@@ -56,15 +56,16 @@ func renameCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeRename(args, cliConfig, force)
 		},
@@ -267,12 +268,12 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName, config.DevRemote)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, parentOpt)

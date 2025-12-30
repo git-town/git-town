@@ -62,7 +62,7 @@ func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomai
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+func (self *Commands) BranchExistsAtRemote(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
 	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }
@@ -81,11 +81,10 @@ func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, bra
 
 // BranchInSyncWithTracking returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
-	trackingBranch := branch.TrackingBranch(devRemote)
-	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), trackingBranch.String())
+func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, localBranch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-parse", localBranch.String(), trackingBranch.String())
 	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
+		return false, fmt.Errorf(messages.DiffProblem, localBranch, trackingBranch, err)
 	}
 	lines := strings.Split(out, "\n")
 	if len(lines) != 2 {

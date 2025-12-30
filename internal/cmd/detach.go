@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -83,15 +82,16 @@ func detachCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeDetach(cliConfig)
 		},
@@ -344,7 +344,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		}
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return detachData{
 		branchInfosLastRun:     branchInfosLastRun,
 		branchToDetachInfo:     *branchToDetachInfo,
@@ -369,6 +369,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
+	oldParent := data.parentBranch
 	// step 1: delete the commits of the branch to detach from all descendents,
 	// while that branch is still in the form it had inside the stack
 	lastParent := data.parentBranch
@@ -380,9 +381,13 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			Program:           prog,
 			RebaseOnto:        lastParent,
 		})
-		if descendent.info.HasTrackingBranch() {
+		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
 			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   descendent.name,
+					ForceIfIncludes: true,
+					TrackingBranch:  descendentTracking,
+				},
 			)
 		}
 		lastParent = descendent.name
@@ -397,9 +402,13 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			CommitsToRemove:    data.parentBranch.BranchName().Location(),
 		},
 	)
-	if data.branchToDetachInfo.HasTrackingBranch() {
+	if trackingBranch, hasTrackingBranch := data.branchToDetachInfo.RemoteName.Get(); hasTrackingBranch {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   data.branchToDetachName,
+				ForceIfIncludes: true,
+				TrackingBranch:  trackingBranch,
+			},
 		)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
@@ -439,19 +448,10 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   prog,
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            data.initialBranch,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			ProposalStackLineageTree:             None[*proposallineage.Tree](),
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
+			Config:          data.config,
+			Program:         prog,
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

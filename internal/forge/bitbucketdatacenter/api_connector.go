@@ -33,7 +33,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
 	toRefID := fmt.Sprintf("refs/heads/%v", target)
@@ -75,7 +75,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalSearchStart, branch)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
 	var resp PullRequestResponse

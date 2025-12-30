@@ -101,15 +101,16 @@ func appendCmd() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     sync,
-				Detached:     detached,
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: push,
-				Stash:        stash,
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          sync,
+				Detached:          detached,
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      push,
+				Stash:             stash,
+				Verbose:           verbose,
 			})
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
@@ -319,8 +320,8 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -353,7 +354,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

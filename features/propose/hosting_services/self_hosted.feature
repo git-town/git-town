@@ -15,10 +15,10 @@ Feature: self-hosted service
     And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | Looking for proposal online ... ok |
-      |         | open <PROPOSAL_URL>                |
+      | BRANCH  | COMMAND                                        |
+      | feature | git fetch --prune --tags                       |
+      |         | Finding proposal from feature into main ... ok |
+      |         | open <PROPOSAL_URL>                            |
 
     Examples:
       | PLATFORM  | PROPOSAL_URL                                                                                                                              |
@@ -36,5 +36,5 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                              |
       | feature | git fetch --prune --tags                                                                                                             |
-      |         | Looking for proposal online ... ok                                                                                                   |
+      |         | Finding proposal from feature into main ... ok                                                                                       |
       |         | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |

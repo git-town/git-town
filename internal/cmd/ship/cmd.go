@@ -18,7 +18,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -50,6 +49,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.IgnoreUncommitted()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
@@ -62,24 +62,26 @@ func Cmd() *cobra.Command {
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			ignoreUncommitted, errIgnoreUncommitted := readIgnoreUncommittedFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			messageFile, errMessageFile := readMessageFileFlag(cmd)
 			shipStrategy, errShipStrategy := readShipStrategyFlag(cmd)
 			toParent, errToParent := readToParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errIgnoreUncommitted, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: ignoreUncommitted,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeShip(executeShipArgs{
 				args:         args,
@@ -93,6 +95,7 @@ func Cmd() *cobra.Command {
 	}
 	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addIgnoreUncommittedFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
@@ -122,7 +125,11 @@ Start:
 	if err != nil {
 		return err
 	}
-	sharedData, flow, err := determineSharedShipData(args.args, repo, args.shipStrategy)
+	sharedData, flow, err := determineSharedShipData(determineSharedShipDataArgs{
+		args:                 args.args,
+		repo:                 repo,
+		shipStrategyOverride: args.shipStrategy,
+	})
 	if err != nil {
 		return err
 	}
@@ -140,6 +147,7 @@ Start:
 	if err = validateSharedData(sharedData, args.toParent, message); err != nil {
 		return err
 	}
+	oldClan := sharedData.config.NormalConfig.Lineage.Clan(gitdomain.LocalBranchNames{sharedData.initialBranch}, sharedData.config.MainAndPerennials())
 	prog := NewMutable(&program.Program{})
 	switch sharedData.config.NormalConfig.ShipStrategy {
 	case configdomain.ShipStrategyAPI:
@@ -175,25 +183,11 @@ Start:
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
 	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   sharedData.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(sharedData.connector),
-					CurrentBranch:            sharedData.initialBranch,
-					Lineage:                  sharedData.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
-					Order:                    sharedData.config.NormalConfig.Order,
-				},
-				ProposalStackLineageTree: None[*proposallineage.Tree](),
-				// Proposal has been shipped and its stack lineage
-				// information shouldn't need to be updated because
-				// proposal is not in a review state.
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{sharedData.initialBranch},
-			},
-		)
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: oldClan.Remove(sharedData.initialBranch),
+			Config:          sharedData.config,
+			Program:         prog,
+		})
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
@@ -272,7 +266,9 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	}
 	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
-			return validate.NoOpenChanges(data.hasOpenChanges)
+			if data.config.NormalConfig.IgnoreUncommitted.DisAllowUncommitted() {
+				return validate.NoOpenChanges(data.hasOpenChanges)
+			}
 		}
 	}
 	return nil

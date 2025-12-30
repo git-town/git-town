@@ -84,6 +84,7 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if err := configfile.Save(configData); err != nil {
 		return err
 	}
+	// keep-sorted start block=yes
 	if gitConfig.AutoSync.IsSome() {
 		_ = gitconfig.RemoveAutoSync(runner)
 	}
@@ -102,6 +103,21 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.FeatureRegex.IsSome() {
 		_ = gitconfig.RemoveFeatureRegex(runner)
 	}
+	if gitConfig.ForgeType.IsSome() {
+		_ = gitconfig.RemoveForgeType(runner)
+	}
+	if gitConfig.GitHubConnectorType.IsSome() {
+		_ = gitconfig.RemoveGitHubConnectorType(runner)
+	}
+	if gitConfig.GitLabConnectorType.IsSome() {
+		_ = gitconfig.RemoveGitLabConnectorType(runner)
+	}
+	if gitConfig.HostingOriginHostname.IsSome() {
+		_ = gitconfig.RemoveOriginHostname(runner)
+	}
+	if gitConfig.IgnoreUncommitted.IsSome() {
+		_ = gitconfig.RemoveIgnoreUncommitted(runner)
+	}
 	if gitConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
@@ -114,14 +130,8 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.Order.IsSome() {
 		_ = gitconfig.RemoveOrder(runner)
 	}
-	if len(gitConfig.PerennialBranches) > 0 {
-		_ = gitconfig.RemovePerennialBranches(runner)
-	}
 	if gitConfig.PerennialRegex.IsSome() {
 		_ = gitconfig.RemovePerennialRegex(runner)
-	}
-	if gitConfig.ShareNewBranches.IsSome() {
-		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
 	if gitConfig.ProposalsShowLineage.IsSome() {
 		_ = gitconfig.RemoveProposalsShowLineage(runner)
@@ -132,11 +142,14 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.PushHook.IsSome() {
 		_ = gitconfig.RemovePushHook(runner)
 	}
-	if gitConfig.ShipStrategy.IsSome() {
-		_ = gitconfig.RemoveShipStrategy(runner)
+	if gitConfig.ShareNewBranches.IsSome() {
+		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
 	if gitConfig.ShipDeleteTrackingBranch.IsSome() {
 		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
+	}
+	if gitConfig.ShipStrategy.IsSome() {
+		_ = gitconfig.RemoveShipStrategy(runner)
 	}
 	if gitConfig.Stash.IsSome() {
 		_ = gitconfig.RemoveStash(runner)
@@ -150,15 +163,19 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.SyncPrototypeStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncPrototypeStrategy(runner)
 	}
-	if gitConfig.SyncUpstream.IsSome() {
-		_ = gitconfig.RemoveSyncUpstream(runner)
-	}
 	if gitConfig.SyncTags.IsSome() {
 		_ = gitconfig.RemoveSyncTags(runner)
+	}
+	if gitConfig.SyncUpstream.IsSome() {
+		_ = gitconfig.RemoveSyncUpstream(runner)
 	}
 	if gitConfig.UnknownBranchType.IsSome() {
 		_ = gitconfig.RemoveUnknownBranchType(runner)
 	}
+	if len(gitConfig.PerennialBranches) > 0 {
+		_ = gitconfig.RemovePerennialBranches(runner)
+	}
+	// keep-sorted end
 	if err := saveUnknownBranchType(userInput.Data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
@@ -208,7 +225,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	}
 
 	// EXTENDED CONFIGURATION
-	// TODO: sort this alphabetically
+	// keep-sorted start block=yes
 	if configFile.AutoSync.IsNone() {
 		fc.Check(
 			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
@@ -219,24 +236,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveBranchPrefix(userInput.Data.BranchPrefix, existingGitConfig.BranchPrefix, frontend),
 		)
 	}
+	if configFile.ContributionRegex.IsNone() {
+		fc.Check(
+			saveContributionRegex(userInput.Data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
+		)
+	}
 	if configFile.Detached.IsNone() {
 		fc.Check(
 			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
-		)
-	}
-	if configFile.NewBranchType.IsNone() {
-		fc.Check(
-			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
-		)
-	}
-	if configFile.PerennialRegex.IsNone() {
-		fc.Check(
-			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
-		)
-	}
-	if configFile.UnknownBranchType.IsNone() {
-		fc.Check(
-			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
@@ -244,9 +251,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveFeatureRegex(userInput.Data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
 		)
 	}
-	if configFile.ContributionRegex.IsNone() {
+	if configFile.IgnoreUncommitted.IsNone() {
 		fc.Check(
-			saveContributionRegex(userInput.Data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
+			saveIgnoreUncommitted(userInput.Data.IgnoreUncommitted, existingGitConfig.IgnoreUncommitted, frontend),
+		)
+	}
+	if configFile.NewBranchType.IsNone() {
+		fc.Check(
+			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
 	if configFile.ObservedRegex.IsNone() {
@@ -257,6 +269,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.Order.IsNone() {
 		fc.Check(
 			saveOrder(userInput.Data.Order, existingGitConfig.Order, frontend),
+		)
+	}
+	if configFile.PerennialRegex.IsNone() {
+		fc.Check(
+			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
 	if configFile.ProposalsShowLineage.IsNone() {
@@ -279,14 +296,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveShareNewBranches(userInput.Data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
 		)
 	}
-	if configFile.ShipStrategy.IsNone() {
-		fc.Check(
-			saveShipStrategy(userInput.Data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
-		)
-	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
 			saveShipDeleteTrackingBranch(userInput.Data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
+		)
+	}
+	if configFile.ShipStrategy.IsNone() {
+		fc.Check(
+			saveShipStrategy(userInput.Data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
 		)
 	}
 	if configFile.Stash.IsNone() {
@@ -309,16 +326,22 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveSyncPrototypeStrategy(userInput.Data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
 		)
 	}
-	if configFile.SyncUpstream.IsNone() {
-		fc.Check(
-			saveSyncUpstream(userInput.Data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
-		)
-	}
 	if configFile.SyncTags.IsNone() {
 		fc.Check(
 			saveSyncTags(userInput.Data.SyncTags, existingGitConfig.SyncTags, frontend),
 		)
 	}
+	if configFile.SyncUpstream.IsNone() {
+		fc.Check(
+			saveSyncUpstream(userInput.Data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
+		)
+	}
+	if configFile.UnknownBranchType.IsNone() {
+		fc.Check(
+			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
+		)
+	}
+	// keep-sorted end
 	return fc.Err
 }
 
@@ -491,6 +514,16 @@ func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlrea
 		return gitconfig.SetGiteaToken(frontend, value, scope)
 	}
 	return gitconfig.RemoveGiteaToken(frontend)
+}
+
+func saveIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitted], valueAlreadyInGit Option[configdomain.IgnoreUncommitted], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetIgnoreUncommitted(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveIgnoreUncommitted(runner)
 }
 
 func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {

@@ -81,15 +81,16 @@ func compressCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeCompress(cliConfig, message, commitHook, stack)
 		},
@@ -180,10 +181,10 @@ type compressData struct {
 type compressBranchData struct {
 	branchType       configdomain.BranchType
 	commitCount      int // number of commits in this branch
-	hasTracking      bool
 	name             gitdomain.LocalBranchName
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
+	trackingBranch   Option[gitdomain.RemoteBranchName]
 }
 
 func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressData, flow configdomain.ProgramFlow, err error) {
@@ -314,14 +315,13 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		if !hasParent {
 			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
-		hasRemoteBranch, _, _ := branchInfo.HasRemoteBranch()
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
 			commitCount:      commitCount,
-			hasTracking:      hasRemoteBranch,
 			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
+			trackingBranch:   branchInfo.RemoteName,
 		})
 	}
 	if len(branchesToCompress) == 0 {
@@ -382,8 +382,13 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 		CommitHook:     args.commitHook,
 		Message:        args.data.newCommitMessage,
 	})
-	if args.data.hasTracking && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
+	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
+	if hasTrackingBranch && args.offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   args.data.name,
+			ForceIfIncludes: true,
+			TrackingBranch:  trackingBranch,
+		})
 	}
 }
 

@@ -22,7 +22,7 @@ Feature: propose a newly prepended branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                                 |
-      |          | Looking for proposal online ... ok                                                                                      |
+      |          | Finding proposal from existing into main ... ok                                                                         |
       | existing | git checkout -b new main                                                                                                |
       | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                                                                    |
       |          | git checkout existing                                                                                                   |
@@ -31,6 +31,7 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes                                                                         |
       |          | git checkout new                                                                                                        |
       | new      | git push -u origin new                                                                                                  |
+      |          | Finding proposal from new into main ... ok                                                                              |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
     And this lineage exists now
       """

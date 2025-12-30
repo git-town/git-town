@@ -71,19 +71,31 @@ EnterForgeData:
 				return emptyResult, exit, false, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeForgejo:
 			forgejoToken, exit, err = enterForgejoToken(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeGitHub:
 			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(data)
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
+			if githubConnectorType, has := githubConnectorTypeOpt.Or(data.Config.File.GitHubConnectorType).Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
 					githubToken, exit, err = enterGitHubToken(data)
+					if err != nil || exit {
+						return emptyResult, exit, false, err
+					}
 				case forgedomain.GitHubConnectorTypeGh:
 				}
 			}
@@ -92,16 +104,16 @@ EnterForgeData:
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
+			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Or(data.Config.File.GitLabConnectorType).Get(); has {
 				switch gitlabConnectorType {
 				case forgedomain.GitLabConnectorTypeAPI:
 					gitlabToken, exit, err = enterGitLabToken(data)
+					if err != nil || exit {
+						return emptyResult, exit, false, err
+					}
 				case forgedomain.GitLabConnectorTypeGlab:
 				}
 			}
-		}
-		if err != nil || exit {
-			return emptyResult, exit, false, err
 		}
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
@@ -165,6 +177,7 @@ EnterForgeData:
 	pushHook := None[configdomain.PushHook]()
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
+	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
 	proposalsShowLineage := None[forgedomain.ProposalsShowLineage]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
@@ -247,6 +260,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
+		ignoreUncommitted, exit, err = enterIgnoreUncommitted(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
 		order, exit, err = enterOrder(data)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
@@ -285,6 +302,7 @@ EnterForgeData:
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
+		IgnoreUncommitted:        ignoreUncommitted,
 		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
@@ -505,6 +523,17 @@ func enterGiteaToken(data Data) (Option[forgedomain.GiteaToken], dialogdomain.Ex
 		Global: data.Config.GitGlobal.GiteaToken,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GiteaToken,
+	})
+}
+
+func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], dialogdomain.Exit, error) {
+	if data.Config.File.IgnoreUncommitted.IsSome() {
+		return None[configdomain.IgnoreUncommitted](), false, nil
+	}
+	return dialog.IgnoreUncommitted(dialog.Args[configdomain.IgnoreUncommitted]{
+		Global: data.Config.GitGlobal.IgnoreUncommitted,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.IgnoreUncommitted,
 	})
 }
 

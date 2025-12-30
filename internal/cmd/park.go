@@ -45,15 +45,16 @@ func parkCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executePark(args, cliConfig)
 		},
@@ -142,7 +143,7 @@ func validateParkData(data parkData, repo execute.OpenRepoResult) error {
 			return err
 		}
 		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
@@ -158,7 +159,7 @@ func canParkBranchType(branchType configdomain.BranchType, branchName gitdomain.
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPark)
 	case configdomain.BranchTypeParkedBranch:
-		finalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyParked, branchName))
+		finalMessages.Addf(messages.BranchIsAlreadyParked, branchName)
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeContributionBranch,

@@ -23,6 +23,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.display-types" is "all"
+    And Git setting "git-town.ignore-uncommitted" is "true"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -69,9 +70,9 @@ Feature: display configuration from Git metadata
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -79,6 +80,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
@@ -141,9 +143,9 @@ Feature: display configuration from Git metadata
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -151,6 +153,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

@@ -38,117 +38,131 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, flow configdomain.ProgramFlow, err error) {
+type determineSharedShipDataArgs struct {
+	args                 []string
+	repo                 execute.OpenRepoResult
+	shipStrategyOverride Option[configdomain.ShipStrategy]
+}
+
+func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipData, flow configdomain.ProgramFlow, err error) {
+	var emptyResult sharedShipData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	repoStatus, err := args.repo.Git.RepoStatus(args.repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	config := repo.UnvalidatedConfig.NormalConfig
+	config := args.repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
-		Backend:              repo.Backend,
+		Backend:              args.repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
-		Frontend:             repo.Frontend,
+		Frontend:             args.repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,
 		GitHubToken:          config.GitHubToken,
 		GitLabConnectorType:  config.GitLabConnectorType,
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(repo.Backend),
+		RemoteURL:            config.DevURL(args.repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	validateOpenChanges := false
+	if len(args.args) == 0 {
+		validateOpenChanges = true
+	}
+	if config.IgnoreUncommitted.AllowUncommitted() {
+		validateOpenChanges = false
 	}
 	branchesSnapshot, stashSize, previousBranchInfos, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
+		Backend:               args.repo.Backend,
+		CommandsCounter:       args.repo.CommandsCounter,
+		ConfigSnapshot:        args.repo.ConfigSnapshot,
 		Connector:             connector,
 		Fetch:                 true,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
+		FinalMessages:         args.repo.FinalMessages,
+		Frontend:              args.repo.Frontend,
+		Git:                   args.repo.Git,
 		HandleUnfinishedState: true,
 		Inputs:                inputs,
-		Repo:                  repo,
+		Repo:                  args.repo,
 		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: len(args) == 0,
+		RootDir:               args.repo.RootDir,
+		UnvalidatedConfig:     args.repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: validateOpenChanges,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ShipRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ShipRepoHasDetachedHead)
 	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	previousBranch := args.repo.Git.PreviouslyCheckedOutBranch(args.repo.Backend)
 	var branchToShip gitdomain.LocalBranchName
-	if len(args) > 0 {
-		branchToShip = gitdomain.NewLocalBranchName(args[0])
+	if len(args.args) > 0 {
+		branchToShip = gitdomain.NewLocalBranchName(args.args[0])
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToShip = activeBranch
 	} else {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ShipNoBranchToShip)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ShipNoBranchToShip)
 	}
 	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
 	if !hasBranchToShipInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
 	}
 	if branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	remotes, err := repo.Git.Remotes(repo.Backend)
+	branchesAndTypes := args.repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	remotes, err := args.repo.Git.Remotes(args.repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
+		Backend:            args.repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip},
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          data.connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
+		ConfigSnapshot:     args.repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           args.repo.Frontend,
+		Git:                args.repo.Git,
 		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+		Unvalidated:        NewMutable(&args.repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	if shipStrategyOverride, hasShipStrategyOverride := shipStrategyOverride.Get(); hasShipStrategyOverride {
+	if shipStrategyOverride, hasShipStrategyOverride := args.shipStrategyOverride.Get(); hasShipStrategyOverride {
 		validatedConfig.NormalConfig.ShipStrategy = shipStrategyOverride
 	}
 	switch validatedConfig.BranchType(branchToShip) {
 	case configdomain.BranchTypeContributionBranch:
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ContributionBranchCannotShip)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContributionBranchCannotShip)
 	case configdomain.BranchTypeMainBranch:
-		return data, configdomain.ProgramFlowExit, errors.New(messages.MainBranchCannotShip)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.MainBranchCannotShip)
 	case configdomain.BranchTypeObservedBranch:
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ObservedBranchCannotShip)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ObservedBranchCannotShip)
 	case configdomain.BranchTypePerennialBranch:
-		return data, configdomain.ProgramFlowExit, errors.New(messages.PerennialBranchCannotShip)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.PerennialBranchCannotShip)
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
@@ -156,17 +170,17 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToShip).Get()
 	if !hasTargetBranch {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipBranchHasNoParent, branchToShip)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipBranchHasNoParent, branchToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip, validatedConfig.NormalConfig.Order)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
-		Offline:                    repo.IsOffline,
+		Offline:                    args.repo.IsOffline,
 		OldBranch:                  branchToShip,
 		OldBranchHasTrackingBranch: branchToShipInfo.HasTrackingBranch(),
 		Order:                      validatedConfig.NormalConfig.Order,

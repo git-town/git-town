@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -80,15 +79,16 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeSwap(cliConfig)
 		},
@@ -351,7 +351,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return swapData{
 		branchInfosLastRun:    branchInfosLastRun,
 		branchesSnapshot:      branchesSnapshot,
@@ -404,23 +404,11 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-
-				ProposalStackLineageTree:             None[*proposallineage.Tree](),
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-			},
-		)
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,

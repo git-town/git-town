@@ -37,7 +37,9 @@ func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepo
 	}
 	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
+		if trackingBranch, hasTrackingBranch := sharedData.targetBranch.RemoteName.Get(); hasTrackingBranch {
+			prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName, TrackingBranch: trackingBranch})
+		}
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShipInfo.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.NormalConfig.Offline.IsOnline() {

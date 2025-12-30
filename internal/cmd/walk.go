@@ -73,11 +73,10 @@ func walkCommand() *cobra.Command {
 	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     walkCmd,
-		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GroupIDStack,
-		Short:   walkDesc,
-		Long:    cmdhelpers.Long(walkDesc, walkHelp),
+		Use:   walkCmd,
+		Args:  cobra.ArbitraryArgs,
+		Short: walkDesc,
+		Long:  cmdhelpers.Long(walkDesc, walkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -87,15 +86,16 @@ func walkCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeWalk(executeWalkArgs{
 				allBranches: allBranches,

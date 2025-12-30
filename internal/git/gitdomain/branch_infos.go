@@ -20,6 +20,16 @@ func (self BranchInfos) BranchIsActiveInAnotherWorktree(branch LocalBranchName) 
 	return branchInfo.SyncStatus == SyncStatusOtherWorktree
 }
 
+func (self BranchInfos) BranchesDeletedAtRemote() LocalBranchNames {
+	result := LocalBranchNames{}
+	for _, bi := range self {
+		if bi.SyncStatus == SyncStatusDeletedAtRemote {
+			result = append(result, bi.GetLocalOrRemoteNameAsLocalName())
+		}
+	}
+	return result
+}
+
 func (self BranchInfos) BranchesInOtherWorktrees() LocalBranchNames {
 	result := LocalBranchNames{}
 	for _, bi := range self {
@@ -55,15 +65,12 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) Optional
 	return MutableNone[BranchInfo]()
 }
 
-func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName, remote Remote) OptionalMutable[BranchInfo] {
-	branchInfoOpt := self.FindByLocalName(branchName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMutable[BranchInfo] {
+	if localInfo := self.FindByLocalName(branchName); localInfo.IsSome() {
+		return localInfo
 	}
-	remoteName := branchName.AtRemote(remote)
-	branchInfoOpt = self.FindByRemoteName(remoteName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
+	if remoteInfo := self.FindRemoteNameMatchingLocal(branchName); remoteInfo.IsSome() {
+		return remoteInfo
 	}
 	return MutableNone[BranchInfo]()
 }
@@ -79,6 +86,18 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[Bra
 		otherRemoteName, hasOtherRemoteName := other.RemoteName.Get()
 		if hasBiRemoteName && hasOtherRemoteName && biRemoteName == otherRemoteName {
 			return MutableSome(&self[b])
+		}
+	}
+	return MutableNone[BranchInfo]()
+}
+
+// FindRemoteNameMatchingLocal finds the BranchInfo with a remote name that matches the given local branch name.
+func (self BranchInfos) FindRemoteNameMatchingLocal(localBranch LocalBranchName) OptionalMutable[BranchInfo] {
+	for b, bi := range self {
+		if remoteName, hasRemoteName := bi.RemoteName.Get(); hasRemoteName {
+			if remoteName.LocalBranchName() == localBranch {
+				return MutableSome(&self[b])
+			}
 		}
 	}
 	return MutableNone[BranchInfo]()
@@ -123,8 +142,8 @@ func (self BranchInfos) HasLocalBranches(branches LocalBranchNames) bool {
 }
 
 // HasMatchingTrackingBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName, devRemote Remote) bool {
-	return self.FindByRemoteName(localBranch.TrackingBranch(devRemote)).IsSome()
+func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName) bool {
+	return self.FindRemoteNameMatchingLocal(localBranch).IsSome()
 }
 
 // LocalBranches provides only the branches that exist on the local machine.
@@ -181,15 +200,14 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchInfos with the given names.
-func (self BranchInfos) Select(remote Remote, names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) {
+func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) {
 	result = make(BranchInfos, 0, len(names))
 	for _, name := range names {
 		if branchInfo, has := self.FindByLocalName(name).Get(); has {
 			result = append(result, *branchInfo)
 			continue
 		}
-		remoteName := name.AtRemote(remote)
-		if branchInfo, has := self.FindByRemoteName(remoteName).Get(); has {
+		if branchInfo, has := self.FindRemoteNameMatchingLocal(name).Get(); has {
 			result = append(result, *branchInfo)
 			continue
 		}

@@ -1,7 +1,6 @@
 package undobranches
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/config"
@@ -68,9 +67,13 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
-			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+			if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+				if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+					result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: tracking})
+				}
+			}
 		} else {
-			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After))
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
 	}
 
@@ -79,7 +82,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedFeatures[branch]
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
-		result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
+		if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+			if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+				result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: tracking})
+			}
+		}
 	}
 
 	// re-create removed omni-branches
@@ -97,17 +104,21 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
 				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
-				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
+				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branchName).Get(); hasBranchInfo {
+					if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName, TrackingBranch: tracking})
+					}
+				}
 			}
 		} else {
-			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA))
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
 		}
 	}
 
 	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
-		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemoteBranch()
+		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemote()
 		hasAfterSHAs, afterLocalSHA, afterRemoteSHA := inconsistentChange.After.GetSHAs()
 		if hasBeforeLocal && hasBeforeRemote && hasAfterSHAs {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: beforeLocalName})
@@ -199,6 +210,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
+	BranchInfos              gitdomain.BranchInfos
 	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
 	FinalMessages            stringslice.Collector

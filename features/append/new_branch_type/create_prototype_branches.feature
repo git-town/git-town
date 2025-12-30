@@ -19,7 +19,7 @@ Feature: append a new branch when prototype branches are configured via a deprec
       |          | git checkout -b new      |
     And Git Town prints:
       """
-      Upgrading deprecated local setting "git-town.create-prototype-branches" to "git-town.new-branch-type"
+      Upgrading deprecated local setting git-town.create-prototype-branches to git-town.new-branch-type
       """
     And Git setting "git-town.new-branch-type" is now "prototype"
     And Git setting "git-town.create-prototype-branches" now doesn't exist

@@ -53,6 +53,7 @@ type NormalConfig struct {
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
+	IgnoreUncommitted        configdomain.IgnoreUncommitted
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
 	ObservedRegex            Option[configdomain.ObservedRegex]
@@ -124,6 +125,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
+		IgnoreUncommitted:        other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
@@ -227,7 +229,7 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 		if self.Lineage.Parent(perennialBranch).IsSome() {
 			_ = gitconfig.RemoveParent(runner, perennialBranch)
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
+			finalMessages.Addf(messages.PerennialBranchRemovedParentEntry, perennialBranch)
 		}
 	}
 }
@@ -281,6 +283,7 @@ func DefaultNormalConfig() NormalConfig {
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
+		IgnoreUncommitted:        false,
 		Lineage:                  configdomain.NewLineage(),
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
@@ -335,6 +338,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		GitUserName:              partial.GitUserName,
 		GiteaToken:               partial.GiteaToken,
 		HostingOriginHostname:    partial.HostingOriginHostname,
+		IgnoreUncommitted:        partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
 		Lineage:                  partial.Lineage,
 		NewBranchType:            partial.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:            partial.ObservedRegex,

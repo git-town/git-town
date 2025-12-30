@@ -25,12 +25,14 @@ Feature: don't ask for information already provided by the config file
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
+      github-connector = "api"
 
       [propose]
       lineage = "none"
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]
@@ -50,15 +52,14 @@ Feature: don't ask for information already provided by the config file
       """
     And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                | KEYS              |
-      | welcome               | enter             |
-      | aliases               | enter             |
-      | perennial branches    | enter             |
-      | github connector type | enter             |
-      | github token          | g h - t o k enter |
-      | token scope           | enter             |
-      | enter all             | down enter        |
-      | config storage        | down enter        |
+      | DIALOG             | KEYS              |
+      | welcome            | enter             |
+      | aliases            | enter             |
+      | perennial branches | enter             |
+      | github token       | g h - t o k enter |
+      | token scope        | enter             |
+      | enter all          | down enter        |
+      | config storage     | down enter        |
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.github-token gh-tok |
@@ -74,7 +75,7 @@ Feature: don't ask for information already provided by the config file
       order = "desc"
       perennials = ["staging"]
       perennial-regex = "release-"
-      unknown-branch-type = "observed"
+      unknown-type = "observed"
 
       [create]
       branch-prefix = "acme-"
@@ -85,7 +86,7 @@ Feature: don't ask for information already provided by the config file
       [hosting]
       dev-remote = "something"
       forge-type = "github"
-      github-connector-type = "api"
+      github-connector = "api"
       origin-hostname = "github.com"
 
       [propose]
@@ -93,6 +94,7 @@ Feature: don't ask for information already provided by the config file
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]

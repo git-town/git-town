@@ -14,7 +14,7 @@ Feature: make another remote branch a contribution branch
       |        | git checkout remote-feature |
     And Git Town prints:
       """
-      branch "remote-feature" is now a contribution branch
+      branch remote-feature is now a contribution branch
       """
     And branch "remote-feature" now has type "contribution"
 

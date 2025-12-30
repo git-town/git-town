@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -34,7 +33,7 @@ import (
 
 const (
 	mergeCmd  = "merge"
-	mergeDesc = "Merges the current branch with its parent"
+	mergeDesc = "Combines the current branch with its parent"
 	mergeHelp = `
 Merges the current branch with its parent branch.
 Both branches must be feature branches.
@@ -82,15 +81,16 @@ func mergeCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeMerge(cliConfig)
 		},
@@ -351,10 +351,12 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
-	if data.parentBranchInfo.RemoteName.IsSome() && repo.IsOffline.IsOnline() {
+	parentTracking, parentHasTracking := data.parentBranchInfo.RemoteName.Get()
+	if parentHasTracking && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
+			TrackingBranch:  parentTracking,
 		})
 	}
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
@@ -364,19 +366,10 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   prog,
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            data.initialBranch,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			ProposalStackLineageTree:             None[*proposallineage.Tree](),
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

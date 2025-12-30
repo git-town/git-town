@@ -6,7 +6,7 @@ Feature: Automatically remove obsolete branch lists setting
     When I run "git-town config"
     Then Git Town prints:
       """
-      Inlining deprecated branch list "git-town.<BRANCHTYPE>-branches"
+      Inlining deprecated branch list git-town.<BRANCHTYPE>-branches
       """
     And local Git setting "git-town.<BRANCHTYPE>-branches" now doesn't exist
     And local Git setting "git-town-branch.one.branchtype" is now "<BRANCHTYPE>"

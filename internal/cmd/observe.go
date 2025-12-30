@@ -50,15 +50,16 @@ func observeCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeObserve(args, cliConfig)
 		},
@@ -149,7 +150,7 @@ func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
-			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyObserved, branchName))
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyObserved, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,
@@ -157,7 +158,7 @@ func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

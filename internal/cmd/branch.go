@@ -33,10 +33,11 @@ func branchCmd() *cobra.Command {
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "branch",
-		Args:  cobra.NoArgs,
-		Short: branchDesc,
-		Long:  cmdhelpers.Long(branchDesc, branchHelp),
+		Use:     "branch",
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDNavigation,
+		Short:   branchDesc,
+		Long:    cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
@@ -45,15 +46,16 @@ func branchCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: displayTypes,
-				DryRun:       None[configdomain.DryRun](),
-				Order:        order,
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             order,
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeBranch(cliConfig)
 		},

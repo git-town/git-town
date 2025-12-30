@@ -81,6 +81,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
+	// TODO: add keep-sorted to all blocks in this function
 	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
 	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
@@ -93,6 +94,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	forgeType, errForgeType := load(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
 	githubConnectorType, errGitHubConnectorType := load(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGitHubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitLabConnectorType := load(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitLabConnectorType, ignoreUnknown)
+	ignoreUncommitted, errIgnoreUncommitted := load(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
@@ -138,6 +140,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errForgeType,
 		errGitHubConnectorType,
 		errGitLabConnectorType,
+		errIgnoreUncommitted,
 		errLineage,
 		errNewBranchType,
 		errObservedRegex,
@@ -184,6 +187,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		GitUserName:              gitdomain.ParseGitUserName(snapshot[configdomain.KeyGitUserName]),
 		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[configdomain.KeyGiteaToken]),
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(snapshot[configdomain.KeyHostingOriginHostname]),
+		IgnoreUncommitted:        ignoreUncommitted,
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[configdomain.KeyMainBranch]),
 		NewBranchType:            newBranchType,

@@ -20,11 +20,11 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
-      |           | Looking for proposal online ... ok                                   |
       |           | git push -u origin prototype                                         |
+      |           | Finding proposal from prototype into main ... ok                     |
       |           | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
-      branch "prototype" is no longer a prototype branch
+      branch prototype is no longer a prototype branch
       """
     And branch "prototype" now has type "feature"

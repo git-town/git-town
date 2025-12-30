@@ -19,12 +19,12 @@ Feature: Create proposals for parked branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                           |
       | parked | git fetch --prune --tags                                          |
-      |        | Looking for proposal online ... ok                                |
       |        | git merge --no-edit --ff origin/parked                            |
       |        | git push                                                          |
+      |        | Finding proposal from parked into main ... ok                     |
       |        | open https://github.com/git-town/git-town/compare/parked?expand=1 |
     And Git Town prints:
       """
-      branch "parked" is no longer parked
+      branch parked is no longer parked
       """
     And branch "parked" now has type "feature"

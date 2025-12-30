@@ -13,6 +13,7 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		BeginBranch:              beginBranchesSnapshot.Active.GetOrZero(),
+		BranchInfos:              beginBranchesSnapshot.Branches,
 		Config:                   validatedConfig,
 		EndBranch:                endBranchesSnapshot.Active.GetOrZero(),
 		FinalMessages:            finalMessages,

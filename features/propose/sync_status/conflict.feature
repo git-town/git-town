@@ -20,7 +20,6 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | Looking for proposal online ... ok      |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -52,6 +51,7 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push                                                           |
+      |         | Finding proposal from feature into main ... ok                     |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
@@ -69,4 +69,5 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push                                                           |
+      |         | Finding proposal from feature into main ... ok                     |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |

@@ -17,14 +17,14 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                       |
       | prototype | git fetch --prune --tags                                                      |
-      |           | Looking for proposal online ... ok                                            |
       |           | git checkout parent                                                           |
       | parent    | git push -u origin parent                                                     |
       |           | git checkout prototype                                                        |
       | prototype | git push -u origin prototype                                                  |
+      |           | Finding proposal from prototype into parent ... ok                            |
       |           | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
     And Git Town prints:
       """
-      branch "prototype" is no longer a prototype branch
+      branch prototype is no longer a prototype branch
       """
     And branch "prototype" now has type "feature"

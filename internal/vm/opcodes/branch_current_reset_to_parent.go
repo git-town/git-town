@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
@@ -12,21 +14,14 @@ type BranchCurrentResetToParent struct {
 }
 
 func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
+	parentName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
 		return nil
 	}
-	branchInfos, hasBranchInfos := args.BranchInfos.Get()
-	if !hasBranchInfos {
-		panic(messages.BranchInfosNotProvided)
+	parentInfo, hasParentInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get()
+	if !hasParentInfo {
+		return fmt.Errorf(messages.BranchInfoNotFound, parentName)
 	}
-	parentIsLocal := branchInfos.HasLocalBranch(parent)
-	var target gitdomain.BranchName
-	if parentIsLocal {
-		target = parent.BranchName()
-	} else {
-		target = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-	}
-	args.PrependOpcodes(&BranchReset{Target: target})
+	args.PrependOpcodes(&BranchReset{Target: parentInfo.GetLocalOrRemoteName()})
 	return nil
 }

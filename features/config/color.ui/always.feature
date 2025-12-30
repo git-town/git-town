@@ -70,9 +70,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: api
+        GitHub connector: api
         GitHub token: (not set)
-        GitLab connector type: api
+        GitLab connector: api
         GitLab token: (not set)
 
       Propose:
@@ -80,6 +80,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:
@@ -123,6 +124,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "squash-merge"
 
       [sync]
@@ -173,9 +175,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -183,6 +185,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
@@ -209,6 +212,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.ignore-uncommitted" is "false"
     And Git setting "git-town.order" is "desc"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -246,6 +250,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]
@@ -296,9 +301,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -306,6 +311,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:
@@ -369,9 +375,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -379,6 +385,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:
@@ -448,9 +455,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -458,6 +465,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

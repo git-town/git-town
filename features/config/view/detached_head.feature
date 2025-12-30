@@ -17,6 +17,7 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.branch-prefix" is "acme-"
     And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.display-types" is "all"
+    And Git setting "git-town.ignore-uncommitted" is "true"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-regex" is "^dependabot/"
@@ -69,9 +70,9 @@ Feature: display configuration from Git metadata in detached head state
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -79,6 +80,7 @@ Feature: display configuration from Git metadata in detached head state
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:

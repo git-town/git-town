@@ -15,7 +15,7 @@ Feature: already existing local branch
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "existing"
+      there is already a branch existing
       """
   #
   # NOTE: Cannot test undo here.

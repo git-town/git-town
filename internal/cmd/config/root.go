@@ -25,7 +25,7 @@ func RootCmd() *cobra.Command {
 	addRedactFlag, readRedactFlag := flags.Redact()
 	configCmd := cobra.Command{
 		Use:     "config",
-		GroupID: cmdhelpers.GroupIDSetup,
+		GroupID: cmdhelpers.GroupIDConfig,
 		Args:    cobra.NoArgs,
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
@@ -37,15 +37,16 @@ func RootCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: displayTypes,
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeDisplayConfig(cliConfig, redact)
 		},
@@ -94,7 +95,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
 	print.Entry("git user name", format.OptionalStringerSetting(config.NormalConfig.GitUserName))
-	print.Entry("git user email", format.OptionalStringerSetting(config.NormalConfig.GitUserEmail))
+	print.Entry("git user email", formatToken(config.NormalConfig.GitUserEmail, redact))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("branch prefix", format.OptionalStringerSetting(config.NormalConfig.BranchPrefix))
@@ -111,9 +112,9 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("Bitbucket app password", formatToken(config.NormalConfig.BitbucketAppPassword, redact))
 	print.Entry("Forgejo token", formatToken(config.NormalConfig.ForgejoToken, redact))
 	print.Entry("Gitea token", formatToken(config.NormalConfig.GiteaToken, redact))
-	print.Entry("GitHub connector type", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
+	print.Entry("GitHub connector", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
 	print.Entry("GitHub token", formatToken(config.NormalConfig.GitHubToken, redact))
-	print.Entry("GitLab connector type", format.OptionalStringerSetting(config.NormalConfig.GitLabConnectorType))
+	print.Entry("GitLab connector", format.OptionalStringerSetting(config.NormalConfig.GitLabConnectorType))
 	print.Entry("GitLab token", formatToken(config.NormalConfig.GitLabToken, redact))
 	fmt.Println()
 	print.Header("Propose")
@@ -121,6 +122,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
+	print.Entry("ignore uncommitted changes", format.Bool(config.NormalConfig.IgnoreUncommitted.AllowUncommitted()))
 	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
 	print.Header("Sync")
