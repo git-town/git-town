@@ -110,6 +110,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.RemoteURL(repo.Backend, remote),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, err

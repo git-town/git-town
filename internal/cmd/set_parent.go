@@ -260,6 +260,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

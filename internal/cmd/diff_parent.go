@@ -121,6 +121,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
