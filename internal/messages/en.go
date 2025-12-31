@@ -5,7 +5,7 @@ const (
 	APIParentBranchLookupStart       = "Finding parent of %s ... "
 	APIProposalFindStart             = "Finding proposal from %s into %s ... "
 	APIProposalSearchStart           = "Finding proposals for %s ... "
-	APIProposalUpdateBody            = "Update body for proposal #%s ... "
+	APIProposalUpdateBody            = "Update body for %s ... "
 	APIProposalUpdateStart           = "Updating proposal online ... "
 	APIUnexpectedResultDataStructure = "unexpected result data structure"
 	APIUpdateProposalSource          = "Updating source branch of proposal %s to %s ... "
@@ -91,6 +91,7 @@ const (
 	ConflictMerge                      = "git merge conflict"
 	ConflictRebase                     = "git rebase conflict"
 	ConnectorCannotFindProposals       = "connector cannot find proposals"
+	ConnectorCannotSearchProposals     = "connector cannot search proposals"
 	ConnectorCannotUpdateProposalBody  = "connector cannot update proposal body"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueNothingToDo                = "nothing to continue"

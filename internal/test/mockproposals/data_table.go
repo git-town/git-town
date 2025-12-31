@@ -13,8 +13,8 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProposals {
-	result := MockProposals{}
+func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forgedomain.ProposalData {
+	result := make([]forgedomain.ProposalData, 0, len(table.Rows)-1)
 	headers := helpers.TableFields(table)
 	for i := 1; i < len(table.Rows); i++ {
 		id := Some(i)
@@ -73,7 +73,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 	return result
 }
 
-func ToDataTable(proposals MockProposals, fields []string) datatable.DataTable {
+func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow(fields...)
 	for _, proposal := range proposals {
@@ -91,7 +91,7 @@ func ToDataTable(proposals MockProposals, fields []string) datatable.DataTable {
 			case "URL":
 				row[f] = proposal.URL
 			default:
-				panic(fmt.Sprintf("unknown field: %s", field))
+				panic("unknown field: " + field)
 			}
 		}
 		result.AddRow(row...)

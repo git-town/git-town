@@ -235,6 +235,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		err = subProcess.Run()
 	}
 	if err != nil {
+		fmt.Println("111111111111111111111111111111111111111111111", err)
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			exitCode = exitErr.ExitCode()

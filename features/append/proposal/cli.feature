@@ -10,7 +10,7 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | existing | local, origin | existing commit |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | BODY |
-      | 1  | existing      | main          | body |
+      |  1 | existing      | main          | body |
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "existing"
     When I run "git-town append new"
@@ -20,6 +20,7 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
       |          | git checkout -b new      |
+    And the initial proposals exist now
     And this lineage exists now
       """
       main
@@ -36,3 +37,4 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | existing | git branch -D new     |
     And the initial lineage exists now
     And the initial commits exist now
+    And the initial proposals exist now
