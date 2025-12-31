@@ -1,4 +1,4 @@
-#:schema  https://github.com/git-town/git-town/blob/main/docs/git-town.schema.json
+#:schema  ./docs/git-town.schema.json
 
 [branches]
 main = "main"
