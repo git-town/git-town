@@ -471,6 +471,17 @@ func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomai
 	})
 }
 
+func enterGiteaToken(data Data) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+	if data.Config.File.GiteaToken.IsSome() {
+		return None[forgedomain.GiteaToken](), false, nil
+	}
+	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
+		Global: data.Config.GitGlobal.GiteaToken,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.GiteaToken,
+	})
+}
+
 func enterGithubConnectorType(data Data) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
 	if data.Config.File.GithubConnectorType.IsSome() {
 		return None[forgedomain.GithubConnectorType](), false, nil
@@ -512,17 +523,6 @@ func enterGitlabToken(data Data) (Option[forgedomain.GitlabToken], dialogdomain.
 		Global: data.Config.GitGlobal.GitlabToken,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitlabToken,
-	})
-}
-
-func enterGiteaToken(data Data) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	if data.Config.File.GiteaToken.IsSome() {
-		return None[forgedomain.GiteaToken](), false, nil
-	}
-	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
-		Global: data.Config.GitGlobal.GiteaToken,
-		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.GiteaToken,
 	})
 }
 
@@ -818,11 +818,11 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
+		GiteaToken:           args.giteaToken,
 		GithubConnectorType:  args.githubConnectorType,
 		GithubToken:          args.githubToken,
 		GitlabConnectorType:  args.gitlabConnectorType,
 		GitlabToken:          args.gitlabToken,
-		GiteaToken:           args.giteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
 	})

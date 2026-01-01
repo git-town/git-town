@@ -123,11 +123,11 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
+		GiteaToken:           config.GiteaToken,
 		GithubConnectorType:  config.GithubConnectorType,
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

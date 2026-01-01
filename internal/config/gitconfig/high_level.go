@@ -82,6 +82,10 @@ func RemoveForgejoToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
 }
 
+func RemoveGiteaToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
+}
+
 func RemoveGithubConnectorType(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubConnectorType)
 }
@@ -96,10 +100,6 @@ func RemoveGitlabConnectorType(runner subshelldomain.Runner) error {
 
 func RemoveGitlabToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitlabToken)
-}
-
-func RemoveGiteaToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
 }
 
 func RemoveIgnoreUncommitted(runner subshelldomain.Runner) error {
@@ -243,6 +243,10 @@ func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToke
 	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
+func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
+}
+
 func SetGithubConnectorType(runner subshelldomain.Runner, value forgedomain.GithubConnectorType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGithubConnectorType, value.String())
 }
@@ -257,10 +261,6 @@ func SetGitlabConnectorType(runner subshelldomain.Runner, value forgedomain.Gitl
 
 func SetGitlabToken(runner subshelldomain.Runner, value forgedomain.GitlabToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitlabToken, value.String())
-}
-
-func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
 }
 
 func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
