@@ -41,7 +41,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 			)
 		case forgedomain.ForgeTypeGitlab:
 			fc.Check(
-				saveGitLabToken(userInput.Data.GitlabToken, unvalidatedConfig.GitLocal.GitlabToken, userInput.Scope, userInput.Data.GitlabConnectorType, frontend),
+				saveGitlabToken(userInput.Data.GitlabToken, unvalidatedConfig.GitLocal.GitlabToken, userInput.Scope, userInput.Data.GitlabConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
@@ -216,7 +216,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	}
 	if configFile.GitlabConnectorType.IsNone() {
 		fc.Check(
-			saveGitLabConnectorType(userInput.Data.GitlabConnectorType, existingGitConfig.GitlabConnectorType, frontend),
+			saveGitlabConnectorType(userInput.Data.GitlabConnectorType, existingGitConfig.GitlabConnectorType, frontend),
 		)
 	}
 
@@ -481,7 +481,7 @@ func saveGithubToken(valueToWriteToGit Option[forgedomain.GithubToken], valueAlr
 	return gitconfig.RemoveGithubToken(frontend)
 }
 
-func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitlabConnectorType], valueAlreadyInGit Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
+func saveGitlabConnectorType(valueToWriteToGit Option[forgedomain.GitlabConnectorType], valueAlreadyInGit Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
@@ -491,7 +491,7 @@ func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitlabConnecto
 	return gitconfig.RemoveGitlabConnectorType(frontend)
 }
 
-func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitlabToken], valueAlreadyInGit Option[forgedomain.GitlabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
+func saveGitlabToken(valueToWriteToGit Option[forgedomain.GitlabToken], valueAlreadyInGit Option[forgedomain.GitlabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
 	if connectorType, has := gitlabConnectorType.Get(); has {
 		if connectorType == forgedomain.GitlabConnectorTypeGlab {
 			return nil
