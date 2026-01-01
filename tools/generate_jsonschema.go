@@ -17,7 +17,6 @@ func main() {
 	reflector.KeyNamer = camelToKebab
 	schema := reflector.Reflect(&configfile.Data{}) //exhaustruct:ignore
 	schema.ID = "https://www.git-town.com/git-town.toml"
-
 	schemaJSON, err := json.MarshalIndent(schema, "", "  ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error marshaling JSON schema: %v\n", err)
