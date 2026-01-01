@@ -57,7 +57,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		displayTypes             Option[configdomain.DisplayTypes]
 		featureRegex             Option[configdomain.FeatureRegex]
 		forgeType                Option[forgedomain.ForgeType]
-		githubConnectorType      Option[forgedomain.GitHubConnectorType]
+		githubConnectorType      Option[forgedomain.GithubConnectorType]
 		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
 		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted        Option[configdomain.IgnoreUncommitted]
@@ -196,8 +196,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GitHubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, messages.ConfigFile)
+		if data.Hosting.GithubConnectorType != nil {
+			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnectorType, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
@@ -291,8 +291,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
-		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              None[forgedomain.GitHubToken](),
+		GithubConnectorType:      githubConnectorType,
+		GithubToken:              None[forgedomain.GithubToken](),
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),

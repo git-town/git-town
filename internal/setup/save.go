@@ -35,9 +35,9 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 			fc.Check(
 				saveForgejoToken(userInput.Data.ForgejoToken, unvalidatedConfig.GitLocal.ForgejoToken, userInput.Scope, frontend),
 			)
-		case forgedomain.ForgeTypeGitHub:
+		case forgedomain.ForgeTypeGithub:
 			fc.Check(
-				saveGitHubToken(userInput.Data.GitHubToken, unvalidatedConfig.GitLocal.GitHubToken, userInput.Scope, userInput.Data.GitHubConnectorType, frontend),
+				saveGithubToken(userInput.Data.GithubToken, unvalidatedConfig.GitLocal.GithubToken, userInput.Scope, userInput.Data.GithubConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitLab:
 			fc.Check(
@@ -106,8 +106,8 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ForgeType.IsSome() {
 		_ = gitconfig.RemoveForgeType(runner)
 	}
-	if gitConfig.GitHubConnectorType.IsSome() {
-		_ = gitconfig.RemoveGitHubConnectorType(runner)
+	if gitConfig.GithubConnectorType.IsSome() {
+		_ = gitconfig.RemoveGithubConnectorType(runner)
 	}
 	if gitConfig.GitLabConnectorType.IsSome() {
 		_ = gitconfig.RemoveGitLabConnectorType(runner)
@@ -209,9 +209,9 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
-	if configFile.GitHubConnectorType.IsNone() {
+	if configFile.GithubConnectorType.IsNone() {
 		fc.Check(
-			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
+			saveGithubConnectorType(userInput.Data.GithubConnectorType, existingGitConfig.GithubConnectorType, frontend),
 		)
 	}
 	if configFile.GitLabConnectorType.IsNone() {
@@ -456,19 +456,19 @@ func saveForgejoToken(valueToWriteToGit Option[forgedomain.ForgejoToken], valueA
 	return gitconfig.RemoveForgejoToken(frontend)
 }
 
-func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], valueAlreadyInGit Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
+func saveGithubConnectorType(valueToWriteToGit Option[forgedomain.GithubConnectorType], valueAlreadyInGit Option[forgedomain.GithubConnectorType], frontend subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitHubConnectorType(frontend, value, configdomain.ConfigScopeLocal)
+		return gitconfig.SetGithubConnectorType(frontend, value, configdomain.ConfigScopeLocal)
 	}
-	return gitconfig.RemoveGitHubConnectorType(frontend)
+	return gitconfig.RemoveGithubConnectorType(frontend)
 }
 
-func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], valueAlreadyInGit Option[forgedomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
+func saveGithubToken(valueToWriteToGit Option[forgedomain.GithubToken], valueAlreadyInGit Option[forgedomain.GithubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GithubConnectorType], frontend subshelldomain.Runner) error {
 	if connectorType, has := githubConnectorType.Get(); has {
-		if connectorType == forgedomain.GitHubConnectorTypeGh {
+		if connectorType == forgedomain.GithubConnectorTypeGh {
 			return nil
 		}
 	}
@@ -476,9 +476,9 @@ func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], valueAlr
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitHubToken(frontend, value, scope)
+		return gitconfig.SetGithubToken(frontend, value, scope)
 	}
-	return gitconfig.RemoveGitHubToken(frontend)
+	return gitconfig.RemoveGithubToken(frontend)
 }
 
 func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnectorType], valueAlreadyInGit Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {

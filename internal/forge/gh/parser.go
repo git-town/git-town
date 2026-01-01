@@ -27,7 +27,7 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 				Title:        data.Title,
 				URL:          data.URL,
 			},
-			ForgeType: forgedomain.ForgeTypeGitHub,
+			ForgeType: forgedomain.ForgeTypeGithub,
 		}
 	}
 	return result, nil

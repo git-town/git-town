@@ -36,7 +36,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@github.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeGitHub)
+		want := Some(forgedomain.ForgeTypeGithub)
 		must.Eq(t, want, have)
 	})
 
@@ -80,8 +80,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitHub))
-		want := Some(forgedomain.ForgeTypeGitHub)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeGithub))
+		want := Some(forgedomain.ForgeTypeGithub)
 		must.Eq(t, want, have)
 	})
 

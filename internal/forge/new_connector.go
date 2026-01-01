@@ -69,17 +69,17 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
 		})
-	case forgedomain.ForgeTypeGitHub:
-		switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
-		case forgedomain.GitHubConnectorTypeAPI:
+	case forgedomain.ForgeTypeGithub:
+		switch args.GithubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
+		case forgedomain.GithubConnectorTypeAPI:
 			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:         args.GitHubToken,
+				APIToken:         args.GithubToken,
 				Browser:          args.Browser,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
-		case forgedomain.GitHubConnectorTypeGh:
+		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
 					Backend:  args.Backend,
@@ -119,8 +119,8 @@ type NewConnectorArgs struct {
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
-	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
-	GitHubToken          Option[forgedomain.GitHubToken]
+	GithubConnectorType  Option[forgedomain.GithubConnectorType]
+	GithubToken          Option[forgedomain.GithubToken]
 	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
 	GitLabToken          Option[forgedomain.GitLabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]

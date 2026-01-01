@@ -18,7 +18,7 @@ const (
 	ForgeTypeBitbucket           ForgeType = "bitbucket"
 	ForgeTypeBitbucketDatacenter ForgeType = "bitbucket-datacenter"
 	ForgeTypeForgejo             ForgeType = "forgejo"
-	ForgeTypeGitHub              ForgeType = "github"
+	ForgeTypeGithub              ForgeType = "github"
 	ForgeTypeGitLab              ForgeType = "gitlab"
 	ForgeTypeGitea               ForgeType = "gitea"
 )
@@ -44,7 +44,7 @@ func forgeTypes() []ForgeType {
 		ForgeTypeBitbucket,
 		ForgeTypeBitbucketDatacenter,
 		ForgeTypeForgejo,
-		ForgeTypeGitHub,
+		ForgeTypeGithub,
 		ForgeTypeGitLab,
 		ForgeTypeGitea,
 	}

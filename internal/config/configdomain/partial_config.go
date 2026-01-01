@@ -32,8 +32,8 @@ type PartialConfig struct {
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	ForgejoToken             Option[forgedomain.ForgejoToken]
-	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[forgedomain.GitHubToken]
+	GithubConnectorType      Option[forgedomain.GithubConnectorType]
+	GithubToken              Option[forgedomain.GithubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
@@ -92,8 +92,8 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
-		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
-		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
+		GithubToken:              other.GithubToken.Or(self.GithubToken),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),

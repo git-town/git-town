@@ -186,7 +186,7 @@ func TestConfigUndo(t *testing.T) {
 			},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyPerennialBranches: "prod",
-				configdomain.KeyGitHubToken:       "token",
+				configdomain.KeyGithubToken:       "token",
 			},
 		}
 		after := configdomain.EndConfigSnapshot{
@@ -220,7 +220,7 @@ func TestConfigUndo(t *testing.T) {
 					configdomain.KeyPushHook,
 				},
 				Removed: map[configdomain.Key]string{
-					configdomain.KeyGitHubToken: "token",
+					configdomain.KeyGithubToken: "token",
 				},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyPerennialBranches: {
@@ -252,7 +252,7 @@ func TestConfigUndo(t *testing.T) {
 				Scope: configdomain.ConfigScopeLocal,
 			},
 			&opcodes.ConfigSet{
-				Key:   configdomain.KeyGitHubToken,
+				Key:   configdomain.KeyGithubToken,
 				Scope: configdomain.ConfigScopeLocal,
 				Value: "token",
 			},

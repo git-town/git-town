@@ -23,7 +23,7 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		{forgedomain.ForgeTypeBitbucketDatacenter, bitbucketdatacenter.Detect},
 		{forgedomain.ForgeTypeForgejo, forgejo.Detect},
 		{forgedomain.ForgeTypeGitea, gitea.Detect},
-		{forgedomain.ForgeTypeGitHub, github.Detect},
+		{forgedomain.ForgeTypeGithub, github.Detect},
 		{forgedomain.ForgeTypeGitLab, gitlab.Detect},
 	}
 	for _, detector := range detectors {

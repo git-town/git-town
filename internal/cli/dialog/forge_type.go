@@ -58,7 +58,7 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 			Text: "Gitea",
 		},
 		{
-			Data: Some(forgedomain.ForgeTypeGitHub),
+			Data: Some(forgedomain.ForgeTypeGithub),
 			Text: "GitHub",
 		},
 		{

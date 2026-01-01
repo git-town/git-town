@@ -81,7 +81,7 @@ func TestParseJSONOutput(t *testing.T) {
 					Title:        "glab connector type",
 					URL:          "https://github.com/git-town/git-town/pull/5079",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
+				ForgeType: forgedomain.ForgeTypeGithub,
 			},
 		}
 		must.Eq(t, want, have)

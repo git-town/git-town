@@ -82,12 +82,12 @@ func RemoveForgejoToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
 }
 
-func RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType)
+func RemoveGithubConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubConnectorType)
 }
 
-func RemoveGitHubToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubToken)
+func RemoveGithubToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubToken)
 }
 
 func RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
@@ -243,12 +243,12 @@ func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToke
 	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
-func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitHubConnectorType, value.String())
+func SetGithubConnectorType(runner subshelldomain.Runner, value forgedomain.GithubConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGithubConnectorType, value.String())
 }
 
-func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
+func SetGithubToken(runner subshelldomain.Runner, value forgedomain.GithubToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGithubToken, value.String())
 }
 
 func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {

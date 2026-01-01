@@ -57,8 +57,8 @@ EnterForgeData:
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	forgejoToken := None[forgedomain.ForgejoToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
-	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
-	githubToken := None[forgedomain.GitHubToken]()
+	githubConnectorTypeOpt := None[forgedomain.GithubConnectorType]()
+	githubToken := None[forgedomain.GithubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
@@ -84,19 +84,19 @@ EnterForgeData:
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-		case forgedomain.ForgeTypeGitHub:
-			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(data)
+		case forgedomain.ForgeTypeGithub:
+			githubConnectorTypeOpt, exit, err = enterGithubConnectorType(data)
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-			if githubConnectorType, has := githubConnectorTypeOpt.Or(data.Config.File.GitHubConnectorType).Get(); has {
+			if githubConnectorType, has := githubConnectorTypeOpt.Or(data.Config.File.GithubConnectorType).Get(); has {
 				switch githubConnectorType {
-				case forgedomain.GitHubConnectorTypeAPI:
-					githubToken, exit, err = enterGitHubToken(data)
+				case forgedomain.GithubConnectorTypeAPI:
+					githubToken, exit, err = enterGithubToken(data)
 					if err != nil || exit {
 						return emptyResult, exit, false, err
 					}
-				case forgedomain.GitHubConnectorTypeGh:
+				case forgedomain.GithubConnectorTypeGh:
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
@@ -124,8 +124,8 @@ EnterForgeData:
 		forgeTypeOpt:         actualForgeType,
 		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
-		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
-		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
+		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GithubConnectorType),
+		githubToken:          githubToken.Or(data.Config.GitGlobal.GithubToken),
 		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(data.Config.GitGlobal.GitLabConnectorType),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
@@ -294,8 +294,8 @@ EnterForgeData:
 		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
-		GitHubConnectorType:      githubConnectorTypeOpt,
-		GitHubToken:              githubToken,
+		GithubConnectorType:      githubConnectorTypeOpt,
+		GithubToken:              githubToken,
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
@@ -471,25 +471,25 @@ func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomai
 	})
 }
 
-func enterGitHubConnectorType(data Data) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
-	if data.Config.File.GitHubConnectorType.IsSome() {
-		return None[forgedomain.GitHubConnectorType](), false, nil
+func enterGithubConnectorType(data Data) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
+	if data.Config.File.GithubConnectorType.IsSome() {
+		return None[forgedomain.GithubConnectorType](), false, nil
 	}
-	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
-		Global: data.Config.GitGlobal.GitHubConnectorType,
+	return dialog.GithubConnectorType(dialog.Args[forgedomain.GithubConnectorType]{
+		Global: data.Config.GitGlobal.GithubConnectorType,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.GitHubConnectorType,
+		Local:  data.Config.GitLocal.GithubConnectorType,
 	})
 }
 
-func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	if data.Config.File.GitHubToken.IsSome() {
-		return None[forgedomain.GitHubToken](), false, nil
+func enterGithubToken(data Data) (Option[forgedomain.GithubToken], dialogdomain.Exit, error) {
+	if data.Config.File.GithubToken.IsSome() {
+		return None[forgedomain.GithubToken](), false, nil
 	}
-	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
-		Global: data.Config.GitGlobal.GitHubToken,
+	return dialog.GithubToken(dialog.Args[forgedomain.GithubToken]{
+		Global: data.Config.GitGlobal.GithubToken,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.GitHubToken,
+		Local:  data.Config.GitLocal.GithubToken,
 	})
 }
 
@@ -765,7 +765,7 @@ type enterTokenScopeArgs struct {
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
-	githubToken          Option[forgedomain.GitHubToken]
+	githubToken          Option[forgedomain.GithubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]
 	inputs               dialogcomponents.Inputs
 }
@@ -797,8 +797,8 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 			return existsAndChanged(args.forgejoToken, args.existingConfig.ForgejoToken)
 		case forgedomain.ForgeTypeGitea:
 			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
-		case forgedomain.ForgeTypeGitHub:
-			return existsAndChanged(args.githubToken, args.existingConfig.GitHubToken)
+		case forgedomain.ForgeTypeGithub:
+			return existsAndChanged(args.githubToken, args.existingConfig.GithubToken)
 		case forgedomain.ForgeTypeGitLab:
 			return existsAndChanged(args.gitlabToken, args.existingConfig.GitLabToken)
 		}
@@ -818,8 +818,8 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
-		GitHubConnectorType:  args.githubConnectorType,
-		GitHubToken:          args.githubToken,
+		GithubConnectorType:  args.githubConnectorType,
+		GithubToken:          args.githubToken,
 		GitLabConnectorType:  args.gitlabConnectorType,
 		GitLabToken:          args.gitlabToken,
 		GiteaToken:           args.giteaToken,
@@ -857,8 +857,8 @@ type testForgeAuthArgs struct {
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
-	githubConnectorType  Option[forgedomain.GitHubConnectorType]
-	githubToken          Option[forgedomain.GitHubToken]
+	githubConnectorType  Option[forgedomain.GithubConnectorType]
+	githubToken          Option[forgedomain.GithubToken]
 	gitlabConnectorType  Option[forgedomain.GitLabConnectorType]
 	gitlabToken          Option[forgedomain.GitLabToken]
 	inputs               dialogcomponents.Inputs
@@ -879,8 +879,8 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
 			return dialog.TokenScope(existingScope, args.inputs)
-		case forgedomain.ForgeTypeGitHub:
-			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitHubToken, args.data.Config.NormalConfig.GitHubToken)
+		case forgedomain.ForgeTypeGithub:
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGithubToken, args.data.Config.NormalConfig.GithubToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitLab:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitLabToken, args.data.Config.NormalConfig.GitLabToken)

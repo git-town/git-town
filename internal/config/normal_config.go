@@ -45,8 +45,8 @@ type NormalConfig struct {
 	FeatureRegex             Option[configdomain.FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	ForgejoToken             Option[forgedomain.ForgejoToken]
-	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[forgedomain.GitHubToken]
+	GithubConnectorType      Option[forgedomain.GithubConnectorType]
+	GithubToken              Option[forgedomain.GithubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
@@ -114,8 +114,8 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
-		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
-		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
+		GithubToken:              other.GithubToken.Or(self.GithubToken),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
@@ -269,8 +269,8 @@ func DefaultNormalConfig() NormalConfig {
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
-		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
-		GitHubToken:              None[forgedomain.GitHubToken](),
+		GithubConnectorType:      None[forgedomain.GithubConnectorType](),
+		GithubToken:              None[forgedomain.GithubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
@@ -321,8 +321,8 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		FeatureRegex:             partial.FeatureRegex,
 		ForgeType:                partial.ForgeType,
 		ForgejoToken:             partial.ForgejoToken,
-		GitHubConnectorType:      partial.GitHubConnectorType,
-		GitHubToken:              partial.GitHubToken,
+		GithubConnectorType:      partial.GithubConnectorType,
+		GithubToken:              partial.GithubToken,
 		GitLabConnectorType:      partial.GitLabConnectorType,
 		GitLabToken:              partial.GitLabToken,
 		GitUserEmail:             partial.GitUserEmail,
