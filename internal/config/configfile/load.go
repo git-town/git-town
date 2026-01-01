@@ -57,8 +57,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		displayTypes             Option[configdomain.DisplayTypes]
 		featureRegex             Option[configdomain.FeatureRegex]
 		forgeType                Option[forgedomain.ForgeType]
-		githubConnectorType      Option[forgedomain.GitHubConnectorType]
-		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
+		githubConnectorType      Option[forgedomain.GithubConnectorType]
+		gitlabConnectorType      Option[forgedomain.GitlabConnectorType]
 		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted        Option[configdomain.IgnoreUncommitted]
 		mainBranch               Option[gitdomain.LocalBranchName]
@@ -88,8 +88,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
-	if data.PushNewbranches != nil {
-		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewbranches))
+	if data.PushNewBranches != nil {
+		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewBranches))
 		finalMessages.Add(messages.PushNewBranchesDeprecation)
 	}
 	if data.PushHook != nil {
@@ -168,8 +168,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
-		if data.Create.PushNewbranches != nil {
-			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
+		if data.Create.PushNewBranches != nil {
+			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewBranches))
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
@@ -196,12 +196,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GitHubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, messages.ConfigFile)
+		if data.Hosting.GithubConnector != nil {
+			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GitLabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType, messages.ConfigFile)
+		if data.Hosting.GitlabConnector != nil {
+			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {

@@ -28,15 +28,15 @@ Git Town supports two ways to connect to GitLab:
 `
 )
 
-func GitLabConnectorType(args Args[forgedomain.GitLabConnectorType]) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.GitLabConnectorType]]{}
+func GitLabConnectorType(args Args[forgedomain.GitlabConnectorType]) (Option[forgedomain.GitlabConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GitlabConnectorType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.GitLabConnectorType]]{
-			Data: None[forgedomain.GitLabConnectorType](),
+		entries = append(entries, list.Entry[Option[forgedomain.GitlabConnectorType]]{
+			Data: None[forgedomain.GitlabConnectorType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[forgedomain.GitLabConnectorType]]{
+	entries = append(entries, list.Entries[Option[forgedomain.GitlabConnectorType]]{
 		{
 			Data: Some(forgedomain.GitLabConnectorTypeAPI),
 			Text: "API token",

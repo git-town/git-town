@@ -119,9 +119,9 @@ type NewConnectorArgs struct {
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
-	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
+	GitHubConnectorType  Option[forgedomain.GithubConnectorType]
 	GitHubToken          Option[forgedomain.GitHubToken]
-	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
+	GitLabConnectorType  Option[forgedomain.GitlabConnectorType]
 	GitLabToken          Option[forgedomain.GitLabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
 	Log                  print.Logger

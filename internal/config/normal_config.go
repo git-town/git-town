@@ -45,9 +45,9 @@ type NormalConfig struct {
 	FeatureRegex             Option[configdomain.FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	ForgejoToken             Option[forgedomain.ForgejoToken]
-	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
+	GitHubConnectorType      Option[forgedomain.GithubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
-	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
+	GitLabConnectorType      Option[forgedomain.GitlabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
@@ -269,9 +269,9 @@ func DefaultNormalConfig() NormalConfig {
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
-		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
+		GitHubConnectorType:      None[forgedomain.GithubConnectorType](),
 		GitHubToken:              None[forgedomain.GitHubToken](),
-		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
+		GitLabConnectorType:      None[forgedomain.GitlabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),

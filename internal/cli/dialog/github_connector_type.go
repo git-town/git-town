@@ -28,15 +28,15 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.GitHubConnectorType]]{}
+func GitHubConnectorType(args Args[forgedomain.GithubConnectorType]) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GithubConnectorType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.GitHubConnectorType]]{
-			Data: None[forgedomain.GitHubConnectorType](),
+		entries = append(entries, list.Entry[Option[forgedomain.GithubConnectorType]]{
+			Data: None[forgedomain.GithubConnectorType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[forgedomain.GitHubConnectorType]]{
+	entries = append(entries, list.Entries[Option[forgedomain.GithubConnectorType]]{
 		{
 			Data: Some(forgedomain.GitHubConnectorTypeAPI),
 			Text: "API token",

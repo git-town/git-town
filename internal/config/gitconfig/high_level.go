@@ -243,7 +243,7 @@ func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToke
 	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
-func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
+func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GithubConnectorType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubConnectorType, value.String())
 }
 
@@ -251,7 +251,7 @@ func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken,
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
 }
 
-func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {
+func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitlabConnectorType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitLabConnectorType, value.String())
 }
 

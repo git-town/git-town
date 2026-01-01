@@ -12,7 +12,7 @@ import (
 func TestParseGitHubConnectorType(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		val Option[forgedomain.GitHubConnectorType]
+		val Option[forgedomain.GithubConnectorType]
 		err error
 	}{
 		"api": {
@@ -24,11 +24,11 @@ func TestParseGitHubConnectorType(t *testing.T) {
 			err: nil,
 		},
 		"invalid": {
-			val: None[forgedomain.GitHubConnectorType](),
+			val: None[forgedomain.GithubConnectorType](),
 			err: errors.New(`unknown GitHubConnectorType defined in test: "invalid"`),
 		},
 		"": {
-			val: None[forgedomain.GitHubConnectorType](),
+			val: None[forgedomain.GithubConnectorType](),
 			err: nil,
 		},
 	}
