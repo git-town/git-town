@@ -148,6 +148,9 @@ lint-cached-connectors:
 lint-collector-addf:
 	@(cd tools/collector_addf && go build) && ./tools/collector_addf/collector_addf
 
+lint-configfile:
+	@tools/rta taplo check git-town.toml
+
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
 
