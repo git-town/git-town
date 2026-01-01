@@ -32,13 +32,13 @@ type PartialConfig struct {
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	ForgejoToken             Option[forgedomain.ForgejoToken]
+	GitUserEmail             Option[gitdomain.GitUserEmail]
+	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	GithubConnectorType      Option[forgedomain.GithubConnectorType]
 	GithubToken              Option[forgedomain.GithubToken]
 	GitlabConnectorType      Option[forgedomain.GitlabConnectorType]
 	GitlabToken              Option[forgedomain.GitlabToken]
-	GitUserEmail             Option[gitdomain.GitUserEmail]
-	GitUserName              Option[gitdomain.GitUserName]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	IgnoreUncommitted        Option[IgnoreUncommitted]
 	Lineage                  Lineage
@@ -92,13 +92,13 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
+		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
+		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
 		GithubToken:              other.GithubToken.Or(self.GithubToken),
 		GitlabConnectorType:      other.GitlabConnectorType.Or(self.GitlabConnectorType),
 		GitlabToken:              other.GitlabToken.Or(self.GitlabToken),
-		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
-		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:        other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
