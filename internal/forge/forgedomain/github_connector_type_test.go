@@ -16,11 +16,11 @@ func TestParseGitHubConnectorType(t *testing.T) {
 		err error
 	}{
 		"api": {
-			val: Some(forgedomain.GitHubConnectorTypeAPI),
+			val: Some(forgedomain.GithubConnectorTypeAPI),
 			err: nil,
 		},
 		"gh": {
-			val: Some(forgedomain.GitHubConnectorTypeGh),
+			val: Some(forgedomain.GithubConnectorTypeGh),
 			err: nil,
 		},
 		"invalid": {
@@ -33,7 +33,7 @@ func TestParseGitHubConnectorType(t *testing.T) {
 		},
 	}
 	for give, want := range tests {
-		have, err := forgedomain.ParseGitHubConnectorType(give, "test")
+		have, err := forgedomain.ParseGithubConnectorType(give, "test")
 		must.Eq(t, want.err, err)
 		must.Eq(t, want.val, have)
 	}

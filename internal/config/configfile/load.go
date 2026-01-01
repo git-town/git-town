@@ -197,11 +197,11 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.GithubConnector != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
+			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GitlabConnector != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
+			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
@@ -292,9 +292,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubToken:              None[forgedomain.GithubToken](),
 		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              None[forgedomain.GitLabToken](),
+		GitLabToken:              None[forgedomain.GitlabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),

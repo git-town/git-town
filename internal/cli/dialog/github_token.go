@@ -12,7 +12,7 @@ import (
 
 const (
 	githubTokenTitle = `GitHub API token`
-	gitHubTokenHelp  = `
+	githubTokenHelp  = `
 Git Town can update pull requests
 and ship branches on your behalf
 using the GitHub API.
@@ -29,20 +29,20 @@ with the GitHub API.
 `
 )
 
-func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+func GithubToken(args Args[forgedomain.GithubToken]) (Option[forgedomain.GithubToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          gitHubTokenHelp,
+		Help:          githubTokenHelp,
 		Inputs:        args.Inputs,
-		Prompt:        messages.GitHubTokenPrompt,
+		Prompt:        messages.GithubTokenPrompt,
 		Title:         githubTokenTitle,
 	})
 	newValue := forgedomain.ParseGitHubToken(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
-		newValue = None[forgedomain.GitHubToken]()
+		newValue = None[forgedomain.GithubToken]()
 	}
-	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSecret(newValue.StringOr(""), exit))
+	fmt.Printf(messages.GithubTokenResult, dialogcomponents.FormattedSecret(newValue.StringOr(""), exit))
 	return newValue, exit, err
 }

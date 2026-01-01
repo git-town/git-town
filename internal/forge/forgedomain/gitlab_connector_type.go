@@ -11,30 +11,30 @@ import (
 type GitlabConnectorType string
 
 const (
-	GitLabConnectorTypeAPI  GitlabConnectorType = "api"  // connect to the GitLab API using Git Town's built-in API connector
-	GitLabConnectorTypeGlab GitlabConnectorType = "glab" // connect to the GitLab API by calling GitLab's "glab" tool
+	GitlabConnectorTypeAPI  GitlabConnectorType = "api"  // connect to the GitLab API using Git Town's built-in API connector
+	GitlabConnectorTypeGlab GitlabConnectorType = "glab" // connect to the GitLab API by calling GitLab's "glab" tool
 )
 
 func (self GitlabConnectorType) String() string {
 	return string(self)
 }
 
-// GitLabConnectorTypes provides all possible types that the GitLabConnectorTypes enum can have.
-func GitLabConnectorTypes() []GitlabConnectorType {
+// GitlabConnectorTypes provides all possible types that the GitlabConnectorTypes enum can have.
+func GitlabConnectorTypes() []GitlabConnectorType {
 	return []GitlabConnectorType{
-		GitLabConnectorTypeAPI,
-		GitLabConnectorTypeGlab,
+		GitlabConnectorTypeAPI,
+		GitlabConnectorTypeGlab,
 	}
 }
 
-func ParseGitLabConnectorType(text string, source string) (Option[GitlabConnectorType], error) {
+func ParseGitlabConnectorType(text string, source string) (Option[GitlabConnectorType], error) {
 	if text == "" {
 		return None[GitlabConnectorType](), nil
 	}
-	for _, connectorType := range GitLabConnectorTypes() {
+	for _, connectorType := range GitlabConnectorTypes() {
 		if connectorType.String() == text {
 			return Some(connectorType), nil
 		}
 	}
-	return None[GitlabConnectorType](), fmt.Errorf(messages.GitLabConnectorTypeUnknown, source, text)
+	return None[GitlabConnectorType](), fmt.Errorf(messages.GitlabConnectorTypeUnknown, source, text)
 }

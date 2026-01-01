@@ -46,9 +46,9 @@ type NormalConfig struct {
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GitHubConnectorType      Option[forgedomain.GithubConnectorType]
-	GitHubToken              Option[forgedomain.GitHubToken]
+	GitHubToken              Option[forgedomain.GithubToken]
 	GitLabConnectorType      Option[forgedomain.GitlabConnectorType]
-	GitLabToken              Option[forgedomain.GitLabToken]
+	GitLabToken              Option[forgedomain.GitlabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
@@ -270,9 +270,9 @@ func DefaultNormalConfig() NormalConfig {
 		ForgeType:                None[forgedomain.ForgeType](),
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		GitHubConnectorType:      None[forgedomain.GithubConnectorType](),
-		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubToken:              None[forgedomain.GithubToken](),
 		GitLabConnectorType:      None[forgedomain.GitlabConnectorType](),
-		GitLabToken:              None[forgedomain.GitLabToken](),
+		GitLabToken:              None[forgedomain.GitlabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),

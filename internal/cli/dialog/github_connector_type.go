@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	gitHubConnectorTypeTitle = `GitHub connector`
-	gitHubConnectorTypeHelp  = `
+	githubConnectorTypeTitle = `GitHub connector`
+	githubConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitHub:
 
 1. GitHub API:
@@ -28,7 +28,7 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(args Args[forgedomain.GithubConnectorType]) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
+func GithubConnectorType(args Args[forgedomain.GithubConnectorType]) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.GithubConnectorType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
 		entries = append(entries, list.Entry[Option[forgedomain.GithubConnectorType]]{
@@ -38,16 +38,16 @@ func GitHubConnectorType(args Args[forgedomain.GithubConnectorType]) (Option[for
 	}
 	entries = append(entries, list.Entries[Option[forgedomain.GithubConnectorType]]{
 		{
-			Data: Some(forgedomain.GitHubConnectorTypeAPI),
+			Data: Some(forgedomain.GithubConnectorTypeAPI),
 			Text: "API token",
 		},
 		{
-			Data: Some(forgedomain.GitHubConnectorTypeGh),
+			Data: Some(forgedomain.GithubConnectorTypeGh),
 			Text: "gh tool",
 		},
 	}...)
 	cursor := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector")
-	fmt.Printf(messages.GitHubConnectorTypeResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, githubConnectorTypeTitle, githubConnectorTypeHelp, args.Inputs, "github-connector")
+	fmt.Printf(messages.GithubConnectorTypeResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

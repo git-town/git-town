@@ -70,8 +70,8 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitHub:
-		switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
-		case forgedomain.GitHubConnectorTypeAPI:
+		switch args.GitHubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
+		case forgedomain.GithubConnectorTypeAPI:
 			connector, err = github.NewConnector(github.NewConnectorArgs{
 				APIToken:         args.GitHubToken,
 				Browser:          args.Browser,
@@ -79,7 +79,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
-		case forgedomain.GitHubConnectorTypeGh:
+		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
 					Backend:  args.Backend,
@@ -89,8 +89,8 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			}
 		}
 	case forgedomain.ForgeTypeGitLab:
-		switch args.GitLabConnectorType.GetOr(forgedomain.GitLabConnectorTypeAPI) {
-		case forgedomain.GitLabConnectorTypeAPI:
+		switch args.GitLabConnectorType.GetOr(forgedomain.GitlabConnectorTypeAPI) {
+		case forgedomain.GitlabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:         args.GitLabToken,
 				Browser:          args.Browser,
@@ -98,7 +98,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
-		case forgedomain.GitLabConnectorTypeGlab:
+		case forgedomain.GitlabConnectorTypeGlab:
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
@@ -120,9 +120,9 @@ type NewConnectorArgs struct {
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
 	GitHubConnectorType  Option[forgedomain.GithubConnectorType]
-	GitHubToken          Option[forgedomain.GitHubToken]
+	GitHubToken          Option[forgedomain.GithubToken]
 	GitLabConnectorType  Option[forgedomain.GitlabConnectorType]
-	GitLabToken          Option[forgedomain.GitLabToken]
+	GitLabToken          Option[forgedomain.GitlabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
