@@ -18,7 +18,7 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		return userOverride
 	}
 	detectors := []detector{
-		{forgedomain.ForgeTypeAzureDevOps, azuredevops.Detect},
+		{forgedomain.ForgeTypeAzuredevops, azuredevops.Detect},
 		{forgedomain.ForgeTypeBitbucket, bitbucketcloud.Detect},
 		{forgedomain.ForgeTypeBitbucketDatacenter, bitbucketdatacenter.Detect},
 		{forgedomain.ForgeTypeForgejo, forgejo.Detect},

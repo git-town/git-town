@@ -29,7 +29,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
-	case forgedomain.ForgeTypeAzureDevOps:
+	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
 			Browser:          args.Browser,
 			ProposalOverride: proposalOverride,

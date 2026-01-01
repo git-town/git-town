@@ -14,7 +14,7 @@ type ForgeType string
 func (self ForgeType) String() string { return string(self) }
 
 const (
-	ForgeTypeAzureDevOps         ForgeType = "azuredevops"
+	ForgeTypeAzuredevops         ForgeType = "azuredevops"
 	ForgeTypeBitbucket           ForgeType = "bitbucket"
 	ForgeTypeBitbucketDatacenter ForgeType = "bitbucket-datacenter"
 	ForgeTypeForgejo             ForgeType = "forgejo"
@@ -40,7 +40,7 @@ func ParseForgeType(name string, source string) (Option[ForgeType], error) {
 // forgeTypes provides all legal values for ForgeType
 func forgeTypes() []ForgeType {
 	return []ForgeType{
-		ForgeTypeAzureDevOps,
+		ForgeTypeAzuredevops,
 		ForgeTypeBitbucket,
 		ForgeTypeBitbucketDatacenter,
 		ForgeTypeForgejo,

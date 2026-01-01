@@ -18,7 +18,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeAzureDevOps)
+		want := Some(forgedomain.ForgeTypeAzuredevops)
 		must.Eq(t, want, have)
 	})
 
