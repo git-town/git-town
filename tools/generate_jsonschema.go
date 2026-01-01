@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"reflect"
+	"slices"
 	"sort"
 	"strings"
 
@@ -34,10 +36,7 @@ func main() {
 func convertToTomlNames(schema *jsonschema.Schema, t reflect.Type) {
 	if schema.Definitions != nil {
 		// Collect and sort definition names for deterministic iteration
-		defNames := make([]string, 0, len(schema.Definitions))
-		for defName := range schema.Definitions { // okay to iterate the map in random order
-			defNames = append(defNames, defName)
-		}
+		defNames := slices.Collect(maps.Keys(schema.Definitions))
 		sort.Strings(defNames)
 
 		for _, defName := range defNames {
