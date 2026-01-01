@@ -63,7 +63,7 @@ func TestSave(t *testing.T) {
 				FeatureRegex:             featureRegex,
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
 				GithubConnectorType:      Some(forgedomain.GithubConnectorTypeGh),
-				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
+				GitlabConnectorType:      Some(forgedomain.GitlabConnectorTypeGlab),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				IgnoreUncommitted:        Some(configdomain.IgnoreUncommitted(true)),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),

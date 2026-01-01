@@ -104,7 +104,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGithubConnectorType := data.GithubConnectorType.Get()
-	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
+	gitlabConnectorType, hasGitlabConnectorType := data.GitlabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
 	// keep-sorted end
 	if cmp.Or(
@@ -113,7 +113,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasDevRemote,
 		hasForgeType,
 		hasGithubConnectorType,
-		hasGitLabConnectorType,
+		hasGitlabConnectorType,
 		hasOriginHostName,
 		// keep-sorted end
 	) {
@@ -131,7 +131,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasGithubConnectorType {
 			result.WriteString(fmt.Sprintf("github-connector = %q\n", githubConnectorType))
 		}
-		if hasGitLabConnectorType {
+		if hasGitlabConnectorType {
 			result.WriteString(fmt.Sprintf("gitlab-connector = %q\n", gitlabConnectorType))
 		}
 		if hasOriginHostName {

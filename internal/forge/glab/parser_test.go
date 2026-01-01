@@ -57,7 +57,7 @@ func TestParseJsonOutput(t *testing.T) {
 					Title:        "foo",
 					URL:          "https://gitlab.com/git-town-qa/test-repo/-/merge_requests/5",
 				},
-				ForgeType: forgedomain.ForgeTypeGitLab,
+				ForgeType: forgedomain.ForgeTypeGitlab,
 			},
 		}
 		must.Eq(t, want, have)

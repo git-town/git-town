@@ -48,7 +48,7 @@ type Hosting struct {
 	DevRemote           *string `toml:"dev-remote"`
 	ForgeType           *string `toml:"forge-type"`
 	GithubConnectorType *string `toml:"github-connector"`
-	GitLabConnectorType *string `toml:"gitlab-connector"`
+	GitlabConnectorType *string `toml:"gitlab-connector"`
 	OriginHostname      *string `toml:"origin-hostname"`
 	Platform            *string `toml:"platform"`
 }

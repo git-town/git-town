@@ -47,8 +47,8 @@ type NormalConfig struct {
 	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GithubConnectorType      Option[forgedomain.GithubConnectorType]
 	GithubToken              Option[forgedomain.GithubToken]
-	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[forgedomain.GitLabToken]
+	GitlabConnectorType      Option[forgedomain.GitlabConnectorType]
+	GitlabToken              Option[forgedomain.GitlabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
@@ -116,8 +116,8 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
 		GithubToken:              other.GithubToken.Or(self.GithubToken),
-		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
-		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
+		GitlabConnectorType:      other.GitlabConnectorType.Or(self.GitlabConnectorType),
+		GitlabToken:              other.GitlabToken.Or(self.GitlabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
@@ -271,8 +271,8 @@ func DefaultNormalConfig() NormalConfig {
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		GithubConnectorType:      None[forgedomain.GithubConnectorType](),
 		GithubToken:              None[forgedomain.GithubToken](),
-		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
-		GitLabToken:              None[forgedomain.GitLabToken](),
+		GitlabConnectorType:      None[forgedomain.GitlabConnectorType](),
+		GitlabToken:              None[forgedomain.GitlabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
@@ -323,8 +323,8 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ForgejoToken:             partial.ForgejoToken,
 		GithubConnectorType:      partial.GithubConnectorType,
 		GithubToken:              partial.GithubToken,
-		GitLabConnectorType:      partial.GitLabConnectorType,
-		GitLabToken:              partial.GitLabToken,
+		GitlabConnectorType:      partial.GitlabConnectorType,
+		GitlabToken:              partial.GitlabToken,
 		GitUserEmail:             partial.GitUserEmail,
 		GitUserName:              partial.GitUserName,
 		GiteaToken:               partial.GiteaToken,

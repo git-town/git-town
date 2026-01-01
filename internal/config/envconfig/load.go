@@ -77,7 +77,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitCommitterNameValue := NewOption(gitdomain.GitUserName(env.Get(gitCommitterName)))
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
-	gitlabConnectorType, errGitLabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitLabConnectorType)
+	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
@@ -110,7 +110,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errFeatureRegex,
 		errForgeType,
 		errGithubConnectorType,
-		errGitLabConnectorType,
+		errGitlabConnectorType,
 		errIgnoreUncommitted,
 		errNewBranchType,
 		errObservedRegex,
@@ -151,8 +151,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ForgeType:                forgeType,
 		GithubConnectorType:      githubConnectorType,
 		GithubToken:              forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitLabToken(env.Get(gitlabToken)),
+		GitlabConnectorType:      gitlabConnectorType,
+		GitlabToken:              forgedomain.ParseGitlabToken(env.Get(gitlabToken)),
 		GitUserEmail:             gitUserEmail,
 		GitUserName:              gitUserName,
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),

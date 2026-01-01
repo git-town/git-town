@@ -93,7 +93,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	featureRegex, errFeatureRegex := load(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex, ignoreUnknown)
 	forgeType, errForgeType := load(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
 	githubConnectorType, errGithubConnectorType := load(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
-	gitlabConnectorType, errGitLabConnectorType := load(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitLabConnectorType, ignoreUnknown)
+	gitlabConnectorType, errGitlabConnectorType := load(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := load(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
@@ -128,7 +128,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errFeatureRegex,
 		errForgeType,
 		errGithubConnectorType,
-		errGitLabConnectorType,
+		errGitlabConnectorType,
 		errIgnoreUncommitted,
 		errLineage,
 		errNewBranchType,
@@ -169,8 +169,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ForgeType:                forgeType,
 		GithubConnectorType:      githubConnectorType,
 		GithubToken:              forgedomain.ParseGithubToken(snapshot[configdomain.KeyGithubToken]),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[configdomain.KeyGitLabToken]),
+		GitlabConnectorType:      gitlabConnectorType,
+		GitlabToken:              forgedomain.ParseGitlabToken(snapshot[configdomain.KeyGitlabToken]),
 		GitUserEmail:             gitdomain.ParseGitUserEmail(snapshot[configdomain.KeyGitUserEmail]),
 		GitUserName:              gitdomain.ParseGitUserName(snapshot[configdomain.KeyGitUserName]),
 		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[configdomain.KeyGiteaToken]),

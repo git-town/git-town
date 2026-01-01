@@ -34,8 +34,8 @@ type PartialConfig struct {
 	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GithubConnectorType      Option[forgedomain.GithubConnectorType]
 	GithubToken              Option[forgedomain.GithubToken]
-	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[forgedomain.GitLabToken]
+	GitlabConnectorType      Option[forgedomain.GitlabConnectorType]
+	GitlabToken              Option[forgedomain.GitlabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
@@ -94,8 +94,8 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
 		GithubToken:              other.GithubToken.Or(self.GithubToken),
-		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
-		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
+		GitlabConnectorType:      other.GitlabConnectorType.Or(self.GitlabConnectorType),
+		GitlabToken:              other.GitlabToken.Or(self.GitlabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),

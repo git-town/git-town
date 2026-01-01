@@ -30,8 +30,8 @@ func TestParseForgeType(t *testing.T) {
 			"FORGEJO":              Some(forgedomain.ForgeTypeForgejo),
 			"github":               Some(forgedomain.ForgeTypeGithub),
 			"GitHub":               Some(forgedomain.ForgeTypeGithub),
-			"gitlab":               Some(forgedomain.ForgeTypeGitLab),
-			"GitLab":               Some(forgedomain.ForgeTypeGitLab),
+			"gitlab":               Some(forgedomain.ForgeTypeGitlab),
+			"GitLab":               Some(forgedomain.ForgeTypeGitlab),
 			"gitea":                Some(forgedomain.ForgeTypeGitea),
 			"Gitea":                Some(forgedomain.ForgeTypeGitea),
 		}

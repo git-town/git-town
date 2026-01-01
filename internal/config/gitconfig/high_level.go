@@ -90,12 +90,12 @@ func RemoveGithubToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubToken)
 }
 
-func RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType)
+func RemoveGitlabConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitlabConnectorType)
 }
 
-func RemoveGitLabToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabToken)
+func RemoveGitlabToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitlabToken)
 }
 
 func RemoveGiteaToken(runner subshelldomain.Runner) error {
@@ -251,12 +251,12 @@ func SetGithubToken(runner subshelldomain.Runner, value forgedomain.GithubToken,
 	return SetConfigValue(runner, scope, configdomain.KeyGithubToken, value.String())
 }
 
-func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitLabConnectorType, value.String())
+func SetGitlabConnectorType(runner subshelldomain.Runner, value forgedomain.GitlabConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitlabConnectorType, value.String())
 }
 
-func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitLabToken, value.String())
+func SetGitlabToken(runner subshelldomain.Runner, value forgedomain.GitlabToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitlabToken, value.String())
 }
 
 func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {

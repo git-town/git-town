@@ -81,11 +81,11 @@ func TestEntries(t *testing.T) {
 					Text: "GitHub",
 				},
 				{
-					Data: forgedomain.ForgeTypeGitLab,
+					Data: forgedomain.ForgeTypeGitlab,
 					Text: "GitLab",
 				},
 			}
-			have := entries.IndexOf(forgedomain.ForgeTypeGitLab)
+			have := entries.IndexOf(forgedomain.ForgeTypeGitlab)
 			want := 1
 			must.EqOp(t, want, have)
 		})
@@ -101,7 +101,7 @@ func TestEntries(t *testing.T) {
 					Text: "GitHub",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitLab),
+					Data: Some(forgedomain.ForgeTypeGitlab),
 					Text: "GitLab",
 				},
 			}
@@ -125,7 +125,7 @@ func TestEntries(t *testing.T) {
 					Text: "GitHub",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitLab),
+					Data: Some(forgedomain.ForgeTypeGitlab),
 					Text: "GitLab",
 				},
 			}

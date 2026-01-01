@@ -88,17 +88,17 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Cache: forgedomain.APICache{},
 			}
 		}
-	case forgedomain.ForgeTypeGitLab:
-		switch args.GitLabConnectorType.GetOr(forgedomain.GitLabConnectorTypeAPI) {
-		case forgedomain.GitLabConnectorTypeAPI:
+	case forgedomain.ForgeTypeGitlab:
+		switch args.GitlabConnectorType.GetOr(forgedomain.GitlabConnectorTypeAPI) {
+		case forgedomain.GitlabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:         args.GitLabToken,
+				APIToken:         args.GitlabToken,
 				Browser:          args.Browser,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
-		case forgedomain.GitLabConnectorTypeGlab:
+		case forgedomain.GitlabConnectorTypeGlab:
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
@@ -121,8 +121,8 @@ type NewConnectorArgs struct {
 	Frontend             subshelldomain.Runner
 	GithubConnectorType  Option[forgedomain.GithubConnectorType]
 	GithubToken          Option[forgedomain.GithubToken]
-	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
-	GitLabToken          Option[forgedomain.GitLabToken]
+	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
+	GitlabToken          Option[forgedomain.GitlabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
