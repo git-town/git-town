@@ -32,13 +32,13 @@ type PartialConfig struct {
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	ForgejoToken             Option[forgedomain.ForgejoToken]
-	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[forgedomain.GitHubToken]
-	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
+	GithubConnectorType      Option[forgedomain.GithubConnectorType]
+	GithubToken              Option[forgedomain.GithubToken]
+	GitlabConnectorType      Option[forgedomain.GitlabConnectorType]
+	GitlabToken              Option[forgedomain.GitlabToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	IgnoreUncommitted        Option[IgnoreUncommitted]
 	Lineage                  Lineage
@@ -92,13 +92,13 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
-		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
-		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
-		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
-		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
+		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
+		GithubToken:              other.GithubToken.Or(self.GithubToken),
+		GitlabConnectorType:      other.GitlabConnectorType.Or(self.GitlabConnectorType),
+		GitlabToken:              other.GitlabToken.Or(self.GitlabToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:        other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),

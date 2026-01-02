@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	gitLabTokenTitle = `GitLab API token`
-	gitLabTokenHelp  = `
+	gitlabTokenTitle = `GitLab API token`
+	gitlabTokenHelp  = `
 Git Town can update merge requests
 and ship branches on GitLab for you.
 To enable this,
@@ -26,20 +26,20 @@ Git Town will not use the GitLab API.
 `
 )
 
-func GitLabToken(args Args[forgedomain.GitLabToken]) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
+func GitlabToken(args Args[forgedomain.GitlabToken]) (Option[forgedomain.GitlabToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "gitlab-token",
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          gitLabTokenHelp,
+		Help:          gitlabTokenHelp,
 		Inputs:        args.Inputs,
-		Prompt:        messages.GitLabTokenPrompt,
-		Title:         gitLabTokenTitle,
+		Prompt:        messages.GitlabTokenPrompt,
+		Title:         gitlabTokenTitle,
 	})
-	newValue := forgedomain.ParseGitLabToken(input)
+	newValue := forgedomain.ParseGitlabToken(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
-		newValue = None[forgedomain.GitLabToken]()
+		newValue = None[forgedomain.GitlabToken]()
 	}
-	fmt.Printf(messages.GitLabTokenResult, dialogcomponents.FormattedSecret(newValue.GetOrZero().String(), exit))
+	fmt.Printf(messages.GitlabTokenResult, dialogcomponents.FormattedSecret(newValue.GetOrZero().String(), exit))
 	return newValue, exit, err
 }

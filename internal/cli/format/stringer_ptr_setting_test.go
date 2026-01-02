@@ -15,7 +15,7 @@ func TestOptionalStringerSetting(t *testing.T) {
 		"":         "(not set)",
 	}
 	for give, want := range tests {
-		option := forgedomain.ParseGitHubToken(give)
+		option := forgedomain.ParseGithubToken(give)
 		have := format.OptionalStringerSetting(option)
 		must.EqOp(t, want, have)
 	}

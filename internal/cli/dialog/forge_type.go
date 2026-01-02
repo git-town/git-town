@@ -38,7 +38,7 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 			Text: messages.AutoDetect,
 		},
 		{
-			Data: Some(forgedomain.ForgeTypeAzureDevOps),
+			Data: Some(forgedomain.ForgeTypeAzuredevops),
 			Text: "Azure DevOps",
 		},
 		{
@@ -58,11 +58,11 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 			Text: "Gitea",
 		},
 		{
-			Data: Some(forgedomain.ForgeTypeGitHub),
+			Data: Some(forgedomain.ForgeTypeGithub),
 			Text: "GitHub",
 		},
 		{
-			Data: Some(forgedomain.ForgeTypeGitLab),
+			Data: Some(forgedomain.ForgeTypeGitlab),
 			Text: "GitLab",
 		},
 	}...)

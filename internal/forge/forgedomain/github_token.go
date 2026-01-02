@@ -6,17 +6,17 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// GitHubToken is a bearer token to use with the GitHub API.
-type GitHubToken string
+// GithubToken is a bearer token to use with the GitHub API.
+type GithubToken string
 
-func (self GitHubToken) String() string {
+func (self GithubToken) String() string {
 	return string(self)
 }
 
-func ParseGitHubToken(value string) Option[GitHubToken] {
+func ParseGithubToken(value string) Option[GithubToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
-		return None[GitHubToken]()
+		return None[GithubToken]()
 	}
-	return Some(GitHubToken(value))
+	return Some(GithubToken(value))
 }
