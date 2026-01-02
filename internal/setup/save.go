@@ -22,7 +22,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	)
 	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
 		switch forgeType {
-		case forgedomain.ForgeTypeAzureDevOps:
+		case forgedomain.ForgeTypeAzuredevops:
 			// no API token for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
@@ -35,13 +35,13 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 			fc.Check(
 				saveForgejoToken(userInput.Data.ForgejoToken, unvalidatedConfig.GitLocal.ForgejoToken, userInput.Scope, frontend),
 			)
-		case forgedomain.ForgeTypeGitHub:
+		case forgedomain.ForgeTypeGithub:
 			fc.Check(
-				saveGitHubToken(userInput.Data.GitHubToken, unvalidatedConfig.GitLocal.GitHubToken, userInput.Scope, userInput.Data.GitHubConnectorType, frontend),
+				saveGithubToken(userInput.Data.GithubToken, unvalidatedConfig.GitLocal.GithubToken, userInput.Scope, userInput.Data.GithubConnectorType, frontend),
 			)
-		case forgedomain.ForgeTypeGitLab:
+		case forgedomain.ForgeTypeGitlab:
 			fc.Check(
-				saveGitLabToken(userInput.Data.GitLabToken, unvalidatedConfig.GitLocal.GitLabToken, userInput.Scope, userInput.Data.GitLabConnectorType, frontend),
+				saveGitlabToken(userInput.Data.GitlabToken, unvalidatedConfig.GitLocal.GitlabToken, userInput.Scope, userInput.Data.GitlabConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
@@ -106,11 +106,11 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ForgeType.IsSome() {
 		_ = gitconfig.RemoveForgeType(runner)
 	}
-	if gitConfig.GitHubConnectorType.IsSome() {
-		_ = gitconfig.RemoveGitHubConnectorType(runner)
+	if gitConfig.GithubConnectorType.IsSome() {
+		_ = gitconfig.RemoveGithubConnectorType(runner)
 	}
-	if gitConfig.GitLabConnectorType.IsSome() {
-		_ = gitconfig.RemoveGitLabConnectorType(runner)
+	if gitConfig.GitlabConnectorType.IsSome() {
+		_ = gitconfig.RemoveGitlabConnectorType(runner)
 	}
 	if gitConfig.HostingOriginHostname.IsSome() {
 		_ = gitconfig.RemoveOriginHostname(runner)
@@ -209,14 +209,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
-	if configFile.GitHubConnectorType.IsNone() {
+	if configFile.GithubConnectorType.IsNone() {
 		fc.Check(
-			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
+			saveGithubConnectorType(userInput.Data.GithubConnectorType, existingGitConfig.GithubConnectorType, frontend),
 		)
 	}
-	if configFile.GitLabConnectorType.IsNone() {
+	if configFile.GitlabConnectorType.IsNone() {
 		fc.Check(
-			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
+			saveGitlabConnectorType(userInput.Data.GitlabConnectorType, existingGitConfig.GitlabConnectorType, frontend),
 		)
 	}
 
@@ -456,56 +456,6 @@ func saveForgejoToken(valueToWriteToGit Option[forgedomain.ForgejoToken], valueA
 	return gitconfig.RemoveForgejoToken(frontend)
 }
 
-func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], valueAlreadyInGit Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitHubConnectorType(frontend, value, configdomain.ConfigScopeLocal)
-	}
-	return gitconfig.RemoveGitHubConnectorType(frontend)
-}
-
-func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], valueAlreadyInGit Option[forgedomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
-	if connectorType, has := githubConnectorType.Get(); has {
-		if connectorType == forgedomain.GitHubConnectorTypeGh {
-			return nil
-		}
-	}
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitHubToken(frontend, value, scope)
-	}
-	return gitconfig.RemoveGitHubToken(frontend)
-}
-
-func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnectorType], valueAlreadyInGit Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitLabConnectorType(frontend, value, configdomain.ConfigScopeLocal)
-	}
-	return gitconfig.RemoveGitLabConnectorType(frontend)
-}
-
-func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], valueAlreadyInGit Option[forgedomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {
-	if connectorType, has := gitlabConnectorType.Get(); has {
-		if connectorType == forgedomain.GitLabConnectorTypeGlab {
-			return nil
-		}
-	}
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitLabToken(frontend, value, scope)
-	}
-	return gitconfig.RemoveGitLabToken(frontend)
-}
-
 func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlreadyInGit Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
@@ -514,6 +464,56 @@ func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlrea
 		return gitconfig.SetGiteaToken(frontend, value, scope)
 	}
 	return gitconfig.RemoveGiteaToken(frontend)
+}
+
+func saveGithubConnectorType(valueToWriteToGit Option[forgedomain.GithubConnectorType], valueAlreadyInGit Option[forgedomain.GithubConnectorType], frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetGithubConnectorType(frontend, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveGithubConnectorType(frontend)
+}
+
+func saveGithubToken(valueToWriteToGit Option[forgedomain.GithubToken], valueAlreadyInGit Option[forgedomain.GithubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GithubConnectorType], frontend subshelldomain.Runner) error {
+	if connectorType, has := githubConnectorType.Get(); has {
+		if connectorType == forgedomain.GithubConnectorTypeGh {
+			return nil
+		}
+	}
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetGithubToken(frontend, value, scope)
+	}
+	return gitconfig.RemoveGithubToken(frontend)
+}
+
+func saveGitlabConnectorType(valueToWriteToGit Option[forgedomain.GitlabConnectorType], valueAlreadyInGit Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetGitlabConnectorType(frontend, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveGitlabConnectorType(frontend)
+}
+
+func saveGitlabToken(valueToWriteToGit Option[forgedomain.GitlabToken], valueAlreadyInGit Option[forgedomain.GitlabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitlabConnectorType], frontend subshelldomain.Runner) error {
+	if connectorType, has := gitlabConnectorType.Get(); has {
+		if connectorType == forgedomain.GitlabConnectorTypeGlab {
+			return nil
+		}
+	}
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetGitlabToken(frontend, value, scope)
+	}
+	return gitconfig.RemoveGitlabToken(frontend)
 }
 
 func saveIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitted], valueAlreadyInGit Option[configdomain.IgnoreUncommitted], runner subshelldomain.Runner) error {

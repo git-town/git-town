@@ -34,7 +34,7 @@ func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[f
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          bitbucketAppPasswordHelp,
 		Inputs:        args.Inputs,
-		Prompt:        messages.BitBucketAppPasswordPrompt,
+		Prompt:        messages.BitbucketAppPasswordPrompt,
 		Title:         bitbucketAppPasswordTitle,
 	})
 	newValue := forgedomain.ParseBitbucketAppPassword(input)
@@ -42,6 +42,6 @@ func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[f
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.BitbucketAppPassword]()
 	}
-	fmt.Printf(messages.BitBucketAppPasswordResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	fmt.Printf(messages.BitbucketAppPasswordResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }

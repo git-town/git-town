@@ -76,8 +76,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitAuthorNameValue := NewOption(gitdomain.GitUserName(env.Get(gitAuthorName)))
 	gitCommitterNameValue := NewOption(gitdomain.GitUserName(env.Get(gitCommitterName)))
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
-	githubConnectorType, errGitHubConnectorType := load(env, githubConnectorType, forgedomain.ParseGitHubConnectorType)
-	gitlabConnectorType, errGitLabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitLabConnectorType)
+	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
+	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
@@ -109,8 +109,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
-		errGitHubConnectorType,
-		errGitLabConnectorType,
+		errGithubConnectorType,
+		errGitlabConnectorType,
 		errIgnoreUncommitted,
 		errNewBranchType,
 		errObservedRegex,
@@ -149,10 +149,10 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		DryRun:                   dryRun,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
-		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              forgedomain.ParseGitHubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitLabToken(env.Get(gitlabToken)),
+		GithubConnectorType:      githubConnectorType,
+		GithubToken:              forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
+		GitlabConnectorType:      gitlabConnectorType,
+		GitlabToken:              forgedomain.ParseGitlabToken(env.Get(gitlabToken)),
 		GitUserEmail:             gitUserEmail,
 		GitUserName:              gitUserName,
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),
