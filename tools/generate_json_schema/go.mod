@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/tools/generate_json_schema
+module github.com/git-town/git-town/v22/tools/generate_json_schema
 
 go 1.24.9
 
