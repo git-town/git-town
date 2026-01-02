@@ -77,15 +77,15 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[forgedomain.ForgeType]{
 				{
-					Data: forgedomain.ForgeTypeGitHub,
+					Data: forgedomain.ForgeTypeGithub,
 					Text: "GitHub",
 				},
 				{
-					Data: forgedomain.ForgeTypeGitLab,
+					Data: forgedomain.ForgeTypeGitlab,
 					Text: "GitLab",
 				},
 			}
-			have := entries.IndexOf(forgedomain.ForgeTypeGitLab)
+			have := entries.IndexOf(forgedomain.ForgeTypeGitlab)
 			want := 1
 			must.EqOp(t, want, have)
 		})
@@ -97,15 +97,15 @@ func TestEntries(t *testing.T) {
 					Text: "auto-detect",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitHub),
+					Data: Some(forgedomain.ForgeTypeGithub),
 					Text: "GitHub",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitLab),
+					Data: Some(forgedomain.ForgeTypeGitlab),
 					Text: "GitLab",
 				},
 			}
-			have := entries.IndexOf(Some(forgedomain.ForgeTypeGitHub))
+			have := entries.IndexOf(Some(forgedomain.ForgeTypeGithub))
 			want := 1
 			must.EqOp(t, want, have)
 		})
@@ -121,15 +121,15 @@ func TestEntries(t *testing.T) {
 					Text: "auto-detect",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitHub),
+					Data: Some(forgedomain.ForgeTypeGithub),
 					Text: "GitHub",
 				},
 				{
-					Data: Some(forgedomain.ForgeTypeGitLab),
+					Data: Some(forgedomain.ForgeTypeGitlab),
 					Text: "GitLab",
 				},
 			}
-			have := entries.IndexOfFunc(Some(forgedomain.ForgeTypeGitHub), func(a, b Option[forgedomain.ForgeType]) bool {
+			have := entries.IndexOfFunc(Some(forgedomain.ForgeTypeGithub), func(a, b Option[forgedomain.ForgeType]) bool {
 				return a.Equal(b)
 			})
 			want := 1

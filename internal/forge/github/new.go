@@ -22,7 +22,7 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken         Option[forgedomain.GitHubToken]
+	APIToken         Option[forgedomain.GithubToken]
 	Browser          Option[configdomain.Browser]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]
@@ -54,7 +54,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			var err error
 			githubClient, err = githubClient.WithEnterpriseURLs(url, url)
 			if err != nil {
-				return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
+				return webConnector, fmt.Errorf(messages.GithubEnterpriseInitializeError, err)
 			}
 		}
 		apiConnector := APIConnector{
