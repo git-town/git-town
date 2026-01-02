@@ -12,7 +12,7 @@ Feature: delete a branch within a branch chain
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "beta" and the previous branch is "alpha"
     When I run "git-town delete"
 

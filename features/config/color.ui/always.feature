@@ -15,7 +15,7 @@ Feature: show the configuration
       | perennial-2    | perennial    |        | local         |
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
 
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
