@@ -72,6 +72,10 @@
   ],
   "record": true,
   "fail-fast": false,
+  "keep-order": [
+    "I ran .*",
+    "I run .*"
+  ],
   "steps": [
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
