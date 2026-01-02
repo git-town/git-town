@@ -8,7 +8,7 @@ type Data struct {
 	Hosting                  *Hosting      `toml:"hosting"`
 	Propose                  *Propose      `toml:"propose"`
 	PushHook                 *bool         `toml:"push-hook"`
-	PushNewbranches          *bool         `toml:"push-new-branches"`
+	PushNewBranches          *bool         `toml:"push-new-branches"`
 	Ship                     *Ship         `toml:"ship"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-tracking-branch"`
 	ShipStrategy             *string       `toml:"ship-strategy"`
@@ -38,7 +38,7 @@ func (self Branches) IsEmpty() bool {
 type Create struct {
 	BranchPrefix     *string `toml:"branch-prefix"`
 	NewBranchType    *string `toml:"new-branch-type"`
-	PushNewbranches  *bool   `toml:"push-new-branches"`
+	PushNewBranches  *bool   `toml:"push-new-branches"`
 	ShareNewBranches *string `toml:"share-new-branches"`
 	Stash            *bool   `toml:"stash"`
 }

@@ -88,7 +88,7 @@ upstream = true
 				Create: &configfile.Create{
 					BranchPrefix:     Ptr("feature-"),
 					NewBranchType:    Ptr("prototype"),
-					PushNewbranches:  nil,
+					PushNewBranches:  nil,
 					ShareNewBranches: Ptr("push"),
 					Stash:            Ptr(true),
 				},
@@ -124,7 +124,7 @@ upstream = true
 				SyncStrategy:             nil,
 				CreatePrototypeBranches:  nil,
 				PushHook:                 nil,
-				PushNewbranches:          nil,
+				PushNewBranches:          nil,
 				ShipDeleteTrackingBranch: nil,
 				ShipStrategy:             nil,
 				SyncTags:                 nil,
@@ -287,7 +287,7 @@ prototype-branches = "compress"
 					Main:        Ptr("main"),
 				},
 				Create: &configfile.Create{
-					PushNewbranches: Ptr(true),
+					PushNewBranches: Ptr(true),
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   Ptr("merge"),
@@ -296,7 +296,7 @@ prototype-branches = "compress"
 				},
 				CreatePrototypeBranches:  Ptr(true),
 				PushHook:                 Ptr(true),
-				PushNewbranches:          Ptr(true),
+				PushNewBranches:          Ptr(true),
 				ShipDeleteTrackingBranch: Ptr(false),
 				ShipStrategy:             Ptr("api"),
 				SyncTags:                 Ptr(false),
