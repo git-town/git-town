@@ -23,3 +23,4 @@ scc 3.6.0
 shellcheck system 0.11.0
 shfmt 3.12.0
 staticcheck 2025.1.1
+taplo 0.10.0

@@ -5,37 +5,37 @@
   "$defs": {
     "Branches": {
       "properties": {
-        "ContributionRegex": {
+        "contribution-regex": {
           "type": "string"
         },
-        "DefaultType": {
+        "default-type": {
           "type": "string"
         },
-        "DisplayTypes": {
+        "display-types": {
           "type": "string"
         },
-        "FeatureRegex": {
+        "feature-regex": {
           "type": "string"
         },
-        "Main": {
+        "main": {
           "type": "string"
         },
-        "ObservedRegex": {
+        "observed-regex": {
           "type": "string"
         },
-        "Order": {
+        "order": {
           "type": "string"
         },
-        "PerennialRegex": {
+        "perennial-regex": {
           "type": "string"
         },
-        "Perennials": {
+        "perennials": {
           "items": {
             "type": "string"
           },
           "type": "array"
         },
-        "UnknownType": {
+        "unknown-type": {
           "type": "string"
         }
       },
@@ -44,19 +44,19 @@
     },
     "Create": {
       "properties": {
-        "BranchPrefix": {
+        "branch-prefix": {
           "type": "string"
         },
-        "NewBranchType": {
+        "new-branch-type": {
           "type": "string"
         },
-        "PushNewBranches": {
+        "push-new-branches": {
           "type": "boolean"
         },
-        "ShareNewBranches": {
+        "share-new-branches": {
           "type": "string"
         },
-        "Stash": {
+        "stash": {
           "type": "boolean"
         }
       },
@@ -65,46 +65,46 @@
     },
     "Data": {
       "properties": {
-        "Branches": {
+        "branches": {
           "$ref": "#/$defs/Branches"
         },
-        "Create": {
+        "create": {
           "$ref": "#/$defs/Create"
         },
-        "CreatePrototypeBranches": {
+        "create-prototype-branches": {
           "type": "boolean"
         },
-        "Hosting": {
+        "hosting": {
           "$ref": "#/$defs/Hosting"
         },
-        "Propose": {
+        "propose": {
           "$ref": "#/$defs/Propose"
         },
-        "PushHook": {
+        "push-hook": {
           "type": "boolean"
         },
-        "PushNewBranches": {
+        "push-new-branches": {
           "type": "boolean"
         },
-        "Ship": {
+        "ship": {
           "$ref": "#/$defs/Ship"
         },
-        "ShipDeleteTrackingBranch": {
+        "ship-delete-tracking-branch": {
           "type": "boolean"
         },
-        "ShipStrategy": {
+        "ship-strategy": {
           "type": "string"
         },
-        "Sync": {
+        "sync": {
           "$ref": "#/$defs/Sync"
         },
-        "SyncStrategy": {
+        "sync-strategy": {
           "$ref": "#/$defs/SyncStrategy"
         },
-        "SyncTags": {
+        "sync-tags": {
           "type": "boolean"
         },
-        "SyncUpstream": {
+        "sync-upstream": {
           "type": "boolean"
         }
       },
@@ -113,25 +113,25 @@
     },
     "Hosting": {
       "properties": {
-        "Browser": {
+        "browser": {
           "type": "string"
         },
-        "DevRemote": {
+        "dev-remote": {
           "type": "string"
         },
-        "ForgeType": {
+        "forge-type": {
           "type": "string"
         },
-        "GithubConnector": {
+        "github-connector": {
           "type": "string"
         },
-        "GitlabConnector": {
+        "gitlab-connector": {
           "type": "string"
         },
-        "OriginHostname": {
+        "origin-hostname": {
           "type": "string"
         },
-        "Platform": {
+        "platform": {
           "type": "string"
         }
       },
@@ -140,7 +140,7 @@
     },
     "Propose": {
       "properties": {
-        "Lineage": {
+        "lineage": {
           "type": "string"
         }
       },
@@ -149,13 +149,13 @@
     },
     "Ship": {
       "properties": {
-        "DeleteTrackingBranch": {
+        "delete-tracking-branch": {
           "type": "boolean"
         },
-        "IgnoreUncommitted": {
+        "ignore-uncommitted": {
           "type": "boolean"
         },
-        "Strategy": {
+        "strategy": {
           "type": "string"
         }
       },
@@ -164,34 +164,34 @@
     },
     "Sync": {
       "properties": {
-        "AutoResolve": {
+        "auto-resolve": {
           "type": "boolean"
         },
-        "AutoSync": {
+        "auto-sync": {
           "type": "boolean"
         },
-        "Detached": {
+        "detached": {
           "type": "boolean"
         },
-        "FeatureStrategy": {
+        "feature-strategy": {
           "type": "string"
         },
-        "PerennialStrategy": {
+        "perennial-strategy": {
           "type": "string"
         },
-        "PrototypeStrategy": {
+        "prototype-strategy": {
           "type": "string"
         },
-        "PushBranches": {
+        "push-branches": {
           "type": "boolean"
         },
-        "PushHook": {
+        "push-hook": {
           "type": "boolean"
         },
-        "Tags": {
+        "tags": {
           "type": "boolean"
         },
-        "Upstream": {
+        "upstream": {
           "type": "boolean"
         }
       },
@@ -200,13 +200,13 @@
     },
     "SyncStrategy": {
       "properties": {
-        "FeatureBranches": {
+        "feature-branches": {
           "type": "string"
         },
-        "PerennialBranches": {
+        "perennial-branches": {
           "type": "string"
         },
-        "PrototypeBranches": {
+        "prototype-branches": {
           "type": "string"
         }
       },
