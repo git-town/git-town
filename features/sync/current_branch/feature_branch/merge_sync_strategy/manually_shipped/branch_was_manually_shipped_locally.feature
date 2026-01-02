@@ -11,8 +11,8 @@ Feature: the branch was shipped manually on the local machine
     And Git setting "git-town.unknown-branch-type" is "prototype"
     And origin deletes the "feature" branch
     And the current branch is "main"
-    And I ran "git merge feature --squash"
     And I ran "git commit -m merged"
+    And I ran "git merge feature --squash"
     When I run "git-town sync --all"
 
   Scenario: result

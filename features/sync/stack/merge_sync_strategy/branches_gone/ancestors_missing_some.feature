@@ -16,8 +16,8 @@ Feature: stacked changes where an ancestor branch isn't local
       | gamma  | local    | local gamma commit  |
       |        | origin   | origin gamma commit |
     And the current branch is "gamma"
-    And I ran "git branch -d main"
     And I ran "git branch -d beta"
+    And I ran "git branch -d main"
     When I run "git-town sync"
 
   Scenario: result
