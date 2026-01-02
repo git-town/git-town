@@ -1,4 +1,4 @@
-RTA_VERSION = 0.24.2  # run-that-app version to use
+RTA_VERSION = 0.26.0  # run-that-app version to use
 
 .DEFAULT_GOAL := help
 
