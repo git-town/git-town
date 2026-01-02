@@ -9,7 +9,7 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	../rta golangci-lint run
-	../rta deadcode github.com/git-town/git-town/tools/structs_sorted
+	../rta deadcode github.com/git-town/git-town/v22/tools/generate_json_schema
 	@../rta --available alphavet && go vet "-vettool=$(shell ../rta --which alphavet)" $(shell go list ./...)
 	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
