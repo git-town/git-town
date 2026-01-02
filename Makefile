@@ -111,6 +111,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_unittests && make test)
 	@echo lint tools/collector_addf
 	@(cd tools/collector_addf && make test)
+	@echo lint tools/generate_json_schema
+	@(cd tools/generate_json_schema && make test)
 	@echo lint tools/lint_cached_connectors
 	@(cd tools/lint_cached_connectors && make test)
 	@echo lint tools/lint_steps
