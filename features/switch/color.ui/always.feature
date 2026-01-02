@@ -7,7 +7,7 @@ Feature: switch branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | main   | local, origin |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "alpha"
     When I run "git-town switch" and enter into the dialogs:
       | DIALOG        | KEYS       |

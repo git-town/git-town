@@ -30,7 +30,7 @@ Feature: detaching an omni-branch verbosely
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-4 | local, origin | commit 4a |
       | branch-4 | local, origin | commit 4b |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "branch-2"
     When I run "git-town detach --verbose"
 

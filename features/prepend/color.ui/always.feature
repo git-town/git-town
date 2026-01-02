@@ -9,7 +9,7 @@ Feature: propose uncommitted changes via a separate parent branch, let Git ask f
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "existing"
     And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
