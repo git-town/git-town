@@ -8,7 +8,7 @@ Feature: prototype multiple other branches
       | contribution | contribution |        | local, origin |
       | observed     | observed     |        | local, origin |
       | parked       | parked       | main   | local, origin |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     When I run "git-town prototype feature contribution observed parked"
 
   Scenario: result

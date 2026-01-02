@@ -3,7 +3,7 @@ Feature: describe the status of the current/last Git Town command
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
 
   Scenario: Git Town command ran successfully
     Given I ran "git-town sync"

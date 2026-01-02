@@ -5,7 +5,7 @@ Feature: on the main branch
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "main"
     When I run "git-town append new"
 

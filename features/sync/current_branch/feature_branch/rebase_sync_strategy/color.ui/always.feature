@@ -13,7 +13,7 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | BRANCH  | LOCATION | MESSAGE               |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync"

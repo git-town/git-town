@@ -12,7 +12,7 @@ Feature: display the local branch hierarchy with types for unusual branches
       | prototype    | prototype    | main   | local         |
       | parked       | parked       | main   | local         |
       | perennial    | perennial    |        | local, origin |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "beta"
     When I run "git-town branch"
 
