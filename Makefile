@@ -100,6 +100,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 	tools/rta golangci-lint run
 	tools/rta node node_modules/.bin/gherkin-lint
 	tools/rta cucumber-sort check
+	make --no-print-directory lint-configfile
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
@@ -110,6 +111,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_unittests && make test)
 	@echo lint tools/collector_addf
 	@(cd tools/collector_addf && make test)
+	@echo lint tools/generate_json_schema
+	@(cd tools/generate_json_schema && make test)
 	@echo lint tools/lint_cached_connectors
 	@(cd tools/lint_cached_connectors && make test)
 	@echo lint tools/lint_steps
@@ -148,6 +151,9 @@ lint-cached-connectors:
 
 lint-collector-addf:
 	@(cd tools/collector_addf && go build) && ./tools/collector_addf/collector_addf
+
+lint-configfile: tools/rta@${RTA_VERSION}
+	@tools/rta taplo check git-town.toml
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
