@@ -100,6 +100,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 	tools/rta golangci-lint run
 	tools/rta node node_modules/.bin/gherkin-lint
 	tools/rta cucumber-sort check
+	make --no-print-directory lint-configfile
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
