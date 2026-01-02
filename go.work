@@ -6,6 +6,7 @@ use (
 	./tools/format_self
 	./tools/format_unittests
 	./tools/iterate_map
+	./tools/generate_json_schema
 	./tools/lint_cached_connectors
 	./tools/lint_steps
 	./tools/messages_sorted
