@@ -71,7 +71,7 @@
     "vendor/**/*.feature"
   ],
   "record": true,
-  "fail-fast": true,
+  "fail-fast": false,
   "steps": [
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
