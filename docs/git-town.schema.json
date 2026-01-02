@@ -44,6 +44,9 @@
     },
     "Create": {
       "properties": {
+        "BranchPrefix": {
+          "type": "string"
+        },
         "NewBranchType": {
           "type": "string"
         },
@@ -110,16 +113,19 @@
     },
     "Hosting": {
       "properties": {
+        "Browser": {
+          "type": "string"
+        },
         "DevRemote": {
           "type": "string"
         },
         "ForgeType": {
           "type": "string"
         },
-        "GitHubConnectorType": {
+        "GithubConnectorType": {
           "type": "string"
         },
-        "GitLabConnectorType": {
+        "GitlabConnectorType": {
           "type": "string"
         },
         "OriginHostname": {
@@ -144,6 +150,9 @@
     "Ship": {
       "properties": {
         "DeleteTrackingBranch": {
+          "type": "boolean"
+        },
+        "IgnoreUncommitted": {
           "type": "boolean"
         },
         "Strategy": {
