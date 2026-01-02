@@ -114,7 +114,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitlab}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: None[gitdomain.ProposalBody](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},

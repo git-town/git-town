@@ -18,13 +18,13 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		return userOverride
 	}
 	detectors := []detector{
-		{forgedomain.ForgeTypeAzureDevOps, azuredevops.Detect},
+		{forgedomain.ForgeTypeAzuredevops, azuredevops.Detect},
 		{forgedomain.ForgeTypeBitbucket, bitbucketcloud.Detect},
 		{forgedomain.ForgeTypeBitbucketDatacenter, bitbucketdatacenter.Detect},
 		{forgedomain.ForgeTypeForgejo, forgejo.Detect},
 		{forgedomain.ForgeTypeGitea, gitea.Detect},
-		{forgedomain.ForgeTypeGitHub, github.Detect},
-		{forgedomain.ForgeTypeGitLab, gitlab.Detect},
+		{forgedomain.ForgeTypeGithub, github.Detect},
+		{forgedomain.ForgeTypeGitlab, gitlab.Detect},
 	}
 	for _, detector := range detectors {
 		if detector.implementation(remoteURL) {

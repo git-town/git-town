@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGitLabWebConnector(t *testing.T) {
+func TestGitlabWebConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {

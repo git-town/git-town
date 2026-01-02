@@ -30,7 +30,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
-	case forgedomain.ForgeTypeAzureDevOps:
+	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
 			Browser:          args.Browser,
 			ProposalOverride: proposalOverride,
@@ -70,23 +70,23 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
 		})
-	case forgedomain.ForgeTypeGitHub:
+	case forgedomain.ForgeTypeGithub:
 		if testHome, inTestMode := args.TestHome.Get(); inTestMode {
 			connector = &github.MockConnector{
 				WebConnector: github.NewWebConnector(remoteURL, args.Browser),
 				Proposals:    mockproposals.Load(testHome.String()),
 			}
 		} else {
-			switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
-			case forgedomain.GitHubConnectorTypeAPI:
+			switch args.GithubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
+			case forgedomain.GithubConnectorTypeAPI:
 				connector, err = github.NewConnector(github.NewConnectorArgs{
-					APIToken:         args.GitHubToken,
+					APIToken:         args.GithubToken,
 					Browser:          args.Browser,
 					Log:              args.Log,
 					ProposalOverride: proposalOverride,
 					RemoteURL:        remoteURL,
 				})
-			case forgedomain.GitHubConnectorTypeGh:
+			case forgedomain.GithubConnectorTypeGh:
 				connector = &gh.CachedConnector{
 					Connector: gh.Connector{
 						Backend:  args.Backend,
@@ -96,17 +96,17 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				}
 			}
 		}
-	case forgedomain.ForgeTypeGitLab:
-		switch args.GitLabConnectorType.GetOr(forgedomain.GitLabConnectorTypeAPI) {
-		case forgedomain.GitLabConnectorTypeAPI:
+	case forgedomain.ForgeTypeGitlab:
+		switch args.GitlabConnectorType.GetOr(forgedomain.GitlabConnectorTypeAPI) {
+		case forgedomain.GitlabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:         args.GitLabToken,
+				APIToken:         args.GitlabToken,
 				Browser:          args.Browser,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
-		case forgedomain.GitLabConnectorTypeGlab:
+		case forgedomain.GitlabConnectorTypeGlab:
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
@@ -127,11 +127,11 @@ type NewConnectorArgs struct {
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
-	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
-	GitHubToken          Option[forgedomain.GitHubToken]
-	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
-	GitLabToken          Option[forgedomain.GitLabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
+	GithubConnectorType  Option[forgedomain.GithubConnectorType]
+	GithubToken          Option[forgedomain.GithubToken]
+	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
+	GitlabToken          Option[forgedomain.GitlabToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 	TestHome             Option[configdomain.TestHome]

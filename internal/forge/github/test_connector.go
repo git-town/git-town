@@ -44,6 +44,6 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 			Title:        "title",
 			URL:          self.Override.String(),
 		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
+		ForgeType: forgedomain.ForgeTypeGithub,
 	}), nil
 }
