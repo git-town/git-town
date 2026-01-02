@@ -192,6 +192,8 @@ github.com/rogpeppe/go-internal/fmtsort
 # github.com/sergi/go-diff v1.4.0
 ## explicit; go 1.13
 github.com/sergi/go-diff/diffmatchpatch
+# github.com/shoenig/test v1.12.1
+## explicit; go 1.18
 # github.com/shoenig/test v1.12.2
 ## explicit; go 1.18
 github.com/shoenig/test/interfaces
