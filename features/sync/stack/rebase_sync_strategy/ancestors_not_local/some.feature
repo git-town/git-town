@@ -17,8 +17,8 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | origin   | origin gamma commit |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "gamma"
-    And I ran "git branch -d beta"
     And I ran "git branch -d main"
+    And I ran "git branch -d beta"
     When I run "git-town sync"
 
   Scenario: result
