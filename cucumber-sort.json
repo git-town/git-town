@@ -131,12 +131,10 @@
     "^<LOCATION> Git setting \".*\" now doesn't exist$",
     "^global Git setting \".*\" is (now|still)",
     "^global Git setting \".*\" (now|still) doesn't exist$",
-    [
-      "^local Git setting \".*\" is (now|still)",
-      "^local Git setting \".*\" (now|still) doesn't exist$",
-      "^Git setting \".*\" is (now|still)",
-      "^Git setting \".*\" (now|still) doesn't exist$"
-    ],
+    "^local Git setting \".*\" is (now|still)",
+    "^local Git setting \".*\" (now|still) doesn't exist$",
+    "^Git setting \".*\" is (now|still)",
+    "^Git setting \".*\" (now|still) doesn't exist$",
     "^the configuration file is now",
     "^the current branch is (now|still) ",
     "^the current branch in the other worktree is still .*$",
