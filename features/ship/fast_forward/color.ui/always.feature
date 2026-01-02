@@ -9,8 +9,8 @@ Feature: ship the supplied feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
+    And Git setting "color.ui" is "always"
     And Git setting "git-town.ship-strategy" is "fast-forward"
-    And local Git setting "color.ui" is "always"
     And the current branch is "other"
     When I run "git-town ship feature"
 

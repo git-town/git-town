@@ -9,8 +9,8 @@ Feature: enter the commit message interactively via the editor
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And Git setting "color.ui" is "always"
     And Git setting "git-town.ship-strategy" is "squash-merge"
-    And local Git setting "color.ui" is "always"
     And the current branch is "feature"
     When I run "git-town ship" and enter "feature done" for the commit message
 
