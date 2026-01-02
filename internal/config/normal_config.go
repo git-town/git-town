@@ -45,13 +45,13 @@ type NormalConfig struct {
 	FeatureRegex             Option[configdomain.FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	ForgejoToken             Option[forgedomain.ForgejoToken]
-	GitHubConnectorType      Option[forgedomain.GithubConnectorType]
-	GitHubToken              Option[forgedomain.GithubToken]
-	GitLabConnectorType      Option[forgedomain.GitlabConnectorType]
-	GitLabToken              Option[forgedomain.GitlabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
+	GithubConnectorType      Option[forgedomain.GithubConnectorType]
+	GithubToken              Option[forgedomain.GithubToken]
+	GitlabConnectorType      Option[forgedomain.GitlabConnectorType]
+	GitlabToken              Option[forgedomain.GitlabToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted        configdomain.IgnoreUncommitted
 	Lineage                  configdomain.Lineage
@@ -114,13 +114,13 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
-		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
-		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
-		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
-		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
+		GithubConnectorType:      other.GithubConnectorType.Or(self.GithubConnectorType),
+		GithubToken:              other.GithubToken.Or(self.GithubToken),
+		GitlabConnectorType:      other.GitlabConnectorType.Or(self.GitlabConnectorType),
+		GitlabToken:              other.GitlabToken.Or(self.GitlabToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:        other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
@@ -269,13 +269,13 @@ func DefaultNormalConfig() NormalConfig {
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
-		GitHubConnectorType:      None[forgedomain.GithubConnectorType](),
-		GitHubToken:              None[forgedomain.GithubToken](),
-		GitLabConnectorType:      None[forgedomain.GitlabConnectorType](),
-		GitLabToken:              None[forgedomain.GitlabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
+		GithubConnectorType:      None[forgedomain.GithubConnectorType](),
+		GithubToken:              None[forgedomain.GithubToken](),
+		GitlabConnectorType:      None[forgedomain.GitlabConnectorType](),
+		GitlabToken:              None[forgedomain.GitlabToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:        false,
 		Lineage:                  configdomain.NewLineage(),
@@ -321,13 +321,13 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		FeatureRegex:             partial.FeatureRegex,
 		ForgeType:                partial.ForgeType,
 		ForgejoToken:             partial.ForgejoToken,
-		GitHubConnectorType:      partial.GitHubConnectorType,
-		GitHubToken:              partial.GitHubToken,
-		GitLabConnectorType:      partial.GitLabConnectorType,
-		GitLabToken:              partial.GitLabToken,
 		GitUserEmail:             partial.GitUserEmail,
 		GitUserName:              partial.GitUserName,
 		GiteaToken:               partial.GiteaToken,
+		GithubConnectorType:      partial.GithubConnectorType,
+		GithubToken:              partial.GithubToken,
+		GitlabConnectorType:      partial.GitlabConnectorType,
+		GitlabToken:              partial.GitlabToken,
 		HostingOriginHostname:    partial.HostingOriginHostname,
 		IgnoreUncommitted:        partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
 		Lineage:                  partial.Lineage,

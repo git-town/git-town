@@ -196,12 +196,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GithubConnector != nil {
-			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
+		if data.Hosting.GithubConnectorType != nil {
+			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnectorType, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GitlabConnector != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
+		if data.Hosting.GitlabConnectorType != nil {
+			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnectorType, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
@@ -291,10 +291,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
-		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              None[forgedomain.GithubToken](),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              None[forgedomain.GitlabToken](),
+		GithubConnectorType:      githubConnectorType,
+		GithubToken:              None[forgedomain.GithubToken](),
+		GitlabConnectorType:      gitlabConnectorType,
+		GitlabToken:              None[forgedomain.GitlabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),

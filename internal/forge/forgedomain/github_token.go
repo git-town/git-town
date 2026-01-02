@@ -13,7 +13,7 @@ func (self GithubToken) String() string {
 	return string(self)
 }
 
-func ParseGitHubToken(value string) Option[GithubToken] {
+func ParseGithubToken(value string) Option[GithubToken] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GithubToken]()

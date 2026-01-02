@@ -92,8 +92,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
 	featureRegex, errFeatureRegex := load(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex, ignoreUnknown)
 	forgeType, errForgeType := load(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
-	githubConnectorType, errGitHubConnectorType := load(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
-	gitlabConnectorType, errGitLabConnectorType := load(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
+	githubConnectorType, errGithubConnectorType := load(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
+	gitlabConnectorType, errGitlabConnectorType := load(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := load(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
@@ -127,8 +127,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errDisplayTypes,
 		errFeatureRegex,
 		errForgeType,
-		errGitHubConnectorType,
-		errGitLabConnectorType,
+		errGithubConnectorType,
+		errGitlabConnectorType,
 		errIgnoreUncommitted,
 		errLineage,
 		errNewBranchType,
@@ -167,10 +167,10 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		DryRun:                   None[configdomain.DryRun](),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
-		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[configdomain.KeyGitHubToken]),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitlabToken(snapshot[configdomain.KeyGitLabToken]),
+		GithubConnectorType:      githubConnectorType,
+		GithubToken:              forgedomain.ParseGithubToken(snapshot[configdomain.KeyGithubToken]),
+		GitlabConnectorType:      gitlabConnectorType,
+		GitlabToken:              forgedomain.ParseGitlabToken(snapshot[configdomain.KeyGitlabToken]),
 		GitUserEmail:             gitdomain.ParseGitUserEmail(snapshot[configdomain.KeyGitUserEmail]),
 		GitUserName:              gitdomain.ParseGitUserName(snapshot[configdomain.KeyGitUserName]),
 		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[configdomain.KeyGiteaToken]),

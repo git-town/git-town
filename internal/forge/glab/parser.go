@@ -69,6 +69,6 @@ func createProposal(data jsonData) forgedomain.Proposal {
 			Title:        data.Title,
 			URL:          data.URL,
 		},
-		ForgeType: forgedomain.ForgeTypeGitLab,
+		ForgeType: forgedomain.ForgeTypeGitlab,
 	}
 }

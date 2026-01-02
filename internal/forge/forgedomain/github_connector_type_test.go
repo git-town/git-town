@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseGitHubConnectorType(t *testing.T) {
+func TestParseGithubConnectorType(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
 		val Option[forgedomain.GithubConnectorType]
@@ -25,7 +25,7 @@ func TestParseGitHubConnectorType(t *testing.T) {
 		},
 		"invalid": {
 			val: None[forgedomain.GithubConnectorType](),
-			err: errors.New(`unknown GitHubConnectorType defined in test: "invalid"`),
+			err: errors.New(`unknown GithubConnectorType defined in test: "invalid"`),
 		},
 		"": {
 			val: None[forgedomain.GithubConnectorType](),

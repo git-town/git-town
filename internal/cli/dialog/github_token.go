@@ -38,7 +38,7 @@ func GithubToken(args Args[forgedomain.GithubToken]) (Option[forgedomain.GithubT
 		Prompt:        messages.GithubTokenPrompt,
 		Title:         githubTokenTitle,
 	})
-	newValue := forgedomain.ParseGitHubToken(input)
+	newValue := forgedomain.ParseGithubToken(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.GithubToken]()
