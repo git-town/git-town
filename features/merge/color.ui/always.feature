@@ -14,7 +14,7 @@ Feature: merging a branch in a stack that is fully in sync
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | beta   | local, origin | beta commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "beta"
     When I run "git-town merge"
 
