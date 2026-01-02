@@ -50,7 +50,7 @@
         "NewBranchType": {
           "type": "string"
         },
-        "PushNewbranches": {
+        "PushNewBranches": {
           "type": "boolean"
         },
         "ShareNewBranches": {
@@ -83,7 +83,7 @@
         "PushHook": {
           "type": "boolean"
         },
-        "PushNewbranches": {
+        "PushNewBranches": {
           "type": "boolean"
         },
         "Ship": {
@@ -122,10 +122,10 @@
         "ForgeType": {
           "type": "string"
         },
-        "GithubConnectorType": {
+        "GithubConnector": {
           "type": "string"
         },
-        "GitlabConnectorType": {
+        "GitlabConnector": {
           "type": "string"
         },
         "OriginHostname": {

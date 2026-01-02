@@ -196,12 +196,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GithubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnectorType, messages.ConfigFile)
+		if data.Hosting.GithubConnector != nil {
+			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Hosting.GitlabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnectorType, messages.ConfigFile)
+		if data.Hosting.GitlabConnector != nil {
+			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
