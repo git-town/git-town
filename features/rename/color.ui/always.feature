@@ -8,7 +8,7 @@ Feature: rename a contribution branch
     And the commits
       | BRANCH       | LOCATION      | MESSAGE               |
       | contribution | local, origin | somebody elses commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "contribution"
     When I run "git-town rename contribution new"
 

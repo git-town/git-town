@@ -7,7 +7,7 @@ Feature: display all executed Git commands
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "feature"
     And a proposal for this branch does not exist
     And tool "open" is installed

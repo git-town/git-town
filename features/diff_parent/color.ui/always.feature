@@ -3,7 +3,7 @@ Feature: view changes made on the current feature branch
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
 
   Scenario: feature branch
     Given the branches
