@@ -58,7 +58,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	make --no-print-directory keep-sorted
-	make --no-print-directory export-config-schema
+	make --no-print-directory generate-json-schema
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
