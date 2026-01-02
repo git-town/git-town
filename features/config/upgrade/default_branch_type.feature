@@ -8,8 +8,8 @@ Feature: automatically upgrade outdated configuration
       """
       Upgrading deprecated <LOCATION> setting git-town.default-branch-type to git-town.unknown-branch-type.
       """
-    And <LOCATION> Git setting "git-town.unknown-branch-type" is now "observed"
     And <LOCATION> Git setting "git-town.default-branch-type" now doesn't exist
+    And <LOCATION> Git setting "git-town.unknown-branch-type" is now "observed"
 
     Examples:
       | LOCATION |

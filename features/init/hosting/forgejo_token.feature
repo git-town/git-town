@@ -21,8 +21,8 @@ Feature: enter the Forgejo API token
     Then Git Town runs the commands
       | COMMAND                                    |
       | git config git-town.forgejo-token code-tok |
-    And local Git setting "git-town.forgejo-token" is now "code-tok"
     And local Git setting "git-town.forge-type" still doesn't exist
+    And local Git setting "git-town.forgejo-token" is now "code-tok"
 
   Scenario: select Forgejo manually
     When I run "git-town init" and enter into the dialog:
