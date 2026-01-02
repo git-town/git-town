@@ -53,22 +53,22 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
-export-config-schema:  # exports the JSON-Schema for the configuration file
-	@go run tools/generate_jsonschema.go > docs/git-town.schema.json
-
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta cucumber-sort format
 	make --no-print-directory keep-sorted
-	make --no-print-directory export-config-schema
+	make --no-print-directory generate-json-schema
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
 	tools/rta shfmt -f . | grep -v node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
 	tools/generate_opcodes_all.sh
+
+generate-json-schema:  # exports the JSON-Schema for the configuration file
+	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
