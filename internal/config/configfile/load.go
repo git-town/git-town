@@ -88,8 +88,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
-	if data.PushNewbranches != nil {
-		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewbranches))
+	if data.PushNewBranches != nil {
+		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewBranches))
 		finalMessages.Add(messages.PushNewBranchesDeprecation)
 	}
 	if data.PushHook != nil {
@@ -168,8 +168,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
-		if data.Create.PushNewbranches != nil {
-			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
+		if data.Create.PushNewBranches != nil {
+			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewBranches))
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
