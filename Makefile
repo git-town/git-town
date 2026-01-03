@@ -57,7 +57,6 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
-	tools/rta cucumber-sort format
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
 	tools/rta gofumpt -l -w .
@@ -66,6 +65,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta shfmt -f . | grep -v node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
 	tools/generate_opcodes_all.sh
+	tools/rta cucumber-sort format
 
 generate-json-schema:  # exports the JSON-Schema for the configuration file
 	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
