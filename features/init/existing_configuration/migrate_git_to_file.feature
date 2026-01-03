@@ -4,7 +4,6 @@ Feature: migrate existing configuration in Git metadata to a config file
   Background:
     Given a Git repo with origin
     And the main branch is "main"
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.branch-prefix" is "acme-"
     And local Git setting "git-town.contribution-regex" is "coworker-.*"
@@ -31,7 +30,6 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS       |
       | welcome                     | enter      |
@@ -99,7 +97,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.unknown-branch-type         |
       | git config --unset git-town.perennial-branches          |
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
@@ -123,7 +120,6 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-tags" now doesn't exist
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
-    # keep-sorted end
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
@@ -174,7 +170,6 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Scenario: undo
     When I run "git-town undo"
-    # keep-sorted start group_prefixes=And,Then
     Then local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.dev-remote" is now "fork"
@@ -199,5 +194,4 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-    # keep-sorted end
     And the main branch is now "main"

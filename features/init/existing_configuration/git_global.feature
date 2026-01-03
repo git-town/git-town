@@ -7,7 +7,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
     And Git Town is not configured
-    # keep-sorted start
     And global Git setting "git-town.auto-sync" is "false"
     And global Git setting "git-town.branch-prefix" is "kg-"
     And global Git setting "git-town.contribution-regex" is "^cont-"
@@ -34,7 +33,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-tags" is "false"
     And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS        |
       | welcome                     | enter       |

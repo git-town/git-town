@@ -4,7 +4,6 @@ Feature: Fix invalid configuration data
   Background:
     Given a Git repo with origin
     And Git Town is not configured
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.branch-prefix" is "xx"
     And local Git setting "git-town.contribution-regex" is "(cont"
@@ -28,7 +27,6 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-upstream" is "zonk"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
     And local Git setting "init.defaultbranch" is "main"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                          |
       | welcome                     | enter                         |
@@ -113,7 +111,6 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
       """
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.contribution-regex" is now "cont"
     And local Git setting "git-town.detached" is now "true"
@@ -134,12 +131,10 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
-    # keep-sorted start
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
@@ -170,4 +165,3 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-perennial-strategy" is now "zonk"
     And local Git setting "git-town.sync-tags" is now "zonk"
     And local Git setting "git-town.sync-upstream" is now "zonk"
-  # keep-sorted end
