@@ -9,7 +9,6 @@ Feature: remove existing configuration in Git metadata
       | production | (none) | local     |
     And I rename the "origin" remote to "fork"
     And the main branch is "main"
-    # keep-sorted start
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.compress" is "town compress"
     And global Git setting "alias.contribute" is "town contribute"
@@ -52,7 +51,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
       | welcome                     | enter                                                                       |                     |
@@ -131,7 +129,6 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.sync-tags true                   |
       | git config git-town.sync-upstream true               |
       | git config git-town.unknown-branch-type feature      |
-    # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -167,14 +164,12 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.unknown-branch-type" is now "feature"
-    # keep-sorted end
     And the main branch is still "main"
     And there are now no perennial branches
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" is now "town append"
-    # keep-sorted start
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -210,6 +205,5 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-    # keep-sorted end
     And the main branch is still "main"
     And the perennial branches are now "qa"

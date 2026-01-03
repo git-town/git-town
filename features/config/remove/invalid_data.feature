@@ -3,7 +3,6 @@ Feature: reset invalid configuration
   Scenario: sync-feature-strategy is invalid
     Given a Git repo with origin
     And the main branch is "main"
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.contribution-regex" is "(cont"
     And local Git setting "git-town.detached" is "zonk"
@@ -24,11 +23,9 @@ Feature: reset invalid configuration
     And local Git setting "git-town.sync-tags" is "zonk"
     And local Git setting "git-town.sync-upstream" is "zonk"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
-    # keep-sorted end
     When I run "git-town config remove"
     Then Git Town runs no commands
     And Git Town is no longer configured
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.detached" now doesn't exist
@@ -49,4 +46,3 @@ Feature: reset invalid configuration
     And local Git setting "git-town.sync-tags" now doesn't exist
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
-  # keep-sorted end
