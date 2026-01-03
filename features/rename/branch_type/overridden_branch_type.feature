@@ -40,6 +40,6 @@ Feature: rename a branch that has an overridden branch type
       |        | git checkout old                      |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
-    And Git setting "git-town-branch.old.branchtype" is now "feature"
     And Git setting "git-town-branch.new.branchtype" now doesn't exist
+    And Git setting "git-town-branch.old.branchtype" is now "feature"
     And the initial branches and lineage exist now

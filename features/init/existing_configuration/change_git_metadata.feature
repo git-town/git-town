@@ -118,6 +118,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
     And local Git setting "git-town.contribution-regex" is now "cont"
+    And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.feature-regex" is now "feat"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "gh-tok"
@@ -140,7 +141,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-    And local Git setting "git-town.dev-remote" still doesn't exist
     And the main branch is now "main"
 # keep-sorted end
 
@@ -160,20 +160,20 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "false"
-    And local Git setting "git-town.ignore-uncommitted" is now "true"
-    And local Git setting "git-town.new-branch-type" is now "parked"
-    And local Git setting "git-town.push-branches" is now "false"
-    And local Git setting "git-town.push-hook" is now "false"
-    And local Git setting "git-town.share-new-branches" is now "no"
-    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.ignore-uncommitted" is now "true"
+    And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposals-show-lineage" now doesn't exist
+    And local Git setting "git-town.push-branches" is now "false"
+    And local Git setting "git-town.push-hook" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.stash" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
