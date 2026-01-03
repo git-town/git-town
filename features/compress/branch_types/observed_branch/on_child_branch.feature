@@ -32,10 +32,10 @@ Feature: does not compress observed branches in the stack
       | observed | local, origin | observed 1 |
       |          |               | observed 2 |
       | child    | local, origin | child 1    |
-    And file "observed_1" still has content "observed 1"
-    And file "observed_2" still has content "observed 2"
     And file "child_1" still has content "child 1"
     And file "child_2" still has content "child 2"
+    And file "observed_1" still has content "observed 1"
+    And file "observed_2" still has content "observed 2"
 
   Scenario: undo
     When I run "git-town undo"

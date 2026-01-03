@@ -12,8 +12,8 @@ Feature: disable pushing through Git metadata
       | feature | local    | local feature commit 1 |
       |         | local    | local feature commit 2 |
       |         | origin   | origin feature commit  |
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And Git setting "git-town.push-branches" is "false"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"

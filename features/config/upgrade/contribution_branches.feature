@@ -8,9 +8,9 @@ Feature: Automatically remove obsolete branch lists setting
       """
       Inlining deprecated branch list git-town.<BRANCHTYPE>-branches
       """
-    And local Git setting "git-town.<BRANCHTYPE>-branches" now doesn't exist
     And local Git setting "git-town-branch.one.branchtype" is now "<BRANCHTYPE>"
     And local Git setting "git-town-branch.two.branchtype" is now "<BRANCHTYPE>"
+    And local Git setting "git-town.<BRANCHTYPE>-branches" now doesn't exist
 
     Examples:
       | BRANCHTYPE   |

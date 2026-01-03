@@ -8,8 +8,8 @@ Feature: automatically upgrade outdated configuration
       """
       Upgrading deprecated <LOCATION> setting git-town.ship-delete-remote-branch to git-town.ship-delete-tracking-branch.
       """
-    And <LOCATION> Git setting "git-town.ship-delete-tracking-branch" is now "true"
     And <LOCATION> Git setting "git-town.ship-delete-remote-branch" now doesn't exist
+    And <LOCATION> Git setting "git-town.ship-delete-tracking-branch" is now "true"
 
     Examples:
       | COMMAND | LOCATION |
