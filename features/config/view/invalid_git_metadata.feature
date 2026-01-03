@@ -2,7 +2,6 @@ Feature: display invalid Git metadata
 
   Scenario: invalid sync-feature-strategy
     Given a Git repo with origin
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.branch-prefix" is ""
     And local Git setting "git-town.contribution-regex" is "(cont"
@@ -26,7 +25,6 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.sync-tags" is "zonk"
     And local Git setting "git-town.sync-upstream" is "zonk"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
-    # keep-sorted end
     When I run "git-town config"
     Then Git Town prints:
       """

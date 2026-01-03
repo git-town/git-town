@@ -8,7 +8,6 @@ Feature: don't change existing extended information when changing basic informat
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.contribution-regex" is "cont"
     And local Git setting "git-town.detached" is "false"
@@ -33,7 +32,6 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS                   |
       | welcome            | enter                  |
@@ -56,7 +54,6 @@ Feature: don't change existing extended information when changing basic informat
       | git config git-town.hosting-origin-hostname code       |
       | git config git-town.forge-type github                  |
       | git config git-town.github-connector api               |
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.contribution-regex" is still "cont"
     And local Git setting "git-town.detached" is still "false"
@@ -83,12 +80,10 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.sync-upstream" is still "false"
     And local Git setting "git-town.unknown-branch-type" is still "observed"
     And the main branch is now "main"
-# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    # keep-sorted start
     And global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
@@ -124,4 +119,3 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.unknown-branch-type" is still "observed"
     And the main branch is now "main"
     And the perennial branches are now "qa"
-  # keep-sorted end
