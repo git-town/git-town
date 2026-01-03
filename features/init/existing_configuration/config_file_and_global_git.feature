@@ -52,7 +52,6 @@ Feature: don't ask for information already provided by the config file
       | enter all          | enter |
       | config storage     | enter |
     Then Git Town runs no commands
-    # keep-sorted start
     And global Git setting "git-town.github-token" is still "123456"
     And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.dev-remote" still doesn't exist
@@ -72,5 +71,4 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.sync-tags" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist
     And local Git setting "git-town.unknown-branch-type" still doesn't exist
-    # keep-sorted end
     And there are still no perennial branches

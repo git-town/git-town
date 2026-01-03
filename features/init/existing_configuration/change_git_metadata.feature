@@ -8,7 +8,6 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ignore-uncommitted" is "true"
@@ -19,7 +18,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     And local Git setting "git-town.sync-tags" is "false"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
       | welcome                     | enter                  |
@@ -105,7 +103,6 @@ Feature: change existing information in Git metadata
       | git config git-town.sync-tags true                       |
       | git config git-town.sync-upstream false                  |
       | git config git-town.unknown-branch-type observed         |
-    # keep-sorted start
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
@@ -142,12 +139,10 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And the main branch is now "main"
-# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -183,4 +178,3 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
-  # keep-sorted end
