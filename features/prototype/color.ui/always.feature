@@ -29,8 +29,8 @@ Feature: prototype multiple other branches
       """
       branch parked is now a prototype branch
       """
-    And branch "feature" now has type "prototype"
     And branch "contribution" now has type "prototype"
+    And branch "feature" now has type "prototype"
     And branch "observed" now has type "prototype"
     And branch "parked" now has type "prototype"
 
@@ -38,7 +38,7 @@ Feature: prototype multiple other branches
     When I run "git-town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now
-    And branch "feature" now has type "feature"
     And branch "contribution" now has type "contribution"
+    And branch "feature" now has type "feature"
     And branch "observed" now has type "observed"
     And branch "parked" now has type "parked"

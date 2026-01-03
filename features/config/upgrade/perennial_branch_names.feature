@@ -8,8 +8,8 @@ Feature: automatically upgrade outdated configuration
       """
       Upgrading deprecated <LOCATION> setting git-town.perennial-branch-names to git-town.perennial-branches.
       """
-    And <LOCATION> Git setting "git-town.perennial-branches" is now "one two"
     And <LOCATION> Git setting "git-town.perennial-branch-names" now doesn't exist
+    And <LOCATION> Git setting "git-town.perennial-branches" is now "one two"
 
     Examples:
       | COMMAND | LOCATION |

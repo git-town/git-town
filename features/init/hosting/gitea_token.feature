@@ -21,8 +21,8 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                   |
       | git config git-town.gitea-token gitea-tok |
-    And local Git setting "git-town.gitea-token" is now "gitea-tok"
     And local Git setting "git-town.forge-type" still doesn't exist
+    And local Git setting "git-town.gitea-token" is now "gitea-tok"
 
   Scenario: select Gitea manually
     When I run "git-town init" and enter into the dialog:
