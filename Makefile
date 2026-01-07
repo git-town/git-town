@@ -78,30 +78,30 @@ install:  # builds for the current platform
 
 lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	conc --show=failed \
-		make --no-print-directory lint-smoke }{ \
-		make --no-print-directory alphavet }{ \
-		make --no-print-directory deadcode }{ \
-		make --no-print-directory lint-cached-connectors }{ \
-		make --no-print-directory lint-collector-addf }{ \
-		make --no-print-directory lint-iterate-map }{ \
-		make --no-print-directory lint-messages-sorted }{ \
-		make --no-print-directory lint-messy-output }{ \
-		make --no-print-directory lint-optioncompare }{ \
-		make --no-print-directory lint-print-config }{ \
-		make --no-print-directory lint-structs-sorted }{ \
-		make --no-print-directory lint-tests-sorted }{ \
-		make --no-print-directory lint-use-equal }{ \
-		git diff --check }{ \
-		(cd tools/lint_steps && go build && ./lint_steps) }{ \
-		tools/rta actionlint }{ \
-		tools/rta --from-source staticcheck ./... }{ \
-		tools/ensure_no_files_with_dashes.sh }{ \
-		tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck }{ \
-		tools/rta golangci-lint cache clean }{ \
-		tools/rta golangci-lint run }{ \
-		tools/rta node node_modules/.bin/gherkin-lint }{ \
-		tools/rta cucumber-sort check }{ \
-		make --no-print-directory lint-configfile
+		"make --no-print-directory lint-smoke" \
+		"make --no-print-directory alphavet" \
+		"make --no-print-directory deadcode" \
+		"make --no-print-directory lint-cached-connectors" \
+		"make --no-print-directory lint-collector-addf" \
+		"make --no-print-directory lint-iterate-map" \
+		"make --no-print-directory lint-messages-sorted" \
+		"make --no-print-directory lint-messy-output" \
+		"make --no-print-directory lint-optioncompare" \
+		"make --no-print-directory lint-print-config" \
+		"make --no-print-directory lint-structs-sorted" \
+		"make --no-print-directory lint-tests-sorted" \
+		"make --no-print-directory lint-use-equal" \
+		"git diff --check" \
+		"cd tools/lint_steps && go build && ./lint_steps"" \
+		"tools/rta actionlint" \
+		"tools/rta --from-source staticcheck ./..."" \
+		"tools/ensure_no_files_with_dashes.sh" \
+		"tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck" \
+		"tools/rta golangci-lint cache clean" \
+		"tools/rta golangci-lint run" \
+		"tools/rta node node_modules/.bin/gherkin-lint" \
+		"tools/rta cucumber-sort check" \
+		"make --no-print-directory lint-configfile"
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
