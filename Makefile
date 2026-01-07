@@ -77,7 +77,7 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	conc --show=failed \
+	tools/rta conc --show=failed \
 		"make --no-print-directory lint-smoke" \
 		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
