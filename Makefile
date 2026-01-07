@@ -92,9 +92,9 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 		"make --no-print-directory lint-tests-sorted" \
 		"make --no-print-directory lint-use-equal" \
 		"git diff --check" \
-		"cd tools/lint_steps && go build && ./lint_steps"" \
+		"cd tools/lint_steps && go build && ./lint_steps" \
 		"tools/rta actionlint" \
-		"tools/rta --from-source staticcheck ./..."" \
+		"tools/rta --from-source staticcheck ./..." \
 		"tools/ensure_no_files_with_dashes.sh" \
 		"tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck" \
 		"tools/rta golangci-lint cache clean" \
