@@ -162,7 +162,7 @@ func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, err
 func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
 	if exitCode != 0 {
-		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)
+		err = fmt.Errorf("process \"%s %s\" failed with code %d.\nOUTPUT START\n%s\nOUTPUT END", cmd, strings.Join(args, " "), exitCode, output)
 	}
 	return output, err
 }

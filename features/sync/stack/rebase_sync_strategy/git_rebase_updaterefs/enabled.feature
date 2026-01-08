@@ -14,8 +14,8 @@ Feature: stacked changes
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And global Git setting "rebase.updateRefs" is "true"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And global Git setting "rebase.updateRefs" is "true"
     And the current branch is "child"
     When I run "git-town sync"
 

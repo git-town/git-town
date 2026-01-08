@@ -30,7 +30,7 @@ func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedo
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          bitbucketUsernameHelp,
 		Inputs:        args.Inputs,
-		Prompt:        messages.BitBucketUsernamePrompt,
+		Prompt:        messages.BitbucketUsernamePrompt,
 		Title:         bitbucketUsernameTitle,
 	})
 	newValue := forgedomain.ParseBitbucketUsername(input)
@@ -38,6 +38,6 @@ func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedo
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.BitbucketUsername]()
 	}
-	fmt.Printf(messages.BitBucketUsernameResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	fmt.Printf(messages.BitbucketUsernameResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }

@@ -15,7 +15,7 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken         Option[forgedomain.GitLabToken]
+	APIToken         Option[forgedomain.GitlabToken]
 	Browser          Option[configdomain.Browser]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]

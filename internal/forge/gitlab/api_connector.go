@@ -52,7 +52,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(strconv.Itoa(proposal.Number))
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitlab}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
@@ -79,7 +79,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	for m, mergeRequest := range mergeRequests {
 		proposalData := parseMergeRequest(mergeRequest)
 		self.log.Success(proposalData.Target.String())
-		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitLab}
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitlab}
 		result[m] = proposal
 	}
 	if len(result) == 0 {
@@ -98,7 +98,7 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGitLabMergingViaAPI, number)
+	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message.String()),
@@ -134,7 +134,7 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
-	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})

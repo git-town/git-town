@@ -133,7 +133,7 @@ func TestOption(t *testing.T) {
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {
 			t.Parallel()
 			text := "my token"
-			option := Some(forgedomain.GitHubToken(text))
+			option := Some(forgedomain.GithubToken(text))
 			have := option.String()
 			must.EqOp(t, "Some(my token)", have)
 		})

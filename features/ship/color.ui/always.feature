@@ -8,7 +8,7 @@ Feature: ship an omni-branch via the always-merge strategy
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And Git setting "git-town.ship-strategy" is "always-merge"
     And the current branch is "feature"
     When I run "git-town ship" and close the editor

@@ -23,8 +23,8 @@ Feature: enter the GitHub API token
       | COMMAND                                  |
       | git config git-town.github-token gh-tok  |
       | git config git-town.github-connector api |
-    And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.forge-type" still doesn't exist
+    And local Git setting "git-town.github-token" is now "gh-tok"
 
   Scenario: manually selected GitHub
     When I run "git-town init" and enter into the dialog:

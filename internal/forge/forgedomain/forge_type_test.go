@@ -15,9 +15,9 @@ func TestParseForgeType(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[forgedomain.ForgeType]{
 			"":                     None[forgedomain.ForgeType](),
-			"azuredevops":          Some(forgedomain.ForgeTypeAzureDevOps),
-			"AzureDevOps":          Some(forgedomain.ForgeTypeAzureDevOps),
-			"AZUREDEVOPS":          Some(forgedomain.ForgeTypeAzureDevOps),
+			"azuredevops":          Some(forgedomain.ForgeTypeAzuredevops),
+			"AzureDevOps":          Some(forgedomain.ForgeTypeAzuredevops),
+			"AZUREDEVOPS":          Some(forgedomain.ForgeTypeAzuredevops),
 			"bitbucket":            Some(forgedomain.ForgeTypeBitbucket),
 			"BitBucket":            Some(forgedomain.ForgeTypeBitbucket),
 			"BITBUCKET":            Some(forgedomain.ForgeTypeBitbucket),
@@ -28,10 +28,10 @@ func TestParseForgeType(t *testing.T) {
 			"Forgejo":              Some(forgedomain.ForgeTypeForgejo),
 			"ForgeJo":              Some(forgedomain.ForgeTypeForgejo),
 			"FORGEJO":              Some(forgedomain.ForgeTypeForgejo),
-			"github":               Some(forgedomain.ForgeTypeGitHub),
-			"GitHub":               Some(forgedomain.ForgeTypeGitHub),
-			"gitlab":               Some(forgedomain.ForgeTypeGitLab),
-			"GitLab":               Some(forgedomain.ForgeTypeGitLab),
+			"github":               Some(forgedomain.ForgeTypeGithub),
+			"GitHub":               Some(forgedomain.ForgeTypeGithub),
+			"gitlab":               Some(forgedomain.ForgeTypeGitlab),
+			"GitLab":               Some(forgedomain.ForgeTypeGitlab),
 			"gitea":                Some(forgedomain.ForgeTypeGitea),
 			"Gitea":                Some(forgedomain.ForgeTypeGitea),
 		}

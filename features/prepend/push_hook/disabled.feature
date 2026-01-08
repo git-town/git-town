@@ -8,8 +8,8 @@ Feature: push without hooks
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And Git setting "git-town.share-new-branches" is "push"
     And Git setting "git-town.push-hook" is "false"
+    And Git setting "git-town.share-new-branches" is "push"
     And the current branch is "old"
     When I run "git-town prepend new"
 

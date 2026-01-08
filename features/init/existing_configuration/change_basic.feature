@@ -8,7 +8,6 @@ Feature: don't change existing extended information when changing basic informat
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.contribution-regex" is "cont"
     And local Git setting "git-town.detached" is "false"
@@ -33,7 +32,6 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS                   |
       | welcome            | enter                  |
@@ -56,10 +54,10 @@ Feature: don't change existing extended information when changing basic informat
       | git config git-town.hosting-origin-hostname code       |
       | git config git-town.forge-type github                  |
       | git config git-town.github-connector api               |
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.contribution-regex" is still "cont"
     And local Git setting "git-town.detached" is still "false"
+    And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.feature-regex" is still "feat"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "gh-tok"
@@ -74,21 +72,18 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.share-new-branches" is still "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is still "true"
     And local Git setting "git-town.ship-strategy" is still "fast-forward"
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is still "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is still "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is still "rebase"
     And local Git setting "git-town.sync-tags" is still "false"
     And local Git setting "git-town.sync-upstream" is still "false"
     And local Git setting "git-town.unknown-branch-type" is still "observed"
-    And local Git setting "git-town.dev-remote" still doesn't exist
-    And local Git setting "git-town.stash" still doesn't exist
     And the main branch is now "main"
-# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    # keep-sorted start
     And global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
@@ -104,6 +99,9 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.contribution-regex" is still "cont"
     And local Git setting "git-town.detached" is still "false"
     And local Git setting "git-town.feature-regex" is still "feat"
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.new-branch-type" is still "parked"
     And local Git setting "git-town.observed-regex" is still "obs"
     And local Git setting "git-town.perennial-regex" is still "per"
@@ -113,15 +111,11 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.share-new-branches" is still "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is still "true"
     And local Git setting "git-town.ship-strategy" is still "fast-forward"
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is still "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is still "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is still "rebase"
     And local Git setting "git-town.sync-upstream" is still "false"
     And local Git setting "git-town.unknown-branch-type" is still "observed"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
-    And local Git setting "git-town.stash" still doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
-  # keep-sorted end
