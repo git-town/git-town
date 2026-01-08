@@ -37,6 +37,7 @@ into another branch without needing to change branches.`
 )
 
 func commitCmd() *cobra.Command {
+	addDownFlag, readDownFlag := flags.Down()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -46,9 +47,10 @@ func commitCmd() *cobra.Command {
 		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			down, errDown := readDownFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errMessage, errVerbose); err != nil {
+			if err := cmp.Or(errDown, errMessage, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -63,15 +65,16 @@ func commitCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCommit(args, cliConfig, message)
+			return executeCommit(args, cliConfig, message, down)
 		},
 	}
+	addDownFlag(&cmd)
 	addMessageFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeCommit(args []string, cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage]) error {
+func executeCommit(args []string, cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -84,7 +87,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCommitData(args, repo, commitMessage)
+	data, flow, err := determineCommitData(args, repo, commitMessage, down)
 	if err != nil {
 		return err
 	}
@@ -148,7 +151,7 @@ type commitData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage]) (data commitData, flow configdomain.ProgramFlow, err error) {
+func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (data commitData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
@@ -235,9 +238,19 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchToCommitInto, hasBranchToCommitInto := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
+	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
+	if down, hasDown := down.Get(); hasDown {
+		if down {
+			parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
+			if !hasParent {
+				return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
+			}
+			branchToCommitIntoOpt = Some(parent)
+		}
+	}
+	branchToCommitInto, hasBranchToCommitInto := branchToCommitIntoOpt.Get()
 	if !hasBranchToCommitInto {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
 	}
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{data.initialBranch}

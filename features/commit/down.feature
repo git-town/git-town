@@ -14,7 +14,7 @@ Feature: commit down
     And wait 1 second to ensure new Git timestamps
     When I run "git-town commit --down -m commit-2b"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |

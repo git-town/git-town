@@ -63,6 +63,7 @@ const (
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitDownNoParent                 = "cannot commit down because branch %s has no parent"
+	CommitNoBranchToCommitInto         = "please provide the branch to commit into"
 	CommitsSelected                    = "%d commits selected"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	CompressAlreadyOneCommit           = "branch %s has already just one commit"
