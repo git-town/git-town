@@ -28,6 +28,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -138,20 +139,28 @@ Start:
 }
 
 type commitData struct {
-	branchesSnapshot   gitdomain.BranchesSnapshot
-	branchInfosLastRun Option[gitdomain.BranchInfos]
-	branchToCommitInto gitdomain.LocalBranchName
-	commitMessage      Option[gitdomain.CommitMessage]
-	config             config.ValidatedConfig
-	connector          Option[forgedomain.Connector]
-	hasOpenChanges     bool
-	initialBranch      gitdomain.LocalBranchName
-	inputs             dialogcomponents.Inputs
-	stashSize          gitdomain.StashSize
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
+	branchToCommitInto       gitdomain.LocalBranchName
+	commitMessage            Option[gitdomain.CommitMessage]
+	config                   config.ValidatedConfig
+	connector                Option[forgedomain.Connector]
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
+	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
+	previousBranch           Option[gitdomain.LocalBranchName]
+	remotes                  gitdomain.Remotes
+	stashSize                gitdomain.StashSize
 }
 
 func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage]) (data commitData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
@@ -237,50 +246,67 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
 	}
 	return commitData{
-		branchInfosLastRun: branchInfosLastRun,
-		branchToCommitInto: branchToCommitInto,
-		branchesSnapshot:   branchesSnapshot,
-		commitMessage:      commitMessage,
-		config:             validatedConfig,
-		connector:          connector,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		inputs:             inputs,
-		stashSize:          stashSize,
+		branchInfosLastRun:       branchInfosLastRun,
+		branchToCommitInto:       branchToCommitInto,
+		branchesSnapshot:         branchesSnapshot,
+		commitMessage:            commitMessage,
+		config:                   validatedConfig,
+		connector:                connector,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		inputs:                   inputs,
+		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
+		previousBranch:           previousBranch,
+		remotes:                  remotes,
+		stashSize:                stashSize,
 	}, configdomain.ProgramFlowContinue, nil
 }
 
 func commitProgram(repo execute.OpenRepoResult, data commitData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
-	undoProg := NewMutable(&program.Program{})
-	switch data.branchToDeleteType {
-	case
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch:
-		deleteFeatureBranch(prog, undoProg, data)
-	case
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeContributionBranch:
-		deleteLocalBranch(prog, undoProg, data)
-	case
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypePerennialBranch:
-		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToDeleteType))
+	// checkout the branch to commit into
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.branchToCommitInto},
+		&opcodes.Commit{
+			AuthorOverride:                 Option[gitdomain.Author]{},
+			FallbackToDefaultCommitMessage: false,
+			Message:                        data.commitMessage,
+		},
+		&opcodes.Checkout{
+			Branch: data.initialBranch,
+		},
+	)
+	// git sync --detached --no-push
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	branchNamesToSync := gitdomain.LocalBranchNames{data.initialBranch}
+	allBranchNamesToSync := data.config.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, data.config.NormalConfig.Order)
+	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
+	branchInfosToSync, nonExistingBranches := data.branchesSnapshot.Branches.Select(allBranchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, data.branchesSnapshot.Branches, repo, data.config.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
 	}
-	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
-	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
-			Branch: localBranchNameToDelete,
-		})
-	}
+
+	sync.BranchesProgram(branchesToSync, sync.BranchProgramArgs{
+		BranchInfos:         data.branchesSnapshot.Branches,
+		BranchInfosPrevious: data.branchInfosLastRun,
+		BranchesToDelete:    NewMutable(&set.Set[gitdomain.LocalBranchName]{}),
+		Config:              data.config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
+		Program:             prog,
+		Prune:               false,
+		PushBranches:        data.config.NormalConfig.PushBranches,
+		Remotes:             data.remotes,
+	})
+
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return optimizer.Optimize(prog.Immutable()), undoProg.Immutable()
 }
