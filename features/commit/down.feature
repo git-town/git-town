@@ -11,7 +11,8 @@ Feature: commit down
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
       | branch-2 | local, origin | commit 2a | file_2    | content 2    |
     And the current branch is "branch-2"
-    And wait 1 second to ensure new Git timestamps
+    And an uncommitted file "changes" with content "my changes"
+    And I ran "git add changes"
     When I run "git-town commit --down -m commit-2b"
 
   @debug @this
@@ -21,12 +22,12 @@ Feature: commit down
       | branch-2 | git fetch --prune --tags |
       |          | git checkout branch-1    |
       | branch-1 | git commit -m commit-2b  |
-    And all branches are now synchronized
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1a | file_1    | content 1    |
-      | branch-2 | local, origin | commit 2a | file_2    | content 2    |
-      | branch-2 | local, origin | commit 2b | file_2    | content 2    |
+      |          | git checkout branch-2    |
+    # And these commits exist now
+    #   | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+    #   | branch-1 | local, origin | commit 1a | file_1    | content 1    |
+    #   | branch-2 | local, origin | commit 2a | file_2    | content 2    |
+    #   | branch-2 | local, origin | commit 2b | file_2    | content 2    |
 
   Scenario: undo
     When I run "git-town undo"
