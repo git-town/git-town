@@ -23,11 +23,11 @@ Feature: commit down
       |          | git checkout branch-1    |
       | branch-1 | git commit -m commit-2b  |
       |          | git checkout branch-2    |
-    # And these commits exist now
-    #   | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
-    #   | branch-1 | local, origin | commit 1a | file_1    | content 1    |
-    #   | branch-2 | local, origin | commit 2a | file_2    | content 2    |
-    #   | branch-2 | local, origin | commit 2b | file_2    | content 2    |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | commit 1a | file_1    | content 1    |
+      |          | local         | commit-2b | changes   | my changes   |
+      | branch-2 | local, origin | commit 2a | file_2    | content 2    |
 
   Scenario: undo
     When I run "git-town undo"
