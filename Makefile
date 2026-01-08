@@ -197,7 +197,7 @@ stats-release:  # displays statistics about the changes since the last release
 test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
-test-go: install  # smoke tests while working on the Go code
+test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@tools/rta conc --show=failed \
 		"make --no-print-directory unit" \
 		"make --no-print-directory deadcode" \
