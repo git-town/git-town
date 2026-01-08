@@ -151,16 +151,16 @@ type commitData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (data commitData, flow configdomain.ProgramFlow, err error) {
+func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (commitData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -180,7 +180,7 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -200,21 +200,21 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return commitData{}, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
+		return commitData{}, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -232,34 +232,35 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return commitData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
 		if down {
 			parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
 			if !hasParent {
-				return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
+				return commitData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
 			}
 			branchToCommitIntoOpt = Some(parent)
 		}
 	}
 	branchToCommitInto, hasBranchToCommitInto := branchToCommitIntoOpt.Get()
 	if !hasBranchToCommitInto {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
+		return commitData{}, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
 	}
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
-	branchNamesToSync := gitdomain.LocalBranchNames{data.initialBranch}
-	allBranchNamesToSync := data.config.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, data.config.NormalConfig.Order)
+	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
+	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111", branchNamesToSync, allBranchNamesToSync)
 	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
-	branchInfosToSync, _ := data.branchesSnapshot.Branches.Select(allBranchNamesToSync...)
-	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, data.branchesSnapshot.Branches, repo, data.config.ValidatedConfigData.MainBranch)
+	branchInfosToSync, _ := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return commitData{}, configdomain.ProgramFlowExit, err
 	}
 	return commitData{
 		branchInfosLastRun:       branchInfosLastRun,
