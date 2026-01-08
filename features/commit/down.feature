@@ -17,13 +17,16 @@ Feature: commit down
   @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git reset --soft main --                        |
-      |         | git commit -m "commit 1"                        |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH   | COMMAND                  |
+      | branch-2 | git fetch --prune --tags |
+      |          | git checkout branch-1    |
+      | branch-1 | git commit -m commit-2b  |
     And all branches are now synchronized
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | commit 1a | file_1    | content 1    |
+      | branch-2 | local, origin | commit 2a | file_2    | content 2    |
+      | branch-2 | local, origin | commit 2b | file_2    | content 2    |
 
   Scenario: undo
     When I run "git-town undo"
