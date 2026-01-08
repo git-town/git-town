@@ -197,11 +197,11 @@ stats-release:  # displays statistics about the changes since the last release
 test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
-test-go:  # smoke tests while working on the Go code
-	@make --no-print-directory install &
-	@make --no-print-directory unit &
-	@make --no-print-directory deadcode &
-	@make --no-print-directory lint
+test-go: install  # smoke tests while working on the Go code
+	@tools/rta conc --show=failed \
+		"make --no-print-directory unit" \
+		"make --no-print-directory deadcode" \
+		"make --no-print-directory lint"
 
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' \
