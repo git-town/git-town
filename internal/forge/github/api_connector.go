@@ -54,7 +54,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	}
 	proposalData := parsePullRequest(pullRequests[0])
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Number)), proposalData.Title))
-	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGithub}
 	return Some(proposal), nil
 }
 
@@ -78,7 +78,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	for p, pullRequest := range pullRequests {
 		proposalData := parsePullRequest(pullRequest)
 		self.log.Success(proposalData.Target.String())
-		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGithub}
 		result[p] = proposal
 	}
 	if len(pullRequests) == 0 {
@@ -97,7 +97,7 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
 	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
 		MergeMethod: "squash",

@@ -12,7 +12,7 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "feature"
     When I run "git-town sync"
 

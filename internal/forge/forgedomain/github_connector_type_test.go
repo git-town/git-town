@@ -9,31 +9,31 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseGitHubConnectorType(t *testing.T) {
+func TestParseGithubConnectorType(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		val Option[forgedomain.GitHubConnectorType]
+		val Option[forgedomain.GithubConnectorType]
 		err error
 	}{
 		"api": {
-			val: Some(forgedomain.GitHubConnectorTypeAPI),
+			val: Some(forgedomain.GithubConnectorTypeAPI),
 			err: nil,
 		},
 		"gh": {
-			val: Some(forgedomain.GitHubConnectorTypeGh),
+			val: Some(forgedomain.GithubConnectorTypeGh),
 			err: nil,
 		},
 		"invalid": {
-			val: None[forgedomain.GitHubConnectorType](),
-			err: errors.New(`unknown GitHubConnectorType defined in test: "invalid"`),
+			val: None[forgedomain.GithubConnectorType](),
+			err: errors.New(`unknown GithubConnectorType defined in test: "invalid"`),
 		},
 		"": {
-			val: None[forgedomain.GitHubConnectorType](),
+			val: None[forgedomain.GithubConnectorType](),
 			err: nil,
 		},
 	}
 	for give, want := range tests {
-		have, err := forgedomain.ParseGitHubConnectorType(give, "test")
+		have, err := forgedomain.ParseGithubConnectorType(give, "test")
 		must.Eq(t, want.err, err)
 		must.Eq(t, want.val, have)
 	}

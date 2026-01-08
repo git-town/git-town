@@ -23,8 +23,8 @@ Feature: prepend a prototype branch to a feature branch
         parent
           old
       """
-    And branch "parent" now has type "prototype"
     And branch "old" still has type "feature"
+    And branch "parent" now has type "prototype"
     And the initial commits exist now
 
   Scenario: undo

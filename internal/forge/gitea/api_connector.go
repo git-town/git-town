@@ -119,7 +119,7 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Title.String(),

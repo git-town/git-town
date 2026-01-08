@@ -56,7 +56,7 @@ Feature: one person making a series of commits and syncs in between
       | feature | local, origin | the feature | file      | content 2    |
     #
     # I make a third change and sync
-    Given local Git setting "color.ui" is "always"
+    Given Git setting "color.ui" is "always"
     And I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
       | my second commit | file      | content 3    |

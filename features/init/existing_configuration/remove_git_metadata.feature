@@ -9,7 +9,6 @@ Feature: remove existing configuration in Git metadata
       | production | (none) | local     |
     And I rename the "origin" remote to "fork"
     And the main branch is "main"
-    # keep-sorted start
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.compress" is "town compress"
     And global Git setting "alias.contribute" is "town contribute"
@@ -52,7 +51,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
       | welcome                     | enter                                                                       |                     |
@@ -131,7 +129,6 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.sync-tags true                   |
       | git config git-town.sync-upstream true               |
       | git config git-town.unknown-branch-type feature      |
-    # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -144,10 +141,17 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "true"
+    And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" is now "false"
     And local Git setting "git-town.new-branch-type" is now "feature"
+    And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" is now "asc"
+    And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
@@ -160,21 +164,12 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.unknown-branch-type" is now "feature"
-    And local Git setting "git-town.contribution-regex" now doesn't exist
-    And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
-    And local Git setting "git-town.observed-regex" now doesn't exist
-    And local Git setting "git-town.perennial-regex" now doesn't exist
-    # keep-sorted end
     And the main branch is still "main"
     And there are now no perennial branches
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" is now "town append"
-    # keep-sorted start
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -210,6 +205,5 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-    # keep-sorted end
     And the main branch is still "main"
     And the perennial branches are now "qa"
