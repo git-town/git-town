@@ -1,4 +1,4 @@
-RTA_VERSION = 0.26.0  # run-that-app version to use
+RTA_VERSION = 0.26.1  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -96,8 +96,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 	tools/rta --from-source staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
-	tools/rta golangci-lint cache clean
-	tools/rta golangci-lint run
+	tools/rta golangci-lint cache clean && tools/rta golangci-lint run
 	tools/rta node node_modules/.bin/gherkin-lint
 	tools/rta cucumber-sort check
 	make --no-print-directory lint-configfile
