@@ -1,4 +1,4 @@
-RTA_VERSION = 0.26.1  # run-that-app version to use
+RTA_VERSION = 0.28.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -77,29 +77,30 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	make --no-print-directory lint-smoke
-	make --no-print-directory alphavet
-	make --no-print-directory deadcode
-	make --no-print-directory lint-cached-connectors
-	make --no-print-directory lint-collector-addf
-	make --no-print-directory lint-iterate-map
-	make --no-print-directory lint-messages-sorted
-	make --no-print-directory lint-messy-output
-	make --no-print-directory lint-optioncompare
-	make --no-print-directory lint-print-config
-	make --no-print-directory lint-structs-sorted
-	make --no-print-directory lint-tests-sorted
-	make --no-print-directory lint-use-equal
-	git diff --check
-	(cd tools/lint_steps && go build && ./lint_steps)
-	tools/rta actionlint
-	tools/rta --from-source staticcheck ./...
-	tools/ensure_no_files_with_dashes.sh
-	tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
-	tools/rta golangci-lint cache clean && tools/rta golangci-lint run
-	tools/rta node node_modules/.bin/gherkin-lint
-	tools/rta cucumber-sort check
-	make --no-print-directory lint-configfile
+	@tools/rta conc --show=failed \
+		"make --no-print-directory lint-smoke" \
+		"make --no-print-directory alphavet" \
+		"make --no-print-directory deadcode" \
+		"make --no-print-directory lint-cached-connectors" \
+		"make --no-print-directory lint-collector-addf" \
+		"make --no-print-directory lint-iterate-map" \
+		"make --no-print-directory lint-messages-sorted" \
+		"make --no-print-directory lint-messy-output" \
+		"make --no-print-directory lint-optioncompare" \
+		"make --no-print-directory lint-print-config" \
+		"make --no-print-directory lint-structs-sorted" \
+		"make --no-print-directory lint-tests-sorted" \
+		"make --no-print-directory lint-use-equal" \
+		"git diff --check" \
+		"cd tools/lint_steps && go build && ./lint_steps" \
+		"tools/rta actionlint" \
+		"tools/rta --from-source staticcheck ./..." \
+		"tools/ensure_no_files_with_dashes.sh" \
+		"tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck" \
+		"tools/rta golangci-lint cache clean && tools/rta golangci-lint run" \
+		"tools/rta node node_modules/.bin/gherkin-lint" \
+		"tools/rta cucumber-sort check" \
+		"make --no-print-directory lint-configfile"
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
@@ -196,11 +197,11 @@ stats-release:  # displays statistics about the changes since the last release
 test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
-test-go:  # smoke tests while working on the Go code
-	@make --no-print-directory install &
-	@make --no-print-directory unit &
-	@make --no-print-directory deadcode &
-	@make --no-print-directory lint
+test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
+	@tools/rta conc --show=failed \
+		"make --no-print-directory unit" \
+		"make --no-print-directory deadcode" \
+		"make --no-print-directory lint"
 
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' \
@@ -249,36 +250,34 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
 deadcode: tools/rta@${RTA_VERSION}
-	@tput bold || true
-	@tput setaf 1 || true
 	@tools/rta --install deadcode
-	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
-	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
-	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
-	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v22 \
-		| grep -v BranchExists \
-		| grep -v 'Create$$' \
-		| grep -v CreateFile \
-		| grep -v CreateGitTown \
-		| grep -v EditDefaultMessage \
-		| grep -v EmptyConfigSnapshot \
-		| grep -v FileExists \
-		| grep -v FileHasContent \
-		| grep -v IsGitRepo \
-		| grep -v Memoized.AsFixture \
-		| grep -v NewCommitMessages \
-		| grep -v NewLineageWith \
-		| grep -v NewSHAs \
-		| grep -v pkg/prelude/ptr.go \
-		| grep -v Paniced \
-		| grep -v Set.Add \
-		| grep -v Set.Contains \
-		| grep -v UseCustomMessageOr \
-		| grep -v UseDefaultMessage \
-		|| true
-	@tput sgr0 || true
+	@tools/rta conc --error-on-output --show=failed \
+		"tools/rta deadcode github.com/git-town/git-town/tools/format_self" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/format_unittests" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/stats_release" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/lint_steps" \
+		"tools/rta deadcode -test github.com/git-town/git-town/v22 \
+			| grep -v BranchExists \
+			| grep -v 'Create$$' \
+			| grep -v CreateFile \
+			| grep -v CreateGitTown \
+			| grep -v EditDefaultMessage \
+			| grep -v EmptyConfigSnapshot \
+			| grep -v FileExists \
+			| grep -v FileHasContent \
+			| grep -v IsGitRepo \
+			| grep -v Memoized.AsFixture \
+			| grep -v NewCommitMessages \
+			| grep -v NewLineageWith \
+			| grep -v NewSHAs \
+			| grep -v pkg/prelude/ptr.go \
+			| grep -v Paniced \
+			| grep -v Set.Add \
+			| grep -v Set.Contains \
+			| grep -v UseCustomMessageOr \
+			| grep -v UseDefaultMessage \
+			|| true"
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
