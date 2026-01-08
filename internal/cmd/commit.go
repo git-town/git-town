@@ -38,6 +38,7 @@ into another branch without needing to change branches.`
 
 func commitCmd() *cobra.Command {
 	addDownFlag, readDownFlag := flags.Down()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -46,11 +47,12 @@ func commitCmd() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			down, errDown := readDownFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDown, errMessage, errVerbose); err != nil {
+			if err := cmp.Or(errDown, errDryRun, errMessage, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -58,23 +60,24 @@ func commitCmd() *cobra.Command {
 				AutoSync:          None[configdomain.AutoSync](),
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
+				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCommit(args, cliConfig, message, down)
+			return executeCommit(cliConfig, message, down)
 		},
 	}
 	addDownFlag(&cmd)
+	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeCommit(args []string, cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) error {
+func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -87,7 +90,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCommitData(args, repo, commitMessage, down)
+	data, flow, err := determineCommitData(repo, commitMessage, down)
 	if err != nil {
 		return err
 	}
@@ -151,7 +154,7 @@ type commitData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (commitData, configdomain.ProgramFlow, error) {
+func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (commitData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
