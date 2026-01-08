@@ -65,7 +65,7 @@ func commitCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCommit(cliConfig, message)
+			return executeCommit(args, cliConfig, message)
 		},
 	}
 	addMessageFlag(&cmd)
@@ -73,7 +73,7 @@ func commitCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCommit(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage]) error {
+func executeCommit(args []string, cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -86,7 +86,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCommitData(repo)
+	data, flow, err := determineCommitData(args, repo, commitMessage)
 	if err != nil {
 		return err
 	}
@@ -150,7 +150,7 @@ type commitData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineCommitData(args []string, repo execute.OpenRepoResult) (data commitData, flow configdomain.ProgramFlow, err error) {
+func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage]) (data commitData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -232,9 +232,15 @@ func determineCommitData(args []string, repo execute.OpenRepoResult) (data commi
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	branchToCommitInto, hasBranchToCommitInto := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
+	if !hasBranchToCommitInto {
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
+	}
 	return commitData{
 		branchInfosLastRun: branchInfosLastRun,
+		branchToCommitInto: branchToCommitInto,
 		branchesSnapshot:   branchesSnapshot,
+		commitMessage:      commitMessage,
 		config:             validatedConfig,
 		connector:          connector,
 		hasOpenChanges:     repoStatus.OpenChanges,
