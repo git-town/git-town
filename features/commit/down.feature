@@ -13,7 +13,7 @@ Feature: commit down
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-2b"
+    When I run "git-town commit --down -m commit-1b"
 
   @debug @this
   Scenario: result
@@ -21,12 +21,12 @@ Feature: commit down
       | BRANCH   | COMMAND                  |
       | branch-2 | git fetch --prune --tags |
       |          | git checkout branch-1    |
-      | branch-1 | git commit -m commit-2b  |
+      | branch-1 | git commit -m commit-1b  |
       |          | git checkout branch-2    |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
-      |          | local         | commit-2b | changes   | my changes   |
+      |          | local         | commit-1b | changes   | my changes   |
       | branch-2 | local, origin | commit 2a | file_2    | content 2    |
 
   Scenario: undo
