@@ -305,7 +305,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             prog,
 		Prune:               false,
-		PushBranches:        data.config.NormalConfig.PushBranches,
+		PushBranches:        false,
 		Remotes:             data.remotes,
 	})
 
