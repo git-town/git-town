@@ -251,7 +251,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 
 deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta --install deadcode
-	@conc --error-on-output \
+	@tools/rta conc --error-on-output --show=failed \
 		"tools/rta deadcode github.com/git-town/git-town/tools/format_self" \
 		"tools/rta deadcode github.com/git-town/git-town/tools/format_unittests" \
 		"tools/rta deadcode github.com/git-town/git-town/tools/stats_release" \
