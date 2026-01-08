@@ -255,8 +255,8 @@ func determineCommitData(args []string, repo execute.OpenRepoResult, commitMessa
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
-	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111", branchNamesToSync, allBranchNamesToSync)
 	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
+	allBranchNamesToSync = allBranchNamesToSync.Remove(branchToCommitInto)
 	branchInfosToSync, _ := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
