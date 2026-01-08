@@ -250,36 +250,34 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
 deadcode: tools/rta@${RTA_VERSION}
-	@tput bold || true
-	@tput setaf 1 || true
 	@tools/rta --install deadcode
-	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
-	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
-	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
-	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v22 \
-		| grep -v BranchExists \
-		| grep -v 'Create$$' \
-		| grep -v CreateFile \
-		| grep -v CreateGitTown \
-		| grep -v EditDefaultMessage \
-		| grep -v EmptyConfigSnapshot \
-		| grep -v FileExists \
-		| grep -v FileHasContent \
-		| grep -v IsGitRepo \
-		| grep -v Memoized.AsFixture \
-		| grep -v NewCommitMessages \
-		| grep -v NewLineageWith \
-		| grep -v NewSHAs \
-		| grep -v pkg/prelude/ptr.go \
-		| grep -v Paniced \
-		| grep -v Set.Add \
-		| grep -v Set.Contains \
-		| grep -v UseCustomMessageOr \
-		| grep -v UseDefaultMessage \
-		|| true
-	@tput sgr0 || true
+	@conc --error-on-output \
+		"tools/rta deadcode github.com/git-town/git-town/tools/format_self" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/format_unittests" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/stats_release" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted" \
+		"tools/rta deadcode github.com/git-town/git-town/tools/lint_steps" \
+		"tools/rta deadcode -test github.com/git-town/git-town/v22 \
+			| grep -v BranchExists \
+			| grep -v 'Create$$' \
+			| grep -v CreateFile \
+			| grep -v CreateGitTown \
+			| grep -v EditDefaultMessage \
+			| grep -v EmptyConfigSnapshot \
+			| grep -v FileExists \
+			| grep -v FileHasContent \
+			| grep -v IsGitRepo \
+			| grep -v Memoized.AsFixture \
+			| grep -v NewCommitMessages \
+			| grep -v NewLineageWith \
+			| grep -v NewSHAs \
+			| grep -v pkg/prelude/ptr.go \
+			| grep -v Paniced \
+			| grep -v Set.Add \
+			| grep -v Set.Contains \
+			| grep -v UseCustomMessageOr \
+			| grep -v UseDefaultMessage \
+			|| true"
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
