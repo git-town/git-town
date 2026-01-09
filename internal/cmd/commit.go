@@ -101,6 +101,10 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
+	err = validateCommitData(data)
+	if err != nil {
+		return err
+	}
 	runProgram := commitProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -140,6 +144,7 @@ Start:
 type commitData struct {
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchToCommitInto       gitdomain.LocalBranchName
+	branchToCommitIntoType   configdomain.BranchType
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
 	commitMessage            Option[gitdomain.CommitMessage]
@@ -256,6 +261,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if !hasBranchToCommitInto {
 		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
 	}
+	branchToCommitIntoType := branchesAndTypes[branchToCommitInto]
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
@@ -269,6 +275,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	return commitData{
 		branchInfosLastRun:       branchInfosLastRun,
 		branchToCommitInto:       branchToCommitInto,
+		branchToCommitIntoType:   branchToCommitIntoType,
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		commitMessage:            commitMessage,
@@ -321,4 +328,13 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()
+}
+
+func validateCommitData(data commitData) error {
+	switch data.branchToCommitIntoType {
+	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
+		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, data.branchToCommitIntoType)
+	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	}
+	return nil
 }

@@ -66,6 +66,7 @@ const (
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitNoBranchToCommitInto         = "please provide the branch to commit into"
 	CommitsSelected                    = "%d commits selected"
+	CommitWrongBranchType              = "cannot commit into branch %s because it is a %s branch"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	CompressAlreadyOneCommit           = "branch %s has already just one commit"
 	CompressBranchNoParent             = "cannot compress branch %s because it has no parent"

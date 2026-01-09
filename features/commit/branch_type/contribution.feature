@@ -1,12 +1,11 @@
-@messyoutput
-Feature: commit from a branch with unknown parent
+Feature: commit down
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | branch-1 | feature | main   | local, origin |
-      | branch-2 | feature |        | local, origin |
+      | NAME     | TYPE         | PARENT   | LOCATIONS     |
+      | branch-1 | feature      | main     | local, origin |
+      | branch-2 | contribution | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
@@ -14,9 +13,7 @@ Feature: commit from a branch with unknown parent
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b" and enter into the dialog:
-      | DIALOG                       | KEYS       |
-      | parent branch for "branch-2" | down enter |
+    When I run "git-town commit --down -m commit-1b"
 
   Scenario: result
     Then Git Town runs the commands
