@@ -43,7 +43,7 @@ func commitCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "commit",
-		Args:    cobra.ArbitraryArgs,
+		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
 		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
