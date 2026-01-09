@@ -43,6 +43,10 @@ Feature: commit verbosely
       |          | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
       |          | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
       |          | git stash list                                                                                                                                                                                                                                                                                                                                   |
+    And Git Town prints:
+      """
+      Ran 25 shell commands.
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                               | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a                             | file_1    | content 1    |
@@ -73,5 +77,9 @@ Feature: commit verbosely
       |          | git checkout branch-2                                                                                                                                                                                                                                                                                                                            |
       |          | git rev-parse HEAD                                                                                                                                                                                                                                                                                                                               |
       | branch-2 | git reset --hard {{ sha 'commit 2a' }}                                                                                                                                                                                                                                                                                                           |
+    And Git Town prints:
+      """
+      Ran 19 shell commands.
+      """
     And the initial branches and lineage exist now
     And the initial commits exist now
