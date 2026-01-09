@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [-d | --down] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
+git town commit [-d | --down int[=1]] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
 ```
 
 The _commit_ command takes the currently staged changes and commits them into a
