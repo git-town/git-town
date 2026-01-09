@@ -145,7 +145,7 @@ Start:
 type commitData struct {
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchToCommitInto       gitdomain.LocalBranchName
-	branchToCommitIntoType   configdomain.BranchType
+	branchTypeToCommitInto   configdomain.BranchType
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
 	commitMessage            Option[gitdomain.CommitMessage]
@@ -262,7 +262,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if !hasBranchToCommitInto {
 		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
 	}
-	branchToCommitIntoType := branchesAndTypes[branchToCommitInto]
+	branchTypeToCommitInto := branchesAndTypes[branchToCommitInto]
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
@@ -276,7 +276,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	return commitData{
 		branchInfosLastRun:       branchInfosLastRun,
 		branchToCommitInto:       branchToCommitInto,
-		branchToCommitIntoType:   branchToCommitIntoType,
+		branchTypeToCommitInto:   branchTypeToCommitInto,
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		commitMessage:            commitMessage,
@@ -332,11 +332,11 @@ func commitProgram(data commitData) (runProgram program.Program) {
 }
 
 func validateCommitData(data commitData) error {
-	switch data.branchToCommitIntoType {
+	switch data.branchTypeToCommitInto {
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.CommitIntoMainBranch)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
-		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchToCommitIntoType.String()), data.branchToCommitIntoType)
+		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchTypeToCommitInto.String()), data.branchTypeToCommitInto)
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	}
 	return nil
