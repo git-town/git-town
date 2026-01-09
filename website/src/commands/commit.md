@@ -14,8 +14,9 @@ This is useful when working with [stacked branches](../stacked-changes.md). A
 common scenario is that you're implementing a feature and realize that part of
 the work, let's say a refactor, really belongs in a different branch because you
 want it reviewed and shipped independently. The feature depends on it, so the
-refactor must live in an ancestor branch. Your desired branch stack might look
-like this:
+refactor must live in an ancestor branch.
+
+Your desired branch stack might look like this:
 
 ```
 main
