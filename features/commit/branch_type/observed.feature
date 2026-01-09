@@ -21,7 +21,7 @@ Feature: commit down
     #   | BRANCH | COMMAND |
     And Git Town prints the error:
       """
-      cannot commit into branch branch-1 because it is a observed branch
+      cannot commit into branch branch-1 because it is an observed branch
       """
 
   Scenario: undo

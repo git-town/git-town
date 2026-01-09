@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
@@ -333,7 +334,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 func validateCommitData(data commitData) error {
 	switch data.branchToCommitIntoType {
 	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
-		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, data.branchToCommitIntoType)
+		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchToCommitIntoType.String()), data.branchToCommitIntoType)
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	}
 	return nil
