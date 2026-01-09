@@ -317,7 +317,6 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		PushBranches:        false,
 		Remotes:             data.remotes,
 	})
-
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
