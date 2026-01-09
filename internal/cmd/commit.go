@@ -294,7 +294,6 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 
 func commitProgram(data commitData) (runProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	// checkout the branch to commit into
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.branchToCommitInto},
 		&opcodes.Commit{
@@ -306,8 +305,6 @@ func commitProgram(data commitData) (runProgram program.Program) {
 			Branch: data.initialBranch,
 		},
 	)
-	// git sync --detached --no-push
-
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		BranchInfosPrevious: data.branchInfosLastRun,
