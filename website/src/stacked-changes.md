@@ -95,22 +95,14 @@ While working on `3-rename-bar`, you discover another improvement for the
 architecture. Add it to `1-refactor`:
 
 ```sh
-git checkout 1-refactor
-# make the changes and commit them
-git checkout 3-rename-bar
-```
-
-The additional architecture changes we just committed exist only in
-`1-refactor`. To propagate them through the other branches in the stack, run:
-
-```
-git town sync --stack --detached
+git commit --down=2
 ```
 
 This command does the following things:
 
+1. Commit the staged changes into `1-refactor`
 1. Pulls updates from `1-refactor` into `2-rename-foo`
-2. Pulls updates from `2-rename-foo` into `3-rename-bar`
+1. Pulls updates from `2-rename-foo` into `3-rename-bar`
 
 ## Shipping the refactor
 

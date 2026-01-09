@@ -3,27 +3,30 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [--dry-run] [-h | --help] [--(no)-ignore-uncommitted] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
+git town commit [-d | --down] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
 ```
 
-_Notice: Most people don't need to use this command. The recommended way to
-merge your feature branches is to use the web UI or merge queue of your code
-hosting service, as you would normally do. `git town ship` is for edge cases
-like developing in [offline mode](../preferences/offline.md) or when shipping
-[stacked changes](../stacked-changes.md)._
+The _commit_ command commits the staged changes into another branch and syncs
+these changes back into the local branch.
 
-The _ship_ command ("let's ship this feature") merges a completed feature branch
-into the main branch and removes the feature branch.
+This helps develop changes as a stack of branches. Let's say you work on a
+feature, and as part of that you discover that you need to perform some
+refactoring. You want to perform the refactoring in a separate branch, so that
+you can [propose](propose.md) and review it separately. You also want to build
+the feature on top of the refactoring, hence the refactoring needs to happen in
+an ancestor branch.
 
-The branch to ship must be in sync. If it isn't in sync, `git town ship` will
-exit with an error. When that happens, run [git town sync](sync.md) to get the
-branch in sync, re-test and re-review the updated branch, and then run
-`git town ship` again.
+```
+main
+ \
+  refactor
+   \
+    feature
+```
 
-To ensure that everything on your branch gets shipped, this command verifies
-that your workspace contains no uncommitted changes. You can configure this
-behavior using the [ignore-uncommitted](../preferences/ignore-uncommitted.md)
-setting.
+With this branch setup, you can work on the refactor on the `feature` branch.
+`git town commit` commits the changes into the `refactor` branch and syncs them
+right back into the `feature` branch.
 
 ## Positional argument
 
@@ -33,6 +36,10 @@ branch.
 When called with a positional argument, it ships the branch with the given name.
 
 ## Options
+
+#### `-d`<br>`--down`
+
+When set, Git Town commits Commit into the parent branch
 
 #### `--dry-run`
 
