@@ -39,13 +39,14 @@ Feature: commit verbosely
       |          | git log --no-merges --format=%H refs/heads/branch-1 ^refs/heads/branch-2                                                                                                                                                                                                                                                                         |
       |          | git rev-parse branch-2 origin/branch-2                                                                                                                                                                                                                                                                                                           |
       | branch-2 | git merge --no-edit --ff branch-1                                                                                                                                                                                                                                                                                                                |
+      |          | git rev-parse --verify -q refs/heads/branch-1                                                                                                                                                                                                                                                                                                    |
       |          | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |          | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
       |          | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
       |          | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                               | FILE NAME | FILE CONTENT |
