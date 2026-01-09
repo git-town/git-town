@@ -27,7 +27,7 @@
     {
       "type": "test-file",
       "files": "**/*.md",
-      "run": "make docs"
+      "run": "make doc"
     },
 
     {
