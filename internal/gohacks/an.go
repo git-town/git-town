@@ -5,8 +5,7 @@ import (
 )
 
 func An(word string) string {
-	prefixes := []string{"a", "e", "i", "o", "u"}
-	for _, prefix := range prefixes {
+	for _, prefix := range []string{"a", "e", "i", "o", "u"} {
 		if strings.HasPrefix(word, prefix) {
 			return "an"
 		}
