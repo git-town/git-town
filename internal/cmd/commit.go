@@ -322,7 +322,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
 	})
 	return prog.Immutable()
 }
