@@ -16,8 +16,8 @@ Feature: commit two down
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
     When I run "git-town commit --down=2 -m commit-1b"
+  # @debug @this
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
