@@ -266,8 +266,8 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
-	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
-	allBranchNamesToSync = allBranchNamesToSync.Remove(branchToCommitInto)
+	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...) // we only want to sync the just committed changes back into the initial branch
+	allBranchNamesToSync = allBranchNamesToSync.Remove(branchToCommitInto)  // we only want to sync the just committed changes back into the initial branch
 	branchInfosToSync, _ := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
