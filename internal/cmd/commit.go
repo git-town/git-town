@@ -244,13 +244,11 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
-		if down {
-			parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
-			if !hasParent {
-				return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
-			}
-			branchToCommitIntoOpt = Some(parent)
+		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down).Get()
+		if !hasAncestor {
+			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
 		}
+		branchToCommitIntoOpt = Some(ancestor)
 	}
 	branchToCommitInto, hasBranchToCommitInto := branchToCommitIntoOpt.Get()
 	if !hasBranchToCommitInto {

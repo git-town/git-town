@@ -14,10 +14,10 @@ const (
 // Down provides type-safe access to the CLI arguments of type configdomain.Down.
 func Down() (AddFunc, ReadDownFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(downLong, downShort, false, "commit into the parent branch")
+		cmd.Flags().IntP(downLong, downShort, 1, "commit into the parent branch")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Down], error) {
-		return readBoolOptFlag[configdomain.Down](cmd.Flags(), downLong)
+		return readIntOptFlag[configdomain.Down](cmd.Flags(), downLong)
 	}
 	return addFlag, readFlag
 }

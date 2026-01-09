@@ -51,6 +51,74 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("Ancestor", func(t *testing.T) {
+		t.Parallel()
+		t.Run("0th ancestor returns the branch itself", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Ancestor(one, 0)
+			must.True(t, have.EqualSome(one))
+		})
+		t.Run("1st ancestor returns the parent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Ancestor(one, 1)
+			must.True(t, have.EqualSome(main))
+		})
+		t.Run("2nd ancestor returns the grandparent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two: one,
+				one: main,
+			})
+			have := lineage.Ancestor(two, 2)
+			must.True(t, have.EqualSome(main))
+		})
+		t.Run("3rd ancestor returns the great-grandparent", func(t *testing.T) {
+			t.Parallel()
+			four := gitdomain.NewLocalBranchName("four")
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				four:  three,
+				three: two,
+				two:   one,
+				one:   main,
+			})
+			have := lineage.Ancestor(four, 3)
+			must.True(t, have.EqualSome(one))
+		})
+		t.Run("returns None when nth ancestor does not exist", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two: one,
+				one: main,
+			})
+			have := lineage.Ancestor(two, 3)
+			must.True(t, have.IsNone())
+		})
+		t.Run("returns None when branch has no parent and nth >= 1", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			have := lineage.Ancestor(one, 1)
+			must.True(t, have.IsNone())
+		})
+		t.Run("deep lineage, getting intermediate ancestor", func(t *testing.T) {
+			t.Parallel()
+			four := gitdomain.NewLocalBranchName("four")
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				four:  three,
+				three: two,
+				two:   one,
+				one:   main,
+			})
+			have := lineage.Ancestor(four, 2)
+			must.True(t, have.EqualSome(two))
+		})
+	})
+
 	t.Run("AncestorsWithoutRoot", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {

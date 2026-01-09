@@ -1,4 +1,4 @@
-Feature: commit down
+Feature: commit two down
 
   Background:
     Given a Git repo with origin
@@ -6,15 +6,18 @@ Feature: commit down
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
+      | branch-3 | feature | branch-2 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
       | branch-2 | local, origin | commit 2a | file_2    | content 2    |
-    And the current branch is "branch-2"
+      | branch-3 | local, origin | commit 3a | file_3    | content 3    |
+    And the current branch is "branch-3"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b"
+    When I run "git-town commit --down=2 -m commit-1b"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |

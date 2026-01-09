@@ -36,6 +36,15 @@ func readBoolOptFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], err
 	return None[T](), nil
 }
 
+// provides the value of the CLI flag with the given name and optional int-based type
+func readIntOptFlag[T ~int](flags *pflag.FlagSet, name string) (Option[T], error) {
+	if flags.Changed(name) {
+		value, err := flags.GetInt(name)
+		return Some(T(value)), err
+	}
+	return None[T](), nil
+}
+
 // provides the value of the CLI flag with the given name and optional negatable bool-based type
 func readNegatableFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
 	if value, err := readBoolOptFlag[T](flags, name); value.IsSome() || err != nil {

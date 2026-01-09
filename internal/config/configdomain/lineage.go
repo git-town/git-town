@@ -33,6 +33,19 @@ func NewLineageWith(data LineageData) Lineage {
 	}
 }
 
+// provides the nth ancestor of the given branch
+func (self Lineage) Ancestor(branch gitdomain.LocalBranchName, nth int) Option[gitdomain.LocalBranchName] {
+	current := branch
+	for range nth {
+		var hasCurrent bool
+		current, hasCurrent = self.Parent(current).Get()
+		if !hasCurrent {
+			return None[gitdomain.LocalBranchName]()
+		}
+	}
+	return Some(current)
+}
+
 // Ancestors provides the names of all parent branches of the branch with the given name.
 func (self Lineage) Ancestors(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	current := branch
