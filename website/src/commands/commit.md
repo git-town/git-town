@@ -50,31 +50,10 @@ that would be run but doesn't execute them.
 
 Display help for this command.
 
-#### `--ignore-uncommitted`<br>`--no-ignore-uncommitted`
-
-Overrides the [ignore-uncommitted](../preferences/ignore-uncommitted.md) setting
-for this call.
-
 #### `-m <text>`<br>`--message <text>`
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
-
-#### `-f <path>`<br>`--message-file <path>`
-
-The `--message-file` aka `-f` flag uses the content of the given file for the
-commit message. The filename `-` reads the commit message from STDIN.
-
-#### `-s <name>`<br>`--strategy <name>`
-
-Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
-
-#### `-p`<br>`--to-parent`
-
-The _ship_ command ships only direct children of the main branch. To ship a
-child branch, you need to first ship or [delete](delete.md) all its ancestor
-branches. If you really want to ship into a non-perennial branch, you can
-override the protection against that with the `--to-parent` aka `-p` option.
 
 #### `-v`<br>`--verbose`
 
