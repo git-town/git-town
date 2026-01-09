@@ -10,9 +10,9 @@ Feature: compress sync strategy
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
       | branch-2 | local, origin | commit 2a | file_2    | content 2    |
+    And Git setting "git-town.sync-strategy" is "compress"
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
-    And Git setting "git-town.sync-strategy" is "compress"
     And I ran "git add changes"
     When I run "git-town commit --down -m commit-1b"
 
