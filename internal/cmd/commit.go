@@ -254,7 +254,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if down, hasDown := down.Get(); hasDown {
 		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down.Value()).Get()
 		if !hasAncestor {
-			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
+			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoAncestor, initialBranch)
 		}
 		branchToCommitIntoOpt = Some(ancestor)
 	}
