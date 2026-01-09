@@ -61,6 +61,7 @@ const (
 	CacheUnitialized                   = "using a cached value before initialization"
 	CannotParse                        = "cannot parse %s: %w"
 	CommandsRun                        = "Ran %d shell commands."
+	CommitDetachedHead                 = "please check out a branch before committing"
 	CommitDownNoParent                 = "cannot commit down because branch %s has no parent"
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitNoBranchToCommitInto         = "please provide the branch to commit into"

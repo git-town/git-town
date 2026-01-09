@@ -212,7 +212,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		return emptyCommitData, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
+		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CommitDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
