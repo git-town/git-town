@@ -17,7 +17,7 @@ const (
 // - --down=2 (uses the specified integer value)
 func Down() (AddFunc, ReadDownFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().IntP(downLong, downShort, 0, "commit into the parent branch")
+		cmd.Flags().IntP(downLong, downShort, 0, "commit into the given ancestor branch")
 		cmd.Flags().Lookup(downLong).NoOptDefVal = "1"
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Down], error) {
