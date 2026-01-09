@@ -251,7 +251,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
-		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down).Get()
+		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down.Value()).Get()
 		if !hasAncestor {
 			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
 		}
