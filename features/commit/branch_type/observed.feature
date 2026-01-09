@@ -6,10 +6,6 @@ Feature: commit down into an observed branch
       | NAME     | TYPE     | PARENT   | LOCATIONS     |
       | branch-1 | observed | main     | local, origin |
       | branch-2 | feature  | branch-1 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1a | file_1    | content 1    |
-      | branch-2 | local, origin | commit 2a | file_2    | content 2    |
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
