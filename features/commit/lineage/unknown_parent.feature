@@ -1,5 +1,5 @@
 @messyoutput
-Feature: commit one down
+Feature: commit from a branch with unknown parent
 
   Background:
     Given a Git repo with origin

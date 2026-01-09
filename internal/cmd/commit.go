@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
@@ -43,7 +44,7 @@ func commitCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "commit",
-		Args:    cobra.ArbitraryArgs,
+		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
 		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
@@ -101,6 +102,10 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
+	err = validateCommitData(data)
+	if err != nil {
+		return err
+	}
 	runProgram := commitProgram(data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -139,7 +144,9 @@ Start:
 
 type commitData struct {
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
+	branchInfosToSync        gitdomain.BranchInfos
 	branchToCommitInto       gitdomain.LocalBranchName
+	branchTypeToCommitInto   configdomain.BranchType
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
 	commitMessage            Option[gitdomain.CommitMessage]
@@ -161,6 +168,10 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return emptyCommitData, configdomain.ProgramFlowExit, err
+	}
+	initialBranch, hasInitialBranch := preFetchBranchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -212,7 +223,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		return emptyCommitData, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
+		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CommitDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
@@ -224,7 +235,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
@@ -238,10 +249,6 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if err != nil || exit {
 		return emptyCommitData, configdomain.ProgramFlowExit, err
 	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
 		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down).Get()
@@ -254,11 +261,12 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if !hasBranchToCommitInto {
 		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CommitNoBranchToCommitInto)
 	}
+	branchTypeToCommitInto := branchesAndTypes[branchToCommitInto]
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchNamesToSync := gitdomain.LocalBranchNames{initialBranch}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
-	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
-	allBranchNamesToSync = allBranchNamesToSync.Remove(branchToCommitInto)
+	allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...) // we only want to sync the just committed changes back into the initial branch
+	allBranchNamesToSync = allBranchNamesToSync.Remove(branchToCommitInto)  // we only want to sync the just committed changes back into the initial branch
 	branchInfosToSync, _ := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
@@ -266,7 +274,9 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	return commitData{
 		branchInfosLastRun:       branchInfosLastRun,
+		branchInfosToSync:        branchInfosToSync,
 		branchToCommitInto:       branchToCommitInto,
+		branchTypeToCommitInto:   branchTypeToCommitInto,
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		commitMessage:            commitMessage,
@@ -284,22 +294,17 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 
 func commitProgram(data commitData) (runProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	// checkout the branch to commit into
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.branchToCommitInto},
 		&opcodes.Commit{
-			AuthorOverride:                 Option[gitdomain.Author]{},
+			AuthorOverride:                 None[gitdomain.Author](),
 			FallbackToDefaultCommitMessage: false,
 			Message:                        data.commitMessage,
 		},
-		&opcodes.Checkout{
-			Branch: data.initialBranch,
-		},
+		&opcodes.Checkout{Branch: data.initialBranch},
 	)
-	// git sync --detached --no-push
-
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-		BranchInfos:         data.branchesSnapshot.Branches,
+		BranchInfos:         data.branchInfosToSync,
 		BranchInfosPrevious: data.branchInfosLastRun,
 		BranchesToDelete:    NewMutable(&set.Set[gitdomain.LocalBranchName]{}),
 		Config:              data.config,
@@ -310,13 +315,23 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		PushBranches:        false,
 		Remotes:             data.remotes,
 	})
-
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
 	})
 	return prog.Immutable()
+}
+
+func validateCommitData(data commitData) error {
+	switch data.branchTypeToCommitInto {
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.CommitIntoMainBranch)
+	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
+		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchTypeToCommitInto.String()), data.branchTypeToCommitInto)
+	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	}
+	return nil
 }
