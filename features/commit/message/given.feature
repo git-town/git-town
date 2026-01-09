@@ -1,4 +1,4 @@
-Feature: commit one down
+Feature: provide the commit message via CLI flag
 
   Background:
     Given a Git repo with origin

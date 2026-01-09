@@ -1,4 +1,4 @@
-Feature: commit one down
+Feature: enter the commit message interactively
 
   Background:
     Given a Git repo with origin
@@ -13,13 +13,13 @@ Feature: commit one down
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b"
+    When I run "git-town commit --down" and enter "commit-1b" for the commit message
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
       | branch-2 | git checkout branch-1             |
-      | branch-1 | git commit -m commit-1b           |
+      | branch-1 | git commit                        |
       |          | git checkout branch-2             |
       | branch-2 | git merge --no-edit --ff branch-1 |
     And these commits exist now
