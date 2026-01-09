@@ -22,7 +22,6 @@ Feature: commit one down
       | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
       | branch-1 | local    | down-commit | changes   | my changes   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
