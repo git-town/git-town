@@ -15,17 +15,12 @@ Feature: commit down
     And I ran "git add changes"
     When I run "git-town commit --down -m commit-1b"
 
-  @this
   Scenario: result
-    # Then Git Town runs the commands
-    #   | BRANCH | COMMAND |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       cannot commit into branch branch-1 because it is an observed branch
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial branches and lineage exist now
-    And the initial commits exist now
+  # Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.
