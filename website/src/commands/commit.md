@@ -11,11 +11,10 @@ different branch in your stack, then synchronizes the result back into your
 current branch.
 
 This is useful when working with [stacked branches](../stacked-changes.md). A
-common scenario looks like this:
-
-You're implementing a feature and realize that part of the work really belongs
-in a refactor. You want that refactor reviewed and shipped independently, but
-the feature depends on it, so the refactor must live in an ancestor branch.
+common scenario is when you're implementing a feature and realize that part of
+the work really belongs in a refactor. You want that refactor reviewed and
+shipped independently, but the feature depends on it, so the refactor must live
+in an ancestor branch.
 
 Your desired branch stack might look like this:
 
