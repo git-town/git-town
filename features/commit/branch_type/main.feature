@@ -1,4 +1,4 @@
-Feature: commit into the main branch
+Feature: commit down into the main branch
 
   Background:
     Given a Git repo with origin
