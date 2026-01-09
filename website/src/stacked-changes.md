@@ -101,8 +101,8 @@ git commit --down=2
 This command does the following things:
 
 1. Commit the currently staged changes into `1-refactor`
-1. Pulls updates from `1-refactor` into `2-rename-foo`
-1. Pulls updates from `2-rename-foo` into `3-rename-bar`
+2. Pulls updates from `1-refactor` into `2-rename-foo`
+3. Pulls updates from `2-rename-foo` into `3-rename-bar`
 
 ## Shipping the refactor
 
