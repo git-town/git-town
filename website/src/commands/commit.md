@@ -6,17 +6,18 @@
 git town commit [-d | --down] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
 ```
 
-The _commit_ command commits the staged changes into another branch and syncs
-these changes back into the local branch.
+The _commit_ command takes the currently staged changes and commits them into a
+different branch in your stack, then synchronizes the result back into your
+current branch.
 
-This helps develop changes as a stack of branches. Let's say you work on a
-feature, and as part of that you discover that you need to perform some
-refactoring. You want to perform the refactoring in a separate branch, so that
-you can [propose](propose.md) and review it separately. You also want to build
-the feature on top of the refactoring, hence the refactoring needs to happen in
-an ancestor branch.
+This is useful when working with [stacked branches](../stacked-changes.md). A
+common scenario looks like this:
 
-This is the branch stack to go with:
+You're implementing a feature and realize that part of the work really belongs
+in a refactor. You want that refactor reviewed and shipped independently, but
+the feature depends on it, so the refactor must live in an ancestor branch.
+
+Your desired branch stack might look like this:
 
 ```
 main
@@ -26,30 +27,23 @@ main
     feature
 ```
 
-Switch back and forth between branches `refactor` and `features` to make sure
-the feature still works with the refactor is cumbersome.
+Manually switching back and forth between `refactor` and `feature` to move
+changes around is slow and error-prone.
 
-Thanks to Git Town's `commit` feature, you can work on the refactor on the
-`feature` branch, and commit the changes into the `refactor` branch and sync
-them right back into the `feature` branch using a single command.
-
-## Positional argument
-
-When called without a positional argument, the _ship_ command ships the current
-branch.
-
-When called with a positional argument, it ships the branch with the given name.
+With `git town commit`, you can stay on the `feature` branch, do the refactoring
+there, and then commit those changes directly into the `refactor` branch. Git
+Town will automatically sync the committed changes back into `feature`, letting
+you continue where you left off.
 
 ## Options
 
 #### `-d`<br>`--down`
 
-When set, Git Town commits Commit into the parent branch
+Commit the staged changes into the parent branch of the current branch.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Print the Git commands that would be executed without actually running them.
 
 #### `-h`<br>`--help`
 
@@ -57,41 +51,18 @@ Display help for this command.
 
 #### `-m <text>`<br>`--message <text>`
 
-Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
-specifying the commit message via the CLI.
+Set the commit message from the command line, equivalent to `git commit -m`.
 
 #### `-v`<br>`--verbose`
 
-The `--verbose` aka `-v` flag prints all Git commands run under the hood to
-determine the repository state.
-
-## Configuration
-
-The configured [ship-strategy](../preferences/ship-strategy.md) determines how
-the _ship_ command merges branches. When shipping
-[stacked changes](../stacked-changes.md), use the
-[fast-forward ship strategy](../preferences/ship-strategy.md#fast-forward) to
-avoid empty merge conflicts.
-
-If you have configured the API tokens for
-[GitHub](../preferences/github-token.md),
-[GitLab](../preferences/gitlab-token.md),
-[Gitea](../preferences/gitea-token.md),
-[Bitbucket](../preferences/bitbucket-app-password.md), or
-[Forgejo](../preferences/forgejo-token.md) and the branch to be shipped has an
-open proposal, this command merges the proposal for the current branch.
-
-If your forge automatically deletes shipped branches, for example
-[GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
-you can
-[disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).
+Prints all Git commands executed under the hood, used to determine repository
+state.
 
 ## See also
 
-<!-- keep-sorted start -->
-
-- [propose](propose.md) creates a pull request for the current branch
-- [repo](repo.md) opens the website of your forge in the browser, so that you
-  can ship branches there
-
-<!-- keep-sorted end -->
+- [git town prepend --commit](prepend.md#-c--commit)
+- [git town prepend --beam](prepend.md#-b--beam)
+- [git town append --commit](append.md#-c--commit)
+- [git town append --beam](append.md#-b--beam)
+- [git town hack --commit](hack.md#-c--commit)
+- [git town hack --beam](hack.md#-b--beam)
