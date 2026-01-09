@@ -144,6 +144,7 @@ Start:
 
 type commitData struct {
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
+	branchInfosToSync        gitdomain.BranchInfos
 	branchToCommitInto       gitdomain.LocalBranchName
 	branchTypeToCommitInto   configdomain.BranchType
 	branchesSnapshot         gitdomain.BranchesSnapshot
@@ -275,6 +276,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	return commitData{
 		branchInfosLastRun:       branchInfosLastRun,
+		branchInfosToSync:        branchInfosToSync,
 		branchToCommitInto:       branchToCommitInto,
 		branchTypeToCommitInto:   branchTypeToCommitInto,
 		branchesSnapshot:         branchesSnapshot,
@@ -304,7 +306,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		&opcodes.Checkout{Branch: data.initialBranch},
 	)
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-		BranchInfos:         data.branchesSnapshot.Branches,
+		BranchInfos:         data.branchInfosToSync,
 		BranchInfosPrevious: data.branchInfosLastRun,
 		BranchesToDelete:    NewMutable(&set.Set[gitdomain.LocalBranchName]{}),
 		Config:              data.config,
