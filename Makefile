@@ -50,7 +50,7 @@ cukewin: install  # runs all end-to-end tests on Windows
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages
 	@tools/rta depth . | grep git-town
 
-docs: install node_modules  # tests the documentation
+doc: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
@@ -194,7 +194,7 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
-test: fix docs unit lint-all cuke  # runs all the tests
+test: fix doc unit lint-all cuke  # runs all the tests
 .PHONY: test
 
 test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
