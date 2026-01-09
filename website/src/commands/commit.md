@@ -30,9 +30,10 @@ Manually switching back and forth between `refactor` and `feature` to commit
 into the correct branch and move changes around is slow and error-prone.
 
 When using `git town commit`, you can stay on the `feature` branch, do the
-refactoring there, and then commit the refactoring changes directly into the
-`refactor` branch. Git Town will automatically sync the committed changes back
-into `feature`, letting you continue where you left off.
+refactoring there to make sure everything works, and then commit the refactoring
+changes directly into the `refactor` branch. Git Town will automatically sync
+the committed changes back into `feature`, letting you continue where you left
+off.
 
 ## Options
 
