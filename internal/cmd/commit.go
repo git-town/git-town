@@ -297,7 +297,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.branchToCommitInto},
 		&opcodes.Commit{
-			AuthorOverride:                 Option[gitdomain.Author]{},
+			AuthorOverride:                 None[gitdomain.Author](),
 			FallbackToDefaultCommitMessage: false,
 			Message:                        data.commitMessage,
 		},
