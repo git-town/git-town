@@ -302,7 +302,6 @@ func commitProgram(data commitData) (runProgram program.Program) {
 			FallbackToDefaultCommitMessage: false,
 			Message:                        data.commitMessage,
 		},
-		&opcodes.Checkout{Branch: data.initialBranch},
 	)
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfosToSync,
