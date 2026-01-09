@@ -1,11 +1,11 @@
-Feature: commit down into an observed branch
+Feature: commit into a perennial branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE     | PARENT   | LOCATIONS     |
-      | branch-1 | observed | main     | local, origin |
-      | branch-2 | feature  | branch-1 | local, origin |
+      | NAME     | TYPE      | PARENT   | LOCATIONS     |
+      | branch-1 | perennial | main     | local, origin |
+      | branch-2 | feature   | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
@@ -19,7 +19,7 @@ Feature: commit down into an observed branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot commit into branch branch-1 because it is an observed branch
+      cannot commit into branch branch-1 because it is a perennial branch
       """
   # Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

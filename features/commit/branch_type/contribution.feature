@@ -1,11 +1,11 @@
-Feature: commit down
+Feature: commit down into a contribution branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE                | PARENT   | LOCATIONS     |
-      | branch-1 | contributionfeature | main     | local, origin |
-      | branch-2 | feature             | branch-1 | local, origin |
+      | NAME     | TYPE         | PARENT   | LOCATIONS     |
+      | branch-1 | contribution | main     | local, origin |
+      | branch-2 | feature      | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1a | file_1    | content 1    |
