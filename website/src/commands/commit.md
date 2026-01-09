@@ -16,6 +16,8 @@ you can [propose](propose.md) and review it separately. You also want to build
 the feature on top of the refactoring, hence the refactoring needs to happen in
 an ancestor branch.
 
+This is the branch stack to go with:
+
 ```
 main
  \
@@ -24,9 +26,12 @@ main
     feature
 ```
 
-With this branch setup, you can work on the refactor on the `feature` branch.
-`git town commit` commits the changes into the `refactor` branch and syncs them
-right back into the `feature` branch.
+Switch back and forth between branches `refactor` and `features` to make sure
+the feature still works with the refactor is cumbersome.
+
+Thanks to Git Town's `commit` feature, you can work on the refactor on the
+`feature` branch, and commit the changes into the `refactor` branch and sync
+them right back into the `feature` branch using a single command.
 
 ## Positional argument
 
