@@ -333,7 +333,9 @@ func commitProgram(data commitData) (runProgram program.Program) {
 
 func validateCommitData(data commitData) error {
 	switch data.branchToCommitIntoType {
-	case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.CommitIntoMainBranch)
+	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
 		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchToCommitIntoType.String()), data.branchToCommitIntoType)
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	}
