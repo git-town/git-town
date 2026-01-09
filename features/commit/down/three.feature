@@ -32,7 +32,7 @@ Feature: commit three down
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
-      | branch-2 | git checkout branch-1                       |
+      | branch-4 | git checkout branch-1                       |
       | branch-1 | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout branch-2                       |
       | branch-2 | git reset --hard {{ sha 'initial commit' }} |
