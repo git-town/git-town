@@ -7,31 +7,23 @@ Feature: commit two down
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
       | branch-3 | feature | branch-2 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1a | file_1    | content 1    |
-      | branch-2 | local, origin | commit 2a | file_2    | content 2    |
-      | branch-3 | local, origin | commit 3a | file_3    | content 3    |
     And the current branch is "branch-3"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down=2 -m commit-1b"
-  # @debug @this
+    When I run "git-town commit --down=2 -m down-commit"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
-      | branch-2 | git fetch --prune --tags          |
-      |          | git checkout branch-1             |
-      | branch-1 | git commit -m commit-1b           |
+      | branch-3 | git checkout branch-1             |
+      | branch-1 | git commit -m down-commit         |
       |          | git checkout branch-2             |
       | branch-2 | git merge --no-edit --ff branch-1 |
+      |          | git checkout branch-3             |
+      | branch-3 | git merge --no-edit --ff branch-2 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                               | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1a                             | file_1    | content 1    |
-      |          | local         | commit-1b                             | changes   | my changes   |
-      | branch-2 | local, origin | commit 2a                             | file_2    | content 2    |
-      |          | local         | Merge branch 'branch-1' into branch-2 |           |              |
+      | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
+      | branch-1 | local    | down-commit | changes   | my changes   |
 
   Scenario: undo
     When I run "git-town undo"

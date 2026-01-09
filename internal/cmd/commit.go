@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/git-town/git-town/v22/pkg/set"
@@ -322,7 +323,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
 	})
-	return prog.Immutable()
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateCommitData(data commitData) error {
