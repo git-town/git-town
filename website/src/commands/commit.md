@@ -12,11 +12,11 @@ current branch.
 
 This is useful when working with [stacked branches](../stacked-changes.md). A
 common scenario is that you're implementing a feature and realize that part of
-the work, let's say a refactor, really belongs in a different branch because you
-want it reviewed and shipped independently. The feature depends on it, so the
-refactor must live in an ancestor branch.
+the work is an independent change, let's say a refactor, and that part belongs
+in a different branch because you want it reviewed and shipped independently.
+Since the feature depends on it, the refactor must live in an ancestor branch.
 
-Your desired branch stack might look like this:
+Your desired branch stack looks like this:
 
 ```
 main
