@@ -162,6 +162,10 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	if err != nil {
 		return emptyCommitData, configdomain.ProgramFlowExit, err
 	}
+	initialBranch, hasInitialBranch := preFetchBranchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyCommitData, configdomain.ProgramFlowExit, err
@@ -224,7 +228,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
@@ -237,10 +241,6 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	})
 	if err != nil || exit {
 		return emptyCommitData, configdomain.ProgramFlowExit, err
-	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyCommitData, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
