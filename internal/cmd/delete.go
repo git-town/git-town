@@ -179,11 +179,11 @@ type deleteData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineDeleteData(args []string, repo execute.OpenRepoResult) (data deleteData, flow configdomain.ProgramFlow, err error) {
+func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return deleteData{}, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -203,7 +203,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return deleteData{}, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -223,15 +223,15 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return deleteData{}, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return deleteData{}, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
+		return deleteData{}, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
 	var branchToDelete gitdomain.LocalBranchName
 	if len(args) > 0 {
@@ -239,20 +239,20 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToDelete = activeBranch
 	} else {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DeleteNoActiveBranch)
+		return deleteData{}, configdomain.ProgramFlowExit, errors.New(messages.DeleteNoActiveBranch)
 	}
 	branchToDeleteInfo, hasBranchToDeleteInfo := branchesSnapshot.Branches.FindByLocalName(branchToDelete).Get()
 	if !hasBranchToDeleteInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchToDelete)
+		return deleteData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchToDelete)
 	}
 	if branchToDeleteInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
+		return deleteData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return deleteData{}, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -270,12 +270,12 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return deleteData{}, configdomain.ProgramFlowExit, err
 	}
 	branchTypeToDelete := validatedConfig.BranchType(branchToDelete)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return deleteData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{

@@ -108,11 +108,11 @@ Start:
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow configdomain.ProgramFlow, err error) {
+func determineContinueData(repo execute.OpenRepoResult) (continueData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return continueData{}, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -132,7 +132,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return continueData{}, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -152,18 +152,18 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return continueData{}, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return continueData{}, flow, nil
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return continueData{}, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -171,7 +171,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          data.connector,
+		Connector:          connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
@@ -181,19 +181,19 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return continueData{}, configdomain.ProgramFlowExit, err
 	}
 	if repoStatus.Conflicts {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
+		return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
+		return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+			return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
 			initialBranch = currentBranch
