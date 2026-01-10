@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [-d | --down] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
+git town commit [-d | --down uint] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
 ```
 
 The _commit_ command takes the currently staged changes and commits them into a
@@ -37,9 +37,14 @@ off.
 
 ## Options
 
-#### `-d`<br>`--down`
+#### `-d uint`<br>`--down uint`
 
-Commit the staged changes into the parent branch of the current branch.
+Commit the staged changes into the ancestor branch that is the given number of
+generations older than the current branch.
+
+- `--down` and `--down=1` commit into the parent branch
+- `--down=2` commits into the grandparent branch
+- `--down=3` commits into the great-grandparent branch
 
 #### `--dry-run`
 

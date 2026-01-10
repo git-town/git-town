@@ -53,3 +53,12 @@ func readStringOptFlag[T ~string](flags *pflag.FlagSet, name string) (Option[T],
 	value, err := flags.GetString(name)
 	return NewOption(T(value)), err
 }
+
+// provides the value of the CLI flag with the given name and optional int-based type
+func readUintOptFlag[T ~uint](flags *pflag.FlagSet, name string) (Option[T], error) {
+	if flags.Changed(name) {
+		value, err := flags.GetUint(name)
+		return Some(T(value)), err
+	}
+	return None[T](), nil
+}
