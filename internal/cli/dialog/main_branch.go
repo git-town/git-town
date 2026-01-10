@@ -58,8 +58,8 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
 	return MainBranchResult{
-		UserChoice:       selection,
 		ActualMainBranch: selection.GetOr(unscoped), // the user either selected a branch, or None if unscoped exists
+		UserChoice:       selection,
 	}, exit, err
 }
 
@@ -72,6 +72,6 @@ type MainBranchArgs struct {
 }
 
 type MainBranchResult struct {
-	UserChoice       Option[gitdomain.LocalBranchName]
 	ActualMainBranch gitdomain.LocalBranchName
+	UserChoice       Option[gitdomain.LocalBranchName]
 }
