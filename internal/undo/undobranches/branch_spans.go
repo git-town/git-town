@@ -72,8 +72,8 @@ func (self BranchSpans) Changes() BranchChanges {
 		} else if localChangeData, isLocalChanged := branchSpan.LocalChanged().Get(); isLocalChanged {
 			maps.Copy(localChanged, localChangeData)
 		}
-		if isRemoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); isRemoteAdded {
-			remoteAdded = append(remoteAdded, remoteBranchName)
+		if remoteAddedBranch, isRemoteAdded := branchSpan.RemoteAdded().Get(); isRemoteAdded {
+			remoteAdded = append(remoteAdded, remoteAddedBranch)
 		} else if isRemoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved(); isRemoteRemoved {
 			remoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
 		} else if isRemoteChanged, remoteBranchName, beforeSHA, afterSHA := branchSpan.RemoteChanged(); isRemoteChanged {

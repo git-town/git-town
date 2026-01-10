@@ -181,16 +181,19 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	})
 }
 
-func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteAdded() Option[gitdomain.RemoteBranchName] {
 	before, hasBefore := self.Before.Get()
 	beforeHasRemoteBranch, _, _ := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, addedRemoteBranchName, addedRemoteBranchSHA
+		return None[gitdomain.RemoteBranchName]()
 	}
-	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
-	remoteAdded = (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
-	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
+	afterHasRemoteBranch, afterRemoteBranchName, _ := after.GetRemote()
+	remoteAdded := (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
+	if !remoteAdded {
+		return None[gitdomain.RemoteBranchName]()
+	}
+	return Some(afterRemoteBranchName)
 }
 
 func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {

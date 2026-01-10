@@ -515,10 +515,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isRemoteAdded, addedRemoteBranchName, addedRemoteSHA := bs.RemoteAdded()
-			must.True(t, isRemoteAdded)
-			must.Eq(t, branch1, addedRemoteBranchName)
-			must.Eq(t, sha1, addedRemoteSHA)
+			have, has := bs.RemoteAdded().Get()
+			must.True(t, has)
+			must.Eq(t, branch1, have)
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
@@ -540,10 +539,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isRemoteAdded, addedRemoteBranchName, addedRemoteSHA := bs.RemoteAdded()
-			must.True(t, isRemoteAdded)
-			must.Eq(t, branch1, addedRemoteBranchName)
-			must.Eq(t, sha1, addedRemoteSHA)
+			have, has := bs.RemoteAdded().Get()
+			must.True(t, has)
+			must.Eq(t, branch1, have)
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -563,8 +561,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isRemoteAdded, _, _ := bs.RemoteAdded()
-			must.False(t, isRemoteAdded)
+			_, has := bs.RemoteAdded().Get()
+			must.False(t, has)
 		})
 	})
 
