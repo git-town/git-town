@@ -85,10 +85,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, before, after := bs.IsInconsistentChange()
-			must.True(t, isInconsistentChange)
-			must.Eq(t, bs.Before.GetOrPanic(), before)
-			must.Eq(t, bs.After.GetOrPanic(), after)
+			have := bs.IsInconsistentChange()
+			want := undobranches.IsInconsistentChangeResult{
+				IsInconsistentChange: true,
+				Before:               bs.Before.GetOrPanic(),
+				After:                bs.After.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
@@ -108,8 +111,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			have := bs.IsInconsistentChange()
+			want := undobranches.IsInconsistentChangeResult{
+				IsInconsistentChange: false,
+				Before:               bs.Before.GetOrPanic(),
+				After:                bs.After.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -129,8 +137,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			have := bs.IsInconsistentChange()
+			want := undobranches.IsInconsistentChangeResult{
+				IsInconsistentChange: false,
+				Before:               bs.Before.GetOrPanic(),
+				After:                bs.After.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -150,8 +163,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			have := bs.IsInconsistentChange()
+			want := undobranches.IsInconsistentChangeResult{
+				IsInconsistentChange: false,
+				Before:               bs.Before.GetOrPanic(),
+				After:                bs.After.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -171,8 +189,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			have := bs.IsInconsistentChange()
+			want := undobranches.IsInconsistentChangeResult{
+				IsInconsistentChange: false,
+				Before:               bs.Before.GetOrPanic(),
+				After:                bs.After.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
