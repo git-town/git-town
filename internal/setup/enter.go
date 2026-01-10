@@ -116,7 +116,7 @@ EnterForgeData:
 			}
 		}
 	}
-	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
+	flow, exit, err := testForgeAuth(testForgeAuthArgs{
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
@@ -134,7 +134,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	if repeat {
+	if flow == configdomain.ProgramFlowRestart {
 		goto EnterForgeData
 	}
 	tokenScope, exit, err := enterTokenScope(enterTokenScopeArgs{
@@ -809,9 +809,9 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 	return false
 }
 
-func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) { //nolint:nonamedreturns
+func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
-		return false, false, nil
+		return configdomain.ProgramFlowContinue, false, nil
 	}
 	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.backend,
@@ -830,11 +830,11 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		RemoteURL:            args.devURL,
 	})
 	if err != nil {
-		return false, false, err
+		return configdomain.ProgramFlowExit, false, err
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return false, false, nil
+		return configdomain.ProgramFlowContinue, false, nil
 	}
 	if credentialsVerifier, canVerifyCredentials := connector.(forgedomain.CredentialVerifier); canVerifyCredentials {
 		verifyResult := credentialsVerifier.VerifyCredentials()
@@ -849,7 +849,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		}
 		fmt.Println(messages.CredentialsAccess)
 	}
-	return false, false, nil
+	return configdomain.ProgramFlowContinue, false, nil
 }
 
 type testForgeAuthArgs struct {
