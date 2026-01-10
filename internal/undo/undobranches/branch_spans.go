@@ -45,7 +45,7 @@ func (self BranchSpans) Changes() BranchChanges {
 	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	for _, branchSpan := range self {
-		if omniRemove, isOmniRemove := branchSpan.IsOmniRemove().Get(); isOmniRemove {
+		if omniRemove, isOmniRemove := branchSpan.OmniRemove().Get(); isOmniRemove {
 			maps.Copy(omniRemoved, omniRemove)
 			continue
 		}
@@ -65,18 +65,18 @@ func (self BranchSpans) Changes() BranchChanges {
 			})
 			continue
 		}
-		if localAddedBranch, isLocalAdded := branchSpan.LocalAdded().Get(); isLocalAdded {
+		if localAddedBranch, isLocalAdded := branchSpan.LocalAdd().Get(); isLocalAdded {
 			localAdded = append(localAdded, localAddedBranch)
-		} else if localRemoveData, isLocalRemoved := branchSpan.LocalRemoved().Get(); isLocalRemoved {
+		} else if localRemoveData, isLocalRemoved := branchSpan.LocalRemove().Get(); isLocalRemoved {
 			maps.Copy(localRemoved, localRemoveData)
-		} else if localChangeData, isLocalChanged := branchSpan.LocalChanged().Get(); isLocalChanged {
+		} else if localChangeData, isLocalChanged := branchSpan.LocalChange().Get(); isLocalChanged {
 			maps.Copy(localChanged, localChangeData)
 		}
-		if remoteAddedBranch, isRemoteAdded := branchSpan.RemoteAdded().Get(); isRemoteAdded {
+		if remoteAddedBranch, isRemoteAdded := branchSpan.RemoteAdd().Get(); isRemoteAdded {
 			remoteAdded = append(remoteAdded, remoteAddedBranch)
-		} else if remoteRemoveData, isRemoteRemoved := branchSpan.RemoteRemoved().Get(); isRemoteRemoved {
+		} else if remoteRemoveData, isRemoteRemoved := branchSpan.RemoteRemove().Get(); isRemoteRemoved {
 			maps.Copy(remoteRemoved, remoteRemoveData)
-		} else if remoteChangeData, isRemoteChanged := branchSpan.RemoteChanged().Get(); isRemoteChanged {
+		} else if remoteChangeData, isRemoteChanged := branchSpan.RemoteChange().Get(); isRemoteChanged {
 			maps.Copy(remoteChanged, remoteChangeData)
 		}
 	}
