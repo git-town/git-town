@@ -300,10 +300,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isLocalAdded, afterBranchName, afterSHA := bs.LocalAdded()
-			must.True(t, isLocalAdded)
-			must.Eq(t, branch1, afterBranchName)
-			must.Eq(t, sha1, afterSHA)
+			have, has := bs.LocalAdded().Get()
+			must.True(t, has)
+			must.EqOp(t, have, branch1)
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -325,10 +324,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isLocalAdded, branchName, afterSHA := bs.LocalAdded()
-			must.True(t, isLocalAdded)
-			must.Eq(t, branch1, branchName)
-			must.Eq(t, sha1, afterSHA)
+			have, has := bs.LocalAdded().Get()
+			must.True(t, has)
+			must.EqOp(t, have, branch1)
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
 			t.Parallel()
@@ -336,8 +334,8 @@ func TestBranchSpan(t *testing.T) {
 				Before: None[gitdomain.BranchInfo](),
 				After:  None[gitdomain.BranchInfo](),
 			}
-			isLocalAdded, _, _ := bs.LocalAdded()
-			must.False(t, isLocalAdded)
+			_, has := bs.LocalAdded().Get()
+			must.False(t, has)
 		})
 	})
 

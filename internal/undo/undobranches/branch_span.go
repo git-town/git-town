@@ -68,16 +68,19 @@ func (self BranchSpan) IsOmniRemove() Option[LocalBranchesSHAs] {
 	})
 }
 
-func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
+func (self BranchSpan) LocalAdded() Option[gitdomain.LocalBranchName] {
 	before, hasBefore := self.Before.Get()
 	beforeHasLocalBranch, _, _ := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, afterBranchName, afterSHA
+		return None[gitdomain.LocalBranchName]()
 	}
-	afterHasLocalBranch, afterLocalBranch, afterSHA := after.GetLocal()
-	isLocalAdded = (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
-	return isLocalAdded, afterLocalBranch, afterSHA
+	afterHasLocalBranch, afterLocalBranch, _ := after.GetLocal()
+	isLocalAdded := (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
+	if !isLocalAdded {
+		return None[gitdomain.LocalBranchName]()
+	}
+	return Some(afterLocalBranch)
 }
 
 func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
