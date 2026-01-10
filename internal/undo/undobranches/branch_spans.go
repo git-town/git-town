@@ -1,6 +1,8 @@
 package undobranches
 
 import (
+	"maps"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/git-town/git-town/v22/internal/undo/undodomain"
@@ -43,51 +45,34 @@ func (self BranchSpans) Changes() BranchChanges {
 	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	for _, branchSpan := range self {
-		if omniRemoveData := branchSpan.IsOmniRemove(); omniRemoveData.IsOmniRemove {
-			omniRemoved[omniRemoveData.Name] = omniRemoveData.SHA
+		if omniRemove, isOmniRemove := branchSpan.OmniRemove().Get(); isOmniRemove {
+			maps.Copy(omniRemoved, omniRemove)
 			continue
 		}
-		if omniChangeData := branchSpan.IsOmniChange(); omniChangeData.IsOmniChange {
-			omniChanged[omniChangeData.Name] = undodomain.Change[gitdomain.SHA]{
-				Before: omniChangeData.SHABefore,
-				After:  omniChangeData.SHAAfter,
-			}
+		if omniChange, hasOmniChange := branchSpan.OmniChange().Get(); hasOmniChange {
+			maps.Copy(omniChanged, omniChange)
 			continue
 		}
-		isLocalRename, beforeName, afterName := branchSpan.IsLocalRename()
-		if isLocalRename {
-			localRenamed = append(localRenamed, LocalBranchRename{
-				After:  afterName,
-				Before: beforeName,
-			})
+		if localBranchRename, isLocalBranchRename := branchSpan.LocalRename().Get(); isLocalBranchRename {
+			localRenamed = append(localRenamed, localBranchRename)
 		}
-		inconsistentChangeData := branchSpan.IsInconsistentChange()
-		if inconsistentChangeData.IsInconsistentChange {
-			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
-				Before: inconsistentChangeData.Before,
-				After:  inconsistentChangeData.After,
-			})
+		if inconsistentChange, isInconsistentChange := branchSpan.InconsistentChange().Get(); isInconsistentChange {
+			inconsistentlyChanged = append(inconsistentlyChanged, inconsistentChange)
 			continue
 		}
-		if localAddedData := branchSpan.LocalAdded(); localAddedData.IsAdded {
-			localAdded = append(localAdded, localAddedData.Name)
-		} else if localRemovedResult := branchSpan.LocalRemoved(); localRemovedResult.IsRemoved {
-			localRemoved[localRemovedResult.Name] = localRemovedResult.SHA
-		} else if localChangedResult := branchSpan.LocalChanged(); localChangedResult.IsChanged {
-			localChanged[localChangedResult.Name] = undodomain.Change[gitdomain.SHA]{
-				Before: localChangedResult.SHABefore,
-				After:  localChangedResult.SHAAfter,
-			}
+		if localAddedBranch, isLocalAdded := branchSpan.LocalAdd().Get(); isLocalAdded {
+			localAdded = append(localAdded, localAddedBranch)
+		} else if localRemoveData, isLocalRemoved := branchSpan.LocalRemove().Get(); isLocalRemoved {
+			maps.Copy(localRemoved, localRemoveData)
+		} else if localChangeData, isLocalChanged := branchSpan.LocalChange().Get(); isLocalChanged {
+			maps.Copy(localChanged, localChangeData)
 		}
-		if remoteAddedResult := branchSpan.RemoteAdded(); remoteAddedResult.IsAdded {
-			remoteAdded = append(remoteAdded, remoteAddedResult.Name)
-		} else if remoteRemovedResult := branchSpan.RemoteRemoved(); remoteRemovedResult.IsRemoved {
-			remoteRemoved[remoteRemovedResult.Name] = remoteRemovedResult.SHA
-		} else if remoteChangedResult := branchSpan.RemoteChanged(); remoteChangedResult.IsChanged {
-			remoteChanged[remoteAddedResult.Name] = undodomain.Change[gitdomain.SHA]{
-				Before: remoteChangedResult.SHABefore,
-				After:  remoteChangedResult.SHAAfter,
-			}
+		if remoteAddedBranch, isRemoteAdded := branchSpan.RemoteAdd().Get(); isRemoteAdded {
+			remoteAdded = append(remoteAdded, remoteAddedBranch)
+		} else if remoteRemoveData, isRemoteRemoved := branchSpan.RemoteRemove().Get(); isRemoteRemoved {
+			maps.Copy(remoteRemoved, remoteRemoveData)
+		} else if remoteChangeData, isRemoteChanged := branchSpan.RemoteChange().Get(); isRemoteChanged {
+			maps.Copy(remoteChanged, remoteChangeData)
 		}
 	}
 	return BranchChanges{

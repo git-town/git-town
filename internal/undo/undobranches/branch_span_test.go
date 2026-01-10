@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -85,11 +86,11 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have, has := bs.IsInconsistentChange().Get()
+			have, has := bs.InconsistentChange().Get()
 			must.True(t, has)
-			want := undobranches.InconsistentChange{
-				Before: bs.Before.GetOrPanic(),
+			want := undodomain.InconsistentChange{
 				After:  bs.After.GetOrPanic(),
+				Before: bs.Before.GetOrPanic(),
 			}
 			must.Eq(t, want, have)
 		})
@@ -111,7 +112,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			_, has := bs.IsInconsistentChange().Get()
+			_, has := bs.InconsistentChange().Get()
 			must.False(t, has)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
@@ -132,13 +133,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := bs.IsInconsistentChange()
-			want := undobranches.InconsistentChange{
-				IsInconsistentChange: false,
-				Before:               bs.Before.GetOrPanic(),
-				After:                bs.After.GetOrPanic(),
-			}
-			must.Eq(t, want, have)
+			_, has := bs.InconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -158,13 +154,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			have := bs.IsInconsistentChange()
-			want := undobranches.InconsistentChange{
-				IsInconsistentChange: false,
-				Before:               bs.Before.GetOrPanic(),
-				After:                bs.After.GetOrPanic(),
-			}
-			must.Eq(t, want, have)
+			_, has := bs.InconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -184,13 +175,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			have := bs.IsInconsistentChange()
-			want := undobranches.InconsistentChange{
-				IsInconsistentChange: false,
-				Before:               bs.Before.GetOrPanic(),
-				After:                bs.After.GetOrPanic(),
-			}
-			must.Eq(t, want, have)
+			_, has := bs.InconsistentChange().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -217,12 +203,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			have := bs.IsOmniChange()
-			want := undobranches.IsOmniChangeResult{
-				IsOmniChange: true,
-				Name:         branch1,
-				SHABefore:    sha1,
-				SHAAfter:     sha2,
+			have, has := bs.OmniChange().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -244,14 +231,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			have := bs.IsOmniChange()
-			want := undobranches.IsOmniChangeResult{
-				IsOmniChange: false,
-				Name:         "branch-1",
-				SHABefore:    "333333",
-				SHAAfter:     "222222",
-			}
-			must.Eq(t, want, have)
+			_, has := bs.OmniChange().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -271,11 +252,10 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			have := branchSpan.IsOmniRemove()
-			want := undobranches.IsOmniRemoveResult{
-				IsOmniRemove: true,
-				Name:         branch1,
-				SHA:          sha1,
+			have, has := branchSpan.OmniRemove().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
 			}
 			must.Eq(t, want, have)
 		})
@@ -299,13 +279,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			have := bs.IsOmniRemove()
-			want := undobranches.IsOmniRemoveResult{
-				IsOmniRemove: false,
-				Name:         branch1,
-				SHA:          "333333",
-			}
-			must.Eq(t, want, have)
+			_, has := bs.OmniRemove().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -325,13 +300,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			have := bs.LocalAdded()
-			want := undobranches.LocalAddedResult{
-				IsAdded: true,
-				Name:    branch1,
-				SHA:     sha1,
-			}
-			must.Eq(t, want, have)
+			have, has := bs.LocalAdd().Get()
+			must.True(t, has)
+			must.EqOp(t, have, branch1)
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -353,13 +324,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			have := bs.LocalAdded()
-			want := undobranches.LocalAddedResult{
-				IsAdded: true,
-				Name:    branch1,
-				SHA:     sha1,
-			}
-			must.Eq(t, want, have)
+			have, has := bs.LocalAdd().Get()
+			must.True(t, has)
+			must.EqOp(t, have, branch1)
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
 			t.Parallel()
@@ -367,13 +334,8 @@ func TestBranchSpan(t *testing.T) {
 				Before: None[gitdomain.BranchInfo](),
 				After:  None[gitdomain.BranchInfo](),
 			}
-			have := bs.LocalAdded()
-			want := undobranches.LocalAddedResult{
-				IsAdded: false,
-				Name:    "",
-				SHA:     "",
-			}
-			must.Eq(t, want, have)
+			_, has := bs.LocalAdd().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -400,12 +362,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			have := branchSpan.LocalChanged()
-			want := undobranches.LocalChangedResult{
-				IsChanged: true,
-				Name:      branch1,
-				SHABefore: sha1,
-				SHAAfter:  sha2,
+			have, has := branchSpan.LocalChange().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -430,12 +393,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := branchSpan.LocalChanged()
-			want := undobranches.LocalChangedResult{
-				IsChanged: true,
-				Name:      branch1,
-				SHABefore: sha1,
-				SHAAfter:  sha2,
+			have, has := branchSpan.LocalChange().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -457,14 +421,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := branchSpan.LocalChanged()
-			want := undobranches.LocalChangedResult{
-				IsChanged: false,
-				Name:      "branch-1",
-				SHABefore: "111111",
-				SHAAfter:  "111111",
-			}
-			must.Eq(t, want, have)
+			_, has := branchSpan.LocalChange().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -484,11 +442,10 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			have := bs.LocalRemoved()
-			want := undobranches.LocalRemovedResult{
-				IsRemoved: true,
-				Name:      branch1,
-				SHA:       sha1,
+			have, has := bs.LocalRemove().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
 			}
 			must.Eq(t, want, have)
 		})
@@ -512,11 +469,10 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			have := bs.LocalRemoved()
-			want := undobranches.LocalRemovedResult{
-				IsRemoved: true,
-				Name:      branch1,
-				SHA:       sha1,
+			have, has := bs.LocalRemove().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
 			}
 			must.Eq(t, want, have)
 		})
@@ -538,13 +494,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			have := bs.LocalRemoved()
-			want := undobranches.LocalRemovedResult{
-				IsRemoved: false,
-				Name:      "branch-1",
-				SHA:       "111111",
-			}
-			must.Eq(t, want, have)
+			_, has := bs.LocalRemove().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -564,13 +515,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			have := bs.RemoteAdded()
-			want := undobranches.RemoteAddedResult{
-				IsAdded: true,
-				Name:    branch1,
-				SHA:     sha1,
-			}
-			must.Eq(t, want, have)
+			have, has := bs.RemoteAdd().Get()
+			must.True(t, has)
+			must.Eq(t, branch1, have)
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
@@ -592,13 +539,9 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			have := bs.RemoteAdded()
-			want := undobranches.RemoteAddedResult{
-				IsAdded: true,
-				Name:    branch1,
-				SHA:     sha1,
-			}
-			must.Eq(t, want, have)
+			have, has := bs.RemoteAdd().Get()
+			must.True(t, has)
+			must.Eq(t, branch1, have)
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -618,13 +561,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			have := bs.RemoteAdded()
-			want := undobranches.RemoteAddedResult{
-				IsAdded: false,
-				Name:    "origin/branch-1",
-				SHA:     "222222",
-			}
-			must.Eq(t, want, have)
+			_, has := bs.RemoteAdd().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -651,12 +589,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			have := branchSpan.RemoteChanged()
-			want := undobranches.RemoteChangedResult{
-				IsChanged: true,
-				Name:      branch1,
-				SHABefore: sha1,
-				SHAAfter:  sha2,
+			have, has := branchSpan.RemoteChange().Get()
+			must.True(t, has)
+			want := undobranches.RemoteBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -681,12 +620,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := branchSpan.RemoteChanged()
-			want := undobranches.RemoteChangedResult{
-				IsChanged: true,
-				Name:      branch1,
-				SHABefore: sha1,
-				SHAAfter:  sha2,
+			have, has := branchSpan.RemoteChange().Get()
+			must.True(t, has)
+			want := undobranches.RemoteBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -708,14 +648,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := branchSpan.RemoteChanged()
-			want := undobranches.RemoteChangedResult{
-				IsChanged: false,
-				Name:      "origin/branch-1",
-				SHABefore: "111111",
-				SHAAfter:  "111111",
-			}
-			must.Eq(t, want, have)
+			_, has := branchSpan.RemoteChange().Get()
+			must.False(t, has)
 		})
 	})
 
@@ -735,10 +669,12 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			remoteRemoved := bs.RemoteRemoved()
-			must.True(t, remoteRemoved.IsRemoved)
-			must.Eq(t, branch1, remoteRemoved.Name)
-			must.Eq(t, sha1, remoteRemoved.SHA)
+			have, has := bs.RemoteRemove().Get()
+			must.True(t, has)
+			want := undobranches.RemoteBranchesSHAs{
+				branch1: sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -760,10 +696,12 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			remoteRemoved := bs.RemoteRemoved()
-			must.True(t, remoteRemoved.IsRemoved)
-			must.Eq(t, branch1, remoteRemoved.Name)
-			must.Eq(t, sha1, remoteRemoved.SHA)
+			have, has := bs.RemoteRemove().Get()
+			must.True(t, has)
+			want := undobranches.RemoteBranchesSHAs{
+				branch1: sha1,
+			}
+			must.Eq(t, want, have)
 		})
 
 		t.Run("changes a remote branch", func(t *testing.T) {
@@ -784,8 +722,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			remoteRemoved := bs.RemoteRemoved()
-			must.False(t, remoteRemoved.IsRemoved)
+			_, has := bs.RemoteRemove().Get()
+			must.False(t, has)
 		})
 
 		t.Run("upstream branch", func(t *testing.T) {
@@ -806,8 +744,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			remoteRemoved := bs.RemoteRemoved()
-			must.False(t, remoteRemoved.IsRemoved)
+			_, has := bs.RemoteRemove().Get()
+			must.False(t, has)
 		})
 	})
 }
