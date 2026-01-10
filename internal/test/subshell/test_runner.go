@@ -208,9 +208,10 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		subProcess.Dir = opts.Dir
 	}
 	subProcess.Env = opts.Env
-	var outputBuf bytes.Buffer
-	subProcess.Stdout = &outputBuf
-	subProcess.Stderr = &outputBuf
+	var stdoutBuf bytes.Buffer
+	var stderrBuf bytes.Buffer
+	subProcess.Stdout = &stdoutBuf
+	subProcess.Stderr = &stderrBuf
 	if input, hasInput := opts.Input.Get(); hasInput {
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
@@ -234,13 +235,17 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	} else {
 		err = subProcess.Run()
 	}
+	// combine stdout and stderr into outputBuf
+	var outputBuf bytes.Buffer
+	outputBuf.Write(stdoutBuf.Bytes())
+	outputBuf.Write(stderrBuf.Bytes())
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
-			err = subshell.ErrorDetails(cmd, args, err, outputBuf.Bytes())
+			err = subshell.ErrorDetails(cmd, args, err, string(outputBuf))
 		}
 	}
 	if self.Verbose {
