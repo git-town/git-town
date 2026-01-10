@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [-d | --down int[=1]] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
+git town commit [-d | --down int] [--dry-run] [-h | --help] [(-m | --message) <text>] [-v | --verbose]
 ```
 
 The _commit_ command takes the currently staged changes and commits them into a
@@ -37,7 +37,7 @@ off.
 
 ## Options
 
-#### `-d`<br>`--down`
+#### `-d`<br>`--down int`
 
 Commit the staged changes into the parent branch of the current branch.
 
