@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 )
 
@@ -20,7 +21,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs) (repeat bool, exit dialogdomain.Exit, err error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs) (flow configdomain.ProgramFlow, exit dialogdomain.Exit, err error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
@@ -37,12 +38,12 @@ const (
 	CredentialsNoAccessChoiceIgnore CredentialsNoAccessChoice = "store these credentials and continue"
 )
 
-func (self CredentialsNoAccessChoice) Repeat() bool {
+func (self CredentialsNoAccessChoice) Repeat() configdomain.ProgramFlow {
 	switch self {
 	case CredentialsNoAccessChoiceRetry:
-		return true
+		return configdomain.ProgramFlowRestart
 	case CredentialsNoAccessChoiceIgnore:
-		return false
+		return configdomain.ProgramFlowContinue
 	}
 	panic("unhandled choice")
 }
