@@ -187,12 +187,13 @@ type compressBranchData struct {
 	trackingBranch   Option[gitdomain.RemoteBranchName]
 }
 
-func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressData, flow configdomain.ProgramFlow, err error) {
+func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (compressData, configdomain.ProgramFlow, error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	emptyResult := compressData{}
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -212,7 +213,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -232,25 +233,25 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CompressDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CompressDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -268,7 +269,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	perennialBranches := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToCompress gitdomain.LocalBranchNames
@@ -281,22 +282,22 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 	for _, branchNameToCompress := range branchNamesToCompress {
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress).Get()
 		if !hasBranchInfo {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
 		branchType := validatedConfig.BranchType(branchNameToCompress)
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			if compressEntireStack {
 				continue
 			}
-			return data, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
-			return data, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		parent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress, parent)
 		if err != nil {
-			return data, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		commitCount := len(commits)
 		if commitCount == 0 {
@@ -308,12 +309,12 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		} else {
 			newCommitMessage, err = repo.Git.CommitMessage(repo.Backend, commits[0].SHA)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 		parentBranch, hasParent := parent.Get()
 		if !hasParent {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
@@ -325,7 +326,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		})
 	}
 	if len(branchesToCompress) == 0 {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
 	return compressData{
 		branchInfosLastRun: branchInfosLastRun,

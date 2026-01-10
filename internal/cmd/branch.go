@@ -106,11 +106,12 @@ Start:
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow configdomain.ProgramFlow, err error) {
+func determineBranchData(repo execute.OpenRepoResult) (branchData, configdomain.ProgramFlow, error) {
+	emptyData := branchData{}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyData, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -130,12 +131,12 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow con
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyData, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyData, flow, nil
 	}
 	initialBranchOpt := branchesSnapshot.Active
 	if branchesSnapshot.DetachedHead {
