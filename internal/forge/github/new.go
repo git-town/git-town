@@ -30,7 +30,14 @@ type NewConnectorArgs struct {
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
-	webConnector := NewWebConnector(args.RemoteURL, args.Browser)
+	webConnector := WebConnector{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
+			Hostname:     args.RemoteURL.Host,
+			Organization: args.RemoteURL.Org,
+			Repository:   args.RemoteURL.Repo,
+		},
+		browser: args.Browser,
+	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{
 			Log:          args.Log,
@@ -61,17 +68,6 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		}, nil
 	}
 	return webConnector, nil
-}
-
-func NewWebConnector(remoteURL giturl.Parts, browser Option[configdomain.Browser]) WebConnector {
-	return WebConnector{
-		HostedRepoInfo: forgedomain.HostedRepoInfo{
-			Hostname:     remoteURL.Host,
-			Organization: remoteURL.Org,
-			Repository:   remoteURL.Repo,
-		},
-		browser: browser,
-	}
 }
 
 func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
