@@ -65,11 +65,15 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := valuesAlreadyInGit[aliasableCommand]
 		newAlias, hasNew := valuesToWriteToGit[aliasableCommand]
+		var err error
 		switch {
 		case hasOld && !hasNew:
-			return gitconfig.RemoveAlias(frontend, aliasableCommand)
+			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
 		case hasNew && !hasOld, newAlias != oldAlias:
-			return gitconfig.SetAlias(frontend, aliasableCommand)
+			err = gitconfig.SetAlias(frontend, aliasableCommand)
+		}
+		if err != nil {
+			return err
 		}
 	}
 	return nil
