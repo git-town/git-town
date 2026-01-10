@@ -809,7 +809,7 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 	return false
 }
 
-func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exit dialogdomain.Exit, err error) {
+func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return configdomain.ProgramFlowContinue, false, nil
 	}
@@ -842,7 +842,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exi
 			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)
 		}
 		if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
-			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, exit))
+			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, false))
 		}
 		if verifyResult.AuthorizationError != nil {
 			return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs)
