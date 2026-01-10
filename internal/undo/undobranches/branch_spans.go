@@ -57,10 +57,7 @@ func (self BranchSpans) Changes() BranchChanges {
 			localRenamed = append(localRenamed, localBranchRename)
 		}
 		if inconsistentChange, isInconsistentChange := branchSpan.InconsistentChange().Get(); isInconsistentChange {
-			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
-				Before: inconsistentChange.Before,
-				After:  inconsistentChange.After,
-			})
+			inconsistentlyChanged = append(inconsistentlyChanged, inconsistentChange)
 			continue
 		}
 		if localAddedBranch, isLocalAdded := branchSpan.LocalAdd().Get(); isLocalAdded {
