@@ -104,11 +104,11 @@ func (self *TestRunner) MustQuery(name string, arguments ...string) string {
 	return self.MustQueryWith(&Options{}, name, arguments...)
 }
 
-func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exitCode int) {
+func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exitCode int) { //nolint:nonamedreturns
 	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) {
+func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) { //nolint:nonamedreturns
 	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
 	output, exitCode = asserts.NoError2(self.QueryWithCode(opts, cmd, args...))
@@ -116,7 +116,7 @@ func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
@@ -167,7 +167,7 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
+func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) { //nolint:nonamedreturns
 	currentBranchText := ""
 	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
