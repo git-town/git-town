@@ -348,14 +348,14 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
 	return deleteProgramResult{
-		runProgram:       optimizer.Optimize(prog.Immutable()),
 		finalUndoProgram: undoProg.Immutable(),
+		runProgram:       optimizer.Optimize(prog.Immutable()),
 	}
 }
 
 type deleteProgramResult struct {
-	runProgram       program.Program
 	finalUndoProgram program.Program
+	runProgram       program.Program
 }
 
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
