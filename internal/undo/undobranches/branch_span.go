@@ -36,10 +36,10 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
 	isOmniChange, _, _, _ := self.IsOmniChange()
 	localChanged, _, _, _ := self.LocalChanged()
-	remoteChanged, _, _, _ := self.RemoteChanged()
+	remoteChanged := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
+	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged.IsChanged && !isOmniChange
 	return isInconsistentChange, before, after
 }
 
@@ -150,19 +150,40 @@ func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gi
 	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
 }
 
-func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteChanged() RemoteChangedResult {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branchName, beforeSHA, afterSHA
+		return RemoteChangedResult{
+			IsChanged:  false,
+			BranchName: "",
+			BeforeSHA:  "",
+			AfterSHA:   "",
+		}
 	}
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branchName, beforeSHA, afterSHA
+		return RemoteChangedResult{
+			IsChanged:  false,
+			BranchName: "",
+			BeforeSHA:  "",
+			AfterSHA:   "",
+		}
 	}
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemote()
-	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
-	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
+	return RemoteChangedResult{
+		IsChanged:  beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA,
+		BranchName: beforeRemoteBranchName,
+		BeforeSHA:  beforeRemoteBranchSHA,
+		AfterSHA:   afterRemoteBranchSHA,
+	}
+}
+
+type RemoteChangedResult struct {
+	IsChanged  bool
+	BranchName gitdomain.RemoteBranchName
+	BeforeSHA  gitdomain.SHA
+	AfterSHA   gitdomain.SHA
 }
 
 func (self BranchSpan) RemoteRemoved() RemoteRemovedResult {

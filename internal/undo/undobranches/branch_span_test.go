@@ -571,11 +571,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
-			must.True(t, remoteChanged)
-			must.Eq(t, branch1, branch)
-			must.Eq(t, sha1, beforeSHA)
-			must.Eq(t, sha2, afterSHA)
+			have := branchSpan.RemoteChanged()
+			want := undobranches.RemoteChangedResult{
+				IsChanged:  true,
+				BranchName: branch1,
+				BeforeSHA:  sha1,
+				AfterSHA:   sha2,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -598,11 +601,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			remoteChanged, branch, beforeSHA, afterSHA := branchSpan.RemoteChanged()
-			must.True(t, remoteChanged)
-			must.Eq(t, branch1, branch)
-			must.Eq(t, sha1, beforeSHA)
-			must.Eq(t, sha2, afterSHA)
+			have := branchSpan.RemoteChanged()
+			want := undobranches.RemoteChangedResult{
+				IsChanged:  true,
+				BranchName: branch1,
+				BeforeSHA:  sha1,
+				AfterSHA:   sha2,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -622,8 +628,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			remoteChanged, _, _, _ := branchSpan.RemoteChanged()
-			must.False(t, remoteChanged)
+			have := branchSpan.RemoteChanged()
+			want := undobranches.RemoteChangedResult{
+				IsChanged:  false,
+				BranchName: "origin/branch-1",
+				BeforeSHA:  "111111",
+				AfterSHA:   "111111",
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
