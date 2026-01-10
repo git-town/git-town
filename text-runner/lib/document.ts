@@ -78,7 +78,11 @@ export function standardizeArgument(texts: string[]): string[] {
     if (text.startsWith("--")) {
       const parts = text.split(" ")
       if (parts.length > 1) {
-        parts[1] = "string"
+        // Only replace angle bracket notations like <msg> with "string"
+        // Keep explicit type names like "int" as-is
+        if (parts[1].startsWith("<") && parts[1].endsWith(">")) {
+          parts[1] = "string"
+        }
       }
       result.push(parts.join(" "))
     } else if (text.startsWith("-")) {

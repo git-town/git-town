@@ -12,12 +12,16 @@ const (
 )
 
 // Down provides type-safe access to the CLI arguments of type configdomain.Down.
+// The flag can be used in two ways:
+// - --down (uses default value of 1)
+// - --down=2 (uses the specified integer value)
 func Down() (AddFunc, ReadDownFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(downLong, downShort, false, "commit into the parent branch")
+		cmd.Flags().UintP(downLong, downShort, 0, "commit into the given ancestor branch")
+		cmd.Flags().Lookup(downLong).NoOptDefVal = "1"
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Down], error) {
-		return readBoolOptFlag[configdomain.Down](cmd.Flags(), downLong)
+		return readUintOptFlag[configdomain.Down](cmd.Flags(), downLong)
 	}
 	return addFlag, readFlag
 }
