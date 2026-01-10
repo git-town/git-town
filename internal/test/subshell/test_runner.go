@@ -245,7 +245,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
-			err = subshell.ErrorDetails(cmd, args, err, string(outputBuf))
+			err = subshell.ErrorDetails(cmd, args, err, outputBuf.Bytes())
 		}
 	}
 	if self.Verbose {
