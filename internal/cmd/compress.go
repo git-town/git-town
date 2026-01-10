@@ -190,8 +190,8 @@ type compressBranchData struct {
 func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (compressData, configdomain.ProgramFlow, error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult compressData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	emptyResult := compressData{}
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}

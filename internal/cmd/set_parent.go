@@ -288,7 +288,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return setParentData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)

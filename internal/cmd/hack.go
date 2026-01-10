@@ -231,7 +231,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	fetch := true
 	if repoStatus.OpenChanges {
@@ -261,27 +261,27 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return appendFeatureData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesToValidate := gitdomain.LocalBranchNames{}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -299,20 +299,20 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if len(targetBranches) > 1 {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, errors.New(messages.HackTooManyArguments)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
 	if prefix, hasPrefix := validatedConfig.NormalConfig.BranchPrefix.Get(); hasPrefix {
 		targetBranch = prefix.Apply(targetBranch)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
 	if validatedConfig.NormalConfig.Detached {
@@ -321,7 +321,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
@@ -367,11 +367,11 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {
-			return appendFeatureData{}, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		// store the new parent
 		if err = validatedConfig.NormalConfig.SetParent(repo.Backend, initialBranch, newParent); err != nil {
-			return appendFeatureData{}, configdomain.ProgramFlowContinue, err
+			return emptyResult, configdomain.ProgramFlowContinue, err
 		}
 		ancestor = newParent
 		hasAncestor = true
@@ -379,11 +379,11 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 	if args.beam.ShouldBeam() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
-			return appendFeatureData{}, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
-			return appendFeatureData{}, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 	}
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
