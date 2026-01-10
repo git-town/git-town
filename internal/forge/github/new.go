@@ -40,9 +40,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{
-			WebConnector: webConnector,
 			Log:          args.Log,
 			Override:     proposalURLOverride,
+			WebConnector: webConnector,
 		}, nil
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
