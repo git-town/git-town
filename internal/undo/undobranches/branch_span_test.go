@@ -86,7 +86,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have, has := bs.IsInconsistentChange().Get()
+			have, has := bs.InconsistentChange().Get()
 			must.True(t, has)
 			want := undodomain.InconsistentChange{
 				After:  bs.After.GetOrPanic(),
@@ -112,7 +112,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			_, has := bs.IsInconsistentChange().Get()
+			_, has := bs.InconsistentChange().Get()
 			must.False(t, has)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
@@ -133,7 +133,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			_, has := bs.IsInconsistentChange().Get()
+			_, has := bs.InconsistentChange().Get()
 			must.False(t, has)
 		})
 		t.Run("no after-local", func(t *testing.T) {
@@ -154,7 +154,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			_, has := bs.IsInconsistentChange().Get()
+			_, has := bs.InconsistentChange().Get()
 			must.False(t, has)
 		})
 		t.Run("no after-remote", func(t *testing.T) {
@@ -175,7 +175,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			_, has := bs.IsInconsistentChange().Get()
+			_, has := bs.InconsistentChange().Get()
 			must.False(t, has)
 		})
 	})

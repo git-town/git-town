@@ -34,7 +34,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	return branchNames.Values()
 }
 
-func (self BranchSpan) IsInconsistentChange() Option[undodomain.InconsistentChange] {
+func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange] {
 	isOmniChange, _, _, _ := self.IsOmniChange()
 	localChanged, _, _, _ := self.LocalChanged()
 	remoteChanged, _, _, _ := self.RemoteChanged()

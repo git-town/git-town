@@ -61,7 +61,7 @@ func (self BranchSpans) Changes() BranchChanges {
 				Before: beforeName,
 			})
 		}
-		inconsistentChange, isInconsistentChange := branchSpan.IsInconsistentChange().Get()
+		inconsistentChange, isInconsistentChange := branchSpan.InconsistentChange().Get()
 		if isInconsistentChange {
 			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
 				Before: inconsistentChange.Before,
