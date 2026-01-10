@@ -34,7 +34,7 @@ func NewLineageWith(data LineageData) Lineage {
 }
 
 // provides the nth ancestor of the given branch
-func (self Lineage) Ancestor(branch gitdomain.LocalBranchName, nth int) Option[gitdomain.LocalBranchName] {
+func (self Lineage) Ancestor(branch gitdomain.LocalBranchName, nth uint) Option[gitdomain.LocalBranchName] {
 	current := branch
 	for range nth {
 		var hasCurrent bool
