@@ -203,11 +203,15 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isOmni, name, beforeSHA, afterSHA := bs.IsOmniChange()
-			must.True(t, isOmni)
-			must.EqOp(t, branch1, name)
-			must.EqOp(t, sha1, beforeSHA)
-			must.EqOp(t, sha2, afterSHA)
+			have, has := bs.OmniChange().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchChange{
+				branch1: undodomain.Change[gitdomain.SHA]{
+					Before: sha1,
+					After:  sha2,
+				},
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
@@ -227,8 +231,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isOmni, _, _, _ := bs.IsOmniChange()
-			must.False(t, isOmni)
+			_, has := bs.OmniChange().Get()
+			must.False(t, has)
 		})
 	})
 

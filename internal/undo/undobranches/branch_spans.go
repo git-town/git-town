@@ -1,6 +1,8 @@
 package undobranches
 
 import (
+	"maps"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/git-town/git-town/v22/internal/undo/undodomain"
@@ -47,11 +49,8 @@ func (self BranchSpans) Changes() BranchChanges {
 			omniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
-		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange(); isOmniChange {
-			omniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
-				Before: beforeSHA,
-				After:  afterSHA,
-			}
+		if omniChange, isOmniChange := branchSpan.OmniChange().Get(); isOmniChange {
+			maps.Copy(omniChanged, omniChange)
 			continue
 		}
 		localBranchRename, isLocalBranchRename := branchSpan.LocalRename().Get()
