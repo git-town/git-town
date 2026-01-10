@@ -53,12 +53,10 @@ func (self BranchSpans) Changes() BranchChanges {
 			maps.Copy(omniChanged, omniChange)
 			continue
 		}
-		localBranchRename, isLocalBranchRename := branchSpan.LocalRename().Get()
-		if isLocalBranchRename {
+		if localBranchRename, isLocalBranchRename := branchSpan.LocalRename().Get(); isLocalBranchRename {
 			localRenamed = append(localRenamed, localBranchRename)
 		}
-		inconsistentChange, isInconsistentChange := branchSpan.InconsistentChange().Get()
-		if isInconsistentChange {
+		if inconsistentChange, isInconsistentChange := branchSpan.InconsistentChange().Get(); isInconsistentChange {
 			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
 				Before: inconsistentChange.Before,
 				After:  inconsistentChange.After,
