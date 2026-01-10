@@ -497,9 +497,9 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := bs.RemoteAdded()
 			want := undobranches.RemoteAddedResult{
-				IsAdded:               true,
-				AddedRemoteBranchName: branch1,
-				AddedRemoteBranchSHA:  sha1,
+				IsAdded: true,
+				Name:    branch1,
+				SHA:     sha1,
 			}
 			must.Eq(t, want, have)
 		})
@@ -525,9 +525,9 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := bs.RemoteAdded()
 			want := undobranches.RemoteAddedResult{
-				IsAdded:               true,
-				AddedRemoteBranchName: branch1,
-				AddedRemoteBranchSHA:  sha1,
+				IsAdded: true,
+				Name:    branch1,
+				SHA:     sha1,
 			}
 			must.Eq(t, want, have)
 		})
@@ -551,9 +551,9 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := bs.RemoteAdded()
 			want := undobranches.RemoteAddedResult{
-				IsAdded:               false,
-				AddedRemoteBranchName: "origin/branch-1",
-				AddedRemoteBranchSHA:  "222222",
+				IsAdded: false,
+				Name:    "origin/branch-1",
+				SHA:     "222222",
 			}
 			must.Eq(t, want, have)
 		})

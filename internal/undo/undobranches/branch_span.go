@@ -144,22 +144,22 @@ func (self BranchSpan) RemoteAdded() RemoteAddedResult {
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return RemoteAddedResult{
-			AddedRemoteBranchName: "",
-			AddedRemoteBranchSHA:  "",
+			Name: "",
+			SHA:  "",
 			IsAdded:               false,
 		}
 	}
 	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
 	return RemoteAddedResult{
-		AddedRemoteBranchName: afterRemoteBranchName,
-		AddedRemoteBranchSHA:  afterRemoteBranchSHA,
+		Name: afterRemoteBranchName,
+		SHA:  afterRemoteBranchSHA,
 		IsAdded:               (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch,
 	}
 }
 
 type RemoteAddedResult struct {
-	AddedRemoteBranchName gitdomain.RemoteBranchName
-	AddedRemoteBranchSHA  gitdomain.SHA
+	Name gitdomain.RemoteBranchName
+	SHA  gitdomain.SHA
 	IsAdded               bool
 }
 
