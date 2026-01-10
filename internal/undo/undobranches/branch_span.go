@@ -219,16 +219,21 @@ func (self BranchSpan) RemoteChanged() Option[RemoteBranchChange] {
 	})
 }
 
-func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteRemoved() Option[RemoteBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, remoteBranchName, beforeRemoteBranchSHA
+		return None[RemoteBranchesSHAs]()
 	}
 	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	afterHasRemoteBranch, _, _ := after.GetRemote()
-	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
-	return remoteRemoved, remoteBranchName, beforeSHA
+	remoteRemoved := beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
+	if !remoteRemoved {
+		return None[RemoteBranchesSHAs]()
+	}
+	return Some(RemoteBranchesSHAs{
+		remoteBranchName: beforeSHA,
+	})
 }
 
 // func (self BranchSpan) String() string {
