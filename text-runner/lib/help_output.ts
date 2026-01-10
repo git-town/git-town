@@ -92,7 +92,7 @@ export class FlagLine {
 }
 
 export function replaceValueNotation(flag: string): string {
-  return flag.replace(/\[="[^"]*"\]/, "")
+  return flag.replace(/\[=[^\]]*\]/, "")
 }
 
 export function isNegatedFlagsGroup(flags: string[]): boolean {
