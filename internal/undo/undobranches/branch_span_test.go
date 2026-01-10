@@ -585,9 +585,9 @@ func TestBranchSpan(t *testing.T) {
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
 				IsChanged:  true,
-				BranchName: branch1,
-				BeforeSHA:  sha1,
-				AfterSHA:   sha2,
+				Name: branch1,
+				SHABefore:  sha1,
+				SHAAfter:   sha2,
 			}
 			must.Eq(t, want, have)
 		})
@@ -615,9 +615,9 @@ func TestBranchSpan(t *testing.T) {
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
 				IsChanged:  true,
-				BranchName: branch1,
-				BeforeSHA:  sha1,
-				AfterSHA:   sha2,
+				Name: branch1,
+				SHABefore:  sha1,
+				SHAAfter:   sha2,
 			}
 			must.Eq(t, want, have)
 		})
@@ -642,9 +642,9 @@ func TestBranchSpan(t *testing.T) {
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
 				IsChanged:  false,
-				BranchName: "origin/branch-1",
-				BeforeSHA:  "111111",
-				AfterSHA:   "111111",
+				Name: "origin/branch-1",
+				SHABefore:  "111111",
+				SHAAfter:   "111111",
 			}
 			must.Eq(t, want, have)
 		})
@@ -668,8 +668,8 @@ func TestBranchSpan(t *testing.T) {
 			}
 			remoteRemoved := bs.RemoteRemoved()
 			must.True(t, remoteRemoved.IsRemoved)
-			must.Eq(t, branch1, remoteRemoved.RemoteBranchName)
-			must.Eq(t, sha1, remoteRemoved.BeforeRemoteSHA)
+			must.Eq(t, branch1, remoteRemoved.Name)
+			must.Eq(t, sha1, remoteRemoved.SHA)
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -693,8 +693,8 @@ func TestBranchSpan(t *testing.T) {
 			}
 			remoteRemoved := bs.RemoteRemoved()
 			must.True(t, remoteRemoved.IsRemoved)
-			must.Eq(t, branch1, remoteRemoved.RemoteBranchName)
-			must.Eq(t, sha1, remoteRemoved.BeforeRemoteSHA)
+			must.Eq(t, branch1, remoteRemoved.Name)
+			must.Eq(t, sha1, remoteRemoved.SHA)
 		})
 
 		t.Run("changes a remote branch", func(t *testing.T) {
