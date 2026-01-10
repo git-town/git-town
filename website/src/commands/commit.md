@@ -37,9 +37,10 @@ off.
 
 ## Options
 
-#### `-d`<br>`--down int`
+#### `-d int`<br>`--down int`
 
-Commit the staged changes into the parent branch of the current branch.
+Commit the staged changes into the ancestor branch that is the given number of
+generations older than the current branch.
 
 #### `--dry-run`
 
