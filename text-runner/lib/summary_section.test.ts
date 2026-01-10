@@ -41,6 +41,14 @@ suite("SummarySection", () => {
           ["-h", "--help"],
         ],
       },
+      {
+        desc: "commit command",
+        give: "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]",
+        want: [
+          ["-v", "--verbose"],
+          ["-h", "--help"],
+        ],
+      },
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {
