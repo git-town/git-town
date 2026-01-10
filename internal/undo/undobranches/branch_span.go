@@ -50,24 +50,6 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 	})
 }
 
-// Indicates whether this BranchSpan describes the removal of an omni Branch
-// and provides all relevant data for this situation.
-func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
-	before, hasBefore := self.Before.Get()
-	if !hasBefore {
-		return None[LocalBranchesSHAs]()
-	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
-	_, hasAfter := self.After.Get()
-	isOmniRemove := beforeIsOmni && !hasAfter
-	if !isOmniRemove {
-		return None[LocalBranchesSHAs]()
-	}
-	return Some(LocalBranchesSHAs{
-		beforeName: beforeSHA,
-	})
-}
-
 func (self BranchSpan) LocalAdd() Option[gitdomain.LocalBranchName] {
 	before, hasBefore := self.Before.Get()
 	beforeHasLocalBranch, _, _ := before.GetLocal()
@@ -178,6 +160,24 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 			Before: beforeSHA,
 			After:  afterSHA,
 		},
+	})
+}
+
+// Indicates whether this BranchSpan describes the removal of an omni Branch
+// and provides all relevant data for this situation.
+func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
+	before, hasBefore := self.Before.Get()
+	if !hasBefore {
+		return None[LocalBranchesSHAs]()
+	}
+	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	_, hasAfter := self.After.Get()
+	isOmniRemove := beforeIsOmni && !hasAfter
+	if !isOmniRemove {
+		return None[LocalBranchesSHAs]()
+	}
+	return Some(LocalBranchesSHAs{
+		beforeName: beforeSHA,
 	})
 }
 
