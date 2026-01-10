@@ -34,12 +34,12 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 }
 
 func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
-	isOmniChange, _, _, _ := self.IsOmniChange()
+	omniChangeData := self.IsOmniChange()
 	localChangedResult := self.LocalChanged()
 	remoteChanged := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChangedResult.IsChanged && remoteChanged.IsChanged && !isOmniChange
+	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChangedResult.IsChanged && remoteChanged.IsChanged && !omniChangeData.IsOmniChange
 	return isInconsistentChange, before, after
 }
 
@@ -74,19 +74,40 @@ func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterNam
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) IsOmniChange() IsOmniChangeResult {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branchName, beforeSHA, afterSHA
+		return IsOmniChangeResult{
+			IsOmniChange: false,
+			Name:         "",
+			SHAAfter:     "",
+			SHABefore:    "",
+		}
 	}
 	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branchName, beforeSHA, afterSHA
+		return IsOmniChangeResult{
+			IsOmniChange: false,
+			Name:         "",
+			SHAAfter:     "",
+			SHABefore:    "",
+		}
 	}
 	afterIsOmni, _, afterSHA := after.IsOmniBranch()
-	isOmniChange = beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
-	return isOmniChange, beforeName, beforeSHA, afterSHA
+	return IsOmniChangeResult{
+		IsOmniChange: beforeIsOmni && afterIsOmni && beforeSHA != afterSHA,
+		Name:         beforeName,
+		SHAAfter:     afterSHA,
+		SHABefore:    beforeSHA,
+	}
+}
+
+type IsOmniChangeResult struct {
+	IsOmniChange bool
+	Name         gitdomain.LocalBranchName
+	SHAAfter     gitdomain.SHA
+	SHABefore    gitdomain.SHA
 }
 
 // Indicates whether this BranchSpan describes the removal of an omni Branch

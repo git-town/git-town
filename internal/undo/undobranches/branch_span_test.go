@@ -199,11 +199,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isOmni, name, beforeSHA, afterSHA := bs.IsOmniChange()
-			must.True(t, isOmni)
-			must.EqOp(t, branch1, name)
-			must.EqOp(t, sha1, beforeSHA)
-			must.EqOp(t, sha2, afterSHA)
+			have := bs.IsOmniChange()
+			want := undobranches.IsOmniChangeResult{
+				IsOmniChange: true,
+				Name:         branch1,
+				SHABefore:    sha1,
+				SHAAfter:     sha2,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
@@ -223,8 +226,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isOmni, _, _, _ := bs.IsOmniChange()
-			must.False(t, isOmni)
+			have := bs.IsOmniChange()
+			want := undobranches.IsOmniChangeResult{
+				IsOmniChange: false,
+				Name:         "branch-1",
+				SHABefore:    "333333",
+				SHAAfter:     "222222",
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
