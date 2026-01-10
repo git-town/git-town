@@ -67,8 +67,8 @@ func (self BranchSpans) Changes() BranchChanges {
 		}
 		if localAddedBranch, isLocalAdded := branchSpan.LocalAdded().Get(); isLocalAdded {
 			localAdded = append(localAdded, localAddedBranch)
-		} else if isLocalRemoved, beforeBranch, beforeSHA := branchSpan.LocalRemoved(); isLocalRemoved {
-			localRemoved[beforeBranch] = beforeSHA
+		} else if localRemoveData, isLocalRemoved := branchSpan.LocalRemoved().Get(); isLocalRemoved {
+			maps.Copy(localRemoved, localRemoveData)
 		} else if localChangeData, isLocalChanged := branchSpan.LocalChanged().Get(); isLocalChanged {
 			maps.Copy(localChanged, localChangeData)
 		}

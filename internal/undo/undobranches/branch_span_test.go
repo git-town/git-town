@@ -442,10 +442,12 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
-			must.True(t, isLocalRemoved)
-			must.Eq(t, branch1, branchName)
-			must.Eq(t, sha1, beforeSHA)
+			have, has := bs.LocalRemoved().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -467,10 +469,12 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
-			must.True(t, isLocalRemoved)
-			must.Eq(t, branch1, branchName)
-			must.Eq(t, sha1, beforeSHA)
+			have, has := bs.LocalRemoved().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
 			t.Parallel()
@@ -490,8 +494,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isLocalRemoved, _, _ := bs.LocalRemoved()
-			must.False(t, isLocalRemoved)
+			_, has := bs.LocalRemoved().Get()
+			must.False(t, has)
 		})
 	})
 

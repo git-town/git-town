@@ -106,13 +106,18 @@ func (self BranchSpan) LocalChanged() Option[LocalBranchChange] {
 	})
 }
 
-func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) LocalRemoved() Option[LocalBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
 	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	hasAfterBranch, _, _ := after.GetLocal()
-	localRemoved = hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
-	return localRemoved, branchName, beforeSHA
+	localRemoved := hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
+	if !localRemoved {
+		return None[LocalBranchesSHAs]()
+	}
+	return Some(LocalBranchesSHAs{
+		branchName: beforeSHA,
+	})
 }
 
 // LocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
