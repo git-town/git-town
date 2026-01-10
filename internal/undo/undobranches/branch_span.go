@@ -50,8 +50,8 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 	})
 }
 
-// IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
-func (self BranchSpan) IsLocalRename() Option[LocalBranchRename] {
+// LocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
+func (self BranchSpan) LocalRename() Option[LocalBranchRename] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
 		return None[LocalBranchRename]()

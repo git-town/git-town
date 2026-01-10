@@ -54,7 +54,7 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
-		localBranchRename, isLocalBranchRename := branchSpan.IsLocalRename().Get()
+		localBranchRename, isLocalBranchRename := branchSpan.LocalRename().Get()
 		if isLocalBranchRename {
 			localRenamed = append(localRenamed, localBranchRename)
 		}
