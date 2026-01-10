@@ -37,7 +37,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange] {
 	_, isOmniChange := self.OmniChange().Get()
 	_, localChanged := self.LocalChanged().Get()
-	remoteChanged, _, _, _ := self.RemoteChanged()
+	_, remoteChanged := self.RemoteChanged().Get()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
 	isInconsistentChange := hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
@@ -196,19 +196,27 @@ func (self BranchSpan) RemoteAdded() Option[gitdomain.RemoteBranchName] {
 	return Some(afterRemoteBranchName)
 }
 
-func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteChanged() Option[RemoteBranchChange] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branchName, beforeSHA, afterSHA
+		return None[RemoteBranchChange]()
 	}
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branchName, beforeSHA, afterSHA
+		return None[RemoteBranchChange]()
 	}
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemote()
-	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
-	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
+	remoteChanged := beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
+	if !remoteChanged {
+		return None[RemoteBranchChange]()
+	}
+	return Some(RemoteBranchChange{
+		beforeRemoteBranchName: undodomain.Change[gitdomain.SHA]{
+			Before: beforeRemoteBranchSHA,
+			After:  afterRemoteBranchSHA,
+		},
+	})
 }
 
 func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {

@@ -76,11 +76,8 @@ func (self BranchSpans) Changes() BranchChanges {
 			remoteAdded = append(remoteAdded, remoteAddedBranch)
 		} else if isRemoteRemoved, beforeRemoteBranchName, beforeRemoteBranchSHA := branchSpan.RemoteRemoved(); isRemoteRemoved {
 			remoteRemoved[beforeRemoteBranchName] = beforeRemoteBranchSHA
-		} else if isRemoteChanged, remoteBranchName, beforeSHA, afterSHA := branchSpan.RemoteChanged(); isRemoteChanged {
-			remoteChanged[remoteBranchName] = undodomain.Change[gitdomain.SHA]{
-				Before: beforeSHA,
-				After:  afterSHA,
-			}
+		} else if remoteChangeData, isRemoteChanged := branchSpan.RemoteChanged().Get(); isRemoteChanged {
+			maps.Copy(remoteChanged, remoteChangeData)
 		}
 	}
 	return BranchChanges{
