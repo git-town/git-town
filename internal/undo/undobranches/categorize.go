@@ -18,8 +18,8 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 		}
 	}
 	return Categorized[undodomain.InconsistentChanges]{
-		Perennials: perennials,
 		Features:   features,
+		Perennials: perennials,
 	}
 }
 
@@ -34,8 +34,8 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config config.Validat
 		}
 	}
 	return Categorized[LocalBranchChange]{
-		Perennials: changedPerennials,
 		Features:   changedFeatures,
+		Perennials: changedPerennials,
 	}
 }
 
@@ -50,8 +50,8 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config config.Valid
 		}
 	}
 	return Categorized[RemoteBranchChange]{
-		Perennials: perennialChanges,
 		Features:   featureChanges,
+		Perennials: perennialChanges,
 	}
 }
 
@@ -66,12 +66,12 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.Validat
 		}
 	}
 	return Categorized[RemoteBranchesSHAs]{
-		Perennials: perennials,
 		Features:   features,
+		Perennials: perennials,
 	}
 }
 
 type Categorized[T any] struct {
-	Perennials T
 	Features   T
+	Perennials T
 }
