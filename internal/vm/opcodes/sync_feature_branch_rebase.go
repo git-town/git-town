@@ -50,7 +50,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, err error) {
+func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (bool, error) {
 	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
 	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
 		return false, nil

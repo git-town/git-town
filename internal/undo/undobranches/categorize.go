@@ -56,3 +56,8 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.Validat
 	}
 	return
 }
+
+type Categorized[T any] struct {
+	Perennials []T
+	Features   []T
+}
