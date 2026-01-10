@@ -51,32 +51,39 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 }
 
 // IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
-func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterName gitdomain.LocalBranchName) {
+func (self BranchSpan) IsLocalRename() Option[LocalBranchRename] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
 	beforeName, hasBeforeName := before.LocalName.Get()
 	if !hasBeforeName {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
 	afterName, hasAfterName := after.LocalName.Get()
 	if !hasAfterName {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
 	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
 	if !hasBeforeSHA {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
 	afterSHA, hasAfterSHA := after.LocalSHA.Get()
 	if !hasAfterSHA {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
-	return beforeName != afterName && beforeSHA == afterSHA, beforeName, afterName
+	isLocalRename := beforeName != afterName && beforeSHA == afterSHA
+	if !isLocalRename {
+		return None[LocalBranchRename]()
+	}
+	return Some(LocalBranchRename{
+		After:  afterName,
+		Before: beforeName,
+	})
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
