@@ -62,7 +62,7 @@ const (
 	CannotParse                        = "cannot parse %s: %w"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitDetachedHead                 = "please check out a branch before committing"
-	CommitDownNoParent                 = "cannot commit down because branch %s has no parent"
+	CommitDownNoAncestor               = "branch %s doesn't have the given ancestor"
 	CommitIntoMainBranch               = "cannot commit into the main branch"
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitNoBranchToCommitInto         = "please provide the branch to commit into"

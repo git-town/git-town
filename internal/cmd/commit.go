@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/git-town/git-town/v22/pkg/set"
@@ -251,13 +252,11 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
 	if down, hasDown := down.Get(); hasDown {
-		if down {
-			parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
-			if !hasParent {
-				return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoParent, initialBranch)
-			}
-			branchToCommitIntoOpt = Some(parent)
+		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down.Value()).Get()
+		if !hasAncestor {
+			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoAncestor, initialBranch)
 		}
+		branchToCommitIntoOpt = Some(ancestor)
 	}
 	branchToCommitInto, hasBranchToCommitInto := branchToCommitIntoOpt.Get()
 	if !hasBranchToCommitInto {
@@ -303,7 +302,6 @@ func commitProgram(data commitData) (runProgram program.Program) {
 			FallbackToDefaultCommitMessage: false,
 			Message:                        data.commitMessage,
 		},
-		&opcodes.Checkout{Branch: data.initialBranch},
 	)
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfosToSync,
@@ -324,7 +322,7 @@ func commitProgram(data commitData) (runProgram program.Program) {
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
 	})
-	return prog.Immutable()
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateCommitData(data commitData) error {
