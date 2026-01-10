@@ -38,7 +38,7 @@ func (self *APICache) Clear() {
 // If there is a cached proposal, returns (Some(proposal), true).
 // If it knows there is no proposal for the given source and target branch, returns (None, true).
 // If it has no records, returns (None, false).
-func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], certain bool) {
+func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], certain bool) { //nolint:nonamedreturns
 	for _, result := range self.results {
 		switch result := result.(type) {
 		case lookupResult:
