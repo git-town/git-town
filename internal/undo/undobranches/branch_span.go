@@ -138,16 +138,29 @@ func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.L
 	return localRemoved, branchName, beforeSHA
 }
 
-func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteAdded() RemoteAddedResult {
 	before, hasBefore := self.Before.Get()
 	beforeHasRemoteBranch, _, _ := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, addedRemoteBranchName, addedRemoteBranchSHA
+		return RemoteAddedResult{
+			AddedRemoteBranchName: "",
+			AddedRemoteBranchSHA:  "",
+			IsAdded:               false,
+		}
 	}
 	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
-	remoteAdded = (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
-	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
+	return RemoteAddedResult{
+		AddedRemoteBranchName: afterRemoteBranchName,
+		AddedRemoteBranchSHA:  afterRemoteBranchSHA,
+		IsAdded:               (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch,
+	}
+}
+
+type RemoteAddedResult struct {
+	AddedRemoteBranchName gitdomain.RemoteBranchName
+	AddedRemoteBranchSHA  gitdomain.SHA
+	IsAdded               bool
 }
 
 func (self BranchSpan) RemoteChanged() RemoteChangedResult {

@@ -79,12 +79,12 @@ func (self BranchSpans) Changes() BranchChanges {
 				After:  afterSHA,
 			}
 		}
-		if isRemoteAdded, remoteBranchName, _ := branchSpan.RemoteAdded(); isRemoteAdded {
-			remoteAdded = append(remoteAdded, remoteBranchName)
+		if remoteAddedResult := branchSpan.RemoteAdded(); remoteAddedResult.IsAdded {
+			remoteAdded = append(remoteAdded, remoteAddedResult.AddedRemoteBranchName)
 		} else if remoteRemovedResult := branchSpan.RemoteRemoved(); remoteRemovedResult.IsRemoved {
 			remoteRemoved[remoteRemovedResult.RemoteBranchName] = remoteRemovedResult.BeforeRemoteSHA
 		} else if remoteChangedResult := branchSpan.RemoteChanged(); remoteChangedResult.IsChanged {
-			remoteChanged[remoteBranchName] = undodomain.Change[gitdomain.SHA]{
+			remoteChanged[remoteAddedResult.AddedRemoteBranchName] = undodomain.Change[gitdomain.SHA]{
 				Before: remoteChangedResult.BeforeSHA,
 				After:  remoteChangedResult.AfterSHA,
 			}
