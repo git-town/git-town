@@ -211,7 +211,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	subProcess.Env = opts.Env
 	var stdoutBuf bytes.Buffer
 	var stderrBuf bytes.Buffer
-	var outputBuf bytes.Buffer
 	subProcess.Stdout = &stdoutBuf
 	subProcess.Stderr = &stderrBuf
 	if input, hasInput := opts.Input.Get(); hasInput {
@@ -238,6 +237,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		err = subProcess.Run()
 	}
 	// combine stdout and stderr into outputBuf
+	var outputBuf bytes.Buffer
 	outputBuf.Write(stdoutBuf.Bytes())
 	outputBuf.Write(stderrBuf.Bytes())
 	if err != nil {
