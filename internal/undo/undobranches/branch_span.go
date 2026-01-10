@@ -169,25 +169,25 @@ func (self BranchSpan) RemoteRemoved() RemoteRemovedResult {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
 		return RemoteRemovedResult{
+			BeforeRemoteSHA:  "",
 			IsRemoved:        false,
 			RemoteBranchName: "",
-			BeforeRemoteSHA:  "",
 		}
 	}
 	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	afterHasRemoteBranch, _, _ := after.GetRemote()
 	return RemoteRemovedResult{
+		BeforeRemoteSHA:  beforeSHA,
 		IsRemoved:        beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch),
 		RemoteBranchName: remoteBranchName,
-		BeforeRemoteSHA:  beforeSHA,
 	}
 }
 
 type RemoteRemovedResult struct {
+	BeforeRemoteSHA  gitdomain.SHA
 	IsRemoved        bool
 	RemoteBranchName gitdomain.RemoteBranchName
-	BeforeRemoteSHA  gitdomain.SHA
 }
 
 // func (self BranchSpan) String() string {
