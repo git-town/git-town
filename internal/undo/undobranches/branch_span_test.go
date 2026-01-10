@@ -85,11 +85,11 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := bs.IsInconsistentChange()
-			want := undobranches.IsInconsistentChangeResult{
-				IsInconsistentChange: true,
-				Before:               bs.Before.GetOrPanic(),
-				After:                bs.After.GetOrPanic(),
+			have, has := bs.IsInconsistentChange().Get()
+			must.True(t, has)
+			want := undobranches.InconsistentChange{
+				Before: bs.Before.GetOrPanic(),
+				After:  bs.After.GetOrPanic(),
 			}
 			must.Eq(t, want, have)
 		})
@@ -111,13 +111,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			have := bs.IsInconsistentChange()
-			want := undobranches.IsInconsistentChangeResult{
-				IsInconsistentChange: false,
-				Before:               bs.Before.GetOrPanic(),
-				After:                bs.After.GetOrPanic(),
-			}
-			must.Eq(t, want, have)
+			_, has := bs.IsInconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -138,7 +133,7 @@ func TestBranchSpan(t *testing.T) {
 				}),
 			}
 			have := bs.IsInconsistentChange()
-			want := undobranches.IsInconsistentChangeResult{
+			want := undobranches.InconsistentChange{
 				IsInconsistentChange: false,
 				Before:               bs.Before.GetOrPanic(),
 				After:                bs.After.GetOrPanic(),
@@ -164,7 +159,7 @@ func TestBranchSpan(t *testing.T) {
 				}),
 			}
 			have := bs.IsInconsistentChange()
-			want := undobranches.IsInconsistentChangeResult{
+			want := undobranches.InconsistentChange{
 				IsInconsistentChange: false,
 				Before:               bs.Before.GetOrPanic(),
 				After:                bs.After.GetOrPanic(),
@@ -190,7 +185,7 @@ func TestBranchSpan(t *testing.T) {
 				}),
 			}
 			have := bs.IsInconsistentChange()
-			want := undobranches.IsInconsistentChangeResult{
+			want := undobranches.InconsistentChange{
 				IsInconsistentChange: false,
 				Before:               bs.Before.GetOrPanic(),
 				After:                bs.After.GetOrPanic(),

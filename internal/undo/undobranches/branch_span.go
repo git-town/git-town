@@ -33,23 +33,26 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	return branchNames.Values()
 }
 
-func (self BranchSpan) IsInconsistentChange() IsInconsistentChangeResult {
+func (self BranchSpan) IsInconsistentChange() Option[InconsistentChange] {
 	omniChangeData := self.IsOmniChange()
 	localChangedResult := self.LocalChanged()
 	remoteChanged := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	return IsInconsistentChangeResult{
-		IsInconsistentChange: hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChangedResult.IsChanged && remoteChanged.IsChanged && !omniChangeData.IsOmniChange,
-		Before:               before,
-		After:                after,
+	isInconsistentChange := hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChangedResult.IsChanged && remoteChanged.IsChanged && !omniChangeData.IsOmniChange
+	if isInconsistentChange {
+		return Some(InconsistentChange{
+			Before: before,
+			After:  after,
+		})
+	} else {
+		return None[InconsistentChange]()
 	}
 }
 
-type IsInconsistentChangeResult struct {
-	IsInconsistentChange bool
-	Before               gitdomain.BranchInfo
-	After                gitdomain.BranchInfo
+type InconsistentChange struct {
+	Before gitdomain.BranchInfo
+	After  gitdomain.BranchInfo
 }
 
 // IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
