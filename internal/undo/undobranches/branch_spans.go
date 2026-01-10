@@ -69,8 +69,8 @@ func (self BranchSpans) Changes() BranchChanges {
 			})
 			continue
 		}
-		if isLocalAdded, afterBranch, _ := branchSpan.LocalAdded(); isLocalAdded {
-			localAdded = append(localAdded, afterBranch)
+		if localAddedData := branchSpan.LocalAdded(); localAddedData.IsAdded {
+			localAdded = append(localAdded, localAddedData.Name)
 		} else if localRemovedResult := branchSpan.LocalRemoved(); localRemovedResult.IsRemoved {
 			localRemoved[localRemovedResult.Name] = localRemovedResult.SHA
 		} else if localChangedResult := branchSpan.LocalChanged(); localChangedResult.IsChanged {
