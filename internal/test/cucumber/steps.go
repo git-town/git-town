@@ -1070,10 +1070,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, godogTable *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
-		branches, _ := asserts.NoError2(repo.LocalBranches())
+		branches := asserts.NoError1(repo.LocalBranches())
 		haveTable := datatable.DataTable{}
 		haveTable.AddRow("BRANCH", "NAME")
-		for _, branch := range branches {
+		for _, branch := range branches.AllBranches {
 			repo.CheckoutBranch(branch)
 			firstFileInBranch := true
 			for _, file := range repo.FilesInWorkspace() {

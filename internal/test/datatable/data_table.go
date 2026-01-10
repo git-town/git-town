@@ -39,7 +39,7 @@ func (self *DataTable) AddRow(elements ...string) {
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
+func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) { //nolint:nonamedreturns
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(other.String(), self.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
@@ -53,7 +53,7 @@ func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount 
 
 // EqualGherkin compares this DataTable instance to the given Gherkin self.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount int) {
+func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount int) { //nolint:nonamedreturns
 	if len(self.Cells) == 0 {
 		return "your data is empty", 1
 	}
