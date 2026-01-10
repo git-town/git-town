@@ -643,10 +643,10 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
-			must.True(t, isRemoteRemoved)
-			must.Eq(t, branch1, remoteBranchName)
-			must.Eq(t, sha1, beforeRemoteSHA)
+			remoteRemoved := bs.RemoteRemoved()
+			must.True(t, remoteRemoved.RemoteRemoved)
+			must.Eq(t, branch1, remoteRemoved.RemoteBranchName)
+			must.Eq(t, sha1, remoteRemoved.BeforeRemoteBranchSHA)
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -668,10 +668,10 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isRemoteRemoved, remoteBranchName, beforeRemoteSHA := bs.RemoteRemoved()
-			must.True(t, isRemoteRemoved)
-			must.Eq(t, branch1, remoteBranchName)
-			must.Eq(t, sha1, beforeRemoteSHA)
+			remoteRemoved := bs.RemoteRemoved()
+			must.True(t, remoteRemoved.RemoteRemoved)
+			must.Eq(t, branch1, remoteRemoved.RemoteBranchName)
+			must.Eq(t, sha1, remoteRemoved.BeforeRemoteBranchSHA)
 		})
 
 		t.Run("changes a remote branch", func(t *testing.T) {
@@ -692,8 +692,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isRemoteRemoved, _, _ := bs.RemoteRemoved()
-			must.False(t, isRemoteRemoved)
+			remoteRemoved := bs.RemoteRemoved()
+			must.False(t, remoteRemoved.RemoteRemoved)
 		})
 
 		t.Run("upstream branch", func(t *testing.T) {
@@ -714,8 +714,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isRemoteRemoved, _, _ := bs.RemoteRemoved()
-			must.False(t, isRemoteRemoved)
+			remoteRemoved := bs.RemoteRemoved()
+			must.False(t, remoteRemoved.RemoteRemoved)
 		})
 	})
 }
