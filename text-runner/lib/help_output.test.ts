@@ -181,7 +181,7 @@ Flags:
 `)
       const have = output.flags()
       const want = [
-        ["-d", "--down"],
+        ["-d", "--down int"],
         ["--dry-run"],
         ["-h", "--help"],
         ["-m", "--message string"],
