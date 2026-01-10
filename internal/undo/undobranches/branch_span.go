@@ -91,15 +91,28 @@ func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.L
 
 // Indicates whether this BranchSpan describes the removal of an omni Branch
 // and provides all relevant data for this situation.
-func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) IsOmniRemove() IsOmniRemoveResult {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, beforeBranchName, beforeSHA
+		return IsOmniRemoveResult{
+			IsOmniRemove: false,
+			Name:         "",
+			SHA:          "",
+		}
 	}
 	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
 	_, hasAfter := self.After.Get()
-	isOmniRemove = beforeIsOmni && !hasAfter
-	return isOmniRemove, beforeName, beforeSHA
+	return IsOmniRemoveResult{
+		IsOmniRemove: beforeIsOmni && !hasAfter,
+		Name:         beforeName,
+		SHA:          beforeSHA,
+	}
+}
+
+type IsOmniRemoveResult struct {
+	IsOmniRemove bool
+	Name         gitdomain.LocalBranchName
+	SHA          gitdomain.SHA
 }
 
 func (self BranchSpan) LocalAdded() LocalAddedResult {
