@@ -10,13 +10,15 @@ import (
 )
 
 // BranchesToMark provides the branches to make contribution, observed, parked, or prototype.
-func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config UnvalidatedConfig) (branchesToMark configdomain.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
-	branchesToMark = configdomain.BranchesAndTypes{}
+func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config UnvalidatedConfig) (BranchesToMarkResult, error) {
+	branchesToMark := configdomain.BranchesAndTypes{}
+	var branchToCheckout Option[gitdomain.LocalBranchName]
+	var emptyResult BranchesToMarkResult
 	switch len(args) {
 	case 0:
 		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 		if !hasCurrentBranch {
-			return branchesToMark, branchToCheckout, errors.New(messages.CurrentBranchCannotDetermine)
+			return emptyResult, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		branchesToMark.AddTypeFor(currentBranch, &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
@@ -33,5 +35,13 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
-	return branchesToMark, branchToCheckout, nil
+	return BranchesToMarkResult{
+		BranchesToMark:   branchesToMark,
+		BranchToCheckout: branchToCheckout,
+	}, nil
+}
+
+type BranchesToMarkResult struct {
+	BranchesToMark   configdomain.BranchesAndTypes
+	BranchToCheckout Option[gitdomain.LocalBranchName]
 }

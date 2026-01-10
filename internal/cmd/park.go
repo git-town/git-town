@@ -127,13 +127,13 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if branchesSnapshot.DetachedHead {
 		return parkData{}, errors.New(messages.ParkDetachedHead)
 	}
-	branchesToPark, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToMarkResult, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 
 	return parkData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,
-		branchToCheckout:      branchToCheckout,
-		branchesToPark:        branchesToPark,
+		branchToCheckout:      branchesToMarkResult.BranchToCheckout,
+		branchesToPark:        branchesToMarkResult.BranchesToMark,
 	}, err
 }
 
