@@ -35,11 +35,11 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 
 func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
 	isOmniChange, _, _, _ := self.IsOmniChange()
-	localChanged, _, _, _ := self.LocalChanged()
+	localChangedResult := self.LocalChanged()
 	remoteChanged := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged.IsChanged && !isOmniChange
+	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChangedResult.IsChanged && remoteChanged.IsChanged && !isOmniChange
 	return isInconsistentChange, before, after
 }
 
@@ -114,19 +114,40 @@ func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomai
 	return isLocalAdded, afterLocalBranch, afterSHA
 }
 
-func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) LocalChanged() LocalChangedResult {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branch, beforeSHA, afterSHA
+		return LocalChangedResult{
+			IsChanged: false,
+			Name:      "",
+			SHAAfter:  "",
+			SHABefore: "",
+		}
 	}
 	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branch, beforeSHA, afterSHA
+		return LocalChangedResult{
+			IsChanged: false,
+			Name:      "",
+			SHAAfter:  "",
+			SHABefore: "",
+		}
 	}
 	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
-	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
-	return localChanged, beforeBranch, beforeSHA, afterSHA
+	return LocalChangedResult{
+		IsChanged: hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA,
+		Name:      beforeBranch,
+		SHAAfter:  afterSHA,
+		SHABefore: beforeSHA,
+	}
+}
+
+type LocalChangedResult struct {
+	IsChanged bool
+	Name      gitdomain.LocalBranchName
+	SHAAfter  gitdomain.SHA
+	SHABefore gitdomain.SHA
 }
 
 func (self BranchSpan) LocalRemoved() LocalRemovedResult {

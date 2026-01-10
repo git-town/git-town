@@ -354,11 +354,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
-			must.True(t, localChanged)
-			must.EqOp(t, branch1, name)
-			must.EqOp(t, sha1, beforeSHA)
-			must.EqOp(t, sha2, afterSHA)
+			have := branchSpan.LocalChanged()
+			want := undobranches.LocalChangedResult{
+				IsChanged: true,
+				Name:      branch1,
+				SHABefore: sha1,
+				SHAAfter:  sha2,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -381,11 +384,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			localChanged, name, beforeSHA, afterSHA := branchSpan.LocalChanged()
-			must.True(t, localChanged)
-			must.EqOp(t, branch1, name)
-			must.EqOp(t, sha1, beforeSHA)
-			must.EqOp(t, sha2, afterSHA)
+			have := branchSpan.LocalChanged()
+			want := undobranches.LocalChangedResult{
+				IsChanged: true,
+				Name:      branch1,
+				SHABefore: sha1,
+				SHAAfter:  sha2,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
@@ -405,8 +411,14 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			localChanged, _, _, _ := branchSpan.LocalChanged()
-			must.False(t, localChanged)
+			have := branchSpan.LocalChanged()
+			want := undobranches.LocalChangedResult{
+				IsChanged: false,
+				Name:      "branch-1",
+				SHABefore: "111111",
+				SHAAfter:  "111111",
+			}
+			must.Eq(t, want, have)
 		})
 	})
 

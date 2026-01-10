@@ -73,10 +73,10 @@ func (self BranchSpans) Changes() BranchChanges {
 			localAdded = append(localAdded, afterBranch)
 		} else if localRemovedResult := branchSpan.LocalRemoved(); localRemovedResult.IsRemoved {
 			localRemoved[localRemovedResult.Name] = localRemovedResult.SHA
-		} else if isLocalChanged, branch, beforeSHA, afterSHA := branchSpan.LocalChanged(); isLocalChanged {
-			localChanged[branch] = undodomain.Change[gitdomain.SHA]{
-				Before: beforeSHA,
-				After:  afterSHA,
+		} else if localChangedResult := branchSpan.LocalChanged(); localChangedResult.IsChanged {
+			localChanged[localChangedResult.Name] = undodomain.Change[gitdomain.SHA]{
+				Before: localChangedResult.SHABefore,
+				After:  localChangedResult.SHAAfter,
 			}
 		}
 		if remoteAddedResult := branchSpan.RemoteAdded(); remoteAddedResult.IsAdded {
