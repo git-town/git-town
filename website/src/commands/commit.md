@@ -42,6 +42,10 @@ off.
 Commit the staged changes into the ancestor branch that is the given number of
 generations older than the current branch.
 
+- `--down` and `--down=1` commit into the parent branch
+- `--down=2` commits into the grandparent branch
+- `--down=3` commits into the great-grandparent branch
+
 #### `--dry-run`
 
 Print the Git commands that would be executed without actually running them.
