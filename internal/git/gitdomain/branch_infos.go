@@ -200,7 +200,7 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchInfos with the given names.
-func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) {
+func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) { //nolint:nonamedreturns
 	result = make(BranchInfos, 0, len(names))
 	for _, name := range names {
 		if branchInfo, has := self.FindByLocalName(name).Get(); has {

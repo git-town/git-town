@@ -332,7 +332,7 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 // If the file was deleted, the return content is empty and the bool return variable is set.
-func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) {
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) { //nolint:nonamedreturns
 	output, err := self.Query("git", "show", location.String()+":"+filename)
 	if err != nil {
 		return "", true

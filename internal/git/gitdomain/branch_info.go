@@ -70,10 +70,20 @@ func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 }
 
 // GetSHAs provides the SHAs of the local and remote branch.
-func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
+func (self BranchInfo) GetSHAs() GetSHAsResult {
 	local, hasLocal := self.LocalSHA.Get()
 	remote, hasRemote := self.RemoteSHA.Get()
-	return hasLocal && hasRemote, local, remote
+	return GetSHAsResult{
+		HasBothSHA: hasLocal && hasRemote,
+		LocalSHA:   local,
+		RemoteSHA:  remote,
+	}
+}
+
+type GetSHAsResult struct {
+	HasBothSHA bool
+	LocalSHA   SHA
+	RemoteSHA  SHA
 }
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
@@ -105,7 +115,7 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 // IsOmniBranch indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
-func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) {
+func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) { //nolint:nonamedreturns
 	localSHA, hasLocalSHA := self.LocalSHA.Get()
 	branchName, hasBranch := self.LocalName.Get()
 	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
