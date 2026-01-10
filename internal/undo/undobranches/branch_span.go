@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/git-town/git-town/v22/pkg/set"
 )
@@ -33,14 +34,20 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	return branchNames.Values()
 }
 
-func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
+func (self BranchSpan) IsInconsistentChange() Option[undodomain.InconsistentChange] {
 	isOmniChange, _, _, _ := self.IsOmniChange()
 	localChanged, _, _, _ := self.LocalChanged()
 	remoteChanged, _, _, _ := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
-	return isInconsistentChange, before, after
+	isInconsistentChange := hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
+	if !isInconsistentChange {
+		return None[undodomain.InconsistentChange]()
+	}
+	return Some(undodomain.InconsistentChange{
+		After:  after,
+		Before: before,
+	})
 }
 
 // IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.

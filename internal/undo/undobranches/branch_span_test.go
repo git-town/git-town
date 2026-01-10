@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -85,10 +86,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, before, after := bs.IsInconsistentChange()
-			must.True(t, isInconsistentChange)
-			must.Eq(t, bs.Before.GetOrPanic(), before)
-			must.Eq(t, bs.After.GetOrPanic(), after)
+			have, has := bs.IsInconsistentChange().Get()
+			must.True(t, has)
+			want := undodomain.InconsistentChange{
+				After:  bs.After.GetOrPanic(),
+				Before: bs.Before.GetOrPanic(),
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
@@ -108,8 +112,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			_, has := bs.IsInconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -129,8 +133,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			_, has := bs.IsInconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -150,8 +154,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			_, has := bs.IsInconsistentChange().Get()
+			must.False(t, has)
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -171,8 +175,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isInconsistentChange, _, _ := bs.IsInconsistentChange()
-			must.False(t, isInconsistentChange)
+			_, has := bs.IsInconsistentChange().Get()
+			must.False(t, has)
 		})
 	})
 
