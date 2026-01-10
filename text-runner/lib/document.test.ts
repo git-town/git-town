@@ -11,6 +11,11 @@ suite("Document", () => {
         want: ["-m", "--message string"],
       },
       {
+        desc: "has argument",
+        give: ["-d int", "--down int"],
+        want: ["-d", "--down int"],
+      },
+      {
         desc: "no argument",
         give: ["-p", "--prototype"],
         want: ["-p", "--prototype"],
