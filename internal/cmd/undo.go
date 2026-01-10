@@ -117,9 +117,10 @@ type undoData struct {
 
 func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult undoData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return undoData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -139,7 +140,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return undoData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -159,7 +160,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return undoData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -188,7 +189,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return undoData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	return undoData{

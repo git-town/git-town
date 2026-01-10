@@ -106,6 +106,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 		return diffParentData{}, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
+	var emptyResult diffParentData
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
@@ -123,7 +124,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return diffParentData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -143,31 +144,31 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return diffParentData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return diffParentData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return diffParentData{}, configdomain.ProgramFlowExit, errors.New(messages.DiffParentDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DiffParentDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return diffParentData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
 	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
-			return diffParentData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return diffParentData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -185,11 +186,11 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return diffParentData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	parentBranch, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
-		return diffParentData{}, configdomain.ProgramFlowExit, errors.New(messages.DiffParentNoFeatureBranch)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DiffParentNoFeatureBranch)
 	}
 	return diffParentData{
 		branch:       branch,

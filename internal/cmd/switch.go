@@ -197,9 +197,10 @@ func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdom
 
 func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult switchData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return switchData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -219,20 +220,20 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return switchData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return switchData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return switchData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	regexes, err := regexes.NewRegexes(args)
 	if err != nil {
-		return switchData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
 		branchesSnapshot:   branchesSnapshot,
