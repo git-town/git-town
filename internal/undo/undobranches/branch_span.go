@@ -36,7 +36,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 
 func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange] {
 	_, isOmniChange := self.OmniChange().Get()
-	localChanged, _, _, _ := self.LocalChanged()
+	_, localChanged := self.LocalChanged().Get()
 	remoteChanged, _, _, _ := self.RemoteChanged()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
@@ -83,19 +83,27 @@ func (self BranchSpan) LocalAdded() Option[gitdomain.LocalBranchName] {
 	return Some(afterLocalBranch)
 }
 
-func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) LocalChanged() Option[LocalBranchChange] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branch, beforeSHA, afterSHA
+		return None[LocalBranchChange]()
 	}
 	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branch, beforeSHA, afterSHA
+		return None[LocalBranchChange]()
 	}
 	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
-	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
-	return localChanged, beforeBranch, beforeSHA, afterSHA
+	localChanged := hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
+	if !localChanged {
+		return None[LocalBranchChange]()
+	}
+	return Some(LocalBranchChange{
+		beforeBranch: undodomain.Change[gitdomain.SHA]{
+			Before: beforeSHA,
+			After:  afterSHA,
+		},
+	})
 }
 
 func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
