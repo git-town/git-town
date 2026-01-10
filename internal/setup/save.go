@@ -61,18 +61,15 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	return nil
 }
 
-func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
+func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) error {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := valuesAlreadyInGit[aliasableCommand]
 		newAlias, hasNew := valuesToWriteToGit[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
-			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
+			return gitconfig.RemoveAlias(frontend, aliasableCommand)
 		case hasNew && !hasOld, newAlias != oldAlias:
-			err = gitconfig.SetAlias(frontend, aliasableCommand)
-		}
-		if err != nil {
-			return err
+			return gitconfig.SetAlias(frontend, aliasableCommand)
 		}
 	}
 	return nil
@@ -431,7 +428,7 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 	return nil
 }
 
-func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) (err error) {
+func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) error {
 	oldValue, oldHas := valueAlreadyInGit.Get()
 	newValue, newHas := valueToWriteToGit.Get()
 	if !oldHas && !newHas {
