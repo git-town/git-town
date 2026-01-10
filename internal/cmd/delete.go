@@ -125,7 +125,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	runProgram, finalUndoProgram := deleteProgram(repo, data, repo.FinalMessages)
+	deletePrograms := deleteProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -135,10 +135,10 @@ Start:
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		FinalUndoProgram:      finalUndoProgram,
+		FinalUndoProgram:      deletePrograms.finalUndoProgram,
 		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
+		RunProgram:            deletePrograms.runProgram,
+		TouchedBranches:       deletePrograms.runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
@@ -315,7 +315,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
+func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) deleteProgramResult {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 	undoProg := NewMutable(&program.Program{})
@@ -347,7 +347,15 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
-	return optimizer.Optimize(prog.Immutable()), undoProg.Immutable()
+	return deleteProgramResult{
+		runProgram:       optimizer.Optimize(prog.Immutable()),
+		finalUndoProgram: undoProg.Immutable(),
+	}
+}
+
+type deleteProgramResult struct {
+	runProgram       program.Program
+	finalUndoProgram program.Program
 }
 
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {

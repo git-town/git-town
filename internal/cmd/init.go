@@ -100,11 +100,11 @@ Start:
 	})
 }
 
-func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.ProgramFlow, err error) {
+func LoadData(repo execute.OpenRepoResult) (setup.Data, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return setup.Data{}, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -124,16 +124,16 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return setup.Data{}, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return setup.Data{}, flow, nil
 	}
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return setup.Data{}, configdomain.ProgramFlowExit, err
 	}
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}

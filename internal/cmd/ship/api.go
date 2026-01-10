@@ -21,23 +21,23 @@ type shipDataAPI struct {
 	proposal               forgedomain.Proposal
 }
 
-func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {
+func determineAPIData(sharedData sharedShipData) (shipDataAPI, error) {
 	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShipInfo.RemoteName.Get()
 	if !hasRemoteBranchToShip {
-		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchToShip)
+		return shipDataAPI{}, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchToShip)
 	}
 	connector, hasConnector := sharedData.connector.Get()
 	if !hasConnector {
-		return result, errors.New(messages.ShipAPIConnectorRequired)
+		return shipDataAPI{}, errors.New(messages.ShipAPIConnectorRequired)
 	}
 	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
 	if !canFindProposals {
-		return result, errors.New(messages.ShipAPIConnectorUnsupported)
+		return shipDataAPI{}, errors.New(messages.ShipAPIConnectorUnsupported)
 	}
 	proposalOpt, err := proposalFinder.FindProposal(sharedData.branchToShip, sharedData.targetBranchName)
 	proposal, hasProposal := proposalOpt.Get()
 	if !hasProposal {
-		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchToShip)
+		return shipDataAPI{}, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchToShip)
 	}
 	return shipDataAPI{
 		branchToShipRemoteName: branchToShipRemoteName,
