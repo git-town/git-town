@@ -36,12 +36,12 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
 	return BranchesToMarkResult{
-		BranchesToMark:   branchesToMark,
 		BranchToCheckout: branchToCheckout,
+		BranchesToMark:   branchesToMark,
 	}, nil
 }
 
 type BranchesToMarkResult struct {
-	BranchesToMark   configdomain.BranchesAndTypes
 	BranchToCheckout Option[gitdomain.LocalBranchName]
+	BranchesToMark   configdomain.BranchesAndTypes
 }
