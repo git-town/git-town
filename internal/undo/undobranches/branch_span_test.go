@@ -426,10 +426,13 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
-			must.True(t, isLocalRemoved)
-			must.Eq(t, branch1, branchName)
-			must.Eq(t, sha1, beforeSHA)
+			have := bs.LocalRemoved()
+			want := undobranches.LocalRemovedResult{
+				IsRemoved: true,
+				Name:      branch1,
+				SHA:       sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -451,10 +454,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 			}
-			isLocalRemoved, branchName, beforeSHA := bs.LocalRemoved()
-			must.True(t, isLocalRemoved)
-			must.Eq(t, branch1, branchName)
-			must.Eq(t, sha1, beforeSHA)
+			have := bs.LocalRemoved()
+			want := undobranches.LocalRemovedResult{
+				IsRemoved: true,
+				Name:      branch1,
+				SHA:       sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
 			t.Parallel()
@@ -474,8 +480,13 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				}),
 			}
-			isLocalRemoved, _, _ := bs.LocalRemoved()
-			must.False(t, isLocalRemoved)
+			have := bs.LocalRemoved()
+			want := undobranches.LocalRemovedResult{
+				IsRemoved: false,
+				Name:      "branch-1",
+				SHA:       "111111",
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -584,10 +595,10 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
-				IsChanged:  true,
-				Name: branch1,
-				SHABefore:  sha1,
-				SHAAfter:   sha2,
+				IsChanged: true,
+				Name:      branch1,
+				SHABefore: sha1,
+				SHAAfter:  sha2,
 			}
 			must.Eq(t, want, have)
 		})
@@ -614,10 +625,10 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
-				IsChanged:  true,
-				Name: branch1,
-				SHABefore:  sha1,
-				SHAAfter:   sha2,
+				IsChanged: true,
+				Name:      branch1,
+				SHABefore: sha1,
+				SHAAfter:  sha2,
 			}
 			must.Eq(t, want, have)
 		})
@@ -641,10 +652,10 @@ func TestBranchSpan(t *testing.T) {
 			}
 			have := branchSpan.RemoteChanged()
 			want := undobranches.RemoteChangedResult{
-				IsChanged:  false,
-				Name: "origin/branch-1",
-				SHABefore:  "111111",
-				SHAAfter:   "111111",
+				IsChanged: false,
+				Name:      "origin/branch-1",
+				SHABefore: "111111",
+				SHAAfter:  "111111",
 			}
 			must.Eq(t, want, have)
 		})

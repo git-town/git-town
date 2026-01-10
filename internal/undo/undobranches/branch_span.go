@@ -129,13 +129,22 @@ func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.Local
 	return localChanged, beforeBranch, beforeSHA, afterSHA
 }
 
-func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) LocalRemoved() LocalRemovedResult {
 	before, hasBefore := self.Before.Get()
 	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	hasAfterBranch, _, _ := after.GetLocal()
-	localRemoved = hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
-	return localRemoved, branchName, beforeSHA
+	return LocalRemovedResult{
+		IsRemoved: hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch),
+		Name:      branchName,
+		SHA:       beforeSHA,
+	}
+}
+
+type LocalRemovedResult struct {
+	IsRemoved bool
+	Name      gitdomain.LocalBranchName
+	SHA       gitdomain.SHA
 }
 
 func (self BranchSpan) RemoteAdded() RemoteAddedResult {
