@@ -110,9 +110,10 @@ Start:
 
 func determineContinueData(repo execute.OpenRepoResult) (continueData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult continueData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return continueData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -132,7 +133,7 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return continueData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -152,18 +153,18 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return continueData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return continueData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return continueData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -181,19 +182,19 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return continueData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if repoStatus.Conflicts {
-		return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return continueData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+			return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
 			initialBranch = currentBranch

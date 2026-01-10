@@ -200,17 +200,18 @@ Start:
 }
 
 func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatureData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult appendFeatureData
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args.argv...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return appendFeatureData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{

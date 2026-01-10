@@ -240,28 +240,28 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return detachData{}, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return detachData{}, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return detachData{}, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchNameToDetach := currentBranch
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
 	if !hasBranchToDetachInfo {
-		return detachData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
 	}
 	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return detachData{}, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return detachData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,

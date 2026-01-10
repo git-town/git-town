@@ -241,7 +241,7 @@ type appendFeatureData struct {
 }
 
 func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResult) (appendFeatureData, configdomain.ProgramFlow, error) {
-	emptyResult := appendFeatureData{}
+	var emptyResult appendFeatureData
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
