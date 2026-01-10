@@ -45,11 +45,11 @@ func (self BranchSpans) Changes() BranchChanges {
 	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	for _, branchSpan := range self {
-		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
-			omniRemoved[beforeLocalBranch] = beforeLocalSHA
+		if omniRemove, isOmniRemove := branchSpan.IsOmniRemove().Get(); isOmniRemove {
+			maps.Copy(omniRemoved, omniRemove)
 			continue
 		}
-		if omniChange, isOmniChange := branchSpan.OmniChange().Get(); isOmniChange {
+		if omniChange, hasOmniChange := branchSpan.OmniChange().Get(); hasOmniChange {
 			maps.Copy(omniChanged, omniChange)
 			continue
 		}

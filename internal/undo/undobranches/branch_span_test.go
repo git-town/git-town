@@ -252,10 +252,12 @@ func TestBranchSpan(t *testing.T) {
 				}),
 				After: None[gitdomain.BranchInfo](),
 			}
-			isOmniRemove, beforeBranchName, beforeSHA := branchSpan.IsOmniRemove()
-			must.True(t, isOmniRemove)
-			must.Eq(t, branch1, beforeBranchName)
-			must.Eq(t, sha1, beforeSHA)
+			have, has := branchSpan.IsOmniRemove().Get()
+			must.True(t, has)
+			want := undobranches.LocalBranchesSHAs{
+				branch1: sha1,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
@@ -277,8 +279,8 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 			}
-			isOmniRemove, _, _ := bs.IsOmniRemove()
-			must.False(t, isOmniRemove)
+			_, has := bs.IsOmniRemove().Get()
+			must.False(t, has)
 		})
 	})
 

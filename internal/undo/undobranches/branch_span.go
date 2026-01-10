@@ -52,15 +52,20 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 
 // Indicates whether this BranchSpan describes the removal of an omni Branch
 // and provides all relevant data for this situation.
-func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) IsOmniRemove() Option[LocalBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, beforeBranchName, beforeSHA
+		return None[LocalBranchesSHAs]()
 	}
 	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
 	_, hasAfter := self.After.Get()
-	isOmniRemove = beforeIsOmni && !hasAfter
-	return isOmniRemove, beforeName, beforeSHA
+	isOmniRemove := beforeIsOmni && !hasAfter
+	if !isOmniRemove {
+		return None[LocalBranchesSHAs]()
+	}
+	return Some(LocalBranchesSHAs{
+		beforeName: beforeSHA,
+	})
 }
 
 func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
