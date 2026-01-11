@@ -323,7 +323,7 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
 		if !has {
-			return detachData{}, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = detachChildBranch{
 			info:     childInfo,
@@ -336,7 +336,7 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 	for d, descendentName := range descendentNames {
 		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
 		if !has {
-			return detachData{}, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
 		}
 		descendents[d] = detachChildBranch{
 			info:     info,
