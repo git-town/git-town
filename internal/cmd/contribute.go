@@ -133,12 +133,12 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if branchesSnapshot.DetachedHead {
 		return contributeData{}, errors.New(messages.ContributeDetachedHead)
 	}
-	branchesToMarkResult, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToMakeContribution, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return contributeData{
 		beginBranchesSnapshot:      branchesSnapshot,
 		branchInfos:                branchesSnapshot.Branches,
-		branchToCheckout:           branchesToMarkResult.BranchToCheckout,
-		branchesToMakeContribution: branchesToMarkResult.BranchesToMark,
+		branchToCheckout:           branchesToMakeContribution.BranchToCheckout,
+		branchesToMakeContribution: branchesToMakeContribution.BranchesToMark,
 	}, err
 }
 
