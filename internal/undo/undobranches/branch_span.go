@@ -90,15 +90,15 @@ func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
 
 func (self BranchSpan) LocalRemove() Option[LocalBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
-	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
+	beforeLocal, hasBeforeLocal := before.Local.Get()
 	after, hasAfter := self.After.Get()
-	hasAfterBranch, _, _ := after.GetLocal()
-	localRemoved := hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
+	_, hasAfterBranch := after.Local.Get()
+	localRemoved := hasBefore && hasBeforeLocal && (!hasAfter || !hasAfterBranch)
 	if !localRemoved {
 		return None[LocalBranchesSHAs]()
 	}
 	return Some(LocalBranchesSHAs{
-		branchName: beforeSHA,
+		beforeLocal.Name: beforeLocal.SHA,
 	})
 }
 
