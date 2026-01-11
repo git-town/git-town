@@ -198,7 +198,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return renameData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
