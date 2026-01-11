@@ -27,7 +27,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 			break
 		}
 		if parentBranchInfo, hasParentInfo := args.BranchInfos.FindLocalOrRemote(parent).Get(); hasParentInfo {
-			parentIsLocal := parentBranchInfo.LocalName.IsSome()
+			parentIsLocal := parentBranchInfo.Local.IsSome()
 			if parentIsLocal {
 				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parent.BranchName())
 				if err != nil {

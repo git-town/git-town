@@ -279,7 +279,7 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 	if !hasInitialBranchInfo {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
 	}
-	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA.Get()
+	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA().Get()
 	if !hasInitialBranchSHA {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
 	}
@@ -287,7 +287,7 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 	if !hasParentBranchInfo {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
 	}
-	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA.Get()
+	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA().Get()
 	if !hasParentBranchSHA {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
 	}

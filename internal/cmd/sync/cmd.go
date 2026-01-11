@@ -324,7 +324,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 				gitdomain.SyncStatusAhead,
 				gitdomain.SyncStatusBehind,
 				gitdomain.SyncStatusUpToDate:
-				previousBranchOpt = previousBranchInfo.LocalName
+				previousBranchOpt = previousBranchInfo.LocalName()
 			case
 				gitdomain.SyncStatusDeletedAtRemote,
 				gitdomain.SyncStatusRemoteOnly,
