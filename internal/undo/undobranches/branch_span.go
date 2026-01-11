@@ -145,12 +145,12 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	if !hasBefore {
 		return None[LocalBranchChange]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeIsOmni, beforeName, beforeSHA := before.OmniBranch()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[LocalBranchChange]()
 	}
-	afterIsOmni, _, afterSHA := after.IsOmniBranch()
+	afterIsOmni, _, afterSHA := after.OmniBranch()
 	isOmniChange := beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
 	if !isOmniChange {
 		return None[LocalBranchChange]()
@@ -170,7 +170,7 @@ func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 	if !hasBefore {
 		return None[LocalBranchesSHAs]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeIsOmni, beforeName, beforeSHA := before.OmniBranch()
 	_, hasAfter := self.After.Get()
 	isOmniRemove := beforeIsOmni && !hasAfter
 	if !isOmniRemove {

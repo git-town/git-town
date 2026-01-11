@@ -426,7 +426,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 				RemoteSHA:  Some(sha1),
 			}
-			isOmni, name, sha := give.IsOmniBranch()
+			isOmni, name, sha := give.OmniBranch()
 			must.True(t, isOmni)
 			must.EqOp(t, branch1, name)
 			must.EqOp(t, sha1, sha)
@@ -440,7 +440,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 				RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 			}
-			isOmni, _, _ := give.IsOmniBranch()
+			isOmni, _, _ := give.OmniBranch()
 			must.False(t, isOmni)
 		})
 		t.Run("empty", func(t *testing.T) {
@@ -452,7 +452,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
-			isOmni, _, _ := give.IsOmniBranch()
+			isOmni, _, _ := give.OmniBranch()
 			must.False(t, isOmni)
 		})
 	})
