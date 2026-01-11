@@ -116,7 +116,7 @@ func (self BranchInfo) LocalSHA() Option[SHA] {
 	return None[SHA]()
 }
 
-// IsOmniBranch indicates whether the branch described by this BranchInfo is omni
+// OmniBranch indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
 func (self BranchInfo) OmniBranch() Option[BranchData] {
