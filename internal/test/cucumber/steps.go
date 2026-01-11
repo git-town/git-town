@@ -451,8 +451,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town runs no commands$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runResult := state.runResult.GetOrPanic()
-		commands := output.GitCommandsInGitTownOutput(runResult.Output)
+		commands := output.GitCommandsInGitTownOutput(state.runResult.GetOrPanic().Output)
 		if len(commands) > 0 {
 			fmt.Println("\n\nERROR: Unexpected commands run!")
 			for _, command := range commands {
