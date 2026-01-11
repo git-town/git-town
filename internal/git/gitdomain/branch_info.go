@@ -60,11 +60,11 @@ func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 
 // GetSHAs provides the SHAs of the local and remote branch.
 func (self BranchInfo) GetSHAs() BranchInfoSHAs {
-	local, hasLocal := self.LocalSHA.Get()
+	local, hasLocal := self.Local.Get()
 	remote, hasRemote := self.RemoteSHA.Get()
 	return BranchInfoSHAs{
 		HasBothSHA: hasLocal && hasRemote,
-		LocalSHA:   local,
+		LocalSHA:   local.SHA,
 		RemoteSHA:  remote,
 	}
 }
