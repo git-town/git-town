@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/glab"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -70,22 +71,29 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGithub:
-		switch args.GithubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
-		case forgedomain.GithubConnectorTypeAPI:
-			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:         args.GithubToken,
-				Browser:          args.Browser,
-				Log:              args.Log,
-				ProposalOverride: proposalOverride,
-				RemoteURL:        remoteURL,
-			})
-		case forgedomain.GithubConnectorTypeGh:
-			connector = &gh.CachedConnector{
-				Connector: gh.Connector{
-					Backend:  args.Backend,
-					Frontend: args.Frontend,
-				},
-				Cache: forgedomain.APICache{},
+		if testHome, inTestMode := args.TestHome.Get(); inTestMode {
+			connector = &github.MockConnector{
+				WebConnector: github.NewWebConnector(remoteURL, args.Browser),
+				Proposals:    mockproposals.Load(testHome.String()),
+			}
+		} else {
+			switch args.GithubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
+			case forgedomain.GithubConnectorTypeAPI:
+				connector, err = github.NewConnector(github.NewConnectorArgs{
+					APIToken:         args.GithubToken,
+					Browser:          args.Browser,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
+				})
+			case forgedomain.GithubConnectorTypeGh:
+				connector = &gh.CachedConnector{
+					Connector: gh.Connector{
+						Backend:  args.Backend,
+						Frontend: args.Frontend,
+					},
+					Cache: forgedomain.APICache{},
+				}
 			}
 		}
 	case forgedomain.ForgeTypeGitlab:
@@ -126,4 +134,5 @@ type NewConnectorArgs struct {
 	GitlabToken          Option[forgedomain.GitlabToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
+	TestHome             Option[configdomain.TestHome]
 }

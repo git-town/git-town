@@ -213,6 +213,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

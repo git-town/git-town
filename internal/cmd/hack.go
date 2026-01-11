@@ -228,6 +228,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

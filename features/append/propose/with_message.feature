@@ -3,6 +3,7 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
   Background:
     Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
+    # And inspect the repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -16,6 +17,7 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
     And I ran "git add new_file"
     When I run "git-town append new --propose -m unrelated"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                   |

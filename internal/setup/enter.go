@@ -825,6 +825,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exi
 		GitlabToken:          args.gitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
+		TestHome:             args.testHome,
 	})
 	if err != nil {
 		return configdomain.ProgramFlowExit, false, err

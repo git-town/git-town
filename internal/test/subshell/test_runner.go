@@ -242,12 +242,13 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	outputBuf.Write(stderrBuf.Bytes())
 	exitCode := 0
 	if err != nil {
+		fmt.Println("111111111111111111111111111111111111111111111", err)
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
-			err = subshell.ErrorDetails(cmd, args, err, outputBuf.Bytes())
+			err = subshell.ErrorDetails(cmd, args, err, string(outputBuf))
 		}
 	}
 	if self.Verbose {

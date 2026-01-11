@@ -67,6 +67,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 			GitlabToken:          normalConfig.GitlabToken,
 			Log:                  print.Logger{},
 			RemoteURL:            normalConfig.DevURL(args.Backend),
+			TestHome:             normalConfig.TestHome,
 		})
 		if err != nil {
 			return configdomain.ProgramFlowExit, err

@@ -201,6 +201,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
+		TestHome:             config.TestHome,
 	})
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
@@ -358,6 +359,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			ChangedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
 			Config:          data.config,
