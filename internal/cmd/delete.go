@@ -181,11 +181,11 @@ type deleteData struct {
 
 func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult deleteData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return deleteData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	var emptyResult deleteData
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
