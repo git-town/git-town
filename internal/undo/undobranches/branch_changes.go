@@ -100,31 +100,31 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// reset inconsistently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
-		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
-			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
-				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
-				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
-				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branchName).Get(); hasBranchInfo {
+		if omni, isOmni := inconsistentlyChangedPerennial.After.OmniBranch().Get(); isOmni {
+			if slices.Contains(args.UndoablePerennialCommits, omni.SHA) {
+				result.Add(&opcodes.CheckoutIfNeeded{Branch: omni.Name})
+				result.Add(&opcodes.CommitRevertIfNeeded{SHA: omni.SHA})
+				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(omni.Name).Get(); hasBranchInfo {
 					if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
-						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName, TrackingBranch: tracking})
+						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: omni.Name, TrackingBranch: tracking})
 					}
 				}
 			}
 		} else {
-			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, inconsistentlyChangedPerennial.After)
 		}
 	}
 
 	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
+		local, hasLocal := inconsistentChange.Before.Local.Get()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemote()
 		hasAfterSHAs, afterLocalSHA, afterRemoteSHA := inconsistentChange.After.GetSHAs()
-		if hasBeforeLocal && hasBeforeRemote && hasAfterSHAs {
-			result.Add(&opcodes.CheckoutIfNeeded{Branch: beforeLocalName})
+		if hasLocal && hasBeforeRemote && hasAfterSHAs {
+			result.Add(&opcodes.CheckoutIfNeeded{Branch: local.Name})
 			result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: afterLocalSHA,
-				SetToSHA:    beforeLocalSHA,
+				SetToSHA:    local.SHA,
 			})
 			result.Add(&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      beforeRemoteName,
