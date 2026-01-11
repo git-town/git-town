@@ -367,7 +367,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 }
 
 func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
-	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get(); hasLocalBranchToDelete {
+	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName().Get(); hasLocalBranchToDelete {
 		if data.initialBranch == localBranchToDelete {
 			if data.hasOpenChanges {
 				prog.Value.Add(&opcodes.ChangesStage{})

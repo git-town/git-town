@@ -32,9 +32,9 @@ func TestNewSwitchBranch(t *testing.T) {
 					beta:  main,
 				})
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: alpha}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: beta}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -63,9 +63,9 @@ func TestNewSwitchBranch(t *testing.T) {
 					beta:  main,
 				})
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: alpha}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: beta}), SyncStatus: gitdomain.SyncStatusOtherWorktree},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -97,10 +97,10 @@ func TestNewSwitchBranch(t *testing.T) {
 				beta:  main,
 			})
 			branchInfos := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-				gitdomain.BranchInfo{LocalName: Some(perennial1), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: alpha}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: beta}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+				gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 			}
 			branchTypes := []configdomain.BranchType{}
 			branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -132,8 +132,8 @@ func TestNewSwitchBranch(t *testing.T) {
 				remote := gitdomain.NewRemoteBranchName("origin/remote")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: local}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{RemoteName: Some(remote), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
@@ -165,10 +165,10 @@ func TestNewSwitchBranch(t *testing.T) {
 				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(grandchild), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/grandchild")), SyncStatus: gitdomain.SyncStatusUpToDate},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: grandchild}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: None[gitdomain.BranchData](), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: grandchild}), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/grandchild")), SyncStatus: gitdomain.SyncStatusUpToDate},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -198,8 +198,8 @@ func TestNewSwitchBranch(t *testing.T) {
 				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{RemoteName: Some(remote), SyncStatus: gitdomain.SyncStatusRemoteOnly},
-					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: local}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -231,11 +231,11 @@ func TestNewSwitchBranch(t *testing.T) {
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed2}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: prototype}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{configdomain.BranchTypeObservedBranch}
 				branchesAndTypes := configdomain.BranchesAndTypes{
@@ -268,11 +268,11 @@ func TestNewSwitchBranch(t *testing.T) {
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed2}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: prototype}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{
 					configdomain.BranchTypeObservedBranch,
@@ -313,11 +313,11 @@ func TestNewSwitchBranch(t *testing.T) {
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed2}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: prototype}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -348,11 +348,11 @@ func TestNewSwitchBranch(t *testing.T) {
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed2}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: prototype}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -380,11 +380,11 @@ func TestNewSwitchBranch(t *testing.T) {
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(observed2), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(perennial), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(prototype), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed1}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: observed2}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: perennial}), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: prototype}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
