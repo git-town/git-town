@@ -70,20 +70,20 @@ func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
 	if !hasBefore {
 		return None[LocalBranchChange]()
 	}
-	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
+	beforeLocal, hasLocalBefore := before.Local.Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[LocalBranchChange]()
 	}
-	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
-	localChanged := hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
+	afterLocal, hasLocalBranchAfter := after.Local.Get()
+	localChanged := hasLocalBefore && hasLocalBranchAfter && beforeLocal.SHA != afterLocal.SHA
 	if !localChanged {
 		return None[LocalBranchChange]()
 	}
 	return Some(LocalBranchChange{
-		beforeBranch: undodomain.Change[gitdomain.SHA]{
-			Before: beforeSHA,
-			After:  afterSHA,
+		beforeLocal.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeLocal.SHA,
+			After:  afterLocal.SHA,
 		},
 	})
 }
