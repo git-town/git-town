@@ -40,8 +40,7 @@ func TestChanges(t *testing.T) {
 			undobranches.BranchSpan{
 				Before: None[gitdomain.BranchInfo](),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: "111111"}),
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
