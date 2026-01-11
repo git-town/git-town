@@ -8,7 +8,7 @@ const versionLong = "version"
 
 func Version() (AddFunc, ReadBoolFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(versionLong, "V", false, "display the version number")
+		cmd.Flags().BoolP(versionLong, "v", false, "display the version number")
 	}
 	readFlag := func(cmd *cobra.Command) (bool, error) {
 		return cmd.Flags().GetBool(versionLong)
