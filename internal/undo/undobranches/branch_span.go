@@ -145,20 +145,20 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	if !hasBefore {
 		return None[LocalBranchChange]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.OmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[LocalBranchChange]()
 	}
-	afterIsOmni, _, afterSHA := after.OmniBranch()
-	isOmniChange := beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
+	afterOmni, afterIsOmni := after.OmniBranch().Get()
+	isOmniChange := beforeIsOmni && afterIsOmni && beforeOmni.SHA != afterOmni.SHA
 	if !isOmniChange {
 		return None[LocalBranchChange]()
 	}
 	return Some(LocalBranchChange{
-		beforeName: undodomain.Change[gitdomain.SHA]{
-			Before: beforeSHA,
-			After:  afterSHA,
+		beforeOmni.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeOmni.SHA,
+			After:  afterOmni.SHA,
 		},
 	})
 }
@@ -170,14 +170,14 @@ func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 	if !hasBefore {
 		return None[LocalBranchesSHAs]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.OmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	_, hasAfter := self.After.Get()
 	isOmniRemove := beforeIsOmni && !hasAfter
 	if !isOmniRemove {
 		return None[LocalBranchesSHAs]()
 	}
 	return Some(LocalBranchesSHAs{
-		beforeName: beforeSHA,
+		beforeOmni.Name: beforeOmni.SHA,
 	})
 }
 
