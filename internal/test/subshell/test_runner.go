@@ -255,8 +255,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		return emptyResult, err
 	}
 	return RunResult{
-		Output:   strings.TrimRight(outputBuf.String(), "\n"),
 		ExitCode: exitCode,
+		Output:   strings.TrimRight(outputBuf.String(), "\n"),
 	}, err
 }
 
