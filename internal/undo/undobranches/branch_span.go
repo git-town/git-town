@@ -162,7 +162,7 @@ func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 	if !hasBefore {
 		return None[LocalBranchesSHAs]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	_, hasAfter := self.After.Get()
 	isOmniRemove := beforeIsOmni && !hasAfter
 	if !isOmniRemove {
