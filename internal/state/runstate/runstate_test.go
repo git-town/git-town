@@ -97,8 +97,10 @@ func TestRunState(t *testing.T) {
   "BeginStashSize": 0,
   "BranchInfosLastRun": [
     {
-      "LocalName": "branch",
-      "LocalSHA": "111111",
+      "Local": {
+        "Name": "branch",
+        "SHA": "111111"
+      },
       "RemoteName": "origin/branch",
       "RemoteSHA": "222222",
       "SyncStatus": "ahead"
