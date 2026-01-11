@@ -258,7 +258,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return proposeData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
