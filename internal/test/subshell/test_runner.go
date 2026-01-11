@@ -322,6 +322,6 @@ type Options struct {
 }
 
 type RunResult struct {
-	Output   string
 	ExitCode int
+	Output   string
 }
