@@ -125,12 +125,12 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 	if branchesSnapshot.DetachedHead {
 		return featureData{}, errors.New(messages.FeatureDetachedHead)
 	}
-	branchesToFeature, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToFeature, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return featureData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
-		branchesToFeature: branchesToFeature,
-		checkout:          branchToCheckout,
+		branchesToFeature: branchesToFeature.BranchesToMark,
+		checkout:          branchesToFeature.BranchToCheckout,
 	}, err
 }
 

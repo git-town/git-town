@@ -106,15 +106,15 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches, _ := asserts.NoError2(self.DevRepo.GetOrPanic().LocalBranches())
-	localBranchesJoined := localBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	localBranches := asserts.NoError1(self.DevRepo.GetOrPanic().LocalBranches())
+	localBranchesJoined := localBranches.AllBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()
 	if !hasOriginRepo {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, _ := asserts.NoError2(originRepo.LocalBranches())
-	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originBranches := asserts.NoError1(originRepo.LocalBranches())
+	originBranchesJoined := originBranches.AllBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, "+originName, localBranchesJoined)

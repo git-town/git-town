@@ -38,7 +38,7 @@ func (self *APICache) Clear() {
 // If there is a cached proposal, returns (Some(proposal), true).
 // If it knows there is no proposal for the given source and target branch, returns (None, true).
 // If it has no records, returns (None, false).
-func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], certain bool) {
+func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], certain bool) { //nolint:nonamedreturns
 	for _, result := range self.results {
 		switch result := result.(type) {
 		case lookupResult:
@@ -65,15 +65,15 @@ func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal
 }
 
 // LookupSearch provides the cached search result for the given source branch.
-func (self *APICache) LookupSearch(source gitdomain.LocalBranchName) (proposals []Proposal, knows bool) {
+func (self *APICache) LookupSearch(source gitdomain.LocalBranchName) Option[[]Proposal] {
 	for _, result := range self.results {
 		if searchResult, ok := result.(searchResult); ok {
 			if searchResult.source == source {
-				return searchResult.proposals, true
+				return Some(searchResult.proposals)
 			}
 		}
 	}
-	return []Proposal{}, false
+	return None[[]Proposal]()
 }
 
 // RegisterLookupResult registers the given result of a lookup operation.

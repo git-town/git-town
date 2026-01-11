@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/filesystem"
 	"github.com/git-town/git-town/v22/internal/test/fixture"
@@ -214,10 +215,13 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateAndCheckoutBranch("branch-1", "initial")
 		currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
 		must.EqOp(t, "branch-1", currentBranch)
-		branches, _, err := runtime.LocalBranchesMainFirst("initial")
+		have, err := runtime.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("initial", "branch-1")
-		must.Eq(t, want, branches)
+		want := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("initial", "branch-1"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("CreateAndCheckoutFeatureBranch", func(t *testing.T) {
@@ -239,10 +243,13 @@ func TestTestCommands(t *testing.T) {
 			runtime.CreateBranch("branch-1", "initial")
 			currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
 			must.EqOp(t, "initial", currentBranch)
-			branches, _, err := runtime.LocalBranchesMainFirst("initial")
+			have, err := runtime.LocalBranchesMainFirst("initial")
 			must.NoError(t, err)
-			want := gitdomain.NewLocalBranchNames("initial", "branch-1")
-			must.Eq(t, want, branches)
+			want := commands.LocalBranchesResult{
+				AllBranches:              gitdomain.NewLocalBranchNames("initial", "branch-1"),
+				BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+			}
+			must.Eq(t, want, have)
 		})
 
 		t.Run("branch name with slashes", func(t *testing.T) {
@@ -251,10 +258,13 @@ func TestTestCommands(t *testing.T) {
 			runtime.CreateBranch("my/feature", "initial")
 			currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
 			must.EqOp(t, "initial", currentBranch)
-			branches, _, err := runtime.LocalBranchesMainFirst("initial")
+			have, err := runtime.LocalBranchesMainFirst("initial")
 			must.NoError(t, err)
-			want := gitdomain.NewLocalBranchNames("initial", "my/feature")
-			must.Eq(t, want, branches)
+			want := commands.LocalBranchesResult{
+				AllBranches:              gitdomain.NewLocalBranchNames("initial", "my/feature"),
+				BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -266,9 +276,9 @@ func TestTestCommands(t *testing.T) {
 		parent := runtime.Config.NormalConfig.Lineage.Parent("observed-1")
 		must.EqOp(t, "main", parent.GetOrPanic())
 		must.EqOp(t, configdomain.BranchTypeObservedBranch, runtime.Config.BranchType("observed-1"))
-		branches, _, err := runtime.LocalBranchesMainFirst("main")
+		branches, err := runtime.LocalBranchesMainFirst("main")
 		must.NoError(t, err)
-		must.True(t, branches.Contains("observed-1"))
+		must.True(t, branches.AllBranches.Contains("observed-1"))
 	})
 
 	t.Run("CreateChildBranch", func(t *testing.T) {
@@ -374,9 +384,9 @@ func TestTestCommands(t *testing.T) {
 			Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 		}
 		devRepo.CreateLocalBranchUsingGitTown(branchSetup)
-		branches, _, err := devRepo.LocalBranchesMainFirst("main")
+		branches, err := devRepo.LocalBranchesMainFirst("main")
 		must.NoError(t, err)
-		must.True(t, branches.Contains("feature-1"))
+		must.True(t, branches.AllBranches.Contains("feature-1"))
 		devRepo.Config.Reload(devRepo.TestRunner)
 		parent := devRepo.Config.NormalConfig.Lineage.Parent("feature-1")
 		must.EqOp(t, "main", parent.GetOrPanic())
@@ -658,9 +668,12 @@ main
 		devRepo.CreateBranch("b2", "main")
 		originRepo.CreateBranch("remote-branch", "main")
 		devRepo.Fetch()
-		have, _, err := devRepo.LocalBranches()
+		have, err := devRepo.LocalBranches()
 		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("b1", "b2", "main")
+		want := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("b1", "b2", "main"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
 		must.Eq(t, want, have)
 	})
 
@@ -674,10 +687,13 @@ main
 		runner.CreateBranch("b2", initial.BranchName())
 		origin.CreateBranch("b3", initial.BranchName())
 		runner.Fetch()
-		branches, _, err := runner.LocalBranchesMainFirst(initial)
+		have, err := runner.LocalBranchesMainFirst(initial)
 		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("initial", "b1", "b2")
-		must.Eq(t, want, branches)
+		want := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("initial", "b1", "b2"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("LocalBranchesOrderedHierarchically", func(t *testing.T) {
@@ -686,9 +702,12 @@ main
 		runtime.CreateFeatureBranch("feature-1", "main")
 		runtime.CreateFeatureBranch("feature-2", "feature-1")
 		lineage := runtime.Config.NormalConfig.Lineage
-		have, _, err := runtime.LocalBranchesOrderedHierarchically(lineage, configdomain.OrderAsc)
+		have, err := runtime.LocalBranchesOrderedHierarchically(lineage, configdomain.OrderAsc)
 		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("main", "feature-1", "feature-2", "initial")
+		want := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("main", "feature-1", "feature-2", "initial"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
 		must.Eq(t, want, have)
 	})
 
@@ -739,9 +758,12 @@ main
 		dev.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
 		dev.CreateBranch("b1", "initial")
 		dev.PushBranchToRemote("b1", gitdomain.RemoteOrigin)
-		branches, _, err := origin.LocalBranchesMainFirst("initial")
+		branches, err := origin.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("initial", "b1")
+		want := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("initial", "b1"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
 		must.Eq(t, want, branches)
 	})
 
@@ -792,14 +814,17 @@ main
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch("b1", "initial")
-		branches, _, err := runtime.LocalBranchesMainFirst("initial")
+		branches, err := runtime.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("initial", "b1")
-		must.Eq(t, want, branches)
+		must.Eq(t, want, branches.AllBranches)
 		runtime.RemoveBranch("b1")
-		branches, _, err = runtime.LocalBranchesMainFirst("initial")
+		branches, err = runtime.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
-		wantBranches := gitdomain.NewLocalBranchNames("initial")
+		wantBranches := commands.LocalBranchesResult{
+			AllBranches:              gitdomain.NewLocalBranchNames("initial"),
+			BranchesInOtherWorktrees: gitdomain.LocalBranchNames{},
+		}
 		must.Eq(t, wantBranches, branches)
 	})
 

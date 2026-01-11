@@ -22,7 +22,7 @@ type ChildBranchArgs struct {
 }
 
 // ChildBranch lets the user select which child branch to switch to.
-func ChildBranch(args ChildBranchArgs) (selectedBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+func ChildBranch(args ChildBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	entries := list.NewEntries(args.ChildBranches...)
 	return dialogcomponents.RadioList(entries, 0, childBranchTitle, childBranchHelp, args.Inputs, "child-branch")
 }

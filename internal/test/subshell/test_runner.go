@@ -115,7 +115,7 @@ func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) R
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
@@ -166,7 +166,7 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (RunResult, error) {
+func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (RunResult, error) { //nolint:nonamedreturns
 	emptyResult := RunResult{ExitCode: 0, Output: ""}
 	currentBranchText := ""
 	if self.Verbose {
@@ -252,10 +252,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		}
 	}
 	if opts.IgnoreOutput {
-		return RunResult{
-			ExitCode: exitCode,
-			Output:   "",
-		}, err
+		return emptyResult, err
 	}
 	return RunResult{
 		ExitCode: exitCode,

@@ -56,7 +56,7 @@ func TestCategorize(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 			},
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeInconsistentChanges(give, config)
+		have := undobranches.CategorizeInconsistentChanges(give, config)
 		wantPerennials := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
 				Before: gitdomain.BranchInfo{
@@ -73,7 +73,7 @@ func TestCategorize(t *testing.T) {
 				},
 			},
 		}
-		must.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
 				Before: gitdomain.BranchInfo{
@@ -90,7 +90,7 @@ func TestCategorize(t *testing.T) {
 				},
 			},
 		}
-		must.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, have.Features)
 	})
 
 	t.Run("CategorizeLocalBranchChange", func(t *testing.T) {
@@ -114,21 +114,21 @@ func TestCategorize(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 			},
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, config)
+		have := undobranches.CategorizeLocalBranchChange(give, config)
 		wantPerennials := undobranches.LocalBranchChange{
 			"dev": {
 				Before: "333333",
 				After:  "444444",
 			},
 		}
-		must.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undobranches.LocalBranchChange{
 			"branch-1": {
 				Before: "111111",
 				After:  "222222",
 			},
 		}
-		must.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, have.Features)
 	})
 
 	t.Run("CategorizeRemoteBranchChange", func(t *testing.T) {
@@ -152,21 +152,21 @@ func TestCategorize(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 			},
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, config)
+		have := undobranches.CategorizeRemoteBranchChange(give, config)
 		wantPerennials := undobranches.RemoteBranchChange{
 			"origin/dev": {
 				Before: "333333",
 				After:  "444444",
 			},
 		}
-		must.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undobranches.RemoteBranchChange{
 			"origin/branch-1": {
 				Before: "111111",
 				After:  "222222",
 			},
 		}
-		must.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, have.Features)
 	})
 
 	t.Run("CategorizeRemoteBranchesSHAs", func(t *testing.T) {
@@ -184,14 +184,14 @@ func TestCategorize(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 			},
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, config)
+		have := undobranches.CategorizeRemoteBranchesSHAs(give, config)
 		wantPerennials := undobranches.RemoteBranchesSHAs{
 			"origin/perennial-branch": "222222",
 		}
-		must.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undobranches.RemoteBranchesSHAs{
 			"origin/feature-branch": "111111",
 		}
-		must.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, have.Features)
 	})
 }

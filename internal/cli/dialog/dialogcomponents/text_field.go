@@ -50,7 +50,7 @@ func (self textFieldModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { //nolint:ireturn
+func (self textFieldModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive
@@ -64,6 +64,7 @@ func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { 
 	case error:
 		panic(msg.Error())
 	}
+	var cmd tea.Cmd
 	self.textInput, cmd = self.textInput.Update(msg)
 	return self, cmd
 }

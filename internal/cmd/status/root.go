@@ -89,14 +89,14 @@ type displayStatusData struct {
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusData, err error) {
+func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
 	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
 	if err != nil {
-		return result, err
+		return displayStatusData{}, err
 	}
 	state, err := runstate.Load(rootDir)
 	if err != nil {
-		return result, err
+		return displayStatusData{}, err
 	}
 	return displayStatusData{
 		filepath: filepath,

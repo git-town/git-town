@@ -68,7 +68,7 @@ func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string)
 }
 
 // runs the given command in this ShellRunner's directory.
-func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (err error) {
+func (self *FrontendRunner) execute(env []string, cmd string, args ...string) error {
 	self.CommandsCounter.Value.Increment()
 	var location gitdomain.Location
 	if self.PrintBranchNames {
@@ -94,6 +94,7 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 		cmd = "cmd"
 	}
 	concurrentGitRetriesLeft := concurrentGitRetries
+	var err error
 	for {
 		subProcess := exec.CommandContext(context.Background(), cmd, args...)
 		subProcess.Env = append(subProcess.Environ(), env...)

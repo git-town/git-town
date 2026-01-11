@@ -11,7 +11,7 @@ type OptionalMutable[T any] struct {
 }
 
 // Get provides null-safe mutable access to the contained value.
-func (self OptionalMutable[T]) Get() (value *T, hasValue bool) {
+func (self OptionalMutable[T]) Get() (value *T, hasValue bool) { //nolint:nonamedreturns
 	if self.IsSome() {
 		return self.Value, true
 	}

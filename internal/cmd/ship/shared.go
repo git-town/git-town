@@ -44,7 +44,7 @@ type determineSharedShipDataArgs struct {
 	shipStrategyOverride Option[configdomain.ShipStrategy]
 }
 
-func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipData, flow configdomain.ProgramFlow, err error) {
+func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, configdomain.ProgramFlow, error) {
 	var emptyResult sharedShipData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := args.repo.Git.RepoStatus(args.repo.Backend)

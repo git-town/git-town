@@ -10,9 +10,11 @@ import (
 )
 
 // loads all issues and pull requests closed since the given date
-func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, closedPullRequests []*github.Issue) {
+func (gh Connector) ClosedIssues(date string) ClosedIssuesResult {
 	query := fmt.Sprintf("repo:%s/%s closed:>=%s", org, repo, date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
+	closedIssues := []*github.Issue{}
+	closedPullRequests := []*github.Issue{}
 	for page := 1; ; page++ {
 		results, response := asserts.NoError2(gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "closed",
@@ -35,5 +37,13 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 		}
 	}
 	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(closedIssues))), console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
-	return
+	return ClosedIssuesResult{
+		ClosedIssues:       closedIssues,
+		ClosedPullRequests: closedPullRequests,
+	}
+}
+
+type ClosedIssuesResult struct {
+	ClosedIssues       []*github.Issue
+	ClosedPullRequests []*github.Issue
 }

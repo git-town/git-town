@@ -5,7 +5,9 @@ import (
 	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config config.ValidatedConfig) (perennials, features undodomain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config config.ValidatedConfig) Categorized[undodomain.InconsistentChanges] {
+	perennials := undodomain.InconsistentChanges{}
+	features := undodomain.InconsistentChanges{}
 	for _, change := range changes {
 		if localBefore, hasLocalBefore := change.Before.Local.Get(); hasLocalBefore {
 			if config.IsMainOrPerennialBranch(localBefore.Name) {
@@ -15,12 +17,15 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 			}
 		}
 	}
-	return
+	return Categorized[undodomain.InconsistentChanges]{
+		Features:   features,
+		Perennials: perennials,
+	}
 }
 
-func CategorizeLocalBranchChange(change LocalBranchChange, config config.ValidatedConfig) (changedPerennials, changedFeatures LocalBranchChange) {
-	changedPerennials = LocalBranchChange{}
-	changedFeatures = LocalBranchChange{}
+func CategorizeLocalBranchChange(change LocalBranchChange, config config.ValidatedConfig) Categorized[LocalBranchChange] {
+	changedPerennials := LocalBranchChange{}
+	changedFeatures := LocalBranchChange{}
 	for branch, change := range change { // okay to iterate the map in random order because we assign to new maps
 		if config.IsMainOrPerennialBranch(branch) {
 			changedPerennials[branch] = change
@@ -28,12 +33,15 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config config.Validat
 			changedFeatures[branch] = change
 		}
 	}
-	return
+	return Categorized[LocalBranchChange]{
+		Features:   changedFeatures,
+		Perennials: changedPerennials,
+	}
 }
 
-func CategorizeRemoteBranchChange(change RemoteBranchChange, config config.ValidatedConfig) (perennialChanges, featureChanges RemoteBranchChange) {
-	perennialChanges = RemoteBranchChange{}
-	featureChanges = RemoteBranchChange{}
+func CategorizeRemoteBranchChange(change RemoteBranchChange, config config.ValidatedConfig) Categorized[RemoteBranchChange] {
+	perennialChanges := RemoteBranchChange{}
+	featureChanges := RemoteBranchChange{}
 	for branch, change := range change { // okay to iterate the map in random order because we assign to new maps
 		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennialChanges[branch] = change
@@ -41,12 +49,15 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config config.Valid
 			featureChanges[branch] = change
 		}
 	}
-	return
+	return Categorized[RemoteBranchChange]{
+		Features:   featureChanges,
+		Perennials: perennialChanges,
+	}
 }
 
-func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.ValidatedConfig) (perennials, features RemoteBranchesSHAs) {
-	perennials = RemoteBranchesSHAs{}
-	features = RemoteBranchesSHAs{}
+func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.ValidatedConfig) Categorized[RemoteBranchesSHAs] {
+	perennials := RemoteBranchesSHAs{}
+	features := RemoteBranchesSHAs{}
 	for branch, sha := range shas { // okay to iterate the map in random order because we assign to new maps
 		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennials[branch] = sha
@@ -54,5 +65,13 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config config.Validat
 			features[branch] = sha
 		}
 	}
-	return
+	return Categorized[RemoteBranchesSHAs]{
+		Features:   features,
+		Perennials: perennials,
+	}
+}
+
+type Categorized[T any] struct {
+	Features   T
+	Perennials T
 }

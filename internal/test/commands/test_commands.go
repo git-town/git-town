@@ -110,10 +110,10 @@ func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage,
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesOrderedHierarchically(lineage, order))
+	branches := asserts.NoError1(self.LocalBranchesOrderedHierarchically(lineage, order))
 	var result []testgit.Commit
-	for _, branch := range branches {
-		if slices.Contains(branchesInOtherWorktree, branch) {
+	for _, branch := range branches.AllBranches {
+		if slices.Contains(branches.BranchesInOtherWorktrees, branch) {
 			// branch is checked out in another workspace --> skip here
 			continue
 		}
@@ -332,7 +332,7 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 // If the file was deleted, the return content is empty and the bool return variable is set.
-func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) {
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) { //nolint:nonamedreturns
 	output, err := self.Query("git", "show", location.String()+":"+filename)
 	if err != nil {
 		return "", true
@@ -350,9 +350,9 @@ func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []stri
 func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, _ := asserts.NoError2(self.LocalBranchesMainFirst(mainBranch))
+	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch))
 	var lastBranch gitdomain.LocalBranchName
-	for _, branch := range branches {
+	for _, branch := range branches.AllBranches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {
 			content, deleted := self.FileContentInCommit(branch.Location(), file)
@@ -422,7 +422,7 @@ func (self *TestCommands) LineageText(lineage configdomain.Lineage) string {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
+func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 	forEachRefFormat := strings.Join(
 		[]string{
 			// worktree marker
@@ -443,8 +443,10 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 		"")
 	output, err := self.Query("git", "for-each-ref", "--format="+forEachRefFormat, "refs/heads/")
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{}, err
+		return LocalBranchesResult{}, err
 	}
+	allBranches := gitdomain.LocalBranchNames{}
+	branchesInOtherWorktrees := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
 		branch := line[2:]
@@ -459,27 +461,35 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 	}
 	slice.NaturalSort(allBranches)
 	slice.NaturalSort(branchesInOtherWorktrees)
-	return allBranches, branchesInOtherWorktrees, nil
+	return LocalBranchesResult{
+		AllBranches:              allBranches,
+		BranchesInOtherWorktrees: branchesInOtherWorktrees,
+	}, nil
+}
+
+type LocalBranchesResult struct {
+	AllBranches              gitdomain.LocalBranchNames
+	BranchesInOtherWorktrees gitdomain.LocalBranchNames
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
-	allBranches, branchesInOtherWorktrees, err = self.LocalBranches()
+func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (LocalBranchesResult, error) {
+	branches, err := self.LocalBranches()
 	if err != nil {
-		return
+		return LocalBranchesResult{}, err
 	}
-	allBranches = slice.Hoist(allBranches, mainBranch)
-	return
+	branches.AllBranches = slice.Hoist(branches.AllBranches, mainBranch)
+	return branches, nil
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesOrderedHierarchically(lineage configdomain.Lineage, order configdomain.Order) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
-	allBranches, branchesInOtherWorktrees, err = self.LocalBranches()
+func (self *TestCommands) LocalBranchesOrderedHierarchically(lineage configdomain.Lineage, order configdomain.Order) (LocalBranchesResult, error) {
+	branches, err := self.LocalBranches()
 	if err != nil {
-		return
+		return LocalBranchesResult{}, err
 	}
-	allBranches = lineage.OrderHierarchically(allBranches, order)
-	return
+	branches.AllBranches = lineage.OrderHierarchically(branches.AllBranches, order)
+	return branches, nil
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {

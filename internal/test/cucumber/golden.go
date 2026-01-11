@@ -35,7 +35,7 @@ func ChangeFeatureFile(filePath, oldSection, newSection string) error {
 	newSectionLines = NormalizeWhitespace(newSectionLines)
 
 	// find the old section in the file
-	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
+	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines).Get()
 	if !found {
 		fmt.Println("WANTED SECTION START")
 		fmt.Println(strings.Join(oldSectionLines, "\n"))

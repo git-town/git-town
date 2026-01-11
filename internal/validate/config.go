@@ -41,7 +41,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	}
 
 	// enter and save missing parent branches
-	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
+	lineageResult, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchInfos:      args.BranchInfos,
 		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
@@ -55,13 +55,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	if err != nil || exit {
 		return config.EmptyValidatedConfig(), exit, err
 	}
-	for _, entry := range additionalLineage.Entries() {
+	for _, entry := range lineageResult.AdditionalLineage.Entries() {
 		if err = args.Unvalidated.Value.NormalConfig.SetParent(args.Backend, entry.Child, entry.Parent); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
-	if len(additionalPerennials) > 0 {
-		newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
+	if len(lineageResult.AdditionalPerennials) > 0 {
+		newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, lineageResult.AdditionalPerennials...)
 		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}

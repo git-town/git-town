@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,8 +15,7 @@ func TestLocateSection(t *testing.T) {
 		name         string
 		giveHaystack []string
 		giveNeedle   []string
-		wantIndex    int
-		wantFound    bool
+		want         Option[int]
 	}{
 		{
 			name: "section at beginning",
@@ -28,8 +28,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIndex: 0,
-			wantFound: true,
+			want: Some(0),
 		},
 		{
 			name: "section in middle",
@@ -43,8 +42,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIndex: 1,
-			wantFound: true,
+			want: Some(1),
 		},
 		{
 			name: "section at end",
@@ -58,8 +56,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIndex: 2,
-			wantFound: true,
+			want: Some(2),
 		},
 		{
 			name: "section not found",
@@ -71,17 +68,15 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIndex: -1,
-			wantFound: false,
+			want: None[int](),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			haveIdx, haveFound := stringslice.LocateSection(tt.giveHaystack, tt.giveNeedle)
-			must.EqOp(t, tt.wantIndex, haveIdx)
-			must.EqOp(t, tt.wantFound, haveFound)
+			have := stringslice.LocateSection(tt.giveHaystack, tt.giveNeedle)
+			must.True(t, tt.want.Equal(have))
 		})
 	}
 }

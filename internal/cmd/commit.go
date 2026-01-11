@@ -293,7 +293,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func commitProgram(data commitData) (runProgram program.Program) {
+func commitProgram(data commitData) program.Program {
 	prog := NewMutable(&program.Program{})
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.branchToCommitInto},
