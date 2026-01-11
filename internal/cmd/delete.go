@@ -316,7 +316,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) deleteProgramResult {
+func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) deletePrograms {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 	undoProg := NewMutable(&program.Program{})
@@ -348,13 +348,13 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
-	return deleteProgramResult{
+	return deletePrograms{
 		finalUndoProgram: undoProg.Immutable(),
 		runProgram:       optimizer.Optimize(prog.Immutable()),
 	}
 }
 
-type deleteProgramResult struct {
+type deletePrograms struct {
 	finalUndoProgram program.Program
 	runProgram       program.Program
 }
