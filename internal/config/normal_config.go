@@ -73,6 +73,7 @@ type NormalConfig struct {
 	SyncPrototypeStrategy    configdomain.SyncPrototypeStrategy
 	SyncTags                 configdomain.SyncTags
 	SyncUpstream             configdomain.SyncUpstream
+	TestHome                 Option[configdomain.TestHome]
 	UnknownBranchType        configdomain.UnknownBranchType
 	Verbose                  configdomain.Verbose
 }
@@ -142,6 +143,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.GetOr(self.SyncPrototypeStrategy),
 		SyncTags:                 other.SyncTags.GetOr(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.GetOr(self.SyncUpstream),
+		TestHome:                 other.TestHome.Or(self.TestHome),
 		UnknownBranchType:        other.UnknownBranchType.GetOr(self.UnknownBranchType),
 		Verbose:                  other.Verbose.GetOr(self.Verbose),
 	}
@@ -297,6 +299,7 @@ func DefaultNormalConfig() NormalConfig {
 		SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
 		SyncTags:                 true,
 		SyncUpstream:             true,
+		TestHome:                 None[configdomain.TestHome](),
 		UnknownBranchType:        configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 		Verbose:                  false,
 	}
@@ -349,6 +352,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		SyncPrototypeStrategy:    partial.SyncPrototypeStrategy.GetOr(configdomain.NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
 		SyncTags:                 partial.SyncTags.GetOr(defaults.SyncTags),
 		SyncUpstream:             partial.SyncUpstream.GetOr(defaults.SyncUpstream),
+		TestHome:                 partial.TestHome.Or(defaults.TestHome),
 		UnknownBranchType:        partial.UnknownBranchType.GetOr(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)),
 		Verbose:                  partial.Verbose.GetOr(defaults.Verbose),
 	}

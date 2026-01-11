@@ -61,6 +61,7 @@ type PartialConfig struct {
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
+	TestHome                 Option[TestHome]
 	UnknownBranchType        Option[UnknownBranchType]
 	Verbose                  Option[Verbose]
 }
@@ -121,6 +122,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
 		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
+		TestHome:                 other.TestHome.Or(self.TestHome),
 		UnknownBranchType:        other.UnknownBranchType.Or(self.UnknownBranchType),
 		Verbose:                  other.Verbose.Or(self.Verbose),
 	}
