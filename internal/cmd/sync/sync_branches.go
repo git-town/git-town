@@ -8,7 +8,7 @@ import (
 // BranchesProgram syncs all given branches.
 func BranchesProgram(branchesToSync configdomain.BranchesToSync, args BranchProgramArgs) {
 	for _, branchToSync := range branchesToSync {
-		if localBranchName, hasLocalBranch := branchToSync.BranchInfo.LocalName.Get(); hasLocalBranch {
+		if localBranchName, hasLocalBranch := branchToSync.BranchInfo.LocalName().Get(); hasLocalBranch {
 			BranchProgram(localBranchName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, args)
 		}
 	}

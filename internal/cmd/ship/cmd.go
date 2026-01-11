@@ -240,8 +240,8 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		return errors.New(messages.ShipMessageWithFastForward)
 	}
 	if !toParent {
-		branch := data.branchToShipInfo.LocalName.GetOrPanic()
-		parentBranch := data.targetBranch.LocalName.GetOrPanic()
+		branch := data.branchToShipInfo.LocalName().GetOrPanic()
+		parentBranch := data.targetBranch.LocalName().GetOrPanic()
 		if !data.config.IsMainOrPerennialBranch(parentBranch) {
 			ancestors := data.config.NormalConfig.Lineage.Ancestors(branch)
 			ancestorsWithoutMainOrPerennial := ancestors[1:]
@@ -264,7 +264,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		gitdomain.SyncStatusRemoteOnly,
 		gitdomain.SyncStatusLocalOnly:
 	}
-	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
+	if localName, hasLocalName := data.branchToShipInfo.LocalName().Get(); hasLocalName {
 		if localName == data.initialBranch {
 			if data.config.NormalConfig.IgnoreUncommitted.DisAllowUncommitted() {
 				return validate.NoOpenChanges(data.hasOpenChanges)

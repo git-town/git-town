@@ -480,8 +480,7 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some(initial),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(commits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusAhead,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[1].SHA),
@@ -514,8 +513,7 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some(initial),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(commits[1].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[1].SHA}),
 							SyncStatus: gitdomain.SyncStatusBehind,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[0].SHA),
@@ -555,8 +553,7 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some(initial),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(localCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: localCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusNotInSync,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(originCommits[0].SHA),
@@ -582,8 +579,7 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some(initial),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(commits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[0].SHA),
@@ -612,15 +608,13 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some(initial),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(localCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: localCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(localCommits[0].SHA),
 						},
 						gitdomain.BranchInfo{
-							LocalName:  None[gitdomain.LocalBranchName](),
-							LocalSHA:   None[gitdomain.SHA](),
+							Local:      None[gitdomain.BranchData](),
 							SyncStatus: gitdomain.SyncStatusRemoteOnly,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
 							RemoteSHA:  Some(originBranchCommits[0].SHA),
@@ -648,15 +642,13 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some[gitdomain.LocalBranchName]("branch"),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
-							LocalSHA:   Some(localBranchCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: "branch", SHA: localBranchCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusLocalOnly,
 							RemoteName: None[gitdomain.RemoteBranchName](),
 							RemoteSHA:  None[gitdomain.SHA](),
 						},
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(initialCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(initialCommits[0].SHA),
@@ -689,15 +681,13 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some[gitdomain.LocalBranchName]("branch"),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
-							LocalSHA:   Some(branchCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: "branch", SHA: branchCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
 							RemoteSHA:  None[gitdomain.SHA](),
 						},
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(initialCommits[1].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[1].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
 							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(initialCommits[1].SHA),
@@ -719,15 +709,13 @@ func TestBackendCommands(t *testing.T) {
 					Active: Some[gitdomain.LocalBranchName]("initial"),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  gitdomain.NewLocalBranchNameOption("branch"),
-							LocalSHA:   Some(commits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: "branch", SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusOtherWorktree,
 							RemoteName: None[gitdomain.RemoteBranchName](),
 							RemoteSHA:  None[gitdomain.SHA](),
 						},
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(commits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusLocalOnly,
 							RemoteName: None[gitdomain.RemoteBranchName](),
 							RemoteSHA:  None[gitdomain.SHA](),
@@ -765,15 +753,13 @@ func TestBackendCommands(t *testing.T) {
 					Active: None[gitdomain.LocalBranchName](),
 					Branches: gitdomain.BranchInfos{
 						gitdomain.BranchInfo{
-							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
-							LocalSHA:   Some(branchCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: "branch", SHA: branchCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusLocalOnly,
 							RemoteName: None[gitdomain.RemoteBranchName](),
 							RemoteSHA:  None[gitdomain.SHA](),
 						},
 						gitdomain.BranchInfo{
-							LocalName:  Some(initial),
-							LocalSHA:   Some(initialCommits[0].SHA),
+							Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusLocalOnly,
 							RemoteName: None[gitdomain.RemoteBranchName](),
 							RemoteSHA:  None[gitdomain.SHA](),
@@ -820,29 +806,25 @@ func TestBackendCommands(t *testing.T) {
 				Active: gitdomain.NewLocalBranchNameOption("branch-2"),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
-						LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
-						LocalSHA:   Some(branch1Commits[0].SHA),
+						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: branch1Commits[0].SHA}),
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
 						RemoteName: None[gitdomain.RemoteBranchName](),
 						RemoteSHA:  None[gitdomain.SHA](),
 					},
 					gitdomain.BranchInfo{
-						LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
-						LocalSHA:   Some(branch2Commits[0].SHA),
+						Local:      Some(gitdomain.BranchData{Name: "branch-2", SHA: branch2Commits[0].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
 						RemoteSHA:  Some(branch2Commits[0].SHA),
 					},
 					gitdomain.BranchInfo{
-						LocalName:  Some(initial),
-						LocalSHA:   Some(initialCommits[1].SHA),
+						Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[1].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 						RemoteSHA:  Some(initialCommits[1].SHA),
 					},
 					gitdomain.BranchInfo{
-						LocalName:  None[gitdomain.LocalBranchName](),
-						LocalSHA:   None[gitdomain.SHA](),
+						Local:      None[gitdomain.BranchData](),
 						SyncStatus: gitdomain.SyncStatusRemoteOnly,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
 						RemoteSHA:  Some(branch3Commits[0].SHA),
@@ -863,8 +845,7 @@ func TestBackendCommands(t *testing.T) {
 				Active: Some(initial),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
-						LocalName:  Some(initial),
-						LocalSHA:   Some(commits[0].SHA),
+						Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
 						RemoteSHA:  Some(commits[0].SHA),
