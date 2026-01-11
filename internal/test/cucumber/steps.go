@@ -586,7 +586,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		notExpected := "Please specify the parent branch of"
 		runResult := state.runResult.GetOrPanic()
 		if strings.Contains(runResult.Output, notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runResult)
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, runResult.Output)
 		}
 		return nil
 	})
