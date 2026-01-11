@@ -256,15 +256,15 @@ type determineSyncDataArgs struct {
 
 func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) (syncData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult syncData
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return syncData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return syncData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	var emptyResult syncData
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
