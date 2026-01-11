@@ -101,12 +101,12 @@ type diffParentData struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffParentData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult diffParentData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return diffParentData{}, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	var emptyResult diffParentData
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
