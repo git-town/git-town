@@ -98,9 +98,9 @@ func TestMockingRunner(t *testing.T) {
 				HomeDir:    "",
 				WorkingDir: "",
 			}
-			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
-			must.EqOp(t, "hello", output)
-			must.EqOp(t, 0, exitCode)
+			runResult, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
+			must.EqOp(t, "hello", runResult.Output)
+			must.EqOp(t, 0, runResult.ExitCode)
 			must.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
@@ -111,9 +111,9 @@ func TestMockingRunner(t *testing.T) {
 				HomeDir:    "",
 				WorkingDir: "",
 			}
-			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
-			must.EqOp(t, "hello", output)
-			must.EqOp(t, 1, exitCode)
+			runResult, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
+			must.EqOp(t, "hello", runResult.Output)
+			must.EqOp(t, 1, runResult.ExitCode)
 			must.NoError(t, err)
 		})
 	})
