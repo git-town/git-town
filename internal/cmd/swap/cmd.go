@@ -314,7 +314,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
 		if !has {
-			return swapData{}, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = swapBranch{
 			info:     *childInfo,
