@@ -468,8 +468,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		runResult := state.runResult.GetOrPanic()
-		commands := output.GitCommandsInGitTownOutput(runResult.Output)
+		commands := output.GitCommandsInGitTownOutput(state.runResult.GetOrPanic().Output)
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
@@ -497,8 +496,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town runs without errors$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runResult := state.runResult.GetOrPanic()
-		exitCode := runResult.ExitCode
+		exitCode := state.runResult.GetOrPanic().ExitCode
 		if exitCode != 0 {
 			return errors.New("unexpected failure of scenario")
 		}
