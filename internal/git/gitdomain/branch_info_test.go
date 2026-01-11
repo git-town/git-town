@@ -123,17 +123,17 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
+			remoteBranch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			branchInfo := gitdomain.BranchInfo{
 				Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: "111111"}),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
-				RemoteName: Some(branch1),
+				RemoteName: Some(remoteBranch1),
 				RemoteSHA:  Some(sha1),
 			}
 			hasRemoteBranch, name, sha := branchInfo.GetRemote()
 			must.True(t, hasRemoteBranch)
-			must.EqOp(t, branch1, name)
+			must.EqOp(t, remoteBranch1, name)
 			must.EqOp(t, sha1, sha)
 		})
 		t.Run("has only a local branch", func(t *testing.T) {
