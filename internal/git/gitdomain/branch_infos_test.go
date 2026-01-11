@@ -310,6 +310,34 @@ func TestBranchInfos(t *testing.T) {
 		})
 	})
 
+	t.Run("FindByRemote", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.BranchInfo{
+				Local:      Some(gitdomain.BranchData{Name: "two", SHA: "111111"}),
+				SyncStatus: gitdomain.SyncStatusUpToDate,
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/two")),
+				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+			}
+			bs := gitdomain.BranchInfos{branch}
+			have, has := bs.FindByRemoteName("origin/two").Get()
+			must.True(t, has)
+			must.Eq(t, &branch, have)
+		})
+		t.Run("has a local branch with the given name", func(t *testing.T) {
+			t.Parallel()
+			bs := gitdomain.BranchInfos{gitdomain.BranchInfo{
+				Local:      Some(gitdomain.BranchData{Name: "kg/one", SHA: "111111"}),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+			}}
+			have := bs.FindByRemoteName("kg/one")
+			must.True(t, have.IsNone())
+		})
+	})
+
 	t.Run("FindLocalOrRemote", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has local name", func(t *testing.T) {
@@ -354,34 +382,6 @@ func TestBranchInfos(t *testing.T) {
 			}
 			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
 			must.Eq(t, MutableNone[gitdomain.BranchInfo](), have)
-		})
-	})
-
-	t.Run("FindByRemote", func(t *testing.T) {
-		t.Parallel()
-		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: "two", SHA: "111111"}),
-				SyncStatus: gitdomain.SyncStatusUpToDate,
-				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/two")),
-				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-			}
-			bs := gitdomain.BranchInfos{branch}
-			have, has := bs.FindByRemoteName("origin/two").Get()
-			must.True(t, has)
-			must.Eq(t, &branch, have)
-		})
-		t.Run("has a local branch with the given name", func(t *testing.T) {
-			t.Parallel()
-			bs := gitdomain.BranchInfos{gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: "kg/one", SHA: "111111"}),
-				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: None[gitdomain.RemoteBranchName](),
-				RemoteSHA:  None[gitdomain.SHA](),
-			}}
-			have := bs.FindByRemoteName("kg/one")
-			must.True(t, have.IsNone())
 		})
 	})
 
