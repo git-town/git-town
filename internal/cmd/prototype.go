@@ -129,12 +129,12 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if branchesSnapshot.DetachedHead {
 		return prototypeData{}, errors.New(messages.PrototypeDetachedHead)
 	}
-	branchesToMarkResult, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToPrototype, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return prototypeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
-		branchesToPrototype: branchesToMarkResult.BranchesToMark,
-		checkout:            branchesToMarkResult.BranchToCheckout,
+		branchesToPrototype: branchesToPrototype.BranchesToMark,
+		checkout:            branchesToPrototype.BranchToCheckout,
 	}, err
 }
 
