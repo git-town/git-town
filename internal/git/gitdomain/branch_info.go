@@ -105,6 +105,17 @@ func (self BranchInfo) LocalSHA() Option[SHA] {
 	return None[SHA]()
 }
 
+// LocalBranchName provides the name of this branch as a local branch, independent of whether this branch is local or not.
+func (self BranchInfo) LocalBranchName() LocalBranchName {
+	if local, hasLocal := self.Local.Get(); hasLocal {
+		return local.Name
+	}
+	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
+		return remoteName.LocalBranchName()
+	}
+	panic(messages.BranchInfoNoContent)
+}
+
 // IsOmniBranch indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
@@ -116,17 +127,6 @@ func (self BranchInfo) OmniBranch() Option[BranchData] {
 		return None[BranchData]()
 	}
 	return Some(local)
-}
-
-// LocalBranchName provides the name of this branch as a local branch, independent of whether this branch is local or not.
-func (self BranchInfo) LocalBranchName() LocalBranchName {
-	if local, hasLocal := self.Local.Get(); hasLocal {
-		return local.Name
-	}
-	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
-		return remoteName.LocalBranchName()
-	}
-	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) String() string {
