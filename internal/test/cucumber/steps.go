@@ -723,7 +723,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
-				fmt.Println(state.runResult.GetOrZero())
+				fmt.Println(runResult.Output)
 				return fmt.Errorf("unexpected exit code: %d", runResult.ExitCode)
 			}
 		}
