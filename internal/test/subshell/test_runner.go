@@ -108,7 +108,7 @@ func (self *TestRunner) MustQueryStringCode(fullCmd string) RunResult {
 	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult { //nolint:nonamedreturns
+func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult {
 	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
 	result, err := self.QueryWithCode(opts, cmd, args...)
