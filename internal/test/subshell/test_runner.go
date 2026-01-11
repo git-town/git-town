@@ -158,11 +158,11 @@ func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, err
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
 func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
-	result, err := self.QueryWithCode(opts, cmd, args...)
-	if result.ExitCode != 0 {
-		err = fmt.Errorf("process \"%s %s\" failed with code %d.\nOUTPUT START\n%s\nOUTPUT END", cmd, strings.Join(args, " "), result.ExitCode, result.Output)
+	runResult, err := self.QueryWithCode(opts, cmd, args...)
+	if runResult.ExitCode != 0 {
+		err = fmt.Errorf("process \"%s %s\" failed with code %d.\nOUTPUT START\n%s\nOUTPUT END", cmd, strings.Join(args, " "), runResult.ExitCode, runResult.Output)
 	}
-	return result.Output, err
+	return runResult.Output, err
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
