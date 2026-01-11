@@ -111,7 +111,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				}
 			}
 		} else {
-			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, inconsistentlyChangedPerennial.After.RemoteSHA)
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, inconsistentlyChangedPerennial.After)
 		}
 	}
 
