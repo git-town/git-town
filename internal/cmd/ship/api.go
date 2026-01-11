@@ -47,7 +47,7 @@ func determineAPIData(sharedData sharedShipData) (shipDataAPI, error) {
 }
 
 func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {
-	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShipInfo.LocalName.Get()
+	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShipInfo.LocalName().Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	connector, hasConnector := sharedData.connector.Get()

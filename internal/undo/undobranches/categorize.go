@@ -9,8 +9,8 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 	perennials := undodomain.InconsistentChanges{}
 	features := undodomain.InconsistentChanges{}
 	for _, change := range changes {
-		if localBefore, hasLocalBefore := change.Before.LocalName.Get(); hasLocalBefore {
-			if config.IsMainOrPerennialBranch(localBefore) {
+		if localBefore, hasLocalBefore := change.Before.Local.Get(); hasLocalBefore {
+			if config.IsMainOrPerennialBranch(localBefore.Name) {
 				perennials = append(perennials, change)
 			} else {
 				features = append(features, change)

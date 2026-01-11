@@ -34,9 +34,9 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 			branch = ancestor
 			continue
 		}
-		if localAncestor, ancestorIsLocal := ancestorInfo.LocalName.Get(); ancestorIsLocal {
+		if localAncestor, ancestorIsLocal := ancestorInfo.Local.Get(); ancestorIsLocal {
 			program = append(program, &RebaseAncestorLocal{
-				Ancestor:        localAncestor,
+				Ancestor:        localAncestor.Name,
 				Branch:          self.Branch,
 				CommitsToRemove: self.CommitsToRemove,
 			})

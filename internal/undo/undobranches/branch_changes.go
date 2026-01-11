@@ -111,20 +111,20 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				}
 			}
 		} else {
-			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, omni.SHA)
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, inconsistentlyChangedPerennial.After)
 		}
 	}
 
 	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChanges.Features {
-		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
+		local, hasLocal := inconsistentChange.Before.Local.Get()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemote()
-		afterSHAs := inconsistentChange.After.GetSHAs()
-		if hasBeforeLocal && hasBeforeRemote && afterSHAs.HasBothSHA {
-			result.Add(&opcodes.CheckoutIfNeeded{Branch: beforeLocalName})
+		hasAfterSHAs, afterLocalSHA, afterRemoteSHA := inconsistentChange.After.GetSHAs()
+		if hasLocal && hasBeforeRemote && hasAfterSHAs {
+			result.Add(&opcodes.CheckoutIfNeeded{Branch: local.Name})
 			result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{
-				MustHaveSHA: afterSHAs.LocalSHA,
-				SetToSHA:    beforeLocalSHA,
+				MustHaveSHA: afterLocalSHA,
+				SetToSHA:    local.SHA,
 			})
 			result.Add(&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      beforeRemoteName,

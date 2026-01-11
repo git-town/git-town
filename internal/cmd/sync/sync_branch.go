@@ -17,7 +17,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentSHAInitial := None[gitdomain.SHA]()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
-			parentSHAInitial = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+			parentSHAInitial = parentBranchInfo.LocalSHA().Or(parentBranchInfo.RemoteSHA)
 		}
 	}
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
