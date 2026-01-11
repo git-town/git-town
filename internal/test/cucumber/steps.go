@@ -75,7 +75,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
 			return ctx, nil //nolint:nilerr
 		}
-		exitCode := state.runExitCode.GetOrPanic()
+		exitCode := state.runResult.GetOrPanic().ExitCode
 		if exitCode != 0 && !state.runExitCodeChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
 			os.Exit(1)
@@ -132,9 +132,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
-			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
-			runOutput:            None[string](),
+			runResult:            None[subshell.RunResult](),
 			uncommittedContent:   None[string](),
 			uncommittedFileName:  None[string](),
 		}
@@ -175,9 +174,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
-			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
-			runOutput:            None[string](),
+			runResult:            None[subshell.RunResult](),
 			uncommittedContent:   None[string](),
 			uncommittedFileName:  None[string](),
 		}
@@ -709,12 +707,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if browserPath, has := state.browserVariable.Get(); has {
 			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
 			Input: Some(input.Content),
 		})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		state.runOutput = Some(runResult.Output)
+		state.runExitCode = Some(runResult.ExitCode)
 		devRepo.Reload()
 	})
 
