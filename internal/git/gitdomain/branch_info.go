@@ -70,17 +70,17 @@ func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 }
 
 // GetSHAs provides the SHAs of the local and remote branch.
-func (self BranchInfo) GetSHAs() GetSHAsResult {
+func (self BranchInfo) GetSHAs() BranchInfoSHAs {
 	local, hasLocal := self.LocalSHA.Get()
 	remote, hasRemote := self.RemoteSHA.Get()
-	return GetSHAsResult{
+	return BranchInfoSHAs{
 		HasBothSHA: hasLocal && hasRemote,
 		LocalSHA:   local,
 		RemoteSHA:  remote,
 	}
 }
 
-type GetSHAsResult struct {
+type BranchInfoSHAs struct {
 	HasBothSHA bool
 	LocalSHA   SHA
 	RemoteSHA  SHA
