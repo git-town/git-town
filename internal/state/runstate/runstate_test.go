@@ -21,8 +21,7 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			BranchInfosLastRun: Some(gitdomain.BranchInfos{
 				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch"),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					Local:      Some(gitdomain.BranchData{Name: "branch", SHA: "111111"}),
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusAhead,
@@ -46,15 +45,13 @@ func TestRunState(t *testing.T) {
 				Active: gitdomain.NewLocalBranchNameOption("branch-1"),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
-						LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: "111111"}),
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 						SyncStatus: gitdomain.SyncStatusNotInSync,
 					},
 					gitdomain.BranchInfo{
-						LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
-						LocalSHA:   Some(gitdomain.NewSHA("333333")),
+						Local:      Some(gitdomain.BranchData{Name: "branch-2", SHA: "333333"}),
 						RemoteName: None[gitdomain.RemoteBranchName](),
 						RemoteSHA:  None[gitdomain.SHA](),
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
