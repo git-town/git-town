@@ -16,7 +16,7 @@ type BranchSpan struct {
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	branchNames := set.New[gitdomain.BranchName]()
 	if before, hasBefore := self.Before.Get(); hasBefore {
-		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := before.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
@@ -24,7 +24,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 		}
 	}
 	if after, hasAfter := self.After.Get(); hasAfter {
-		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := after.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
@@ -52,17 +52,17 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 
 func (self BranchSpan) LocalAdd() Option[gitdomain.LocalBranchName] {
 	before, hasBefore := self.Before.Get()
-	beforeHasLocalBranch, _, _ := before.GetLocal()
+	_, beforeHasLocalBranch := before.Local.Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[gitdomain.LocalBranchName]()
 	}
-	afterHasLocalBranch, afterLocalBranch, _ := after.GetLocal()
+	afterLocalBranch, afterHasLocalBranch := after.Local.Get()
 	isLocalAdded := (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
 	if !isLocalAdded {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return Some(afterLocalBranch)
+	return Some(afterLocalBranch.Name)
 }
 
 func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
@@ -70,35 +70,35 @@ func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
 	if !hasBefore {
 		return None[LocalBranchChange]()
 	}
-	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
+	beforeLocal, hasLocalBefore := before.Local.Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[LocalBranchChange]()
 	}
-	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
-	localChanged := hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
+	afterLocal, hasLocalBranchAfter := after.Local.Get()
+	localChanged := hasLocalBefore && hasLocalBranchAfter && beforeLocal.SHA != afterLocal.SHA
 	if !localChanged {
 		return None[LocalBranchChange]()
 	}
 	return Some(LocalBranchChange{
-		beforeBranch: undodomain.Change[gitdomain.SHA]{
-			Before: beforeSHA,
-			After:  afterSHA,
+		beforeLocal.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeLocal.SHA,
+			After:  afterLocal.SHA,
 		},
 	})
 }
 
 func (self BranchSpan) LocalRemove() Option[LocalBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
-	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
+	beforeLocal, hasBeforeLocal := before.Local.Get()
 	after, hasAfter := self.After.Get()
-	hasAfterBranch, _, _ := after.GetLocal()
-	localRemoved := hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
+	_, hasAfterBranch := after.Local.Get()
+	localRemoved := hasBefore && hasBeforeLocal && (!hasAfter || !hasAfterBranch)
 	if !localRemoved {
 		return None[LocalBranchesSHAs]()
 	}
 	return Some(LocalBranchesSHAs{
-		branchName: beforeSHA,
+		beforeLocal.Name: beforeLocal.SHA,
 	})
 }
 
@@ -112,29 +112,21 @@ func (self BranchSpan) LocalRename() Option[LocalBranchRename] {
 	if !hasAfter {
 		return None[LocalBranchRename]()
 	}
-	beforeName, hasBeforeName := before.LocalName.Get()
-	if !hasBeforeName {
+	beforeLocal, hasBeforeLocal := before.Local.Get()
+	if !hasBeforeLocal {
 		return None[LocalBranchRename]()
 	}
-	afterName, hasAfterName := after.LocalName.Get()
-	if !hasAfterName {
+	afterLocal, hasAfterLocal := after.Local.Get()
+	if !hasAfterLocal {
 		return None[LocalBranchRename]()
 	}
-	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
-	if !hasBeforeSHA {
-		return None[LocalBranchRename]()
-	}
-	afterSHA, hasAfterSHA := after.LocalSHA.Get()
-	if !hasAfterSHA {
-		return None[LocalBranchRename]()
-	}
-	isLocalRename := beforeName != afterName && beforeSHA == afterSHA
+	isLocalRename := beforeLocal.Name != afterLocal.Name && beforeLocal.SHA == afterLocal.SHA
 	if !isLocalRename {
 		return None[LocalBranchRename]()
 	}
 	return Some(LocalBranchRename{
-		After:  afterName,
-		Before: beforeName,
+		After:  afterLocal.Name,
+		Before: beforeLocal.Name,
 	})
 }
 
@@ -145,20 +137,20 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	if !hasBefore {
 		return None[LocalBranchChange]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[LocalBranchChange]()
 	}
-	afterIsOmni, _, afterSHA := after.IsOmniBranch()
-	isOmniChange := beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
+	afterOmni, afterIsOmni := after.OmniBranch().Get()
+	isOmniChange := beforeIsOmni && afterIsOmni && beforeOmni.SHA != afterOmni.SHA
 	if !isOmniChange {
 		return None[LocalBranchChange]()
 	}
 	return Some(LocalBranchChange{
-		beforeName: undodomain.Change[gitdomain.SHA]{
-			Before: beforeSHA,
-			After:  afterSHA,
+		beforeOmni.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeOmni.SHA,
+			After:  afterOmni.SHA,
 		},
 	})
 }
@@ -170,14 +162,14 @@ func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 	if !hasBefore {
 		return None[LocalBranchesSHAs]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	_, hasAfter := self.After.Get()
 	isOmniRemove := beforeIsOmni && !hasAfter
 	if !isOmniRemove {
 		return None[LocalBranchesSHAs]()
 	}
 	return Some(LocalBranchesSHAs{
-		beforeName: beforeSHA,
+		beforeOmni.Name: beforeOmni.SHA,
 	})
 }
 

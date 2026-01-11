@@ -307,7 +307,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
-	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
+	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName().Get()
 	if !hasOldLocalBranch {
 		return prog.Immutable()
 	}
