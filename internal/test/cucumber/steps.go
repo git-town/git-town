@@ -386,8 +386,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runResult := state.runResult.GetOrPanic()
-		if exitCode := runResult.ExitCode; exitCode != 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
+		if runResult.ExitCode != 0 {
+			return fmt.Errorf("unexpected exit code %d", runResult.ExitCode)
 		}
 		output := stripansi.Strip(runResult.Output)
 		if !strings.Contains(output, strings.TrimRight(expected.Content, "\n")) {
