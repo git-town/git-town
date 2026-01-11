@@ -111,9 +111,7 @@ func (self *TestRunner) MustQueryStringCode(fullCmd string) RunResult {
 func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult {
 	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
-	result, err := self.QueryWithCode(opts, cmd, args...)
-	asserts.NoError(err)
-	return result
+	return asserts.NoError1(self.QueryWithCode(opts, cmd, args...))
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
