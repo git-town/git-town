@@ -16,7 +16,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has local and remote name", func(t *testing.T) {
 			t.Parallel()
 			branchInfo := gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: "branch", SHA: "111111"}),
+				Local:      Some(gitdomain.BranchData{Name: "branch"}),
 				RemoteName: gitdomain.NewRemoteBranchNameOption("origin/branch"),
 			}
 			have := branchInfo.GetLocalOrRemoteName()
@@ -25,7 +25,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has only local name", func(t *testing.T) {
 			t.Parallel()
 			branchInfo := gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: "branch", SHA: "111111"}),
+				Local:      Some(gitdomain.BranchData{Name: "branch"}),
 				RemoteName: None[gitdomain.RemoteBranchName](),
 			}
 			have := branchInfo.GetLocalOrRemoteName()
