@@ -112,29 +112,21 @@ func (self BranchSpan) LocalRename() Option[LocalBranchRename] {
 	if !hasAfter {
 		return None[LocalBranchRename]()
 	}
-	beforeName, hasBeforeName := before.LocalName.Get()
-	if !hasBeforeName {
+	beforeLocal, hasBeforeLocal := before.Local.Get()
+	if !hasBeforeLocal {
 		return None[LocalBranchRename]()
 	}
-	afterName, hasAfterName := after.LocalName.Get()
-	if !hasAfterName {
+	afterLocal, hasAfterLocal := after.Local.Get()
+	if !hasAfterLocal {
 		return None[LocalBranchRename]()
 	}
-	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
-	if !hasBeforeSHA {
-		return None[LocalBranchRename]()
-	}
-	afterSHA, hasAfterSHA := after.LocalSHA.Get()
-	if !hasAfterSHA {
-		return None[LocalBranchRename]()
-	}
-	isLocalRename := beforeName != afterName && beforeSHA == afterSHA
+	isLocalRename := beforeLocal.Name != afterLocal.Name && beforeLocal.SHA == afterLocal.SHA
 	if !isLocalRename {
 		return None[LocalBranchRename]()
 	}
 	return Some(LocalBranchRename{
-		After:  afterName,
-		Before: beforeName,
+		After:  afterLocal.Name,
+		Before: beforeLocal.Name,
 	})
 }
 
