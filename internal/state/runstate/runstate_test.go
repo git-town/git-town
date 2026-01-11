@@ -112,15 +112,19 @@ func TestRunState(t *testing.T) {
     "Active": "branch-1",
     "Branches": [
       {
-        "LocalName": "branch-1",
-        "LocalSHA": "111111",
+        "Local": {
+          "Name": "branch-1",
+          "SHA": "111111"
+        },
         "RemoteName": "origin/branch-1",
         "RemoteSHA": "222222",
         "SyncStatus": "not in sync"
       },
       {
-        "LocalName": "branch-2",
-        "LocalSHA": "333333",
+        "Local": {
+          "Name": "branch-2",
+          "SHA": "333333"
+        },
         "RemoteName": null,
         "RemoteSHA": null,
         "SyncStatus": "local only"
