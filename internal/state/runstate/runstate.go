@@ -125,7 +125,7 @@ func writeBranchInfos(result *strings.Builder, branchInfos gitdomain.BranchInfos
 		result.WriteString(" (")
 		result.WriteString(string(branchInfo.SyncStatus))
 		result.WriteString(")\n      Local: ")
-		result.WriteString(branchInfo.LocalSHA.StringOr(messages.DialogResultNone))
+		result.WriteString(branchInfo.LocalSHA().StringOr(messages.DialogResultNone))
 		result.WriteString("\n      Remote: ")
 		result.WriteString(branchInfo.RemoteSHA.StringOr(messages.DialogResultNone))
 		result.WriteRune('\n')
