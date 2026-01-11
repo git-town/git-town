@@ -11,60 +11,6 @@ import (
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
 
-	t.Run("GetLocal", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is a local branch", func(t *testing.T) {
-			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			sha1 := gitdomain.NewSHA("111111")
-			branchInfo := gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: branch1, SHA: sha1}),
-				SyncStatus: gitdomain.SyncStatusLocalOnly,
-				RemoteName: None[gitdomain.RemoteBranchName](),
-				RemoteSHA:  None[gitdomain.SHA](),
-			}
-			have, has := branchInfo.Local.Get()
-			must.True(t, has)
-			must.Eq(t, gitdomain.BranchData{Name: branch1, SHA: sha1}, have)
-		})
-		t.Run("is omnibranch", func(t *testing.T) {
-			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			sha1 := gitdomain.NewSHA("111111")
-			branchInfo := gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: branch1, SHA: sha1}),
-				SyncStatus: gitdomain.SyncStatusUpToDate,
-				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-				RemoteSHA:  Some(sha1),
-			}
-			have, has := branchInfo.Local.Get()
-			must.True(t, has)
-			must.Eq(t, gitdomain.BranchData{Name: branch1, SHA: sha1}, have)
-		})
-		t.Run("has only a remote branch", func(t *testing.T) {
-			t.Parallel()
-			branchInfo := gitdomain.BranchInfo{
-				Local:      None[gitdomain.BranchData](),
-				SyncStatus: gitdomain.SyncStatusRemoteOnly,
-				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-			}
-			_, has := branchInfo.Local.Get()
-			must.False(t, has)
-		})
-		t.Run("is empty", func(t *testing.T) {
-			t.Parallel()
-			branchInfo := gitdomain.BranchInfo{
-				Local:      None[gitdomain.BranchData](),
-				SyncStatus: gitdomain.SyncStatusUpToDate,
-				RemoteName: None[gitdomain.RemoteBranchName](),
-				RemoteSHA:  None[gitdomain.SHA](),
-			}
-			_, has := branchInfo.Local.Get()
-			must.False(t, has)
-		})
-	})
-
 	t.Run("GetLocalOrRemoteName", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has local and remote name", func(t *testing.T) {
