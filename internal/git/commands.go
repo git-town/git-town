@@ -978,7 +978,7 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 		Active: Some(branch),
 		Branches: gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				Local:      Some(gitdomain.BranchData{Name: branch, SHA: "0000000"}), // brand-new repos witout any commits don't seemt to have a SHA
+				Local:      Some(gitdomain.BranchData{Name: branch, SHA: "0000000"}), // brand-new repos witout any commits don't have a SHA
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
