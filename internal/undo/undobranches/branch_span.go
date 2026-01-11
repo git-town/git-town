@@ -16,7 +16,7 @@ type BranchSpan struct {
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	branchNames := set.New[gitdomain.BranchName]()
 	if before, hasBefore := self.Before.Get(); hasBefore {
-		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := before.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
@@ -24,7 +24,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 		}
 	}
 	if after, hasAfter := self.After.Get(); hasAfter {
-		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := after.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
@@ -52,17 +52,17 @@ func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange
 
 func (self BranchSpan) LocalAdd() Option[gitdomain.LocalBranchName] {
 	before, hasBefore := self.Before.Get()
-	beforeHasLocalBranch, _, _ := before.GetLocal()
+	_, beforeHasLocalBranch := before.Local.Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return None[gitdomain.LocalBranchName]()
 	}
-	afterHasLocalBranch, afterLocalBranch, _ := after.GetLocal()
+	afterLocalBranch, afterHasLocalBranch := after.Local.Get()
 	isLocalAdded := (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
 	if !isLocalAdded {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return Some(afterLocalBranch)
+	return Some(afterLocalBranch.Name)
 }
 
 func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
