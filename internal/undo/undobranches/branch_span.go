@@ -169,7 +169,7 @@ func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 		return None[LocalBranchesSHAs]()
 	}
 	return Some(LocalBranchesSHAs{
-		beforeName: beforeSHA,
+		beforeOmni.Name: beforeOmni.SHA,
 	})
 }
 
