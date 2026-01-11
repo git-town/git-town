@@ -544,8 +544,7 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				}),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
+					Local:      None[gitdomain.BranchData](),
 					RemoteName: Some(branch1),
 					RemoteSHA:  Some(sha2),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
