@@ -13,8 +13,8 @@ import (
 func (gh Connector) ClosedIssues(date string) ClosedResult {
 	query := fmt.Sprintf("repo:%s/%s closed:>=%s", org, repo, date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
-	closedIssues := []*github.Issue{}
-	closedPullRequests := []*github.Issue{}
+	issues := []*github.Issue{}
+	pullRequests := []*github.Issue{}
 	for page := 1; ; page++ {
 		results, response := asserts.NoError2(gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "closed",
@@ -27,19 +27,19 @@ func (gh Connector) ClosedIssues(date string) ClosedResult {
 		fmt.Print(".")
 		for _, issue := range results.Issues {
 			if issue.IsPullRequest() {
-				closedPullRequests = append(closedPullRequests, issue)
+				pullRequests = append(pullRequests, issue)
 			} else {
-				closedIssues = append(closedIssues, issue)
+				issues = append(issues, issue)
 			}
 		}
 		if response.NextPage == 0 {
 			break
 		}
 	}
-	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(closedIssues))), console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
+	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(issues))), console.Green.Styled(strconv.Itoa(len(pullRequests))))
 	return ClosedResult{
-		Issues:       closedIssues,
-		PullRequests: closedPullRequests,
+		Issues:       issues,
+		PullRequests: pullRequests,
 	}
 }
 
