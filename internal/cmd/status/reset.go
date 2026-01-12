@@ -75,9 +75,12 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	configDirRepo := configDirUser.RepoConfigDir(rootDir)
 	runstatePath := runstate.NewRunstatePath(configDirRepo)
 	err = os.Remove(runstatePath.String())
-	if err != nil {
+	if os.IsNotExist(err) {
+		fmt.Println(messages.RunstateDoesntExist)
+	} else if err != nil {
 		return err
+	} else {
+		fmt.Println(messages.RunLogDeleted)
 	}
-	fmt.Println(messages.RunLogDeleted)
 	return nil
 }
