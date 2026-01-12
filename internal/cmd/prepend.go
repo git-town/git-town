@@ -252,15 +252,16 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data prependData, flow configdomain.ProgramFlow, err error) {
+func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prependData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult prependData
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -281,7 +282,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		TestHome:             config.TestHome,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	fetch := true
 	if repoStatus.OpenChanges {
@@ -311,39 +312,39 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.PrependDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.PrependDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	targetBranch := gitdomain.NewLocalBranchName(args.argv[0])
 	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
 		targetBranch = prefix.Apply(targetBranch)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -362,22 +363,22 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestor, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if args.beam {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
-			return data, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
-			return data, configdomain.ProgramFlowExit, err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
@@ -387,7 +388,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)

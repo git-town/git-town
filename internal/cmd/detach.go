@@ -190,11 +190,12 @@ type detachChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow configdomain.ProgramFlow, err error) {
+func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult detachData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -215,7 +216,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		TestHome:             config.TestHome,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -235,33 +236,33 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchNameToDetach := currentBranch
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
 	if !hasBranchToDetachInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
 	}
 	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -279,24 +280,24 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
 	if !hasParentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
 	}
 	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if branchHasMergeCommits {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
 	}
 
 	connectorProposalFinder := None[forgedomain.ProposalFinder]()
@@ -306,7 +307,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 			connectorProposalFinder = Some(proposalFinder)
 			branchToDetachProposal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 	}
@@ -318,12 +319,12 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		if hasProposalFinder {
 			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = detachChildBranch{
 			info:     childInfo,
@@ -336,7 +337,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	for d, descendentName := range descendentNames {
 		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
 		}
 		descendents[d] = detachChildBranch{
 			info:     info,

@@ -83,7 +83,7 @@ func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 	return err
 }
 
-func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
+func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
 		remoteOpt = gitdomain.NewRemote(args[0])
@@ -113,11 +113,11 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 		TestHome:             config.TestHome,
 	})
 	if err != nil {
-		return data, err
+		return repoData{}, err
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return data, forgedomain.UnsupportedServiceError()
+		return repoData{}, forgedomain.UnsupportedServiceError()
 	}
 	return repoData{
 		connector: connector,

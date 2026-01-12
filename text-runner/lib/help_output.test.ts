@@ -161,6 +161,34 @@ Flags:
       ]
       deepEqual(have, want)
     })
+
+    test("commit command", () => {
+      const output = new HelpOutput(`
+Commit into another branch.
+
+Allows you to commit the currently staged changes
+into another branch without needing to change branches.
+
+Usage:
+  git-town commit [flags]
+
+Flags:
+  -d, --down int[=1]     commit into the given ancestor branch
+      --dry-run          print but do not run the Git commands
+  -h, --help             help for commit
+  -m, --message string   specify the commit message
+  -v, --verbose          display all Git commands run under the hood
+`)
+      const have = output.flags()
+      const want = [
+        ["-d", "--down int"],
+        ["--dry-run"],
+        ["-h", "--help"],
+        ["-m", "--message string"],
+        ["-v", "--verbose"],
+      ]
+      deepEqual(have, want)
+    })
   })
 })
 

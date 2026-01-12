@@ -238,11 +238,12 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, flow configdomain.ProgramFlow, err error) {
+func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult setParentData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -263,7 +264,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		TestHome:             config.TestHome,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -283,21 +284,21 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -315,12 +316,12 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()
@@ -355,11 +356,12 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setParentData) (prog program.Program, exit dialogdomain.Exit) {
+func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setParentData) (program.Program, dialogdomain.Exit) {
 	proposal, hasProposal := data.proposal.Get()
 	// update lineage
 	oldParent, hasOldParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 	newParent, hasNewParent := newParentOpt.Get()
+	prog := program.Program{}
 	if !hasNewParent {
 		prog.Add(&opcodes.BranchTypeOverrideSet{Branch: data.initialBranch, BranchType: configdomain.BranchTypePerennialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/subshell"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -64,14 +65,11 @@ type ScenarioState struct {
 	// whether this scenario verifies the proposals it has defined
 	proposalsChecked bool
 
-	// the error of the last run of Git Town
-	runExitCode Option[int]
-
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
 
-	// the output of the last run of Git Town
-	runOutput Option[string]
+	// the result of the last run of Git Town
+	runResult Option[subshell.RunResult]
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent Option[string]

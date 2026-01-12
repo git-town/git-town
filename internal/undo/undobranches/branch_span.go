@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/git-town/git-town/v22/pkg/set"
 )
@@ -15,7 +16,7 @@ type BranchSpan struct {
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	branchNames := set.New[gitdomain.BranchName]()
 	if before, hasBefore := self.Before.Get(); hasBefore {
-		if localName, hasLocalName := before.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := before.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := before.RemoteName.Get(); hasRemoteName {
@@ -23,7 +24,7 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 		}
 	}
 	if after, hasAfter := self.After.Get(); hasAfter {
-		if localName, hasLocalName := after.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := after.LocalName().Get(); hasLocalName {
 			branchNames.Add(localName.BranchName())
 		}
 		if remoteName, hasRemoteName := after.RemoteName.Get(); hasRemoteName {
@@ -33,148 +34,198 @@ func (self BranchSpan) BranchNames() []gitdomain.BranchName {
 	return branchNames.Values()
 }
 
-func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before, after gitdomain.BranchInfo) {
-	isOmniChange, _, _, _ := self.IsOmniChange()
-	localChanged, _, _, _ := self.LocalChanged()
-	remoteChanged, _, _, _ := self.RemoteChanged()
+func (self BranchSpan) InconsistentChange() Option[undodomain.InconsistentChange] {
+	_, isOmniChange := self.OmniChange().Get()
+	_, localChanged := self.LocalChange().Get()
+	_, remoteChanged := self.RemoteChange().Get()
 	before, hasBefore := self.Before.Get()
 	after, hasAfter := self.After.Get()
-	isInconsistentChange = hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
-	return isInconsistentChange, before, after
+	isInconsistentChange := hasBefore && before.HasTrackingBranch() && hasAfter && after.HasTrackingBranch() && localChanged && remoteChanged && !isOmniChange
+	if !isInconsistentChange {
+		return None[undodomain.InconsistentChange]()
+	}
+	return Some(undodomain.InconsistentChange{
+		After:  after,
+		Before: before,
+	})
 }
 
-// IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
-func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterName gitdomain.LocalBranchName) {
+func (self BranchSpan) LocalAdd() Option[gitdomain.LocalBranchName] {
+	before, hasBefore := self.Before.Get()
+	_, beforeHasLocalBranch := before.Local.Get()
+	after, hasAfter := self.After.Get()
+	if !hasAfter {
+		return None[gitdomain.LocalBranchName]()
+	}
+	afterLocalBranch, afterHasLocalBranch := after.Local.Get()
+	isLocalAdded := (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
+	if !isLocalAdded {
+		return None[gitdomain.LocalBranchName]()
+	}
+	return Some(afterLocalBranch.Name)
+}
+
+func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, "", ""
+		return None[LocalBranchChange]()
+	}
+	beforeLocal, hasLocalBefore := before.Local.Get()
+	after, hasAfter := self.After.Get()
+	if !hasAfter {
+		return None[LocalBranchChange]()
+	}
+	afterLocal, hasLocalBranchAfter := after.Local.Get()
+	localChanged := hasLocalBefore && hasLocalBranchAfter && beforeLocal.SHA != afterLocal.SHA
+	if !localChanged {
+		return None[LocalBranchChange]()
+	}
+	return Some(LocalBranchChange{
+		beforeLocal.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeLocal.SHA,
+			After:  afterLocal.SHA,
+		},
+	})
+}
+
+func (self BranchSpan) LocalRemove() Option[LocalBranchesSHAs] {
+	before, hasBefore := self.Before.Get()
+	beforeLocal, hasBeforeLocal := before.Local.Get()
+	after, hasAfter := self.After.Get()
+	_, hasAfterBranch := after.Local.Get()
+	localRemoved := hasBefore && hasBeforeLocal && (!hasAfter || !hasAfterBranch)
+	if !localRemoved {
+		return None[LocalBranchesSHAs]()
+	}
+	return Some(LocalBranchesSHAs{
+		beforeLocal.Name: beforeLocal.SHA,
+	})
+}
+
+// LocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
+func (self BranchSpan) LocalRename() Option[LocalBranchRename] {
+	before, hasBefore := self.Before.Get()
+	if !hasBefore {
+		return None[LocalBranchRename]()
 	}
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, "", ""
+		return None[LocalBranchRename]()
 	}
-	beforeName, hasBeforeName := before.LocalName.Get()
-	if !hasBeforeName {
-		return false, "", ""
+	beforeLocal, hasBeforeLocal := before.Local.Get()
+	if !hasBeforeLocal {
+		return None[LocalBranchRename]()
 	}
-	afterName, hasAfterName := after.LocalName.Get()
-	if !hasAfterName {
-		return false, "", ""
+	afterLocal, hasAfterLocal := after.Local.Get()
+	if !hasAfterLocal {
+		return None[LocalBranchRename]()
 	}
-	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
-	if !hasBeforeSHA {
-		return false, "", ""
+	isLocalRename := beforeLocal.Name != afterLocal.Name && beforeLocal.SHA == afterLocal.SHA
+	if !isLocalRename {
+		return None[LocalBranchRename]()
 	}
-	afterSHA, hasAfterSHA := after.LocalSHA.Get()
-	if !hasAfterSHA {
-		return false, "", ""
-	}
-	return beforeName != afterName && beforeSHA == afterSHA, beforeName, afterName
+	return Some(LocalBranchRename{
+		After:  afterLocal.Name,
+		Before: beforeLocal.Name,
+	})
 }
 
-// IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
+// OmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branchName, beforeSHA, afterSHA
+		return None[LocalBranchChange]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branchName, beforeSHA, afterSHA
+		return None[LocalBranchChange]()
 	}
-	afterIsOmni, _, afterSHA := after.IsOmniBranch()
-	isOmniChange = beforeIsOmni && afterIsOmni && beforeSHA != afterSHA
-	return isOmniChange, beforeName, beforeSHA, afterSHA
+	afterOmni, afterIsOmni := after.OmniBranch().Get()
+	isOmniChange := beforeIsOmni && afterIsOmni && beforeOmni.SHA != afterOmni.SHA
+	if !isOmniChange {
+		return None[LocalBranchChange]()
+	}
+	return Some(LocalBranchChange{
+		beforeOmni.Name: undodomain.Change[gitdomain.SHA]{
+			Before: beforeOmni.SHA,
+			After:  afterOmni.SHA,
+		},
+	})
 }
 
 // Indicates whether this BranchSpan describes the removal of an omni Branch
 // and provides all relevant data for this situation.
-func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
+func (self BranchSpan) OmniRemove() Option[LocalBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, beforeBranchName, beforeSHA
+		return None[LocalBranchesSHAs]()
 	}
-	beforeIsOmni, beforeName, beforeSHA := before.IsOmniBranch()
+	beforeOmni, beforeIsOmni := before.OmniBranch().Get()
 	_, hasAfter := self.After.Get()
-	isOmniRemove = beforeIsOmni && !hasAfter
-	return isOmniRemove, beforeName, beforeSHA
-}
-
-func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
-	before, hasBefore := self.Before.Get()
-	beforeHasLocalBranch, _, _ := before.GetLocal()
-	after, hasAfter := self.After.Get()
-	if !hasAfter {
-		return false, afterBranchName, afterSHA
+	isOmniRemove := beforeIsOmni && !hasAfter
+	if !isOmniRemove {
+		return None[LocalBranchesSHAs]()
 	}
-	afterHasLocalBranch, afterLocalBranch, afterSHA := after.GetLocal()
-	isLocalAdded = (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
-	return isLocalAdded, afterLocalBranch, afterSHA
+	return Some(LocalBranchesSHAs{
+		beforeOmni.Name: beforeOmni.SHA,
+	})
 }
 
-func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
-	before, hasBefore := self.Before.Get()
-	if !hasBefore {
-		return false, branch, beforeSHA, afterSHA
-	}
-	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
-	after, hasAfter := self.After.Get()
-	if !hasAfter {
-		return false, branch, beforeSHA, afterSHA
-	}
-	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
-	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
-	return localChanged, beforeBranch, beforeSHA, afterSHA
-}
-
-func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
-	before, hasBefore := self.Before.Get()
-	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
-	after, hasAfter := self.After.Get()
-	hasAfterBranch, _, _ := after.GetLocal()
-	localRemoved = hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
-	return localRemoved, branchName, beforeSHA
-}
-
-func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteAdd() Option[gitdomain.RemoteBranchName] {
 	before, hasBefore := self.Before.Get()
 	beforeHasRemoteBranch, _, _ := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, addedRemoteBranchName, addedRemoteBranchSHA
+		return None[gitdomain.RemoteBranchName]()
 	}
-	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
-	remoteAdded = (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
-	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
+	afterHasRemoteBranch, afterRemoteBranchName, _ := after.GetRemote()
+	remoteAdded := (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
+	if !remoteAdded {
+		return None[gitdomain.RemoteBranchName]()
+	}
+	return Some(afterRemoteBranchName)
 }
 
-func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain.RemoteBranchName, beforeSHA, afterSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteChange() Option[RemoteBranchChange] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, branchName, beforeSHA, afterSHA
+		return None[RemoteBranchChange]()
 	}
 	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false, branchName, beforeSHA, afterSHA
+		return None[RemoteBranchChange]()
 	}
 	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemote()
-	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
-	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
+	remoteChanged := beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
+	if !remoteChanged {
+		return None[RemoteBranchChange]()
+	}
+	return Some(RemoteBranchChange{
+		beforeRemoteBranchName: undodomain.Change[gitdomain.SHA]{
+			Before: beforeRemoteBranchSHA,
+			After:  afterRemoteBranchSHA,
+		},
+	})
 }
 
-func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName gitdomain.RemoteBranchName, beforeRemoteBranchSHA gitdomain.SHA) {
+func (self BranchSpan) RemoteRemove() Option[RemoteBranchesSHAs] {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false, remoteBranchName, beforeRemoteBranchSHA
+		return None[RemoteBranchesSHAs]()
 	}
 	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	afterHasRemoteBranch, _, _ := after.GetRemote()
-	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
-	return remoteRemoved, remoteBranchName, beforeSHA
+	remoteRemoved := beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
+	if !remoteRemoved {
+		return None[RemoteBranchesSHAs]()
+	}
+	return Some(RemoteBranchesSHAs{
+		remoteBranchName: beforeSHA,
+	})
 }
 
 // func (self BranchSpan) String() string {

@@ -6,9 +6,14 @@ suite("Document", () => {
   suite("standardizeArgument()", () => {
     const tests = [
       {
-        desc: "has argument",
+        desc: "string argument",
         give: ["-m <msg>", "--message <msg>"],
         want: ["-m", "--message string"],
+      },
+      {
+        desc: "int argument",
+        give: ["-d int", "--down int"],
+        want: ["-d", "--down int"],
       },
       {
         desc: "no argument",
