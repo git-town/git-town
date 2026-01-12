@@ -88,16 +88,9 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	if unfinishedDetails, hasUnfinishedDetails := data.runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		if !unfinishedDetails.CanSkip {
-			return errors.New(messages.SkipBranchHasConflicts)
-		}
-	}
-	if park {
-		activeBranchType := data.config.BranchType(data.activeBranch)
-		if err = canParkBranchType(activeBranchType, data.activeBranch, repo.FinalMessages); err != nil {
-			return err
-		}
+	err = validateSkipData(data, repo)
+	if err != nil {
+		return err
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
@@ -226,5 +219,21 @@ type skipData struct {
 	connector      Option[forgedomain.Connector]
 	hasOpenChanges bool
 	inputs         dialogcomponents.Inputs
+	park           configdomain.Park
 	runState       runstate.RunState
+}
+
+func validateSkipData(data skipData, repo execute.OpenRepoResult) error {
+	if unfinishedDetails, hasUnfinishedDetails := data.runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+		if !unfinishedDetails.CanSkip {
+			return errors.New(messages.SkipBranchHasConflicts)
+		}
+	}
+	if data.park {
+		activeBranchType := data.config.BranchType(data.activeBranch)
+		if err := canParkBranchType(activeBranchType, data.activeBranch, repo.FinalMessages); err != nil {
+			return err
+		}
+	}
+	return nil
 }
