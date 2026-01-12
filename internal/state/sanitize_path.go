@@ -3,18 +3,16 @@ package state
 import (
 	"regexp"
 	"strings"
-
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
 
-func SanitizePath(dir gitdomain.RepoRootDir) string {
+func SanitizePath[T ~string](dir T) T {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
-	sanitized := replaceCharacterRE.ReplaceAllString(dir.String(), "-")
+	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
 	sanitized = strings.ToLower(sanitized)
 	replaceDoubleMinusRE := regexp.MustCompile("--+") // two or more dashes
 	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")
 	for strings.HasPrefix(sanitized, "-") {
 		sanitized = sanitized[1:]
 	}
-	return sanitized
+	return T(sanitized)
 }

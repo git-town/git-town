@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 )
 
 // Delete removes the stored run state from disk.
-func Delete(repoDir gitdomain.RepoRootDir, fileType FileType) (existed bool, err error) { //nolint:nonamedreturns
-	filename, err := FilePath(repoDir, fileType)
+func Delete(repoDir gitdomain.RepoRootDir, homeDir configdomain.ConfigDir, fileType FileType) (existed bool, err error) { //nolint:nonamedreturns
+	filename, err := FilePath(repoDir, homeDir, fileType)
 	if err != nil {
 		return false, err
 	}

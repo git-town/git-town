@@ -6,20 +6,15 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
-func Load(repoDir gitdomain.RepoRootDir, homeDir configdomain.HomeDir) (Option[RunState], error) {
-	filename, err := state.FilePath(repoDir, homeDir, state.FileTypeRunstate)
-	if err != nil {
-		return None[RunState](), err
-	}
-	_, err = os.Stat(filename)
+func Load(configDir configdomain.ConfigDir) (Option[RunState], error) {
+	filename := configDir.RunstatePath()
+	_, err := os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return None[RunState](), nil
