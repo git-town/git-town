@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/skip"
@@ -210,14 +211,20 @@ func loadSkipData(repo execute.OpenRepoResult) (skipData, configdomain.ProgramFl
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SkipNothingToDo)
 	}
 	return skipData{
-		activeBranch: activeBranch,
-		config:       validatedConfig,
-		inputs:       inputs,
+		activeBranch:   activeBranch,
+		config:         validatedConfig,
+		connector:      connector,
+		hasOpenChanges: repoStatus.OpenChanges,
+		inputs:         inputs,
+		runState:       runState,
 	}, configdomain.ProgramFlowContinue, nil
 }
 
 type skipData struct {
-	activeBranch gitdomain.LocalBranchName
-	config       config.ValidatedConfig
-	inputs       dialogcomponents.Inputs
+	activeBranch   gitdomain.LocalBranchName
+	config         config.ValidatedConfig
+	connector      Option[forgedomain.Connector]
+	hasOpenChanges bool
+	inputs         dialogcomponents.Inputs
+	runState       runstate.RunState
 }
