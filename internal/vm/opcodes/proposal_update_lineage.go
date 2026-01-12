@@ -47,8 +47,6 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	if updatedProposalBody == oldProposalBody {
 		return nil
 	}
-	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
-	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
 		args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
 	}
