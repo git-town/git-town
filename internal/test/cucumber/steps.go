@@ -31,6 +31,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/handlebars"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	"github.com/git-town/git-town/v22/internal/test/output"
 	"github.com/git-town/git-town/v22/internal/test/subshell"
 	"github.com/git-town/git-town/v22/internal/test/testgit"
@@ -38,6 +39,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 // the global FixtureFactory instance.
@@ -78,6 +80,10 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 		exitCode := state.runResult.GetOrPanic().ExitCode
 		if exitCode != 0 && !state.runExitCodeChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
+			os.Exit(1)
+		}
+		if state.initialProposals.IsSome() && !state.proposalsChecked {
+			print.Error(fmt.Errorf("%s - scenario %q doesn't verify proposals", scenario.Uri, scenario.Name))
 			os.Exit(1)
 		}
 		if state != nil {
@@ -1350,6 +1356,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the initial proposals exist now$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
+		have := string(mockproposals.LoadBytes(state.fixture.Dir))
+		want, hasInitialProposals := state.initialProposals.Get()
+		if !hasInitialProposals {
+			return errors.New("no initial proposals defined")
+		}
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(want, have, false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
+		}
+		fmt.Printf("\nERROR! Found %d differences to the initial proposals\n\n", len(diffs))
+		fmt.Println(dmp.DiffPrettyText(diffs))
+		return errors.New("mismatching proposals found, see diff above")
+	})
+
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
@@ -1420,6 +1444,27 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
 		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
+		initialProposals := mockproposals.Save(state.fixture.Dir, proposals)
+		state.initialProposals = Some(initialProposals)
+	})
+
+	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
+		have := mockproposals.Load(state.fixture.Dir)
+		haveTable := mockproposals.ToDataTable(have.Proposals, helpers.TableFields(want))
+		diff, errorCount := haveTable.EqualGherkin(want)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
+			fmt.Println(diff)
+			return errors.New("mismatching proposals found, see diff above")
 		}
 		return nil
 	})
