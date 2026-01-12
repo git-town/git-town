@@ -33,6 +33,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		flow, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
+			ConfigDir:         args.Repo.ConfigDir,
 			Connector:         args.Connector,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
