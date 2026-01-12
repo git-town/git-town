@@ -23,7 +23,7 @@ type ExecuteArgs struct {
 	Backend          subshelldomain.RunnerQuerier
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
-	ConfigDirRepo    configdomain.ConfigDirRepo
+	ConfigDir        configdomain.ConfigDirRepo
 	Connector        Option[forgedomain.Connector]
 	FinalMessages    stringslice.Collector
 	Frontend         subshelldomain.Runner
@@ -58,7 +58,7 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          program,
 	})
-	runstatePath := runstate.NewRunstatePath(args.ConfigDirRepo)
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
 	err := os.Remove(runstatePath.String())
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
