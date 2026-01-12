@@ -10,9 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -74,10 +72,7 @@ func executeRunLog(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, err := loadRunLogData(repo.RootDir)
-	if err != nil {
-		return err
-	}
+	data := loadRunLogData(repo.ConfigDir)
 	if err = showRunLog(data); err != nil {
 		return err
 	}
@@ -101,9 +96,7 @@ type runLogData struct {
 	filepath string // filepath of the runlog file
 }
 
-func loadRunLogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
-	filepath, err := state.FilePath(rootDir, state.FileTypeRunlog)
-	return runLogData{
-		filepath: filepath,
-	}, err
+func loadRunLogData(configDir configdomain.ConfigDirRepo) runLogData {
+	filepath := configDir.RunlogPath()
+	return runLogData{filepath: filepath}
 }

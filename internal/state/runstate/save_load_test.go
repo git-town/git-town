@@ -810,6 +810,8 @@ func TestLoadSave(t *testing.T) {
   }
 }`[1:]
 
+		tempDir := t.TempDir()
+		configDir, err := configdomain.NewConfigDir(tempDir)
 		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
 		homeDir := configdomain.NewConfigDir("/path/to/home")
 		err := runstate.Save(runState, repoRoot, homeDir)

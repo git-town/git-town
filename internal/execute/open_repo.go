@@ -171,6 +171,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
+	ConfigDir         configdomain.ConfigDirRepo
 	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner

@@ -160,7 +160,7 @@ Start:
 	if err != nil || exit {
 		return err
 	}
-	runStateOpt, err := runstate.Load(repo.RootDir)
+	runStateOpt, err := runstate.Load(repo.ConfigDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}

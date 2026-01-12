@@ -12,7 +12,7 @@ import (
 
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
-func Load(configDir configdomain.ConfigDir) (Option[RunState], error) {
+func Load(configDir configdomain.ConfigDirRepo) (Option[RunState], error) {
 	filename := configDir.RunstatePath()
 	_, err := os.Stat(filename)
 	if err != nil {

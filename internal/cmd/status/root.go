@@ -90,6 +90,7 @@ type displayStatusData struct {
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
+	configDir, err := configdomain.NewConfigDir(rootDir)
 	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
 	if err != nil {
 		return displayStatusData{}, err
