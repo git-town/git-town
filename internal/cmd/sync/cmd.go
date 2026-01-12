@@ -180,7 +180,8 @@ Start:
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && isOnline {
 		AddSyncProposalsProgram(AddSyncProposalsProgramArgs{
 			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
