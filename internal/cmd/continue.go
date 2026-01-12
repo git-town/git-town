@@ -222,7 +222,8 @@ type continueData struct {
 }
 
 func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {
-	runStateOpt, err := runstate.Load(repo.ConfigDir)
+	runstatePath := runstate.NewRunstatePath(repo.ConfigDir)
+	runStateOpt, err := runstate.Load(runstatePath)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
