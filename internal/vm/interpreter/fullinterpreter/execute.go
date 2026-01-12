@@ -24,6 +24,7 @@ type ExecuteArgs struct {
 	Backend                 subshelldomain.RunnerQuerier
 	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
+	ConfigDir               configdomain.ConfigDirRepo
 	Connector               Option[forgedomain.Connector]
 	FinalMessages           stringslice.Collector
 	Frontend                subshelldomain.Runner
@@ -36,13 +37,12 @@ type ExecuteArgs struct {
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
 	RunState                runstate.RunState
-	RunlogPath              runlog.RunlogPath
-	RunstatePath            runstate.RunstatePath
 }
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
-	if err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RunlogPath); err != nil {
+	runlogPath := runlog.NewRunlogPath(args.ConfigDir)
+	if err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, runlogPath); err != nil {
 		return err
 	}
 	for {
@@ -51,6 +51,7 @@ func Execute(args ExecuteArgs) error {
 			return finished(finishedArgs{
 				Backend:         args.Backend,
 				CommandsCounter: args.CommandsCounter,
+				ConfigDir:       args.ConfigDir,
 				FinalMessages:   args.FinalMessages,
 				Git:             args.Git,
 				Inputs:          args.Inputs,

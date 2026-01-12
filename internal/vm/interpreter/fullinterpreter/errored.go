@@ -21,7 +21,8 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RunlogPath)
+	runlogPath := runlog.NewRunlogPath(args.ConfigDir)
+	err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), runlogPath)
 	if err != nil {
 		return err
 	}
@@ -78,7 +79,8 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, canSkip); err != nil {
 		return err
 	}
-	if err = runstate.Save(args.RunState, args.RunstatePath); err != nil {
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+	if err = runstate.Save(args.RunState, runstatePath); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())

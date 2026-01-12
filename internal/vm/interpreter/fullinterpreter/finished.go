@@ -20,12 +20,11 @@ import (
 type finishedArgs struct {
 	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
+	ConfigDir       configdomain.ConfigDirRepo
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
 	RunState        runstate.RunState
-	RunlogPath      runlog.RunlogPath
-	RunstatePath    runstate.RunstatePath
 	Verbose         configdomain.Verbose
 }
 
@@ -35,7 +34,8 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RunlogPath); err != nil {
+	runlogPath := runlog.NewRunlogPath(args.ConfigDir)
+	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), runlogPath); err != nil {
 		return err
 	}
 	globalSnapshot, err := gitconfig.LoadSnapshot(args.Backend, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
@@ -56,7 +56,8 @@ func finished(args finishedArgs) error {
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished(endBranchesSnapshot)
-	if err = runstate.Save(args.RunState, args.RunstatePath); err != nil {
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+	if err = runstate.Save(args.RunState, runstatePath); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
