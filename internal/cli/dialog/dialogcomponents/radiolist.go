@@ -13,7 +13,7 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.
-func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, dialogName string) (selected S, exit dialogdomain.Exit, err error) { //nolint:ireturn
+func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
 		help:  help,
