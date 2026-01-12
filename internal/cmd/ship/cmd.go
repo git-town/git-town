@@ -182,7 +182,9 @@ Start:
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
-	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+	updateProposalLineage := sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			ChangedBranches: oldClan.Remove(sharedData.initialBranch),
 			Config:          sharedData.config,
