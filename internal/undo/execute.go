@@ -2,16 +2,17 @@ package undo
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/lightinterpreter"
@@ -28,6 +29,7 @@ type ExecuteArgs struct {
 	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
+	ConfigDirRepo    configdomain.ConfigDirRepo
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 }
@@ -57,7 +59,8 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          program,
 	})
-	_, err := state.Delete(args.RootDir, state.FileTypeRunstate)
+	runstatePath := runstate.NewRunstatePath(args.ConfigDirRepo)
+	err := os.Remove(runstatePath.String())
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
