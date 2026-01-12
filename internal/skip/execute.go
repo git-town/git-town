@@ -35,7 +35,6 @@ type ExecuteArgs struct {
 	InitialBranch   gitdomain.LocalBranchName
 	Inputs          dialogcomponents.Inputs
 	Park            configdomain.Park
-	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 }
 
@@ -78,7 +77,6 @@ func Execute(args ExecuteArgs) error {
 		InitialStashSize:        args.RunState.BeginStashSize,
 		Inputs:                  args.Inputs,
 		PendingCommand:          Some(args.RunState.Command),
-		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
 	})
 }

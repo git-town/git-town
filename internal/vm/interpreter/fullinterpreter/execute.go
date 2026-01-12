@@ -35,7 +35,6 @@ type ExecuteArgs struct {
 	InitialStashSize        gitdomain.StashSize
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
-	RootDir                 gitdomain.RepoRootDir // TODO: delete?
 	RunState                runstate.RunState
 	RunlogPath              runlog.RunlogPath
 	RunstatePath            runstate.RunstatePath
@@ -55,7 +54,6 @@ func Execute(args ExecuteArgs) error {
 				FinalMessages:   args.FinalMessages,
 				Git:             args.Git,
 				Inputs:          args.Inputs,
-				RootDir:         args.RootDir,
 				RunState:        args.RunState,
 				Verbose:         args.Config.NormalConfig.Verbose,
 			})

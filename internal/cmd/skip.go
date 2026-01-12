@@ -104,7 +104,6 @@ Start:
 		InitialBranch:   data.activeBranch,
 		Inputs:          data.inputs,
 		Park:            park,
-		RootDir:         repo.RootDir,
 		RunState:        data.runState,
 	})
 }

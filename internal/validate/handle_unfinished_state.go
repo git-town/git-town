@@ -101,7 +101,6 @@ type UnfinishedStateArgs struct {
 	Inputs            dialogcomponents.Inputs
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
-	RootDir           gitdomain.RepoRootDir
 	RunState          Option[runstate.RunState]
 	RunstatePath      runstate.RunstatePath
 	UnvalidatedConfig config.UnvalidatedConfig
@@ -135,7 +134,6 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		InitialStashSize:        runState.BeginStashSize,
 		Inputs:                  args.Inputs,
 		PendingCommand:          Some(runState.Command),
-		RootDir:                 args.RootDir,
 		RunState:                runState,
 	})
 }
@@ -210,7 +208,6 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		InitialBranch:   currentBranch,
 		Inputs:          args.Inputs,
 		Park:            false,
-		RootDir:         args.RootDir,
 		RunState:        runState,
 	})
 }
@@ -235,7 +232,6 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		Git:              args.Git,
 		HasOpenChanges:   args.HasOpenChanges,
 		InitialStashSize: runState.BeginStashSize,
-		RootDir:          args.RootDir,
 		RunState:         runState,
 	})
 }

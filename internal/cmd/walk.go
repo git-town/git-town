@@ -179,7 +179,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }

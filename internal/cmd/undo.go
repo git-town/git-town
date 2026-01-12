@@ -101,7 +101,6 @@ Start:
 		Git:              repo.Git,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: data.stashSize,
-		RootDir:          repo.RootDir,
 		RunState:         runState,
 	})
 }

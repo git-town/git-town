@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/git"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -24,7 +23,6 @@ type finishedArgs struct {
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
-	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 	RunlogPath      runlog.RunlogPath
 	RunstatePath    runstate.RunstatePath

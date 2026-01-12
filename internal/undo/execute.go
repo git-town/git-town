@@ -30,7 +30,6 @@ type ExecuteArgs struct {
 	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
-	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 }
 
