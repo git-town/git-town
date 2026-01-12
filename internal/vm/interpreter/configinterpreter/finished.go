@@ -69,5 +69,6 @@ func Finished(args FinishedArgs) error {
 		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return runstate.Save(runState, args.RunstatePath)
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+	return runstate.Save(runState, runstatePath)
 }
