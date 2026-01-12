@@ -77,7 +77,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := loadSkipData(repo)
+	data, flow, err := loadSkipData(repo, park)
 	if err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ Start:
 	})
 }
 
-func loadSkipData(repo execute.OpenRepoResult) (skipData, configdomain.ProgramFlow, error) {
+func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	var emptyResult skipData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -209,6 +209,7 @@ func loadSkipData(repo execute.OpenRepoResult) (skipData, configdomain.ProgramFl
 		connector:      connector,
 		hasOpenChanges: repoStatus.OpenChanges,
 		inputs:         inputs,
+		park:           park,
 		runState:       runState,
 	}, configdomain.ProgramFlowContinue, nil
 }
