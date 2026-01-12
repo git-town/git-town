@@ -1,19 +1,13 @@
 package state
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 )
 
-func FilePath(repoDir gitdomain.RepoRootDir, fileType FileType) (string, error) {
-	configDir, err := os.UserConfigDir()
-	if err != nil {
-		return "", fmt.Errorf(messages.RunstateCannotDetermineUserDir, err)
-	}
+func FilePath(repoDir gitdomain.RepoRootDir, homeDir configdomain.HomeDir, fileType FileType) (string, error) {
 	sanitizedRepo := SanitizePath(repoDir)
-	return filepath.Join(configDir, "git-town", sanitizedRepo, fileType.String()+".json"), nil
+	return filepath.Join(homeDir.String(), "git-town", sanitizedRepo, fileType.String()+".json"), nil
 }
