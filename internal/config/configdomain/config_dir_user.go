@@ -39,7 +39,7 @@ func SanitizePath[T ~string](dir T) T {
 func SystemUserConfigDir() (ConfigDirUser, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", fmt.Errorf(messages.RunstateCannotDetermineUserDir, err)
+		return "", fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
 	}
 	return ConfigDirUser(configDir), nil
 }

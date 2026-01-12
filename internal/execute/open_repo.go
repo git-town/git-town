@@ -146,9 +146,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			err = gitCommands.ChangeDir(rootDir)
 		}
 	}
+	configDirUser, err := configdomain.SystemUserConfigDir()
+	if err != nil {
+		return emptyOpenRepoResult(), fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
+	}
+	configDirRepo := configDirUser.RepoConfigDir(rootDir)
 	return OpenRepoResult{
 		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
+		ConfigDir:         configDirRepo,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,
