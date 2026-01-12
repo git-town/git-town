@@ -12,7 +12,7 @@ import (
 )
 
 // Append writes the given entry to the end of the runlog for this repo.
-func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string], runlogPath RunlogPath) error {
+func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string], runlogPath FilePath) error {
 	entry := NewEntry(event, branchInfos, pendingCommand)
 	content, err := json.MarshalIndent(entry, "", "  ")
 	if err != nil {

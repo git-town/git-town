@@ -811,7 +811,7 @@ func TestLoadSave(t *testing.T) {
 }`[1:]
 
 		tempDir := t.TempDir()
-		runstatePath := runstate.RunstatePath(filepath.Join(tempDir, "runstate.json"))
+		runstatePath := runstate.FilePath(filepath.Join(tempDir, "runstate.json"))
 		err := runstate.Save(runState, runstatePath)
 		must.NoError(t, err)
 		content, err := os.ReadFile(runstatePath.String())

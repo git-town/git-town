@@ -144,6 +144,9 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 		if currentDirectory != rootDir.String() {
 			err = gitCommands.ChangeDir(rootDir)
+			if err != nil {
+				return emptyOpenRepoResult(), err
+			}
 		}
 	}
 	configDirUser, err := configdomain.SystemUserConfigDir()

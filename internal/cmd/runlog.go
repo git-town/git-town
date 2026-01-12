@@ -94,7 +94,7 @@ func showRunLog(data runLogData) error {
 }
 
 type runLogData struct {
-	filepath runlog.RunlogPath
+	filepath runlog.FilePath
 }
 
 func loadRunLogData(repoConfigDir configdomain.ConfigDirRepo) runLogData {

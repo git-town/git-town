@@ -140,7 +140,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 	})
 }
 
-func discardRunstate(runstatePath runstate.RunstatePath) (configdomain.ProgramFlow, error) {
+func discardRunstate(runstatePath runstate.FilePath) (configdomain.ProgramFlow, error) {
 	err := os.Remove(runstatePath.String())
 	return configdomain.ProgramFlowContinue, err
 }

@@ -23,7 +23,7 @@ func (self ConfigDirUser) String() string {
 	return string(self)
 }
 
-func SanitizePath[T ~string](dir T) T {
+func SanitizePath[T ~string](dir T) T { //nolint:ireturn
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
 	sanitized = strings.ToLower(sanitized)

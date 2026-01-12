@@ -6,13 +6,13 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 )
 
-// RunstatePath is the path to the runstate file.
-type RunstatePath string
+// FilePath is the path to the runstate file.
+type FilePath string
 
-func (self RunstatePath) String() string {
+func (self FilePath) String() string {
 	return string(self)
 }
 
-func NewRunstatePath(repoConfigDir configdomain.ConfigDirRepo) RunstatePath {
-	return RunstatePath(filepath.Join(repoConfigDir.String(), "runstate.json"))
+func NewRunstatePath(repoConfigDir configdomain.ConfigDirRepo) FilePath {
+	return FilePath(filepath.Join(repoConfigDir.String(), "runstate.json"))
 }

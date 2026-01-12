@@ -11,7 +11,7 @@ import (
 
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
-func Load(runstatePath RunstatePath) (Option[RunState], error) {
+func Load(runstatePath FilePath) (Option[RunState], error) {
 	_, err := os.Stat(runstatePath.String())
 	if err != nil {
 		if os.IsNotExist(err) {

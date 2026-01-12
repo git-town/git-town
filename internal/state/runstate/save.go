@@ -10,7 +10,7 @@ import (
 )
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState RunState, runstatePath RunstatePath) error {
+func Save(runState RunState, runstatePath FilePath) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)
