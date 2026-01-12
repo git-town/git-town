@@ -31,27 +31,21 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		args.FinalMessages.Add(messages.ConnectorCannotUpdateProposalBody)
 		return nil
 	}
-	parentBranch, hasParentBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
-	if !hasParentBranch {
-		return nil
-	}
-	proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
+	proposals, err := proposalSearcher.SearchProposals(self.Branch)
 	if err != nil {
 		args.FinalMessages.Addf(messages.ProposalFindProblem, err.Error())
 		return nil
 	}
-	proposal, hasProposal := proposalOpt.Get()
-	if !hasProposal {
-		return nil
-	}
-	oldProposalBody := proposal.Data.Data().Body.GetOrZero()
-	lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
-	updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
-	if updatedProposalBody == oldProposalBody {
-		return nil
-	}
-	if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
-		args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
+	for _, proposal := range proposals {
+		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
+		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
+		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
+		if updatedProposalBody == oldProposalBody {
+			return nil
+		}
+		if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
+			args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
+		}
 	}
 	return nil
 }
