@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state"
@@ -13,8 +14,8 @@ import (
 
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
-func Load(repoDir gitdomain.RepoRootDir) (Option[RunState], error) {
-	filename, err := state.FilePath(repoDir, state.FileTypeRunstate)
+func Load(repoDir gitdomain.RepoRootDir, homeDir configdomain.HomeDir) (Option[RunState], error) {
+	filename, err := state.FilePath(repoDir, homeDir, state.FileTypeRunstate)
 	if err != nil {
 		return None[RunState](), err
 	}
