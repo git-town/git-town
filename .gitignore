@@ -1,3 +1,4 @@
+.claude/*.local.*
 dist/
 git-town.exe
 git-town_*
