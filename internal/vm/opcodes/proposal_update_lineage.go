@@ -18,9 +18,9 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
 		return nil
 	}
-	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	if !canFindProposals {
-		args.FinalMessages.Add(messages.ConnectorCannotFindProposals)
+	proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher)
+	if !canSearchProposals {
+		args.FinalMessages.Add(messages.ConnectorCannotSearchProposals)
 		return nil
 	}
 	proposalBodyUpdater, canUpdateProposalBody := connector.(forgedomain.ProposalBodyUpdater)
