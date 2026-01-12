@@ -23,13 +23,13 @@ type ExecuteArgs struct {
 	Backend          subshelldomain.RunnerQuerier
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
+	ConfigDirRepo    configdomain.ConfigDirRepo
 	Connector        Option[forgedomain.Connector]
 	FinalMessages    stringslice.Collector
 	Frontend         subshelldomain.Runner
 	Git              git.Commands
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
-	ConfigDirRepo    configdomain.ConfigDirRepo
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
 }

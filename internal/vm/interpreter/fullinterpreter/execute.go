@@ -36,8 +36,8 @@ type ExecuteArgs struct {
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
 	RootDir                 gitdomain.RepoRootDir // TODO: delete?
-	RunlogPath              runlog.RunlogPath
 	RunState                runstate.RunState
+	RunlogPath              runlog.RunlogPath
 	RunstatePath            runstate.RunstatePath
 }
 

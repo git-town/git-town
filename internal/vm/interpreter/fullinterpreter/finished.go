@@ -25,8 +25,8 @@ type finishedArgs struct {
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
-	RunlogPath      runlog.RunlogPath
 	RunState        runstate.RunState
+	RunlogPath      runlog.RunlogPath
 	RunstatePath    runstate.RunstatePath
 	Verbose         configdomain.Verbose
 }
