@@ -28,7 +28,6 @@ linters:
     - nilnil # in our code returning nil, nil makes sense
     - noctx # we aren't using contexts to cancel operations yet, might be interesting in the future
     - noinlineerr # inline errors are okay
-    - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
     - staticcheck # we run this separately
     - usetesting # false positives

@@ -63,7 +63,7 @@ func (self *CachedConnector) FindProposal(source, target gitdomain.LocalBranchNa
 var _ forgedomain.ProposalSearcher = &cachedConnector // type-check
 
 func (self *CachedConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedSearchResult, has := self.Cache.LookupSearch(source); has {
+	if cachedSearchResult, has := self.Cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
 	}
 	loadedSearchResult, err := self.Connector.SearchProposals(source)

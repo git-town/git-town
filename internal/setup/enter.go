@@ -28,11 +28,11 @@ func Enter(data Data) (UserInput, dialogdomain.Exit, bool, error) {
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	mainBranchSetting, actualMainBranch, exit, err := enterMainBranch(data)
+	mainBranchResult, exit, err := enterMainBranch(data)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	perennialBranches, exit, err := enterPerennialBranches(data, actualMainBranch)
+	perennialBranches, exit, err := enterPerennialBranches(data, mainBranchResult.ActualMainBranch)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
@@ -303,7 +303,7 @@ EnterForgeData:
 		HostingOriginHostname:    hostingOriginHostName,
 		IgnoreUncommitted:        ignoreUncommitted,
 		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
-		MainBranch:               mainBranchSetting,
+		MainBranch:               mainBranchResult.UserChoice,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
@@ -327,7 +327,7 @@ EnterForgeData:
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
-		MainBranch: actualMainBranch,
+		MainBranch: mainBranchResult.ActualMainBranch,
 	}
 	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, enterAll, nil
 }
@@ -537,9 +537,12 @@ func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], 
 	})
 }
 
-func enterMainBranch(data Data) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+func enterMainBranch(data Data) (dialog.MainBranchResult, dialogdomain.Exit, error) {
 	if configFileMainBranch, hasMain := data.Config.File.MainBranch.Get(); hasMain {
-		return Some(configFileMainBranch), configFileMainBranch, false, nil
+		return dialog.MainBranchResult{
+			UserChoice:       Some(configFileMainBranch),
+			ActualMainBranch: configFileMainBranch,
+		}, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
 		Inputs:         data.Inputs,
@@ -806,7 +809,7 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 	return false
 }
 
-func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exit dialogdomain.Exit, err error) {
+func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	if args.testHome.IsSome() {
 		return configdomain.ProgramFlowContinue, false, nil
 	}
@@ -839,7 +842,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat configdomain.ProgramFlow, exi
 			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)
 		}
 		if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
-			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, exit))
+			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, false))
 		}
 		if verifyResult.AuthorizationError != nil {
 			return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs)

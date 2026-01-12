@@ -334,7 +334,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 	})
 
-	t.Run("IsOmniBranch", func(t *testing.T) {
+	t.Run("OmniBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
 			t.Parallel()
