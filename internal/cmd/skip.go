@@ -9,10 +9,12 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/skip"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
@@ -74,10 +76,51 @@ Start:
 	if err != nil {
 		return err
 	}
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	data, flow, err := loadSkipData(repo)
 	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	if unfinishedDetails, hasUnfinishedDetails := data.runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+		if !unfinishedDetails.CanSkip {
+			return errors.New(messages.SkipBranchHasConflicts)
+		}
+	}
+	if park {
+		activeBranchType := data.config.BranchType(data.activeBranch)
+		if err = canParkBranchType(activeBranchType, data.activeBranch, repo.FinalMessages); err != nil {
+			return err
+		}
+	}
+	return skip.Execute(skip.ExecuteArgs{
+		Backend:         repo.Backend,
+		CommandsCounter: repo.CommandsCounter,
+		Config:          data.config,
+		Connector:       data.connector,
+		FinalMessages:   repo.FinalMessages,
+		Frontend:        repo.Frontend,
+		Git:             repo.Git,
+		HasOpenChanges:  data.hasOpenChanges,
+		InitialBranch:   data.activeBranch,
+		Inputs:          data.inputs,
+		Park:            park,
+		RootDir:         repo.RootDir,
+		RunState:        data.runState,
+	})
+}
+
+func loadSkipData(repo execute.OpenRepoResult) (skipData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult skipData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -97,7 +140,7 @@ Start:
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -117,20 +160,18 @@ Start:
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
 	}
 	activeBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
 		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return err
+			return emptyResult, configdomain.ProgramFlowExit, err
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
 			activeBranch = currentBranch
@@ -140,7 +181,7 @@ Start:
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -158,40 +199,25 @@ Start:
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	runStateOpt, err := runstate.Load(repo.RootDir)
 	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	runState, hasRunState := runStateOpt.Get()
 	if !hasRunState || runState.IsFinished() {
-		return errors.New(messages.SkipNothingToDo)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SkipNothingToDo)
 	}
-	if unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		if !unfinishedDetails.CanSkip {
-			return errors.New(messages.SkipBranchHasConflicts)
-		}
-	}
-	if park {
-		activeBranchType := validatedConfig.BranchType(activeBranch)
-		if err = canParkBranchType(activeBranchType, activeBranch, repo.FinalMessages); err != nil {
-			return err
-		}
-	}
-	return skip.Execute(skip.ExecuteArgs{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          validatedConfig,
-		Connector:       connector,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-		Git:             repo.Git,
-		HasOpenChanges:  repoStatus.OpenChanges,
-		InitialBranch:   activeBranch,
-		Inputs:          inputs,
-		Park:            park,
-		RootDir:         repo.RootDir,
-		RunState:        runState,
-	})
+	return skipData{
+		activeBranch: activeBranch,
+		config:       validatedConfig,
+		inputs:       inputs,
+	}, configdomain.ProgramFlowContinue, nil
+}
+
+type skipData struct {
+	activeBranch gitdomain.LocalBranchName
+	config       config.ValidatedConfig
+	inputs       dialogcomponents.Inputs
 }
