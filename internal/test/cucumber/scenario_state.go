@@ -59,6 +59,12 @@ type ScenarioState struct {
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
+	// the proposals defined in the setup step
+	initialProposals Option[string]
+
+	// whether this scenario verifies the proposals it has defined
+	proposalsChecked bool
+
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
 
