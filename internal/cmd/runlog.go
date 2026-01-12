@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runlog"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -83,7 +84,7 @@ func executeRunLog(cliConfig configdomain.PartialConfig) error {
 func showRunLog(data runLogData) error {
 	fmt.Printf(messages.RunlogDisplaying, data.filepath)
 	fmt.Println()
-	content, err := os.ReadFile(data.filepath)
+	content, err := os.ReadFile(data.filepath.String())
 	if err != nil {
 		return fmt.Errorf(messages.RunLogCannotRead, data.filepath, err)
 	}
@@ -93,10 +94,10 @@ func showRunLog(data runLogData) error {
 }
 
 type runLogData struct {
-	filepath string // filepath of the runlog file
+	filepath runlog.RunlogPath
 }
 
-func loadRunLogData(configDir configdomain.ConfigDirRepo) runLogData {
-	filepath := configDir.RunlogPath()
+func loadRunLogData(repoConfigDir configdomain.ConfigDirRepo) runLogData {
+	filepath := runlog.NewRunlogPath(repoConfigDir)
 	return runLogData{filepath: filepath}
 }
