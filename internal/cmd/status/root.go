@@ -84,7 +84,7 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 }
 
 type displayStatusData struct {
-	filepath string                    // filepath of the runstate file
+	filepath runstate.RunstatePath     // filepath of the runstate file
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
@@ -93,13 +93,14 @@ func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, er
 	if err != nil {
 		return displayStatusData{}, err
 	}
-	configDir := userConfigDir.RepoConfigDir(rootDir)
-	state, err := runstate.Load(configDir)
+	configDirRepo := userConfigDir.RepoConfigDir(rootDir)
+	runstatePath := runstate.NewRunstatePath(configDirRepo)
+	state, err := runstate.Load(runstatePath)
 	if err != nil {
 		return displayStatusData{}, err
 	}
 	return displayStatusData{
-		filepath: filepath,
+		filepath: runstatePath,
 		state:    state,
 	}, nil
 }

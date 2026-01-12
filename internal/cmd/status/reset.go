@@ -3,6 +3,7 @@ package status
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -66,11 +67,12 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	if !hasRootDir {
 		return errors.New(messages.RepoOutside)
 	}
-	configDir, err := configdomain.NewConfigDir(rootDir)
+	configDirUser, err := configdomain.SystemUserConfigDir()
 	if err != nil {
 		return err
 	}
-	err = configDir.Delete()
+	configDirRepo := configDirUser.RepoConfigDir(rootDir)
+	err = os.RemoveAll(configDirRepo.String())
 	if err != nil {
 		return err
 	}
