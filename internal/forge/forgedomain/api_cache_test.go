@@ -29,7 +29,7 @@ func TestAPICache(t *testing.T) {
 			cache.Clear()
 			_, has := cache.Lookup("source", "target")
 			must.False(t, has)
-			_, has = cache.LookupSearch("source")
+			_, has = cache.LookupSearch("source").Get()
 			must.False(t, has)
 		})
 	})
@@ -193,7 +193,7 @@ func TestAPICache(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.APICache{}
 			source := gitdomain.NewLocalBranchName("feature")
-			_, knows := cache.LookupSearch(source)
+			_, knows := cache.LookupSearch(source).Get()
 			must.False(t, knows)
 		})
 
@@ -216,7 +216,7 @@ func TestAPICache(t *testing.T) {
 			}
 			giveProposals := []forgedomain.Proposal{proposal1, proposal2}
 			cache.RegisterSearchResult("source", giveProposals)
-			haveProposals, has := cache.LookupSearch("source")
+			haveProposals, has := cache.LookupSearch("source").Get()
 			must.True(t, has)
 			must.EqOp(t, 2, len(haveProposals))
 			must.EqOp(t, "PR 1", haveProposals[0].Data.Data().Title)
@@ -227,7 +227,7 @@ func TestAPICache(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.APICache{}
 			cache.RegisterSearchResult("other", []forgedomain.Proposal{})
-			_, knows := cache.LookupSearch("source")
+			_, knows := cache.LookupSearch("source").Get()
 			must.False(t, knows)
 		})
 
@@ -241,7 +241,7 @@ func TestAPICache(t *testing.T) {
 				},
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
-			_, knows := cache.LookupSearch("source")
+			_, knows := cache.LookupSearch("source").Get()
 			must.False(t, knows)
 		})
 	})
@@ -336,7 +336,7 @@ func TestAPICache(t *testing.T) {
 				},
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
-			result, has := cache.LookupSearch("source")
+			result, has := cache.LookupSearch("source").Get()
 			must.True(t, has)
 			must.EqOp(t, 1, len(result))
 			must.EqOp(t, "PR 1", result[0].Data.Data().Title)
@@ -361,7 +361,7 @@ func TestAPICache(t *testing.T) {
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal2})
-			haveProposals, has := cache.LookupSearch("source")
+			haveProposals, has := cache.LookupSearch("source").Get()
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals))
 			must.EqOp(t, "Second PR", haveProposals[0].Data.Data().Title)
@@ -386,11 +386,11 @@ func TestAPICache(t *testing.T) {
 			}
 			cache.RegisterSearchResult("source1", []forgedomain.Proposal{proposal1})
 			cache.RegisterSearchResult("source2", []forgedomain.Proposal{proposal2})
-			haveProposals1, has := cache.LookupSearch("source1")
+			haveProposals1, has := cache.LookupSearch("source1").Get()
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals1))
 			must.EqOp(t, "First PR", haveProposals1[0].Data.Data().Title)
-			haveProposals2, has := cache.LookupSearch("source2")
+			haveProposals2, has := cache.LookupSearch("source2").Get()
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals2))
 			must.EqOp(t, "Second PR", haveProposals2[0].Data.Data().Title)

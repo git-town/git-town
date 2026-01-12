@@ -68,7 +68,7 @@ type ScenarioState struct {
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
 
-	// the output of the last run of Git Town
+	// the result of the last run of Git Town
 	runResult Option[subshell.RunResult]
 
 	// content of the uncommitted file in the workspace

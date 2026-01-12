@@ -116,7 +116,7 @@ func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) R
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
@@ -258,15 +258,15 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
+	var output string
 	if opts.IgnoreOutput {
-		return RunResult{
-			ExitCode: exitCode,
-			Output:   "",
-		}, err
+		output = ""
+	} else {
+		output = strings.TrimRight(outputBuf.String(), "\n")
 	}
 	return RunResult{
 		ExitCode: exitCode,
-		Output:   strings.TrimRight(outputBuf.String(), "\n"),
+		Output:   output,
 	}, err
 }
 

@@ -271,6 +271,7 @@ deadcode: tools/rta@${RTA_VERSION}
 			| grep -v NewCommitMessages \
 			| grep -v NewLineageWith \
 			| grep -v NewSHAs \
+			| grep -v NoError2 \
 			| grep -v pkg/prelude/ptr.go \
 			| grep -v Paniced \
 			| grep -v Set.Add \

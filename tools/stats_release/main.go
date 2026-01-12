@@ -22,20 +22,20 @@ func main() {
 	contributors := data.NewUsers()
 	gh := connector.NewConnector()
 
-	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
+	closed := gh.ClosedIssues(lastRelease.ISOTime)
 
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED ISSUES")
 	fmt.Println()
-	contributors.AddUsers(gh.IssuesParticipants(closedIssues, "issue"))
+	contributors.AddUsers(gh.IssuesParticipants(closed.Issues, "issue"))
 
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
 	fmt.Println()
-	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests, "PR"))
+	contributors.AddUsers(gh.IssuesParticipants(closed.PullRequests, "PR"))
 
 	// print statistics
 	fmt.Println()
-	fmt.Printf("%s shipped pull requests\n", console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
-	fmt.Printf("%s resolved issues\n", console.Green.Styled(strconv.Itoa(len(closedIssues))))
+	fmt.Printf("%s shipped pull requests\n", console.Green.Styled(strconv.Itoa(len(closed.PullRequests))))
+	fmt.Printf("%s resolved issues\n", console.Green.Styled(strconv.Itoa(len(closed.Issues))))
 	users := contributors.Values()
 	fmt.Printf("%s contributors:\n", console.Cyan.Styled(strconv.Itoa(len(users))))
 	userNames := make([]string, len(users))
