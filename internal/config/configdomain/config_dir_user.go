@@ -23,15 +23,6 @@ func (self ConfigDirUser) String() string {
 	return string(self)
 }
 
-// SystemUserConfigDir provides the UserConfigDir to use in production.
-func SystemUserConfigDir() (ConfigDirUser, error) {
-	configDir, err := os.UserConfigDir()
-	if err != nil {
-		return "", fmt.Errorf(messages.RunstateCannotDetermineUserDir, err)
-	}
-	return ConfigDirUser(configDir), nil
-}
-
 func SanitizePath[T ~string](dir T) T {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
@@ -42,4 +33,13 @@ func SanitizePath[T ~string](dir T) T {
 		sanitized = sanitized[1:]
 	}
 	return T(sanitized)
+}
+
+// SystemUserConfigDir provides the UserConfigDir to use in production.
+func SystemUserConfigDir() (ConfigDirUser, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", fmt.Errorf(messages.RunstateCannotDetermineUserDir, err)
+	}
+	return ConfigDirUser(configDir), nil
 }
