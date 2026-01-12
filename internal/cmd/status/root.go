@@ -21,7 +21,7 @@ import (
 
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
-func RootCommand() *cobra.Command {
+func StatusCommand() *cobra.Command {
 	addPendingFlag, readPendingFlag := flags.Pending()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -73,7 +73,7 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 		}
 		return err
 	}
-	data, err := loadDisplayStatusData(repo.RootDir)
+	data, err := loadStatusData(repo.RootDir)
 	if err != nil {
 		return err
 	}
@@ -84,27 +84,27 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 	return nil
 }
 
-type displayStatusData struct {
+type statusData struct {
 	filepath string                    // filepath of the runstate file
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
+func loadStatusData(rootDir gitdomain.RepoRootDir) (statusData, error) {
 	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
 	if err != nil {
-		return displayStatusData{}, err
+		return statusData{}, err
 	}
 	state, err := runstate.Load(rootDir)
 	if err != nil {
-		return displayStatusData{}, err
+		return statusData{}, err
 	}
-	return displayStatusData{
+	return statusData{
 		filepath: filepath,
 		state:    state,
 	}, nil
 }
 
-func displayStatus(data displayStatusData, pending configdomain.Pending) {
+func displayStatus(data statusData, pending configdomain.Pending) {
 	state, hasState := data.state.Get()
 	if !hasState {
 		if !pending {

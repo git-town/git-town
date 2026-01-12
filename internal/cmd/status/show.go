@@ -58,7 +58,7 @@ func executeStatusShow(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, err := loadDisplayStatusData(repo.RootDir)
+	data, err := loadStatusData(repo.RootDir)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func executeStatusShow(cliConfig configdomain.PartialConfig) error {
 	return nil
 }
 
-func showStatus(data displayStatusData) {
+func showStatus(data statusData) {
 	state, hasState := data.state.Get()
 	if !hasState {
 		return
