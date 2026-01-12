@@ -27,6 +27,7 @@
     - [undo](commands/undo.md)
   - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)
+    - [commit](commands/commit.md)
     - [detach](commands/detach.md)
     - [down](commands/down.md)
     - [diff-parent](commands/diff-parent.md)

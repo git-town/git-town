@@ -43,7 +43,7 @@ func (self BranchInfos) BranchesInOtherWorktrees() LocalBranchNames {
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMutable[BranchInfo] {
 	for bi, branch := range self {
-		if localName, hasLocalName := branch.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := branch.LocalName().Get(); hasLocalName {
 			if localName == branchName {
 				return MutableSome(&self[bi])
 			}
@@ -77,8 +77,8 @@ func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMu
 
 func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[BranchInfo] {
 	for b, bi := range self {
-		biLocalName, hasBiLocalName := bi.LocalName.Get()
-		otherLocalName, hasOtherLocalName := other.LocalName.Get()
+		biLocalName, hasBiLocalName := bi.LocalName().Get()
+		otherLocalName, hasOtherLocalName := other.LocalName().Get()
 		if hasBiLocalName && hasOtherLocalName && biLocalName == otherLocalName {
 			return MutableSome(&self[b])
 		}
@@ -105,7 +105,7 @@ func (self BranchInfos) FindRemoteNameMatchingLocal(localBranch LocalBranchName)
 
 func (self BranchInfos) HasBranch(branch LocalBranchName) bool {
 	for _, branchInfo := range self {
-		if localName, hasLocalName := branchInfo.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := branchInfo.LocalName().Get(); hasLocalName {
 			if localName == branch {
 				return true
 			}
@@ -122,7 +122,7 @@ func (self BranchInfos) HasBranch(branch LocalBranchName) bool {
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
 func (self BranchInfos) HasLocalBranch(branch LocalBranchName) bool {
 	for _, bi := range self {
-		if biLocalName, hasBiLocalName := bi.LocalName.Get(); hasBiLocalName {
+		if biLocalName, hasBiLocalName := bi.LocalName().Get(); hasBiLocalName {
 			if biLocalName == branch {
 				return true
 			}
@@ -150,7 +150,7 @@ func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName
 func (self BranchInfos) LocalBranches() BranchInfos {
 	result := BranchInfos{}
 	for _, bi := range self {
-		if bi.LocalName.IsSome() {
+		if bi.LocalName().IsSome() {
 			result = append(result, bi)
 		}
 	}
@@ -181,7 +181,7 @@ func (self BranchInfos) NamesAllBranches() LocalBranchNames {
 func (self BranchInfos) NamesLocalBranches() LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
 	for _, bi := range self {
-		if localName, hasLocalName := bi.LocalName.Get(); hasLocalName {
+		if localName, hasLocalName := bi.LocalName().Get(); hasLocalName {
 			result = append(result, localName)
 		}
 	}
@@ -191,7 +191,7 @@ func (self BranchInfos) NamesLocalBranches() LocalBranchNames {
 func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 	result := BranchInfos{}
 	for _, bi := range self {
-		localName, hasLocalName := bi.LocalName.Get()
+		localName, hasLocalName := bi.LocalName().Get()
 		if !hasLocalName || localName != branchName {
 			result = append(result, bi)
 		}
@@ -200,7 +200,7 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchInfos with the given names.
-func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) {
+func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) { //nolint:nonamedreturns
 	result = make(BranchInfos, 0, len(names))
 	for _, name := range names {
 		if branchInfo, has := self.FindByLocalName(name).Get(); has {
@@ -228,9 +228,10 @@ func (self BranchInfos) String() string {
 
 func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
 	for b := range self {
-		if localName, hasLocalName := self[b].LocalName.Get(); hasLocalName {
-			if localName == branch {
-				self[b].LocalSHA = Some(sha)
+		if local, hasLocal := self[b].Local.Get(); hasLocal {
+			if local.Name == branch {
+				local.SHA = sha
+				self[b].Local = Some(local)
 				return nil
 			}
 		}
