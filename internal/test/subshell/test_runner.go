@@ -251,12 +251,15 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
+	var output string
 	if opts.IgnoreOutput {
-		return RunResult{ExitCode: exitCode, Output: ""}, err
+		output = ""
+	} else {
+		output = strings.TrimRight(outputBuf.String(), "\n")
 	}
 	return RunResult{
 		ExitCode: exitCode,
-		Output:   strings.TrimRight(outputBuf.String(), "\n"),
+		Output:   output,
 	}, err
 }
 
