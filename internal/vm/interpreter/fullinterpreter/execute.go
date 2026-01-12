@@ -35,13 +35,15 @@ type ExecuteArgs struct {
 	InitialStashSize        gitdomain.StashSize
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
-	RootDir                 gitdomain.RepoRootDir
+	RootDir                 gitdomain.RepoRootDir // TODO: delete?
+	RunlogPath              runlog.RunlogPath
 	RunState                runstate.RunState
+	RunstatePath            runstate.RunstatePath
 }
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
-	if err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RootDir); err != nil {
+	if err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RunlogPath); err != nil {
 		return err
 	}
 	for {

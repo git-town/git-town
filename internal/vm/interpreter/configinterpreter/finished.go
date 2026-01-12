@@ -23,6 +23,7 @@ type FinishedArgs struct {
 	FinalMessages         stringslice.Collector
 	Git                   git.Commands
 	RootDir               gitdomain.RepoRootDir
+	RunstatePath          runstate.RunstatePath
 	TouchedBranches       []gitdomain.BranchName
 	Verbose               configdomain.Verbose
 }
@@ -68,5 +69,5 @@ func Finished(args FinishedArgs) error {
 		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return runstate.Save(runState, args.RootDir)
+	return runstate.Save(runState, args.RunstatePath)
 }

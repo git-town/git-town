@@ -25,7 +25,9 @@ type finishedArgs struct {
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
+	RunlogPath      runlog.RunlogPath
 	RunState        runstate.RunState
+	RunstatePath    runstate.RunstatePath
 	Verbose         configdomain.Verbose
 }
 
@@ -35,7 +37,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir); err != nil {
+	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RunlogPath); err != nil {
 		return err
 	}
 	globalSnapshot, err := gitconfig.LoadSnapshot(args.Backend, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
@@ -56,7 +58,7 @@ func finished(args finishedArgs) error {
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished(endBranchesSnapshot)
-	if err = runstate.Save(args.RunState, args.RootDir); err != nil {
+	if err = runstate.Save(args.RunState, args.RunstatePath); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())

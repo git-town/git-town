@@ -3,6 +3,7 @@ package validate
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
@@ -18,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/skip"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/undo"
@@ -77,7 +77,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		_, err := continueRunstate(runState, args)
 		return configdomain.ProgramFlowContinue, err
 	case dialog.ResponseDiscard:
-		return discardRunstate(args.RootDir)
+		return discardRunstate(args.RunstatePath)
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
@@ -103,6 +103,7 @@ type UnfinishedStateArgs struct {
 	RepoStatus        gitdomain.RepoStatus
 	RootDir           gitdomain.RepoRootDir
 	RunState          Option[runstate.RunState]
+	RunstatePath      runstate.RunstatePath
 	UnvalidatedConfig config.UnvalidatedConfig
 }
 
@@ -139,8 +140,8 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 	})
 }
 
-func discardRunstate(rootDir gitdomain.RepoRootDir) (configdomain.ProgramFlow, error) {
-	_, err := state.Delete(rootDir, state.FileTypeRunstate)
+func discardRunstate(runstatePath runstate.RunstatePath) (configdomain.ProgramFlow, error) {
+	err := os.Remove(runstatePath.String())
 	return configdomain.ProgramFlowContinue, err
 }
 
