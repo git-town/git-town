@@ -150,6 +150,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               None[forgedomain.Connector](),
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,

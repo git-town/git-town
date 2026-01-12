@@ -20,10 +20,10 @@ type FinishedArgs struct {
 	BeginConfigSnapshot   configdomain.BeginConfigSnapshot
 	Command               string
 	CommandsCounter       Mutable[gohacks.Counter]
+	ConfigDir             configdomain.ConfigDirRepo
 	FinalMessages         stringslice.Collector
 	Git                   git.Commands
 	RootDir               gitdomain.RepoRootDir
-	RunstatePath          runstate.RunstatePath
 	TouchedBranches       []gitdomain.BranchName
 	Verbose               configdomain.Verbose
 }

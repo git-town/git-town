@@ -85,6 +85,7 @@ func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "offline",
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,

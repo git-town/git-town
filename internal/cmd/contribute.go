@@ -104,6 +104,7 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "contribute",
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,

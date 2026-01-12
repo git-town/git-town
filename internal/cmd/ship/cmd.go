@@ -208,6 +208,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  sharedData.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               sharedData.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
