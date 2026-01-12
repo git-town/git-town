@@ -15,7 +15,7 @@ import (
 // i.e. ~/.config.
 type ConfigDirUser string
 
-func (self ConfigDirUser) ConfigDir(repoDir gitdomain.RepoRootDir) ConfigDirRepo {
+func (self ConfigDirUser) RepoConfigDir(repoDir gitdomain.RepoRootDir) ConfigDirRepo {
 	return ConfigDirRepo(filepath.Join(self.String(), "git-town", SanitizePath(repoDir.String())))
 }
 

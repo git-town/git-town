@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -90,12 +89,12 @@ type displayStatusData struct {
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
-	configDir, err := configdomain.NewConfigDir(rootDir)
-	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
+	userConfigDir, err := configdomain.SystemUserConfigDir()
 	if err != nil {
 		return displayStatusData{}, err
 	}
-	state, err := runstate.Load(rootDir)
+	configDir := userConfigDir.RepoConfigDir(rootDir)
+	state, err := runstate.Load(configDir)
 	if err != nil {
 		return displayStatusData{}, err
 	}
