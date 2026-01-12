@@ -77,7 +77,8 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		_, err := continueRunstate(runState, args)
 		return configdomain.ProgramFlowContinue, err
 	case dialog.ResponseDiscard:
-		return discardRunstate(args.RunstatePath)
+		runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+		return discardRunstate(runstatePath)
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
@@ -93,6 +94,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 type UnfinishedStateArgs struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
+	ConfigDir         configdomain.ConfigDirRepo
 	Connector         Option[forgedomain.Connector]
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
@@ -102,7 +104,6 @@ type UnfinishedStateArgs struct {
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RunState          Option[runstate.RunState]
-	RunstatePath      runstate.RunstatePath
 	UnvalidatedConfig config.UnvalidatedConfig
 }
 
@@ -123,6 +124,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,
+		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,

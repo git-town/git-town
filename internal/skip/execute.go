@@ -27,6 +27,7 @@ type ExecuteArgs struct {
 	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	Config          config.ValidatedConfig
+	ConfigDir       configdomain.ConfigDirRepo
 	Connector       Option[forgedomain.Connector]
 	FinalMessages   stringslice.Collector
 	Frontend        subshelldomain.Runner
@@ -66,6 +67,7 @@ func Execute(args ExecuteArgs) error {
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
+		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
