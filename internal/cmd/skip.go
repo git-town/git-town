@@ -195,7 +195,8 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 	if err != nil || exit {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	runStateOpt, err := runstate.Load(repo.ConfigDir)
+	runstatePath := runstate.NewRunstatePath(repo.ConfigDir)
+	runStateOpt, err := runstate.Load(runstatePath)
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
