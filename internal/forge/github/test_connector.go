@@ -17,8 +17,8 @@ var (
 // TestConnector simulates interacting with the GitHub API in tests.
 type TestConnector struct {
 	WebConnector
-	log      print.Logger
-	override forgedomain.ProposalOverride
+	Log      print.Logger
+	Override forgedomain.ProposalOverride
 }
 
 // ============================================================================
@@ -28,9 +28,9 @@ type TestConnector struct {
 var _ forgedomain.ProposalFinder = testConnector // type check
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalFindStart, branch, target)
-	self.log.Ok()
-	if self.override == forgedomain.OverrideNoProposal {
+	self.Log.Start(messages.APIProposalFindStart, branch, target)
+	self.Log.Ok()
+	if self.Override == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
@@ -42,7 +42,7 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 			Source:       branch,
 			Target:       target,
 			Title:        "title",
-			URL:          self.override.String(),
+			URL:          self.Override.String(),
 		},
 		ForgeType: forgedomain.ForgeTypeGithub,
 	}), nil
