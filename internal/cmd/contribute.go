@@ -107,7 +107,6 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       data.branchesToMakeContribution.Keys().BranchNames(),
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
