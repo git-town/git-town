@@ -252,7 +252,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		}
 	}
 	if opts.IgnoreOutput {
-		return emptyResult, err
+		return RunResult{ExitCode: exitCode, Output: ""}, err
 	}
 	return RunResult{
 		ExitCode: exitCode,
