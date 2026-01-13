@@ -51,7 +51,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
 		proposals := mockproposals.Load(proposalsPath)
-		return MockConnector{
+		return &MockConnector{
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
 			WebConnector:  webConnector,
