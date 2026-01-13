@@ -25,17 +25,18 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                                 |
-      | existing | git checkout -b new                                                                                     |
-      | new      | git commit -m uncommitted                                                                               |
-      |          | git checkout existing                                                                                   |
-      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
-      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
-      |          | git checkout new                                                                                        |
-      | new      | git -c rebase.updateRefs=false rebase existing                                                          |
-      |          | git push -u origin new                                                                                  |
-      |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted             |
-      |          | git checkout existing                                                                                   |
+      | BRANCH   | COMMAND                                                                                                                         |
+      | existing | git checkout -b new                                                                                                             |
+      | new      | git commit -m uncommitted                                                                                                       |
+      |          | git checkout existing                                                                                                           |
+      | existing | git -c rebase.updateRefs=false rebase --onto 8a201b280df8bdaaf28b7a7a1062842531f873d5^ 8a201b280df8bdaaf28b7a7a1062842531f873d5 |
+      |          | git -c rebase.updateRefs=false rebase --onto 1f3ca057cfbf5925f4755c0358f508410df05786^ 1f3ca057cfbf5925f4755c0358f508410df05786 |
+      |          | git checkout new                                                                                                                |
+      | new      | git -c rebase.updateRefs=false rebase existing                                                                                  |
+      |          | git push -u origin new                                                                                                          |
+      |          | Finding proposal from new into existing ...                                                                                     |
+      |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted                                     |
+      |          | git checkout existing                                                                                                           |
     And no rebase is now in progress
     And this lineage exists now
       """
