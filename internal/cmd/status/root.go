@@ -84,7 +84,7 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 }
 
 type displayStatusData struct {
-	filepath runstate.FilePath         // filepath of the runstate file
+	filepath runstate.FilePath
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
