@@ -38,7 +38,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
 		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
 		if updatedProposalBody == oldProposalBody {
-			return nil
+			continue
 		}
 		if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
 			args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
