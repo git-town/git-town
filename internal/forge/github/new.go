@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/subshell"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -25,7 +26,7 @@ type NewConnectorArgs struct {
 	APIToken         Option[forgedomain.GithubToken]
 	Browser          Option[configdomain.Browser]
 	Log              print.Logger
-	ProposalOverride Option[forgedomain.ProposalOverride]
+	ProposalOverride Option[forgedomain.ProposalOverride] // TODO: remove once the new mock connector works
 	RemoteURL        giturl.Parts
 }
 
@@ -43,6 +44,12 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			WebConnector: webConnector,
 			log:          args.Log,
 			override:     proposalURLOverride,
+		}, nil
+	}
+	if subshell.IsInTest() {
+		return MockConnector{
+			WebConnector: webConnector,
+			Proposals:    proposals,
 		}, nil
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
