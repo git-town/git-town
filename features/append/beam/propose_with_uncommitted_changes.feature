@@ -23,7 +23,6 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
@@ -36,6 +35,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       |          | git checkout new                                                                                        |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
       |          | git push -u origin new                                                                                  |
+      |          | Finding proposal from new into existing ...                                                             |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted             |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
