@@ -79,6 +79,7 @@ func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
 	}
 	proposal.Target = target
-	_ = proposal.Target
+	self.Proposals.Update(proposal)
+	mockproposals.Save(self.ProposalsPath, self.Proposals)
 	return nil
 }

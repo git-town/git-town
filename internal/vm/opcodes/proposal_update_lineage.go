@@ -25,11 +25,9 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	spew.Dump(connector)
 	proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher)
 	if !canSearchProposals {
-		fmt.Println("444444444444444444444444444444444444444444444444444444444444444444444444444", proposalSearcher)
 		args.FinalMessages.Add(messages.ConnectorCannotSearchProposals)
 		return nil
 	}
-	fmt.Println("333333333333333333333333333333333333333333333333333333333333333333333333333")
 	proposalBodyUpdater, canUpdateProposalBody := connector.(forgedomain.ProposalBodyUpdater)
 	if !canUpdateProposalBody {
 		args.FinalMessages.Add(messages.ConnectorCannotUpdateProposalBody)
@@ -41,7 +39,8 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		return nil
 	}
 	for _, proposal := range proposals {
-		fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222222222", proposal)
+		fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222222222")
+		spew.Dump(proposal)
 		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
 		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
 		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
