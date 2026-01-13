@@ -94,7 +94,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 type UnfinishedStateArgs struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
-	ConfigDir         configdomain.ConfigDirRepo
+	ConfigDir         configdomain.RepoConfigDir
 	Connector         Option[forgedomain.Connector]
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner

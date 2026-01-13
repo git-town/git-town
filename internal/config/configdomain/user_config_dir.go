@@ -11,15 +11,15 @@ import (
 	"github.com/git-town/git-town/v22/internal/messages"
 )
 
-// ConfigDirUser is the directory that contains the user configuration on this machine,
+// UserConfigDir is the directory that contains the user configuration on this machine,
 // i.e. ~/.config.
-type ConfigDirUser string
+type UserConfigDir string
 
-func (self ConfigDirUser) RepoConfigDir(repoDir gitdomain.RepoRootDir) ConfigDirRepo {
-	return ConfigDirRepo(filepath.Join(self.String(), "git-town", SanitizePath(repoDir.String())))
+func (self UserConfigDir) RepoConfigDir(repoDir gitdomain.RepoRootDir) RepoConfigDir {
+	return RepoConfigDir(filepath.Join(self.String(), "git-town", SanitizePath(repoDir.String())))
 }
 
-func (self ConfigDirUser) String() string {
+func (self UserConfigDir) String() string {
 	return string(self)
 }
 
@@ -36,10 +36,10 @@ func SanitizePath[T ~string](dir T) T { //nolint:ireturn
 }
 
 // SystemUserConfigDir provides the UserConfigDir to use in production.
-func SystemUserConfigDir() (ConfigDirUser, error) {
+func SystemUserConfigDir() (UserConfigDir, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
 	}
-	return ConfigDirUser(configDir), nil
+	return UserConfigDir(configDir), nil
 }

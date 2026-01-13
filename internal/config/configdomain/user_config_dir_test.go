@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestSanitizePath(t *testing.T) {
+func TestUserConfigDir(t *testing.T) {
 	t.Parallel()
 
 	t.Run("SanitizePath", func(t *testing.T) {

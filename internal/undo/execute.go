@@ -23,7 +23,7 @@ type ExecuteArgs struct {
 	Backend          subshelldomain.RunnerQuerier
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
-	ConfigDir        configdomain.ConfigDirRepo
+	ConfigDir        configdomain.RepoConfigDir
 	Connector        Option[forgedomain.Connector]
 	FinalMessages    stringslice.Collector
 	Frontend         subshelldomain.Runner
