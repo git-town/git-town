@@ -94,6 +94,7 @@
       "^the branches$",
       "^the commits$"
     ],
+    "^the proposals$",
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",
     "^the main branch is \".*\"$",
@@ -164,7 +165,6 @@
   ],
   "unknown-steps": [
     "^the initial proposals exist now$",
-    "^the proposals are now$",
-    "^the proposals$"
+    "^the proposals are now$"
   ]
 }
