@@ -20,7 +20,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Enter(data Data) (UserInput, dialogdomain.Exit, bool, error) {
+func Enter(data Data, configDir configdomain.RepoConfigDir) (UserInput, dialogdomain.Exit, bool, error) {
 	var emptyResult UserInput
 	exit, err := dialog.Welcome(data.Inputs)
 	if err != nil || exit {
@@ -120,6 +120,7 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
+		configDir:            configDir,
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
 		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),

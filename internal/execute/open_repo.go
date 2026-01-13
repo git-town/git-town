@@ -149,15 +149,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			}
 		}
 	}
-	configDirUser, err := configdomain.SystemUserConfigDir()
+	userConfigDir, err := configdomain.SystemUserConfigDir()
 	if err != nil {
 		return emptyOpenRepoResult(), fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
 	}
-	configDirRepo := configDirUser.RepoConfigDir(rootDir)
+	repoConfigDir := userConfigDir.RepoConfigDir(rootDir)
 	return OpenRepoResult{
 		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
-		ConfigDir:         configDirRepo,
+		ConfigDir:         repoConfigDir,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,

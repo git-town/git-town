@@ -29,7 +29,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, enterAll, err := setup.Enter(setupData)
+		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -87,6 +87,7 @@ type ConfigArgs struct {
 	BranchInfos        gitdomain.BranchInfos
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
+	ConfigDir          configdomain.RepoConfigDir
 	ConfigSnapshot     configdomain.BeginConfigSnapshot
 	Connector          Option[forgedomain.Connector]
 	Frontend           subshelldomain.Runner
