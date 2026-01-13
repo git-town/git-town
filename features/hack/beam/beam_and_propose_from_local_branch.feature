@@ -22,7 +22,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
@@ -35,6 +34,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git checkout new                                                                                        |
       | new      | git push -u origin new                                                                                  |
+      |          | Finding proposal from new into main ...                                                                 |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                        |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress

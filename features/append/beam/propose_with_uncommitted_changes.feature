@@ -23,6 +23,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
