@@ -13,6 +13,6 @@ func (self FilePath) String() string {
 	return string(self)
 }
 
-func NewRunlogPath(repoConfigDir configdomain.ConfigDirRepo) FilePath {
+func NewRunlogPath(repoConfigDir configdomain.RepoConfigDir) FilePath {
 	return FilePath(filepath.Join(repoConfigDir.String(), "runlog.json"))
 }

@@ -13,6 +13,6 @@ func (self FilePath) String() string {
 	return string(self)
 }
 
-func NewRunstatePath(repoConfigDir configdomain.ConfigDirRepo) FilePath {
+func NewRunstatePath(repoConfigDir configdomain.RepoConfigDir) FilePath {
 	return FilePath(filepath.Join(repoConfigDir.String(), "runstate.json"))
 }
