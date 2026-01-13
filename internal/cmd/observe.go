@@ -104,9 +104,9 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "observe",
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})

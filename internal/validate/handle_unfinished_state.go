@@ -3,6 +3,7 @@ package validate
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
@@ -18,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/skip"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/undo"
@@ -78,7 +78,8 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		_, err := continueRunstate(runState, args)
 		return configdomain.ProgramFlowContinue, err
 	case dialog.ResponseDiscard:
-		return discardRunstate(args.RootDir)
+		runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+		return discardRunstate(runstatePath)
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
@@ -94,6 +95,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 type UnfinishedStateArgs struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
+	ConfigDir         configdomain.RepoConfigDir
 	Connector         Option[forgedomain.Connector]
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
@@ -102,7 +104,6 @@ type UnfinishedStateArgs struct {
 	Inputs            dialogcomponents.Inputs
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
-	RootDir           gitdomain.RepoRootDir
 	RunState          Option[runstate.RunState]
 	UnvalidatedConfig config.UnvalidatedConfig
 }
@@ -124,6 +125,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,
+		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
@@ -135,13 +137,12 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		InitialStashSize:        runState.BeginStashSize,
 		Inputs:                  args.Inputs,
 		PendingCommand:          Some(runState.Command),
-		RootDir:                 args.RootDir,
 		RunState:                runState,
 	})
 }
 
-func discardRunstate(rootDir gitdomain.RepoRootDir) (configdomain.ProgramFlow, error) {
-	_, err := state.Delete(rootDir, state.FileTypeRunstate)
+func discardRunstate(runstatePath runstate.FilePath) (configdomain.ProgramFlow, error) {
+	err := os.Remove(runstatePath.String())
 	return configdomain.ProgramFlowContinue, err
 }
 
@@ -202,6 +203,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		Backend:         args.Backend,
 		CommandsCounter: args.CommandsCounter,
 		Config:          validatedConfig,
+		ConfigDir:       args.ConfigDir,
 		Connector:       args.Connector,
 		FinalMessages:   args.FinalMessages,
 		Frontend:        args.Frontend,
@@ -210,7 +212,6 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		InitialBranch:   currentBranch,
 		Inputs:          args.Inputs,
 		Park:            false,
-		RootDir:         args.RootDir,
 		RunState:        runState,
 	})
 }
@@ -229,13 +230,13 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		Backend:          args.Backend,
 		CommandsCounter:  args.CommandsCounter,
 		Config:           validatedConfig,
+		ConfigDir:        args.ConfigDir,
 		Connector:        args.Connector,
 		FinalMessages:    args.FinalMessages,
 		Frontend:         args.Frontend,
 		Git:              args.Git,
 		HasOpenChanges:   args.HasOpenChanges,
 		InitialStashSize: runState.BeginStashSize,
-		RootDir:          args.RootDir,
 		RunState:         runState,
 	})
 }
