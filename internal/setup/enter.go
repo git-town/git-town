@@ -818,6 +818,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
 		Browser:              None[configdomain.Browser](),
+		ConfigDir:            args.configDir,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
@@ -856,6 +857,7 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
+	configDir            configdomain.RepoConfigDir
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]

@@ -17,10 +17,6 @@ func (self MockProposalPath) String() string {
 	return string(self)
 }
 
-func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
-	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
-}
-
 func Load(path MockProposalPath) MockProposals {
 	fileData := LoadBytes(path)
 	var proposals []forgedomain.ProposalData
@@ -31,6 +27,10 @@ func Load(path MockProposalPath) MockProposals {
 func LoadBytes(path MockProposalPath) []byte {
 	fileData := asserts.NoError1(os.ReadFile(path.String()))
 	return fileData
+}
+
+func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
+	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
 }
 
 func Save(path MockProposalPath, proposals MockProposals) string {
