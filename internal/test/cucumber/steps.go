@@ -1366,13 +1366,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.proposalsChecked = true
 		proposalsPath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
-		have := string(mockproposals.LoadBytes(proposalsPath))
+		have, has := mockproposals.LoadBytes(proposalsPath).Get()
+		if !has {
+			return errors.New("no mock proposals file")
+		}
 		want, hasInitialProposals := state.initialProposals.Get()
 		if !hasInitialProposals {
 			return errors.New("no initial proposals defined")
 		}
 		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(want, have, false)
+		diffs := dmp.DiffMain(want, string(have), false)
 		if len(diffs) == 1 && diffs[0].Type == 0 {
 			return nil
 		}
