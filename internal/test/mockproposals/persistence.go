@@ -13,12 +13,6 @@ func FilePath(workspaceDir string) string {
 	return filepath.Join(workspaceDir, "proposals.json")
 }
 
-func LoadBytes(workspaceDir string) []byte {
-	filePath := FilePath(workspaceDir)
-	fileData := asserts.NoError1(os.ReadFile(filePath))
-	return fileData
-}
-
 func Load(workspaceDir string) MockProposals {
 	fileData := LoadBytes(workspaceDir)
 	var proposals []forgedomain.ProposalData
@@ -27,6 +21,12 @@ func Load(workspaceDir string) MockProposals {
 		Dir:       workspaceDir,
 		Proposals: proposals,
 	}
+}
+
+func LoadBytes(workspaceDir string) []byte {
+	filePath := FilePath(workspaceDir)
+	fileData := asserts.NoError1(os.ReadFile(filePath))
+	return fileData
 }
 
 func Save(workspaceDir string, proposals []forgedomain.ProposalData) string {
