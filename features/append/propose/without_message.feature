@@ -22,6 +22,7 @@ Feature: proposing uncommitted changes via a child branch and enter commit messa
       | existing | git checkout -b new                                                       |
       | new      | git commit                                                                |
       |          | git push -u origin new                                                    |
+      |          | Finding proposal from new into existing ...                               |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1 |
       |          | git checkout existing                                                     |
     And this lineage exists now
