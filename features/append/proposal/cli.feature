@@ -20,7 +20,6 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
       |          | git checkout -b new      |
-    And the initial proposals exist now
     And this lineage exists now
       """
       main
@@ -28,6 +27,7 @@ Feature: append a new feature branch to an existing feature branch and sync prop
           new
       """
     And the initial commits exist now
+    And the initial proposals exist now
 
   Scenario: undo
     When I run "git-town undo"
