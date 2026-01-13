@@ -23,7 +23,6 @@ type FinishedArgs struct {
 	ConfigDir             configdomain.ConfigDirRepo
 	FinalMessages         stringslice.Collector
 	Git                   git.Commands
-	RootDir               gitdomain.RepoRootDir
 	TouchedBranches       []gitdomain.BranchName
 	Verbose               configdomain.Verbose
 }

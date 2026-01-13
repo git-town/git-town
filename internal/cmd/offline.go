@@ -88,7 +88,6 @@ func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       []gitdomain.BranchName{},
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
