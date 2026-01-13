@@ -5,15 +5,19 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 )
 
-func FilePath(workspaceDir string) string {
-	return filepath.Join(workspaceDir, "proposals.json")
+// MockProposalPath is the path to the mock proposals file.
+type MockProposalPath string
+
+func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
+	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
 }
 
-func Load(workspaceDir string) MockProposals {
+func Load(path MockProposalPath) MockProposals {
 	fileData := LoadBytes(workspaceDir)
 	var proposals []forgedomain.ProposalData
 	asserts.NoError(json.Unmarshal(fileData, &proposals))
