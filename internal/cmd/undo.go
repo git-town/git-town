@@ -81,7 +81,8 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	runStateOpt, err := runstate.Load(repo.RootDir)
+	runstatePath := runstate.NewRunstatePath(repo.ConfigDir)
+	runStateOpt, err := runstate.Load(runstatePath)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -94,13 +95,13 @@ Start:
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
+		ConfigDir:        repo.ConfigDir,
 		Connector:        data.connector,
 		FinalMessages:    repo.FinalMessages,
 		Frontend:         repo.Frontend,
 		Git:              repo.Git,
 		HasOpenChanges:   data.hasOpenChanges,
 		InitialStashSize: data.stashSize,
-		RootDir:          repo.RootDir,
 		RunState:         runState,
 	})
 }
