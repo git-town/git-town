@@ -22,6 +22,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
