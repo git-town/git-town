@@ -24,6 +24,7 @@ type MockConnector struct {
 	WebConnector
 	Proposals     mockproposals.MockProposals
 	ProposalsPath mockproposals.MockProposalPath
+	cache         forgedomain.APICache
 	log           print.Logger
 }
 
@@ -34,6 +35,9 @@ type MockConnector struct {
 var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
 
 func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if cachedProposal, has := self.cache.Lookup(source, target); has {
+		return cachedProposal, nil
+	}
 	self.log.Start(messages.APIProposalFindStart, source, target)
 	data, has := self.Proposals.FindBySourceAndTarget(source, target).Get()
 	if !has {
@@ -50,6 +54,9 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
 
 func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
+		return cachedSearchResult, nil
+	}
 	self.log.Start(messages.APIParentBranchLookupStart, source.String())
 	result := []forgedomain.Proposal{}
 	for _, data := range self.Proposals.FindBySource(source) {
@@ -69,6 +76,7 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
+	self.cache.Clear()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Data().Number)))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
@@ -88,6 +96,7 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	self.cache.Clear()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Data().Number)), colors.BoldCyan().Styled(target.String()))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {

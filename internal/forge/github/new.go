@@ -55,6 +55,8 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
 			WebConnector:  webConnector,
+			cache:         forgedomain.APICache{},
+			log:           args.Log,
 		}, nil
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
