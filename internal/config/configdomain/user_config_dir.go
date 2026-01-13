@@ -15,6 +15,7 @@ import (
 // i.e. ~/.config.
 type UserConfigDir string
 
+// RepoConfigDir provides the file path where Git Town stores data for the given Git repo inside this UserConfigDir.
 func (self UserConfigDir) RepoConfigDir(repoDir gitdomain.RepoRootDir) RepoConfigDir {
 	return RepoConfigDir(filepath.Join(self.String(), "git-town", SanitizePath(repoDir.String())))
 }
