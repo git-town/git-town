@@ -165,7 +165,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
-	}, err
+	}, nil
 }
 
 type OpenRepoArgs struct {
@@ -180,7 +180,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
-	ConfigDir         configdomain.ConfigDirRepo
+	ConfigDir         configdomain.RepoConfigDir
 	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
