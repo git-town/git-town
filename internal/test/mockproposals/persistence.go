@@ -13,28 +13,28 @@ import (
 // MockProposalPath is the path to the mock proposals file.
 type MockProposalPath string
 
+func (self MockProposalPath) String() string {
+	return string(self)
+}
+
 func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
 	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
 }
 
 func Load(path MockProposalPath) MockProposals {
-	fileData := LoadBytes(workspaceDir)
+	fileData := LoadBytes(path)
 	var proposals []forgedomain.ProposalData
 	asserts.NoError(json.Unmarshal(fileData, &proposals))
-	return MockProposals{
-		Dir:       workspaceDir,
-		Proposals: proposals,
-	}
+	return proposals
 }
 
-func LoadBytes(workspaceDir string) []byte {
-	filePath := FilePath(workspaceDir)
-	fileData := asserts.NoError1(os.ReadFile(filePath))
+func LoadBytes(path MockProposalPath) []byte {
+	fileData := asserts.NoError1(os.ReadFile(path.String()))
 	return fileData
 }
 
-func Save(workspaceDir string, proposals []forgedomain.ProposalData) string {
+func Save(path MockProposalPath, proposals MockProposals) string {
 	content := asserts.NoError1(json.MarshalIndent(proposals, "", "  "))
-	asserts.NoError(os.WriteFile(FilePath(workspaceDir), content, 0o600))
+	asserts.NoError(os.WriteFile(path.String(), content, 0o600))
 	return string(content)
 }
