@@ -24,6 +24,7 @@ func (self UserConfigDir) String() string {
 	return string(self)
 }
 
+// TODO: move this into package internal/sys/filesystem
 func SanitizePath[T ~string](dir T) T { //nolint:ireturn
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
