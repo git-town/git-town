@@ -18,9 +18,6 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
 		return nil
 	}
-
-	// because at this point the lineage might be updated with deleted or renamed branches,
-	// so we don't have a reliable way to find the proposal based on parent listed in the lineage.
 	proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher)
 	if !canSearchProposals {
 		args.FinalMessages.Add(messages.ConnectorCannotSearchProposals)
