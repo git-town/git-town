@@ -75,6 +75,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector, err = github.NewConnector(github.NewConnectorArgs{
 				APIToken:         args.GithubToken,
 				Browser:          args.Browser,
+				ConfigDir:        args.ConfigDir,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
@@ -116,6 +117,7 @@ type NewConnectorArgs struct {
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
 	Browser              Option[configdomain.Browser]
+	ConfigDir            configdomain.RepoConfigDir
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner

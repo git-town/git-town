@@ -52,9 +52,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
 		proposals := mockproposals.Load(proposalsPath)
 		return MockConnector{
-			WebConnector:  webConnector,
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
+			WebConnector:  webConnector,
 		}, nil
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {

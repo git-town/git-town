@@ -4,6 +4,6 @@ package configdomain
 // Example: ~/.config/git-town/home-user-git-town.
 type ConfigDirRepo string
 
-func (self ConfigDirRepo) String() string {
-	return string(self)
-}
+// func (self ConfigDirRepo) String() string {
+// 	return string(self)
+// }

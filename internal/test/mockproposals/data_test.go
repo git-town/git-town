@@ -54,6 +54,54 @@ func TestMockProposals(t *testing.T) {
 		})
 	})
 
+	t.Run("FindBySource", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns all proposals matching source", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+			}
+			data2 := forgedomain.ProposalData{
+				Number: 2,
+				Source: "feature-branch",
+				Target: "develop",
+			}
+			data3 := forgedomain.ProposalData{
+				Number: 3,
+				Source: "other-branch",
+				Target: "main",
+			}
+			proposals := mockproposals.MockProposals{data1, data2, data3}
+			have := proposals.FindBySource("feature-branch")
+			want := []forgedomain.ProposalData{data1, data2}
+			must.Eq(t, want, have)
+		})
+
+		t.Run("no proposals match source", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
+				},
+			}
+			have := proposals.FindBySource("other-branch")
+			must.Len(t, 0, have)
+		})
+
+		t.Run("proposals slice is empty", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			have := proposals.FindBySource("feature-branch")
+			must.Len(t, 0, have)
+		})
+	})
+
 	t.Run("FindBySourceAndTarget", func(t *testing.T) {
 		t.Parallel()
 		t.Run("source and target match", func(t *testing.T) {
@@ -142,54 +190,6 @@ func TestMockProposals(t *testing.T) {
 			have := proposals.FindBySourceAndTarget("feature-branch", "main")
 			want := Some(data1)
 			must.Eq(t, want, have)
-		})
-	})
-
-	t.Run("FindBySource", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns all proposals matching source", func(t *testing.T) {
-			t.Parallel()
-			data1 := forgedomain.ProposalData{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-			}
-			data2 := forgedomain.ProposalData{
-				Number: 2,
-				Source: "feature-branch",
-				Target: "develop",
-			}
-			data3 := forgedomain.ProposalData{
-				Number: 3,
-				Source: "other-branch",
-				Target: "main",
-			}
-			proposals := mockproposals.MockProposals{data1, data2, data3}
-			have := proposals.FindBySource("feature-branch")
-			want := []forgedomain.ProposalData{data1, data2}
-			must.Eq(t, want, have)
-		})
-
-		t.Run("no proposals match source", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{
-				{
-					Number: 1,
-					Source: "feature-branch",
-					Target: "main",
-					Title:  "Proposal 1",
-					URL:    "https://example.com/pr/1",
-				},
-			}
-			have := proposals.FindBySource("other-branch")
-			must.Len(t, 0, have)
-		})
-
-		t.Run("proposals slice is empty", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{}
-			have := proposals.FindBySource("feature-branch")
-			must.Len(t, 0, have)
 		})
 	})
 }
