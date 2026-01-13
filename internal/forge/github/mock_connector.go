@@ -69,6 +69,7 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Data().Number)))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
@@ -76,6 +77,7 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	proposal.Body = Some(newBody)
 	self.Proposals.Update(proposal)
 	mockproposals.Save(self.ProposalsPath, self.Proposals)
+	self.log.Finished(nil)
 	return nil
 }
 
@@ -86,6 +88,7 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Data().Number)), colors.BoldCyan().Styled(target.String()))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
@@ -93,5 +96,6 @@ func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	proposal.Target = target
 	self.Proposals.Update(proposal)
 	mockproposals.Save(self.ProposalsPath, self.Proposals)
+	self.log.Finished(nil)
 	return nil
 }
