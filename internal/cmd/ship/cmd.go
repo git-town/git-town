@@ -182,7 +182,9 @@ Start:
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
-	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+	updateProposalLineage := sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			ChangedBranches: oldClan.Remove(sharedData.initialBranch),
 			Config:          sharedData.config,
@@ -208,6 +210,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  sharedData.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               sharedData.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -219,7 +222,6 @@ Start:
 		InitialStashSize:        sharedData.stashSize,
 		Inputs:                  sharedData.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }

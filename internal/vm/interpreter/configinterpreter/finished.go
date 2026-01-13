@@ -20,9 +20,9 @@ type FinishedArgs struct {
 	BeginConfigSnapshot   configdomain.BeginConfigSnapshot
 	Command               string
 	CommandsCounter       Mutable[gohacks.Counter]
+	ConfigDir             configdomain.RepoConfigDir
 	FinalMessages         stringslice.Collector
 	Git                   git.Commands
-	RootDir               gitdomain.RepoRootDir
 	TouchedBranches       []gitdomain.BranchName
 	Verbose               configdomain.Verbose
 }
@@ -68,5 +68,6 @@ func Finished(args FinishedArgs) error {
 		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return runstate.Save(runState, args.RootDir)
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+	return runstate.Save(runState, runstatePath)
 }
