@@ -144,11 +144,20 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 		if currentDirectory != rootDir.String() {
 			err = gitCommands.ChangeDir(rootDir)
+			if err != nil {
+				return emptyOpenRepoResult(), err
+			}
 		}
 	}
+	configDirUser, err := configdomain.SystemUserConfigDir()
+	if err != nil {
+		return emptyOpenRepoResult(), fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
+	}
+	configDirRepo := configDirUser.RepoConfigDir(rootDir)
 	return OpenRepoResult{
 		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
+		ConfigDir:         configDirRepo,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,
@@ -156,7 +165,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
-	}, err
+	}, nil
 }
 
 type OpenRepoArgs struct {
@@ -171,6 +180,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
+	ConfigDir         configdomain.RepoConfigDir
 	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner

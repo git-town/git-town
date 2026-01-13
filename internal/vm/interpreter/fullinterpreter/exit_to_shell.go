@@ -18,7 +18,8 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir); err != nil {
+	runlogPath := runlog.NewRunlogPath(args.ConfigDir)
+	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), runlogPath); err != nil {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
@@ -42,7 +43,8 @@ func exitToShell(args ExecuteArgs) error {
 	if err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, true); err != nil {
 		return err
 	}
-	if err = runstate.Save(args.RunState, args.RootDir); err != nil {
+	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
+	if err = runstate.Save(args.RunState, runstatePath); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	args.FinalMessages.Add(`Run "git town continue" to go to the next branch.`)

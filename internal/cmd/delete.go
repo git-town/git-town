@@ -145,6 +145,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -156,7 +157,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
@@ -366,7 +366,9 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			ChangedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
 			Config:          data.config,

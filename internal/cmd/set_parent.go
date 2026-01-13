@@ -209,6 +209,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -220,7 +221,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
@@ -467,7 +467,9 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		}
 	}
 	// update proposal lineages
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
 		parents := gitdomain.LocalBranchNames{}
 		if hasOldParent {
 			parents = append(parents, oldParent)

@@ -17,7 +17,8 @@ import (
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], configdomain.ProgramFlow, error) {
-	runStateOpt, err := runstate.Load(args.RootDir)
+	runstatePath := runstate.NewRunstatePath(args.Repo.ConfigDir)
+	runStateOpt, err := runstate.Load(runstatePath)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), configdomain.ProgramFlowExit, err
 	}
@@ -32,6 +33,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		flow, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
+			ConfigDir:         args.Repo.ConfigDir,
 			Connector:         args.Connector,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
@@ -40,7 +42,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Inputs:            args.Inputs,
 			PushHook:          args.UnvalidatedConfig.NormalConfig.PushHook,
 			RepoStatus:        args.RepoStatus,
-			RootDir:           args.Repo.RootDir,
 			RunState:          runStateOpt,
 			UnvalidatedConfig: args.UnvalidatedConfig,
 		})
