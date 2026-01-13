@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/messages"
 )
 
-// UserConfigDir is the directory that contains the user configuration on this machine,
+// UserConfigDir is the directory that contains the user-specific configuration on this machine,
 // i.e. ~/.config.
 type UserConfigDir string
 
