@@ -20,7 +20,7 @@ import (
 type finishedArgs struct {
 	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
-	ConfigDir       configdomain.ConfigDirRepo
+	ConfigDir       configdomain.RepoConfigDir
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
