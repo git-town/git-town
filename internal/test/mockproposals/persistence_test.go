@@ -52,9 +52,8 @@ func TestPersistence(t *testing.T) {
 			t.Parallel()
 			configDir := configdomain.RepoConfigDir("zonk")
 			proposalsPath := mockproposals.NewMockProposalPath(configDir)
-			must.Panic(t, func() {
-				mockproposals.Load(proposalsPath)
-			})
+			have := mockproposals.Load(proposalsPath)
+			must.Len(t, 0, have)
 		})
 
 		t.Run("file without proposals", func(t *testing.T) {
