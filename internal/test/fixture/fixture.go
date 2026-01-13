@@ -227,6 +227,12 @@ func (self *Fixture) coworkerRepoPath() string {
 	return filepath.Join(self.Dir, "coworker")
 }
 
+// userConfigDir provides the full path to the user configuration directory
+func (self *Fixture) RepoConfigDir() configdomain.RepoConfigDir {
+	userConfigDir := configdomain.UserConfigDir(filepath.Join(self.Dir, ".config"))
+	return userConfigDir.RepoConfigDir(gitdomain.NewRepoRootDir(self.DevRepo.GetOrPanic().WorkingDir))
+}
+
 func developerRepoPath(rootDir string) string {
 	return filepath.Join(rootDir, "developer")
 }

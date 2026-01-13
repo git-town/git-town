@@ -1365,7 +1365,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial proposals exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.proposalsChecked = true
-		have := string(mockproposals.LoadBytes(state.fixture.Dir))
+		proposalsPath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		have := string(mockproposals.LoadBytes(proposalsPath))
 		want, hasInitialProposals := state.initialProposals.Get()
 		if !hasInitialProposals {
 			return errors.New("no initial proposals defined")
@@ -1457,15 +1458,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
-		initialProposals := mockproposals.Save(state.fixture.Dir, proposals)
+		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		initialProposals := mockproposals.Save(proposalFilePath, proposals)
 		state.initialProposals = Some(initialProposals)
 	})
 
 	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.proposalsChecked = true
-		have := mockproposals.Load(state.fixture.Dir)
-		haveTable := mockproposals.ToDataTable(have.Proposals, helpers.TableFields(want))
+		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		have := mockproposals.Load(proposalFilePath)
+		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
 		diff, errorCount := haveTable.EqualGherkin(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
