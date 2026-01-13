@@ -165,7 +165,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
-	}, err
+	}, nil
 }
 
 type OpenRepoArgs struct {
