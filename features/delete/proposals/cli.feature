@@ -15,13 +15,21 @@ Feature: delete the current feature branch from a stack and update proposals
     And the current branch is "alpha"
     When I run "git-town delete"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | alpha  | git fetch --prune --tags |
-      |        | git push origin :alpha   |
-      |        | git checkout beta        |
-      | beta   | git branch -D alpha      |
+      | BRANCH | COMMAND                                                                    |
+      | alpha  | git fetch --prune --tags                                                   |
+      |        | Finding proposal from beta into alpha ... #2 (Proposal from beta to alpha) |
+      |        | Updating target branch of proposal #2 to main ... ok                       |
+      |        | git push origin :alpha                                                     |
+      |        | git checkout beta                                                          |
+      | beta   | git branch -D alpha                                                        |
+      |        | Finding parent of alpha ... main                                           |
+      |        | Update body for ##1 ... ok                                                 |
+      |        | Finding parent of beta ... main                                            |
+      |        | Finding proposal from beta into main ... #2 (Proposal from beta to alpha)  |
+      |        | Update body for ##2 ... ok                                                 |
     And this lineage exists now
       """
       main
