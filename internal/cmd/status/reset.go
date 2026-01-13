@@ -81,7 +81,7 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	case err != nil:
 		return err
 	default:
-		fmt.Println(messages.RunLogDeleted)
+		fmt.Println(messages.RunstateDeleted)
 	}
 	return nil
 }
