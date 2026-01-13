@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -85,21 +84,23 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 }
 
 type displayStatusData struct {
-	filepath string                    // filepath of the runstate file
+	filepath runstate.FilePath
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
-	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
+	userConfigDir, err := configdomain.SystemUserConfigDir()
 	if err != nil {
 		return displayStatusData{}, err
 	}
-	state, err := runstate.Load(rootDir)
+	configDirRepo := userConfigDir.RepoConfigDir(rootDir)
+	runstatePath := runstate.NewRunstatePath(configDirRepo)
+	state, err := runstate.Load(runstatePath)
 	if err != nil {
 		return displayStatusData{}, err
 	}
 	return displayStatusData{
-		filepath: filepath,
+		filepath: runstatePath,
 		state:    state,
 	}, nil
 }

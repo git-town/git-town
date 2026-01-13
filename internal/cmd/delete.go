@@ -145,6 +145,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -156,7 +157,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }

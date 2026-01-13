@@ -210,6 +210,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  sharedData.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               sharedData.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -221,7 +222,6 @@ Start:
 		InitialStashSize:        sharedData.stashSize,
 		Inputs:                  sharedData.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }

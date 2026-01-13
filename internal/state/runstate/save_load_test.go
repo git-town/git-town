@@ -3,13 +3,13 @@ package runstate_test
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
@@ -810,12 +810,11 @@ func TestLoadSave(t *testing.T) {
   }
 }`[1:]
 
-		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
-		err := runstate.Save(runState, repoRoot)
+		tempDir := t.TempDir()
+		runstatePath := runstate.FilePath(filepath.Join(tempDir, "runstate.json"))
+		err := runstate.Save(runState, runstatePath)
 		must.NoError(t, err)
-		filepath, err := state.FilePath(repoRoot, state.FileTypeRunstate)
-		must.NoError(t, err)
-		content, err := os.ReadFile(filepath)
+		content, err := os.ReadFile(runstatePath.String())
 		must.NoError(t, err)
 		must.EqOp(t, wantJSON, string(content))
 		var newState runstate.RunState

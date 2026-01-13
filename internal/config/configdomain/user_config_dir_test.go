@@ -1,14 +1,14 @@
-package state_test
+package configdomain_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/shoenig/test/must"
 )
 
-func TestSanitizePath(t *testing.T) {
+func TestUserConfigDir(t *testing.T) {
 	t.Parallel()
 
 	t.Run("SanitizePath", func(t *testing.T) {
@@ -19,7 +19,7 @@ func TestSanitizePath(t *testing.T) {
 		}
 		for give, want := range tests {
 			rootDir := gitdomain.NewRepoRootDir(give)
-			have := state.SanitizePath(rootDir)
+			have := configdomain.SanitizePath(rootDir).String()
 			must.EqOp(t, want, have)
 		}
 	})
