@@ -143,7 +143,6 @@
     "^the previous Git branch is (now|still)",
     "^(this|no|the initial) lineage exists now$",
     "^the initial branches and lineage exist now$",
-    "^the proposals are now$",
     "^the branches are now",
     "^all branches are now synchronized$",
     "^(these|no) commits exist now$",
@@ -163,6 +162,7 @@
     "^the branches contain these files:$",
     "^these tags exist now$",
     "^the initial tags exist now$",
-    "^the initial proposals exist now$"
+    "^the initial proposals exist now$",
+    "^the proposals are now$"
   ]
 }
