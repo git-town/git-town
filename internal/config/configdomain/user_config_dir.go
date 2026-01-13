@@ -24,7 +24,25 @@ func (self UserConfigDir) String() string {
 	return string(self)
 }
 
-// TODO: move this and SystemUserConfigDir into package internal/sys/files?
+// TODO: as part of separating low-level (system) and high-level (Git Town specific) code,
+// move this and SystemUserConfigDir into package internal/sys/files?
+// low-level code cannot depend on high-level code
+//
+// possible layout:
+//
+// # DOMAIN LEVEL: Git Town specific things that use the mid and low level
+//
+// config  execute  proposallineage  setup  skip  state  undo  vm
+//
+// # MID LEVEL: generic frameworks created or used, uses the low level
+//
+// cmd  messages  validate
+//
+// # LOW LEVEL: helpers for interacting with the system
+//
+// browser  cli  forge  git  gohacks  regexes  subshell
+//
+// a
 func SanitizePath[T ~string](dir T) T { //nolint:ireturn
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
