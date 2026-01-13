@@ -18,7 +18,8 @@ var (
 // MockConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockConnector struct {
 	WebConnector
-	Proposals mockproposals.MockProposals
+	Proposals     mockproposals.MockProposals
+	ProposalsPath mockproposals.MockProposalPath
 }
 
 // ============================================================================
@@ -43,7 +44,7 @@ var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
 
 func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	result := []forgedomain.Proposal{}
-	for _, data := range self.Proposals.Search(source) {
+	for _, data := range self.Proposals.FindBySource(source) {
 		result = append(result, forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeGithub})
 	}
 	return result, nil
@@ -61,7 +62,8 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
 	}
 	proposal.Body = Some(newBody)
-	self.Proposals.Save(*proposal)
+	self.Proposals.Update(proposal)
+	mockproposals.Save(self.ProposalsPath, self.Proposals)
 	return nil
 }
 
