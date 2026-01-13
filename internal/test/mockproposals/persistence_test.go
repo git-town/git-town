@@ -55,12 +55,9 @@ func TestPersistence(t *testing.T) {
 		t.Run("file does not exist", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
-			have := mockproposals.Load(workspaceDir)
-			want := mockproposals.MockProposals{
-				Proposals: []forgedomain.ProposalData{},
-				Dir:       workspaceDir,
-			}
-			must.Eq(t, want, have)
+			must.Panic(t, func() {
+				mockproposals.Load(workspaceDir)
+			})
 		})
 
 		t.Run("file without proposals", func(t *testing.T) {
