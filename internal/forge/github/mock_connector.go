@@ -2,10 +2,14 @@ package github
 
 import (
 	"fmt"
+	"strconv"
 
+	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/test/mockproposals"
+	"github.com/git-town/git-town/v22/pkg/colors"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -20,6 +24,7 @@ type MockConnector struct {
 	WebConnector
 	Proposals     mockproposals.MockProposals
 	ProposalsPath mockproposals.MockProposalPath
+	log           print.Logger
 }
 
 // ============================================================================
@@ -29,10 +34,12 @@ type MockConnector struct {
 var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
 
 func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	self.log.Start(messages.APIProposalFindStart, source, target)
 	data, has := self.Proposals.FindBySourceAndTarget(source, target).Get()
 	if !has {
 		return None[forgedomain.Proposal](), nil
 	}
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), data.Title))
 	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeGithub}), nil
 }
 
@@ -43,9 +50,14 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
 
 func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	self.log.Start(messages.APIParentBranchLookupStart, source.String())
 	result := []forgedomain.Proposal{}
 	for _, data := range self.Proposals.FindBySource(source) {
+		self.log.Success(data.Target.String())
 		result = append(result, forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeGithub})
+	}
+	if len(result) == 0 {
+		self.log.Success("none")
 	}
 	return result, nil
 }
