@@ -60,7 +60,7 @@ func Execute(args ExecuteArgs) error {
 	})
 	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
 	err := os.Remove(runstatePath.String())
-	if err != nil {
+	if err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
