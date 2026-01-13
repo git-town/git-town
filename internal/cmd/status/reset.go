@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/cache"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runlog"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/subshell"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -73,6 +74,8 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	configDirRepo := configDirUser.RepoConfigDir(rootDir)
+
+	// delete runstate
 	runstatePath := runstate.NewRunstatePath(configDirRepo)
 	err = os.Remove(runstatePath.String())
 	switch {
@@ -83,5 +86,18 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	default:
 		fmt.Println(messages.RunstateDeleted)
 	}
+
+	// delete runlog
+	runlogPath := runlog.NewRunlogPath(configDirRepo)
+	err = os.Remove(runlogPath.String())
+	switch {
+	case os.IsNotExist(err):
+		fmt.Println(messages.RunLogDoesntExist)
+	case err != nil:
+		return err
+	default:
+		fmt.Println(messages.RunLogDeleted)
+	}
+
 	return nil
 }
