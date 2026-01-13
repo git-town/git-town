@@ -1,9 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -21,8 +18,6 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
 		return nil
 	}
-	fmt.Println("111111111111111111111111111111111111111111111111111111111111111111111111111")
-	spew.Dump(connector)
 	proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher)
 	if !canSearchProposals {
 		args.FinalMessages.Add(messages.ConnectorCannotSearchProposals)
@@ -39,8 +34,6 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		return nil
 	}
 	for _, proposal := range proposals {
-		fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222222222")
-		spew.Dump(proposal)
 		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
 		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
 		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
