@@ -289,6 +289,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: branchesToValidate,
+		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,

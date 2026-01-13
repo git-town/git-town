@@ -192,6 +192,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,

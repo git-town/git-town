@@ -278,6 +278,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connectorOpt,
 		Frontend:           repo.Frontend,
