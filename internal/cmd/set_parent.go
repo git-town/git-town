@@ -251,6 +251,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,

@@ -122,6 +122,7 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
