@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -27,10 +28,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 		for f, field := range row.Cells {
 			switch headers[f] {
 			case "ID":
-				value, err := strconv.Atoi(field.Value)
-				if err != nil {
-					panic(err)
-				}
+				value := asserts.NoError1(strconv.Atoi(field.Value))
 				id = Some(value)
 			case "SOURCE BRANCH":
 				source = Some(gitdomain.NewLocalBranchName(field.Value))
