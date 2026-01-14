@@ -19,7 +19,7 @@ Feature: propose uncommitted changes via a separate parent branch with message
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
-      |          | Finding proposal from existing into main ...                   |
+      |          | Finding proposal from existing into main ... none              |
       | existing | git checkout -b new main                                       |
       | new      | git commit                                                     |
       |          | git push -u origin new                                         |
