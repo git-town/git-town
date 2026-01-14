@@ -16,5 +16,6 @@ jobs:
       - run: sudo apt update
       - name: install Spanish language pack
         run: sudo apt-get install language-pack-es language-pack-es-base
+      - run: env
       - run: make cukethis
         shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea
