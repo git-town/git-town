@@ -67,7 +67,7 @@ func TestPersistence(t *testing.T) {
 		})
 	})
 
-	t.Run("Load and Save roundtrip", func(t *testing.T) {
+	t.Run("Save and Load roundtrip", func(t *testing.T) {
 		t.Parallel()
 		configDir := configdomain.RepoConfigDir(t.TempDir())
 		proposalsPath := mockproposals.NewMockProposalPath(configDir)
