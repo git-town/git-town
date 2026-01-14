@@ -81,6 +81,8 @@ func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatabl
 				row[f] = proposal.Source.String()
 			case "TARGET BRANCH":
 				row[f] = proposal.Target.String()
+			case "TITLE":
+				row[f] = proposal.Title.String()
 			case "BODY":
 				row[f] = proposal.Body.GetOrZero().String()
 			case "URL":
