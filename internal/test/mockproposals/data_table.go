@@ -28,8 +28,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 		for f, field := range row.Cells {
 			switch headers[f] {
 			case "ID":
-				value := asserts.NoError1(strconv.Atoi(field.Value))
-				id = Some(value)
+				id = Some(asserts.NoError1(strconv.Atoi(field.Value)))
 			case "SOURCE BRANCH":
 				source = Some(gitdomain.NewLocalBranchName(field.Value))
 			case "TARGET BRANCH":
