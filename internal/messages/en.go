@@ -2,7 +2,7 @@ package messages
 
 const (
 	AliasedCommands                  = "Aliased commands: %s\n"
-	APIParentBranchLookupStart       = "Finding parent of %s ... "
+	APIParentBranchLookupStart       = "Finding proposals for %s ... "
 	APIProposalFindStart             = "Finding proposal from %s into %s ... "
 	APIProposalSearchStart           = "Finding proposals for %s ... "
 	APIProposalUpdateBody            = "Update body for %s ... "
