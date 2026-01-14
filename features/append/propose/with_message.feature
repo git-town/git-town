@@ -22,7 +22,7 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
       | existing | git checkout -b new                                                                       |
       | new      | git commit -m unrelated                                                                   |
       |          | git push -u origin new                                                                    |
-      |          | Finding proposal from new into existing ...                                               |
+      |          | Finding proposal from new into existing ... none                                          |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=unrelated |
       |          | git checkout existing                                                                     |
     And this lineage exists now
