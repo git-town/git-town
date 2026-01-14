@@ -50,6 +50,9 @@ type ScenarioState struct {
 	// commits that existed at the origin repo before the end-to-end test executed the first subshell command
 	initialOriginSHAs Option[gitdomain.Commits]
 
+	// the proposals defined in the setup step
+	initialProposals Option[string]
+
 	// the Git tags before the end-to-end test executed the first subshell command
 	initialTags Option[datatable.DataTable]
 
@@ -58,6 +61,9 @@ type ScenarioState struct {
 
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
+
+	// whether this scenario verifies the proposals it has defined
+	proposalsChecked bool
 
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool

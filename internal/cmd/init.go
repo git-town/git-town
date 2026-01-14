@@ -79,7 +79,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	userInput, exit, enterAll, err := setup.Enter(data)
+	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err
 	}

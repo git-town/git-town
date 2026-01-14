@@ -20,7 +20,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Enter(data Data) (UserInput, dialogdomain.Exit, bool, error) {
+func Enter(data Data, configDir configdomain.RepoConfigDir) (UserInput, dialogdomain.Exit, bool, error) {
 	var emptyResult UserInput
 	exit, err := dialog.Welcome(data.Inputs)
 	if err != nil || exit {
@@ -120,6 +120,7 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
+		configDir:            configDir,
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
 		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
@@ -818,6 +819,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
 		Browser:              None[configdomain.Browser](),
+		ConfigDir:            args.configDir,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
@@ -856,6 +858,7 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
+	configDir            configdomain.RepoConfigDir
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]

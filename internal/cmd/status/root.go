@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -89,7 +90,7 @@ type displayStatusData struct {
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
-	userConfigDir, err := configdomain.SystemUserConfigDir()
+	userConfigDir, err := cli.SystemUserConfigDir()
 	if err != nil {
 		return displayStatusData{}, err
 	}

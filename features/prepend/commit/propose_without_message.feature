@@ -19,9 +19,11 @@ Feature: propose uncommitted changes via a separate parent branch with message
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
+      |          | Finding proposal from existing into main ... none              |
       | existing | git checkout -b new main                                       |
       | new      | git commit                                                     |
       |          | git push -u origin new                                         |
+      |          | Finding proposal from new into main ... none                   |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1 |
       |          | git checkout existing                                          |
     And this lineage exists now

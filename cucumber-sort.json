@@ -94,6 +94,7 @@
       "^the branches$",
       "^the commits$"
     ],
+    "^the proposals$",
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",
     "^the main branch is \".*\"$",
@@ -160,6 +161,8 @@
     "^the initial commits exist now$",
     "^the branches contain these files:$",
     "^these tags exist now$",
-    "^the initial tags exist now$"
+    "^the initial tags exist now$",
+    "^the initial proposals exist now$",
+    "^the proposals are now$"
   ]
 }

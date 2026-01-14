@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -69,7 +70,7 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	if !hasRootDir {
 		return errors.New(messages.RepoOutside)
 	}
-	configDirUser, err := configdomain.SystemUserConfigDir()
+	configDirUser, err := cli.SystemUserConfigDir()
 	if err != nil {
 		return err
 	}

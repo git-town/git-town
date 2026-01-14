@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
@@ -149,15 +150,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			}
 		}
 	}
-	configDirUser, err := configdomain.SystemUserConfigDir()
+	userConfigDir, err := cli.SystemUserConfigDir()
 	if err != nil {
 		return emptyOpenRepoResult(), fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
 	}
-	configDirRepo := configDirUser.RepoConfigDir(rootDir)
+	repoConfigDir := userConfigDir.RepoConfigDir(rootDir)
 	return OpenRepoResult{
 		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
-		ConfigDir:         configDirRepo,
+		ConfigDir:         repoConfigDir,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,

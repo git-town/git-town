@@ -201,6 +201,13 @@ func (self *Fixture) Delete() {
 	os.RemoveAll(self.Dir)
 }
 
+// RepoConfigDir provides the full path to the user configuration directory
+func (self *Fixture) RepoConfigDir() configdomain.RepoConfigDir {
+	userConfigDir := configdomain.UserConfigDir(filepath.Join(self.Dir, ".config"))
+	repoRootDir := gitdomain.NewRepoRootDir(self.DevRepo.GetOrPanic().WorkingDir)
+	return userConfigDir.RepoConfigDir(repoRootDir)
+}
+
 // TagTable provides a table for all tags in this Git environment.
 func (self *Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()

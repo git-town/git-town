@@ -18,6 +18,7 @@ Feature: auto-propose new branches
       |        | git -c rebase.updateRefs=false rebase origin/main              |
       |        | git checkout -b new                                            |
       | new    | git push -u origin new                                         |
+      |        | Finding proposal from new into main ... none                   |
       |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And this lineage exists now
       """
