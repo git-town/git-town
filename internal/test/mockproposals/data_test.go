@@ -65,17 +65,17 @@ func TestMockProposals(t *testing.T) {
 			}
 			data2 := forgedomain.ProposalData{
 				Number: 2,
-				Source: "feature-branch",
-				Target: "develop",
-			}
-			data3 := forgedomain.ProposalData{
-				Number: 3,
 				Source: "other-branch",
 				Target: "main",
 			}
+			data3 := forgedomain.ProposalData{
+				Number: 3,
+				Source: "feature-branch",
+				Target: "develop",
+			}
 			proposals := mockproposals.MockProposals{data1, data2, data3}
 			have := proposals.FindBySource("feature-branch")
-			want := []forgedomain.ProposalData{data1, data2}
+			want := []forgedomain.ProposalData{data1, data3}
 			must.Eq(t, want, have)
 		})
 
