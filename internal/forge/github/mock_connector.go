@@ -41,6 +41,7 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 	self.log.Start(messages.APIProposalFindStart, source, target)
 	data, has := self.Proposals.FindBySourceAndTarget(source, target).Get()
 	if !has {
+		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), data.Title))
