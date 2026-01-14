@@ -2,7 +2,6 @@ package mockproposals
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -20,13 +19,10 @@ func (self MockProposalPath) String() string {
 }
 
 func Load(path MockProposalPath) MockProposals {
-	fmt.Println("222222222222222222222222222222222222222222222222222", path)
 	fileData, hasMockProposals := LoadBytes(path).Get()
 	if !hasMockProposals {
-		fmt.Println("333333333333333333333333333333333333333333333333333")
 		return []forgedomain.ProposalData{}
 	}
-	fmt.Println("4444444444444444444444444444444444444444444444444444444444444")
 	var proposals []forgedomain.ProposalData
 	asserts.NoError(json.Unmarshal(fileData, &proposals))
 	return proposals
@@ -48,7 +44,6 @@ func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath 
 }
 
 func Save(path MockProposalPath, proposals MockProposals) string {
-	fmt.Println("11111111111111111111111111111111111111111111111", path)
 	asserts.NoError(os.MkdirAll(filepath.Dir(path.String()), 0o755))
 	content := asserts.NoError1(json.MarshalIndent(proposals, "", "  "))
 	asserts.NoError(os.WriteFile(path.String(), content, 0o600))
