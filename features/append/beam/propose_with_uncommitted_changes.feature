@@ -35,7 +35,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       |          | git checkout new                                                                                        |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
       |          | git push -u origin new                                                                                  |
-      |          | Finding proposal from new into existing ...                                                             |
+      |          | Finding proposal from new into existing ... none                                                        |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted             |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress

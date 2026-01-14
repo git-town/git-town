@@ -34,7 +34,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git checkout new                                                                                        |
       | new      | git push -u origin new                                                                                  |
-      |          | Finding proposal from new into main ...                                                                 |
+      |          | Finding proposal from new into main ... none                                                            |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                        |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
