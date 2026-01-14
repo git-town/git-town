@@ -16,14 +16,15 @@ import (
 func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forgedomain.ProposalData {
 	result := make([]forgedomain.ProposalData, 0, len(table.Rows)-1)
 	headers := helpers.TableFields(table)
-	for i := 1; i < len(table.Rows); i++ {
-		id := Some(i)
+	for r := 1; r < len(table.Rows); r++ {
+		row := table.Rows[r]
+		id := Some(r)
 		source := None[gitdomain.LocalBranchName]()
 		target := None[gitdomain.LocalBranchName]()
 		title := None[gitdomain.ProposalTitle]()
 		body := None[gitdomain.ProposalBody]()
 		url := None[string]()
-		for f, field := range table.Rows[i].Cells {
+		for f, field := range row.Cells {
 			switch headers[f] {
 			case "ID":
 				value, err := strconv.Atoi(field.Value)
@@ -44,7 +45,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 			}
 		}
 		if id.IsNone() {
-			id = Some(i)
+			id = Some(r)
 		}
 		if source.IsNone() {
 			panic("please provide the source branch")
