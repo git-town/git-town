@@ -41,9 +41,6 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 				url = Some(field.Value)
 			}
 		}
-		if id.IsNone() {
-			id = Some(r)
-		}
 		if source.IsNone() {
 			panic("please provide the source branch")
 		}
