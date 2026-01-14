@@ -1460,7 +1460,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		proposals := mockproposals.FromGherkinTable(table, devRepo.Config.NormalConfig.Lineage)
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
 		initialProposals := mockproposals.Save(proposalFilePath, proposals)
 		state.initialProposals = Some(initialProposals)
