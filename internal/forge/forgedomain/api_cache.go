@@ -28,8 +28,8 @@ type searchResult struct {
 	source    gitdomain.LocalBranchName
 }
 
-// Clear removes all cached results.
-func (self *APICache) Clear() {
+// ClearAll removes all cached results.
+func (self *APICache) ClearAll() {
 	self.results = []Result{}
 }
 

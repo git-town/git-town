@@ -12,7 +12,7 @@ import (
 func TestAPICache(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Clear", func(t *testing.T) {
+	t.Run("ClearAll", func(t *testing.T) {
 		t.Parallel()
 
 		t.Run("removes all cached results", func(t *testing.T) {
@@ -26,7 +26,7 @@ func TestAPICache(t *testing.T) {
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
-			cache.Clear()
+			cache.ClearAll()
 			_, has := cache.Lookup("source", "target")
 			must.False(t, has)
 			_, has = cache.LookupSearch("source").Get()
