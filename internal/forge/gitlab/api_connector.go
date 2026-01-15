@@ -93,13 +93,13 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector
 
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
-	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message.String()),
 		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
