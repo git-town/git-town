@@ -3,11 +3,13 @@ package mockproposals
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
 	"github.com/git-town/git-town/v22/pkg/asserts"
@@ -94,4 +96,26 @@ func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatabl
 		result.AddRow(row...)
 	}
 	return result
+}
+
+func ToDocString(proposals []forgedomain.ProposalData) string {
+	result := strings.Builder{}
+	for _, proposal := range proposals {
+		result.WriteString("number: ")
+		result.WriteString(proposal.Number.String())
+		result.WriteString("\n")
+		result.WriteString("source: ")
+		result.WriteString(proposal.Source.String())
+		result.WriteString("\n")
+		result.WriteString("target: ")
+		result.WriteString(proposal.Target.String())
+		result.WriteString("\n")
+		result.WriteString("body: ")
+		result.WriteString(gohacks.IndentLines(proposal.Body.GetOrZero().String(), 2))
+		result.WriteString("\n")
+		result.WriteString("url: ")
+		result.WriteString(proposal.URL)
+		result.WriteString("\n")
+	}
+	return result.String()
 }
