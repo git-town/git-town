@@ -10,7 +10,7 @@ func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Propo
 	return forgedomain.ProposalData{
 		Active:       mergeRequest.State == "opened",
 		MergeWithAPI: true,
-		Number:       mergeRequest.IID,
+		Number:       forgedomain.ProposalNumber(mergeRequest.IID),
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        gitdomain.ProposalTitle(mergeRequest.Title),

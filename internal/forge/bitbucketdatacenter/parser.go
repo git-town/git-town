@@ -11,7 +11,7 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 	return forgedomain.ProposalData{
 		Active:       !pullRequest.Closed,
 		MergeWithAPI: false,
-		Number:       pullRequest.ID,
+		Number:       forgedomain.ProposalNumber(pullRequest.ID),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),

@@ -123,7 +123,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
-	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody.String())
+	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--body="+updatedBody.String())
 }
 
 // ============================================================================
@@ -133,7 +133,7 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 var _ forgedomain.ProposalTargetUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
+	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--base="+target.String())
 }
 
 // ============================================================================

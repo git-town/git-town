@@ -85,7 +85,7 @@ func parsePullRequest(pullRequest *github.PullRequest) forgedomain.ProposalData 
 	return forgedomain.ProposalData{
 		Active:       pullRequest.GetState() == "open",
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.GetBody()),
-		Number:       pullRequest.GetNumber(),
+		Number:       forgedomain.ProposalNumber(pullRequest.GetNumber()),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:        gitdomain.ProposalTitle(pullRequest.GetTitle()),
