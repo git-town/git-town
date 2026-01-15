@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/mockproposals"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -45,27 +44,6 @@ body:
 		must.Eq(t, want, have)
 	})
 
-	t.Run("single proposal with empty body", func(t *testing.T) {
-		t.Parallel()
-		proposals := []forgedomain.ProposalData{
-			{
-				Number: forgedomain.ProposalNumber(456),
-				Source: gitdomain.NewLocalBranchName("bugfix"),
-				Target: gitdomain.NewLocalBranchName("develop"),
-				Body:   None[gitdomain.ProposalBody](),
-				URL:    "https://example.com/pr/456",
-			},
-		}
-		have := mockproposals.ToDocString(proposals)
-		want := `
-url: https://example.com/pr/456
-number: 456
-source: bugfix
-target: develop
-body:`[1:]
-		must.Eq(t, want, have)
-	})
-
 	t.Run("multiple proposals", func(t *testing.T) {
 		t.Parallel()
 		proposals := []forgedomain.ProposalData{
@@ -73,7 +51,7 @@ body:`[1:]
 				Number: forgedomain.ProposalNumber(1),
 				Source: gitdomain.NewLocalBranchName("branch-1"),
 				Target: gitdomain.NewLocalBranchName("main"),
-				Body:   gitdomain.NewProposalBodyOpt("Body 1"),
+				Body:   gitdomain.NewProposalBodyOpt(""),
 				URL:    "https://example.com/pr/1",
 			},
 			{
@@ -91,7 +69,7 @@ number: 1
 source: branch-1
 target: main
 body:
-  Body 1
+
 
 url: https://example.com/pr/2
 number: 2
