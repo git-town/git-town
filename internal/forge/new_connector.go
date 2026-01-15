@@ -92,6 +92,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:  args.GitlabToken,
 				Browser:   args.Browser,
+				ConfigDir: args.ConfigDir,
 				Log:       args.Log,
 				RemoteURL: remoteURL,
 			})
