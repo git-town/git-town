@@ -1460,13 +1460,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
 		haveData := mockproposals.Load(proposalFilePath)
 		haveString := mockproposals.ToDocString(haveData)
-
+		wantString := strings.TrimSpace(want.Content)
 		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(strings.TrimSpace(want.Content), haveString, false)
+		diffs := dmp.DiffMain(wantString, haveString, false)
 		if len(diffs) == 1 && diffs[0].Type == 0 {
 			return nil
 		}
 		diffText := dmp.DiffPrettyText(diffs)
+		diffText += fmt.Sprintf("\n\nHAVE:\n%q\n\n", haveString)
+		diffText += fmt.Sprintf("\n\nWANT:\n%q\n\n", wantString)
 		fmt.Println(diffText)
 		return errors.New("mismatching proposals found, see diff above")
 	})
