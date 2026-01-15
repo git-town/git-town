@@ -2,7 +2,6 @@ package github
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -80,7 +79,7 @@ var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	self.cache.Clear(proposalData.Data().Number)
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Data().Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled(proposalData.Data().Number.String()))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
