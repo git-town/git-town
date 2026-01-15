@@ -45,6 +45,34 @@ func TestAPICache(t *testing.T) {
 			must.True(t, has)
 			must.Eq(t, proposal2, have)
 		})
+
+		t.Run("removes all search results", func(t *testing.T) {
+			t.Parallel()
+			cache := &forgedomain.APICache{}
+			proposal1 := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 1,
+					Source: "one",
+					Target: "target",
+				},
+			}
+			proposal2 := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 1,
+					Source: "two",
+					Target: "target",
+				},
+			}
+			cache.RegisterSearchResult("one", []forgedomain.Proposal{proposal1})
+			cache.RegisterSearchResult("two", []forgedomain.Proposal{proposal2})
+			cache.Clear(1)
+			haveOpt, certain := cache.Lookup("one", "target")
+			must.False(t, certain)
+			must.False(t, haveOpt.IsSome())
+			haveOpt, certain = cache.Lookup("two", "target")
+			must.False(t, certain)
+			must.False(t, haveOpt.IsSome())
+		})
 	})
 
 	t.Run("Lookup", func(t *testing.T) {
