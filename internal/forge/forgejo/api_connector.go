@@ -113,7 +113,7 @@ func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber,
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
+	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	client, err := self.getClient()
 	if err != nil {
 		return err
