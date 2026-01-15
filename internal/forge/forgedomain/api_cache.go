@@ -28,12 +28,7 @@ type searchResult struct {
 	source    gitdomain.LocalBranchName
 }
 
-// ClearAll removes all cached results.
-func (self *APICache) ClearAll() {
-	self.results = []Result{}
-}
-
-func (self *APICache) ClearProposal(number int) {
+func (self *APICache) Clear(number int) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
 		if proposalResult, ok := result.(lookupResult); ok {
 			proposal, hasProposal := proposalResult.proposal.Get()

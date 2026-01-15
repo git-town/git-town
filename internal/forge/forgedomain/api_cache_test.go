@@ -12,29 +12,7 @@ import (
 func TestAPICache(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ClearAll", func(t *testing.T) {
-		t.Parallel()
-
-		t.Run("removes all cached results", func(t *testing.T) {
-			t.Parallel()
-			cache := &forgedomain.APICache{}
-			proposal := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Source: "source",
-					Target: "target",
-				},
-			}
-			cache.RegisterLookupResult("source", "target", Some(proposal))
-			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
-			cache.ClearAll()
-			_, has := cache.Lookup("source", "target")
-			must.False(t, has)
-			_, has = cache.LookupSearch("source").Get()
-			must.False(t, has)
-		})
-	})
-
-	t.Run("ClearProposal", func(t *testing.T) {
+	t.Run("Clear", func(t *testing.T) {
 		t.Parallel()
 
 		t.Run("removes the proposal with the given number from the cache", func(t *testing.T) {
@@ -56,7 +34,7 @@ func TestAPICache(t *testing.T) {
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal1))
 			cache.RegisterLookupResult("other", "target", Some(proposal2))
-			cache.ClearProposal(proposal1.Data.Data().Number)
+			cache.Clear(proposal1.Data.Data().Number)
 			haveOpt, certain := cache.Lookup("source", "target")
 			must.False(t, certain)
 			have, has := haveOpt.Get()
