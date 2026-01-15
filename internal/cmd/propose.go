@@ -384,6 +384,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		prog.Value.Add(&opcodes.BranchTrackingCreateIfNeeded{
 			CurrentBranch: branchToPropose.name,
 		})
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branchToPropose.name})
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
