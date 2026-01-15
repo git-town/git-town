@@ -78,7 +78,7 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
-	self.cache.Clear()
+	self.cache.Clear(proposalData.Data().Number)
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
@@ -98,7 +98,7 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	self.cache.Clear()
+	self.cache.Clear(proposalData.Data().Number)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()), colors.BoldCyan().Styled(target.String()))
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {

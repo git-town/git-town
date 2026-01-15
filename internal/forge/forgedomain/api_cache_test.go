@@ -15,22 +15,63 @@ func TestAPICache(t *testing.T) {
 	t.Run("Clear", func(t *testing.T) {
 		t.Parallel()
 
-		t.Run("removes all cached results", func(t *testing.T) {
+		t.Run("removes the proposal with the given number from the cache", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.APICache{}
-			proposal := forgedomain.Proposal{
+			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
+					Number: 1,
 					Source: "source",
 					Target: "target",
 				},
 			}
-			cache.RegisterLookupResult("source", "target", Some(proposal))
-			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
-			cache.Clear()
-			_, has := cache.Lookup("source", "target")
+			proposal2 := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 2,
+					Source: "other",
+					Target: "target",
+				},
+			}
+			cache.RegisterLookupResult("source", "target", Some(proposal1))
+			cache.RegisterLookupResult("other", "target", Some(proposal2))
+			cache.Clear(proposal1.Data.Data().Number)
+			haveOpt, certain := cache.Lookup("source", "target")
+			must.False(t, certain)
+			_, has := haveOpt.Get()
 			must.False(t, has)
-			_, has = cache.LookupSearch("source").Get()
-			must.False(t, has)
+			haveOpt, certain = cache.Lookup("other", "target")
+			must.True(t, certain)
+			have, has := haveOpt.Get()
+			must.True(t, has)
+			must.Eq(t, proposal2, have)
+		})
+
+		t.Run("removes all search results", func(t *testing.T) {
+			t.Parallel()
+			cache := &forgedomain.APICache{}
+			proposal1 := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 1,
+					Source: "one",
+					Target: "target",
+				},
+			}
+			proposal2 := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 2,
+					Source: "two",
+					Target: "target",
+				},
+			}
+			cache.RegisterSearchResult("one", []forgedomain.Proposal{proposal1})
+			cache.RegisterSearchResult("two", []forgedomain.Proposal{proposal2})
+			cache.Clear(1)
+			haveOpt, certain := cache.Lookup("one", "target")
+			must.False(t, certain)
+			must.False(t, haveOpt.IsSome())
+			haveOpt, certain = cache.Lookup("two", "target")
+			must.False(t, certain)
+			must.False(t, haveOpt.IsSome())
 		})
 	})
 
