@@ -50,7 +50,7 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push                                                           |
-      |         | Finding proposal from feature into main ... ok                     |
+      |         | Finding proposal from feature into main ... none                   |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
@@ -68,5 +68,5 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push                                                           |
-      |         | Finding proposal from feature into main ... ok                     |
+      |         | Finding proposal from feature into main ... none                   |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
