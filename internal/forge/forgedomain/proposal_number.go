@@ -2,6 +2,9 @@ package forgedomain
 
 import "strconv"
 
+// ProposalNumber is a number (ID) of a proposal.
+//
+// Example: https://github.com/git-town/git-town/pull/5977 has proposal number 5977.
 type ProposalNumber int
 
 func (self ProposalNumber) Int() int {
