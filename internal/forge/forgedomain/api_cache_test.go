@@ -49,7 +49,7 @@ func TestAPICache(t *testing.T) {
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Number: 1,
+					Number: 2,
 					Source: "other",
 					Target: "target",
 				},
