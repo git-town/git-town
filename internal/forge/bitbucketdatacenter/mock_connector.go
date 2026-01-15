@@ -45,5 +45,7 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), data.Title))
-	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	proposal := forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
+	self.cache.RegisterLookupResult(source, target, Some(proposal))
+	return Some(proposal), nil
 }
