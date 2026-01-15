@@ -15,7 +15,7 @@ Feature: support many browsers and operating systems
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                              |
       | feature | git fetch --prune --tags                                             |
-      |         | Finding proposal from feature into main ... ok                       |
+      |         | Finding proposal from feature into main ... none                     |
       |         | <TOOL> https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:

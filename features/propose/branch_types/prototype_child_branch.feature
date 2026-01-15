@@ -20,7 +20,7 @@ Feature: Create proposals for prototype branches
       | parent    | git push -u origin parent                                                     |
       |           | git checkout prototype                                                        |
       | prototype | git push -u origin prototype                                                  |
-      |           | Finding proposal from prototype into parent ... ok                            |
+      |           | Finding proposal from prototype into parent ... none                          |
       |           | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
     And Git Town prints:
       """

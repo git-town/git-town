@@ -20,7 +20,7 @@ Feature: Create proposals for prototype branches
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
       |           | git push -u origin prototype                                         |
-      |           | Finding proposal from prototype into main ... ok                     |
+      |           | Finding proposal from prototype into main ... none                   |
       |           | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
