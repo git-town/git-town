@@ -13,7 +13,7 @@ Feature: dry-run proposing changes
   Scenario: a PR for this branch exists already
     Given the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
-      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     When I run "git-town propose --dry-run"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                        |
