@@ -28,7 +28,7 @@ type searchResult struct {
 	source    gitdomain.LocalBranchName
 }
 
-func (self *APICache) Clear(proposalID int) {
+func (self *APICache) Clear(proposalID ProposalNumber) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
 		if proposalResult, ok := result.(lookupResult); ok {
 			proposal, hasProposal := proposalResult.proposal.Get()
