@@ -18,6 +18,6 @@ Feature: prepend with the previous branch checked out in another worktree
       | BRANCH  | TYPE     | COMMAND                                                            |
       | current | frontend | git fetch --prune --tags                                           |
       |         | frontend | git push -u origin current                                         |
-      |         | frontend | Finding proposal from current into main ... ok                     |
+      |         | frontend | Finding proposal from current into main ... none                   |
       |         | frontend | open https://github.com/git-town/git-town/compare/current?expand=1 |
     And the previous Git branch is now "current"

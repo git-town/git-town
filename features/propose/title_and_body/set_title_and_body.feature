@@ -15,7 +15,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      |         | Finding proposal from feature into main ... ok                                                 |
+      |         | Finding proposal from feature into main ... none                                               |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body |
 
   Scenario: provide title via CLI
@@ -23,7 +23,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                           |
       | feature | git fetch --prune --tags                                                          |
-      |         | Finding proposal from feature into main ... ok                                    |
+      |         | Finding proposal from feature into main ... none                                  |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title |
 
   Scenario: provide body via CLI
@@ -31,7 +31,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                         |
       | feature | git fetch --prune --tags                                                        |
-      |         | Finding proposal from feature into main ... ok                                  |
+      |         | Finding proposal from feature into main ... none                                |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=my_body |
 
   Scenario: provide title via CLI and body via file
@@ -47,7 +47,7 @@ Feature: Prepopulate title and body
       | feature | git fetch --prune --tags                                                                          |
       |         | git add -A                                                                                        |
       |         | git stash -m "Git Town WIP"                                                                       |
-      |         | Finding proposal from feature into main ... ok                                                    |
+      |         | Finding proposal from feature into main ... none                                                  |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
       |         | git stash pop                                                                                     |
       |         | git restore --staged .                                                                            |
@@ -69,5 +69,5 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      |         | Finding proposal from feature into main ... ok                                                 |
+      |         | Finding proposal from feature into main ... none                                               |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext |
