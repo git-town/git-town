@@ -13,9 +13,8 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	Browser          Option[configdomain.Browser]
-	ProposalOverride Option[forgedomain.ProposalOverride]
-	RemoteURL        giturl.Parts
+	Browser   Option[configdomain.Browser]
+	RemoteURL giturl.Parts
 }
 
 // NewConnector provides the correct connector for talking to Azure DevOps.

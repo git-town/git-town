@@ -25,14 +25,12 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	if !hasRemoteURL || !hasForgeType {
 		return None[forgedomain.Connector](), nil
 	}
-	proposalOverride := forgedomain.ReadProposalOverride()
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
 	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
 			Browser:          args.Browser,
-			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeBitbucket:
