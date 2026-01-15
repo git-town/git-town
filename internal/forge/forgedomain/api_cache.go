@@ -28,9 +28,20 @@ type searchResult struct {
 	source    gitdomain.LocalBranchName
 }
 
-// Clear removes all cached results.
-func (self *APICache) Clear() {
-	self.results = []Result{}
+func (self *APICache) Clear(proposalID ProposalNumber) {
+	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
+		if proposalResult, ok := result.(lookupResult); ok {
+			proposal, hasProposal := proposalResult.proposal.Get()
+			if !hasProposal {
+				return true
+			}
+			return proposal.Data.Data().Number == proposalID
+		}
+		if _, ok := result.(searchResult); ok {
+			return true
+		}
+		return false
+	})
 }
 
 // Lookup provides the proposal for the given source and target branch.
