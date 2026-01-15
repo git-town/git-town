@@ -33,14 +33,15 @@ func TestToDocString(t *testing.T) {
 			},
 		}
 		have := mockproposals.ToDocString(proposals)
-		want := `number: 789
+		want := `
 url: https://example.com/pr/789
+number: 789
 source: feature
 target: main
 body:
   Line 1
   Line 2
-  Line 3`
+  Line 3`[1:]
 		must.Eq(t, want, have)
 	})
 
@@ -56,8 +57,9 @@ body:
 			},
 		}
 		have := mockproposals.ToDocString(proposals)
-		want := `number: 456
+		want := `
 url: https://example.com/pr/456
+number: 456
 source: bugfix
 target: develop
 body:`[1:]
