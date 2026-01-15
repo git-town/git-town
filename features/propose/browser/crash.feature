@@ -7,10 +7,10 @@ Feature: print the URL when the browser crashes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
       |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+    And the current branch is "feature"
     And tool "open" is broken
     When I run "git-town propose"
 

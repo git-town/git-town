@@ -37,6 +37,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
+			ConfigDir:   args.ConfigDir,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -45,6 +46,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
+			ConfigDir:   args.ConfigDir,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -53,6 +55,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		connector = forgejo.NewConnector(forgejo.NewConnectorArgs{
 			APIToken:  args.ForgejoToken,
 			Browser:   args.Browser,
+			ConfigDir: args.ConfigDir,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -60,6 +63,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.GiteaToken,
 			Browser:   args.Browser,
+			ConfigDir: args.ConfigDir,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
