@@ -11,7 +11,9 @@ Feature: dry-run proposing changes
     And tool "open" is installed
 
   Scenario: a PR for this branch exists already
-    Given a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
+    Given the proposals
+      | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
+      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     When I run "git-town propose --dry-run"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |

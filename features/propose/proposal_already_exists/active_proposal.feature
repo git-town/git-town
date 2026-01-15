@@ -8,7 +8,9 @@ Feature: open the page of an already existing proposal
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
+    And the proposals
+      | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
+      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     And tool "open" is installed
 
   Scenario: a PR for this branch exists already

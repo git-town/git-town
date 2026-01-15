@@ -251,12 +251,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddUpstream()
 	})
 
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(url)
-	})
-
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
