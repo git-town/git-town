@@ -21,10 +21,12 @@ Feature: proposing a stack containing a parked branch
       | child  | git fetch --prune --tags                                                  |
       |        | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
+      |        | git checkout parent                                                       |
       |        | Finding proposal from parent into main ... none                           |
-      |        | open https://github.com/git-town/git-town/compare/parent?expand=1         |
+      | parent | open https://github.com/git-town/git-town/compare/parent?expand=1         |
+      |        | git checkout child                                                        |
       |        | Finding proposal from child into parent ... none                          |
-      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      | child  | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial lineage exists now
     And the initial branches exist now
 
