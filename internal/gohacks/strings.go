@@ -12,7 +12,9 @@ func IndentLines(text string, amount int) string {
 	result := make([]string, len(lines))
 	indent := strings.Repeat(" ", amount)
 	for l, line := range lines {
-		result[l] = indent + line
+		if len(line) > 0 {
+			result[l] = indent + line
+		}
 	}
 	return strings.Join(result, "\n")
 }
