@@ -97,7 +97,7 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGitlabMergingViaAPI, number.String())
+	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message.String()),
