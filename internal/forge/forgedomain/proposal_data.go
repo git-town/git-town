@@ -9,7 +9,7 @@ type ProposalData struct {
 	Active       bool // whether the proposal is open
 	Body         Option[gitdomain.ProposalBody]
 	MergeWithAPI bool
-	Number       int
+	Number       ProposalNumber
 	Source       gitdomain.LocalBranchName
 	Target       gitdomain.LocalBranchName
 	Title        gitdomain.ProposalTitle

@@ -58,7 +58,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 			Active:       true,
 			Body:         body,
 			MergeWithAPI: true,
-			Number:       id.GetOrPanic(),
+			Number:       forgedomain.ProposalNumber(id.GetOrPanic()),
 			Source:       source.GetOrPanic(),
 			Target:       target.GetOrPanic(),
 			Title:        title.GetOrZero(),
@@ -76,7 +76,7 @@ func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatabl
 		for f, field := range fields {
 			switch field {
 			case "ID":
-				row[f] = strconv.Itoa(proposal.Number)
+				row[f] = proposal.Number.String()
 			case "SOURCE BRANCH":
 				row[f] = proposal.Source.String()
 			case "TARGET BRANCH":

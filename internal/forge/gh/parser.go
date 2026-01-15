@@ -21,7 +21,7 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 				Active:       data.State == "open",
 				Body:         NewOption(data.Body),
 				MergeWithAPI: data.Mergeable == "MERGEABLE",
-				Number:       data.Number,
+				Number:       forgedomain.ProposalNumber(data.Number),
 				Source:       data.HeadRefName,
 				Target:       data.BaseRefName,
 				Title:        data.Title,

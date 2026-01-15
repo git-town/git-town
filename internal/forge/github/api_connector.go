@@ -53,7 +53,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 	proposalData := parsePullRequest(pullRequests[0])
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Number)), proposalData.Title))
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+proposalData.Number.String()), proposalData.Title))
 	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGithub}
 	return Some(proposal), nil
 }
@@ -117,8 +117,8 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
-	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, int(data.Number), &github.PullRequest{
 		Body: Ptr(updatedBody.String()),
 	})
 	self.log.Finished(err)
@@ -134,8 +134,8 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, int(data.Number), &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},

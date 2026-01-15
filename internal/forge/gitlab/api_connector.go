@@ -3,7 +3,6 @@ package gitlab
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -51,7 +50,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
-		self.log.Success(strconv.Itoa(proposal.Number))
+		self.log.Success(proposal.Number.String())
 		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitlab}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
@@ -118,8 +117,8 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	data := proposalData.Data()
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
 		Description: Ptr(updatedDescription.String()),
 	})
 	self.log.Finished(err)
@@ -135,7 +134,7 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	self.log.Finished(err)

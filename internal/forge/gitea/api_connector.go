@@ -145,7 +145,7 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 		return err
 	}
 	data := proposalData.Data()
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Body: Ptr(updatedBody.String()),
 	})
@@ -166,7 +166,7 @@ func (self *AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	}
 	data := proposalData.Data()
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Base: targetName,
 	})
