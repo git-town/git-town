@@ -33,6 +33,22 @@ func (self *APICache) ClearAll() {
 	self.results = []Result{}
 }
 
+func (self *APICache) ClearProposal(number int) {
+	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
+		if proposalResult, ok := result.(lookupResult); ok {
+			proposal, hasProposal := proposalResult.proposal.Get()
+			if !hasProposal {
+				return true
+			}
+			return proposal.Data.Data().Number == number
+		}
+		if _, ok := result.(searchResult); ok {
+			return true
+		}
+		return false
+	})
+}
+
 // Lookup provides the proposal for the given source and target branch.
 // Since the absence of a proposal is a valid API result, the second return value is true if the cache is certain about the result.
 // If there is a cached proposal, returns (Some(proposal), true).
