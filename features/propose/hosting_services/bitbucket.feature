@@ -7,7 +7,6 @@ Feature: Bitbucket support
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
 
   Scenario Outline: normal origin
     Given the origin is "<ORIGIN>"
@@ -16,7 +15,7 @@ Feature: Bitbucket support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                       |
       | feature | git fetch --prune --tags                                                                                      |
-      |         | Finding proposal from feature into main ... ok                                                                |
+      |         | Finding proposal from feature into main ... none                                                              |
       |         | open https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain |
 
     Examples:
@@ -41,7 +40,7 @@ Feature: Bitbucket support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                             |
       | feature | git fetch --prune --tags                                                                                                            |
-      |         | Finding proposal from feature into main ... ok                                                                                      |
+      |         | Finding proposal from feature into main ... none                                                                                    |
       |         | open https://bitbucket.org/git-town/git-town.github.com/pull-requests/new?source=feature&dest=git-town%2Fgit-town.github.com%3Amain |
 
     Examples:

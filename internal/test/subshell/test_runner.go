@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/subshell"
 	"github.com/git-town/git-town/v22/internal/test/envvars"
@@ -32,9 +31,6 @@ type TestRunner struct {
 
 	// the directory that contains the global Git configuration
 	HomeDir string
-
-	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
-	ProposalOverride Option[string]
 
 	// whether to log the output of subshell commands
 	Verbose configdomain.Verbose
@@ -186,9 +182,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
 	}
-	if proposalOverride, hasProposalOverride := self.ProposalOverride.Get(); hasProposalOverride {
-		opts.Env = envvars.Replace(opts.Env, forgedomain.OverrideKey, proposalOverride)
-	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {
 		opts.Env = envvars.PrependPath(opts.Env, self.BinDir)
@@ -273,11 +266,6 @@ func (self *TestRunner) Run(name string, arguments ...string) error {
 func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
 	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
 	return err
-}
-
-// SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (self *TestRunner) SetProposalOverride(content string) {
-	self.ProposalOverride = Some(content)
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.

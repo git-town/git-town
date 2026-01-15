@@ -13,7 +13,6 @@ Feature: propose a newly prepended branch
       |          |               | unrelated commit |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "existing"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town prepend new --beam --propose --title='proposal title' --body='proposal body'" and enter into the dialog:
       | DIALOG          | KEYS             |
@@ -22,7 +21,7 @@ Feature: propose a newly prepended branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                                 |
-      |          | Finding proposal from existing into main ... ok                                                                         |
+      |          | Finding proposal from existing into main ... none                                                                       |
       | existing | git checkout -b new main                                                                                                |
       | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                                                                    |
       |          | git checkout existing                                                                                                   |
@@ -31,7 +30,7 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes                                                                         |
       |          | git checkout new                                                                                                        |
       | new      | git push -u origin new                                                                                                  |
-      |          | Finding proposal from new into main ... ok                                                                              |
+      |          | Finding proposal from new into main ... none                                                                            |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
     And this lineage exists now
       """

@@ -11,7 +11,6 @@ Feature: unknown ship strategy
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "zonk"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     When I run "git-town ship -m done"
 
   Scenario: result

@@ -64,11 +64,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 	devRepo := self.DevRepo.GetOrPanic()
 	devRepo.AddWorktree(workTreePath, branch)
 	runner := subshell.TestRunner{
-		BinDir:           devRepo.BinDir,
-		HomeDir:          devRepo.HomeDir,
-		ProposalOverride: None[string](),
-		Verbose:          devRepo.Verbose,
-		WorkingDir:       workTreePath,
+		BinDir:     devRepo.BinDir,
+		HomeDir:    devRepo.HomeDir,
+		Verbose:    devRepo.Verbose,
+		WorkingDir: workTreePath,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},

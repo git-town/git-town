@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
@@ -250,18 +249,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()
-	})
-
-	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
-	})
-
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {

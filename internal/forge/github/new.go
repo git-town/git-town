@@ -24,12 +24,11 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken         Option[forgedomain.GithubToken]
-	Browser          Option[configdomain.Browser]
-	ConfigDir        configdomain.RepoConfigDir
-	Log              print.Logger
-	ProposalOverride Option[forgedomain.ProposalOverride] // TODO: remove once the new mock connector works
-	RemoteURL        giturl.Parts
+	APIToken  Option[forgedomain.GithubToken]
+	Browser   Option[configdomain.Browser]
+	ConfigDir configdomain.RepoConfigDir
+	Log       print.Logger
+	RemoteURL giturl.Parts
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
@@ -40,13 +39,6 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Repository:   args.RemoteURL.Repo,
 		},
 		browser: args.Browser,
-	}
-	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
-		return TestConnector{
-			WebConnector: webConnector,
-			log:          args.Log,
-			override:     proposalURLOverride,
-		}, nil
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)

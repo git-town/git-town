@@ -9,7 +9,6 @@ Feature: display all executed Git commands
       | feature | feature | main   | local, origin |
     And Git setting "color.ui" is "always"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose --verbose"
     Then Git Town runs the commands
@@ -33,7 +32,7 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --verify -q refs/heads/feature                                                                                                                                                                                                                                                                                                     |
       |         | backend  | git rev-parse feature origin/feature                                                                                                                                                                                                                                                                                                             |
       |         | backend  | git rev-parse --abbrev-ref --symbolic-full-name @{u}                                                                                                                                                                                                                                                                                             |
-      |         | frontend | Finding proposal from feature into main ... ok                                                                                                                                                                                                                                                                                                   |
+      |         | frontend | Finding proposal from feature into main ... none                                                                                                                                                                                                                                                                                                 |
       |         | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1                                                                                                                                                                                                                                                                               |
       |         | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |         | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |

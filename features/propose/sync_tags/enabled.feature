@@ -12,7 +12,6 @@ Feature: don't sync tags while proposing
       | local-tag  | local    |
       | origin-tag | origin   |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 
@@ -20,7 +19,7 @@ Feature: don't sync tags while proposing
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --no-tags                                        |
-      |         | Finding proposal from feature into main ... ok                     |
+      |         | Finding proposal from feature into main ... none                   |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And the initial tags exist now
 

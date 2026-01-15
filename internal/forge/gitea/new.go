@@ -6,6 +6,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
+	"github.com/git-town/git-town/v22/internal/subshell"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -15,11 +17,11 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken         Option[forgedomain.GiteaToken]
-	Browser          Option[configdomain.Browser]
-	Log              print.Logger
-	ProposalOverride Option[forgedomain.ProposalOverride]
-	RemoteURL        giturl.Parts
+	APIToken  Option[forgedomain.GiteaToken]
+	Browser   Option[configdomain.Browser]
+	ConfigDir configdomain.RepoConfigDir
+	Log       print.Logger
+	RemoteURL giturl.Parts
 }
 
 // NewConnector provides a connector instance that talks to the gitea API.
@@ -32,11 +34,15 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 		},
 		browser: args.Browser,
 	}
-	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
-		return TestConnector{
-			WebConnector: webConnector,
-			log:          args.Log,
-			override:     proposalURLOverride,
+	if subshell.IsInTest() {
+		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
+		proposals := mockproposals.Load(proposalsPath)
+		return &MockConnector{
+			Proposals:     proposals,
+			ProposalsPath: proposalsPath,
+			WebConnector:  webConnector,
+			cache:         forgedomain.APICache{},
+			log:           args.Log,
 		}
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
