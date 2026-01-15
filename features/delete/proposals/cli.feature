@@ -15,6 +15,7 @@ Feature: delete the current feature branch from a stack and update proposals
     And the current branch is "alpha"
     When I run "git-town delete"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                    |

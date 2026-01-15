@@ -1454,19 +1454,22 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.initialProposals = Some(initialProposals)
 	})
 
-	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
+	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.proposalsChecked = true
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
-		have := mockproposals.Load(proposalFilePath)
-		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
-		diff, errorCount := haveTable.EqualGherkin(want)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
-			fmt.Println(diff)
-			return errors.New("mismatching proposals found, see diff above")
+		haveData := mockproposals.Load(proposalFilePath)
+		haveString := mockproposals.ToDocString(haveData)
+
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(want.Content, haveString, false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
 		}
-		return nil
+		result := dmp.DiffPrettyText(diffs)
+		result += "\n\nReceived this string:\n\n"
+		result += haveString
+		return errors.New("mismatching proposals found, see diff above")
 	})
 
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
