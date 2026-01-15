@@ -9,7 +9,6 @@ Feature: Create proposals for prototype branches
       | parent    | feature   | main   | local     |
       | prototype | prototype | parent | local     |
     And the current branch is "prototype"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

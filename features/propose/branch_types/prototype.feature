@@ -12,7 +12,6 @@ Feature: Create proposals for prototype branches
       | main      | local    | main commit      |
       | prototype | local    | prototype commit |
     And the current branch is "prototype"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

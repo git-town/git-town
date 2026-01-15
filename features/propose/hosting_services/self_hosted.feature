@@ -7,7 +7,6 @@ Feature: self-hosted service
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
 
   Scenario Outline: self hosted
     Given the origin is "git@self-hosted:git-town/git-town.git"

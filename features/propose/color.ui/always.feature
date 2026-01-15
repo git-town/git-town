@@ -9,7 +9,6 @@ Feature: display all executed Git commands
       | feature | feature | main   | local, origin |
     And Git setting "color.ui" is "always"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose --verbose"
     Then Git Town runs the commands

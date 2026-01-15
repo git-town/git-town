@@ -12,7 +12,6 @@ Feature: don't sync tags while proposing
       | local-tag  | local    |
       | origin-tag | origin   |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

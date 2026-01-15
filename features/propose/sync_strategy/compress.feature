@@ -14,7 +14,6 @@ Feature: proposing using the "compress" sync strategy
       | existing | origin   | remote existing commit  |
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "existing"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     And wait 1 second to ensure new Git timestamps
     When I run "git-town propose"

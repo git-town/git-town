@@ -17,7 +17,6 @@ Feature: sync before proposing
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

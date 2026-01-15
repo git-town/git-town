@@ -11,7 +11,6 @@ Feature: Create proposals for parked branches
       | BRANCH | LOCATION | MESSAGE       |
       | parked | local    | parked commit |
     And the current branch is "parked"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

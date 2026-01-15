@@ -12,7 +12,6 @@ Feature: merge conflict
       | feature | local    | local commit  | conflicting_file | local content  |
       | feature | origin   | origin commit | conflicting_file | remote content |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

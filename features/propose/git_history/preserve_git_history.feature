@@ -9,7 +9,6 @@ Feature: preserve the previous Git branch
       | previous | feature | main   | local, origin |
       | current  | feature | main   | local, origin |
     And the current branch is "current" and the previous branch is "previous"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
     Then the current branch is still "current"

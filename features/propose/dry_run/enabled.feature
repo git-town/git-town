@@ -21,7 +21,6 @@ Feature: dry-run proposing changes
     And the initial branches and lineage exist now
 
   Scenario: there is no PR for this branch yet
-    Given a proposal for this branch does not exist
     When I run "git-town propose --dry-run"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |

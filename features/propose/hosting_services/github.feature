@@ -3,7 +3,6 @@ Feature: GitHub support
 
   Background:
     Given a Git repo with origin
-    And a proposal for this branch does not exist
     And tool "open" is installed
 
   Scenario Outline: normal origin

@@ -10,7 +10,6 @@ Feature: prepend with the previous branch checked out in another worktree
       | previous | feature | main   | local     |
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 

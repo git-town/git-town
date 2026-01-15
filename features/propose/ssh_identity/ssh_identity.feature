@@ -9,7 +9,6 @@ Feature: use a SSH identity
       | feature | feature | main   | local, origin |
     And Git setting "git-town.hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands

@@ -8,7 +8,6 @@ Feature: Prepopulate title and body
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
 
   Scenario: provide title and body via CLI

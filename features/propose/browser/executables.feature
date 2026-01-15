@@ -10,7 +10,6 @@ Feature: support many browsers and operating systems
 
   Scenario Outline:
     And the origin is "https://github.com/git-town/git-town.git"
-    And a proposal for this branch does not exist
     And tool "<TOOL>" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
