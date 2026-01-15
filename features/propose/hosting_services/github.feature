@@ -15,7 +15,7 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --tags                                           |
-      |         | Finding proposal from feature into main ... ok                     |
+      |         | Finding proposal from feature into main ... none                   |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:
@@ -39,7 +39,7 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                       |
       | feature | git fetch --prune --tags                                                      |
-      |         | Finding proposal from feature into main ... ok                                |
+      |         | Finding proposal from feature into main ... none                              |
       |         | open https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
 
     Examples:
@@ -61,7 +61,7 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                             |
       | fix-#2 | git fetch --prune --tags                                            |
-      |        | Finding proposal from fix-#2 into main ... ok                       |
+      |        | Finding proposal from fix-#2 into main ... none                     |
       |        | open https://github.com/git-town/git-town/compare/fix-%232?expand=1 |
 
   Scenario: URL-encodes forward slashes
@@ -74,7 +74,7 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                   |
       | test/feature | git fetch --prune --tags                                                  |
-      |              | Finding proposal from test/feature into main ... ok                       |
+      |              | Finding proposal from test/feature into main ... none                     |
       |              | open https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: stacked change with known parent
@@ -90,5 +90,5 @@ Feature: GitHub support
       | child  | git fetch --prune --tags                                                  |
       |        | git checkout parent                                                       |
       | parent | git checkout child                                                        |
-      |        | Finding proposal from child into parent ... ok                            |
+      |        | Finding proposal from child into parent ... none                          |
       | child  | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
