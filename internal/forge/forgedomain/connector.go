@@ -60,7 +60,7 @@ type ProposalFinder interface {
 // to enable Git Town to merge for proposals at the active forge.
 type ProposalMerger interface {
 	// Merges the proposal with the given number using the given message.
-	SquashMergeProposal(number int, message gitdomain.CommitMessage) error
+	SquashMergeProposal(number ProposalNumber, message gitdomain.CommitMessage) error
 }
 
 // ProposalSearcher describes methods that connectors need to implement
