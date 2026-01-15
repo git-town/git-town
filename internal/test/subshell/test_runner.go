@@ -32,9 +32,6 @@ type TestRunner struct {
 	// the directory that contains the global Git configuration
 	HomeDir string
 
-	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
-	ProposalOverride Option[string]
-
 	// whether to log the output of subshell commands
 	Verbose configdomain.Verbose
 
@@ -269,11 +266,6 @@ func (self *TestRunner) Run(name string, arguments ...string) error {
 func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
 	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
 	return err
-}
-
-// SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (self *TestRunner) SetProposalOverride(content string) {
-	self.ProposalOverride = Some(content)
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
