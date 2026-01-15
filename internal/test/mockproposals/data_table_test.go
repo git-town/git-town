@@ -40,8 +40,7 @@ target: main
 body:
   Line 1
   Line 2
-  Line 3
-`
+  Line 3`
 		must.Eq(t, want, have)
 	})
 
@@ -61,8 +60,7 @@ body:
 url: https://example.com/pr/456
 source: bugfix
 target: develop
-body:
-`[1:]
+body:`[1:]
 		must.Eq(t, want, have)
 	})
 
@@ -86,17 +84,19 @@ body:
 		}
 		have := mockproposals.ToDocString(proposals)
 		want := `
+url: https://example.com/pr/1
 number: 1
 source: branch-1
 target: main
-body:   Body 1
-url: https://example.com/pr/1
+body:
+  Body 1
+
+url: https://example.com/pr/2
 number: 2
 source: branch-2
 target: main
-body:   Body 2
-url: https://example.com/pr/2
-`[1:]
+body:
+  Body 2`[1:]
 		must.Eq(t, want, have)
 	})
 
@@ -117,8 +117,7 @@ url:
 number: 999
 source: test
 target: main
-body:
-`[1:]
+body:`[1:]
 		must.Eq(t, want, have)
 	})
 }

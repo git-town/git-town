@@ -101,21 +101,23 @@ func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatabl
 func ToDocString(proposals []forgedomain.ProposalData) string {
 	result := strings.Builder{}
 	for _, proposal := range proposals {
-		result.WriteString("number: ")
+		result.WriteString("url:")
+		if proposal.URL != "" {
+			result.WriteString(" ")
+			result.WriteString(proposal.URL)
+		}
+		result.WriteString("\nnumber: ")
 		result.WriteString(proposal.Number.String())
-		result.WriteString("\n")
-		result.WriteString("source: ")
+		result.WriteString("\nsource: ")
 		result.WriteString(proposal.Source.String())
-		result.WriteString("\n")
-		result.WriteString("target: ")
+		result.WriteString("\ntarget: ")
 		result.WriteString(proposal.Target.String())
+		result.WriteString("\nbody:\n")
+		if body, hasBody := proposal.Body.Get(); hasBody {
+			result.WriteString(gohacks.IndentLines(body.String(), 2))
+		}
 		result.WriteString("\n")
-		result.WriteString("body: ")
-		result.WriteString(gohacks.IndentLines(proposal.Body.GetOrZero().String(), 2))
-		result.WriteString("\n")
-		result.WriteString("url: ")
-		result.WriteString(proposal.URL)
 		result.WriteString("\n")
 	}
-	return result.String()
+	return strings.TrimSpace(result.String())
 }
