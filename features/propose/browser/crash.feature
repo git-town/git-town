@@ -29,3 +29,4 @@ Feature: print the URL when the browser crashes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial proposals exist now
