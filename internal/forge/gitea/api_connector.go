@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v22/internal/cli/print"
@@ -110,7 +109,7 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	client, err := self.getClient()
 	if err != nil {
 		return err
@@ -119,8 +118,8 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
+	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Title.String(),
 		Message: commitMessageParts.Body,
