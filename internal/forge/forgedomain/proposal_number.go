@@ -9,7 +9,7 @@ func (self ProposalNumber) Int() int {
 }
 
 func (self ProposalNumber) String() string {
-	return strconv.Itoa(int(self))
+	return strconv.Itoa(self.Int())
 }
 
 func NewProposalNumberFromFloat64(number float64) ProposalNumber {

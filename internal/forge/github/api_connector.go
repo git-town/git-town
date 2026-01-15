@@ -118,7 +118,7 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
-	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, int(data.Number), &github.PullRequest{
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number.Int(), &github.PullRequest{
 		Body: Ptr(updatedBody.String()),
 	})
 	self.log.Finished(err)
@@ -135,7 +135,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, int(data.Number), &github.PullRequest{
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number.Int(), &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},
