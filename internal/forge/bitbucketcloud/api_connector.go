@@ -182,9 +182,9 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(data.Number),
+		ID:                data.Number.String(),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      data.Source.String(),
@@ -206,9 +206,9 @@ var _ forgedomain.ProposalSourceUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(source.String()))
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(data.Number),
+		ID:                data.Number.String(),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      source.String(),
@@ -230,9 +230,9 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(target.String()))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(data.Number),
+		ID:                data.Number.String(),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      data.Source.String(),

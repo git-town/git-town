@@ -2,7 +2,6 @@ package forgejo
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -44,7 +43,7 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), data.Title))
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+data.Number.String()), data.Title))
 	proposal := forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeForgejo}
 	self.cache.RegisterLookupResult(source, target, Some(proposal))
 	return Some(proposal), nil

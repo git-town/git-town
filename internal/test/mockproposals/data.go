@@ -8,7 +8,7 @@ import (
 
 type MockProposals []forgedomain.ProposalData
 
-func (self *MockProposals) FindByID(id int) Option[forgedomain.ProposalData] {
+func (self *MockProposals) FindByID(id forgedomain.ProposalNumber) Option[forgedomain.ProposalData] {
 	for _, proposal := range *self {
 		if proposal.Number == id {
 			return Some(proposal)

@@ -19,7 +19,7 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 	if !ok {
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	number := int(id2)
+	number := forgedomain.NewProposalNumberFromFloat64(id2)
 	title1, has := pullRequest["title"]
 	if !has {
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
