@@ -2,7 +2,6 @@ package forgedomain_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -31,7 +30,6 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		}
 		serialized, err := json.MarshalIndent(data, "", "  ")
 		must.NoError(t, err)
-		fmt.Println(string(serialized))
 		want := `
 {
   "Active": true,
