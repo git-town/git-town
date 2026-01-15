@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -112,8 +111,8 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
 }
 
 // ============================================================================

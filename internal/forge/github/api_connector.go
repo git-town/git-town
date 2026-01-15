@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -93,13 +92,13 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector // type check
 
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
 	commitMessageParts := message.Parts()
-	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
+	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number.Int(), commitMessageParts.Body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Title.String(),
 	})

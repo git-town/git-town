@@ -80,7 +80,7 @@ func (self *CachedConnector) SearchProposals(source gitdomain.LocalBranchName) (
 
 var _ forgedomain.ProposalMerger = &cachedConnector // type check
 
-func (self *CachedConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self *CachedConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	self.Cache.Clear(number)
 	return self.Connector.SquashMergeProposal(number, message)
 }
