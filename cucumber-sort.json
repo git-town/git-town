@@ -113,7 +113,6 @@
     "^I ran .* on branch",
     "^the current branch is \".*$",
     "^branch \".*\" is active in another worktree$",
-    "^a proposal for this branch ",
     "^tool .* is ",
     "^no tool to open browsers is installed$",
     "^the configuration file:$",
