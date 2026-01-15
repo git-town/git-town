@@ -28,7 +28,7 @@ func TestToDocString(t *testing.T) {
 				Number: forgedomain.ProposalNumber(789),
 				Source: gitdomain.NewLocalBranchName("feature"),
 				Target: gitdomain.NewLocalBranchName("main"),
-				Body:   gitdomain.NewProposalBodyOpt("Line 1\nLine 2\nLine 3"),
+				Body:   gitdomain.NewProposalBodyOpt("Line 1\n\nLine 3"),
 				URL:    "https://example.com/pr/789",
 			},
 		}
@@ -40,7 +40,7 @@ source: feature
 target: main
 body:
   Line 1
-  Line 2
+
   Line 3`[1:]
 		must.Eq(t, want, have)
 	})
