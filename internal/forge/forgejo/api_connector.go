@@ -144,7 +144,7 @@ func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	if err != nil {
 		return err
 	}
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Body: newBody.String(),
 	})
@@ -165,7 +165,7 @@ func (self *APIConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 		return err
 	}
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
@@ -244,7 +244,7 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 	return forgedomain.ProposalData{
 		Active:       pullRequest.State == forgejo.StateOpen,
 		MergeWithAPI: pullRequest.Mergeable,
-		Number:       int(pullRequest.Index),
+		Number:       forgedomain.ProposalNumber(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
