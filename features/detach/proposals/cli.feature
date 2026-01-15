@@ -1,0 +1,104 @@
+Feature: detach the current feature branch from a stack and update proposals
+
+  Background:
+    Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | alpha  | feature | main   | local, origin |
+      | beta   | feature | alpha  | local, origin |
+      | gamma1 | feature | beta   | local, origin |
+      | gamma2 | feature | beta   | local, origin |
+      | delta  | feature | gamma2 | local, origin |
+    And the proposals
+      | ID | SOURCE BRANCH | TARGET BRANCH | BODY        | URL                      |
+      |  1 | alpha         | main          | alpha body  | https://example.com/pr/1 |
+      |  2 | beta          | alpha         | beta body   | https://example.com/pr/2 |
+      |  3 | gamma1        | beta          | gamma1 body | https://example.com/pr/3 |
+      |  4 | gamma2        | beta          | gamma2 body | https://example.com/pr/4 |
+      |  5 | delta         | gamma2        | delta body  | https://example.com/pr/5 |
+    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And the current branch is "beta"
+    When I run "git-town detach"
+
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                        |
+      | beta   | git fetch --prune --tags                                                       |
+      |        | Finding proposal from beta into alpha ... #2 (Proposal from beta to alpha)     |
+      |        | Finding proposal from gamma1 into beta ... #3 (Proposal from gamma1 to beta)   |
+      |        | Finding proposal from gamma2 into beta ... #4 (Proposal from gamma2 to beta)   |
+      |        | git checkout gamma1                                                            |
+      | gamma1 | git pull                                                                       |
+      |        | git -c rebase.updateRefs=false rebase --onto alpha beta                        |
+      |        | git push --force-with-lease                                                    |
+      |        | git checkout gamma2                                                            |
+      | gamma2 | git pull                                                                       |
+      |        | git -c rebase.updateRefs=false rebase --onto gamma1 beta                       |
+      |        | git push --force-with-lease                                                    |
+      |        | git checkout delta                                                             |
+      | delta  | git pull                                                                       |
+      |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta                       |
+      |        | git push --force-with-lease                                                    |
+      |        | git checkout beta                                                              |
+      | beta   | git -c rebase.updateRefs=false rebase --onto main alpha                        |
+      |        | Updating target branch of proposal #2 to main ... ok                           |
+      |        | Updating target branch of proposal #3 to alpha ... ok                          |
+      |        | Updating target branch of proposal #4 to alpha ... ok                          |
+      |        | Finding proposals for alpha ... main                                           |
+      |        | Finding proposal from alpha into main ... #1 (Proposal from alpha to main)     |
+      |        | Finding proposal from gamma1 into alpha ... #3 (Proposal from gamma1 to beta)  |
+      |        | Finding proposal from gamma2 into alpha ... #4 (Proposal from gamma2 to beta)  |
+      |        | Finding proposal from delta into gamma2 ... #5 (Proposal from delta to gamma2) |
+      |        | Update body for #1 ... ok                                                      |
+      |        | Finding proposals for beta ... main                                            |
+      |        | Finding proposal from beta into main ... #2 (Proposal from beta to alpha)      |
+      |        | Update body for #2 ... ok                                                      |
+      |        | Finding proposals for delta ... gamma2                                         |
+      |        | Finding proposal from alpha into main ... #1 (Proposal from alpha to main)     |
+      |        | Update body for #5 ... ok                                                      |
+      |        | Finding proposals for gamma1 ... alpha                                         |
+      |        | Update body for #3 ... ok                                                      |
+      |        | Finding proposals for gamma2 ... alpha                                         |
+      |        | Finding proposal from delta into gamma2 ... #5 (Proposal from delta to gamma2) |
+      |        | Update body for #4 ... ok                                                      |
+    And this lineage exists now
+      """
+      main
+        alpha
+          gamma1
+          gamma2
+            delta
+        beta
+      """
+    And the branches are now
+      | REPOSITORY    | BRANCHES                                 |
+      | local, origin | main, alpha, beta, delta, gamma1, gamma2 |
+    And no uncommitted files exist now
+    And the proposals are now
+      | ID | SOURCE BRANCH | TARGET BRANCH | BODY                                                                                                                                                                                                                                                                                                                                                                                                           |
+      |  1 | alpha         | main          | alpha body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1 :point_left:\n    - https://example.com/pr/3\n    - https://example.com/pr/4\n      - https://example.com/pr/5\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n |
+      |  2 | beta          | main          | beta body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/2 :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                                                                                    |
+      |  3 | gamma1        | alpha         | gamma1 body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/3 :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                                                  |
+      |  4 | gamma2        | alpha         | gamma2 body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/4 :point_left:\n      - https://example.com/pr/5\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                |
+      |  5 | delta         | gamma2        | delta body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/4\n      - https://example.com/pr/5 :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                 |
+
+  @this
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                              |
+      | delta  | git branch beta {{ sha 'initial commit' }}           |
+      |        | git push -u origin beta                              |
+      |        | Updating target branch of proposal #3 to beta ... ok |
+      |        | Updating target branch of proposal #4 to beta ... ok |
+      |        | git checkout beta                                    |
+    And the initial branches and lineage exist now
+    And the initial commits exist now
+    And the proposals are now
+      | ID | SOURCE BRANCH | TARGET BRANCH | BODY                                                                                                                                                                                                                                                                                                                                                                                                           |
+      |  1 | alpha         | main          | alpha body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1 :point_left:\n    - https://example.com/pr/3\n    - https://example.com/pr/4\n      - https://example.com/pr/5\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n |
+      |  2 | beta          | alpha         | beta body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- beta :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                                                                                                                  |
+      |  3 | gamma1        | beta          | gamma1 body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/3 :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                                                  |
+      |  4 | gamma2        | beta          | gamma2 body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/4 :point_left:\n      - https://example.com/pr/5\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                |
+      |  5 | delta         | gamma2        | delta body\n\n<!-- branch-stack-start -->\n\n-------------------------\n- main\n  - https://example.com/pr/1\n    - https://example.com/pr/4\n      - https://example.com/pr/5 :point_left:\n\n<sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>\n\n<!-- branch-stack-end -->\n                                 |
