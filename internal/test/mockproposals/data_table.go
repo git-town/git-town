@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
-	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -66,34 +65,6 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 			Title:        title.GetOrZero(),
 			URL:          url.GetOrZero(),
 		})
-	}
-	return result
-}
-
-func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatable.DataTable {
-	result := datatable.DataTable{}
-	result.AddRow(fields...)
-	for _, proposal := range proposals {
-		row := make([]string, len(fields))
-		for f, field := range fields {
-			switch field {
-			case "ID":
-				row[f] = proposal.Number.String()
-			case "SOURCE BRANCH":
-				row[f] = proposal.Source.String()
-			case "TARGET BRANCH":
-				row[f] = proposal.Target.String()
-			case "TITLE":
-				row[f] = proposal.Title.String()
-			case "BODY":
-				row[f] = proposal.Body.GetOrZero().String()
-			case "URL":
-				row[f] = proposal.URL
-			default:
-				panic("unknown field: " + field)
-			}
-		}
-		result.AddRow(row...)
 	}
 	return result
 }

@@ -1462,13 +1462,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		haveString := mockproposals.ToDocString(haveData)
 
 		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(want.Content, haveString, false)
+		diffs := dmp.DiffMain(strings.TrimSpace(want.Content), haveString, false)
 		if len(diffs) == 1 && diffs[0].Type == 0 {
 			return nil
 		}
-		result := dmp.DiffPrettyText(diffs)
-		result += "\n\nReceived this string:\n\n"
-		result += haveString
+		diffText := dmp.DiffPrettyText(diffs)
+		fmt.Println(diffText)
 		return errors.New("mismatching proposals found, see diff above")
 	})
 
