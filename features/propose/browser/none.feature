@@ -23,7 +23,9 @@ Feature: print the URL when no browser installed
       """
       Please open in a browser: https://github.com/git-town/git-town/pull/123
       """
+    And the initial proposals exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial proposals exist now
