@@ -3,7 +3,6 @@ package gitlab
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -34,7 +33,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -51,8 +50,8 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
-		self.log.Success(strconv.Itoa(proposal.Number))
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
+		self.log.Success(proposal.Number.String())
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitlab}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
@@ -65,7 +64,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -79,7 +78,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	for m, mergeRequest := range mergeRequests {
 		proposalData := parseMergeRequest(mergeRequest)
 		self.log.Success(proposalData.Target.String())
-		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitLab}
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitlab}
 		result[m] = proposal
 	}
 	if len(result) == 0 {
@@ -94,13 +93,13 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector
 
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGitLabMergingViaAPI, number)
+	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
-	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message.String()),
 		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
@@ -118,8 +117,8 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	data := proposalData.Data()
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
 		Description: Ptr(updatedDescription.String()),
 	})
 	self.log.Finished(err)
@@ -134,8 +133,8 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
-	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	self.log.Finished(err)

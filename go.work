@@ -2,8 +2,10 @@ go 1.24.9
 
 use (
 	.
+	./tools/collector_addf
 	./tools/format_self
 	./tools/format_unittests
+	./tools/generate_json_schema
 	./tools/iterate_map
 	./tools/lint_cached_connectors
 	./tools/lint_steps

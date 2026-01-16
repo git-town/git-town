@@ -28,9 +28,15 @@ Feature: propose an entire stack
       |          | git checkout branch-3                                                          |
       | branch-3 | git merge --no-edit --ff branch-2                                              |
       |          | git push                                                                       |
-      |          | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
-      |          | open https://github.com/git-town/git-town/compare/branch-1...branch-2?expand=1 |
-      |          | open https://github.com/git-town/git-town/compare/branch-2...branch-3?expand=1 |
+      |          | git checkout branch-1                                                          |
+      |          | Finding proposal from branch-1 into main ... none                              |
+      | branch-1 | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
+      |          | git checkout branch-2                                                          |
+      |          | Finding proposal from branch-2 into branch-1 ... none                          |
+      | branch-2 | open https://github.com/git-town/git-town/compare/branch-1...branch-2?expand=1 |
+      |          | git checkout branch-3                                                          |
+      |          | Finding proposal from branch-3 into branch-2 ... none                          |
+      | branch-3 | open https://github.com/git-town/git-town/compare/branch-2...branch-3?expand=1 |
 
   Scenario: undo
     When I run "git-town undo"

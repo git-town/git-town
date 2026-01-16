@@ -25,109 +25,85 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	if !hasRemoteURL || !hasForgeType {
 		return None[forgedomain.Connector](), nil
 	}
-	proposalOverride := forgedomain.ReadProposalOverride()
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
-	case forgedomain.ForgeTypeAzureDevOps:
+	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
-			Browser:          args.Browser,
-			ProposalOverride: proposalOverride,
-			RemoteURL:        remoteURL,
+			Browser:   args.Browser,
+			RemoteURL: remoteURL,
 		})
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword:      args.BitbucketAppPassword,
-			Browser:          args.Browser,
-			Log:              args.Log,
-			ProposalOverride: proposalOverride,
-			RemoteURL:        remoteURL,
-			UserName:         args.BitbucketUsername,
+			AppPassword: args.BitbucketAppPassword,
+			Browser:     args.Browser,
+			ConfigDir:   args.ConfigDir,
+			Log:         args.Log,
+			RemoteURL:   remoteURL,
+			UserName:    args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword:      args.BitbucketAppPassword,
-			Browser:          args.Browser,
-			Log:              args.Log,
-			ProposalOverride: proposalOverride,
-			RemoteURL:        remoteURL,
-			UserName:         args.BitbucketUsername,
+			AppPassword: args.BitbucketAppPassword,
+			Browser:     args.Browser,
+			ConfigDir:   args.ConfigDir,
+			Log:         args.Log,
+			RemoteURL:   remoteURL,
+			UserName:    args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeForgejo:
 		connector = forgejo.NewConnector(forgejo.NewConnectorArgs{
-			APIToken:         args.ForgejoToken,
-			Browser:          args.Browser,
-			Log:              args.Log,
-			ProposalOverride: proposalOverride,
-			RemoteURL:        remoteURL,
+			APIToken:  args.ForgejoToken,
+			Browser:   args.Browser,
+			ConfigDir: args.ConfigDir,
+			Log:       args.Log,
+			RemoteURL: remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:         args.GiteaToken,
-			Browser:          args.Browser,
-			Log:              args.Log,
-			ProposalOverride: proposalOverride,
-			RemoteURL:        remoteURL,
+			APIToken:  args.GiteaToken,
+			Browser:   args.Browser,
+			ConfigDir: args.ConfigDir,
+			Log:       args.Log,
+			RemoteURL: remoteURL,
 		})
-	case forgedomain.ForgeTypeGitHub:
-		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
-			switch githubConnectorType {
-			case forgedomain.GitHubConnectorTypeAPI:
-				connector, err = github.NewConnector(github.NewConnectorArgs{
-					APIToken:         args.GitHubToken,
-					Browser:          args.Browser,
-					Log:              args.Log,
-					ProposalOverride: proposalOverride,
-					RemoteURL:        remoteURL,
-				})
-			case forgedomain.GitHubConnectorTypeGh:
-				connector = &gh.CachedConnector{
-					Connector: gh.Connector{
-						Backend:  args.Backend,
-						Frontend: args.Frontend,
-					},
-					Cache: forgedomain.APICache{},
-				}
-			}
-		} else {
-			// no GitHubConnectorType specified --> use the API connector
+	case forgedomain.ForgeTypeGithub:
+		switch args.GithubConnectorType.GetOr(forgedomain.GithubConnectorTypeAPI) {
+		case forgedomain.GithubConnectorTypeAPI:
 			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:         args.GitHubToken,
-				Browser:          args.Browser,
-				Log:              args.Log,
-				ProposalOverride: proposalOverride,
-				RemoteURL:        remoteURL,
+				APIToken:  args.GithubToken,
+				Browser:   args.Browser,
+				ConfigDir: args.ConfigDir,
+				Log:       args.Log,
+				RemoteURL: remoteURL,
 			})
-		}
-	case forgedomain.ForgeTypeGitLab:
-		if gitLabConnectorType, hasGitLabConnectorType := args.GitLabConnectorType.Get(); hasGitLabConnectorType {
-			switch gitLabConnectorType {
-			case forgedomain.GitLabConnectorTypeAPI:
-				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-					APIToken:         args.GitLabToken,
-					Browser:          args.Browser,
-					Log:              args.Log,
-					ProposalOverride: proposalOverride,
-					RemoteURL:        remoteURL,
-				})
-			case forgedomain.GitLabConnectorTypeGlab:
-				connector = &glab.CachedConnector{
-					Connector: glab.Connector{
-						Backend:  args.Backend,
-						Frontend: args.Frontend,
-					},
-					Cache: forgedomain.APICache{},
-				}
+		case forgedomain.GithubConnectorTypeGh:
+			connector = &gh.CachedConnector{
+				Connector: gh.Connector{
+					Backend:  args.Backend,
+					Frontend: args.Frontend,
+				},
+				Cache: forgedomain.APICache{},
 			}
-		} else {
-			// no GitLabConnectorType specified --> use the API connector
+		}
+	case forgedomain.ForgeTypeGitlab:
+		switch args.GitlabConnectorType.GetOr(forgedomain.GitlabConnectorTypeAPI) {
+		case forgedomain.GitlabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:         args.GitLabToken,
-				Browser:          args.Browser,
-				Log:              args.Log,
-				ProposalOverride: proposalOverride,
-				RemoteURL:        remoteURL,
+				APIToken:  args.GitlabToken,
+				Browser:   args.Browser,
+				ConfigDir: args.ConfigDir,
+				Log:       args.Log,
+				RemoteURL: remoteURL,
 			})
+		case forgedomain.GitlabConnectorTypeGlab:
+			connector = &glab.CachedConnector{
+				Connector: glab.Connector{
+					Backend:  args.Backend,
+					Frontend: args.Frontend,
+				},
+				Cache: forgedomain.APICache{},
+			}
 		}
 	}
 	return NewOption(connector), err
@@ -138,14 +114,15 @@ type NewConnectorArgs struct {
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
 	Browser              Option[configdomain.Browser]
+	ConfigDir            configdomain.RepoConfigDir
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
-	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
-	GitHubToken          Option[forgedomain.GitHubToken]
-	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
-	GitLabToken          Option[forgedomain.GitLabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
+	GithubConnectorType  Option[forgedomain.GithubConnectorType]
+	GithubToken          Option[forgedomain.GithubToken]
+	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
+	GitlabToken          Option[forgedomain.GitlabToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 }

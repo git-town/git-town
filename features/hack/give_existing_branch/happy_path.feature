@@ -14,7 +14,7 @@ Feature: making a branch a feature branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "contribution"
+      there is already a branch contribution
       """
   #
   # NOTE: Cannot test undo here.

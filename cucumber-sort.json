@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/kevgo/cucumber-sort/refs/heads/main/docs/schema.json",
   "include": [
     "features/**/*.feature"
   ],
@@ -21,6 +22,8 @@
     "features/ship/fast_forward/supplied_branch/ship_delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/current_branch/delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/supplied_branch/delete_tracking_branch/disabled.feature",
+    "features/skip/park/branch_type/feature.feature",
+    "features/skip/park/branch_type/perennial.feature",
     "features/swap/merge_conflict/dependent_changes.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/conflict_feature_branch_main_branch.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/shipped_changes_conflict_with_existing_feature_branch.feature",
@@ -69,7 +72,11 @@
     "vendor/**/*.feature"
   ],
   "record": true,
-  "fail-fast": true,
+  "fail-fast": false,
+  "keep-order": [
+    "I ran .*",
+    "I run .*"
+  ],
   "steps": [
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
@@ -87,15 +94,11 @@
       "^the branches$",
       "^the commits$"
     ],
+    "^the proposals$",
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",
     "^the main branch is \".*\"$",
-    "^Git setting \"git-town.perennial-branches\" is ",
     "Git setting \".*\" is \".*\"$",
-    "Git setting \"git-town.new-branch-push-flag\" is ",
-    "Git setting \"git-town.push-new-branches\" is ",
-    "Git setting \"git-town.create-prototype-branches\" is ",
-    "Git setting \"git-town-branch.*.branchtype\" is",
     "^offline mode is enabled$",
     "^Git Town parent setting for branch \".*\" is .*$",
     "^the tags$",
@@ -110,7 +113,6 @@
     "^I ran .* on branch",
     "^the current branch is \".*$",
     "^branch \".*\" is active in another worktree$",
-    "^a proposal for this branch ",
     "^tool .* is ",
     "^no tool to open browsers is installed$",
     "^the configuration file:$",
@@ -130,16 +132,10 @@
     "rebase is now in progress$",
     "merge is (now|still) in progress$",
     "^Git Town is no longer configured$",
-    "^<LOCATION> Git setting \".*\" is now \".*\"$",
-    "^<LOCATION> Git setting \".*\" now doesn't exist$",
-    "^global Git setting \".*\" is (now|still)",
-    "^global Git setting \".*\" (now|still) doesn't exist$",
-    "^local Git setting \".*\" is (now|still)",
-    "^local Git setting \".*\" (now|still) doesn't exist$",
-    "^Git setting \".*\" is (now|still)",
-    "^Git setting \".*\" (now|still) doesn't exist$",
-    "Git setting \"git-town-branch.*.branchtype\" is (now|still) ",
-    "Git setting \"git-town-branch.*.branchtype\" now doesn't exist$",
+    "^<LOCATION> Git setting \".* now",
+    "^global Git setting \".* (now|still)",
+    "^local Git setting \".* (now|still)",
+    "^Git setting \".* (now|still)",
     "^the configuration file is now",
     "^the current branch is (now|still) ",
     "^the current branch in the other worktree is still .*$",
@@ -164,6 +160,8 @@
     "^the initial commits exist now$",
     "^the branches contain these files:$",
     "^these tags exist now$",
-    "^the initial tags exist now$"
+    "^the initial tags exist now$",
+    "^the initial proposals exist now$",
+    "^the proposals are now$"
   ]
 }

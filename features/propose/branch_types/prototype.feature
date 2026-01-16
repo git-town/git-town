@@ -12,7 +12,6 @@ Feature: Create proposals for prototype branches
       | main      | local    | main commit      |
       | prototype | local    | prototype commit |
     And the current branch is "prototype"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
 
@@ -20,11 +19,11 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
-      |           | Looking for proposal online ... ok                                   |
       |           | git push -u origin prototype                                         |
+      |           | Finding proposal from prototype into main ... none                   |
       |           | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
-      branch "prototype" is no longer a prototype branch
+      branch prototype is no longer a prototype branch
       """
     And branch "prototype" now has type "feature"

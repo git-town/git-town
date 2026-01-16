@@ -18,8 +18,10 @@ Feature: auto-propose new branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                        |
       | old    | git fetch --prune --tags                                       |
+      |        | Finding proposal from old into main ... none                   |
       |        | git checkout -b new main                                       |
       | new    | git push -u origin new                                         |
+      |        | Finding proposal from new into main ... none                   |
       |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And this lineage exists now
       """

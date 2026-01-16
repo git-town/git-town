@@ -3,7 +3,9 @@ package status
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -13,7 +15,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/cache"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
+	"github.com/git-town/git-town/v22/internal/state/runlog"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/subshell"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -34,15 +37,16 @@ func resetRunstateCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeStatusReset(cliConfig)
 		},
@@ -66,23 +70,35 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	if !hasRootDir {
 		return errors.New(messages.RepoOutside)
 	}
-	runstateExisted, err := state.Delete(rootDir, state.FileTypeRunstate)
+	configDirUser, err := cli.SystemUserConfigDir()
 	if err != nil {
 		return err
 	}
-	if runstateExisted {
-		fmt.Println(messages.RunstateDeleted)
-	} else {
+	configDirRepo := configDirUser.RepoConfigDir(rootDir)
+
+	// delete runstate
+	runstatePath := runstate.NewRunstatePath(configDirRepo)
+	err = os.Remove(runstatePath.String())
+	switch {
+	case os.IsNotExist(err):
 		fmt.Println(messages.RunstateDoesntExist)
-	}
-	runlogExisted, err := state.Delete(rootDir, state.FileTypeRunlog)
-	if err != nil {
+	case err != nil:
 		return err
+	default:
+		fmt.Println(messages.RunstateDeleted)
 	}
-	if runlogExisted {
-		fmt.Println(messages.RunLogDeleted)
-	} else {
+
+	// delete runlog
+	runlogPath := runlog.NewRunlogPath(configDirRepo)
+	err = os.Remove(runlogPath.String())
+	switch {
+	case os.IsNotExist(err):
 		fmt.Println(messages.RunLogDoesntExist)
+	case err != nil:
+		return err
+	default:
+		fmt.Println(messages.RunLogDeleted)
 	}
+
 	return nil
 }

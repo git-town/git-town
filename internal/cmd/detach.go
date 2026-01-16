@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -83,15 +82,16 @@ func detachCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeDetach(cliConfig)
 		},
@@ -148,6 +148,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -159,7 +160,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
@@ -190,11 +190,12 @@ type detachChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow configdomain.ProgramFlow, err error) {
+func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult detachData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -202,19 +203,20 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
-		GitHubConnectorType:  config.GitHubConnectorType,
-		GitHubToken:          config.GitHubToken,
-		GitLabConnectorType:  config.GitLabConnectorType,
-		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
+		GithubConnectorType:  config.GithubConnectorType,
+		GithubToken:          config.GithubToken,
+		GitlabConnectorType:  config.GitlabConnectorType,
+		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -234,39 +236,40 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchNameToDetach := currentBranch
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
 	if !hasBranchToDetachInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
 	}
 	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
@@ -278,24 +281,24 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
 	if !hasParentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
 	}
 	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if branchHasMergeCommits {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
 	}
 
 	connectorProposalFinder := None[forgedomain.ProposalFinder]()
@@ -305,7 +308,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 			connectorProposalFinder = Some(proposalFinder)
 			branchToDetachProposal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 	}
@@ -317,12 +320,12 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		if hasProposalFinder {
 			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = detachChildBranch{
 			info:     childInfo,
@@ -335,7 +338,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	for d, descendentName := range descendentNames {
 		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
 		}
 		descendents[d] = detachChildBranch{
 			info:     info,
@@ -344,7 +347,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		}
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return detachData{
 		branchInfosLastRun:     branchInfosLastRun,
 		branchToDetachInfo:     *branchToDetachInfo,
@@ -369,6 +372,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
+	oldParent := data.parentBranch
 	// step 1: delete the commits of the branch to detach from all descendents,
 	// while that branch is still in the form it had inside the stack
 	lastParent := data.parentBranch
@@ -380,9 +384,13 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			Program:           prog,
 			RebaseOnto:        lastParent,
 		})
-		if descendent.info.HasTrackingBranch() {
+		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
 			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   descendent.name,
+					ForceIfIncludes: true,
+					TrackingBranch:  descendentTracking,
+				},
 			)
 		}
 		lastParent = descendent.name
@@ -397,9 +405,13 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			CommitsToRemove:    data.parentBranch.BranchName().Location(),
 		},
 	)
-	if data.branchToDetachInfo.HasTrackingBranch() {
+	if trackingBranch, hasTrackingBranch := data.branchToDetachInfo.RemoteName.Get(); hasTrackingBranch {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   data.branchToDetachName,
+				ForceIfIncludes: true,
+				TrackingBranch:  trackingBranch,
+			},
 		)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
@@ -438,20 +450,13 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			)
 		}
 	}
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   prog,
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            data.initialBranch,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			ProposalStackLineageTree:             None[*proposallineage.Tree](),
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
+			Config:          data.config,
+			Program:         prog,
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

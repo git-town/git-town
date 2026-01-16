@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -80,15 +79,16 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeSwap(cliConfig)
 		},
@@ -146,6 +146,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -157,7 +158,6 @@ Start:
 		InitialStashSize:        data.stashSize,
 		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
@@ -191,11 +191,12 @@ type swapBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configdomain.ProgramFlow, err error) {
+func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult swapData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -203,19 +204,20 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
-		GitHubConnectorType:  config.GitHubConnectorType,
-		GitHubToken:          config.GitHubToken,
-		GitLabConnectorType:  config.GitLabConnectorType,
-		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
+		GithubConnectorType:  config.GithubConnectorType,
+		GithubToken:          config.GithubToken,
+		GitlabConnectorType:  config.GitlabConnectorType,
+		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -235,38 +237,39 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.SwapRepoHasDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SwapRepoHasDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	currentBranchInfo, hasBranchToSwapInfo := branchesSnapshot.Branches.FindByLocalName(currentBranch).Get()
 	if !hasBranchToSwapInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, currentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, currentBranch)
 	}
 	if currentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, currentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, currentBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
@@ -278,26 +281,26 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	currentBranchType := validatedConfig.BranchType(currentBranch)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(currentBranch).Get()
 	if !hasParentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.SwapNoParent)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SwapNoParent)
 	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapParentNotLocal, parentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapParentNotLocal, parentBranch)
 	}
 	parentBranchType := validatedConfig.BranchType(parentBranch)
 	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
 	if !hasGrandParentBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.SwapNoGrandParent)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SwapNoGrandParent)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(currentBranch, validatedConfig.NormalConfig.Order)
 	children := make([]swapBranch, len(childBranches))
@@ -307,13 +310,13 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
 				if err != nil {
-					return data, configdomain.ProgramFlowExit, err
+					return emptyResult, configdomain.ProgramFlowExit, err
 				}
 			}
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = swapBranch{
 			info:     *childInfo,
@@ -328,30 +331,30 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 			currentbranchProposal, err = proposalFinder.FindProposal(currentBranch, parentBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 			parentBranchProposal, err = proposalFinder.FindProposal(parentBranch, grandParentBranch)
 			if err != nil {
-				return data, configdomain.ProgramFlowExit, err
+				return emptyResult, configdomain.ProgramFlowExit, err
 			}
 		}
 	}
 	branchContainsMerges, err := repo.Git.BranchContainsMerges(repo.Backend, currentBranch, parentBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if branchContainsMerges {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, currentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, currentBranch)
 	}
 	parentContainsMerges, err := repo.Git.BranchContainsMerges(repo.Backend, parentBranch, grandParentBranch)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if parentContainsMerges {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return swapData{
 		branchInfosLastRun:    branchInfosLastRun,
 		branchesSnapshot:      branchesSnapshot,
@@ -403,24 +406,14 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			program:     prog,
 		})
 	}
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-
-				ProposalStackLineageTree:             None[*proposallineage.Tree](),
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-			},
-		)
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,

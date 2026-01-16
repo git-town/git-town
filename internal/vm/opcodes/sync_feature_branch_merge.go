@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -17,10 +16,6 @@ type SyncFeatureBranchMerge struct {
 
 func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	branchInfos, hasBranchInfos := args.BranchInfos.Get()
-	if !hasBranchInfos {
-		panic(messages.BranchInfosNotProvided)
-	}
 	branch := self.Branch
 	for {
 		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
@@ -31,8 +26,8 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		if args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() && parentIsPerennial {
 			break
 		}
-		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {
-			parentIsLocal := parentBranchInfo.LocalName.IsSome()
+		if parentBranchInfo, hasParentInfo := args.BranchInfos.FindLocalOrRemote(parent).Get(); hasParentInfo {
+			parentIsLocal := parentBranchInfo.Local.IsSome()
 			if parentIsLocal {
 				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parent.BranchName())
 				if err != nil {
@@ -67,7 +62,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		branch = parent
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, trackingBranch)
 		if err != nil {
 			return err
 		}

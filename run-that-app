@@ -1,7 +1,8 @@
 actionlint 1.7.8
 alphavet 0.1.0
+conc 0.1.0
 contest 0.5.0
-cucumber-sort 0.1.0
+cucumber-sort 0.2.0
 deadcode 0.38.0
 depth 1.2.1
 dprint 0.50.2
@@ -23,3 +24,4 @@ scc 3.6.0
 shellcheck system 0.11.0
 shfmt 3.12.0
 staticcheck 2025.1.1
+taplo 0.10.0

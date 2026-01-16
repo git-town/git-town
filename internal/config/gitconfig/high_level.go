@@ -82,24 +82,28 @@ func RemoveForgejoToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
 }
 
-func RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType)
-}
-
-func RemoveGitHubToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubToken)
-}
-
-func RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType)
-}
-
-func RemoveGitLabToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabToken)
-}
-
 func RemoveGiteaToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
+}
+
+func RemoveGithubConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubConnectorType)
+}
+
+func RemoveGithubToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGithubToken)
+}
+
+func RemoveGitlabConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitlabConnectorType)
+}
+
+func RemoveGitlabToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitlabToken)
+}
+
+func RemoveIgnoreUncommitted(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyIgnoreUncommitted)
 }
 
 func RemoveMainBranch(runner subshelldomain.Runner) error {
@@ -239,24 +243,28 @@ func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToke
 	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
-func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitHubConnectorType, value.String())
-}
-
-func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
-}
-
-func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitLabConnectorType, value.String())
-}
-
-func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyGitLabToken, value.String())
-}
-
 func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
+}
+
+func SetGithubConnectorType(runner subshelldomain.Runner, value forgedomain.GithubConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGithubConnectorType, value.String())
+}
+
+func SetGithubToken(runner subshelldomain.Runner, value forgedomain.GithubToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGithubToken, value.String())
+}
+
+func SetGitlabConnectorType(runner subshelldomain.Runner, value forgedomain.GitlabConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitlabConnectorType, value.String())
+}
+
+func SetGitlabToken(runner subshelldomain.Runner, value forgedomain.GitlabToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitlabToken, value.String())
+}
+
+func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
 }
 
 func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {

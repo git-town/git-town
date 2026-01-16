@@ -1,3 +1,4 @@
+.claude/*.local.*
 dist/
 git-town.exe
 git-town_*
@@ -5,7 +6,10 @@ go.work.sum
 node_modules/
 rta.exe
 tools/alphavet*
+tools/collector_addf/collector_addf*
 tools/depth*
+tools/generate_json_schema/generate_json_schema
+tools/generate_json_schema/generate_json_schema.exe
 tools/gofumpt*
 tools/golangci_lint*
 tools/iterate_map/iterate_map*

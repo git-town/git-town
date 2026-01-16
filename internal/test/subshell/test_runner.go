@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/subshell"
 	"github.com/git-town/git-town/v22/internal/test/envvars"
@@ -32,9 +31,6 @@ type TestRunner struct {
 
 	// the directory that contains the global Git configuration
 	HomeDir string
-
-	// content of the GIT_TOWN_TEST_PROPOSAL environment variable
-	ProposalOverride Option[string]
 
 	// whether to log the output of subshell commands
 	Verbose configdomain.Verbose
@@ -104,19 +100,18 @@ func (self *TestRunner) MustQuery(name string, arguments ...string) string {
 	return self.MustQueryWith(&Options{}, name, arguments...)
 }
 
-func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exitCode int) {
+func (self *TestRunner) MustQueryStringCode(fullCmd string) RunResult {
 	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) {
+func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult {
 	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
-	output, exitCode = asserts.NoError2(self.QueryWithCode(opts, cmd, args...))
-	return output, exitCode
+	return asserts.NoError1(self.QueryWithCode(opts, cmd, args...))
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
@@ -159,15 +154,16 @@ func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, err
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
 func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
-	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
-	if exitCode != 0 {
-		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)
+	runResult, err := self.QueryWithCode(opts, cmd, args...)
+	if runResult.ExitCode != 0 {
+		err = fmt.Errorf("process \"%s %s\" failed with code %d.\nOUTPUT START\n%s\nOUTPUT END", cmd, strings.Join(args, " "), runResult.ExitCode, runResult.Output)
 	}
-	return output, err
+	return runResult.Output, err
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
+func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (RunResult, error) {
+	emptyResult := RunResult{ExitCode: 0, Output: ""}
 	currentBranchText := ""
 	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -185,9 +181,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	// add the custom origin
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
-	}
-	if proposalOverride, hasProposalOverride := self.ProposalOverride.Get(); hasProposalOverride {
-		opts.Env = envvars.Replace(opts.Env, forgedomain.OverrideKey, proposalOverride)
 	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {
@@ -210,29 +203,31 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
 	subProcess.Stderr = &outputBuf
+	var err error
 	if input, hasInput := opts.Input.Get(); hasInput {
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
 		if err != nil {
-			return "", 0, fmt.Errorf("cannot create stdin pipe: %w", err)
+			return emptyResult, fmt.Errorf("cannot create stdin pipe: %w", err)
 		}
 		if err = subProcess.Start(); err != nil {
-			return "", 0, fmt.Errorf("cannot start command: %w", err)
+			return emptyResult, fmt.Errorf("cannot start command: %w", err)
 		}
 		_, err = stdin.Write([]byte(input))
 		if err != nil {
-			return "", 0, fmt.Errorf("cannot write to stdin: %w", err)
+			return emptyResult, fmt.Errorf("cannot write to stdin: %w", err)
 		}
 		if err = stdin.Close(); err != nil {
-			return "", 0, fmt.Errorf("cannot close stdin pipe: %w", err)
+			return emptyResult, fmt.Errorf("cannot close stdin pipe: %w", err)
 		}
 		if err = subProcess.Wait(); err != nil {
 			fmt.Println("cannot wait for command to finish:", err)
-			return
+			return emptyResult, err
 		}
 	} else {
 		err = subProcess.Run()
 	}
+	exitCode := 0
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -249,10 +244,16 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
+	var output string
 	if opts.IgnoreOutput {
-		return "", exitCode, err
+		output = ""
+	} else {
+		output = strings.TrimRight(outputBuf.String(), "\n")
 	}
-	return strings.TrimRight(outputBuf.String(), "\n"), exitCode, err
+	return RunResult{
+		ExitCode: exitCode,
+		Output:   output,
+	}, err
 }
 
 // Run runs the given command with the given arguments.
@@ -265,11 +266,6 @@ func (self *TestRunner) Run(name string, arguments ...string) error {
 func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
 	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
 	return err
-}
-
-// SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (self *TestRunner) SetProposalOverride(content string) {
-	self.ProposalOverride = Some(content)
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
@@ -311,4 +307,9 @@ type Options struct {
 
 	// input to pipe into STDIN
 	Input Option[string] `exhaustruct:"optional"`
+}
+
+type RunResult struct {
+	ExitCode int
+	Output   string
 }

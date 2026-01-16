@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/test/datatable"
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/subshell"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -49,6 +50,9 @@ type ScenarioState struct {
 	// commits that existed at the origin repo before the end-to-end test executed the first subshell command
 	initialOriginSHAs Option[gitdomain.Commits]
 
+	// the proposals defined in the setup step
+	initialProposals Option[string]
+
 	// the Git tags before the end-to-end test executed the first subshell command
 	initialTags Option[datatable.DataTable]
 
@@ -58,14 +62,14 @@ type ScenarioState struct {
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
-	// the error of the last run of Git Town
-	runExitCode Option[int]
+	// whether this scenario verifies the proposals it has defined
+	proposalsChecked bool
 
 	// indicates whether the scenario has verified the error
 	runExitCodeChecked bool
 
-	// the output of the last run of Git Town
-	runOutput Option[string]
+	// the result of the last run of Git Town
+	runResult Option[subshell.RunResult]
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent Option[string]

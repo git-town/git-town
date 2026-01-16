@@ -30,11 +30,11 @@ Feature: shipped parent of a stacked change with independent changes
       |           | git push                                          |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And Git Town prints:
       """
-      deleted branch "feature-2"
+      deleted branch feature-2
       """
     And this lineage exists now
       """

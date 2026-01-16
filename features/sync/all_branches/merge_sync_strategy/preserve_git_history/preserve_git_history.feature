@@ -21,8 +21,8 @@ Feature: preserve the previous Git branch
     And there is now no previous Git branch
 
   Scenario: both branches deleted
-    Given origin deletes the "previous" branch
-    And origin deletes the "current" branch
+    Given origin deletes the "current" branch
+    And origin deletes the "previous" branch
     When I run "git-town sync --all"
     Then the current branch is now "main"
     And there is now no previous Git branch

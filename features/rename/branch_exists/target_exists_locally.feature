@@ -19,7 +19,7 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "beta"
+      there is already a branch beta
       """
     And the initial branches and lineage exist now
 
@@ -39,6 +39,6 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "beta" at the "origin" remote
+      there is already a branch beta at the origin remote
       """
     And the initial branches and lineage exist now

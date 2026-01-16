@@ -15,7 +15,7 @@ Feature: swapping a branch with its observed parent
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "parent" is a observed branch
+      cannot swap: branch parent is a observed branch
       """
   #
   # NOTE: Cannot test undo here.

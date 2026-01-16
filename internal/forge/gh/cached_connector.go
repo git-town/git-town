@@ -63,7 +63,7 @@ func (self *CachedConnector) FindProposal(source, target gitdomain.LocalBranchNa
 var _ forgedomain.ProposalSearcher = &cachedConnector // type-check
 
 func (self *CachedConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedSearchResult, has := self.Cache.LookupSearch(source); has {
+	if cachedSearchResult, has := self.Cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
 	}
 	loadedSearchResult, err := self.Connector.SearchProposals(source)
@@ -79,8 +79,8 @@ func (self *CachedConnector) SearchProposals(source gitdomain.LocalBranchName) (
 
 var _ forgedomain.ProposalMerger = &cachedConnector // type-check
 
-func (self *CachedConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	self.Cache.Clear()
+func (self *CachedConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+	self.Cache.Clear(number)
 	return self.Connector.SquashMergeProposal(number, message)
 }
 
@@ -91,7 +91,7 @@ func (self *CachedConnector) SquashMergeProposal(number int, message gitdomain.C
 var _ forgedomain.ProposalBodyUpdater = &cachedConnector // type-check
 
 func (self *CachedConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
-	self.Cache.Clear()
+	self.Cache.Clear(proposalData.Data().Number)
 	return self.Connector.UpdateProposalBody(proposalData, updatedBody)
 }
 
@@ -102,7 +102,7 @@ func (self *CachedConnector) UpdateProposalBody(proposalData forgedomain.Proposa
 var _ forgedomain.ProposalTargetUpdater = &cachedConnector // type-check
 
 func (self *CachedConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	self.Cache.Clear()
+	self.Cache.Clear(proposalData.Data().Number)
 	return self.Connector.UpdateProposalTarget(proposalData, target)
 }
 

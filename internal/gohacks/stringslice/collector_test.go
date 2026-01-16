@@ -10,6 +10,47 @@ import (
 func TestCollector(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Addf", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("adds formatted strings", func(t *testing.T) {
+			t.Parallel()
+			collector := stringslice.NewCollector()
+			collector.Addf("Hello, %s!", "world")
+			must.Eq(t, []string{"Hello, world!"}, collector.Result())
+		})
+
+		t.Run("multiple arguments and types", func(t *testing.T) {
+			t.Parallel()
+			collector := stringslice.NewCollector()
+			collector.Addf("String: %s, Int: %d, Float: %.2f", "test", 42, 3.14159)
+			must.Eq(t, []string{"String: test, Int: 42, Float: 3.14"}, collector.Result())
+		})
+
+		t.Run("empty format string", func(t *testing.T) {
+			t.Parallel()
+			collector := stringslice.NewCollector()
+			collector.Addf("")
+			must.Eq(t, []string{""}, collector.Result())
+		})
+
+		t.Run("no arguments", func(t *testing.T) {
+			t.Parallel()
+			collector := stringslice.NewCollector()
+			collector.Addf("plain text")
+			must.Eq(t, []string{"plain text"}, collector.Result())
+		})
+
+		t.Run("chaining with Add", func(t *testing.T) {
+			t.Parallel()
+			collector := stringslice.NewCollector()
+			collector.Add("first")
+			collector.Addf("second: %s", "value")
+			collector.Add("third")
+			must.Eq(t, []string{"first", "second: value", "third"}, collector.Result())
+		})
+	})
+
 	t.Run("owned variable", func(t *testing.T) {
 		t.Parallel()
 		collector := stringslice.NewCollector()

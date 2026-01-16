@@ -2,28 +2,29 @@ Feature: display invalid Git metadata
 
   Scenario: invalid sync-feature-strategy
     Given a Git repo with origin
+    And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.branch-prefix" is ""
+    And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.detached" is "zonk"
     And local Git setting "git-town.feature-regex" is "(feat"
+    And local Git setting "git-town.ignore-uncommitted" is "zonk"
+    And local Git setting "git-town.new-branch-type" is "zonk"
+    And local Git setting "git-town.observed-regex" is "(obs"
+    And local Git setting "git-town.order" is "zonk"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposals-show-lineage" is "zonk"
-    And local Git setting "git-town.contribution-regex" is "(cont"
-    And local Git setting "git-town.observed-regex" is "(obs"
-    And local Git setting "git-town.new-branch-type" is "zonk"
-    And local Git setting "git-town.unknown-branch-type" is "zonk"
+    And local Git setting "git-town.push-branches" is "zonk"
+    And local Git setting "git-town.push-hook" is "zonk"
+    And local Git setting "git-town.share-new-branches" is "zonk"
+    And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
+    And local Git setting "git-town.ship-strategy" is "zonk"
+    And local Git setting "git-town.stash" is "zonk"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     And local Git setting "git-town.sync-perennial-strategy" is "zonk"
     And local Git setting "git-town.sync-prototype-strategy" is "zonk"
-    And local Git setting "git-town.sync-upstream" is "zonk"
-    And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.sync-tags" is "zonk"
-    And local Git setting "git-town.detached" is "zonk"
-    And local Git setting "git-town.stash" is "zonk"
-    And local Git setting "git-town.share-new-branches" is "zonk"
-    And local Git setting "git-town.push-branches" is "zonk"
-    And local Git setting "git-town.push-hook" is "zonk"
-    And local Git setting "git-town.ship-strategy" is "zonk"
-    And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
-    And local Git setting "git-town.order" is "zonk"
+    And local Git setting "git-town.sync-upstream" is "zonk"
+    And local Git setting "git-town.unknown-branch-type" is "zonk"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -31,6 +32,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.contribution-regex": "(cont"
       Ignoring invalid value for "git-town.detached": "zonk"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
+      Ignoring invalid value for "git-town.ignore-uncommitted": "zonk"
       Ignoring invalid value for "git-town.new-branch-type": "zonk"
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
@@ -84,9 +86,9 @@ Feature: display invalid Git metadata
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -94,6 +96,7 @@ Feature: display invalid Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

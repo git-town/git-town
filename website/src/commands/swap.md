@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town swap [--auto-resolve] [--dry-run] [-h | --help] [-v | --verbose]
+git town swap [--(no)-auto-resolve] [--dry-run] [-h | --help] [-v | --verbose]
 ```
 
 The _swap_ command switches the position of the current branch with the branch
@@ -49,7 +49,7 @@ be owned by you, i.e. you cannot swap
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).

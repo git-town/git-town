@@ -14,10 +14,10 @@ type shipDataMerge struct {
 	remotes gitdomain.Remotes
 }
 
-func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.LocalBranchName) (result shipDataMerge, err error) {
+func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.LocalBranchName) (shipDataMerge, error) {
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return result, err
+		return shipDataMerge{}, err
 	}
 	branchAuthors, err := repo.Git.BranchAuthors(repo.Backend, branch, parent)
 	return shipDataMerge{
@@ -28,7 +28,7 @@ func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.Lo
 
 func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {
 	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchToShip, Parent: sharedData.targetBranchName})
-	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
+	localTargetBranch, _ := sharedData.targetBranch.LocalName().Get()
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
@@ -37,7 +37,9 @@ func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepo
 	}
 	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
 	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
+		if trackingBranch, hasTrackingBranch := sharedData.targetBranch.RemoteName.Get(); hasTrackingBranch {
+			prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName, TrackingBranch: trackingBranch})
+		}
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShipInfo.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.NormalConfig.Offline.IsOnline() {

@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const switchDesc = "Display the local branches visually and allows switching between them"
+const switchDesc = "Switch branches visually"
 
 func switchCmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
@@ -35,7 +35,7 @@ func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
-		GroupID: cmdhelpers.GroupIDBasic,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
@@ -51,15 +51,16 @@ func switchCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: displayTypes,
-				DryRun:       None[configdomain.DryRun](),
-				Order:        order,
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        stash,
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             order,
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             stash,
+				Verbose:           verbose,
 			})
 			return executeSwitch(executeSwitchArgs{
 				allBranches: allBranches,
@@ -194,11 +195,12 @@ func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdom
 	return cmp.Or(errCheckout, errPop)
 }
 
-func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, flow configdomain.ProgramFlow, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult switchData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -218,20 +220,20 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	regexes, err := regexes.NewRegexes(args)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
 		branchesSnapshot:   branchesSnapshot,

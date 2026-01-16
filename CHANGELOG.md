@@ -1,5 +1,58 @@
 # Git Town Changelog
 
+## 22.5.0 (unreleased)
+
+- The Git Town CLI can now embed branch lineage directly into proposals. This feature is in preview. To enable it, configure proposals-show-lineage to `cli`.
+
+## 22.4.0 (2025-12-24)
+
+#### New Features
+
+- `sync` now has a `--gone` flag to only sync (i.e. remove) branches that have already been shipped or deleted on the remote. This provides a low-risk way to clean up obsolete local branches without configuring branch types or touching anything active ([#5845](https://github.com/git-town/git-town/issues/5845)).
+- `ship` can now ignore uncommitted changes via the new [ignore-uncommitted](https://www.git-town.com/preferences/ignore-uncommitted.html) configuration setting, making it easier to ship in messy working directories when you know what you're doing ([#5837](https://github.com/git-town/git-town/issues/5837)).
+- `propose --stack` now supports skipping branches where proposal creation fails instead of aborting by running [git town skip](https://www.git-town.com/commands/skip.html) ([#5869](https://github.com/git-town/git-town/issues/5869)).
+- `config --redact` now also obfuscates the configured user email in addition to other sensitive values ([#5850](https://github.com/git-town/git-town/pull/5850)).
+
+#### Bug Fixes
+
+- Improved handling of branches that exist across multiple Git remotes ([#5838](https://github.com/git-town/git-town/discussions/5838)).
+- `propose --stack` now skips branches where proposal creation failed but the proposal exists anyways ([#5865](https://github.com/git-town/git-town/issues/5865)).
+- `init` now correctly persists connector types to the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
+- `sync --all` now switches to a branch that is available in the worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
+
+#### Contributors
+
+Shoutout to @degauden, @kevgo, @meowsus, @pcfreak30, @stephenwade for contributing code, feedback, and ideas to 62 shipped pull requests and 7 resolved issues!
+
+## 22.3.0 (2025-12-13)
+
+#### New Features
+
+- All Git Town commands now also show the negated forms of CLI flags in their help output, making it clearer how to disable options ([#5814](https://github.com/git-town/git-town/issues/5814)).
+- Added a new [branch-prefix](https://www.git-town.com/preferences/branch-prefix.html) config setting that automatically prepends a prefix to branches created by Git Town ([#5677](https://github.com/git-town/git-town/issues/5677)).
+- `git town skip` gained a `--park` flag to permanently skip this branch ([#5839](https://github.com/git-town/git-town/issues/5839)).
+- `git town config` now supports a `--redact` flag that obfuscates sensitive configuration data like access tokens, making it safer to share configuration in bug reports ([#5831](https://github.com/git-town/git-town/pull/5831)).
+- `git town switch` gained a `--stash` flag to explicitly disable stashing uncommitted changes ([#5778](https://github.com/git-town/git-town/issues/5778)).
+- You can now configure which browser Git Town opens via the new [browser](https://www.git-town.com/preferences/browser.html) config setting. Previously this was only configurable through the `BROWSER` environment variable ([#5818](https://github.com/git-town/git-town/pull/5818)).
+- A JSON Schema for the Git Town config file is now published on [schemastore.org](https://www.schemastore.org), enabling validation and editor autocompletion ([#5703](https://github.com/git-town/git-town/issues/5703)).
+
+#### Bug Fixes
+
+- Git Town now retries backend Git commands that fail due to concurrent Git usage (for example when your IDE races the CLI) ([#5816](https://github.com/git-town/git-town/pull/5816)).
+- The setup assistant no longer deletes advanced configuration when running a quick setup ([#5802](https://github.com/git-town/git-town/pull/5802)).
+- The setup assistant now reliably writes all config values to the config file ([#5803](https://github.com/git-town/git-town/pull/5803)).
+- `git town sync` now switches to a local branch available in the current worktree before deleting the current branch ([#5797](https://github.com/git-town/git-town/issues/5797)).
+- `git town sync` avoids phantom merge conflicts by no longer syncing with tracking branches of ancestors if their local branch is unavailable in the current worktree ([#5791](https://github.com/git-town/git-town/issues/5791)).
+- `git town hack --beam` now works correctly with worktrees and branches without an ancestor ([#5690](https://github.com/git-town/git-town/issues/5690)).
+- `git town sync --prune` no longer crashes when the current branch has already been shipped at the remote ([#5704](https://github.com/git-town/git-town/issues/5704))
+- `git town walk` now skips branches that aren't available in the current worktree ([#5714](https://github.com/git-town/git-town/issues/5714)).
+- `git town propose` now only opens proposals that are still active ([#5745](https://github.com/git-town/git-town/issues/5745)).
+- The `share-new-branches` config setting now accepts a wider range of values ([#5719](https://github.com/git-town/git-town/pull/5719)).
+
+#### Contributors
+
+Huge thanks to @erik-rw, @j2fw, @james-harlyy, @kevgo, @lukeramsden, @meowsus, @ruudk, @stephenwade, @yaadata for contributing code, ideas, and feedback to 130 merged pull requests and 19 resolved issues!
+
 ## 22.2.0 (2025-10-31)
 
 #### New Features

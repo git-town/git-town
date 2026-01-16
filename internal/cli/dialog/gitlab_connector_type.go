@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	gitLabConnectorTypeTitle = `GitLab connector type`
-	gitLabConnectorTypeHelp  = `
+	gitlabConnectorTypeTitle = `GitLab connector`
+	gitlabConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitLab:
 
 1. GitLab API:
@@ -28,26 +28,26 @@ Git Town supports two ways to connect to GitLab:
 `
 )
 
-func GitLabConnectorType(args Args[forgedomain.GitLabConnectorType]) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.GitLabConnectorType]]{}
+func GitlabConnectorType(args Args[forgedomain.GitlabConnectorType]) (Option[forgedomain.GitlabConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GitlabConnectorType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.GitLabConnectorType]]{
-			Data: None[forgedomain.GitLabConnectorType](),
+		entries = append(entries, list.Entry[Option[forgedomain.GitlabConnectorType]]{
+			Data: None[forgedomain.GitlabConnectorType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[forgedomain.GitLabConnectorType]]{
+	entries = append(entries, list.Entries[Option[forgedomain.GitlabConnectorType]]{
 		{
-			Data: Some(forgedomain.GitLabConnectorTypeAPI),
+			Data: Some(forgedomain.GitlabConnectorTypeAPI),
 			Text: "API token",
 		},
 		{
-			Data: Some(forgedomain.GitLabConnectorTypeGlab),
+			Data: Some(forgedomain.GitlabConnectorTypeGlab),
 			Text: "glab tool",
 		},
 	}...)
 	cursor := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, args.Inputs, "gitlab-connector-type")
-	fmt.Printf(messages.GitLabConnectorTypeResult, dialogcomponents.FormattedSelection(selection.GetOrZero().String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitlabConnectorTypeTitle, gitlabConnectorTypeHelp, args.Inputs, "gitlab-connector")
+	fmt.Printf(messages.GitlabConnectorTypeResult, dialogcomponents.FormattedSelection(selection.GetOrZero().String(), exit))
 	return selection, exit, err
 }

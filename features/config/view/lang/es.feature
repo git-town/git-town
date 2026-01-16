@@ -14,11 +14,11 @@ Feature: show the configuration in Spanish
       | perennial-2    | perennial    |        | local         |
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
+    And Git setting "git-town.contribution-regex" is "^renovate/"
+    And Git setting "git-town.feature-regex" is "^user-.*$"
+    And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
-    And Git setting "git-town.contribution-regex" is "^renovate/"
-    And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config" with these environment variables
@@ -62,9 +62,9 @@ Feature: show the configuration in Spanish
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -72,6 +72,7 @@ Feature: show the configuration in Spanish
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:

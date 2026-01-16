@@ -47,15 +47,16 @@ func prototypeCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executePrototype(args, cliConfig)
 		},
@@ -99,9 +100,9 @@ func executePrototype(args []string, cliConfig configdomain.PartialConfig) error
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "prototype",
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
@@ -128,18 +129,18 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if branchesSnapshot.DetachedHead {
 		return prototypeData{}, errors.New(messages.PrototypeDetachedHead)
 	}
-	branchesToPrototype, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToPrototype, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return prototypeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
-		branchesToPrototype: branchesToPrototype,
-		checkout:            branchToCheckout,
+		branchesToPrototype: branchesToPrototype.BranchesToMark,
+		checkout:            branchesToPrototype.BranchToCheckout,
 	}, err
 }
 
 func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPrototype) {
-		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {
@@ -148,7 +149,7 @@ func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) erro
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotPrototype)
 		case configdomain.BranchTypePrototypeBranch:
-			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyPrototype, branchName))
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyPrototype, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,

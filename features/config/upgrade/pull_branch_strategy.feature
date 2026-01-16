@@ -6,10 +6,10 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town <COMMAND>"
     Then Git Town prints:
       """
-      Upgrading deprecated <LOCATION> setting "git-town.pull-branch-strategy" to "git-town.sync-perennial-strategy".
+      Upgrading deprecated <LOCATION> setting git-town.pull-branch-strategy to git-town.sync-perennial-strategy.
       """
-    And <LOCATION> Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And <LOCATION> Git setting "git-town.pull-branch-strategy" now doesn't exist
+    And <LOCATION> Git setting "git-town.sync-perennial-strategy" is now "rebase"
 
     Examples:
       | COMMAND | LOCATION |

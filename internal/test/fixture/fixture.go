@@ -64,11 +64,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 	devRepo := self.DevRepo.GetOrPanic()
 	devRepo.AddWorktree(workTreePath, branch)
 	runner := subshell.TestRunner{
-		BinDir:           devRepo.BinDir,
-		HomeDir:          devRepo.HomeDir,
-		ProposalOverride: None[string](),
-		Verbose:          devRepo.Verbose,
-		WorkingDir:       workTreePath,
+		BinDir:     devRepo.BinDir,
+		HomeDir:    devRepo.HomeDir,
+		Verbose:    devRepo.Verbose,
+		WorkingDir: workTreePath,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
@@ -106,15 +105,15 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches, _ := asserts.NoError2(self.DevRepo.GetOrPanic().LocalBranches())
-	localBranchesJoined := localBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	localBranches := asserts.NoError1(self.DevRepo.GetOrPanic().LocalBranches())
+	localBranchesJoined := localBranches.AllBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()
 	if !hasOriginRepo {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, _ := asserts.NoError2(originRepo.LocalBranches())
-	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originBranches := asserts.NoError1(originRepo.LocalBranches())
+	originBranchesJoined := originBranches.AllBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, "+originName, localBranchesJoined)
@@ -199,6 +198,13 @@ func (self *Fixture) CreateTags(table *godog.Table) {
 
 func (self *Fixture) Delete() {
 	os.RemoveAll(self.Dir)
+}
+
+// RepoConfigDir provides the full path to the user configuration directory
+func (self *Fixture) RepoConfigDir() configdomain.RepoConfigDir {
+	userConfigDir := configdomain.UserConfigDir(filepath.Join(self.Dir, ".config"))
+	repoRootDir := gitdomain.NewRepoRootDir(self.DevRepo.GetOrPanic().WorkingDir)
+	return userConfigDir.RepoConfigDir(repoRootDir)
 }
 
 // TagTable provides a table for all tags in this Git environment.

@@ -11,7 +11,6 @@ Feature: cannot ship a local branch via API
       | feature | local    | feature commit |
     And Git setting "git-town.ship-strategy" is "api"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     When I run "git-town ship -m done"
 
   Scenario: result
@@ -20,7 +19,7 @@ Feature: cannot ship a local branch via API
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot ship branch "feature" via API because it has no remote branch
+      cannot ship branch feature via API because it has no remote branch
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

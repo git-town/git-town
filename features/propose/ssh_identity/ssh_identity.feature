@@ -9,14 +9,13 @@ Feature: use a SSH identity
       | feature | feature | main   | local, origin |
     And Git setting "git-town.hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | Looking for proposal online ... ok |
-      |         | open <PROPOSAL_URL>                |
+      | BRANCH  | COMMAND                                          |
+      | feature | git fetch --prune --tags                         |
+      |         | Finding proposal from feature into main ... none |
+      |         | open <PROPOSAL_URL>                              |
 
     Examples:
       | ORIGIN_HOSTNAME | PROPOSAL_URL                                                                                                                             |

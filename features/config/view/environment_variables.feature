@@ -10,7 +10,7 @@ Feature: display configuration defined in environment variables
       | observed-2     | observed     |        | local, origin |
     And Git Town is not configured
 
-  Scenario: all configured in Git, no stacked changes
+  Scenario: all configured in env vars, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_AUTO_SYNC                   | false              |
@@ -26,10 +26,11 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_FEATURE_REGEX               | ^user-.*$          |
       | GIT_TOWN_FORGE_TYPE                  | gitlab             |
       | GIT_TOWN_GITEA_TOKEN                 | gitea-token        |
-      | GIT_TOWN_GITHUB_CONNECTOR_TYPE       | gh                 |
+      | GIT_TOWN_GITHUB_CONNECTOR            | gh                 |
       | GIT_TOWN_GITHUB_TOKEN                | github-token       |
-      | GIT_TOWN_GITLAB_CONNECTOR_TYPE       | glab               |
+      | GIT_TOWN_GITLAB_CONNECTOR            | glab               |
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
+      | GIT_TOWN_IGNORE_UNCOMMITTED          | true               |
       | GIT_TOWN_MAIN_BRANCH                 | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
@@ -88,9 +89,9 @@ Feature: display configuration defined in environment variables
         Bitbucket app password: bitbucket-password
         Forgejo token: forgejo-token
         Gitea token: gitea-token
-        GitHub connector type: gh
+        GitHub connector: gh
         GitHub token: github-token
-        GitLab connector type: glab
+        GitLab connector: glab
         GitLab token: gitlab-token
 
       Propose:
@@ -98,6 +99,7 @@ Feature: display configuration defined in environment variables
 
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: yes
         ship strategy: fast-forward
 
       Sync:

@@ -14,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/subshell"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -82,11 +81,10 @@ func InitializeNoInitialCommit(workingDir, homeDir, binDir string) commands.Test
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	testRunner := subshell.TestRunner{
-		BinDir:           binDir,
-		HomeDir:          homeDir,
-		ProposalOverride: None[string](),
-		Verbose:          false,
-		WorkingDir:       workingDir,
+		BinDir:     binDir,
+		HomeDir:    homeDir,
+		Verbose:    false,
+		WorkingDir: workingDir,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},

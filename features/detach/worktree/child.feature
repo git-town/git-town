@@ -33,7 +33,7 @@ Feature: detaching a branch whose child is checked out in another worktree
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach because branch "branch-3" it is active in another worktree
+      cannot detach because branch branch-3 it is active in another worktree
       """
   #
   # NOTE: Cannot test undo here.

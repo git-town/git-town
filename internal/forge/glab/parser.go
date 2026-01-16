@@ -63,12 +63,12 @@ func createProposal(data jsonData) forgedomain.Proposal {
 			Active:       data.State == "open",
 			Body:         NewOption(data.Description),
 			MergeWithAPI: data.Mergeable == "mergeable",
-			Number:       data.Number,
+			Number:       forgedomain.ProposalNumber(data.Number),
 			Source:       data.SourceBranch,
 			Target:       data.TargetBranch,
 			Title:        data.Title,
 			URL:          data.URL,
 		},
-		ForgeType: forgedomain.ForgeTypeGitLab,
+		ForgeType: forgedomain.ForgeTypeGitlab,
 	}
 }

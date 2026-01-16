@@ -194,13 +194,13 @@ func TestFixture(t *testing.T) {
 		// create the origin branch
 		cloned.OriginRepo.GetOrPanic().CreateBranch("b1", "main")
 		// verify it is in the origin branches
-		branches, _, err := cloned.OriginRepo.GetOrPanic().LocalBranchesMainFirst("main")
+		branches, err := cloned.OriginRepo.GetOrPanic().LocalBranchesMainFirst("main")
 		must.NoError(t, err)
-		must.SliceContains(t, branches.Strings(), "b1")
+		must.SliceContains(t, branches.AllBranches.Strings(), "b1")
 		// verify it isn't in the local branches
-		branches, _, err = cloned.DevRepo.GetOrPanic().LocalBranchesMainFirst("main")
+		branches, err = cloned.DevRepo.GetOrPanic().LocalBranchesMainFirst("main")
 		must.NoError(t, err)
-		must.SliceNotContains(t, branches.Strings(), "b1")
+		must.SliceNotContains(t, branches.AllBranches.Strings(), "b1")
 	})
 }
 

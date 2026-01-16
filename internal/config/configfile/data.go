@@ -8,7 +8,7 @@ type Data struct {
 	Hosting                  *Hosting      `toml:"hosting"`
 	Propose                  *Propose      `toml:"propose"`
 	PushHook                 *bool         `toml:"push-hook"`
-	PushNewbranches          *bool         `toml:"push-new-branches"`
+	PushNewBranches          *bool         `toml:"push-new-branches"`
 	Ship                     *Ship         `toml:"ship"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-tracking-branch"`
 	ShipStrategy             *string       `toml:"ship-strategy"`
@@ -38,19 +38,19 @@ func (self Branches) IsEmpty() bool {
 type Create struct {
 	BranchPrefix     *string `toml:"branch-prefix"`
 	NewBranchType    *string `toml:"new-branch-type"`
-	PushNewbranches  *bool   `toml:"push-new-branches"`
+	PushNewBranches  *bool   `toml:"push-new-branches"`
 	ShareNewBranches *string `toml:"share-new-branches"`
 	Stash            *bool   `toml:"stash"`
 }
 
 type Hosting struct {
-	Browser             *string `toml:"browser"`
-	DevRemote           *string `toml:"dev-remote"`
-	ForgeType           *string `toml:"forge-type"`
-	GitHubConnectorType *string `toml:"github-connector"`
-	GitLabConnectorType *string `toml:"gitlab-connector"`
-	OriginHostname      *string `toml:"origin-hostname"`
-	Platform            *string `toml:"platform"`
+	Browser         *string `toml:"browser"`
+	DevRemote       *string `toml:"dev-remote"`
+	ForgeType       *string `toml:"forge-type"`
+	GithubConnector *string `toml:"github-connector"`
+	GitlabConnector *string `toml:"gitlab-connector"`
+	OriginHostname  *string `toml:"origin-hostname"`
+	Platform        *string `toml:"platform"`
 }
 
 func (self Hosting) IsEmpty() bool {
@@ -63,6 +63,7 @@ type Propose struct {
 
 type Ship struct {
 	DeleteTrackingBranch *bool   `toml:"delete-tracking-branch"`
+	IgnoreUncommitted    *bool   `toml:"ignore-uncommitted"`
 	Strategy             *string `toml:"strategy"`
 }
 

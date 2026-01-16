@@ -33,10 +33,11 @@ func branchCmd() *cobra.Command {
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "branch",
-		Args:  cobra.NoArgs,
-		Short: branchDesc,
-		Long:  cmdhelpers.Long(branchDesc, branchHelp),
+		Use:     "branch",
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDNavigation,
+		Short:   branchDesc,
+		Long:    cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
@@ -45,15 +46,16 @@ func branchCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: displayTypes,
-				DryRun:       None[configdomain.DryRun](),
-				Order:        order,
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             order,
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeBranch(cliConfig)
 		},
@@ -104,11 +106,12 @@ Start:
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow configdomain.ProgramFlow, err error) {
+func determineBranchData(repo execute.OpenRepoResult) (branchData, configdomain.ProgramFlow, error) {
+	var emptyResult branchData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -128,12 +131,12 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow con
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	initialBranchOpt := branchesSnapshot.Active
 	if branchesSnapshot.DetachedHead {

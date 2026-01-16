@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
@@ -144,11 +145,20 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 		if currentDirectory != rootDir.String() {
 			err = gitCommands.ChangeDir(rootDir)
+			if err != nil {
+				return emptyOpenRepoResult(), err
+			}
 		}
 	}
+	userConfigDir, err := cli.SystemUserConfigDir()
+	if err != nil {
+		return emptyOpenRepoResult(), fmt.Errorf(messages.ConfigDirUserCannotDetermine, err)
+	}
+	repoConfigDir := userConfigDir.RepoConfigDir(rootDir)
 	return OpenRepoResult{
 		Backend:           backendRunner,
 		CommandsCounter:   commandsCounter,
+		ConfigDir:         repoConfigDir,
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,
@@ -156,21 +166,22 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
 		UnvalidatedConfig: unvalidatedConfig,
-	}, err
+	}, nil
 }
 
 type OpenRepoArgs struct {
 	CliConfig        configdomain.PartialConfig
-	IgnoreUnknown    bool
-	PrintBranchNames bool
-	PrintCommands    bool
-	ValidateGitRepo  bool
-	ValidateIsOnline bool
+	IgnoreUnknown    bool // whether to ignore unknown configuration values
+	PrintBranchNames bool // whether Git Town output should contain branch names
+	PrintCommands    bool // whether Git Town output should list Git commands that Git Town executes
+	ValidateGitRepo  bool // whether to ensure whether the current directory is a Git repository
+	ValidateIsOnline bool // whether this Git Town command requires an online connection
 }
 
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
+	ConfigDir         configdomain.RepoConfigDir
 	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner

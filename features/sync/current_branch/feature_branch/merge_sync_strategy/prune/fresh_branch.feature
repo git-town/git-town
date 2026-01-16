@@ -13,8 +13,7 @@ Feature: prune a freshly created branch
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
       |         | git checkout main        |
-      | main    | git push origin :feature |
-      |         | git branch -D feature    |
+      | main    | git branch -D feature    |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |

@@ -7,7 +7,6 @@ Feature: self-hosted service
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
 
   Scenario Outline: self hosted
     Given the origin is "git@self-hosted:git-town/git-town.git"
@@ -15,10 +14,10 @@ Feature: self-hosted service
     And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | Looking for proposal online ... ok |
-      |         | open <PROPOSAL_URL>                |
+      | BRANCH  | COMMAND                                          |
+      | feature | git fetch --prune --tags                         |
+      |         | Finding proposal from feature into main ... none |
+      |         | open <PROPOSAL_URL>                              |
 
     Examples:
       | PLATFORM  | PROPOSAL_URL                                                                                                                              |
@@ -36,5 +35,5 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                              |
       | feature | git fetch --prune --tags                                                                                                             |
-      |         | Looking for proposal online ... ok                                                                                                   |
+      |         | Finding proposal from feature into main ... none                                                                                     |
       |         | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |

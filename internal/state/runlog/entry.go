@@ -21,10 +21,10 @@ type Entry struct {
 func NewEntry(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
 	branches := map[gitdomain.BranchName]gitdomain.SHA{}
 	for _, branchInfo := range branchInfos {
-		if hasLocalBranch, localName, localSHA := branchInfo.GetLocal(); hasLocalBranch {
-			branches[localName.BranchName()] = localSHA
+		if local, hasLocal := branchInfo.Local.Get(); hasLocal {
+			branches[local.Name.BranchName()] = local.SHA
 		}
-		if hasRemoteBranch, remoteName, remoteSHA := branchInfo.GetRemoteBranch(); hasRemoteBranch {
+		if hasRemoteBranch, remoteName, remoteSHA := branchInfo.GetRemote(); hasRemoteBranch {
 			branches[remoteName.BranchName()] = remoteSHA
 		}
 	}

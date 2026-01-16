@@ -10,20 +10,22 @@ import (
 )
 
 // BranchesToMark provides the branches to make contribution, observed, parked, or prototype.
-func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config UnvalidatedConfig) (branchesToMark configdomain.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
-	branchesToMark = configdomain.BranchesAndTypes{}
+func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config UnvalidatedConfig) (BranchesToMarkResult, error) {
+	branchesToMark := configdomain.BranchesAndTypes{}
+	var branchToCheckout Option[gitdomain.LocalBranchName]
+	var emptyResult BranchesToMarkResult
 	switch len(args) {
 	case 0:
 		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 		if !hasCurrentBranch {
-			return branchesToMark, branchToCheckout, errors.New(messages.CurrentBranchCannotDetermine)
+			return emptyResult, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		branchesToMark.AddTypeFor(currentBranch, &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToMark.AddTypeFor(branch, &config)
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch(config.NormalConfig.DevRemote)).Get()
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindRemoteNameMatchingLocal(branch).Get()
 		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
 		} else {
@@ -33,5 +35,13 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	}
-	return branchesToMark, branchToCheckout, nil
+	return BranchesToMarkResult{
+		BranchToCheckout: branchToCheckout,
+		BranchesToMark:   branchesToMark,
+	}, nil
+}
+
+type BranchesToMarkResult struct {
+	BranchToCheckout Option[gitdomain.LocalBranchName]
+	BranchesToMark   configdomain.BranchesAndTypes
 }

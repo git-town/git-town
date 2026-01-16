@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/git-town/git-town/v22/internal/cli"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -13,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -37,15 +37,16 @@ func RootCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeStatus(cliConfig, pending)
 		},
@@ -84,21 +85,23 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 }
 
 type displayStatusData struct {
-	filepath string                    // filepath of the runstate file
+	filepath runstate.FilePath
 	state    Option[runstate.RunState] // content of the runstate file
 }
 
-func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusData, err error) {
-	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
+func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
+	userConfigDir, err := cli.SystemUserConfigDir()
 	if err != nil {
-		return result, err
+		return displayStatusData{}, err
 	}
-	state, err := runstate.Load(rootDir)
+	configDirRepo := userConfigDir.RepoConfigDir(rootDir)
+	runstatePath := runstate.NewRunstatePath(configDirRepo)
+	state, err := runstate.Load(runstatePath)
 	if err != nil {
-		return result, err
+		return displayStatusData{}, err
 	}
 	return displayStatusData{
-		filepath: filepath,
+		filepath: runstatePath,
 		state:    state,
 	}, nil
 }

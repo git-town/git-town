@@ -14,17 +14,17 @@ Feature: parking multiple other branches
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now parked
+      branch feature is now parked
       """
-    And branch "feature" now has type "parked"
     And branch "contribution" now has type "parked"
+    And branch "feature" now has type "parked"
     And branch "observed" now has type "parked"
     And branch "prototype" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" now has type "feature"
     And branch "contribution" now has type "contribution"
+    And branch "feature" now has type "feature"
     And branch "observed" now has type "observed"
     And branch "prototype" now has type "prototype"

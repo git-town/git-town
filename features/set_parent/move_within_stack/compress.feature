@@ -32,7 +32,7 @@ Feature: remove a branch from a stack
       |          | git push --force-with-lease --force-if-includes                |
     And Git Town prints:
       """
-      branch "branch-3" is now a child of "branch-1"
+      branch branch-3 is now a child of branch-1
       """
     And this lineage exists now
       """

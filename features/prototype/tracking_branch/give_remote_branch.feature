@@ -14,7 +14,7 @@ Feature: prototype another remote branch
       | main   | git checkout remote-feature |
     And Git Town prints:
       """
-      branch "remote-feature" is now a prototype branch
+      branch remote-feature is now a prototype branch
       """
     And branch "remote-feature" now has type "prototype"
 

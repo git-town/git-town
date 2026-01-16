@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
@@ -31,6 +30,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/handlebars"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	"github.com/git-town/git-town/v22/internal/test/output"
 	"github.com/git-town/git-town/v22/internal/test/subshell"
 	"github.com/git-town/git-town/v22/internal/test/testgit"
@@ -38,6 +38,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 // the global FixtureFactory instance.
@@ -75,9 +76,13 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.Name, scenario.Uri, state.fixture.Dir)
 			return ctx, nil //nolint:nilerr
 		}
-		exitCode := state.runExitCode.GetOrPanic()
+		exitCode := state.runResult.GetOrPanic().ExitCode
 		if exitCode != 0 && !state.runExitCodeChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
+			os.Exit(1)
+		}
+		if state.initialProposals.IsSome() && !state.proposalsChecked {
+			print.Error(fmt.Errorf("%s - scenario %q doesn't verify proposals", scenario.Uri, scenario.Name))
 			os.Exit(1)
 		}
 		if state != nil {
@@ -129,12 +134,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
+			initialProposals:     None[string](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
-			runExitCode:          None[int](),
+			proposalsChecked:     false,
 			runExitCodeChecked:   false,
-			runOutput:            None[string](),
+			runResult:            None[subshell.RunResult](),
 			uncommittedContent:   None[string](),
 			uncommittedFileName:  None[string](),
 		}
@@ -172,12 +178,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
+			initialProposals:     None[string](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
-			runExitCode:          None[int](),
+			proposalsChecked:     false,
 			runExitCodeChecked:   false,
-			runOutput:            None[string](),
+			runResult:            None[subshell.RunResult](),
 			uncommittedContent:   None[string](),
 			uncommittedFileName:  None[string](),
 		}
@@ -242,18 +249,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()
-	})
-
-	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
-	})
-
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(url)
 	})
 
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
@@ -358,7 +353,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town does not print "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), text) {
+		if strings.Contains(stripansi.Strip(state.runResult.GetOrPanic().Output), text) {
 			return fmt.Errorf("text found: %q", text)
 		}
 		return nil
@@ -387,10 +382,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
+		runResult := state.runResult.GetOrPanic()
+		if runResult.ExitCode != 0 {
+			return fmt.Errorf("unexpected exit code %d", runResult.ExitCode)
 		}
-		output := stripansi.Strip(state.runOutput.GetOrPanic())
+		output := stripansi.Strip(runResult.Output)
 		if !strings.Contains(output, strings.TrimRight(expected.Content, "\n")) {
 			fmt.Println("ERROR: text not found:")
 			fmt.Println("==================================================================")
@@ -420,7 +416,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		output := state.runOutput.GetOrPanic()
+		output := state.runResult.GetOrPanic().Output
 		if len(output) > 0 {
 			return fmt.Errorf("expected no output but found %q", output)
 		}
@@ -430,7 +426,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		have := stripansi.Strip(state.runResult.GetOrPanic().Output)
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
 		}
@@ -440,10 +436,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.runExitCodeChecked = true
-		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrZero())
+		runResult := state.runResult.GetOrPanic()
+		if !strings.Contains(stripansi.Strip(runResult.Output), expected.Content) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, runResult.Output)
 		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+		if exitCode := runResult.ExitCode; exitCode == 0 {
 			return fmt.Errorf("unexpected exit code %d", exitCode)
 		}
 		return nil
@@ -451,7 +448,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town runs no commands$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
+		commands := output.GitCommandsInGitTownOutput(state.runResult.GetOrPanic().Output)
 		if len(commands) > 0 {
 			fmt.Println("\n\nERROR: Unexpected commands run!")
 			for _, command := range commands {
@@ -467,7 +464,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
+		commands := output.GitCommandsInGitTownOutput(state.runResult.GetOrPanic().Output)
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
@@ -495,7 +492,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^Git Town runs without errors$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		exitCode := state.runExitCode.GetOrPanic()
+		exitCode := state.runResult.GetOrPanic().ExitCode
 		if exitCode != 0 {
 			return errors.New("unexpected failure of scenario")
 		}
@@ -584,8 +581,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I am not prompted for any parent branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		notExpected := "Please specify the parent branch of"
-		if strings.Contains(state.runOutput.GetOrPanic(), notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runOutput)
+		runResult := state.runResult.GetOrPanic()
+		if strings.Contains(runResult.Output, notExpected) {
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, runResult.Output)
 		}
 		return nil
 	})
@@ -616,12 +614,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
+			initialProposals:     None[string](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
-			runExitCode:          None[int](),
+			proposalsChecked:     false,
 			runExitCodeChecked:   false,
-			runOutput:            None[string](),
+			runResult:            None[subshell.RunResult](),
 			uncommittedContent:   None[string](),
 			uncommittedFileName:  None[string](),
 		}
@@ -709,23 +708,22 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if browserPath, has := state.browserVariable.Get(); has {
 			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
 			Input: Some(input.Content),
 		})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, false)
-		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
-			if exitCode != 0 {
+		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
+			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
-				fmt.Println(state.runOutput.GetOrZero())
-				return fmt.Errorf("unexpected exit code: %d", exitCode)
+				fmt.Println(runResult.Output)
+				return fmt.Errorf("unexpected exit code: %d", runResult.ExitCode)
 			}
 		}
 		return nil
@@ -734,8 +732,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, false)
-		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
-			if exitCode == 0 {
+		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
+			if runResult.ExitCode == 0 {
 				return errors.New("this command should fail")
 			}
 		}
@@ -747,11 +745,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(state, command, false)
-		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
-			if exitCode != 0 {
+		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
+			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
-				fmt.Println(state.runOutput.GetOrZero())
-				return fmt.Errorf("unexpected exit code: %d", exitCode)
+				fmt.Println(state.runResult.GetOrZero())
+				return fmt.Errorf("unexpected exit code: %d", runResult.ExitCode)
 			}
 		}
 		return nil
@@ -800,9 +798,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -812,9 +809,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage("")
-		output, exitCode := devRepo.MustQueryStringCode(cmd)
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCode(cmd)
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -828,11 +824,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if browserPath, has := state.browserVariable.Get(); has {
 			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env: env,
 		})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -841,9 +836,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -852,9 +846,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := secondWorkTree.MustQueryStringCode(cmd)
+		state.runResult = Some(runResult)
 		secondWorkTree.Reload()
 	})
 
@@ -864,9 +857,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.MockCommitMessage(message)
-		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := secondWorkTree.MustQueryStringCode(cmd)
+		state.runResult = Some(runResult)
 		secondWorkTree.Reload()
 	})
 
@@ -883,9 +875,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for a, answer := range helpers.TableToInputEnv(input) {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -898,9 +889,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for _, row := range envVars.Rows {
 			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -916,9 +906,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for a, answer := range helpers.TableToInputEnv(input) {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
 
@@ -1070,10 +1059,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, godogTable *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
-		branches, _ := asserts.NoError2(repo.LocalBranches())
+		branches := asserts.NoError1(repo.LocalBranches())
 		haveTable := datatable.DataTable{}
 		haveTable.AddRow("BRANCH", "NAME")
-		for _, branch := range branches {
+		for _, branch := range branches.AllBranches {
 			repo.CheckoutBranch(branch)
 			firstFileInBranch := true
 			for _, file := range repo.FilesInWorkspace() {
@@ -1203,18 +1192,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
+		state.runResult = Some(runResult)
 	})
 
 	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		output, exitCode := coworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
+		runResult := coworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runResult = Some(runResult)
 	})
 
 	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
@@ -1362,6 +1349,28 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the initial proposals exist now$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
+		proposalsPath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		have, has := mockproposals.LoadBytes(proposalsPath).Get()
+		if !has {
+			return errors.New("no mock proposals file")
+		}
+		want, hasInitialProposals := state.initialProposals.Get()
+		if !hasInitialProposals {
+			return errors.New("no initial proposals defined")
+		}
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(want, string(have), false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
+		}
+		fmt.Printf("\nERROR! Found %d differences to the initial proposals\n\n", len(diffs))
+		fmt.Println(dmp.DiffPrettyText(diffs))
+		return errors.New("mismatching proposals found, see diff above")
+	})
+
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
@@ -1434,6 +1443,38 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		proposals := mockproposals.FromGherkinTable(table, devRepo.Config.NormalConfig.Lineage)
+		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		initialProposals := mockproposals.Save(proposalFilePath, proposals)
+		state.initialProposals = Some(initialProposals)
+	})
+
+	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
+		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		haveData := mockproposals.Load(proposalFilePath)
+		haveString := mockproposals.ToDocString(haveData)
+		wantString := strings.TrimSpace(want.Content)
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(wantString, haveString, false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
+		}
+		if CukeUpdate {
+			scenarioURI := ctx.Value(keyScenarioURI).(string)
+			return ChangeFeatureFile(scenarioURI, wantString, haveString)
+		}
+		diffText := dmp.DiffPrettyText(diffs)
+		diffText += fmt.Sprintf("\n\nHAVE:\n%q\n\n", haveString)
+		diffText += fmt.Sprintf("\n\nWANT:\n%q\n\n", wantString)
+		fmt.Println(diffText)
+		return errors.New("mismatching proposals found, see diff above")
 	})
 
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
@@ -1570,14 +1611,13 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 	}
-	var exitCode int
-	var runOutput string
+	var runResult subshell.RunResult
 	env := os.Environ()
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
-		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
+		runResult = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
 			Env: env,
 		})
 		devRepo.Reload()
@@ -1587,11 +1627,12 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 		subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
-		runOutput = string(outputBytes)
-		exitCode = subProcess.ProcessState.ExitCode()
+		runResult = subshell.RunResult{
+			Output:   string(outputBytes),
+			ExitCode: subProcess.ProcessState.ExitCode(),
+		}
 	}
-	state.runOutput = Some(runOutput)
-	state.runExitCode = Some(exitCode)
+	state.runResult = Some(runResult)
 }
 
 func updateInitialSHAs(state *ScenarioState) {

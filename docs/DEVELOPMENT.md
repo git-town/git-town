@@ -211,7 +211,7 @@ spew.Dump(variable)
 - or -
 
 ```go
-pretty.LDiff(t, var1, var2)
+pretty.Ldiff(t, var1, var2)
 ```
 
 ### Debug an E2E test on the CLI

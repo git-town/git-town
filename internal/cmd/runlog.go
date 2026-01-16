@@ -10,9 +10,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state"
+	"github.com/git-town/git-town/v22/internal/state/runlog"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -44,15 +43,16 @@ func runLogCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeRunLog(cliConfig)
 		},
@@ -73,36 +73,22 @@ func executeRunLog(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, err := loadRunLogData(repo.RootDir)
-	if err != nil {
-		return err
-	}
-	if err = showRunLog(data); err != nil {
+	filepath := runlog.NewRunlogPath(repo.ConfigDir)
+	if err = showRunLog(filepath); err != nil {
 		return err
 	}
 	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
 	return nil
 }
 
-func showRunLog(data runLogData) error {
-	fmt.Printf(messages.RunlogDisplaying, data.filepath)
+func showRunLog(filepath runlog.FilePath) error {
+	fmt.Printf(messages.RunlogDisplaying, filepath)
 	fmt.Println()
-	content, err := os.ReadFile(data.filepath)
+	content, err := os.ReadFile(filepath.String())
 	if err != nil {
-		return fmt.Errorf(messages.RunLogCannotRead, data.filepath, err)
+		return fmt.Errorf(messages.RunLogCannotRead, filepath, err)
 	}
 	fmt.Print(string(content))
-	fmt.Printf(messages.RunlogDisplaying, data.filepath)
+	fmt.Printf(messages.RunlogDisplaying, filepath)
 	return nil
-}
-
-type runLogData struct {
-	filepath string // filepath of the runlog file
-}
-
-func loadRunLogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
-	filepath, err := state.FilePath(rootDir, state.FileTypeRunlog)
-	return runLogData{
-		filepath: filepath,
-	}, err
 }

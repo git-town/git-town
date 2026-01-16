@@ -12,7 +12,7 @@ Feature: make the current observed branch an observed branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "observed" is already observed
+      branch observed is already observed
       """
     And branch "observed" still has type "observed"
 

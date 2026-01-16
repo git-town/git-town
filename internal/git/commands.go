@@ -62,7 +62,7 @@ func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomai
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+func (self *Commands) BranchExistsAtRemote(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
 	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }
@@ -81,10 +81,10 @@ func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, bra
 
 // BranchInSyncWithTracking returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), branch.TrackingBranch(devRemote).String())
+func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, localBranch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-parse", localBranch.String(), trackingBranch.String())
 	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
+		return false, fmt.Errorf(messages.DiffProblem, localBranch, trackingBranch, err)
 	}
 	lines := strings.Split(out, "\n")
 	if len(lines) != 2 {
@@ -152,8 +152,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		switch {
 		case branch.Worktree && !branch.Head:
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(branch.BranchName.LocalName()),
-				LocalSHA:   Some(branch.SHA),
+				Local:      Some(gitdomain.BranchData{Name: branch.BranchName.LocalName(), SHA: branch.SHA}),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
@@ -161,8 +160,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		case isLocalRefName(branch.RefName):
 			syncStatus := determineSyncStatus(branch.Track, branch.UpstreamOption)
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(branch.BranchName.LocalName()),
-				LocalSHA:   Some(branch.SHA),
+				Local:      Some(gitdomain.BranchData{Name: branch.BranchName.LocalName(), SHA: branch.SHA}),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: syncStatus,
@@ -174,8 +172,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 				existingBranchWithTracking.RemoteSHA = Some(branch.SHA)
 			} else {
 				result = append(result, gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
+					Local:      None[gitdomain.BranchData](),
 					RemoteName: Some(remoteBranchName),
 					RemoteSHA:  Some(branch.SHA),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
@@ -199,8 +196,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			currentBranchOpt = gitdomain.NewLocalBranchNameOption(headSHA.String())
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
-				LocalName:  currentBranchOpt,
-				LocalSHA:   Some(headSHA),
+				Local:      Some(gitdomain.BranchData{Name: gitdomain.LocalBranchName(headSHA.String()), SHA: headSHA}),
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
@@ -1005,8 +1001,7 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 		Active: Some(branch),
 		Branches: gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
-				LocalName:  Some(branch),
-				LocalSHA:   None[gitdomain.SHA](),
+				Local:      Some(gitdomain.BranchData{Name: branch, SHA: "0000000"}), // brand-new repos witout any commits don't have a SHA
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),

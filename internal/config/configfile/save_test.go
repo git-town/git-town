@@ -62,9 +62,10 @@ func TestSave(t *testing.T) {
 				}),
 				FeatureRegex:             featureRegex,
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
-				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
-				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
+				GithubConnectorType:      Some(forgedomain.GithubConnectorTypeGh),
+				GitlabConnectorType:      Some(forgedomain.GitlabConnectorTypeGlab),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
+				IgnoreUncommitted:        Some(configdomain.IgnoreUncommitted(true)),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:            observedRegex,
@@ -97,7 +98,7 @@ observed-regex = "observed-"
 order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
-unknown-branch-type = "prototype"
+unknown-type = "prototype"
 
 [create]
 branch-prefix = "feature-"
@@ -109,8 +110,8 @@ stash = true
 browser = "chrome"
 dev-remote = "origin"
 forge-type = "github"
-github-connector-type = "gh"
-gitlab-connector-type = "glab"
+github-connector = "gh"
+gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]
@@ -118,6 +119,7 @@ lineage = "cli"
 
 [ship]
 delete-tracking-branch = true
+ignore-uncommitted = true
 strategy = "api"
 
 [sync]

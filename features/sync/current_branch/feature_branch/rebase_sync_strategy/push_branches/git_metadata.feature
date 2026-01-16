@@ -14,8 +14,8 @@ Feature: disable pushing through the Git metadata
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And Git setting "git-town.push-branches" is "false"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "child"
     When I run "git-town sync"
 

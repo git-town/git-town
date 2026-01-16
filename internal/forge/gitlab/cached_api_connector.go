@@ -55,7 +55,7 @@ func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranc
 var _ forgedomain.ProposalSearcher = &cachedAPIConnector
 
 func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
+	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
 	}
 	loadedSearchResult, err := self.api.SearchProposals(source)
@@ -71,8 +71,8 @@ func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName
 
 var _ forgedomain.ProposalMerger = &cachedAPIConnector
 
-func (self *CachedAPIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	self.cache.Clear()
+func (self *CachedAPIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+	self.cache.Clear(number)
 	return self.api.SquashMergeProposal(number, message)
 }
 
@@ -83,7 +83,7 @@ func (self *CachedAPIConnector) SquashMergeProposal(number int, message gitdomai
 var _ forgedomain.ProposalBodyUpdater = &cachedAPIConnector
 
 func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
-	self.cache.Clear()
+	self.cache.Clear(proposalData.Data().Number)
 	return self.api.UpdateProposalBody(proposalData, newBody)
 }
 
@@ -94,7 +94,7 @@ func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.Prop
 var _ forgedomain.ProposalTargetUpdater = &cachedAPIConnector
 
 func (self *CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	self.cache.Clear()
+	self.cache.Clear(proposalData.Data().Number)
 	return self.api.UpdateProposalTarget(proposalData, target)
 }
 

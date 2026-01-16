@@ -43,15 +43,16 @@ func featureCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeFeature(args, cliConfig)
 		},
@@ -95,9 +96,9 @@ func executeFeature(args []string, cliConfig configdomain.PartialConfig) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "feature",
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
@@ -124,12 +125,12 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 	if branchesSnapshot.DetachedHead {
 		return featureData{}, errors.New(messages.FeatureDetachedHead)
 	}
-	branchesToFeature, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToFeature, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return featureData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
-		branchesToFeature: branchesToFeature,
-		checkout:          branchToCheckout,
+		branchesToFeature: branchesToFeature.BranchesToMark,
+		checkout:          branchesToFeature.BranchToCheckout,
 	}, err
 }
 
@@ -141,14 +142,14 @@ func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotMakeFeature)
 		case configdomain.BranchTypeFeatureBranch:
-			repo.FinalMessages.Add(fmt.Sprintf(messages.HackBranchIsAlreadyFeature, branchName))
+			repo.FinalMessages.Addf(messages.HackBranchIsAlreadyFeature, branchName)
 		case
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 			hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
-			hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
 			if !hasLocalBranch && !hasRemoteBranch {
 				return fmt.Errorf(messages.BranchDoesntExist, branchName)
 			}

@@ -12,7 +12,7 @@ Feature: delete a branch within a branch chain
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And local Git setting "color.ui" is "always"
+    And Git setting "color.ui" is "always"
     And the current branch is "beta" and the previous branch is "alpha"
     When I run "git-town delete"
 
@@ -25,7 +25,7 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch -D beta       |
     And Git Town prints:
       """
-      branch "gamma" is now a child of "alpha"
+      branch gamma is now a child of alpha
       """
     And this lineage exists now
       """

@@ -9,8 +9,8 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | LOCATION | MESSAGE      | FILE NAME  |
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
-    And Git setting "git-town.sync-prototype-strategy" is "rebase"
     And Git setting "git-town.sync-feature-strategy" is "merge"
+    And Git setting "git-town.sync-prototype-strategy" is "rebase"
     And the current branch is "prototype"
     When I run "git-town sync"
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -26,6 +27,7 @@ type ExecuteArgs struct {
 	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	Config          config.ValidatedConfig
+	ConfigDir       configdomain.RepoConfigDir
 	Connector       Option[forgedomain.Connector]
 	FinalMessages   stringslice.Collector
 	Frontend        subshelldomain.Runner
@@ -33,20 +35,28 @@ type ExecuteArgs struct {
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
 	Inputs          dialogcomponents.Inputs
-	RootDir         gitdomain.RepoRootDir
+	Park            configdomain.Park
 	RunState        runstate.RunState
 }
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
+	skipProgram := args.RunState.AbortProgram
+	if args.Park {
+		skipProgram = append(skipProgram, &opcodes.BranchTypeOverrideSet{
+			Branch:     args.InitialBranch,
+			BranchType: configdomain.BranchTypeParkedBranch,
+		})
+	}
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
+		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
 		Config:        args.Config,
 		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
-		Prog:          args.RunState.AbortProgram,
+		Prog:          skipProgram,
 	})
 	args.RunState.AbortProgram = program.Program{}
 	if err := revertChangesToCurrentBranch(args); err != nil {
@@ -57,6 +67,7 @@ func Execute(args ExecuteArgs) error {
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
+		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
@@ -68,7 +79,6 @@ func Execute(args ExecuteArgs) error {
 		InitialStashSize:        args.RunState.BeginStashSize,
 		Inputs:                  args.Inputs,
 		PendingCommand:          Some(args.RunState.Command),
-		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
 	})
 }
@@ -106,6 +116,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.InitialBranch,
+		BranchInfos:              args.RunState.BeginBranchesSnapshot.Branches,
 		Config:                   args.Config,
 		EndBranch:                args.InitialBranch,
 		FinalMessages:            args.FinalMessages,
@@ -114,6 +125,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
+		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
 		Config:        args.Config,
 		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,

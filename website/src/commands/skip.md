@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town skip [-h | --help] [-v | --verbose]
+git town skip [-h | --help] [--park] [-v | --verbose]
 ```
 
 The _skip_ command allows to skip a Git branch with merge conflicts when syncing
@@ -14,6 +14,11 @@ all feature branches.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--park`
+
+When set, also [parks](park.md) the branch to be skipped. This allows you to
+permanently skip merge conflicts on this branch.
 
 #### `-v`<br>`--verbose`
 

@@ -20,7 +20,7 @@ import (
 
 const (
 	initCmd  = "init"
-	initDesc = "Prompts to setup your Git Town configuration"
+	initDesc = "Set up Git Town on your computer"
 )
 
 func initCommand() *cobra.Command {
@@ -28,7 +28,7 @@ func initCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     initCmd,
 		Args:    cobra.NoArgs,
-		GroupID: cmdhelpers.GroupIDSetup,
+		GroupID: cmdhelpers.GroupIDConfig,
 		Short:   initDesc,
 		Long:    cmdhelpers.Long(initDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -37,15 +37,16 @@ func initCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeConfigSetup(cliConfig)
 		},
@@ -78,7 +79,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	userInput, exit, enterAll, err := setup.Enter(data)
+	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err
 	}
@@ -91,19 +92,20 @@ Start:
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               initCmd,
 		CommandsCounter:       repo.CommandsCounter,
+		ConfigDir:             repo.ConfigDir,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
 		TouchedBranches:       []gitdomain.BranchName{},
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
-func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.ProgramFlow, err error) {
+func LoadData(repo execute.OpenRepoResult) (setup.Data, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult setup.Data
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -123,16 +125,16 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, nil
+		return emptyResult, flow, nil
 	}
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, configdomain.ProgramFlowExit, err
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}

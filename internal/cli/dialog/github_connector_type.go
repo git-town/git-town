@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	gitHubConnectorTypeTitle = `GitHub connector type`
-	gitHubConnectorTypeHelp  = `
+	githubConnectorTypeTitle = `GitHub connector`
+	githubConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitHub:
 
 1. GitHub API:
@@ -28,26 +28,26 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.GitHubConnectorType]]{}
+func GithubConnectorType(args Args[forgedomain.GithubConnectorType]) (Option[forgedomain.GithubConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GithubConnectorType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.GitHubConnectorType]]{
-			Data: None[forgedomain.GitHubConnectorType](),
+		entries = append(entries, list.Entry[Option[forgedomain.GithubConnectorType]]{
+			Data: None[forgedomain.GithubConnectorType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[forgedomain.GitHubConnectorType]]{
+	entries = append(entries, list.Entries[Option[forgedomain.GithubConnectorType]]{
 		{
-			Data: Some(forgedomain.GitHubConnectorTypeAPI),
+			Data: Some(forgedomain.GithubConnectorTypeAPI),
 			Text: "API token",
 		},
 		{
-			Data: Some(forgedomain.GitHubConnectorTypeGh),
+			Data: Some(forgedomain.GithubConnectorTypeGh),
 			Text: "gh tool",
 		},
 	}...)
 	cursor := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector-type")
-	fmt.Printf(messages.GitHubConnectorTypeResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, githubConnectorTypeTitle, githubConnectorTypeHelp, args.Inputs, "github-connector")
+	fmt.Printf(messages.GithubConnectorTypeResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

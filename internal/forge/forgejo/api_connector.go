@@ -3,7 +3,6 @@ package forgejo
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v22/internal/cli/print"
@@ -37,7 +36,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	client, err := self.getClient()
 	if err != nil {
 		return None[forgedomain.Proposal](), err
@@ -74,7 +73,7 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
 func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	client, err := self.getClient()
 	if err != nil {
 		return []forgedomain.Proposal{}, err
@@ -109,17 +108,17 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	client, err := self.getClient()
 	if err != nil {
 		return err
 	}
-	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
+	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), forgejo.MergePullRequestOption{
 		Style:   forgejo.MergeStyleSquash,
 		Title:   commitMessageParts.Title.String(),
 		Message: commitMessageParts.Body,
@@ -129,10 +128,7 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 		return err
 	}
 	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Finished(err)
-	return err
+	return nil
 }
 
 // ============================================================================
@@ -147,7 +143,7 @@ func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	if err != nil {
 		return err
 	}
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Body: newBody.String(),
 	})
@@ -168,7 +164,7 @@ func (self *APIConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 		return err
 	}
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
@@ -247,7 +243,7 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 	return forgedomain.ProposalData{
 		Active:       pullRequest.State == forgejo.StateOpen,
 		MergeWithAPI: pullRequest.Mergeable,
-		Number:       int(pullRequest.Index),
+		Number:       forgedomain.ProposalNumber(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),

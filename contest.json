@@ -27,7 +27,19 @@
     {
       "type": "test-file",
       "files": "**/*.md",
-      "run": "make docs"
+      "run": "make doc"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test {{file}}"
+    },
+
+    {
+      "type": "test-file-line",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test-only {{file}}"
     },
 
     {

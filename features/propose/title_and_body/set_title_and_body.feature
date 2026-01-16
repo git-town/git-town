@@ -8,7 +8,6 @@ Feature: Prepopulate title and body
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And a proposal for this branch does not exist
     And tool "open" is installed
 
   Scenario: provide title and body via CLI
@@ -16,7 +15,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      |         | Looking for proposal online ... ok                                                             |
+      |         | Finding proposal from feature into main ... none                                               |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body |
 
   Scenario: provide title via CLI
@@ -24,7 +23,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                           |
       | feature | git fetch --prune --tags                                                          |
-      |         | Looking for proposal online ... ok                                                |
+      |         | Finding proposal from feature into main ... none                                  |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title |
 
   Scenario: provide body via CLI
@@ -32,7 +31,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                         |
       | feature | git fetch --prune --tags                                                        |
-      |         | Looking for proposal online ... ok                                              |
+      |         | Finding proposal from feature into main ... none                                |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=my_body |
 
   Scenario: provide title via CLI and body via file
@@ -46,12 +45,12 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                           |
       | feature | git fetch --prune --tags                                                                          |
-      |         | Looking for proposal online ... ok                                                                |
       |         | git add -A                                                                                        |
       |         | git stash -m "Git Town WIP"                                                                       |
+      |         | Finding proposal from feature into main ... none                                                  |
+      |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
       |         | git stash pop                                                                                     |
       |         | git restore --staged .                                                                            |
-      |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
 
   Scenario: non-existing body file
     When I run "git-town propose --body-file zonk.txt"
@@ -70,5 +69,5 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      |         | Looking for proposal online ... ok                                                             |
+      |         | Finding proposal from feature into main ... none                                               |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext |

@@ -16,21 +16,22 @@ Feature: display configuration from Git metadata
       | prototype-2    | prototype    | main   | local         |
 
   Scenario: all configured in Git, no stacked changes
-    Given Git setting "git-town.perennial-branches" is "qa staging"
-    And Git setting "git-town.perennial-regex" is "^release-"
+    Given Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.branch-prefix" is "acme-"
     And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^renovate/"
-    And Git setting "git-town.display-types" is "all"
-    And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.feature-regex" is "^user-.*$"
-    And Git setting "git-town.ship-strategy" is "squash-merge"
-    And Git setting "git-town.unknown-branch-type" is "observed"
-    And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
-    And Git setting "git-town.stash" is "false"
+    And Git setting "git-town.display-types" is "all"
+    And Git setting "git-town.feature-regex" is "^user-.*$"
+    And Git setting "git-town.ignore-uncommitted" is "true"
+    And Git setting "git-town.observed-regex" is "^dependabot/"
+    And Git setting "git-town.perennial-branches" is "qa staging"
+    And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
+    And Git setting "git-town.stash" is "false"
+    And Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -69,9 +70,9 @@ Feature: display configuration from Git metadata
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -79,6 +80,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
@@ -141,9 +143,9 @@ Feature: display configuration from Git metadata
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
@@ -151,6 +153,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

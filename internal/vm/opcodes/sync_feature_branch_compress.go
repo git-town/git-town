@@ -1,8 +1,11 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -21,13 +24,17 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
-		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
+	if configuredParent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+		parentInfo, hasParentInfo := args.BranchInfos.FindLocalOrRemote(configuredParent).Get()
+		if !hasParentInfo {
+			return fmt.Errorf(messages.BranchInfoNotFound, configuredParent)
+		}
+		parentName := parentInfo.GetLocalOrRemoteName()
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
 		}
-		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
+		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(configuredParent)
 		skipParent := args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() && parentIsPerennial
 		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
@@ -45,7 +52,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		}
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, trackingBranch)
 		if err != nil {
 			return err
 		}
@@ -67,23 +74,15 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Message:        commitMessage,
 			},
 		)
-		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() && self.PushBranches.ShouldPush() {
-			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
+		trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
+		if self.Offline.IsOnline() && hasTrackingBranch && self.PushBranches.ShouldPush() {
+			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   self.CurrentBranch,
+				ForceIfIncludes: false,
+				TrackingBranch:  trackingBranch,
+			})
 		}
 	}
 	args.PrependOpcodes(opcodes...)
 	return nil
-}
-
-func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfosOpt Option[gitdomain.BranchInfos], devRemote gitdomain.Remote) gitdomain.BranchName {
-	if branchInfos, hasBranchInfos := branchInfosOpt.Get(); hasBranchInfos {
-		if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
-			return parentInfo.GetLocalOrRemoteName()
-		}
-		parentRemoteName := parentLocalName.AtRemote(devRemote)
-		if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
-			return parentRemoteName.BranchName()
-		}
-	}
-	return parentLocalName.BranchName()
 }

@@ -10,13 +10,12 @@ Feature: support many browsers and operating systems
 
   Scenario Outline:
     And the origin is "https://github.com/git-town/git-town.git"
-    And a proposal for this branch does not exist
     And tool "<TOOL>" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                              |
       | feature | git fetch --prune --tags                                             |
-      |         | Looking for proposal online ... ok                                   |
+      |         | Finding proposal from feature into main ... none                     |
       |         | <TOOL> https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:

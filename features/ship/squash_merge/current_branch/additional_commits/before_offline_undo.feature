@@ -22,7 +22,7 @@ Feature: undoing an offline ship with additional commits to main
       |        | git checkout feature                          |
     And Git Town prints:
       """
-      cannot reset branch "main"
+      cannot reset branch main
       """
     And Git Town prints:
       """

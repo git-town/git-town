@@ -3,13 +3,13 @@ package runstate_test
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/state"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
@@ -19,19 +19,6 @@ import (
 
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
-
-	t.Run("SanitizePath", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]string{
-			"/home/user/development/git-town":        "home-user-development-git-town",
-			"c:\\Users\\user\\development\\git-town": "c-users-user-development-git-town",
-		}
-		for give, want := range tests {
-			rootDir := gitdomain.NewRepoRootDir(give)
-			have := state.SanitizePath(rootDir)
-			must.EqOp(t, want, have)
-		}
-	})
 
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
@@ -114,15 +101,15 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitlab}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: None[gitdomain.ProposalBody](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true, TrackingBranch: "origin/branch"},
 				&opcodes.PushCurrentBranchForceIgnoreError{},
-				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
+				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch", TrackingBranch: "origin/branch"},
 				&opcodes.PushTags{},
 				&opcodes.RebaseAbort{},
 				&opcodes.RebaseBranch{Branch: "branch"},
@@ -679,7 +666,8 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "ForceIfIncludes": true
+        "ForceIfIncludes": true,
+        "TrackingBranch": "origin/branch"
       },
       "type": "PushCurrentBranchForceIfNeeded"
     },
@@ -689,7 +677,8 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch"
+        "CurrentBranch": "branch",
+        "TrackingBranch": "origin/branch"
       },
       "type": "PushCurrentBranchIfNeeded"
     },
@@ -821,12 +810,11 @@ func TestLoadSave(t *testing.T) {
   }
 }`[1:]
 
-		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
-		err := runstate.Save(runState, repoRoot)
+		tempDir := t.TempDir()
+		runstatePath := runstate.FilePath(filepath.Join(tempDir, "runstate.json"))
+		err := runstate.Save(runState, runstatePath)
 		must.NoError(t, err)
-		filepath, err := state.FilePath(repoRoot, state.FileTypeRunstate)
-		must.NoError(t, err)
-		content, err := os.ReadFile(filepath)
+		content, err := os.ReadFile(runstatePath.String())
 		must.NoError(t, err)
 		must.EqOp(t, wantJSON, string(content))
 		var newState runstate.RunState

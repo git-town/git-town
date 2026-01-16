@@ -44,15 +44,16 @@ func repoCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeRepo(args, cliConfig)
 		},
@@ -82,7 +83,7 @@ func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 	return err
 }
 
-func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
+func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
 		remoteOpt = gitdomain.NewRemote(args[0])
@@ -99,23 +100,24 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Browser:              config.Browser,
+		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
-		GitHubConnectorType:  config.GitHubConnectorType,
-		GitHubToken:          config.GitHubToken,
-		GitLabConnectorType:  config.GitLabConnectorType,
-		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
+		GithubConnectorType:  config.GithubConnectorType,
+		GithubToken:          config.GithubToken,
+		GitlabConnectorType:  config.GitlabConnectorType,
+		GitlabToken:          config.GitlabToken,
 		Log:                  print.Logger{},
 		RemoteURL:            config.RemoteURL(repo.Backend, remote),
 	})
 	if err != nil {
-		return data, err
+		return repoData{}, err
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return data, forgedomain.UnsupportedServiceError()
+		return repoData{}, forgedomain.UnsupportedServiceError()
 	}
 	return repoData{
 		connector: connector,
