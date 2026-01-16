@@ -24,28 +24,45 @@ Feature: detach a branch branch with multiple children
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                         |
-      | beta   | git fetch --prune --tags                                        |
-      |        | Finding proposal from beta into alpha ... #2 (beta proposal)    |
-      |        | Finding proposal from gamma1 into beta ... #3 (gamma1 proposal) |
-      |        | Finding proposal from gamma2 into beta ... #4 (gamma2 proposal) |
-      |        | git checkout gamma1                                             |
-      | gamma1 | git pull                                                        |
-      |        | git -c rebase.updateRefs=false rebase --onto alpha beta         |
-      |        | git push --force-with-lease                                     |
-      |        | git checkout gamma2                                             |
-      | gamma2 | git pull                                                        |
-      |        | git -c rebase.updateRefs=false rebase --onto alpha beta         |
-      |        | git push --force-with-lease                                     |
-      |        | git checkout delta                                              |
-      | delta  | git pull                                                        |
-      |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta        |
-      |        | git push --force-with-lease                                     |
-      |        | git checkout beta                                               |
-      | beta   | git -c rebase.updateRefs=false rebase --onto main alpha         |
-      |        | Updating target branch of proposal #2 to main ... ok            |
-      |        | Updating target branch of proposal #3 to alpha ... ok           |
-      |        | Updating target branch of proposal #4 to alpha ... ok           |
+      | BRANCH | COMMAND                                                          |
+      | beta   | git fetch --prune --tags                                         |
+      |        | Finding proposal from beta into alpha ... #2 (beta proposal)     |
+      |        | Finding proposal from gamma1 into beta ... #3 (gamma1 proposal)  |
+      |        | Finding proposal from gamma2 into beta ... #4 (gamma2 proposal)  |
+      |        | git checkout gamma1                                              |
+      | gamma1 | git pull                                                         |
+      |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
+      |        | git push --force-with-lease                                      |
+      |        | git checkout gamma2                                              |
+      | gamma2 | git pull                                                         |
+      |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
+      |        | git push --force-with-lease                                      |
+      |        | git checkout delta                                               |
+      | delta  | git pull                                                         |
+      |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta         |
+      |        | git push --force-with-lease                                      |
+      |        | git checkout beta                                                |
+      | beta   | git -c rebase.updateRefs=false rebase --onto main alpha          |
+      |        | Updating target branch of proposal #2 to main ... ok             |
+      |        | Updating target branch of proposal #3 to alpha ... ok            |
+      |        | Updating target branch of proposal #4 to alpha ... ok            |
+      |        | Finding all proposals for alpha ... main                         |
+      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
+      |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 proposal) |
+      |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 proposal) |
+      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
+      |        | Update body for #1 ... ok                                        |
+      |        | Finding all proposals for beta ... main                          |
+      |        | Finding proposal from beta into main ... #2 (beta proposal)      |
+      |        | Update body for #2 ... ok                                        |
+      |        | Finding all proposals for delta ... gamma2                       |
+      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
+      |        | Update body for #5 ... ok                                        |
+      |        | Finding all proposals for gamma1 ... alpha                       |
+      |        | Update body for #3 ... ok                                        |
+      |        | Finding all proposals for gamma2 ... alpha                       |
+      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
+      |        | Update body for #4 ... ok                                        |
     And this lineage exists now
       """
       main
@@ -84,7 +101,7 @@ Feature: detach a branch branch with multiple children
       url: https://example.com/pr/2
       number: 2
       source: beta
-      target: alpha
+      target: main
       body:
         beta body
 
@@ -101,7 +118,7 @@ Feature: detach a branch branch with multiple children
       url: https://example.com/pr/3
       number: 3
       source: gamma1
-      target: beta
+      target: alpha
       body:
         gamma1 body
 
@@ -119,7 +136,7 @@ Feature: detach a branch branch with multiple children
       url: https://example.com/pr/4
       number: 4
       source: gamma2
-      target: beta
+      target: alpha
       body:
         gamma2 body
 
