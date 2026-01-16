@@ -21,7 +21,6 @@ Feature: detach the current feature branch from a stack and update proposals
     And the current branch is "beta"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
