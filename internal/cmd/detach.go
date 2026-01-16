@@ -375,14 +375,22 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	oldParent := data.parentBranch
 	// step 1: delete the commits of the branch to detach from all descendents,
 	// while that branch is still in the form it had inside the stack
-	lastParent := data.parentBranch
 	for _, descendent := range data.descendents {
+		// Determine the correct parent to rebase onto.
+		// If the descendant's parent is the branch being detached, rebase onto that branch's parent.
+		// Otherwise, rebase onto the descendant's actual parent.
+		rebaseOnto := data.parentBranch
+		if descendentParent, hasParent := data.config.NormalConfig.Lineage.Parent(descendent.name).Get(); hasParent {
+			if descendentParent != data.branchToDetachName {
+				rebaseOnto = descendentParent
+			}
+		}
 		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
 			Ancestor:          data.branchToDetachName.BranchName(),
 			Branch:            descendent.name,
 			HasTrackingBranch: descendent.info.HasTrackingBranch(),
 			Program:           prog,
-			RebaseOnto:        lastParent,
+			RebaseOnto:        rebaseOnto,
 		})
 		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
 			prog.Value.Add(
@@ -393,7 +401,6 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 				},
 			)
 		}
-		lastParent = descendent.name
 	}
 	// step 2: delete the commits of parent branches from the detached branch
 	prog.Value.Add(
