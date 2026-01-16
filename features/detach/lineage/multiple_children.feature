@@ -10,6 +10,14 @@ Feature: detach a branch branch with multiple children
       | gamma1 | feature | beta   | local, origin |
       | gamma2 | feature | beta   | local, origin |
       | delta  | feature | gamma2 | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE       | FILE NAME   | FILE CONTENT   |
+      | main   | local, origin | main commit   | main-file   | main content   |
+      | alpha  | local, origin | alpha commit  | alpha-file  | alpha content  |
+      | beta   | local, origin | beta commit   | beta-file   | beta content   |
+      | gamma1 | local, origin | gamma1 commit | gamma1-file | gamma1 content |
+      | gamma2 | local, origin | gamma2 commit | gamma2-file | gamma2 content |
+      | delta  | local, origin | delta commit  | delta-file  | delta content  |
     And the current branch is "beta"
     When I run "git-town detach"
 
@@ -34,6 +42,7 @@ Feature: detach a branch branch with multiple children
       |        | git push --force-with-lease                              |
       |        | git checkout beta                                        |
       | beta   | git -c rebase.updateRefs=false rebase --onto main alpha  |
+      |        | git push --force-with-lease --force-if-includes          |
     And this lineage exists now
       """
       main
@@ -50,6 +59,19 @@ Feature: detach a branch branch with multiple children
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                         |
+      | beta   | git reset --hard {{ sha 'beta commit' }}        |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout delta                              |
+      | delta  | git reset --hard {{ sha 'delta commit' }}       |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout gamma1                             |
+      | gamma1 | git reset --hard {{ sha 'gamma1 commit' }}      |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout gamma2                             |
+      | gamma2 | git reset --hard {{ sha 'gamma2 commit' }}      |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout beta                               |
     And the initial branches and lineage exist now
     And the initial commits exist now
