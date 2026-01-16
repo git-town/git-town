@@ -13,7 +13,7 @@ import (
 )
 
 // creates the program for undoing a program that finished
-func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
+func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) {
 	result := NewMutable(&program.Program{})
 	result.Value.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
@@ -26,12 +26,17 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 			Message:        "Committing open changes to undo them",
 		})
 	}
-	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
-		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
-	}
+	// undo config changes
 	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
 		result.Value.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}
+	// undo branch changes
+	endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get()
+	if hasEndBranchesSnapshot {
+		undoProgram, changedBranches = undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
+		result.Value.AddProgram(undoProgram)
+	}
+	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
@@ -48,5 +53,5 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return result.Immutable()
+	return result.Immutable(), changedBranches
 }

@@ -34,11 +34,11 @@ type ExecuteArgs struct {
 }
 
 // undoes the persisted runstate
-func Execute(args ExecuteArgs) error {
+func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err error) {
 	if args.RunState.DryRun {
-		return nil
+		return gitdomain.LocalBranchNames{}, nil
 	}
-	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
+	program, changedBranches := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
 		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
