@@ -59,7 +59,7 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
 	}
-	self.log.Start(messages.APIParentBranchLookupStart, source.String())
+	self.log.Start(messages.APIProposalSearchStart, source.String())
 	result := []forgedomain.Proposal{}
 	for _, data := range self.Proposals.FindBySource(source) {
 		self.log.Success(data.Target.String())
