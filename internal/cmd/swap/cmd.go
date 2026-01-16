@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -20,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage/synclineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -409,7 +409,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
-		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+		synclineage.AddSyncProposalsProgram(synclineage.AddSyncProposalsProgramArgs{
 			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
 			Program:         prog,
