@@ -101,7 +101,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,

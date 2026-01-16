@@ -24,9 +24,9 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | git push origin :alpha                                                     |
       |        | git checkout beta                                                          |
       | beta   | git branch -D alpha                                                        |
-      |        | Finding proposals for alpha ... main                                       |
+      |        | Finding all proposals for alpha ... main                                   |
       |        | Update body for #1 ... ok                                                  |
-      |        | Finding proposals for beta ... main                                        |
+      |        | Finding all proposals for beta ... main                                    |
       |        | Finding proposal from beta into main ... #2 (Proposal from beta to alpha)  |
       |        | Update body for #2 ... ok                                                  |
     And this lineage exists now
