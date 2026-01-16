@@ -1454,19 +1454,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.initialProposals = Some(initialProposals)
 	})
 
-	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
+	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.proposalsChecked = true
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
-		have := mockproposals.Load(proposalFilePath)
-		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
-		diff, errorCount := haveTable.EqualGherkin(want)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
-			fmt.Println(diff)
-			return errors.New("mismatching proposals found, see diff above")
+		haveData := mockproposals.Load(proposalFilePath)
+		haveString := mockproposals.ToDocString(haveData)
+		wantString := strings.TrimSpace(want.Content)
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(wantString, haveString, false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
 		}
-		return nil
+		diffText := dmp.DiffPrettyText(diffs)
+		diffText += fmt.Sprintf("\n\nHAVE:\n%q\n\n", haveString)
+		diffText += fmt.Sprintf("\n\nWANT:\n%q\n\n", wantString)
+		fmt.Println(diffText)
+		return errors.New("mismatching proposals found, see diff above")
 	})
 
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
