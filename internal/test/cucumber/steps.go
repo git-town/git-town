@@ -1467,7 +1467,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return nil
 		}
 		diffText := dmp.DiffPrettyText(diffs)
-		diffText += fmt.Sprintf("\n\nHAVE FULL:\n%s\n\n", haveString)
 		diffText += fmt.Sprintf("\n\nHAVE:\n%q\n\n", haveString)
 		diffText += fmt.Sprintf("\n\nWANT:\n%q\n\n", wantString)
 		fmt.Println(diffText)
