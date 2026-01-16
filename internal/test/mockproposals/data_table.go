@@ -88,7 +88,6 @@ func ToDocString(proposals []forgedomain.ProposalData) string {
 			result.WriteString(gohacks.IndentLines(body.String(), 2))
 		}
 		result.WriteString("\n")
-		result.WriteString("\n")
 	}
 	return strings.TrimSpace(result.String())
 }

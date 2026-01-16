@@ -70,7 +70,6 @@ source: branch-1
 target: main
 body:
 
-
 url: https://example.com/pr/2
 number: 2
 source: branch-2
