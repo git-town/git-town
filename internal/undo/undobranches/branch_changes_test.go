@@ -75,7 +75,7 @@ func TestChanges(t *testing.T) {
 				PerennialBranches: gitdomain.LocalBranchNames{},
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, _ := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
