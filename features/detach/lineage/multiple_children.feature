@@ -27,7 +27,7 @@ Feature: detach a branch branch with multiple children
       |        | git push --force-with-lease                              |
       |        | git checkout gamma2                                      |
       | gamma2 | git pull                                                 |
-      |        | git -c rebase.updateRefs=false rebase --onto alpha beta  |
+      |        | git -c rebase.updateRefs=false rebase --onto gamma1 beta |
       |        | git push --force-with-lease                              |
       |        | git checkout delta                                       |
       | delta  | git pull                                                 |
