@@ -29,7 +29,7 @@
           },
           {
             "type": "command",
-            "command": "make unit"
+            "command": "make test-go"
           }
         ]
       }
