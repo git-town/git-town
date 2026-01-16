@@ -2,7 +2,9 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
 	"github.com/git-town/git-town/v22/internal/undo/undoconfig"
@@ -39,6 +41,15 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram progr
 	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
+	}
+	updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := args.Config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: changedBranches,
+			Config:          args.Config,
+			Program:         result,
+		})
 	}
 	result.Value.AddProgram(args.RunState.FinalUndoProgram)
 	initialBranchOpt := args.RunState.BeginBranchesSnapshot.Active

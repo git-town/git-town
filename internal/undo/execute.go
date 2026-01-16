@@ -59,7 +59,7 @@ func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err 
 		Prog:          program,
 	})
 	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
-	err := os.Remove(runstatePath.String())
+	err = os.Remove(runstatePath.String())
 	if err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
