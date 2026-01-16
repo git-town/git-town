@@ -33,7 +33,6 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | git checkout delta                                               |
       | delta  | git branch -D beta                                               |
       |        | Finding all proposals for alpha ... main                         |
-      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
       |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 proposal) |
       |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 proposal) |
       |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
