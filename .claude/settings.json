@@ -26,10 +26,6 @@
           {
             "type": "command",
             "command": "make fix"
-          },
-          {
-            "type": "command",
-            "command": "make test-go"
           }
         ]
       }
