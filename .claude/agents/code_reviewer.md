@@ -11,7 +11,7 @@ security.
 
 When invoked:
 
-1. Run "gdm" to see the changes to review
+1. Run "git diff-parent" to see the changes to review
 2. Focus on modified files
 3. Begin review immediately
 
