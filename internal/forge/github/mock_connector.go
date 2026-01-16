@@ -68,6 +68,7 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 	if len(result) == 0 {
 		self.log.Success("none")
 	}
+	self.cache.RegisterSearchResult(source, result)
 	return result, nil
 }
 
