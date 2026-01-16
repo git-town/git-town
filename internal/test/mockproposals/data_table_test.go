@@ -19,31 +19,6 @@ func TestToDocString(t *testing.T) {
 		want := ""
 		must.Eq(t, want, have)
 	})
-
-	t.Run("single proposal with multi-line body", func(t *testing.T) {
-		t.Parallel()
-		proposals := []forgedomain.ProposalData{
-			{
-				Number: forgedomain.ProposalNumber(789),
-				Source: gitdomain.NewLocalBranchName("feature"),
-				Target: gitdomain.NewLocalBranchName("main"),
-				Body:   gitdomain.NewProposalBodyOpt("Line 1\n\nLine 3"),
-				URL:    "https://example.com/pr/789",
-			},
-		}
-		have := mockproposals.ToDocString(proposals)
-		want := `
-url: https://example.com/pr/789
-number: 789
-source: feature
-target: main
-body:
-  Line 1
-
-  Line 3`[1:]
-		must.Eq(t, want, have)
-	})
-
 	t.Run("multiple proposals", func(t *testing.T) {
 		t.Parallel()
 		proposals := []forgedomain.ProposalData{
@@ -97,6 +72,30 @@ number: 999
 source: test
 target: main
 body:`[1:]
+		must.Eq(t, want, have)
+	})
+
+	t.Run("single proposal with multi-line body", func(t *testing.T) {
+		t.Parallel()
+		proposals := []forgedomain.ProposalData{
+			{
+				Number: forgedomain.ProposalNumber(789),
+				Source: gitdomain.NewLocalBranchName("feature"),
+				Target: gitdomain.NewLocalBranchName("main"),
+				Body:   gitdomain.NewProposalBodyOpt("Line 1\n\nLine 3"),
+				URL:    "https://example.com/pr/789",
+			},
+		}
+		have := mockproposals.ToDocString(proposals)
+		want := `
+url: https://example.com/pr/789
+number: 789
+source: feature
+target: main
+body:
+  Line 1
+
+  Line 3`[1:]
 		must.Eq(t, want, have)
 	})
 }
