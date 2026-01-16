@@ -1,4 +1,4 @@
-package sync
+package synclineage
 
 import (
 	"github.com/git-town/git-town/v22/internal/config"
