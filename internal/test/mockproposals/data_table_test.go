@@ -19,6 +19,7 @@ func TestToDocString(t *testing.T) {
 		want := ""
 		must.Eq(t, want, have)
 	})
+
 	t.Run("multiple proposals", func(t *testing.T) {
 		t.Parallel()
 		proposals := []forgedomain.ProposalData{
