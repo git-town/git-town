@@ -3,12 +3,13 @@ package mockproposals
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/test/datatable"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -68,30 +69,25 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 	return result
 }
 
-func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatable.DataTable {
-	result := datatable.DataTable{}
-	result.AddRow(fields...)
+func ToDocString(proposals []forgedomain.ProposalData) string {
+	result := strings.Builder{}
 	for _, proposal := range proposals {
-		row := make([]string, len(fields))
-		for f, field := range fields {
-			switch field {
-			case "ID":
-				row[f] = proposal.Number.String()
-			case "SOURCE BRANCH":
-				row[f] = proposal.Source.String()
-			case "TARGET BRANCH":
-				row[f] = proposal.Target.String()
-			case "TITLE":
-				row[f] = proposal.Title.String()
-			case "BODY":
-				row[f] = proposal.Body.GetOrZero().String()
-			case "URL":
-				row[f] = proposal.URL
-			default:
-				panic("unknown field: " + field)
-			}
+		result.WriteString("url:")
+		if proposal.URL != "" {
+			result.WriteString(" ")
+			result.WriteString(proposal.URL)
 		}
-		result.AddRow(row...)
+		result.WriteString("\nnumber: ")
+		result.WriteString(proposal.Number.String())
+		result.WriteString("\nsource: ")
+		result.WriteString(proposal.Source.String())
+		result.WriteString("\ntarget: ")
+		result.WriteString(proposal.Target.String())
+		result.WriteString("\nbody:\n")
+		if body, hasBody := proposal.Body.Get(); hasBody {
+			result.WriteString(gohacks.IndentLines(body.String(), 2))
+		}
+		result.WriteString("\n")
 	}
-	return result
+	return strings.TrimSpace(result.String())
 }
