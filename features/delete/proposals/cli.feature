@@ -11,43 +11,43 @@ Feature: delete the current feature branch from a stack and update proposals
       | gamma2 | feature | beta   | local, origin |
       | delta  | feature | gamma2 | local, origin |
     And the proposals
-      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE          | BODY        | URL                      |
-      | 1  | alpha         | main          | alpha feature  | alpha body  | https://example.com/pr/1 |
-      | 2  | beta          | alpha         | beta feature   | beta body   | https://example.com/pr/2 |
-      | 3  | gamma1        | beta          | gamma1 feature | gamma1 body | https://example.com/pr/3 |
-      | 4  | gamma2        | beta          | gamma2 feature | gamma2 body | https://example.com/pr/4 |
-      | 5  | delta         | gamma2        | delta feature  | delta body  | https://example.com/pr/5 |
+      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE           | BODY        | URL                      |
+      | 1  | alpha         | main          | alpha proposal  | alpha body  | https://example.com/pr/1 |
+      | 2  | beta          | alpha         | beta proposal   | beta body   | https://example.com/pr/2 |
+      | 3  | gamma1        | beta          | gamma1 proposal | gamma1 body | https://example.com/pr/3 |
+      | 4  | gamma2        | beta          | gamma2 proposal | gamma2 body | https://example.com/pr/4 |
+      | 5  | delta         | gamma2        | delta proposal  | delta body  | https://example.com/pr/5 |
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "beta"
     When I run "git-town delete"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                         |
-      | beta   | git fetch --prune --tags                                        |
-      |        | Finding proposal from gamma1 into beta ... #3 (gamma1 feature)  |
-      |        | Finding proposal from gamma2 into beta ... #4 (gamma2 feature)  |
-      |        | Updating target branch of proposal #3 to alpha ... ok           |
-      |        | Updating target branch of proposal #4 to alpha ... ok           |
-      |        | git push origin :beta                                           |
-      |        | git checkout delta                                              |
-      | delta  | git branch -D beta                                              |
-      |        | Finding proposals for alpha ... main                            |
-      |        | Finding proposal from alpha into main ... #1 (alpha feature)    |
-      |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 feature) |
-      |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 feature) |
-      |        | Finding proposal from delta into gamma2 ... #5 (delta feature)  |
-      |        | Update body for #1 ... ok                                       |
-      |        | Finding proposals for beta ... alpha                            |
-      |        | Update body for #2 ... ok                                       |
-      |        | Finding proposals for delta ... gamma2                          |
-      |        | Finding proposal from alpha into main ... #1 (alpha feature)    |
-      |        | Update body for #5 ... ok                                       |
-      |        | Finding proposals for gamma1 ... alpha                          |
-      |        | Update body for #3 ... ok                                       |
-      |        | Finding proposals for gamma2 ... alpha                          |
-      |        | Finding proposal from delta into gamma2 ... #5 (delta feature)  |
-      |        | Update body for #4 ... ok                                       |
+      | BRANCH | COMMAND                                                          |
+      | beta   | git fetch --prune --tags                                         |
+      |        | Finding proposal from gamma1 into beta ... #3 (gamma1 proposal)  |
+      |        | Finding proposal from gamma2 into beta ... #4 (gamma2 proposal)  |
+      |        | Updating target branch of proposal #3 to alpha ... ok            |
+      |        | Updating target branch of proposal #4 to alpha ... ok            |
+      |        | git push origin :beta                                            |
+      |        | git checkout delta                                               |
+      | delta  | git branch -D beta                                               |
+      |        | Finding proposals for alpha ... main                             |
+      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
+      |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 proposal) |
+      |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 proposal) |
+      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
+      |        | Update body for #1 ... ok                                        |
+      |        | Finding proposals for beta ... alpha                             |
+      |        | Update body for #2 ... ok                                        |
+      |        | Finding proposals for delta ... gamma2                           |
+      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
+      |        | Update body for #5 ... ok                                        |
+      |        | Finding proposals for gamma1 ... alpha                           |
+      |        | Update body for #3 ... ok                                        |
+      |        | Finding proposals for gamma2 ... alpha                           |
+      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
+      |        | Update body for #4 ... ok                                        |
     And this lineage exists now
       """
       main
