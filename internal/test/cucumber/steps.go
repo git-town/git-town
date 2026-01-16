@@ -1466,6 +1466,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if len(diffs) == 1 && diffs[0].Type == 0 {
 			return nil
 		}
+		if CukeUpdate {
+			scenarioURI := ctx.Value(keyScenarioURI).(string)
+			return ChangeFeatureFile(scenarioURI, wantString, haveString)
+		}
 		diffText := dmp.DiffPrettyText(diffs)
 		diffText += fmt.Sprintf("\n\nHAVE:\n%q\n\n", haveString)
 		diffText += fmt.Sprintf("\n\nWANT:\n%q\n\n", wantString)
