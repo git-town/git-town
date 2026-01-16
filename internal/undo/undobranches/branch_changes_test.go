@@ -164,7 +164,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -186,6 +186,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch", "perennial-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("local-only branch pushed to origin", func(t *testing.T) {
@@ -255,7 +257,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -273,6 +275,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch", "perennial-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("local-only branch removed", func(t *testing.T) {
@@ -318,7 +322,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -334,6 +338,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "branch-1"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"branch-1"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch added", func(t *testing.T) {
@@ -393,7 +399,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -414,6 +420,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "main"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"perennial-branch", "feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch changed locally", func(t *testing.T) {
@@ -489,7 +497,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          true,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -511,6 +519,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
@@ -607,7 +617,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -630,6 +640,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
@@ -722,7 +734,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -743,6 +755,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch deleted locally", func(t *testing.T) {
@@ -812,7 +826,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -832,6 +846,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch", "perennial-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch remote updated", func(t *testing.T) {
@@ -939,7 +955,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          true,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -958,6 +974,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch renamed locally", func(t *testing.T) {
@@ -1033,7 +1051,7 @@ func TestChanges(t *testing.T) {
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1051,6 +1069,8 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"old", "new"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
@@ -1121,7 +1141,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1139,6 +1159,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
@@ -1214,7 +1236,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1236,6 +1258,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch", "perennial-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("omnibranch updates pushed up", func(t *testing.T) {
@@ -1396,7 +1420,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1410,6 +1434,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "main"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"perennial-branch", "feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("sync with a new upstream remote", func(t *testing.T) {
@@ -1477,7 +1503,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1492,6 +1518,8 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "main"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"main"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
 	t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
@@ -1571,7 +1599,7 @@ func TestChanges(t *testing.T) {
 				PushHook:          false,
 			},
 		}
-		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		haveProgram, haveChangedBranches := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			BranchInfos:              before.Branches,
 			Config:                   config,
@@ -1591,5 +1619,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
+		wantChangedBranches := gitdomain.LocalBranchNames{"main", "feature-branch"}
+		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 }
