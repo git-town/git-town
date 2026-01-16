@@ -29,11 +29,7 @@
           },
           {
             "type": "command",
-            "command": "make unit"
-          },
-          {
-            "type": "command",
-            "command": "make lint"
+            "command": "make test-go"
           }
         ]
       }
