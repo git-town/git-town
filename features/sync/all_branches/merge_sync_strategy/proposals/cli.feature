@@ -1,32 +1,20 @@
-Feature: sync a stack and update proposals
+Feature: sync all branches and update proposals
 
   Background:
     Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
     And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | alpha | feature | main   | local, origin |
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | alpha    | feature | main   | local, origin |
+      | beta     | feature | alpha  | local, origin |
+      | gamma    | feature | beta   | local, origin |
+      | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, origin | alpha commit |
-    And the branches
-      | NAME | TYPE    | PARENT | LOCATIONS     |
-      | beta | feature | alpha  | local, origin |
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE     |
-      | beta   | local, origin | beta commit |
-    And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | gamma | feature | beta   | local, origin |
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE      |
-      | gamma  | local, origin | gamma commit |
-    And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | delta | feature | gamma  | local, origin |
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE      |
-      | delta  | local, origin | delta commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | alpha    | local, origin | alpha commit    |
+      | beta     | local, origin | beta commit     |
+      | gamma    | local, origin | gamma commit    |
+      | branch-1 | local, origin | branch-1 commit |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE          | BODY       | URL                      |
       | 1  | alpha         | main          | alpha proposal | alpha body | https://example.com/pr/1 |
@@ -37,33 +25,34 @@ Feature: sync a stack and update proposals
     And the current branch is "main"
     When I run "git-town sync --all"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                        |
-      | main   | git fetch --prune --tags                                       |
-      |        | git checkout alpha                                             |
-      | alpha  | git checkout beta                                              |
-      | beta   | git checkout gamma                                             |
-      | gamma  | git checkout delta                                             |
-      | delta  | git checkout main                                              |
-      | main   | git push --tags                                                |
-      |        | Finding all proposals for alpha ... main                       |
-      |        | Finding proposal from alpha into main ... #1 (alpha proposal)  |
-      |        | Finding proposal from beta into alpha ... #2 (beta proposal)   |
-      |        | Finding proposal from gamma into beta ... #3 (gamma proposal)  |
-      |        | Finding proposal from delta into gamma ... #4 (delta proposal) |
-      |        | Update body for #1 ... ok                                      |
-      |        | Finding all proposals for beta ... alpha                       |
-      |        | Finding proposal from alpha into main ... #1 (alpha proposal)  |
-      |        | Update body for #2 ... ok                                      |
-      |        | Finding all proposals for delta ... gamma                      |
-      |        | Finding proposal from beta into alpha ... #2 (beta proposal)   |
-      |        | Update body for #4 ... ok                                      |
-      |        | Finding all proposals for gamma ... beta                       |
-      |        | Finding proposal from delta into gamma ... #4 (delta proposal) |
-      |        | Update body for #3 ... ok                                      |
+      | BRANCH   | COMMAND                                                       |
+      | main     | git fetch --prune --tags                                      |
+      |          | git checkout alpha                                            |
+      | alpha    | git checkout beta                                             |
+      | beta     | git merge --no-edit --ff alpha                                |
+      |          | git push                                                      |
+      |          | git checkout gamma                                            |
+      | gamma    | git merge --no-edit --ff beta                                 |
+      |          | git push                                                      |
+      |          | git checkout branch-1                                         |
+      | branch-1 | git checkout main                                             |
+      | main     | git push --tags                                               |
+      |          | Finding all proposals for alpha ... main                      |
+      |          | Finding proposal from alpha into main ... #1 (alpha proposal) |
+      |          | Finding proposal from beta into alpha ... #2 (beta proposal)  |
+      |          | Finding proposal from gamma into beta ... #3 (gamma proposal) |
+      |          | Update body for #1 ... ok                                     |
+      |          | Finding all proposals for beta ... alpha                      |
+      |          | Finding proposal from alpha into main ... #1 (alpha proposal) |
+      |          | Update body for #2 ... ok                                     |
+      |          | Finding all proposals for branch-1 ... none                   |
+      |          | Finding all proposals for gamma ... beta                      |
+      |          | Finding proposal from beta into alpha ... #2 (beta proposal)  |
+      |          | Update body for #3 ... ok                                     |
     And the initial branches and lineage exist now
-    And the initial commits exist now
     And the proposals are now
       """
       url: https://example.com/pr/1
@@ -80,7 +69,6 @@ Feature: sync a stack and update proposals
           - https://example.com/pr/1 :point_left:
             - https://example.com/pr/2
               - https://example.com/pr/3
-                - https://example.com/pr/4
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
@@ -100,7 +88,6 @@ Feature: sync a stack and update proposals
           - https://example.com/pr/1
             - https://example.com/pr/2 :point_left:
               - https://example.com/pr/3
-                - https://example.com/pr/4
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
@@ -120,7 +107,6 @@ Feature: sync a stack and update proposals
           - https://example.com/pr/1
             - https://example.com/pr/2
               - https://example.com/pr/3 :point_left:
-                - https://example.com/pr/4
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
