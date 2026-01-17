@@ -38,7 +38,7 @@ func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err 
 	if args.RunState.DryRun {
 		return gitdomain.LocalBranchNames{}, nil
 	}
-	program, changedBranches := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
+	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
 		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
