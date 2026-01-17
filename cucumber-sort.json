@@ -163,5 +163,8 @@
     "^the initial tags exist now$",
     "^the initial proposals exist now$",
     "^the proposals are now$"
+  ],
+  "unknown-steps": [
+    "^origin closes proposal #2$"
   ]
 }
