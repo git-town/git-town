@@ -990,7 +990,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return gitconfig.SetOffline(devRepo.TestRunner, true)
 	})
 
-	sc.Step(`^origin closes proposal #([^"]*)$`, func(ctx context.Context, proposalNumber int) {
+	sc.Step(`^origin closes proposal #(\d+)$`, func(ctx context.Context, proposalNumber int) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
 		proposals := mockproposals.Load(proposalFilePath)
