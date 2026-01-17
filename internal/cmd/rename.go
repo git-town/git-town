@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -354,6 +355,15 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 			}
 			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
+	}
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateProposalLineage && isOnline {
+		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.newBranch, data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
+		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

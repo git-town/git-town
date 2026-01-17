@@ -12,6 +12,55 @@ import (
 func TestMockProposals(t *testing.T) {
 	t.Parallel()
 
+	t.Run("DeleteByID", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("delete middle one", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+			}
+			data2 := forgedomain.ProposalData{
+				Number: 2,
+				Source: "other-branch",
+				Target: "main",
+			}
+			data3 := forgedomain.ProposalData{
+				Number: 3,
+				Source: "third-branch",
+				Target: "main",
+			}
+			proposals := mockproposals.MockProposals{data1, data2, data3}
+			proposals.DeleteByID(2)
+			want := mockproposals.MockProposals{data1, data3}
+			must.Eq(t, want, proposals)
+		})
+
+		t.Run("no match", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+				Title:  "Proposal 1",
+			}
+			proposals := mockproposals.MockProposals{data1}
+			proposals.DeleteByID(999)
+			want := mockproposals.MockProposals{data1}
+			must.Eq(t, want, proposals)
+		})
+
+		t.Run("no proposals", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			proposals.DeleteByID(1)
+			want := mockproposals.MockProposals{}
+			must.Eq(t, want, proposals)
+		})
+	})
+
 	t.Run("FindByID", func(t *testing.T) {
 		t.Parallel()
 		t.Run("ID matches", func(t *testing.T) {

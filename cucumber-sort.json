@@ -125,6 +125,7 @@
       "^I run \".*\"",
       "^I pipe the following text into"
     ],
+    "^origin closes proposal",
     "^I am not prompted for any parent branches$",
     "^Git Town runs",
     "^Git Town prints",

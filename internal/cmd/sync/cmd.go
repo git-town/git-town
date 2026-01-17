@@ -187,7 +187,7 @@ Start:
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          data.config,
 			Program:         runProgram,
-			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			TouchedBranches: data.branchesToSync.BranchNames(),
 		})
 	}
 
