@@ -15,7 +15,7 @@ import (
 )
 
 // creates the program for undoing a program that finished
-func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) { //nolint:nonamedreturns
+func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program { //nolint:nonamedreturns
 	result := NewMutable(&program.Program{})
 	result.Value.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
@@ -35,21 +35,22 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram progr
 	// undo branch changes
 	endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get()
 	if hasEndBranchesSnapshot {
-		undoProgram, changedBranches = undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
+		undoProgram, changedBranches := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
 		result.Value.AddProgram(undoProgram)
+		// update embedded lineage
+		updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+		isOnline := args.Config.NormalConfig.Offline.IsOnline()
+		if updateProposalLineage && isOnline {
+			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+				ChangedBranches: changedBranches,
+				Config:          args.Config,
+				Program:         result,
+			})
+		}
 	}
 	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
-	}
-	updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
-	isOnline := args.Config.NormalConfig.Offline.IsOnline()
-	if updateProposalLineage && isOnline {
-		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: changedBranches,
-			Config:          args.Config,
-			Program:         result,
-		})
 	}
 	result.Value.AddProgram(args.RunState.FinalUndoProgram)
 	initialBranchOpt := args.RunState.BeginBranchesSnapshot.Active
@@ -64,5 +65,5 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram progr
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return result.Immutable(), changedBranches
+	return result.Immutable()
 }
