@@ -170,30 +170,13 @@ Feature: detach the current feature branch from a stack and update proposals
       
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                         |
-      |        | Updating target branch of proposal #2 to alpha ... ok           |
-      |        | Updating target branch of proposal #3 to beta ... ok            |
-      |        | Updating target branch of proposal #4 to beta ... ok            |
-      |        | Finding all proposals for alpha ... main                        |
-      |        | Finding proposal from gamma1 into alpha ... none                |
-      |        | Finding proposal from gamma2 into alpha ... none                |
-      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal) |
-      |        | Update body for #1 ... ok                                       |
-      |        | Finding all proposals for beta ... alpha                        |
-      |        | Update body for #2 ... ok                                       |
-      |        | Finding all proposals for delta ... gamma2                      |
-      |        | Finding proposal from alpha into main ... #1 (alpha proposal)   |
-      |        | Finding proposal from gamma2 into alpha ... none                |
-      |        | Update body for #5 ... ok                                       |
-      |        | Finding all proposals for gamma1 ... beta                       |
-      |        | Update body for #3 ... ok                                       |
-      |        | Finding all proposals for gamma2 ... beta                       |
-      |        | Finding proposal from delta into gamma2 ... #5 (delta proposal) |
-      |        | Update body for #4 ... ok                                       |
+      | BRANCH | COMMAND                                               |
+      |        | Updating target branch of proposal #2 to alpha ... ok |
+      |        | Updating target branch of proposal #3 to beta ... ok  |
+      |        | Updating target branch of proposal #4 to beta ... ok  |
     And the initial branches and lineage exist now
     And the initial commits exist now
     And the proposals are now
