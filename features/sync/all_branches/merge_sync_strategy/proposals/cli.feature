@@ -7,30 +7,26 @@ Feature: sync a stack and update proposals
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | alpha  | local, origin | alpha 1 | alpha_1   | alpha 1      |
-      |        |               | alpha 2 | alpha_2   | alpha 2      |
+      | BRANCH | LOCATION      | MESSAGE |
+      | alpha  | local, origin | alpha 1 |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | beta   | local, origin | beta 1  | beta_1    | beta 1       |
-      |        |               | beta 2  | beta_2    | beta 2       |
+      | BRANCH | LOCATION      | MESSAGE |
+      | beta   | local, origin | beta 1  |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | gamma | feature | beta   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | gamma  | local, origin | gamma 1 | gamma_1   | gamma 1      |
-      |        |               | gamma 2 | gamma_2   | gamma 2      |
+      | BRANCH | LOCATION      | MESSAGE |
+      | gamma  | local, origin | gamma 1 |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | delta | feature | gamma  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
-      | delta  | local, origin | delta 1 | delta_1   | delta 1      |
-      |        |               | delta 2 | delta_2   | delta 2      |
+      | BRANCH | LOCATION      | MESSAGE |
+      | delta  | local, origin | delta 1 |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE          | BODY       | URL                      |
       | 1  | alpha         | main          | alpha proposal | alpha body | https://example.com/pr/1 |
