@@ -469,11 +469,9 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		}
 	}
 	// update proposal lineages
-	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
 	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
-		fmt.Println("2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
 		parents := gitdomain.LocalBranchNames{}
 		if hasOldParent {
 			parents = append(parents, oldParent)
