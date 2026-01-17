@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/datatable"
@@ -987,6 +989,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return gitconfig.SetOffline(devRepo.TestRunner, true)
+	})
+
+	sc.Step(`^origin closes proposal #([^"]*)$`, func(ctx context.Context, proposalNumber int) {
+		numberToDelete := forgedomain.ProposalNumber(asserts.NoError1(strconv.Atoi(proposalNumber)))
+		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
+		proposals := mockproposals.Load(proposalFilePath)
+		proposals.DeleteByID(proposalNumber)
+		mockproposals.Save(proposalFilePath, proposals)
 	})
 
 	sc.Step(`^origin deletes the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
