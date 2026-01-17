@@ -41,7 +41,6 @@ Feature: sync a stack and update proposals
     And the current branch is "main"
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                        |
