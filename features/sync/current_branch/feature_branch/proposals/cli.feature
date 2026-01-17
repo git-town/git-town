@@ -4,45 +4,65 @@ Feature: sync the current feature branch and update proposals
     Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-      | other   | feature | main   | local, origin |
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
+      | feature-1 | feature | main      | local, origin |
+      | feature-2 | feature | feature-1 | local, origin |
+      | feature-3 | feature | feature-2 | local, origin |
+      | other     | feature | main      | local, origin |
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, origin | feature commit |
-      | other   | local, origin | other commit   |
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, origin | feature-1 commit |
+      | feature-2 | local, origin | feature-2 commit |
+      | feature-3 | local, origin | feature-3 commit |
+      | other     | local, origin | other commit     |
     And the proposals
-      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE            | BODY         | URL                      |
-      | 1  | feature       | main          | feature proposal | feature body | https://example.com/pr/1 |
-      | 2  | other         | main          | other proposal   | other body   | https://example.com/pr/2 |
+      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE              | BODY           | URL                      |
+      | 1  | feature-1     | main          | feature-1 proposal | feature-1 body | https://example.com/pr/1 |
+      | 2  | feature-2     | feature-1     | feature-2 proposal | feature-2 body | https://example.com/pr/2 |
+      | 3  | feature-3     | feature-2     | feature-3 proposal | feature-3 body | https://example.com/pr/3 |
+      | 4  | other         | main          | other proposal     | other body     | https://example.com/pr/4 |
     And Git setting "git-town.proposals-show-lineage" is "cli"
-    And the current branch is "feature"
+    And the current branch is "feature-2"
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                           |
-      | feature | git fetch --prune --tags                                          |
-      |         | Finding all proposals for feature ... main                        |
-      |         | Finding proposal from feature into main ... #1 (feature proposal) |
-      |         | Update body for #1 ... ok                                         |
-      |         | Finding all proposals for other ... main                          |
-      |         | Finding proposal from other into main ... #2 (other proposal)     |
-      |         | Update body for #2 ... ok                                         |
+      | BRANCH    | COMMAND                                                                    |
+      | feature-2 | git fetch --prune --tags                                                   |
+      |           | git checkout feature-1                                                     |
+      | feature-1 | git checkout feature-2                                                     |
+      | feature-2 | git merge --no-edit --ff feature-1                                         |
+      |           | git push                                                                   |
+      |           | Finding all proposals for feature-1 ... main                               |
+      |           | Finding proposal from feature-1 into main ... #1 (feature-1 proposal)      |
+      |           | Finding proposal from feature-2 into feature-1 ... #2 (feature-2 proposal) |
+      |           | Finding proposal from feature-3 into feature-2 ... #3 (feature-3 proposal) |
+      |           | Update body for #1 ... ok                                                  |
+      |           | Finding all proposals for feature-2 ... feature-1                          |
+      |           | Finding proposal from feature-1 into main ... #1 (feature-1 proposal)      |
+      |           | Update body for #2 ... ok                                                  |
+      |           | Finding all proposals for feature-3 ... feature-2                          |
+      |           | Finding proposal from feature-2 into feature-1 ... #2 (feature-2 proposal) |
+      |           | Update body for #3 ... ok                                                  |
+      |           | Finding all proposals for other ... main                                   |
+      |           | Finding proposal from other into main ... #4 (other proposal)              |
+      |           | Update body for #4 ... ok                                                  |
     And the proposals are now
       """
       url: https://example.com/pr/1
       number: 1
-      source: feature
+      source: feature-1
       target: main
       body:
-        feature body
+        feature-1 body
 
         <!-- branch-stack-start -->
 
         -------------------------
         - main
           - https://example.com/pr/1 :point_left:
+            - https://example.com/pr/2
+              - https://example.com/pr/3
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
@@ -50,6 +70,44 @@ Feature: sync the current feature branch and update proposals
 
       url: https://example.com/pr/2
       number: 2
+      source: feature-2
+      target: feature-1
+      body:
+        feature-2 body
+
+        <!-- branch-stack-start -->
+
+        -------------------------
+        - main
+          - https://example.com/pr/1
+            - https://example.com/pr/2 :point_left:
+              - https://example.com/pr/3
+
+        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
+
+        <!-- branch-stack-end -->
+
+      url: https://example.com/pr/3
+      number: 3
+      source: feature-3
+      target: feature-2
+      body:
+        feature-3 body
+
+        <!-- branch-stack-start -->
+
+        -------------------------
+        - main
+          - https://example.com/pr/1
+            - https://example.com/pr/2
+              - https://example.com/pr/3 :point_left:
+
+        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
+
+        <!-- branch-stack-end -->
+
+      url: https://example.com/pr/4
+      number: 4
       source: other
       target: main
       body:
@@ -59,7 +117,7 @@ Feature: sync the current feature branch and update proposals
 
         -------------------------
         - main
-          - https://example.com/pr/2 :point_left:
+          - https://example.com/pr/4 :point_left:
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
@@ -68,22 +126,27 @@ Feature: sync the current feature branch and update proposals
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                                               |
+      | feature-2 | git reset --hard {{ sha-initial 'feature-2 commit' }} |
+      |           | git push --force-with-lease --force-if-includes       |
     And the initial branches and lineage exist now
     And the proposals are now
       """
       url: https://example.com/pr/1
       number: 1
-      source: feature
+      source: feature-1
       target: main
       body:
-        feature body
+        feature-1 body
 
         <!-- branch-stack-start -->
 
         -------------------------
         - main
           - https://example.com/pr/1 :point_left:
+            - https://example.com/pr/2
+              - https://example.com/pr/3
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
@@ -91,6 +154,44 @@ Feature: sync the current feature branch and update proposals
 
       url: https://example.com/pr/2
       number: 2
+      source: feature-2
+      target: feature-1
+      body:
+        feature-2 body
+
+        <!-- branch-stack-start -->
+
+        -------------------------
+        - main
+          - https://example.com/pr/1
+            - https://example.com/pr/2 :point_left:
+              - https://example.com/pr/3
+
+        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
+
+        <!-- branch-stack-end -->
+
+      url: https://example.com/pr/3
+      number: 3
+      source: feature-3
+      target: feature-2
+      body:
+        feature-3 body
+
+        <!-- branch-stack-start -->
+
+        -------------------------
+        - main
+          - https://example.com/pr/1
+            - https://example.com/pr/2
+              - https://example.com/pr/3 :point_left:
+
+        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
+
+        <!-- branch-stack-end -->
+
+      url: https://example.com/pr/4
+      number: 4
       source: other
       target: main
       body:
@@ -100,7 +201,7 @@ Feature: sync the current feature branch and update proposals
 
         -------------------------
         - main
-          - https://example.com/pr/2 :point_left:
+          - https://example.com/pr/4 :point_left:
 
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
