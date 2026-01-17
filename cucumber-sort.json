@@ -165,6 +165,7 @@
     "^the proposals are now$"
   ],
   "unknown-steps": [
+    "^origin closes proposal #1$",
     "^origin closes proposal #2$"
   ]
 }
