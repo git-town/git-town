@@ -91,7 +91,7 @@ Start:
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	_, err = undo.Execute(undo.ExecuteArgs{
+	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
@@ -104,7 +104,6 @@ Start:
 		InitialStashSize: data.stashSize,
 		RunState:         runState,
 	})
-	return err
 }
 
 type undoData struct {

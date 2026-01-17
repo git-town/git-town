@@ -34,9 +34,9 @@ type ExecuteArgs struct {
 }
 
 // undoes the persisted runstate
-func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err error) { //nolint:nonamedreturns
+func Execute(args ExecuteArgs) error {
 	if args.RunState.DryRun {
-		return gitdomain.LocalBranchNames{}, nil
+		return nil
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
@@ -59,10 +59,10 @@ func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err 
 		Prog:          program,
 	})
 	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
-	err = os.Remove(runstatePath.String())
+	err := os.Remove(runstatePath.String())
 	if err != nil && !os.IsNotExist(err) {
-		return changedBranches, fmt.Errorf(messages.RunstateDeleteProblem, err)
+		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return changedBranches, nil
+	return nil
 }

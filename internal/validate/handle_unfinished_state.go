@@ -226,7 +226,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 	if err != nil || exit {
 		return configdomain.ProgramFlowExit, err
 	}
-	_, err = undo.Execute(undo.ExecuteArgs{
+	return configdomain.ProgramFlowExit, undo.Execute(undo.ExecuteArgs{
 		Backend:          args.Backend,
 		CommandsCounter:  args.CommandsCounter,
 		Config:           validatedConfig,
@@ -239,7 +239,6 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		InitialStashSize: runState.BeginStashSize,
 		RunState:         runState,
 	})
-	return configdomain.ProgramFlowExit, err
 }
 
 type quickValidateConfigArgs struct {
