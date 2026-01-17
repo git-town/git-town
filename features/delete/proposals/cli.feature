@@ -164,6 +164,7 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | Updating target branch of proposal #3 to beta ... ok |
       |        | Updating target branch of proposal #4 to beta ... ok |
       |        | git checkout beta                                    |
+      |        | Finding all proposals for beta ... alpha             |
     And the initial branches and lineage exist now
     And the initial commits exist now
     And the proposals are now
