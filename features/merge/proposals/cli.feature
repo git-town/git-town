@@ -29,7 +29,7 @@ Feature: merge the current feature branch and update proposals
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "beta"
     When I run "git-town merge"
-    And origin closes proposal #2
+    Then origin closes proposal #2
 
   Scenario: result
     Then Git Town runs the commands
