@@ -11,49 +11,6 @@ import (
 
 func TestMockProposals(t *testing.T) {
 	t.Parallel()
-
-	t.Run("FindByID", func(t *testing.T) {
-		t.Parallel()
-		t.Run("ID matches", func(t *testing.T) {
-			t.Parallel()
-			data1 := forgedomain.ProposalData{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-			}
-			data2 := forgedomain.ProposalData{
-				Number: 2,
-				Source: "other-branch",
-				Target: "main",
-			}
-			proposals := mockproposals.MockProposals{data1, data2}
-			have := proposals.FindByID(2)
-			want := Some(data2)
-			must.Eq(t, want, have)
-		})
-
-		t.Run("ID does not match", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{
-				{
-					Number: 1,
-					Source: "feature-branch",
-					Target: "main",
-					Title:  "Proposal 1",
-				},
-			}
-			have := proposals.FindByID(999)
-			must.True(t, have.IsNone())
-		})
-
-		t.Run("no proposals", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{}
-			have := proposals.FindByID(1)
-			must.True(t, have.IsNone())
-		})
-	})
-
 	t.Run("DeleteByID", func(t *testing.T) {
 		t.Parallel()
 
@@ -100,6 +57,48 @@ func TestMockProposals(t *testing.T) {
 			proposals.DeleteByID(1)
 			want := mockproposals.MockProposals{}
 			must.Eq(t, want, proposals)
+		})
+	})
+
+	t.Run("FindByID", func(t *testing.T) {
+		t.Parallel()
+		t.Run("ID matches", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+			}
+			data2 := forgedomain.ProposalData{
+				Number: 2,
+				Source: "other-branch",
+				Target: "main",
+			}
+			proposals := mockproposals.MockProposals{data1, data2}
+			have := proposals.FindByID(2)
+			want := Some(data2)
+			must.Eq(t, want, have)
+		})
+
+		t.Run("ID does not match", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+				},
+			}
+			have := proposals.FindByID(999)
+			must.True(t, have.IsNone())
+		})
+
+		t.Run("no proposals", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			have := proposals.FindByID(1)
+			must.True(t, have.IsNone())
 		})
 	})
 
