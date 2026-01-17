@@ -170,7 +170,7 @@ Feature: detach the current feature branch from a stack and update proposals
       
       """
 
-  @this
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
