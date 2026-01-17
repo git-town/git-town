@@ -39,7 +39,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if hasEndBranchesSnapshot {
 		undoProgram := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
 		result.Value.AddProgram(undoProgram)
-		fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", changedBranches)
+		fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", args.RunState.TouchedBranches)
 		// update embedded lineage
 		updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
