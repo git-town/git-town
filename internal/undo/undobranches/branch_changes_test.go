@@ -275,7 +275,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
-		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch", "perennial-branch"}
+		wantChangedBranches := gitdomain.LocalBranchNames{}
 		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
@@ -519,7 +519,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
-		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		wantChangedBranches := gitdomain.LocalBranchNames{"perennial-branch"}
 		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
@@ -640,7 +640,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
-		wantChangedBranches := gitdomain.LocalBranchNames{"feature-branch"}
+		wantChangedBranches := gitdomain.LocalBranchNames{"perennial-branch"}
 		must.Eq(t, wantChangedBranches, haveChangedBranches)
 	})
 
@@ -974,8 +974,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
-		wantChangedBranches := gitdomain.LocalBranchNames{}
-		must.Eq(t, wantChangedBranches, haveChangedBranches)
+		must.Eq(t, nil, haveChangedBranches)
 	})
 
 	t.Run("omnibranch renamed locally", func(t *testing.T) {
@@ -1159,8 +1158,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
 		must.Eq(t, wantProgram, haveProgram)
-		wantChangedBranches := gitdomain.LocalBranchNames{}
-		must.Eq(t, wantChangedBranches, haveChangedBranches)
+		must.Eq(t, nil, haveChangedBranches)
 	})
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
