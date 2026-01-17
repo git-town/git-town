@@ -121,7 +121,6 @@ Feature: rename the current feature branch and update proposals
         <!-- branch-stack-end -->
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
