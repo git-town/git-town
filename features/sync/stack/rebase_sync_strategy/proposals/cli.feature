@@ -31,23 +31,28 @@ Feature: sync stacked changes and update proposals
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                        |
-      | child  | git fetch --prune --tags                                                       |
-      |        | git checkout main                                                              |
-      | main   | git -c rebase.updateRefs=false rebase origin/main                              |
-      |        | git push                                                                       |
-      |        | git checkout parent                                                            |
-      | parent | git push --force-with-lease --force-if-includes                                |
-      |        | git -c rebase.updateRefs=false rebase origin/parent                            |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}   |
-      |        | git push --force-with-lease --force-if-includes                                |
-      |        | git checkout child                                                             |
-      | child  | git push --force-with-lease --force-if-includes                                |
-      |        | git -c rebase.updateRefs=false rebase origin/child                             |
-      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
-      |        | git push --force-with-lease --force-if-includes                                |
-      |        | Finding all proposals for child ... none                                       |
-      |        | Finding all proposals for parent ... none                                      |
+      | BRANCH | COMMAND                                                                                |
+      | child  | git fetch --prune --tags                                                               |
+      |        | git checkout main                                                                      |
+      | main   | git -c rebase.updateRefs=false rebase origin/main                                      |
+      |        | git push                                                                               |
+      |        | git checkout parent                                                                    |
+      | parent | git push --force-with-lease --force-if-includes                                        |
+      |        | git -c rebase.updateRefs=false rebase origin/parent                                    |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
+      |        | git push --force-with-lease --force-if-includes                                        |
+      |        | git checkout child                                                                     |
+      | child  | git push --force-with-lease --force-if-includes                                        |
+      |        | git -c rebase.updateRefs=false rebase origin/child                                     |
+      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                                        |
+      |        | Finding all proposals for child ... parent                                             |
+      |        | Finding proposal from parent into main ... #1 (parent proposal)                        |
+      |        | Finding proposal from child into parent ... #2 (child proposal)                        |
+      |        | Update body for #2 ... ok                                                              |
+      |        | Finding all proposals for parent ... main                                              |
+      |        | Finding proposal from child into parent ... #2 (child proposal)                        |
+      |        | Update body for #1 ... ok                                                              |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
