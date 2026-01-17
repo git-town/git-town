@@ -61,7 +61,6 @@ type BranchChanges struct {
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) { //nolint:nonamedreturns
 	result := program.Program{}
 	changed := set.New[gitdomain.LocalBranchName]()
-
 	omniChanges := CategorizeLocalBranchChange(self.OmniChanged, args.Config)
 	changed.Add(omniChanges.Features.BranchNames()...)
 	changed.Add(omniChanges.Perennials.BranchNames()...)
