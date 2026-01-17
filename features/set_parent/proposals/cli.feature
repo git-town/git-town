@@ -25,7 +25,6 @@ Feature: change the parent of a feature branch and update proposals
     And the current branch is "child"
     When I run "git-town set-parent new-parent"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                             |
