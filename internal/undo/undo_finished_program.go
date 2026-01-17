@@ -3,7 +3,9 @@ package undo
 import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
 	"github.com/git-town/git-town/v22/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v22/internal/undo/undostash"
@@ -26,12 +28,27 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 			Message:        "Committing open changes to undo them",
 		})
 	}
+	// undo config changes
 	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
 		result.Value.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}
-	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
-		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
+	// undo branch changes
+	endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get()
+	if hasEndBranchesSnapshot {
+		undoProgram, changedBranches := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
+		result.Value.AddProgram(undoProgram)
+		// update embedded lineage
+		updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+		isOnline := args.Config.NormalConfig.Offline.IsOnline()
+		if updateProposalLineage && isOnline {
+			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+				ChangedBranches: changedBranches,
+				Config:          args.Config,
+				Program:         result,
+			})
+		}
 	}
+	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
