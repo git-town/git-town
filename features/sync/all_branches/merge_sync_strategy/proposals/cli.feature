@@ -7,26 +7,26 @@ Feature: sync a stack and update proposals
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE |
-      | alpha  | local, origin | alpha 1 |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE |
-      | beta   | local, origin | beta 1  |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | beta   | local, origin | beta commit |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | gamma | feature | beta   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE |
-      | gamma  | local, origin | gamma 1 |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | gamma  | local, origin | gamma commit |
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | delta | feature | gamma  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE |
-      | delta  | local, origin | delta 1 |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | delta  | local, origin | delta commit |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE          | BODY       | URL                      |
       | 1  | alpha         | main          | alpha proposal | alpha body | https://example.com/pr/1 |
