@@ -60,7 +60,7 @@ type BranchChanges struct {
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) {
 	result := program.Program{}
-	changed := set.Set[gitdomain.LocalBranchName]{}
+	changed := set.New[gitdomain.LocalBranchName]()
 
 	omniChanges := CategorizeLocalBranchChange(self.OmniChanged, args.Config)
 	changed.Add(omniChanges.Features.BranchNames()...)
