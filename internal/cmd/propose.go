@@ -328,6 +328,10 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
+	updateProposalLineage := validatedConfig.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	if updateProposalLineage {
+		bodyText += lineageSection
+	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
