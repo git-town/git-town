@@ -19,9 +19,9 @@ Feature: swap a feature branch and update proposals
       | branch-3 | local, origin | commit 3b   |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE             | BODY          | URL                      |
-      |  1 | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
-      |  2 | branch-2      | branch-1      | branch-2 proposal | branch-2 body | https://example.com/pr/2 |
-      |  2 | branch-3      | branch-2      | branch-3 proposal | branch-3 body | https://example.com/pr/3 |
+      | 1  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
+      | 2  | branch-2      | branch-1      | branch-2 proposal | branch-2 body | https://example.com/pr/2 |
+      | 3  | branch-3      | branch-2      | branch-3 proposal | branch-3 body | https://example.com/pr/3 |
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "branch-2"
     When I run "git-town swap"
@@ -31,7 +31,7 @@ Feature: swap a feature branch and update proposals
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                             |
       | branch-2 | git fetch --prune --tags                                                            |
-      |          | Finding proposal from branch-3 into branch-2 ... #2 (branch-3 proposal)             |
+      |          | Finding proposal from branch-3 into branch-2 ... #3 (branch-3 proposal)             |
       |          | Finding proposal from branch-2 into branch-1 ... #2 (branch-2 proposal)             |
       |          | Finding proposal from branch-1 into main ... #1 (branch-1 proposal)                 |
       |          | Updating target branch of proposal #2 to main ... ok                                |
@@ -41,25 +41,22 @@ Feature: swap a feature branch and update proposals
       |          | git checkout branch-1                                                               |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main                          |
       |          | git push --force-with-lease --force-if-includes                                     |
-      |          | Updating target branch of proposal #2 to branch-1 ... ok                            |
+      |          | Updating target branch of proposal #3 to branch-1 ... ok                            |
       |          | git checkout branch-3                                                               |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'commit 2b' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
       |          | git checkout branch-2                                                               |
       |          | Finding all proposals for branch-1 ... branch-2                                     |
-      |          | Finding proposal from branch-2 into main ... none                                   |
+      |          | Finding proposal from branch-2 into main ... #2 (branch-2 proposal)                 |
       |          | Finding proposal from branch-1 into branch-2 ... #1 (branch-1 proposal)             |
-      |          | Finding proposal from branch-3 into branch-1 ... none                               |
+      |          | Finding proposal from branch-3 into branch-1 ... #3 (branch-3 proposal)             |
       |          | Update body for #1 ... ok                                                           |
-      |          | Finding all proposals for branch-2 ... branch-1                                     |
-      |          | Finding proposal from branch-2 into main ... none                                   |
+      |          | Finding all proposals for branch-2 ... main                                         |
       |          | Finding proposal from branch-1 into branch-2 ... #1 (branch-1 proposal)             |
-      |          | Finding proposal from branch-3 into branch-1 ... none                               |
       |          | Update body for #2 ... ok                                                           |
-      |          | Finding proposal from branch-2 into main ... none                                   |
-      |          | Finding proposal from branch-3 into branch-1 ... none                               |
-      |          | Update body for #2 ... ok                                                           |
-      |          | Finding all proposals for branch-3 ... none                                         |
+      |          | Finding all proposals for branch-3 ... branch-1                                     |
+      |          | Finding proposal from branch-2 into main ... #2 (branch-2 proposal)                 |
+      |          | Update body for #3 ... ok                                                           |
     And this lineage exists now
       """
       main
@@ -84,52 +81,54 @@ Feature: swap a feature branch and update proposals
       target: branch-2
       body:
         branch-1 body
-      
+
         <!-- branch-stack-start -->
-      
+
         -------------------------
         - main
-          - branch-2
+          - https://example.com/pr/2
             - https://example.com/pr/1 :point_left:
-      
+              - https://example.com/pr/3
+
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
-      
+
         <!-- branch-stack-end -->
-      
+
+      url: https://example.com/pr/2
+      number: 2
+      source: branch-2
+      target: main
+      body:
+        branch-2 body
+
+        <!-- branch-stack-start -->
+
+        -------------------------
+        - main
+          - branch-2 :point_left:
+            - https://example.com/pr/1
+
+        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
+
+        <!-- branch-stack-end -->
+
       url: https://example.com/pr/2
       number: 2
       source: branch-2
       target: branch-1
       body:
         branch-2 body
-      
+
         <!-- branch-stack-start -->
-      
+
         -------------------------
         - main
-          - branch-2 :point_left:
+          - https://example.com/pr/2
             - https://example.com/pr/1
-      
+              - https://example.com/pr/3 :point_left:
+
         <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
-      
-        <!-- branch-stack-end -->
-      
-      url: https://example.com/pr/2
-      number: 2
-      source: branch-2
-      target: branch-1
-      body:
-        branch-2 body
-      
-        <!-- branch-stack-start -->
-      
-        -------------------------
-        - main
-          - branch-2 :point_left:
-            - https://example.com/pr/1
-      
-        <sup>[Stack](https://www.git-town.com/how-to/github-actions-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
-      
+
         <!-- branch-stack-end -->
       """
 
