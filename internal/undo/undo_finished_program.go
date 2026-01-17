@@ -37,7 +37,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	// undo branch changes
 	endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get()
 	if hasEndBranchesSnapshot {
-		undoProgram, changedBranches := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
+		undoProgram := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
 		result.Value.AddProgram(undoProgram)
 		fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", changedBranches)
 		// update embedded lineage
@@ -46,9 +46,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		if updateProposalLineage && isOnline {
 			fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222")
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-				ChangedBranches: changedBranches,
 				Config:          args.Config,
 				Program:         result,
+				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames(),
 			})
 		}
 	}

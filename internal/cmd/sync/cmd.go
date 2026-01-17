@@ -185,9 +185,9 @@ Start:
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
 			Program:         runProgram,
+			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}
 

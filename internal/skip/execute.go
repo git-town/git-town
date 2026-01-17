@@ -114,7 +114,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 			After:  afterSnapshot.Branches.FindByLocalName(args.InitialBranch).ToOption(),
 		},
 	}
-	undoCurrentBranchProgram, _ := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.InitialBranch,
 		BranchInfos:              args.RunState.BeginBranchesSnapshot.Branches,
 		Config:                   args.Config,

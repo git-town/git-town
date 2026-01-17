@@ -523,9 +523,9 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
 			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}
 	return optimizer.Optimize(prog.Immutable())

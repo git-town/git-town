@@ -186,9 +186,9 @@ Start:
 	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: oldClan.Remove(sharedData.initialBranch),
 			Config:          sharedData.config,
 			Program:         prog,
+			TouchedBranches: oldClan.Remove(sharedData.initialBranch),
 		})
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
