@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -992,10 +991,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^origin closes proposal #([^"]*)$`, func(ctx context.Context, proposalNumber int) {
-		numberToDelete := forgedomain.ProposalNumber(asserts.NoError1(strconv.Atoi(proposalNumber)))
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		proposalFilePath := mockproposals.NewMockProposalPath(state.fixture.RepoConfigDir())
 		proposals := mockproposals.Load(proposalFilePath)
-		proposals.DeleteByID(proposalNumber)
+		proposals.DeleteByID(forgedomain.ProposalNumber(proposalNumber))
 		mockproposals.Save(proposalFilePath, proposals)
 	})
 
