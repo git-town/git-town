@@ -16,42 +16,43 @@ Feature: sync all branches and update proposals
       | gamma    | local, origin | gamma commit    |
       | branch-1 | local, origin | branch-1 commit |
     And the proposals
-      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE          | BODY       | URL                      |
-      |  1 | alpha         | main          | alpha proposal | alpha body | https://example.com/pr/1 |
-      |  2 | beta          | alpha         | beta proposal  | beta body  | https://example.com/pr/2 |
-      |  3 | gamma         | beta          | gamma proposal | gamma body | https://example.com/pr/3 |
-      |  4 | delta         | gamma         | delta proposal | delta body | https://example.com/pr/4 |
+      | ID | SOURCE BRANCH | TARGET BRANCH | TITLE             | BODY          | URL                      |
+      |  1 | alpha         | main          | alpha proposal    | alpha body    | https://example.com/pr/1 |
+      |  2 | beta          | alpha         | beta proposal     | beta body     | https://example.com/pr/2 |
+      |  3 | gamma         | beta          | gamma proposal    | gamma body    | https://example.com/pr/3 |
+      |  4 | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/4 |
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "main"
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                       |
-      | main     | git fetch --prune --tags                                      |
-      |          | git checkout alpha                                            |
-      | alpha    | git checkout beta                                             |
-      | beta     | git merge --no-edit --ff alpha                                |
-      |          | git push                                                      |
-      |          | git checkout gamma                                            |
-      | gamma    | git merge --no-edit --ff beta                                 |
-      |          | git push                                                      |
-      |          | git checkout branch-1                                         |
-      | branch-1 | git checkout main                                             |
-      | main     | git push --tags                                               |
-      |          | Finding all proposals for alpha ... main                      |
-      |          | Finding proposal from alpha into main ... #1 (alpha proposal) |
-      |          | Finding proposal from beta into alpha ... #2 (beta proposal)  |
-      |          | Finding proposal from gamma into beta ... #3 (gamma proposal) |
-      |          | Update body for #1 ... ok                                     |
-      |          | Finding all proposals for beta ... alpha                      |
-      |          | Finding proposal from alpha into main ... #1 (alpha proposal) |
-      |          | Update body for #2 ... ok                                     |
-      |          | Finding all proposals for branch-1 ... none                   |
-      |          | Finding all proposals for gamma ... beta                      |
-      |          | Finding proposal from beta into alpha ... #2 (beta proposal)  |
-      |          | Update body for #3 ... ok                                     |
+      | BRANCH   | COMMAND                                                             |
+      | main     | git fetch --prune --tags                                            |
+      |          | git checkout alpha                                                  |
+      | alpha    | git checkout beta                                                   |
+      | beta     | git merge --no-edit --ff alpha                                      |
+      |          | git push                                                            |
+      |          | git checkout gamma                                                  |
+      | gamma    | git merge --no-edit --ff beta                                       |
+      |          | git push                                                            |
+      |          | git checkout branch-1                                               |
+      | branch-1 | git checkout main                                                   |
+      | main     | git push --tags                                                     |
+      |          | Finding all proposals for alpha ... main                            |
+      |          | Finding proposal from alpha into main ... #1 (alpha proposal)       |
+      |          | Finding proposal from beta into alpha ... #2 (beta proposal)        |
+      |          | Finding proposal from gamma into beta ... #3 (gamma proposal)       |
+      |          | Update body for #1 ... ok                                           |
+      |          | Finding all proposals for beta ... alpha                            |
+      |          | Finding proposal from alpha into main ... #1 (alpha proposal)       |
+      |          | Update body for #2 ... ok                                           |
+      |          | Finding all proposals for branch-1 ... main                         |
+      |          | Finding proposal from branch-1 into main ... #4 (branch-1 proposal) |
+      |          | Update body for #4 ... ok                                           |
+      |          | Finding all proposals for gamma ... beta                            |
+      |          | Finding proposal from beta into alpha ... #2 (beta proposal)        |
+      |          | Update body for #3 ... ok                                           |
     And the initial branches and lineage exist now
     And the proposals are now
       """
@@ -117,7 +118,7 @@ Feature: sync all branches and update proposals
       source: branch-1
       target: main
       body:
-        delta body
+        branch-1 body
       
         <!-- branch-stack-start -->
       
