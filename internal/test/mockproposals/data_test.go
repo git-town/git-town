@@ -11,6 +11,7 @@ import (
 
 func TestMockProposals(t *testing.T) {
 	t.Parallel()
+
 	t.Run("DeleteByID", func(t *testing.T) {
 		t.Parallel()
 
