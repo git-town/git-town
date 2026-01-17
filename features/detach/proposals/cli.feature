@@ -46,11 +46,13 @@ Feature: detach the current feature branch from a stack and update proposals
       |        | Updating target branch of proposal #3 to alpha ... ok            |
       |        | Updating target branch of proposal #4 to alpha ... ok            |
       |        | Finding all proposals for alpha ... main                         |
+      |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
       |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 proposal) |
       |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 proposal) |
       |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
       |        | Update body for #1 ... ok                                        |
       |        | Finding all proposals for beta ... main                          |
+      |        | Finding proposal from beta into main ... #2 (beta proposal)      |
       |        | Update body for #2 ... ok                                        |
       |        | Finding all proposals for delta ... gamma2                       |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
