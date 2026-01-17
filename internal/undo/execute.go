@@ -34,7 +34,7 @@ type ExecuteArgs struct {
 }
 
 // undoes the persisted runstate
-func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err error) {
+func Execute(args ExecuteArgs) (changedBranches gitdomain.LocalBranchNames, err error) { //nolint:nonamedreturns
 	if args.RunState.DryRun {
 		return gitdomain.LocalBranchNames{}, nil
 	}

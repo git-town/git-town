@@ -58,7 +58,7 @@ type BranchChanges struct {
 // }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
-func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) {
+func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) { //nolint:nonamedreturns
 	result := program.Program{}
 	changed := set.New[gitdomain.LocalBranchName]()
 
