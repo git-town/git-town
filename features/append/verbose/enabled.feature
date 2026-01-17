@@ -49,6 +49,7 @@ Feature: display all executed Git commands
       Ran 30 shell commands.
       """
 
+  @this
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
@@ -66,10 +67,10 @@ Feature: display all executed Git commands
       |          | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |          | backend  | git remote                                                                                                                                                                                                                                                                                                                                       |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
-      | new      | frontend | git checkout existing                                                                                                                                                                                                                                                                                                                            |
-      | existing | frontend | git branch -D new                                                                                                                                                                                                                                                                                                                                |
       |          | backend  | git config --unset git-town-branch.new.branchtype                                                                                                                                                                                                                                                                                                |
       |          | backend  | git config --unset git-town-branch.new.parent                                                                                                                                                                                                                                                                                                    |
+      | new      | frontend | git checkout existing                                                                                                                                                                                                                                                                                                                            |
+      | existing | frontend | git branch -D new                                                                                                                                                                                                                                                                                                                                |
     And Git Town prints:
       """
       Ran 17 shell commands.
