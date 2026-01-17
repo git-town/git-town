@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/undo/undodomain"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
-	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
@@ -58,13 +57,10 @@ type BranchChanges struct {
 // }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
-func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoProgram program.Program, changedBranches gitdomain.LocalBranchNames) { //nolint:nonamedreturns
+func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
-	changed := set.New[gitdomain.LocalBranchName]()
 
 	omniChanges := CategorizeLocalBranchChange(self.OmniChanged, args.Config)
-	changed.Add(omniChanges.Features.BranchNames()...)
-	changed.Add(omniChanges.Perennials.BranchNames()...)
 
 	// revert omni-changed perennial branches
 	for _, branch := range omniChanges.Perennials.BranchNames() {
@@ -100,7 +96,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 		result.Add(&opcodes.BranchCreate{Branch: branch, StartingPoint: sha.Location()})
 		result.Add(&opcodes.BranchTrackingCreate{Branch: branch})
 	}
-	changed.Add(self.OmniRemoved.BranchNames()...)
 
 	inconsistentChanges := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
 
@@ -118,12 +113,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 			}
 		} else {
 			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, inconsistentlyChangedPerennial.After)
-		}
-		if local, hasLocal := inconsistentlyChangedPerennial.After.Local.Get(); hasLocal {
-			changed.Add(local.Name)
-		}
-		if local, hasLocal := inconsistentlyChangedPerennial.Before.Local.Get(); hasLocal {
-			changed.Add(local.Name)
 		}
 	}
 
@@ -144,12 +133,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 				SetToSHA:    beforeRemoteSHA,
 			})
 		}
-		if local, hasLocal := inconsistentChange.After.Local.Get(); hasLocal {
-			changed.Add(local.Name)
-		}
-		if local, hasLocal := inconsistentChange.Before.Local.Get(); hasLocal {
-			changed.Add(local.Name)
-		}
 	}
 
 	// re-create remotely removed feature branches
@@ -168,7 +151,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: localBranch})
 		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
 	}
-	changed.Add(self.LocalChanged.BranchNames()...)
 
 	// re-create locally removed branches
 	for _, removedLocalBranch := range self.LocalRemoved.BranchNames() {
@@ -178,7 +160,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 			StartingPoint: startingPoint.Location(),
 		})
 	}
-	changed.Add(self.LocalRemoved.BranchNames()...)
 
 	// restore the name of locally renamed branches
 	for _, rename := range self.LocalRenamed {
@@ -186,8 +167,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 			NewName: rename.Before,
 			OldName: rename.After,
 		})
-		changed.Add(rename.After)
-		changed.Add(rename.Before)
 	}
 
 	// remove locally added branches
@@ -197,7 +176,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 		}
 		result.Add(&opcodes.BranchLocalDelete{Branch: addedLocalBranch})
 	}
-	changed.Add(self.LocalAdded...)
 
 	// Ignore remotely changed perennial branches because we can't force-push to them
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
@@ -228,7 +206,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) (undoPr
 	// This must be a CheckoutIfExists opcode because this branch might not exist
 	// when a Git Town command fails, stores this undo opcode, then gets continued and deletes this branch.
 	result.Add(&opcodes.CheckoutIfExists{Branch: args.BeginBranch})
-	return result, changed.Values()
+	return result
 }
 
 type BranchChangesUndoProgramArgs struct {

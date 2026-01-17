@@ -462,9 +462,9 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
 			Config:          data.config,
 			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

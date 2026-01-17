@@ -35,16 +35,16 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	// undo branch changes
 	endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get()
 	if hasEndBranchesSnapshot {
-		undoProgram, changedBranches := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
+		undoProgram := undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages)
 		result.Value.AddProgram(undoProgram)
 		// update embedded lineage
 		updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
 		if updateProposalLineage && isOnline {
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-				ChangedBranches: changedBranches,
 				Config:          args.Config,
 				Program:         result,
+				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames(),
 			})
 		}
 	}
