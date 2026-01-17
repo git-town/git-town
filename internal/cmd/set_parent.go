@@ -24,7 +24,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage/synclineage"
+	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -479,7 +479,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		if hasNewParent {
 			parents = append(parents, newParent)
 		}
-		synclineage.AddSyncProposalsProgram(synclineage.AddSyncProposalsProgramArgs{
+		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 			ChangedBranches: parents,
 			Config:          data.config,
 			Program:         NewMutable(&prog),

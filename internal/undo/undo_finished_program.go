@@ -2,10 +2,10 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
 	"github.com/git-town/git-town/v22/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v22/internal/undo/undostash"
@@ -45,7 +45,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) (undoProgram progr
 	updateProposalLineage := args.Config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 	isOnline := args.Config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
-		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 			ChangedBranches: changedBranches,
 			Config:          args.Config,
 			Program:         result,
