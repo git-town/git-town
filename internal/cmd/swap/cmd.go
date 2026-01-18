@@ -410,9 +410,9 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
 			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
