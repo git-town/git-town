@@ -10,8 +10,8 @@ Feature: propose with embedded lineage
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.proposals-show-lineage" is "cli"
+    And the current branch is "feature"
     And tool "open" is installed
     When I run "git-town propose"
 
