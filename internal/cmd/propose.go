@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -330,7 +331,9 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
 	updateProposalLineage := validatedConfig.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 	if updateProposalLineage {
-		bodyText += lineageSection
+		lineageSection := proposallineage.RenderSection(validatedConfig.NormalConfig.Lineage, initialBranch, validatedConfig.NormalConfig.Order, connectorOpt)
+		fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", lineageSection)
+		bodyText = Some(gitdomain.ProposalBody(bodyText.GetOrZero().String() + "\n\n" + lineageSection))
 	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
