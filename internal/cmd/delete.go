@@ -373,9 +373,9 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
 			Config:          data.config,
 			Program:         prog,
+			TouchedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
 		})
 	}
 }

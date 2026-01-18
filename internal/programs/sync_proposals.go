@@ -9,13 +9,13 @@ import (
 )
 
 type AddSyncProposalsProgramArgs struct {
-	ChangedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
 	Config          config.ValidatedConfig
 	Program         Mutable[program.Program]
+	TouchedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
 }
 
 func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
-	affectedBranches := args.Config.NormalConfig.Lineage.Clan(args.ChangedBranches, args.Config.MainAndPerennials())
+	affectedBranches := args.Config.NormalConfig.Lineage.Clan(args.TouchedBranches, args.Config.MainAndPerennials())
 	for _, branch := range affectedBranches {
 		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
 	}
