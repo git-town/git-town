@@ -360,9 +360,9 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.newBranch, data.initialBranch},
 			Config:          data.config,
 			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.newBranch, data.initialBranch},
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
