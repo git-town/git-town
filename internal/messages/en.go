@@ -256,6 +256,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalNoNumberGiven                   = "no proposal number given"
 	ProposalNoParent                        = "branch %s has no parent and can therefore not be proposed"
 	ProposalsLineage                        = "Proposals display the stack lineage: %s\n"
+	ProposalsLineageSingleStack             = "Proposals embed lineage for single stacks: %s\n"
 	ProposalsLineageInvalid                 = "invalid value for whether proposals should show the lineage in %s: %q. Valid values are: none, ci, cli"
 	ProposalSourceCannotUpdate              = "cannot update the proposal source branch on your forge"
 	ProposalTargetBranchUpdateProblem       = "cannot update the target branch of proposal %d on your forge"
