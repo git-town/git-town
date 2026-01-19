@@ -41,6 +41,7 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 	data, has := self.Proposals.FindBySourceAndTarget(source, target).Get()
 	if !has {
 		self.log.Success("none")
+		self.cache.RegisterLookupResult(source, target, None[forgedomain.Proposal]())
 		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+data.Number.String()), data.Title))
