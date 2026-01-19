@@ -104,6 +104,7 @@ const (
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyProposalsShowLineage                = Key("git-town.proposals-show-lineage")
+	KeyProposalsShowLineageSingleStack     = Key("git-town.proposals-show-lineage-single-stack")
 	KeyPushBranches                        = Key("git-town.push-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
 	KeyShareNewBranches                    = Key("git-town.share-new-branches")
@@ -172,6 +173,7 @@ var keys = []Key{
 	KeyPerennialBranches,
 	KeyPerennialRegex,
 	KeyProposalsShowLineage,
+	KeyProposalsShowLineageSingleStack,
 	KeyPushBranches,
 	KeyPushHook,
 	KeyShareNewBranches,
