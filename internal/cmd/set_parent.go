@@ -480,9 +480,9 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			parents = append(parents, newParent)
 		}
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
-			ChangedBranches: parents,
 			Config:          data.config,
 			Program:         NewMutable(&prog),
+			TouchedBranches: parents,
 		})
 	}
 	return optimizer.Optimize(prog), false
