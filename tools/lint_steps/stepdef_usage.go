@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	"github.com/git-town/git-town/v22/pkg/set"
@@ -57,18 +58,23 @@ type StepRE struct {
 
 // provides all usages of Cucumber steps in the given file content
 func FindUsedStepsIn(fileContent string) []string {
-	if stepUsageRE == nil {
-		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
-	}
+	findUsedStepsOnce.Do(func() {
+		findUsedStepsRegex = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
+	})
 	var result []string
 	for line := range strings.SplitSeq(fileContent, "\n") {
-		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
+		matches := findUsedStepsRegex.FindAllStringSubmatch(line, -1)
 		if len(matches) > 0 {
 			result = append(result, strings.TrimSpace(matches[0][1]))
 		}
 	}
 	return result
 }
+
+var (
+	findUsedStepsOnce  sync.Once
+	findUsedStepsRegex *regexp.Regexp
+)
 
 // indicates whether the given step definition is used anywhere in the given list of executed steps
 func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
