@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
@@ -265,9 +266,17 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 	if prefix, hasPrefix := prefix.Get(); hasPrefix {
 		content = prefix + "\n" + content
 	}
-	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
+	commentOutSquashCommitMessageOnce.Do(func() {
+		commentOutSquashCommitMessageRegex = regexp.MustCompile("(?m)^")
+	})
+	content = commentOutSquashCommitMessageRegex.ReplaceAllString(content, "# ")
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
+
+var (
+	commentOutSquashCommitMessageOnce  sync.Once
+	commentOutSquashCommitMessageRegex *regexp.Regexp
+)
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
