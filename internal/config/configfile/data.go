@@ -58,7 +58,8 @@ func (self Hosting) IsEmpty() bool {
 }
 
 type Propose struct {
-	Lineage *string `toml:"lineage"`
+	Lineage            *string `toml:"lineage"`
+	LineageSingleStack *bool   `toml:"lineage-single-stack"`
 }
 
 type Ship struct {
