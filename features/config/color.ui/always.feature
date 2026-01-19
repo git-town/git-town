@@ -49,18 +49,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: asc
         display types: all branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         browser: firefox
         development remote: origin
@@ -74,15 +74,16 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: api
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+        lineage single stack: yes
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: no
@@ -109,24 +110,25 @@ Feature: show the configuration
       observed-regex = "^dependabot/"
       unknown-type = "observed"
       display-types = "all"
-
+      
       [create]
       share-new-branches = "push"
       stash = false
-
+      
       [hosting]
       browser = "firefox"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [propose]
       lineage = "cli"
-
+      lineage-single-stack = true
+      
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = true
@@ -154,18 +156,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: asc
         display types: all branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: push
         stash uncommitted changes: no
-
+      
       Hosting:
         browser: firefox
         development remote: origin
@@ -179,15 +181,16 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: cli
-
+        lineage single stack: yes
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
@@ -202,6 +205,7 @@ Feature: show the configuration
         auto-resolve phantom conflicts: no
       """
 
+  @this
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
     And Git setting "git-town.auto-resolve" is "false"
@@ -238,21 +242,21 @@ Feature: show the configuration
       unknown-type = "contribution"
       order = "asc"
       display-types = "no"
-
+      
       [create]
       share-new-branches = "push"
       stash = true
-
+      
       [hosting]
       browser = "chrome"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
       strategy = "api"
-
+      
       [sync]
       auto-sync = true
       detached = false
@@ -280,18 +284,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: desc
         display types: all branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         browser: firefox
         development remote: origin
@@ -305,15 +309,16 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+        lineage single stack: yes
+      
       Ship:
         delete tracking branch: no
         ignore uncommitted changes: no
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
@@ -354,18 +359,18 @@ Feature: show the configuration
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -379,15 +384,15 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
@@ -400,7 +405,7 @@ Feature: show the configuration
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
-
+      
       Branch Lineage:
         main
           alpha
@@ -410,7 +415,7 @@ Feature: show the configuration
           parked-2
           prototype-1
           prototype-2
-
+      
         qa
           hotfix
       """
@@ -434,18 +439,18 @@ Feature: show the configuration
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -459,15 +464,15 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
