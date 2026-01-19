@@ -20,7 +20,10 @@ var (
 )
 
 func Expand(text string, args ExpandArgs) string {
-	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
+	expandOnce.Do(func() {
+		expandRegex = regexp.MustCompile(`\{\{.*?\}\}`)
+	})
+	templateOnce.Do(func() { templateRE = expandRegex })
 	for strings.Contains(text, "{{") {
 		match := templateRE.FindString(text)
 		switch {
@@ -137,6 +140,11 @@ func Expand(text string, args ExpandArgs) string {
 	}
 	return text
 }
+
+var (
+	expandOnce  sync.Once
+	expandRegex *regexp.Regexp
+)
 
 type ExpandArgs struct {
 	BeforeRunDevSHAs       gitdomain.Commits
