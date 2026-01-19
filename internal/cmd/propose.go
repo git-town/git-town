@@ -329,11 +329,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
-	updateProposalLineage := validatedConfig.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
-	if updateProposalLineage {
-		lineageSection := proposallineage.RenderSection(validatedConfig.NormalConfig.Lineage, initialBranch, validatedConfig.NormalConfig.Order, connectorOpt)
-		bodyText = Some(proposallineage.UpdateProposalBody(bodyText.GetOrZero(), lineageSection))
-	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
@@ -391,6 +386,12 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 			CurrentBranch: branchToPropose.name,
 		})
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branchToPropose.name})
+		updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+		proposalBody := data.proposalBody
+		if updateProposalLineage {
+			lineageSection := proposallineage.RenderSection(data.config.NormalConfig.Lineage, branchToPropose.name, data.config.NormalConfig.Order, data.connector)
+			proposalBody = Some(proposallineage.UpdateProposalBody(proposalBody.GetOrZero(), lineageSection))
+		}
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
