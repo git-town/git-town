@@ -556,12 +556,14 @@ func (self *Commands) ForcePushBranchSafely(runner subshelldomain.Runner, pushHo
 }
 
 func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
 	}
-	matches := versionRegexp.FindStringSubmatch(output)
+	gitVersionOnce.Do(func() {
+		gitVersionRegex = regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
+	})
+	matches := gitVersionRegex.FindStringSubmatch(output)
 	if matches == nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
@@ -578,6 +580,11 @@ func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error
 		Minor: minorVersion,
 	}, nil
 }
+
+var (
+	gitVersionOnce  sync.Once
+	gitVersionRegex *regexp.Regexp
+)
 
 func (self *Commands) HasMergeInProgress(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")
