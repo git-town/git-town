@@ -395,7 +395,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
-			ProposalBody:  data.proposalBody,
+			ProposalBody:  proposalBody,
 			ProposalTitle: data.proposalTitle,
 		})
 		prog.Value.Add(&opcodes.ProgramEndOfBranch{})
