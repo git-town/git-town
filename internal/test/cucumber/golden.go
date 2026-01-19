@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
@@ -66,14 +67,38 @@ func ChangeFeatureFile(filePath, oldSection, newSection string) error {
 
 // NormalizeWhitespace collapses redundant whitespace in the given lines.
 func NormalizeWhitespace(lines []string) []string {
-	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
+	normalizeWhitespaceOnce.Do(func() {
+		normalizeWhitespaceRegex = regexp.MustCompile(`\s{2,}`)
+	})
+	return stringslice.ReplaceRegex(lines, normalizeWhitespaceRegex, " ")
 }
 
+var (
+	normalizeWhitespaceOnce  sync.Once
+	normalizeWhitespaceRegex *regexp.Regexp
+)
+
 func ReplaceSHA(lines []string) []string {
-	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[0-9a-f]{40}`), "SHA")
+	replaceSHAOnce.Do(func() {
+		replaceSHARegex = regexp.MustCompile(`[0-9a-f]{40}`)
+	})
+	return stringslice.ReplaceRegex(lines, replaceSHARegex, "SHA")
 }
+
+var (
+	replaceSHAOnce  sync.Once
+	replaceSHARegex *regexp.Regexp
+)
 
 // ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
 func ReplaceSHAPlaceholder(lines []string) []string {
-	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\{\{.*?\}\}`), "SHA")
+	replaceSHAPlaceholderOnce.Do(func() {
+		replaceSHAPlaceholderRegex = regexp.MustCompile(`\{\{.*?\}\}`)
+	})
+	return stringslice.ReplaceRegex(lines, replaceSHAPlaceholderRegex, "SHA")
 }
+
+var (
+	replaceSHAPlaceholderOnce  sync.Once
+	replaceSHAPlaceholderRegex *regexp.Regexp
+)
