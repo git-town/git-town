@@ -119,6 +119,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("lineage", format.StringsSetting(config.NormalConfig.ProposalsShowLineage.String()))
+	print.Entry("lineage single stack", format.Bool(config.NormalConfig.ProposalsShowLineageSingleStack.ShowLineage()))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
