@@ -643,7 +643,7 @@ func enterProposalsShowLineageSingleStack(data Data) (Option[forgedomain.Proposa
 	if data.Config.File.ProposalsShowLineage.IsSome() {
 		return None[forgedomain.ProposalsShowLineageSingleStack](), false, nil
 	}
-	return dialog.ProposalsShowLineageSingleStack(dialog.Args[forgedomain.ProposalsShowLineageSingleStack]{
+	return dialog.ProposalShowLineageSingleStack(dialog.Args[forgedomain.ProposalsShowLineageSingleStack]{
 		Global: data.Config.GitGlobal.ProposalsShowLineageSingleStack,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ProposalsShowLineageSingleStack,
