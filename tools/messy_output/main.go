@@ -21,7 +21,7 @@ type ScenarioInfo struct {
 }
 
 func main() {
-	dialogStepRegex := regexp.MustCompile(`^I r[au]n ".*" and enter into the dialogs?:$`)
+	dialogStepRegex := CompileRegex()
 	errors := 0
 	asserts.NoError(filepath.WalkDir("features", func(path string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() || filepath.Ext(d.Name()) != ".feature" {
@@ -49,6 +49,10 @@ func AnalyzeScenarios(file string, scenarios []ScenarioInfo) []string {
 		}
 	}
 	return result
+}
+
+func CompileRegex() *regexp.Regexp {
+	return regexp.MustCompile(`^I r[au]n ".*" and enter into the dialogs?:$`)
 }
 
 func FindScenarios(feature *messages.Feature, dialogStepRegex *regexp.Regexp) []ScenarioInfo {
