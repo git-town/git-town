@@ -332,7 +332,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 	updateProposalLineage := validatedConfig.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 	if updateProposalLineage {
 		lineageSection := proposallineage.RenderSection(validatedConfig.NormalConfig.Lineage, initialBranch, validatedConfig.NormalConfig.Order, connectorOpt)
-		bodyText = Some(gitdomain.ProposalBody(bodyText.GetOrZero().String() + "\n\n" + lineageSection))
+		bodyText = Some(proposallineage.UpdateProposalBody(bodyText.GetOrZero(), lineageSection))
 	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
