@@ -18,7 +18,6 @@ Feature: propose an entire stack with embedded lineages
     And tool "open" is installed
     When I run "git-town propose --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
