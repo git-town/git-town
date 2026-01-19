@@ -1,7 +1,6 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
-  @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:
