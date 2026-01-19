@@ -63,35 +63,34 @@ Feature: Fix invalid configuration data
       | proposals show lineage single stack | enter                         |
       | config storage                      | enter                         |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                                       |
-      | git config git-town.main-branch main                          |
-      | git config git-town.auto-sync false                           |
-      | git config git-town.branch-prefix ab                          |
-      | git config git-town.contribution-regex cont                   |
-      | git config git-town.detached true                             |
-      | git config git-town.feature-regex feat                        |
-      | git config git-town.ignore-uncommitted false                  |
-      | git config git-town.new-branch-type parked                    |
-      | git config git-town.observed-regex obs                        |
-      | git config git-town.order desc                                |
-      | git config git-town.perennial-regex per                       |
-      | git config git-town.proposals-show-lineage none               |
-      | git config git-town.proposals-show-lineage-single-stack false |
-      | git config git-town.push-branches false                       |
-      | git config git-town.push-hook false                           |
-      | git config git-town.share-new-branches push                   |
-      | git config git-town.ship-delete-tracking-branch false         |
-      | git config git-town.ship-strategy always-merge                |
-      | git config git-town.stash false                               |
-      | git config git-town.sync-feature-strategy rebase              |
-      | git config git-town.sync-perennial-strategy rebase            |
-      | git config git-town.sync-prototype-strategy rebase            |
-      | git config git-town.sync-tags false                           |
-      | git config git-town.sync-upstream false                       |
-      | git config git-town.unknown-branch-type observed              |
+      | COMMAND                                                      |
+      | git config git-town.main-branch main                         |
+      | git config git-town.auto-sync false                          |
+      | git config git-town.branch-prefix ab                         |
+      | git config git-town.contribution-regex cont                  |
+      | git config git-town.detached true                            |
+      | git config git-town.feature-regex feat                       |
+      | git config git-town.ignore-uncommitted false                 |
+      | git config git-town.new-branch-type parked                   |
+      | git config git-town.observed-regex obs                       |
+      | git config git-town.order desc                               |
+      | git config git-town.perennial-regex per                      |
+      | git config git-town.proposals-show-lineage none              |
+      | git config git-town.proposals-show-lineage-single-stack true |
+      | git config git-town.push-branches false                      |
+      | git config git-town.push-hook false                          |
+      | git config git-town.share-new-branches push                  |
+      | git config git-town.ship-delete-tracking-branch false        |
+      | git config git-town.ship-strategy always-merge               |
+      | git config git-town.stash false                              |
+      | git config git-town.sync-feature-strategy rebase             |
+      | git config git-town.sync-perennial-strategy rebase           |
+      | git config git-town.sync-prototype-strategy rebase           |
+      | git config git-town.sync-tags false                          |
+      | git config git-town.sync-upstream false                      |
+      | git config git-town.unknown-branch-type observed             |
     And Git Town prints:
       """
       Ignoring invalid value for "git-town.auto-sync": "zonk"
@@ -103,6 +102,8 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
+      Ignoring invalid value for "git-town.proposals-show-lineage": "zonk"
+      Ignoring invalid value for "git-town.proposals-show-lineage-single-stack": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
