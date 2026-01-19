@@ -40,6 +40,10 @@ Feature: display information from config file
       github-connector = "gh"
       origin-hostname = "github.com"
 
+      [propose]
+      lineage = "cli"
+      lineage-single-stack = false
+
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
@@ -100,7 +104,8 @@ Feature: display information from config file
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        lineage: cli
+        lineage single stack: no
 
       Ship:
         delete tracking branch: yes
