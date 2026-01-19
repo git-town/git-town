@@ -137,6 +137,9 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ProposalsShowLineage.IsSome() {
 		_ = gitconfig.RemoveProposalsShowLineage(runner)
 	}
+	if gitConfig.ProposalsShowLineageSingleStack.IsSome() {
+		_ = gitconfig.RemoveProposalsShowLineageSingleStack(runner)
+	}
 	if gitConfig.PushBranches.IsSome() {
 		_ = gitconfig.RemovePushBranches(runner)
 	}
@@ -280,6 +283,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.ProposalsShowLineage.IsNone() {
 		fc.Check(
 			saveProposalsShowLineage(userInput.Data.ProposalsShowLineage, existingGitConfig.ProposalsShowLineage, frontend),
+		)
+	}
+	if configFile.ProposalsShowLineageSingleStack.IsNone() {
+		fc.Check(
+			saveProposalsShowLineageSingleStack(userInput.Data.ProposalsShowLineageSingleStack, existingGitConfig.ProposalsShowLineageSingleStack, frontend),
 		)
 	}
 	if configFile.PushBranches.IsNone() {
@@ -605,6 +613,16 @@ func saveProposalsShowLineage(valueToWriteToGit Option[forgedomain.ProposalsShow
 		return gitconfig.SetProposalsShowLineage(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveProposalsShowLineage(runner)
+}
+
+func saveProposalsShowLineageSingleStack(valueToWriteToGit Option[forgedomain.ProposalsShowLineageSingleStack], valueAlreadyInGit Option[forgedomain.ProposalsShowLineageSingleStack], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetProposalsShowLineageSingleStack(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveProposalsShowLineageSingleStack(runner)
 }
 
 func savePushBranches(valueToWriteToGit Option[configdomain.PushBranches], valueAlreadyInGit Option[configdomain.PushBranches], runner subshelldomain.Runner) error {

@@ -142,6 +142,9 @@
       "properties": {
         "lineage": {
           "type": "string"
+        },
+        "lineage-single-stack": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false,

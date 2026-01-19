@@ -142,6 +142,10 @@ func RemoveProposalsShowLineage(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalsShowLineage)
 }
 
+func RemoveProposalsShowLineageSingleStack(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalsShowLineageSingleStack)
+}
+
 func RemovePushBranches(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushBranches)
 }
@@ -305,6 +309,10 @@ func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.Perennia
 
 func SetProposalsShowLineage(runner subshelldomain.Runner, value forgedomain.ProposalsShowLineage, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyProposalsShowLineage, value.String())
+}
+
+func SetProposalsShowLineageSingleStack(runner subshelldomain.Runner, value forgedomain.ProposalsShowLineageSingleStack, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyProposalsShowLineageSingleStack, value.String())
 }
 
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {

@@ -21,6 +21,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.proposals-show-lineage" is "cli"
+    And global Git setting "git-town.proposals-show-lineage-single-stack" is "false"
     And global Git setting "git-town.push-branches" is "false"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
@@ -34,38 +35,39 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS        |
-      | welcome                     | enter       |
-      | aliases                     | enter       |
-      | main branch                 | enter       |
-      | perennial branches          | space enter |
-      | origin hostname             | enter       |
-      | forge type                  | enter       |
-      | enter all                   | down enter  |
-      | perennial regex             | enter       |
-      | feature regex               | enter       |
-      | contribution regex          | enter       |
-      | observed regex              | enter       |
-      | branch prefix               | enter       |
-      | new branch type             | enter       |
-      | unknown branch type         | enter       |
-      | sync feature strategy       | enter       |
-      | sync perennial strategy     | enter       |
-      | sync prototype strategy     | enter       |
-      | sync upstream               | enter       |
-      | auto sync                   | enter       |
-      | sync tags                   | enter       |
-      | detached                    | enter       |
-      | stash                       | enter       |
-      | share new branches          | enter       |
-      | push branches               | enter       |
-      | push hook                   | enter       |
-      | ship strategy               | enter       |
-      | ship delete tracking branch | enter       |
-      | ignore-uncommitted          | enter       |
-      | order                       | enter       |
-      | proposals show lineage      | enter       |
-      | config storage              | enter       |
+      | DIALOG                              | KEYS        |
+      | welcome                             | enter       |
+      | aliases                             | enter       |
+      | main branch                         | enter       |
+      | perennial branches                  | space enter |
+      | origin hostname                     | enter       |
+      | forge type                          | enter       |
+      | enter all                           | down enter  |
+      | perennial regex                     | enter       |
+      | feature regex                       | enter       |
+      | contribution regex                  | enter       |
+      | observed regex                      | enter       |
+      | branch prefix                       | enter       |
+      | new branch type                     | enter       |
+      | unknown branch type                 | enter       |
+      | sync feature strategy               | enter       |
+      | sync perennial strategy             | enter       |
+      | sync prototype strategy             | enter       |
+      | sync upstream                       | enter       |
+      | auto sync                           | enter       |
+      | sync tags                           | enter       |
+      | detached                            | enter       |
+      | stash                               | enter       |
+      | share new branches                  | enter       |
+      | push branches                       | enter       |
+      | push hook                           | enter       |
+      | ship strategy                       | enter       |
+      | ship delete tracking branch         | enter       |
+      | ignore-uncommitted                  | enter       |
+      | order                               | enter       |
+      | proposals show lineage              | enter       |
+      | proposals show lineage single stack | enter       |
+      | config storage                      | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config git-town.perennial-branches branch-1 |
