@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -77,8 +78,10 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
 		return None[DisplayTypes](), nil
 	}
-	re := regexp.MustCompile(`[ +\-&_]`)
-	parts := re.Split(strings.ToLower(text), -1)
+	parseDisplayTypesOnce.Do(func() {
+		parseDisplayTypesRegex = regexp.MustCompile(`[ +\-&_]`)
+	})
+	parts := parseDisplayTypesRegex.Split(strings.ToLower(text), -1)
 	var quantifier Quantifier
 	switch parts[0] {
 	case QuantifierAll:
@@ -108,3 +111,8 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		Quantifier:  quantifier,
 	}), nil
 }
+
+var (
+	parseDisplayTypesOnce  sync.Once
+	parseDisplayTypesRegex *regexp.Regexp
+)

@@ -4,6 +4,7 @@ package giturl
 import (
 	"regexp"
 	"strings"
+	"sync"
 
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -23,8 +24,10 @@ func Parse(url string) Option[Parts] {
 
 	// handle HTTP/HTTPS URLs
 	if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
-		httpPattern := regexp.MustCompile(`^https?://(?:([^@]+)@)?([^/]+)/(.*)$`)
-		if matches := httpPattern.FindStringSubmatch(url); matches != nil {
+		parseHTTPPatternOnce.Do(func() {
+			parseHTTPPatternRegex = regexp.MustCompile(`^https?://(?:([^@]+)@)?([^/]+)/(.*)$`)
+		})
+		if matches := parseHTTPPatternRegex.FindStringSubmatch(url); matches != nil {
 			path := strings.TrimSuffix(matches[3], ".git")
 			return finalize(matches[1], matches[2], path)
 		}
@@ -33,8 +36,10 @@ func Parse(url string) Option[Parts] {
 
 	// handle SSH URLs with ssh:// prefix
 	if strings.HasPrefix(url, "ssh://") {
-		sshPattern := regexp.MustCompile(`^ssh://(?:([^@]+)@)?([^/:]+)(?::(\d+))?/(.*)$`)
-		if matches := sshPattern.FindStringSubmatch(url); matches != nil {
+		parseSSHPatternOnce.Do(func() {
+			parseSSHPatternRegex = regexp.MustCompile(`^ssh://(?:([^@]+)@)?([^/:]+)(?::(\d+))?/(.*)$`)
+		})
+		if matches := parseSSHPatternRegex.FindStringSubmatch(url); matches != nil {
 			path := strings.TrimSuffix(matches[4], ".git")
 			return finalize(matches[1], matches[2], path)
 		}
@@ -43,13 +48,18 @@ func Parse(url string) Option[Parts] {
 
 	// handle SSH URLs with colon separator (e.g., git@github.com:user/repo),
 	// with and without ports
-	colonPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^:]+):(.*)$`)
-	if matches := colonPattern.FindStringSubmatch(url); matches != nil {
+	parseColonPatternOnce.Do(func() {
+		parseColorPatternRegex = regexp.MustCompile(`^(?:([^@]+)@)?([^:]+):(.*)$`)
+	})
+	if matches := parseColorPatternRegex.FindStringSubmatch(url); matches != nil {
 		host := matches[2]
 		path := matches[3]
 
 		// handle port numbers in path (e.g., git@git.example.com:4022/a/b.git)
-		if portSlashMatch := regexp.MustCompile(`^(\d+)/(.*)$`).FindStringSubmatch(path); portSlashMatch != nil {
+		parsePortSlashOnce.Do(func() {
+			parsePortSlashRegex = regexp.MustCompile(`^(\d+)/(.*)$`)
+		})
+		if portSlashMatch := parsePortSlashRegex.FindStringSubmatch(path); portSlashMatch != nil {
 			path = portSlashMatch[2]
 		}
 		path = strings.TrimSuffix(path, ".git")
@@ -57,14 +67,28 @@ func Parse(url string) Option[Parts] {
 	}
 
 	// handle SSH URLs with slash separator (e.g., git@bitbucket.org/user/repo)
-	slashPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^/]+)/(.*)$`)
-	if matches := slashPattern.FindStringSubmatch(url); matches != nil {
+	parseSlashPatternOnce.Do(func() {
+		parseSlashPatternRegex = regexp.MustCompile(`^(?:([^@]+)@)?([^/]+)/(.*)$`)
+	})
+	if matches := parseSlashPatternRegex.FindStringSubmatch(url); matches != nil {
 		path := strings.TrimSuffix(matches[3], ".git")
 		return finalize(matches[1], matches[2], path)
 	}
-
 	return None[Parts]()
 }
+
+var (
+	parseHTTPPatternOnce   sync.Once
+	parseHTTPPatternRegex  *regexp.Regexp
+	parseSSHPatternOnce    sync.Once
+	parseSSHPatternRegex   *regexp.Regexp
+	parseColonPatternOnce  sync.Once
+	parseColorPatternRegex *regexp.Regexp
+	parsePortSlashOnce     sync.Once
+	parsePortSlashRegex    *regexp.Regexp
+	parseSlashPatternOnce  sync.Once
+	parseSlashPatternRegex *regexp.Regexp
+)
 
 func finalize(userMatch, host, path string) Option[Parts] {
 	parts := strings.Split(path, "/")

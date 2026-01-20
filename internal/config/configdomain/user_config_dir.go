@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
@@ -41,13 +42,21 @@ func (self UserConfigDir) String() string {
 //
 // a
 func SanitizePath[T ~string](dir T) T { //nolint:ireturn
-	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
-	sanitized := replaceCharacterRE.ReplaceAllString(string(dir), "-")
+	sanitizePathOnce.Do(func() {
+		sanitizePathCharacterRegex = regexp.MustCompile("[[:^alnum:]]")
+		sanitizePathDoubleMinusRegex = regexp.MustCompile("--+") // two or more dashes
+	})
+	sanitized := sanitizePathCharacterRegex.ReplaceAllString(string(dir), "-")
 	sanitized = strings.ToLower(sanitized)
-	replaceDoubleMinusRE := regexp.MustCompile("--+") // two or more dashes
-	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")
+	sanitized = sanitizePathDoubleMinusRegex.ReplaceAllString(sanitized, "-")
 	for strings.HasPrefix(sanitized, "-") {
 		sanitized = sanitized[1:]
 	}
 	return T(sanitized)
 }
+
+var (
+	sanitizePathOnce             sync.Once
+	sanitizePathCharacterRegex   *regexp.Regexp
+	sanitizePathDoubleMinusRegex *regexp.Regexp
+)

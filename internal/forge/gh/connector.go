@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/github"
@@ -160,9 +161,12 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 		AuthorizationError:  nil,
 	}
 	lines := stringslice.NonEmptyLines(output)
-	regex := regexp.MustCompile(`Logged in to github.com account (\w+)`)
+	parsePermissionsOnce.Do(func() {
+		parsePermissionsLoggedInRegex = regexp.MustCompile(`Logged in to github.com account (\w+)`)
+		parsePermissionsScopesRegex = regexp.MustCompile(`Token scopes: (.+)`)
+	})
 	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
+		matches := parsePermissionsLoggedInRegex.FindStringSubmatch(line)
 		if matches != nil {
 			result.AuthenticatedUser = NewOption(matches[1])
 			break
@@ -171,9 +175,8 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 	if result.AuthenticatedUser.IsNone() {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
-	regex = regexp.MustCompile(`Token scopes: (.+)`)
 	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
+		matches := parsePermissionsScopesRegex.FindStringSubmatch(line)
 		if matches != nil {
 			parts := strings.Split(matches[1], ", ")
 			if slices.Contains(parts, "'repo'") {
@@ -184,3 +187,9 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 	}
 	return result
 }
+
+var (
+	parsePermissionsOnce          sync.Once
+	parsePermissionsLoggedInRegex *regexp.Regexp
+	parsePermissionsScopesRegex   *regexp.Regexp
+)

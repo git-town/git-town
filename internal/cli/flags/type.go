@@ -3,6 +3,7 @@ package flags
 import (
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/spf13/cobra"
@@ -45,8 +46,10 @@ func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, er
 
 func SplitBranchTypeNames(text string) []string {
 	text = strings.TrimSpace(text)
-	splitter := regexp.MustCompile(`[,\+&\|]`)
-	splitted := splitter.Split(text, -1)
+	splitBranchOnce.Do(func() {
+		splitBranchRegex = regexp.MustCompile(`[,\+&\|]`)
+	})
+	splitted := splitBranchRegex.Split(text, -1)
 	result := make([]string, 0, len(splitted))
 	for _, split := range splitted {
 		if len(split) > 0 {
@@ -55,6 +58,11 @@ func SplitBranchTypeNames(text string) []string {
 	}
 	return result
 }
+
+var (
+	splitBranchOnce  sync.Once
+	splitBranchRegex *regexp.Regexp
+)
 
 // ReadTypeFlagFunc is the type signature for the function that reads the "type" flag from the args to the given Cobra command.
 type ReadTypeFlagFunc func(*cobra.Command) ([]configdomain.BranchType, error)
