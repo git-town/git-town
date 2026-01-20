@@ -475,7 +475,7 @@ Feature: show the configuration
       
       Propose:
         lineage: none
-        lineage single stack: yes
+        lineage single stack: no
       
       Ship:
         delete tracking branch: yes
