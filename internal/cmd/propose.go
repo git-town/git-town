@@ -389,7 +389,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
 		proposalBody := data.proposalBody
 		if updateProposalLineage {
-			lineageSection := proposallineage.RenderSection(data.config.NormalConfig.Lineage, branchToPropose.name, data.config.NormalConfig.Order, data.connector)
+			lineageSection := proposallineage.RenderSection(data.config.NormalConfig.Lineage, branchToPropose.name, data.config.NormalConfig.Order, data.config.NormalConfig.ProposalsShowLineageSingleStack, data.connector)
 			proposalBody = Some(proposallineage.UpdateProposalBody(proposalBody.GetOrZero(), lineageSection))
 		}
 		prog.Value.Add(&opcodes.ProposalCreate{

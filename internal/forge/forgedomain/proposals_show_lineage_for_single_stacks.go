@@ -4,7 +4,7 @@ import "strconv"
 
 type ProposalsShowLineageSingleStack bool
 
-func (self ProposalsShowLineageSingleStack) ShowLineage() bool {
+func (self ProposalsShowLineageSingleStack) Value() bool {
 	return bool(self)
 }
 
