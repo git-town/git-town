@@ -11,7 +11,7 @@ type TreeNode struct {
 }
 
 func (self TreeNode) BranchCount() int {
-	result := len(self.Children)
+	result := 1
 	for _, child := range self.Children {
 		result += child.BranchCount()
 	}

@@ -13,19 +13,21 @@ func TestCalculateTree(t *testing.T) {
 
 	t.Run("BranchCount", func(t *testing.T) {
 		t.Parallel()
-		tree := proposallineage.TreeNode{
-			Branch: "main",
-			Children: []proposallineage.TreeNode{
-				{Branch: "branch-1"},
-				{Branch: "branch-2", Children: []proposallineage.TreeNode{
-					{Branch: "branch-2a", Children: []proposallineage.TreeNode{
-						{Branch: "branch-2a1"},
+		t.Run("deep tree", func(t *testing.T) {
+			tree := proposallineage.TreeNode{
+				Branch: "main",
+				Children: []proposallineage.TreeNode{
+					{Branch: "branch-1"},
+					{Branch: "branch-2", Children: []proposallineage.TreeNode{
+						{Branch: "branch-2a", Children: []proposallineage.TreeNode{
+							{Branch: "branch-2a1"},
+						}},
 					}},
-				}},
-			},
-		}
-		have := tree.BranchCount()
-		must.EqOp(t, 5, have)
+				},
+			}
+			have := tree.BranchCount()
+			must.EqOp(t, 5, have)
+		})
 	})
 
 	t.Run("CalculateTree", func(t *testing.T) {
