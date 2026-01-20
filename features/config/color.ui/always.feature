@@ -394,7 +394,7 @@ Feature: show the configuration
 
       Propose:
         lineage: none
-        lineage single stack: yesct
+        lineage single stack: yes
 
       Ship:
         delete tracking branch: yes
