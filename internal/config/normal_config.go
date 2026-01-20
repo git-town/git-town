@@ -288,7 +288,7 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialBranches:               gitdomain.LocalBranchNames{},
 		PerennialRegex:                  None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:            forgedomain.ProposalsShowLineageNone,
-		ProposalsShowLineageSingleStack: true,
+		ProposalsShowLineageSingleStack: false,
 		PushBranches:                    true,
 		PushHook:                        true,
 		ShareNewBranches:                configdomain.ShareNewBranchesNone,
