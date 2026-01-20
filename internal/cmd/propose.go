@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -385,10 +386,16 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 			CurrentBranch: branchToPropose.name,
 		})
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branchToPropose.name})
+		updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+		proposalBody := data.proposalBody
+		if updateProposalLineage {
+			lineageSection := proposallineage.RenderSection(data.config.NormalConfig.Lineage, branchToPropose.name, data.config.NormalConfig.Order, data.connector)
+			proposalBody = Some(proposallineage.UpdateProposalBody(proposalBody.GetOrZero(), lineageSection))
+		}
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
-			ProposalBody:  data.proposalBody,
+			ProposalBody:  proposalBody,
 			ProposalTitle: data.proposalTitle,
 		})
 		prog.Value.Add(&opcodes.ProgramEndOfBranch{})

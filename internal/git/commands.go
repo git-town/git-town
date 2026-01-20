@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
@@ -265,9 +266,17 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 	if prefix, hasPrefix := prefix.Get(); hasPrefix {
 		content = prefix + "\n" + content
 	}
-	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
+	commentOutSquashCommitMessageOnce.Do(func() {
+		commentOutSquashCommitMessageRegex = regexp.MustCompile("(?m)^")
+	})
+	content = commentOutSquashCommitMessageRegex.ReplaceAllString(content, "# ")
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
+
+var (
+	commentOutSquashCommitMessageOnce  sync.Once
+	commentOutSquashCommitMessageRegex *regexp.Regexp
+)
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
@@ -547,12 +556,14 @@ func (self *Commands) ForcePushBranchSafely(runner subshelldomain.Runner, pushHo
 }
 
 func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
 	}
-	matches := versionRegexp.FindStringSubmatch(output)
+	gitVersionOnce.Do(func() {
+		gitVersionRegex = regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
+	})
+	matches := gitVersionRegex.FindStringSubmatch(output)
 	if matches == nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
@@ -569,6 +580,11 @@ func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error
 		Minor: minorVersion,
 	}, nil
 }
+
+var (
+	gitVersionOnce  sync.Once
+	gitVersionRegex *regexp.Regexp
+)
 
 func (self *Commands) HasMergeInProgress(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")

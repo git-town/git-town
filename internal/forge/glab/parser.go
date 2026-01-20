@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"sync"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -32,9 +33,11 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 		AuthorizationError:  nil,
 	}
 	lines := stringslice.NonEmptyLines(output)
-	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
+	parsePermissionsOutputOnce.Do(func() {
+		parsePermissionsOutputRegex = regexp.MustCompile(`Logged in to \S+ as (\S+) `)
+	})
 	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
+		matches := parsePermissionsOutputRegex.FindStringSubmatch(line)
 		if matches != nil {
 			result.AuthenticatedUser = NewOption(matches[1])
 			break
@@ -45,6 +48,11 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 	}
 	return result
 }
+
+var (
+	parsePermissionsOutputOnce  sync.Once
+	parsePermissionsOutputRegex *regexp.Regexp
+)
 
 type jsonData struct {
 	Description  gitdomain.ProposalBody    `json:"description"`
