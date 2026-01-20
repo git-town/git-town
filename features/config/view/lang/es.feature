@@ -24,7 +24,6 @@ Feature: show the configuration in Spanish
     When I run "git-town config" with these environment variables
       | LANG | es_ES.UTF-8 |
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
@@ -70,6 +69,7 @@ Feature: show the configuration in Spanish
       
       Propose:
         lineage: none
+        lineage single stack: yes
       
       Ship:
         delete tracking branch: yes
