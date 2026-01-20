@@ -29,6 +29,8 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
+    And Git setting "git-town.proposals-show-lineage" is "ci"
+    And Git setting "git-town.proposals-show-lineage-single-stack" is "yes"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"
@@ -76,7 +78,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        lineage: ci
         lineage single stack: yes
 
       Ship:

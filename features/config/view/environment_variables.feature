@@ -38,13 +38,13 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_PROPOSALS_SHOW_LINEAGE              | cli                |
       | GIT_TOWN_PROPOSALS_SHOW_LINEAGE_SINGLE_STACK | false              |
       | GIT_TOWN_ORIGIN_HOSTNAME                     | codeforge          |
-      | GIT_TOWN_OFFLINE                             |                  1 |
+      | GIT_TOWN_OFFLINE                             | 1                  |
       | GIT_TOWN_PERENNIAL_BRANCHES                  | qa staging         |
       | GIT_TOWN_PERENNIAL_REGEX                     | ^release-          |
       | GIT_TOWN_PUSH_BRANCHES                       | no                 |
       | GIT_TOWN_PUSH_HOOK                           | no                 |
       | GIT_TOWN_SHARE_NEW_BRANCHES                  | push               |
-      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH         |                  0 |
+      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH         | 0                  |
       | GIT_TOWN_SHIP_STRATEGY                       | fast-forward       |
       | GIT_TOWN_STASH                               | false              |
       | GIT_TOWN_SYNC_FEATURE_STRATEGY               | rebase             |
@@ -69,18 +69,18 @@ Feature: display configuration defined in environment variables
         unknown branch type: observed
         order: desc
         display types: all branch types
-      
+
       Configuration:
         offline: yes
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: acme-
         new branch type: prototype
         share new branches: push
         stash uncommitted changes: no
-      
+
       Hosting:
         browser: firefox
         development remote: my-fork
@@ -94,16 +94,16 @@ Feature: display configuration defined in environment variables
         GitHub token: github-token
         GitLab connector: glab
         GitLab token: gitlab-token
-      
+
       Propose:
         lineage: cli
         lineage single stack: no
-      
+
       Ship:
         delete tracking branch: no
         ignore uncommitted changes: yes
         ship strategy: fast-forward
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
