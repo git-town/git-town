@@ -1,5 +1,4 @@
-@skipWindows
-Feature: propose with embedded lineage
+Feature: propose single stack, show single stacks enabled
 
   Background:
     Given a Git repo with origin
