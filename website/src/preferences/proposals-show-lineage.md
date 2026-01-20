@@ -1,7 +1,7 @@
 # proposals-show-lineage
 
-This setting configures how Git Town embeds a
-[breadcrumb](../how-to/github-actions-breadcrumb.md) of the
+This setting makes Git Town embed a
+[breadcrumb](../how-to/proposal-branch-stack.md the
 [branch stack](../stacked-changes.md) into proposals.
 
 You have several options for this:
