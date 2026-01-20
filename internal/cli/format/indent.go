@@ -6,11 +6,6 @@ import (
 	"sync"
 )
 
-var (
-	indentOnce sync.Once
-	identRE    *regexp.Regexp
-)
-
 // Indent outputs the given string with the given level of indentation
 // on each line. Each level of indentation is two spaces.
 func Indent(message string) string {
@@ -18,3 +13,8 @@ func Indent(message string) string {
 	indentOnce.Do(func() { identRE = regexp.MustCompile("\n  \n") })
 	return identRE.ReplaceAllString(result, "\n\n")
 }
+
+var (
+	indentOnce sync.Once
+	identRE    *regexp.Regexp
+)

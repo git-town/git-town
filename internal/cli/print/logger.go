@@ -3,6 +3,7 @@ package print
 import (
 	"fmt"
 	"regexp"
+	"sync"
 
 	"github.com/git-town/git-town/v22/pkg/colors"
 )
@@ -36,9 +37,11 @@ func (self Logger) Start(template string, data ...any) {
 		fmt.Print(colors.Bold().Styled(template))
 		return
 	}
-	re := regexp.MustCompile(`%(?:s|d|w)`) // Split by any of "%s", "%d", or "%w"
-	parts := re.Split(template, -1)
-	matches := re.FindAllString(template, -1)
+	logStartOnce.Do(func() {
+		logStartRegex = regexp.MustCompile(`%(?:s|d|w)`) // Split by any of "%s", "%d", or "%w"
+	})
+	parts := logStartRegex.Split(template, -1)
+	matches := logStartRegex.FindAllString(template, -1)
 	for i := range data {
 		fmt.Print(colors.Bold().Styled(parts[i]))
 		format := matches[i]
@@ -50,6 +53,11 @@ func (self Logger) Start(template string, data ...any) {
 	}
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
 }
+
+var (
+	logStartOnce  sync.Once
+	logStartRegex *regexp.Regexp
+)
 
 func (self Logger) Success(message string) {
 	self.Log(colors.BoldGreen().Styled(message))

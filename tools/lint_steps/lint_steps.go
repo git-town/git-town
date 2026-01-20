@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
 
 	"github.com/git-town/git-town/v22/pkg/asserts"
 )
@@ -13,8 +12,6 @@ const (
 	filePath   = "../../" + fileName
 	featureDir = "../../features"
 )
-
-var stepUsageRE *regexp.Regexp
 
 func main() {
 	stepsFileBytes := asserts.NoError1(os.ReadFile(filePath))
