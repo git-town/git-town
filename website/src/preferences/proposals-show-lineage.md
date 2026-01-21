@@ -1,7 +1,6 @@
 # proposals-show-lineage
 
-This setting makes Git Town embed a
-[breadcrumb](../how-to/proposal-branch-stack.md the
+This setting makes Git Town embed a visual overview of the
 [branch stack](../stacked-changes.md) into proposals.
 
 You have several options for this:
