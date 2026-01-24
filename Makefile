@@ -197,7 +197,6 @@ stats-release:  # displays statistics about the changes since the last release
 .PHONY: test
 test:  # runs all the tests
 	@tools/rta conc --show=failed \
-		"make --no-print-directory fix" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory unit" \
 		"make --no-print-directory lint-all" \
