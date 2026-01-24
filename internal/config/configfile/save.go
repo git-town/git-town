@@ -143,7 +143,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	proposalBreadcrumb, hasProposalBreadcrumb := data.ProposalBreadcrumb.Get()
 	if hasProposalBreadcrumb {
 		result.WriteString("\n[propose]\n")
-		result.WriteString(fmt.Sprintf("lineage = %q\n", proposalBreadcrumb))
+		result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
 	}
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()

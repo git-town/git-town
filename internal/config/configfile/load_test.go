@@ -51,7 +51,7 @@ gitlab-connector = "glab"
 origin-hostname = "github.com"
 
 [propose]
-lineage = "cli"
+breadcrumb = "cli"
 
 [ship]
 delete-tracking-branch = false
@@ -102,7 +102,7 @@ upstream = true
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Lineage: Ptr("cli"),
+					Breadcrumb: Ptr("cli"),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),

@@ -115,7 +115,7 @@ gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]
-lineage = "cli"
+breadcrumb = "cli"
 
 [ship]
 delete-tracking-branch = true
