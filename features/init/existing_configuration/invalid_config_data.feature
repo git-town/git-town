@@ -30,38 +30,38 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.unknown-branch-type" is "zonk"
     And local Git setting "init.defaultbranch" is "main"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                              | KEYS                          |
-      | welcome                             | enter                         |
-      | aliases                             | enter                         |
-      | main branch                         | enter                         |
-      | origin hostname                     | enter                         |
-      | forge type                          | enter                         |
-      | enter all                           | down enter                    |
-      | perennial regex                     | p e r enter                   |
-      | feature regex                       | f e a t enter                 |
-      | contribution regex                  | c o n t enter                 |
-      | observed regex                      | o b s enter                   |
-      | branch prefix                       | backspace backspace a b enter |
-      | new branch type                     | down enter                    |
-      | unknown branch type                 | down enter                    |
-      | sync feature strategy               | down enter                    |
-      | sync perennial strategy             | down enter                    |
-      | sync prototype strategy             | down enter                    |
-      | sync upstream                       | down enter                    |
-      | auto-sync                           | down enter                    |
-      | sync-tags                           | down enter                    |
-      | detached                            | down enter                    |
-      | stash                               | down enter                    |
-      | share-new-branches                  | down enter                    |
-      | push-branches                       | down enter                    |
-      | push-hook                           | down enter                    |
-      | ship-strategy                       | down enter                    |
-      | ship-delete-tracking branch         | down enter                    |
-      | ignore-uncommitted                  | down enter                    |
-      | order                               | down enter                    |
-      | proposal breadcrumb                 | enter                         |
-      | proposals show lineage single stack | enter                         |
-      | config storage                      | enter                         |
+      | DIALOG                            | KEYS                          |
+      | welcome                           | enter                         |
+      | aliases                           | enter                         |
+      | main branch                       | enter                         |
+      | origin hostname                   | enter                         |
+      | forge type                        | enter                         |
+      | enter all                         | down enter                    |
+      | perennial regex                   | p e r enter                   |
+      | feature regex                     | f e a t enter                 |
+      | contribution regex                | c o n t enter                 |
+      | observed regex                    | o b s enter                   |
+      | branch prefix                     | backspace backspace a b enter |
+      | new branch type                   | down enter                    |
+      | unknown branch type               | down enter                    |
+      | sync feature strategy             | down enter                    |
+      | sync perennial strategy           | down enter                    |
+      | sync prototype strategy           | down enter                    |
+      | sync upstream                     | down enter                    |
+      | auto-sync                         | down enter                    |
+      | sync-tags                         | down enter                    |
+      | detached                          | down enter                    |
+      | stash                             | down enter                    |
+      | share-new-branches                | down enter                    |
+      | push-branches                     | down enter                    |
+      | push-hook                         | down enter                    |
+      | ship-strategy                     | down enter                    |
+      | ship-delete-tracking branch       | down enter                    |
+      | ignore-uncommitted                | down enter                    |
+      | order                             | down enter                    |
+      | proposal breadcrumb               | enter                         |
+      | proposals breadcrumb single stack | enter                         |
+      | config storage                    | enter                         |
 
   Scenario: result
     Then Git Town runs the commands
