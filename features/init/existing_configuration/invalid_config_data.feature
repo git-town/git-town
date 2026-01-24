@@ -14,7 +14,6 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.order" is "zonk"
     And local Git setting "git-town.perennial-regex" is "(per"
-    And local Git setting "git-town.proposal-breadcrumb-single" is "zonk"
     And local Git setting "git-town.push-branches" is "zonk"
     And local Git setting "git-town.push-hook" is "zonk"
     And local Git setting "git-town.share-new-branches" is "zonk"
@@ -59,7 +58,6 @@ Feature: Fix invalid configuration data
       | ignore-uncommitted          | down enter                    |
       | order                       | down enter                    |
       | proposal breadcrumb         | enter                         |
-      | proposal breadcrumb single  | enter                         |
       | config storage              | enter                         |
 
   Scenario: result
@@ -77,7 +75,6 @@ Feature: Fix invalid configuration data
       | git config git-town.order desc                        |
       | git config git-town.perennial-regex per               |
       | git config git-town.proposal-breadcrumb none          |
-      | git config git-town.proposal-breadcrumb-single true   |
       | git config git-town.push-branches false               |
       | git config git-town.push-hook false                   |
       | git config git-town.share-new-branches push           |
@@ -101,7 +98,6 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
-      Ignoring invalid value for "git-town.proposal-breadcrumb-single": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
@@ -123,7 +119,6 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
-      Ignoring invalid value for "git-town.proposal-breadcrumb-single": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
