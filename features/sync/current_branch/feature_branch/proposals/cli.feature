@@ -127,9 +127,17 @@ Feature: sync the current feature branch and update proposals
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }} |
-      |          | git push --force-with-lease --force-if-includes      |
+      | BRANCH   | COMMAND                                                                 |
+      | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                    |
+      |          | git push --force-with-lease --force-if-includes                         |
+      |          | Finding all proposals for branch-1 ... main                             |
+      |          | Finding proposal from branch-1 into main ... #1 (branch-1 proposal)     |
+      |          | Finding proposal from branch-2 into branch-1 ... #2 (branch-2 proposal) |
+      |          | Finding proposal from branch-3 into branch-2 ... #3 (branch-3 proposal) |
+      |          | Finding all proposals for branch-2 ... branch-1                         |
+      |          | Finding all proposals for branch-3 ... branch-2                         |
+      |          | Finding all proposals for other ... main                                |
+      |          | Finding proposal from other into main ... #4 (other proposal)           |
     And the initial branches and lineage exist now
     And the proposals are now
       """

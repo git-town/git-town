@@ -103,13 +103,19 @@ Feature: sync stacked changes and update proposals
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                            |
-      | child  | git reset --hard {{ sha-initial 'child commit' }}  |
-      |        | git push --force-with-lease --force-if-includes    |
-      |        | git checkout parent                                |
-      | parent | git reset --hard {{ sha-initial 'parent commit' }} |
-      |        | git push --force-with-lease --force-if-includes    |
-      |        | git checkout child                                 |
+      | BRANCH | COMMAND                                                         |
+      | child  | git reset --hard {{ sha-initial 'child commit' }}               |
+      |        | git push --force-with-lease --force-if-includes                 |
+      |        | git checkout parent                                             |
+      | parent | git reset --hard {{ sha-initial 'parent commit' }}              |
+      |        | git push --force-with-lease --force-if-includes                 |
+      |        | git checkout child                                              |
+      |        | Finding all proposals for child ... parent                      |
+      |        | Finding proposal from parent into main ... #1 (parent proposal) |
+      |        | Finding proposal from child into parent ... #2 (child proposal) |
+      |        | Finding all proposals for other ... main                        |
+      |        | Finding proposal from other into main ... #3 (other proposal)   |
+      |        | Finding all proposals for parent ... main                       |
     And the initial branches and lineage exist now
     And the proposals are now
       """
