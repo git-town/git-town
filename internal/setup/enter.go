@@ -179,7 +179,7 @@ EnterForgeData:
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
-	proposalsShowLineage := None[forgedomain.ProposalBreadcrumb]()
+	proposalBreadcrumb := None[forgedomain.ProposalBreadcrumb]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -269,7 +269,7 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
-		proposalsShowLineage, exit, err = enterProposalsShowLineage(data)
+		proposalBreadcrumb, exit, err = enterProposalBreadcrumb(data)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -312,7 +312,7 @@ EnterForgeData:
 		Order:                    order,
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		ProposalsShowLineage:     proposalsShowLineage,
+		ProposalBreadcrumb:       proposalBreadcrumb,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
@@ -622,14 +622,14 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 	})
 }
 
-func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
-	if data.Config.File.ProposalsShowLineage.IsSome() {
+func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalBreadcrumb.IsSome() {
 		return None[forgedomain.ProposalBreadcrumb](), false, nil
 	}
 	return dialog.ProposalBreadcrumb(dialog.Args[forgedomain.ProposalBreadcrumb]{
-		Global: data.Config.GitGlobal.ProposalsShowLineage,
+		Global: data.Config.GitGlobal.ProposalBreadcrumb,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.ProposalsShowLineage,
+		Local:  data.Config.GitLocal.ProposalBreadcrumb,
 	})
 }
 

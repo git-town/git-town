@@ -173,7 +173,7 @@ upstream = true
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("public", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
-				ProposalsShowLineage:     Some(forgedomain.ProposalBreadcrumbCLI),
+				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbCLI),
 				PushBranches:             None[configdomain.PushBranches](),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPush),

@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseProposalsShowLineage(t *testing.T) {
+func TestParseProposalBreadcrumb(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		give string
