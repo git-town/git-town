@@ -2,7 +2,7 @@
 
 ## 22.5.0 (unreleased)
 
-- The Git Town CLI can now embed branch lineage directly into proposals. This feature is in preview. To enable it, configure proposals-show-lineage to `cli`.
+- The Git Town CLI can now embed branch lineage directly into proposals. This feature is in preview. To enable it, configure proposal-breadcrumb to `cli`.
 
 ## 22.4.0 (2025-12-24)
 

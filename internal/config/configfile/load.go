@@ -67,7 +67,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		order                           Option[configdomain.Order]
 		perennialBranches               gitdomain.LocalBranchNames
 		perennialRegex                  Option[configdomain.PerennialRegex]
-		proposalsShowLineage            Option[forgedomain.ProposalsShowLineage]
+		proposalBreadcrumb              Option[forgedomain.ProposalBreadcrumb]
 		proposalsShowLineageSingleStack Option[forgedomain.ProposalsShowLineageSingleStack]
 		pushBranches                    Option[configdomain.PushBranches]
 		pushHook                        Option[configdomain.PushHook]
@@ -210,8 +210,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Propose != nil {
+		// load the deprecated "lineage" setting first so that "breadcrumb" can override the value later
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
+			proposalBreadcrumb, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Lineage, messages.ConfigFile)
+			ec.Check(err)
+		}
+		if data.Propose.Breadcrumb != nil {
+			proposalBreadcrumb, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.LineageSingleStack != nil {
@@ -312,7 +317,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Order:                           order,
 		PerennialBranches:               perennialBranches,
 		PerennialRegex:                  perennialRegex,
-		ProposalsShowLineage:            proposalsShowLineage,
+		ProposalBreadcrumb:              proposalBreadcrumb,
 		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,

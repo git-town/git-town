@@ -40,7 +40,7 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking branch         | enter      |
       | ignore-uncommitted                  | enter      |
       | order                               | enter      |
-      | proposals show lineage              | enter      |
+      | proposal breadcrumb                 | enter      |
       | proposals show lineage single stack | enter      |
       | config storage                      | enter      |
 
@@ -53,7 +53,7 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.ignore-uncommitted true                  |
       | git config git-town.new-branch-type feature                  |
       | git config git-town.order asc                                |
-      | git config git-town.proposals-show-lineage none              |
+      | git config git-town.proposal-breadcrumb none                 |
       | git config git-town.proposals-show-lineage-single-stack true |
       | git config git-town.push-branches true                       |
       | git config git-town.push-hook true                           |
@@ -97,6 +97,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.perennial-regex" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage-single-stack" still doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist

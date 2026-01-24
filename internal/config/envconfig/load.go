@@ -43,7 +43,7 @@ const (
 	offline                         = "GIT_TOWN_OFFLINE"
 	perennialBranches               = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex                  = "GIT_TOWN_PERENNIAL_REGEX"
-	proposalsShowLineage            = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
+	proposalBreadcrumb              = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	proposalsShowLineageSingleStack = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE_SINGLE_STACK"
 	pushBranches                    = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                        = "GIT_TOWN_PUSH_HOOK"
@@ -85,7 +85,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
-	proposalsShowLineage, errProposalsShowLineage := load(env, proposalsShowLineage, forgedomain.ParseProposalsShowLineage)
+	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, forgedomain.ParseProposalBreadcrumb)
 	proposalsShowLineageSingleStack, errProposalsShowLineageSingleStack := load(env, proposalsShowLineageSingleStack, gohacks.ParseBoolOpt[forgedomain.ProposalsShowLineageSingleStack])
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
@@ -119,7 +119,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errOffline,
 		errOrder,
 		errPerennialRegex,
-		errProposalsShowLineage,
+		errProposalBreadcrumb,
 		errProposalsShowLineageSingleStack,
 		errPushBranches,
 		errPushHook,
@@ -169,7 +169,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		Order:                           order,
 		PerennialBranches:               gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:                  perennialRegex,
-		ProposalsShowLineage:            proposalsShowLineage,
+		ProposalBreadcrumb:              proposalBreadcrumb,
 		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,

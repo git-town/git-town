@@ -76,6 +76,7 @@ const (
 	KeyDeprecatedObservedBranches          = Key("git-town.observed-branches")
 	KeyDeprecatedParkedBranches            = Key("git-town.parked-branches")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
+	KeyDeprecatedProposalsShowLineage      = Key("git-town.proposals-show-lineage")
 	KeyDeprecatedPrototypeBranches         = Key("git-town.prototype-branches")
 	KeyDeprecatedPullBranchStrategy        = Key("git-town.pull-branch-strategy")
 	KeyDeprecatedPushNewBranches           = Key("git-town.push-new-branches")
@@ -103,7 +104,7 @@ const (
 	KeyOrder                               = Key("git-town.order")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
-	KeyProposalsShowLineage                = Key("git-town.proposals-show-lineage")
+	KeyProposalBreadcrumb                  = Key("git-town.proposal-breadcrumb")
 	KeyProposalsShowLineageSingleStack     = Key("git-town.proposals-show-lineage-single-stack")
 	KeyPushBranches                        = Key("git-town.push-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
@@ -144,6 +145,7 @@ var keys = []Key{
 	KeyDeprecatedObservedBranches,
 	KeyDeprecatedParkedBranches,
 	KeyDeprecatedPerennialBranchNames,
+	KeyDeprecatedProposalsShowLineage,
 	KeyDeprecatedPrototypeBranches,
 	KeyDeprecatedPullBranchStrategy,
 	KeyDeprecatedPushNewBranches,
@@ -172,7 +174,7 @@ var keys = []Key{
 	KeyOrder,
 	KeyPerennialBranches,
 	KeyPerennialRegex,
-	KeyProposalsShowLineage,
+	KeyProposalBreadcrumb,
 	KeyProposalsShowLineageSingleStack,
 	KeyPushBranches,
 	KeyPushHook,
@@ -218,6 +220,7 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyDeprecatedPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,
+	KeyDeprecatedProposalsShowLineage:      KeyProposalBreadcrumb,
 	KeyDeprecatedPullBranchStrategy:        KeySyncPerennialStrategy,
 	KeyDeprecatedPushVerify:                KeyPushHook,
 	KeyDeprecatedShipDeleteRemoteBranch:    KeyShipDeleteTrackingBranch,

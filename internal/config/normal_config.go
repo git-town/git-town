@@ -61,7 +61,7 @@ type NormalConfig struct {
 	Order                           configdomain.Order
 	PerennialBranches               gitdomain.LocalBranchNames
 	PerennialRegex                  Option[configdomain.PerennialRegex]
-	ProposalsShowLineage            forgedomain.ProposalsShowLineage
+	ProposalBreadcrumb              forgedomain.ProposalBreadcrumb
 	ProposalsShowLineageSingleStack forgedomain.ProposalsShowLineageSingleStack
 	PushBranches                    configdomain.PushBranches
 	PushHook                        configdomain.PushHook
@@ -131,7 +131,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		Order:                           other.Order.GetOr(self.Order),
 		PerennialBranches:               other.PerennialBranches.AppendAllMissing(self.PerennialBranches),
 		PerennialRegex:                  other.PerennialRegex.Or(self.PerennialRegex),
-		ProposalsShowLineage:            other.ProposalsShowLineage.GetOr(self.ProposalsShowLineage),
+		ProposalBreadcrumb:              other.ProposalBreadcrumb.GetOr(self.ProposalBreadcrumb),
 		ProposalsShowLineageSingleStack: other.ProposalsShowLineageSingleStack.GetOr(self.ProposalsShowLineageSingleStack),
 		PushBranches:                    other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                        other.PushHook.GetOr(self.PushHook),
@@ -287,7 +287,7 @@ func DefaultNormalConfig() NormalConfig {
 		Order:                           configdomain.OrderAsc,
 		PerennialBranches:               gitdomain.LocalBranchNames{},
 		PerennialRegex:                  None[configdomain.PerennialRegex](),
-		ProposalsShowLineage:            forgedomain.ProposalsShowLineageNone,
+		ProposalBreadcrumb:              forgedomain.ProposalBreadcrumbNone,
 		ProposalsShowLineageSingleStack: false,
 		PushBranches:                    true,
 		PushHook:                        true,
@@ -340,7 +340,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		Order:                           partial.Order.GetOr(defaults.Order),
 		PerennialBranches:               partial.PerennialBranches,
 		PerennialRegex:                  partial.PerennialRegex,
-		ProposalsShowLineage:            partial.ProposalsShowLineage.GetOr(defaults.ProposalsShowLineage),
+		ProposalBreadcrumb:              partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
 		ProposalsShowLineageSingleStack: partial.ProposalsShowLineageSingleStack.GetOr(defaults.ProposalsShowLineageSingleStack),
 		PushBranches:                    partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                        partial.PushHook.GetOr(defaults.PushHook),

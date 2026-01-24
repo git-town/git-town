@@ -59,7 +59,7 @@ Feature: Fix invalid configuration data
       | ship-delete-tracking branch         | down enter                    |
       | ignore-uncommitted                  | down enter                    |
       | order                               | down enter                    |
-      | proposals show lineage              | enter                         |
+      | proposal breadcrumb                 | enter                         |
       | proposals show lineage single stack | enter                         |
       | config storage                      | enter                         |
 
@@ -77,7 +77,7 @@ Feature: Fix invalid configuration data
       | git config git-town.observed-regex obs                       |
       | git config git-town.order desc                               |
       | git config git-town.perennial-regex per                      |
-      | git config git-town.proposals-show-lineage none              |
+      | git config git-town.proposal-breadcrumb none                 |
       | git config git-town.proposals-show-lineage-single-stack true |
       | git config git-town.push-branches false                      |
       | git config git-town.push-hook false                          |

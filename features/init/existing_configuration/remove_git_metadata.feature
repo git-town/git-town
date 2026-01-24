@@ -38,7 +38,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
-    And local Git setting "git-town.proposals-show-lineage" is "none"
+    And local Git setting "git-town.proposal-breadcrumb" is "none"
     And local Git setting "git-town.proposals-show-lineage-single-stack" is "false"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
@@ -83,7 +83,7 @@ Feature: remove existing configuration in Git metadata
       | ship delete tracking branch         | down enter                                                                  | disable             |
       | ignore-uncommitted                  | up enter                                                                    | disable             |
       | order                               | up enter                                                                    |                     |
-      | proposals show lineage              | down enter                                                                  |                     |
+      | proposal breadcrumb                 | down enter                                                                  |                     |
       | proposals show lineage single stack | up enter                                                                    |                     |
       | config storage                      | enter                                                                       | git metadata        |
 
@@ -118,7 +118,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.observed-regex                   |
       | git config git-town.order asc                                |
       | git config --unset git-town.perennial-regex                  |
-      | git config git-town.proposals-show-lineage cli               |
+      | git config git-town.proposal-breadcrumb cli                  |
       | git config git-town.proposals-show-lineage-single-stack true |
       | git config git-town.push-branches true                       |
       | git config git-town.push-hook true                           |
@@ -155,7 +155,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
-    And local Git setting "git-town.proposals-show-lineage" is now "cli"
+    And local Git setting "git-town.proposal-breadcrumb" is now "cli"
     And local Git setting "git-town.proposals-show-lineage-single-stack" is now "true"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
@@ -196,7 +196,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" is now "obs.*"
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
-    And local Git setting "git-town.proposals-show-lineage" is now "none"
+    And local Git setting "git-town.proposal-breadcrumb" is now "none"
     And local Git setting "git-town.proposals-show-lineage-single-stack" is now "false"
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"

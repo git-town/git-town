@@ -134,8 +134,8 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.PerennialRegex.IsSome() {
 		_ = gitconfig.RemovePerennialRegex(runner)
 	}
-	if gitConfig.ProposalsShowLineage.IsSome() {
-		_ = gitconfig.RemoveProposalsShowLineage(runner)
+	if gitConfig.ProposalBreadcrumb.IsSome() {
+		_ = gitconfig.RemoveProposalBreadcrumb(runner)
 	}
 	if gitConfig.ProposalsShowLineageSingleStack.IsSome() {
 		_ = gitconfig.RemoveProposalsShowLineageSingleStack(runner)
@@ -280,9 +280,9 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
-	if configFile.ProposalsShowLineage.IsNone() {
+	if configFile.ProposalBreadcrumb.IsNone() {
 		fc.Check(
-			saveProposalsShowLineage(userInput.Data.ProposalsShowLineage, existingGitConfig.ProposalsShowLineage, frontend),
+			saveProposalBreadcrumb(userInput.Data.ProposalBreadcrumb, existingGitConfig.ProposalBreadcrumb, frontend),
 		)
 	}
 	if configFile.ProposalsShowLineageSingleStack.IsNone() {
@@ -605,14 +605,14 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 	return nil
 }
 
-func saveProposalsShowLineage(valueToWriteToGit Option[forgedomain.ProposalsShowLineage], valueAlreadyInGit Option[forgedomain.ProposalsShowLineage], runner subshelldomain.Runner) error {
+func saveProposalBreadcrumb(valueToWriteToGit Option[forgedomain.ProposalBreadcrumb], valueAlreadyInGit Option[forgedomain.ProposalBreadcrumb], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetProposalsShowLineage(runner, value, configdomain.ConfigScopeLocal)
+		return gitconfig.SetProposalBreadcrumb(runner, value, configdomain.ConfigScopeLocal)
 	}
-	return gitconfig.RemoveProposalsShowLineage(runner)
+	return gitconfig.RemoveProposalBreadcrumb(runner)
 }
 
 func saveProposalsShowLineageSingleStack(valueToWriteToGit Option[forgedomain.ProposalsShowLineageSingleStack], valueAlreadyInGit Option[forgedomain.ProposalsShowLineageSingleStack], runner subshelldomain.Runner) error {

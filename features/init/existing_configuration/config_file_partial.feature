@@ -9,16 +9,16 @@ Feature: ask for information not provided by the config file
       main = "main"
       perennials = ["public"]
       order = "desc"
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
-
+      
       [sync]
       auto-sync = false
       tags = false
@@ -53,7 +53,7 @@ Feature: ask for information not provided by the config file
       | push branches                       | enter                 |
       | push hook                           | enter                 |
       | ship strategy                       | enter                 |
-      | proposals show lineage              | enter                 |
+      | proposal breadcrumb                 | enter                 |
       | proposals show lineage single stack | enter                 |
       | config storage                      | enter                 |
     Then Git Town runs the commands
@@ -68,7 +68,7 @@ Feature: ask for information not provided by the config file
       | git config git-town.new-branch-type feature                  |
       | git config git-town.observed-regex obs                       |
       | git config git-town.perennial-regex peren                    |
-      | git config git-town.proposals-show-lineage none              |
+      | git config git-town.proposal-breadcrumb none                 |
       | git config git-town.proposals-show-lineage-single-stack true |
       | git config git-town.push-branches true                       |
       | git config git-town.push-hook true                           |

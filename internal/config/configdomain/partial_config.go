@@ -49,7 +49,7 @@ type PartialConfig struct {
 	Order                           Option[Order]
 	PerennialBranches               gitdomain.LocalBranchNames
 	PerennialRegex                  Option[PerennialRegex]
-	ProposalsShowLineage            Option[forgedomain.ProposalsShowLineage]
+	ProposalBreadcrumb              Option[forgedomain.ProposalBreadcrumb]
 	ProposalsShowLineageSingleStack Option[forgedomain.ProposalsShowLineageSingleStack]
 	PushBranches                    Option[PushBranches]
 	PushHook                        Option[PushHook]
@@ -110,7 +110,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Order:                           other.Order.Or(self.Order),
 		PerennialBranches:               append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:                  other.PerennialRegex.Or(self.PerennialRegex),
-		ProposalsShowLineage:            other.ProposalsShowLineage.Or(self.ProposalsShowLineage),
+		ProposalBreadcrumb:              other.ProposalBreadcrumb.Or(self.ProposalBreadcrumb),
 		ProposalsShowLineageSingleStack: other.ProposalsShowLineageSingleStack.Or(self.ProposalsShowLineageSingleStack),
 		PushBranches:                    other.PushBranches.Or(self.PushBranches),
 		PushHook:                        other.PushHook.Or(self.PushHook),

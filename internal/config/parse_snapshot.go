@@ -102,7 +102,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	order, errOrder := load(snapshot, configdomain.KeyOrder, configdomain.ParseOrder, ignoreUnknown)
 	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
 	perennialRegex, errPerennialRegex := load(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
-	proposalsShowLineage, errProposalsShowLineage := load(snapshot, configdomain.KeyProposalsShowLineage, forgedomain.ParseProposalsShowLineage, ignoreUnknown)
+	proposalBreadcrumb, errProposalBreadcrumb := load(snapshot, configdomain.KeyProposalBreadcrumb, forgedomain.ParseProposalBreadcrumb, ignoreUnknown)
 	proposalsShowLineageSingleStack, errProposalsShowLineageSingleStack := load(snapshot, configdomain.KeyProposalsShowLineageSingleStack, gohacks.ParseBoolOpt[forgedomain.ProposalsShowLineageSingleStack], ignoreUnknown)
 	pushBranches, errPushBranches := load(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
 	pushHook, errPushHook := load(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
@@ -137,7 +137,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errOrder,
 		errOffline,
 		errPerennialRegex,
-		errProposalsShowLineage,
+		errProposalBreadcrumb,
 		errProposalsShowLineageSingleStack,
 		errPushBranches,
 		errPushHook,
@@ -186,7 +186,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		Offline:                         offline,
 		PerennialBranches:               gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:                  perennialRegex,
-		ProposalsShowLineage:            proposalsShowLineage,
+		ProposalBreadcrumb:              proposalBreadcrumb,
 		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,
