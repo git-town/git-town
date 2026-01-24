@@ -458,7 +458,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			)
 		}
 	}
-	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb == forgedomain.ProposalBreadcrumbCLI
+	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

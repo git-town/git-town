@@ -56,7 +56,7 @@ createProposal:
 		return err
 	}
 
-	if args.Config.Value.NormalConfig.ProposalBreadcrumb == forgedomain.ProposalBreadcrumbCLI {
+	if args.Config.Value.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb() {
 		// TODO: remove this once we embed the lineage when creating the proposal
 		args.PrependOpcodes(&ProposalUpdateLineage{
 			Branch: self.Branch,
