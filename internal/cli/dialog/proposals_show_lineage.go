@@ -12,39 +12,39 @@ import (
 )
 
 const (
-	proposalsShowLineageTitle = `Proposals Show Lineage`
-	proposalsShowLineageHelp  = `
-	How should Git Town share stack lineage in proposals?
+	proposalBreadcrumbTitle = `Proposal Breadcrumb`
+	proposalBreadcrumbHelp  = `
+	Should proposals contain a breadcrumb of proposals for all branches in the stack?
 
 	See https://www.git-town.com/how-to/github-actions-breadcrumb.html for details.
 `
 )
 
-func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[forgedomain.ProposalsShowLineage], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.ProposalsShowLineage]]{}
+func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.ProposalBreadcrumb]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.ProposalsShowLineage]]{
-			Data: None[forgedomain.ProposalsShowLineage](),
+		entries = append(entries, list.Entry[Option[forgedomain.ProposalBreadcrumb]]{
+			Data: None[forgedomain.ProposalBreadcrumb](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
 
-	entries = append(entries, list.Entries[Option[forgedomain.ProposalsShowLineage]]{
+	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumb]]{
 		{
-			Data: Some(forgedomain.ProposalsShowLineageNone),
-			Text: "no stack lineage in proposals",
+			Data: Some(forgedomain.ProposalBreadcrumbNone),
+			Text: "no breadcrumb in proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalsShowLineageCLI),
-			Text: "Git Town CLI embeds the stack lineage into proposals",
+			Data: Some(forgedomain.ProposalBreadcrumbCLI),
+			Text: "Git Town CLI embeds the breadcrumb into proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalsShowLineageCI),
-			Text: "CI server embeds the stack lineage into proposals",
+			Data: Some(forgedomain.ProposalBreadcrumbCI),
+			Text: "CI server embeds the breadcrumb into proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsShowLineageTitle, proposalsShowLineageHelp, args.Inputs, "proposals-show-lineage")
-	fmt.Printf(messages.ProposalsLineage, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbTitle, proposalBreadcrumbHelp, args.Inputs, "proposal-breadcrumb")
+	fmt.Printf(messages.ProposalBreadcrumb, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

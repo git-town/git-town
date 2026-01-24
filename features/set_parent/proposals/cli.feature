@@ -22,7 +22,7 @@ Feature: change the parent of a feature branch and update proposals
       | 1  | child         | old-parent    | child proposal      | child body      | https://example.com/pr/1 |
       | 2  | old-parent    | main          | old-parent proposal | old-parent body | https://example.com/pr/2 |
       | 3  | new-parent    | main          | new-parent proposal | new-parent body | https://example.com/pr/3 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "child"
     When I run "git-town set-parent new-parent"

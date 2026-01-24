@@ -20,7 +20,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.order" is "desc"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
-    And global Git setting "git-town.proposals-show-lineage" is "cli"
+    And global Git setting "git-town.proposal-breadcrumb" is "cli"
     And global Git setting "git-town.push-branches" is "false"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
@@ -64,7 +64,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ship delete tracking branch | enter       |
       | ignore-uncommitted          | enter       |
       | order                       | enter       |
-      | proposals show lineage      | enter       |
+      | proposal breadcrumb         | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |

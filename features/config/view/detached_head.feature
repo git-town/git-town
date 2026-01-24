@@ -24,7 +24,7 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"

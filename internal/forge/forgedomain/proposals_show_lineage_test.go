@@ -8,81 +8,81 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseProposalsShowLineage(t *testing.T) {
+func TestParseProposalBreadcrumb(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		give string
-		want Option[forgedomain.ProposalsShowLineage]
+		want Option[forgedomain.ProposalBreadcrumb]
 		err  bool
 	}{
 		{
 			give: "",
-			want: None[forgedomain.ProposalsShowLineage](),
+			want: None[forgedomain.ProposalBreadcrumb](),
 			err:  false,
 		},
 		{
 			give: "none",
-			want: Some(forgedomain.ProposalsShowLineageNone),
+			want: Some(forgedomain.ProposalBreadcrumbNone),
 			err:  false,
 		},
 		{
 			give: "ci",
-			want: Some(forgedomain.ProposalsShowLineageCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
 			give: "CI",
-			want: Some(forgedomain.ProposalsShowLineageCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
 			give: "Ci",
-			want: Some(forgedomain.ProposalsShowLineageCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
 			give: "cli",
-			want: Some(forgedomain.ProposalsShowLineageCLI),
+			want: Some(forgedomain.ProposalBreadcrumbCLI),
 			err:  false,
 		},
 		{
 			give: "false",
-			want: Some(forgedomain.ProposalsShowLineageNone),
+			want: Some(forgedomain.ProposalBreadcrumbNone),
 			err:  false,
 		},
 		{
 			give: "true",
-			want: Some(forgedomain.ProposalsShowLineageCLI),
+			want: Some(forgedomain.ProposalBreadcrumbCLI),
 			err:  false,
 		},
 		{
 			give: "no",
-			want: Some(forgedomain.ProposalsShowLineageNone),
+			want: Some(forgedomain.ProposalBreadcrumbNone),
 			err:  false,
 		},
 		{
 			give: "yes",
-			want: Some(forgedomain.ProposalsShowLineageCLI),
+			want: Some(forgedomain.ProposalBreadcrumbCLI),
 			err:  false,
 		},
 		{
 			give: "0",
-			want: Some(forgedomain.ProposalsShowLineageNone),
+			want: Some(forgedomain.ProposalBreadcrumbNone),
 			err:  false,
 		},
 		{
 			give: "1",
-			want: Some(forgedomain.ProposalsShowLineageCLI),
+			want: Some(forgedomain.ProposalBreadcrumbCLI),
 			err:  false,
 		},
 		{
 			give: "zonk",
-			want: None[forgedomain.ProposalsShowLineage](),
+			want: None[forgedomain.ProposalBreadcrumb](),
 			err:  true,
 		},
 	}
 	for _, tt := range tests {
-		have, err := forgedomain.ParseProposalsShowLineage(tt.give, "test")
+		have, err := forgedomain.ParseProposalBreadcrumb(tt.give, "test")
 		must.EqOp(t, err != nil, tt.err)
 		must.True(t, have.Equal(tt.want))
 	}
