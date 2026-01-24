@@ -25,7 +25,8 @@ them.
 
 The Git Town CLI can create and update branch stacks directly in proposals. This
 approach works across all supported forges and doesn't require any CI or
-workflow changes.
+workflow changes. Proposals only get updated if branch changes happen through
+the Git Town CLI.
 
 To enable this behavior, configure the following setting:
 
@@ -36,7 +37,7 @@ To enable this behavior, configure the following setting:
 
 If your team standardizes on Git Town and uses GitHub, you can set up the
 [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
-to automatically add and update branch stacks on pull requests.
+to automatically add and update breadcrumbs on pull requests.
 
 This offloads the update logic to CI and ensures branch stacks stay in sync even
 when changes are made outside the local CLI.
