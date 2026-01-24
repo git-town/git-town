@@ -519,7 +519,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
-	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb == forgedomain.ProposalBreadcrumbCLI
+	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb.ShouldUpdateProposalLineage()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

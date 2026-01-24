@@ -368,7 +368,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb == forgedomain.ProposalBreadcrumbCLI
+	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb.ShouldUpdateProposalLineage()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

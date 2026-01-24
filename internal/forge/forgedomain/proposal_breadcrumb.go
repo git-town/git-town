@@ -17,6 +17,10 @@ const (
 	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
+func (self ProposalBreadcrumb) ShouldUpdateProposalLineage() bool {
+	return self == ProposalBreadcrumbCLI
+}
+
 func (self ProposalBreadcrumb) String() string {
 	return string(self)
 }
