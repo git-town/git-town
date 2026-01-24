@@ -41,8 +41,8 @@ Feature: display information from config file
       origin-hostname = "github.com"
 
       [propose]
-      lineage = "cli"
-      lineage-single-stack = false
+      breadcrumb = "cli"
+      breadcrumb-single = false
 
       [ship]
       delete-tracking-branch = true

@@ -1,4 +1,4 @@
-# lineage-single-stack
+# proposal-breadcrumb-single
 
 This setting configures whether Git Town adds the stack lineage to proposals of
 stacks that consist only of a single branch.

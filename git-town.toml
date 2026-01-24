@@ -5,7 +5,7 @@ main = "main"
 perennials = ["public"]
 
 [propose]
-lineage-single-stack = false
+breadcrumb-single = false
 
 [ship]
 delete-tracking-branch = false
