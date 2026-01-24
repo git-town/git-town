@@ -14,15 +14,12 @@ type GitCommands interface {
 	SHAsForCommit(gitdomain.CommitMessage) gitdomain.SHAs
 }
 
-var (
-	templateOnce sync.Once
-	templateRE   *regexp.Regexp
-)
-
 func Expand(text string, args ExpandArgs) string {
-	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
+	expandOnce.Do(func() {
+		expandRegex = regexp.MustCompile(`\{\{.*?\}\}`)
+	})
 	for strings.Contains(text, "{{") {
-		match := templateRE.FindString(text)
+		match := expandRegex.FindString(text)
 		switch {
 		case strings.HasPrefix(match, "{{ sha "):
 			commitMessage := gitdomain.CommitMessage(match[8 : len(match)-4])
@@ -137,6 +134,11 @@ func Expand(text string, args ExpandArgs) string {
 	}
 	return text
 }
+
+var (
+	expandOnce  sync.Once
+	expandRegex *regexp.Regexp
+)
 
 type ExpandArgs struct {
 	BeforeRunDevSHAs       gitdomain.Commits
