@@ -11,7 +11,7 @@ Feature: append a new feature branch to an existing feature branch and sync prop
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | BODY |
       | 1  | existing      | main          | body |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "existing"
     When I run "git-town append new"
 

@@ -9,40 +9,40 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// ProposalsShowLineage indicates whether and how proposals should display the stack lineage of the respective branch.
-type ProposalsShowLineage string
+// ProposalBreadcrumb indicates whether and how proposals should display the stack lineage of the respective branch.
+type ProposalBreadcrumb string
 
 const (
-	ProposalsShowLineageNone ProposalsShowLineage = "none" // don't display lineage in proposals
-	ProposalsShowLineageCI   ProposalsShowLineage = "ci"   // lineage is embedded into proposals via https://github.com/git-town/action
-	ProposalsShowLineageCLI  ProposalsShowLineage = "cli"  // the Git Town CLI should embed the lineage into proposals
+	ProposalBreadcrumbNone ProposalBreadcrumb = "none" // don't display lineage in proposals
+	ProposalBreadcrumbCI   ProposalBreadcrumb = "ci"   // lineage is embedded into proposals via https://github.com/git-town/action
+	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
-func (self ProposalsShowLineage) String() string {
+func (self ProposalBreadcrumb) String() string {
 	return string(self)
 }
 
-func ParseProposalsShowLineage(value string, source string) (Option[ProposalsShowLineage], error) {
+func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadcrumb], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
 	case "":
-		return None[ProposalsShowLineage](), nil
-	case ProposalsShowLineageNone.String():
-		return Some(ProposalsShowLineageNone), nil
-	case ProposalsShowLineageCI.String():
-		return Some(ProposalsShowLineageCI), nil
-	case ProposalsShowLineageCLI.String():
-		return Some(ProposalsShowLineageCLI), nil
+		return None[ProposalBreadcrumb](), nil
+	case ProposalBreadcrumbNone.String():
+		return Some(ProposalBreadcrumbNone), nil
+	case ProposalBreadcrumbCI.String():
+		return Some(ProposalBreadcrumbCI), nil
+	case ProposalBreadcrumbCLI.String():
+		return Some(ProposalBreadcrumbCLI), nil
 	}
-	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposals-show-lineage")
+	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposal-breadcrumb")
 	if err != nil {
-		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsLineageInvalid, source, value)
+		return None[ProposalBreadcrumb](), fmt.Errorf(messages.ProposalBreadcrumbInvalid, source, value)
 	}
 	if parsed, has := parsedOpt.Get(); has {
 		if parsed {
 			// The CLI is configured with "true" --> assume the user wants the CLI to embed lineage into proposals.
-			return Some(ProposalsShowLineageCLI), nil
+			return Some(ProposalBreadcrumbCLI), nil
 		}
-		return Some(ProposalsShowLineageNone), nil
+		return Some(ProposalBreadcrumbNone), nil
 	}
-	return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsLineageInvalid, source, value)
+	return None[ProposalBreadcrumb](), fmt.Errorf(messages.ProposalBreadcrumbInvalid, source, value)
 }

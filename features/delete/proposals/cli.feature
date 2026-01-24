@@ -17,7 +17,7 @@ Feature: delete the current feature branch from a stack and update proposals
       | 3  | gamma1        | beta          | gamma1 proposal | gamma1 body | https://example.com/pr/3 |
       | 4  | gamma2        | beta          | gamma2 proposal | gamma2 body | https://example.com/pr/4 |
       | 5  | delta         | gamma2        | delta proposal  | delta body  | https://example.com/pr/5 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "beta"
     When I run "git-town delete"
 

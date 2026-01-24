@@ -28,7 +28,7 @@ Feature: don't ask for information already provided by the config file
       github-connector = "api"
 
       [propose]
-      lineage = "none"
+      breadcrumb = "none"
 
       [ship]
       delete-tracking-branch = true

@@ -21,7 +21,7 @@ Feature: sync all branches and update proposals
       | 2  | beta          | alpha         | beta proposal     | beta body     | https://example.com/pr/2 |
       | 3  | gamma         | beta          | gamma proposal    | gamma body    | https://example.com/pr/3 |
       | 4  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/4 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "main"
     When I run "git-town sync --all"
 
