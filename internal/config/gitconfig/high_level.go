@@ -142,8 +142,8 @@ func RemoveProposalBreadcrumb(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumb)
 }
 
-func RemoveProposalsShowLineageSingleStack(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalsShowLineageSingleStack)
+func RemoveProposalBreadcrumbSingle(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumbSingle)
 }
 
 func RemovePushBranches(runner subshelldomain.Runner) error {
@@ -311,8 +311,8 @@ func SetProposalBreadcrumb(runner subshelldomain.Runner, value forgedomain.Propo
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumb, value.String())
 }
 
-func SetProposalsShowLineageSingleStack(runner subshelldomain.Runner, value forgedomain.ProposalBreadcrumbSingle, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyProposalsShowLineageSingleStack, value.String())
+func SetProposalBreadcrumbSingle(runner subshelldomain.Runner, value forgedomain.ProposalBreadcrumbSingle, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumbSingle, value.String())
 }
 
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {

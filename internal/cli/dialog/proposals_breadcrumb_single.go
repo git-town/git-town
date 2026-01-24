@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	proposalsBreadcrumbSingleTitle = `Show lineage for single stacks`
-	proposalBreadcrumbSingleHelp   = `
+	proposalBreadcrumbSingleTitle = `Show lineage for single stacks`
+	proposalBreadcrumbSingleHelp  = `
 Should Git Town display breadcrumbs for stacks that contain only a single branch?
 
 `
@@ -38,7 +38,7 @@ func ProposalBreadcrumbSingle(args Args[forgedomain.ProposalBreadcrumbSingle]) (
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsBreadcrumbSingleTitle, proposalBreadcrumbSingleHelp, args.Inputs, "proposal-breadcrumb-single")
-	fmt.Printf(messages.ProposalBreadcrumbSingleStack, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbSingleTitle, proposalBreadcrumbSingleHelp, args.Inputs, "proposal-breadcrumb-single")
+	fmt.Printf(messages.ProposalBreadcrumbSingle, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

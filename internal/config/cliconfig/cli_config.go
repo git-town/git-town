@@ -55,7 +55,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PerennialBranches:               gitdomain.LocalBranchNames{},
 		PerennialRegex:                  None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:              None[forgedomain.ProposalBreadcrumb](),
-		ProposalsBreadcrumbSingle: None[forgedomain.ProposalBreadcrumbSingle](),
+		ProposalBreadcrumbSingle: None[forgedomain.ProposalBreadcrumbSingle](),
 		PushHook:                        None[configdomain.PushHook](),
 		ShareNewBranches:                None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:        None[configdomain.ShipDeleteTrackingBranch](),

@@ -180,7 +180,7 @@ EnterForgeData:
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
 	proposalBreadcrumb := None[forgedomain.ProposalBreadcrumb]()
-	proposalsShowLineageSingleStack := None[forgedomain.ProposalBreadcrumbSingle]()
+	proposalBreadcrumbSingle := None[forgedomain.ProposalBreadcrumbSingle]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -274,7 +274,7 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
-		proposalsShowLineageSingleStack, exit, err = enterProposalsShowLineageSingleStack(data)
+		proposalBreadcrumbSingle, exit, err = enterProposalBreadcrumbSingle(data)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -284,54 +284,54 @@ EnterForgeData:
 		return emptyResult, exit, false, err
 	}
 	normalData := configdomain.PartialConfig{
-		Aliases:                         aliases,
-		AutoResolve:                     None[configdomain.AutoResolve](),
-		AutoSync:                        autoSync,
-		BitbucketAppPassword:            bitbucketAppPassword,
-		BitbucketUsername:               bitbucketUsername,
-		BranchPrefix:                    branchPrefix,
-		BranchTypeOverrides:             configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		Browser:                         None[configdomain.Browser](),
-		ForgejoToken:                    forgejoToken,
-		ContributionRegex:               contributionRegex,
-		Detached:                        detached,
-		DevRemote:                       devRemote,
-		DisplayTypes:                    None[configdomain.DisplayTypes](),
-		DryRun:                          None[configdomain.DryRun](), // the setup assistant doesn't ask for this
-		FeatureRegex:                    featureRegex,
-		ForgeType:                       enteredForgeType,
-		GithubConnectorType:             githubConnectorTypeOpt,
-		GithubToken:                     githubToken,
-		GitlabConnectorType:             gitlabConnectorTypeOpt,
-		GitlabToken:                     gitlabToken,
-		GitUserEmail:                    None[gitdomain.GitUserEmail](),
-		GitUserName:                     None[gitdomain.GitUserName](),
-		GiteaToken:                      giteaToken,
-		HostingOriginHostname:           hostingOriginHostName,
-		IgnoreUncommitted:               ignoreUncommitted,
-		Lineage:                         configdomain.NewLineage(), // the setup assistant doesn't ask for this
-		MainBranch:                      mainBranchResult.UserChoice,
-		NewBranchType:                   newBranchType,
-		ObservedRegex:                   observedRegex,
-		Offline:                         None[configdomain.Offline](), // the setup assistant doesn't ask for this
-		Order:                           order,
-		PerennialBranches:               perennialBranches,
-		PerennialRegex:                  perennialRegex,
-		ProposalBreadcrumb:              proposalBreadcrumb,
-		ProposalsBreadcrumbSingle: proposalsShowLineageSingleStack,
-		PushBranches:                    pushBranches,
-		PushHook:                        pushHook,
-		ShareNewBranches:                shareNewBranches,
-		ShipDeleteTrackingBranch:        shipDeleteTrackingBranch,
-		ShipStrategy:                    shipStrategy,
-		Stash:                           stash,
-		SyncFeatureStrategy:             syncFeatureStrategy,
-		SyncPerennialStrategy:           syncPerennialStrategy,
-		SyncPrototypeStrategy:           syncPrototypeStrategy,
-		SyncTags:                        syncTags,
-		SyncUpstream:                    syncUpstream,
-		UnknownBranchType:               unknownBranchType,
-		Verbose:                         None[configdomain.Verbose](), // the setup assistant doesn't ask for this
+		Aliases:                  aliases,
+		AutoResolve:              None[configdomain.AutoResolve](),
+		AutoSync:                 autoSync,
+		BitbucketAppPassword:     bitbucketAppPassword,
+		BitbucketUsername:        bitbucketUsername,
+		BranchPrefix:             branchPrefix,
+		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
+		Browser:                  None[configdomain.Browser](),
+		ForgejoToken:             forgejoToken,
+		ContributionRegex:        contributionRegex,
+		Detached:                 detached,
+		DevRemote:                devRemote,
+		DisplayTypes:             None[configdomain.DisplayTypes](),
+		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
+		FeatureRegex:             featureRegex,
+		ForgeType:                enteredForgeType,
+		GithubConnectorType:      githubConnectorTypeOpt,
+		GithubToken:              githubToken,
+		GitlabConnectorType:      gitlabConnectorTypeOpt,
+		GitlabToken:              gitlabToken,
+		GitUserEmail:             None[gitdomain.GitUserEmail](),
+		GitUserName:              None[gitdomain.GitUserName](),
+		GiteaToken:               giteaToken,
+		HostingOriginHostname:    hostingOriginHostName,
+		IgnoreUncommitted:        ignoreUncommitted,
+		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
+		MainBranch:               mainBranchResult.UserChoice,
+		NewBranchType:            newBranchType,
+		ObservedRegex:            observedRegex,
+		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
+		Order:                    order,
+		PerennialBranches:        perennialBranches,
+		PerennialRegex:           perennialRegex,
+		ProposalBreadcrumb:       proposalBreadcrumb,
+		ProposalBreadcrumbSingle: proposalBreadcrumbSingle,
+		PushBranches:             pushBranches,
+		PushHook:                 pushHook,
+		ShareNewBranches:         shareNewBranches,
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		ShipStrategy:             shipStrategy,
+		Stash:                    stash,
+		SyncFeatureStrategy:      syncFeatureStrategy,
+		SyncPerennialStrategy:    syncPerennialStrategy,
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncTags:                 syncTags,
+		SyncUpstream:             syncUpstream,
+		UnknownBranchType:        unknownBranchType,
+		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
 		MainBranch: mainBranchResult.ActualMainBranch,
@@ -639,14 +639,14 @@ func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb],
 	})
 }
 
-func enterProposalsShowLineageSingleStack(data Data) (Option[forgedomain.ProposalBreadcrumbSingle], dialogdomain.Exit, error) {
+func enterProposalBreadcrumbSingle(data Data) (Option[forgedomain.ProposalBreadcrumbSingle], dialogdomain.Exit, error) {
 	if data.Config.File.ProposalBreadcrumb.IsSome() {
 		return None[forgedomain.ProposalBreadcrumbSingle](), false, nil
 	}
 	return dialog.ProposalBreadcrumbSingle(dialog.Args[forgedomain.ProposalBreadcrumbSingle]{
-		Global: data.Config.GitGlobal.ProposalsBreadcrumbSingle,
+		Global: data.Config.GitGlobal.ProposalBreadcrumbSingle,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.ProposalsBreadcrumbSingle,
+		Local:  data.Config.GitLocal.ProposalBreadcrumbSingle,
 	})
 }
 
