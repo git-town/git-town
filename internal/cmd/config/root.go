@@ -119,7 +119,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
-	print.Entry("breadcrumb stack", format.Bool(config.NormalConfig.ProposalsShowLineageSingleStack.Value()))
+	print.Entry("breadcrumb single stack", format.Bool(config.NormalConfig.ProposalsShowLineageSingleStack.Value()))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
