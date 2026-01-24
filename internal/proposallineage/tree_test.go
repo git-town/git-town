@@ -14,6 +14,7 @@ func TestCalculateTree(t *testing.T) {
 	t.Run("BranchCount", func(t *testing.T) {
 		t.Parallel()
 		t.Run("deep tree", func(t *testing.T) {
+			t.Parallel()
 			tree := proposallineage.TreeNode{
 				Branch: "main",
 				Children: []proposallineage.TreeNode{
