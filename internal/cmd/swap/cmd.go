@@ -406,9 +406,9 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			program:     prog,
 		})
 	}
-	updateProposalLineage := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
-	if updateProposalLineage && isOnline {
+	if updateBreadcrumb && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          data.config,
 			Program:         prog,
