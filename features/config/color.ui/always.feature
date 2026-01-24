@@ -76,7 +76,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
@@ -181,7 +181,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: cli
+        breadcrumb: cli
 
       Ship:
         delete tracking branch: yes
@@ -307,7 +307,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: no
@@ -381,7 +381,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
@@ -461,7 +461,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
