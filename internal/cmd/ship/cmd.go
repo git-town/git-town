@@ -182,9 +182,9 @@ Start:
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
-	updateProposalLineage := sharedData.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := sharedData.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
-	if updateProposalLineage && isOnline {
+	if updateBreadcrumb && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          sharedData.config,
 			Program:         prog,
