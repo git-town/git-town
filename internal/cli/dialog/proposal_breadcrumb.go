@@ -16,7 +16,7 @@ const (
 	proposalBreadcrumbHelp  = `
 	Should proposals contain a breadcrumb of proposals for all branches in the stack?
 
-	See https://www.git-town.com/how-to/github-actions-breadcrumb.html for details.
+	See https://www.git-town.com/how-to/proposal-breadcrumb.html for details.
 `
 )
 
