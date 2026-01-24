@@ -640,7 +640,7 @@ func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb],
 }
 
 func enterProposalsShowLineageSingleStack(data Data) (Option[forgedomain.ProposalsShowLineageSingleStack], dialogdomain.Exit, error) {
-	if data.Config.File.ProposalsShowLineage.IsSome() {
+	if data.Config.File.ProposalBreadcrumb.IsSome() {
 		return None[forgedomain.ProposalsShowLineageSingleStack](), false, nil
 	}
 	return dialog.ProposalShowLineageSingleStack(dialog.Args[forgedomain.ProposalsShowLineageSingleStack]{
