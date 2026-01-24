@@ -155,7 +155,6 @@ Feature: delete the current feature branch from a stack and update proposals
         <!-- branch-stack-end -->
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
