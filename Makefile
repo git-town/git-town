@@ -63,12 +63,15 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
 	tools/rta shfmt -f . | grep -v node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
-	tools/rta ghokin fmt replace features/
+	make --no-print-directory ghokin
 	tools/generate_opcodes_all.sh
 	tools/rta cucumber-sort format
 
 generate-json-schema:  # exports the JSON-Schema for the configuration file
 	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
+
+ghokin: tools/rta@${RTA_VERSION}  # formats the Cucumber tests
+	@tools/rta ghokin fmt replace features/
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
