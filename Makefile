@@ -199,8 +199,8 @@ test: fix doc unit lint-all cuke  # runs all the tests
 
 test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@tools/rta conc --show=failed \
-		"make --no-print-directory unit" \
-		"make --no-print-directory lint"
+		"make --no-print-directory lint" \
+		"make --no-print-directory unit"
 
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' \
