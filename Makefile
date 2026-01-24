@@ -197,15 +197,15 @@ stats-release:  # displays statistics about the changes since the last release
 .PHONY: test
 test:  # runs all the tests
 	@tools/rta conc --show=failed \
+		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
-		"make --no-print-directory unit" \
 		"make --no-print-directory lint-all" \
-		"make --no-print-directory cuke"
+		"make --no-print-directory unit"
 
 test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@tools/rta conc --show=failed \
-		"make --no-print-directory unit" \
-		"make --no-print-directory lint"
+		"make --no-print-directory lint" \
+		"make --no-print-directory unit"
 
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' \
