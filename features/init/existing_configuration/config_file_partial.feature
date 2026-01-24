@@ -29,33 +29,33 @@ Feature: ask for information not provided by the config file
       | branch-1 | (none) | local, origin |
     And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                            | KEYS                  |
-      | welcome                           | enter                 |
-      | aliases                           | enter                 |
-      | perennial branches                | space enter           |
-      | github connector                  | enter                 |
-      | github token                      | g h - t o k e n enter |
-      | token scope                       | enter                 |
-      | enter all                         | down enter            |
-      | perennial regex                   | p e r e n enter       |
-      | feature regex                     | f e a t enter         |
-      | contribution regex                | c o n t enter         |
-      | observed regex                    | o b s enter           |
-      | branch prefix                     | a c m e - enter       |
-      | new branch type                   | enter                 |
-      | unknown branch type               | enter                 |
-      | sync feature strategy             | enter                 |
-      | sync perennial strategy           | enter                 |
-      | sync prototype strategy           | enter                 |
-      | detached                          | enter                 |
-      | stash                             | enter                 |
-      | share new branches                | enter                 |
-      | push branches                     | enter                 |
-      | push hook                         | enter                 |
-      | ship strategy                     | enter                 |
-      | proposal breadcrumb               | enter                 |
-      | proposals breadcrumb single stack | enter                 |
-      | config storage                    | enter                 |
+      | DIALOG                     | KEYS                  |
+      | welcome                    | enter                 |
+      | aliases                    | enter                 |
+      | perennial branches         | space enter           |
+      | github connector           | enter                 |
+      | github token               | g h - t o k e n enter |
+      | token scope                | enter                 |
+      | enter all                  | down enter            |
+      | perennial regex            | p e r e n enter       |
+      | feature regex              | f e a t enter         |
+      | contribution regex         | c o n t enter         |
+      | observed regex             | o b s enter           |
+      | branch prefix              | a c m e - enter       |
+      | new branch type            | enter                 |
+      | unknown branch type        | enter                 |
+      | sync feature strategy      | enter                 |
+      | sync perennial strategy    | enter                 |
+      | sync prototype strategy    | enter                 |
+      | detached                   | enter                 |
+      | stash                      | enter                 |
+      | share new branches         | enter                 |
+      | push branches              | enter                 |
+      | push hook                  | enter                 |
+      | ship strategy              | enter                 |
+      | proposal breadcrumb        | enter                 |
+      | proposal breadcrumb single | enter                 |
+      | config storage             | enter                 |
     Then Git Town runs the commands
       | COMMAND                                             |
       | git config git-town.github-token gh-token           |

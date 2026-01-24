@@ -53,39 +53,39 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                            | KEYS                                                                        | DESCRIPTION         |
-      | welcome                           | enter                                                                       |                     |
-      | aliases                           | n enter                                                                     | remove all aliases  |
-      | main branch                       | enter                                                                       |                     |
-      | perennial branches                | down space enter                                                            |                     |
-      | origin hostname                   | backspace backspace backspace backspace enter                               | remove the override |
-      | forge type                        | up up up up up up enter                                                     | remove the override |
-      | enter all                         | down enter                                                                  |                     |
-      | perennial regex                   | backspace backspace backspace backspace enter                               |                     |
-      | feature regex                     | backspace backspace backspace backspace backspace backspace enter           |                     |
-      | contribution regex                | backspace backspace backspace backspace backspace backspace backspace enter |                     |
-      | observed regex                    | backspace backspace backspace backspace backspace enter                     |                     |
-      | branch prefix                     | backspace backspace backspace enter                                         |                     |
-      | new branch type                   | up enter                                                                    |                     |
-      | unknown branch type               | up enter                                                                    |                     |
-      | sync feature strategy             | up enter                                                                    |                     |
-      | sync perennial strategy           | down enter                                                                  |                     |
-      | sync prototype strategy           | up enter                                                                    |                     |
-      | sync upstream                     | down enter                                                                  |                     |
-      | auto sync                         | up enter                                                                    |                     |
-      | sync tags                         | down enter                                                                  |                     |
-      | detached                          | down enter                                                                  |                     |
-      | stash                             | up enter                                                                    |                     |
-      | share new branches                | up enter                                                                    | enable              |
-      | push branches                     | down enter                                                                  | enable              |
-      | push hook                         | down enter                                                                  | enable              |
-      | ship strategy                     | down enter                                                                  |                     |
-      | ship delete tracking branch       | down enter                                                                  | disable             |
-      | ignore-uncommitted                | up enter                                                                    | disable             |
-      | order                             | up enter                                                                    |                     |
-      | proposal breadcrumb               | down enter                                                                  |                     |
-      | proposals breadcrumb single stack | up enter                                                                    |                     |
-      | config storage                    | enter                                                                       | git metadata        |
+      | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
+      | welcome                     | enter                                                                       |                     |
+      | aliases                     | n enter                                                                     | remove all aliases  |
+      | main branch                 | enter                                                                       |                     |
+      | perennial branches          | down space enter                                                            |                     |
+      | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
+      | forge type                  | up up up up up up enter                                                     | remove the override |
+      | enter all                   | down enter                                                                  |                     |
+      | perennial regex             | backspace backspace backspace backspace enter                               |                     |
+      | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
+      | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
+      | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
+      | branch prefix               | backspace backspace backspace enter                                         |                     |
+      | new branch type             | up enter                                                                    |                     |
+      | unknown branch type         | up enter                                                                    |                     |
+      | sync feature strategy       | up enter                                                                    |                     |
+      | sync perennial strategy     | down enter                                                                  |                     |
+      | sync prototype strategy     | up enter                                                                    |                     |
+      | sync upstream               | down enter                                                                  |                     |
+      | auto sync                   | up enter                                                                    |                     |
+      | sync tags                   | down enter                                                                  |                     |
+      | detached                    | down enter                                                                  |                     |
+      | stash                       | up enter                                                                    |                     |
+      | share new branches          | up enter                                                                    | enable              |
+      | push branches               | down enter                                                                  | enable              |
+      | push hook                   | down enter                                                                  | enable              |
+      | ship strategy               | down enter                                                                  |                     |
+      | ship delete tracking branch | down enter                                                                  | disable             |
+      | ignore-uncommitted          | up enter                                                                    | disable             |
+      | order                       | up enter                                                                    |                     |
+      | proposal breadcrumb         | down enter                                                                  |                     |
+      | proposal breadcrumb single  | up enter                                                                    |                     |
+      | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
     Then Git Town runs the commands
