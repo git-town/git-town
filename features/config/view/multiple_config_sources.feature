@@ -130,7 +130,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: yes
+        breadcrumb single branch: yes
 
       Ship:
         delete tracking branch: no

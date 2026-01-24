@@ -105,7 +105,7 @@ Feature: display information from config file
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes

@@ -95,7 +95,7 @@ Feature: display invalid Git metadata
 
       Propose:
         breadcrumb: none
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes

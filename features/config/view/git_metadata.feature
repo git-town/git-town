@@ -78,7 +78,7 @@ Feature: display configuration from Git metadata
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes
@@ -152,7 +152,7 @@ Feature: display configuration from Git metadata
 
       Propose:
         breadcrumb: none
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes

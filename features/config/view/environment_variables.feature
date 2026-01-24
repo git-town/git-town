@@ -97,7 +97,7 @@ Feature: display configuration defined in environment variables
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: no

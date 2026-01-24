@@ -79,7 +79,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: yes
+        breadcrumb single branch: yes
 
       Ship:
         delete tracking branch: yes
@@ -186,7 +186,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: yes
+        breadcrumb single branch: yes
 
       Ship:
         delete tracking branch: yes
@@ -319,7 +319,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: cli
-        breadcrumb single stack: yes
+        breadcrumb single branch: yes
 
       Ship:
         delete tracking branch: no
@@ -394,7 +394,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: none
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes
@@ -475,7 +475,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: none
-        breadcrumb single stack: no
+        breadcrumb single branch: no
 
       Ship:
         delete tracking branch: yes
