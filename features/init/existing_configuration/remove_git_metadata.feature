@@ -82,7 +82,7 @@ Feature: remove existing configuration in Git metadata
       | ship delete tracking branch | down enter                                                                  | disable             |
       | ignore-uncommitted          | up enter                                                                    | disable             |
       | order                       | up enter                                                                    |                     |
-      | proposals show lineage      | down enter                                                                  |                     |
+      | proposal breadcrumb         | down enter                                                                  |                     |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result

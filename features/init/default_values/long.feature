@@ -40,7 +40,7 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking branch | enter      |
       | ignore-uncommitted          | enter      |
       | order                       | enter      |
-      | proposals show lineage      | enter      |
+      | proposal breadcrumb         | enter      |
       | config storage              | enter      |
 
   Scenario: result

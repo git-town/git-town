@@ -57,7 +57,7 @@ Feature: Fix invalid configuration data
       | ship-delete-tracking branch | down enter                    |
       | ignore-uncommitted          | down enter                    |
       | order                       | down enter                    |
-      | proposals show lineage      | enter                         |
+      | proposal breadcrumb         | enter                         |
       | config storage              | enter                         |
 
   Scenario: result

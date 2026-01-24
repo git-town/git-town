@@ -52,7 +52,7 @@ Feature: change existing information in Git metadata
       | ship delete tracking branch | down enter             |
       | ignore-uncommitted          | up enter               |
       | order                       | up enter               |
-      | proposals show lineage      | down enter             |
+      | proposal breadcrumb         | down enter             |
       | config storage              | enter                  |
 
   Scenario: result

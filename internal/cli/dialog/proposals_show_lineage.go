@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	proposalsShowLineageTitle = `Proposals Show Lineage`
+	proposalsShowLineageTitle = `Proposal Breadcrumb`
 	proposalsShowLineageHelp  = `
-	How should Git Town share stack lineage in proposals?
+	Should proposals contain a breadcrumb of proposals for all branches in the stack?
 
 	See https://www.git-town.com/how-to/github-actions-breadcrumb.html for details.
 `
 )
 
-func ProposalsShowLineage(args Args[forgedomain.ProposalBreadcrumb]) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.ProposalBreadcrumb]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
 		entries = append(entries, list.Entry[Option[forgedomain.ProposalBreadcrumb]]{
@@ -32,15 +32,15 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalBreadcrumb]) (Option[for
 	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumb]]{
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbNone),
-			Text: "no stack lineage in proposals",
+			Text: "no breadcrumb in proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbCLI),
-			Text: "Git Town CLI embeds the stack lineage into proposals",
+			Text: "Git Town CLI embeds the breadcrumb into proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalsBreadcrumbCI),
-			Text: "CI server embeds the stack lineage into proposals",
+			Text: "CI server embeds the breadcrumb into proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)

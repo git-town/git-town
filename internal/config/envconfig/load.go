@@ -43,7 +43,7 @@ const (
 	offline                  = "GIT_TOWN_OFFLINE"
 	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
-	proposalsShowLineage     = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
+	proposalsShowLineage     = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	pushBranches             = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"

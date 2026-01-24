@@ -53,7 +53,7 @@ Feature: ask for information not provided by the config file
       | push branches           | enter                 |
       | push hook               | enter                 |
       | ship strategy           | enter                 |
-      | proposals show lineage  | enter                 |
+      | proposal breadcrumb     | enter                 |
       | config storage          | enter                 |
     Then Git Town runs the commands
       | COMMAND                                             |

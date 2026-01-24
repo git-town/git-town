@@ -626,7 +626,7 @@ func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalBreadcrumb
 	if data.Config.File.ProposalsShowLineage.IsSome() {
 		return None[forgedomain.ProposalBreadcrumb](), false, nil
 	}
-	return dialog.ProposalsShowLineage(dialog.Args[forgedomain.ProposalBreadcrumb]{
+	return dialog.ProposalBreadcrumb(dialog.Args[forgedomain.ProposalBreadcrumb]{
 		Global: data.Config.GitGlobal.ProposalsShowLineage,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ProposalsShowLineage,

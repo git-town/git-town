@@ -64,7 +64,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ship delete tracking branch | enter       |
       | ignore-uncommitted          | enter       |
       | order                       | enter       |
-      | proposals show lineage      | enter       |
+      | proposal breadcrumb         | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |
