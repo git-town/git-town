@@ -1,4 +1,4 @@
-Feature: propose single stack, show single stacks enabled
+Feature: propose single branch, breadcrumb-single enabled
 
   Background:
     Given a Git repo with origin

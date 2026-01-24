@@ -30,11 +30,11 @@ func ProposalBreadcrumbSingle(args Args[forgedomain.ProposalBreadcrumbSingle]) (
 	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumbSingle]]{
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbSingle(true)),
-			Text: "yes, embed lineage for single stacks into proposals",
+			Text: "yes, embed breadcrumbs also for single branches",
 		},
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbSingle(false)),
-			Text: "no, don't embed lineage for single stacks into proposals",
+			Text: "no, only embed breadcrums if the stack has at least 2 branches",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)

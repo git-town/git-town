@@ -1,4 +1,4 @@
-Feature: propose a deep stack, show single stacks disabled
+Feature: propose a stack, breadcrumb-single disabled
 
   Background:
     Given a Git repo with origin
