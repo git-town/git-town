@@ -33,7 +33,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.proposal-breadcrumb" is "cli"
-    And Git setting "git-town.proposals-show-lineage-single-stack" is "yes"
+    And Git setting "git-town.proposal-breadcrumb-single" is "yes"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -56,27 +56,27 @@ Feature: show the configuration
       unknown-type = "contribution"
       order = "asc"
       display-types = "all"
-      
+
       [create]
       branch-prefix = "file-"
       share-new-branches = "push"
       stash = true
-      
+
       [hosting]
       browser = "chrome"
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-      
+
       [propose]
       breadcrumb = "ci"
       breadcrumb-single-stack = false
-      
+
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
       strategy = "api"
-      
+
       [sync]
       auto-sync = true
       detached = false
@@ -103,18 +103,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: desc
         display types: no branch types
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: git-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         browser: firefox
         development remote: origin
@@ -128,16 +128,16 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         breadcrumb: cli
         breadcrumb single stack: yes
-      
+
       Ship:
         delete tracking branch: no
         ignore uncommitted changes: no
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: no

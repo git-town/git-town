@@ -46,27 +46,27 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                                      |
-      | git config git-town.main-branch main                         |
-      | git config git-town.auto-sync true                           |
-      | git config git-town.detached false                           |
-      | git config git-town.ignore-uncommitted true                  |
-      | git config git-town.new-branch-type feature                  |
-      | git config git-town.order asc                                |
-      | git config git-town.proposal-breadcrumb none                 |
-      | git config git-town.proposals-show-lineage-single-stack true |
-      | git config git-town.push-branches true                       |
-      | git config git-town.push-hook true                           |
-      | git config git-town.share-new-branches no                    |
-      | git config git-town.ship-delete-tracking-branch true         |
-      | git config git-town.ship-strategy api                        |
-      | git config git-town.stash true                               |
-      | git config git-town.sync-feature-strategy merge              |
-      | git config git-town.sync-perennial-strategy ff-only          |
-      | git config git-town.sync-prototype-strategy merge            |
-      | git config git-town.sync-tags true                           |
-      | git config git-town.sync-upstream true                       |
-      | git config git-town.unknown-branch-type feature              |
+      | COMMAND                                              |
+      | git config git-town.main-branch main                 |
+      | git config git-town.auto-sync true                   |
+      | git config git-town.detached false                   |
+      | git config git-town.ignore-uncommitted true          |
+      | git config git-town.new-branch-type feature          |
+      | git config git-town.order asc                        |
+      | git config git-town.proposal-breadcrumb none         |
+      | git config git-town.proposal-breadcrumb-single true  |
+      | git config git-town.push-branches true               |
+      | git config git-town.push-hook true                   |
+      | git config git-town.share-new-branches no            |
+      | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.ship-strategy api                |
+      | git config git-town.stash true                       |
+      | git config git-town.sync-feature-strategy merge      |
+      | git config git-town.sync-perennial-strategy ff-only  |
+      | git config git-town.sync-prototype-strategy merge    |
+      | git config git-town.sync-tags true                   |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.unknown-branch-type feature      |
     And there are still no perennial branches
 
   Scenario: undo
@@ -97,7 +97,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.perennial-regex" still doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage" still doesn't exist
-    And local Git setting "git-town.proposals-show-lineage-single-stack" still doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb-single" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist

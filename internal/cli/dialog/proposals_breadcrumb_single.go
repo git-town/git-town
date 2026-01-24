@@ -38,7 +38,7 @@ func ProposalBreadcrumbSingle(args Args[forgedomain.ProposalBreadcrumbSingle]) (
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsBreadcrumbSingleTitle, proposalBreadcrumbSingleHelp, args.Inputs, "proposals-show-lineage-single-stack")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsBreadcrumbSingleTitle, proposalBreadcrumbSingleHelp, args.Inputs, "proposal-breadcrumb-single")
 	fmt.Printf(messages.ProposalBreadcrumbSingleStack, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

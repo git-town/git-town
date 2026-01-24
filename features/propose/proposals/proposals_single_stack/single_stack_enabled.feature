@@ -10,7 +10,7 @@ Feature: propose single stack, show single stacks enabled
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
     And Git setting "git-town.proposals-show-lineage" is "cli"
-    And Git setting "git-town.proposals-show-lineage-single-stack" is "yes"
+    And Git setting "git-town.proposal-breadcrumb-single" is "yes"
     And the current branch is "branch-1"
     And tool "open" is installed
     When I run "git-town propose"

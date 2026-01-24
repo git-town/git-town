@@ -39,7 +39,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is "none"
-    And local Git setting "git-town.proposals-show-lineage-single-stack" is "false"
+    And local Git setting "git-town.proposal-breadcrumb-single" is "false"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
@@ -89,49 +89,49 @@ Feature: remove existing configuration in Git metadata
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                                      |
-      | git config --global --unset alias.append                     |
-      | git config --global --unset alias.compress                   |
-      | git config --global --unset alias.contribute                 |
-      | git config --global --unset alias.diff-parent                |
-      | git config --global --unset alias.hack                       |
-      | git config --global --unset alias.delete                     |
-      | git config --global --unset alias.observe                    |
-      | git config --global --unset alias.park                       |
-      | git config --global --unset alias.prepend                    |
-      | git config --global --unset alias.propose                    |
-      | git config --global --unset alias.rename                     |
-      | git config --global --unset alias.repo                       |
-      | git config --global --unset alias.set-parent                 |
-      | git config --global --unset alias.ship                       |
-      | git config --global --unset alias.sync                       |
-      | git config git-town.perennial-branches ""                    |
-      | git config --unset git-town.hosting-origin-hostname          |
-      | git config --unset git-town.forge-type                       |
-      | git config git-town.auto-sync true                           |
-      | git config --unset git-town.branch-prefix                    |
-      | git config --unset git-town.contribution-regex               |
-      | git config git-town.detached false                           |
-      | git config --unset git-town.feature-regex                    |
-      | git config git-town.ignore-uncommitted false                 |
-      | git config git-town.new-branch-type feature                  |
-      | git config --unset git-town.observed-regex                   |
-      | git config git-town.order asc                                |
-      | git config --unset git-town.perennial-regex                  |
-      | git config git-town.proposal-breadcrumb cli                  |
-      | git config git-town.proposals-show-lineage-single-stack true |
-      | git config git-town.push-branches true                       |
-      | git config git-town.push-hook true                           |
-      | git config git-town.share-new-branches no                    |
-      | git config git-town.ship-delete-tracking-branch true         |
-      | git config git-town.ship-strategy api                        |
-      | git config git-town.stash true                               |
-      | git config git-town.sync-feature-strategy merge              |
-      | git config git-town.sync-perennial-strategy rebase           |
-      | git config git-town.sync-prototype-strategy merge            |
-      | git config git-town.sync-tags true                           |
-      | git config git-town.sync-upstream true                       |
-      | git config git-town.unknown-branch-type feature              |
+      | COMMAND                                              |
+      | git config --global --unset alias.append             |
+      | git config --global --unset alias.compress           |
+      | git config --global --unset alias.contribute         |
+      | git config --global --unset alias.diff-parent        |
+      | git config --global --unset alias.hack               |
+      | git config --global --unset alias.delete             |
+      | git config --global --unset alias.observe            |
+      | git config --global --unset alias.park               |
+      | git config --global --unset alias.prepend            |
+      | git config --global --unset alias.propose            |
+      | git config --global --unset alias.rename             |
+      | git config --global --unset alias.repo               |
+      | git config --global --unset alias.set-parent         |
+      | git config --global --unset alias.ship               |
+      | git config --global --unset alias.sync               |
+      | git config git-town.perennial-branches ""            |
+      | git config --unset git-town.hosting-origin-hostname  |
+      | git config --unset git-town.forge-type               |
+      | git config git-town.auto-sync true                   |
+      | git config --unset git-town.branch-prefix            |
+      | git config --unset git-town.contribution-regex       |
+      | git config git-town.detached false                   |
+      | git config --unset git-town.feature-regex            |
+      | git config git-town.ignore-uncommitted false         |
+      | git config git-town.new-branch-type feature          |
+      | git config --unset git-town.observed-regex           |
+      | git config git-town.order asc                        |
+      | git config --unset git-town.perennial-regex          |
+      | git config git-town.proposal-breadcrumb cli          |
+      | git config git-town.proposal-breadcrumb-single true  |
+      | git config git-town.push-branches true               |
+      | git config git-town.push-hook true                   |
+      | git config git-town.share-new-branches no            |
+      | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.ship-strategy api                |
+      | git config git-town.stash true                       |
+      | git config git-town.sync-feature-strategy merge      |
+      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-prototype-strategy merge    |
+      | git config git-town.sync-tags true                   |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.unknown-branch-type feature      |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -156,7 +156,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" is now "cli"
-    And local Git setting "git-town.proposals-show-lineage-single-stack" is now "true"
+    And local Git setting "git-town.proposal-breadcrumb-single" is now "true"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -197,7 +197,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is now "none"
-    And local Git setting "git-town.proposals-show-lineage-single-stack" is now "false"
+    And local Git setting "git-town.proposal-breadcrumb-single" is now "false"
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"

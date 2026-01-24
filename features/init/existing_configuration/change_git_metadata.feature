@@ -58,53 +58,53 @@ Feature: change existing information in Git metadata
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                                       |
-      | git config --global alias.append "town append"                |
-      | git config --global alias.compress "town compress"            |
-      | git config --global alias.contribute "town contribute"        |
-      | git config --global alias.diff-parent "town diff-parent"      |
-      | git config --global alias.down "town down"                    |
-      | git config --global alias.hack "town hack"                    |
-      | git config --global alias.delete "town delete"                |
-      | git config --global alias.observe "town observe"              |
-      | git config --global alias.park "town park"                    |
-      | git config --global alias.prepend "town prepend"              |
-      | git config --global alias.propose "town propose"              |
-      | git config --global alias.rename "town rename"                |
-      | git config --global alias.repo "town repo"                    |
-      | git config --global alias.set-parent "town set-parent"        |
-      | git config --global alias.ship "town ship"                    |
-      | git config --global alias.sync "town sync"                    |
-      | git config --global alias.up "town up"                        |
-      | git config git-town.github-token gh-tok                       |
-      | git config git-town.perennial-branches "production qa"        |
-      | git config git-town.hosting-origin-hostname code              |
-      | git config git-town.forge-type github                         |
-      | git config git-town.github-connector api                      |
-      | git config git-town.auto-sync true                            |
-      | git config git-town.branch-prefix kg-                         |
-      | git config git-town.contribution-regex cont                   |
-      | git config git-town.detached true                             |
-      | git config git-town.feature-regex feat                        |
-      | git config git-town.ignore-uncommitted false                  |
-      | git config git-town.new-branch-type prototype                 |
-      | git config git-town.observed-regex obs                        |
-      | git config git-town.order asc                                 |
-      | git config git-town.perennial-regex per                       |
-      | git config git-town.proposal-breadcrumb cli                   |
-      | git config git-town.proposals-show-lineage-single-stack false |
-      | git config git-town.push-branches true                        |
-      | git config git-town.push-hook true                            |
-      | git config git-town.share-new-branches push                   |
-      | git config git-town.ship-delete-tracking-branch true          |
-      | git config git-town.ship-strategy fast-forward                |
-      | git config git-town.stash false                               |
-      | git config git-town.sync-feature-strategy rebase              |
-      | git config git-town.sync-perennial-strategy rebase            |
-      | git config git-town.sync-prototype-strategy rebase            |
-      | git config git-town.sync-tags true                            |
-      | git config git-town.sync-upstream false                       |
-      | git config git-town.unknown-branch-type observed              |
+      | COMMAND                                                  |
+      | git config --global alias.append "town append"           |
+      | git config --global alias.compress "town compress"       |
+      | git config --global alias.contribute "town contribute"   |
+      | git config --global alias.diff-parent "town diff-parent" |
+      | git config --global alias.down "town down"               |
+      | git config --global alias.hack "town hack"               |
+      | git config --global alias.delete "town delete"           |
+      | git config --global alias.observe "town observe"         |
+      | git config --global alias.park "town park"               |
+      | git config --global alias.prepend "town prepend"         |
+      | git config --global alias.propose "town propose"         |
+      | git config --global alias.rename "town rename"           |
+      | git config --global alias.repo "town repo"               |
+      | git config --global alias.set-parent "town set-parent"   |
+      | git config --global alias.ship "town ship"               |
+      | git config --global alias.sync "town sync"               |
+      | git config --global alias.up "town up"                   |
+      | git config git-town.github-token gh-tok                  |
+      | git config git-town.perennial-branches "production qa"   |
+      | git config git-town.hosting-origin-hostname code         |
+      | git config git-town.forge-type github                    |
+      | git config git-town.github-connector api                 |
+      | git config git-town.auto-sync true                       |
+      | git config git-town.branch-prefix kg-                    |
+      | git config git-town.contribution-regex cont              |
+      | git config git-town.detached true                        |
+      | git config git-town.feature-regex feat                   |
+      | git config git-town.ignore-uncommitted false             |
+      | git config git-town.new-branch-type prototype            |
+      | git config git-town.observed-regex obs                   |
+      | git config git-town.order asc                            |
+      | git config git-town.perennial-regex per                  |
+      | git config git-town.proposal-breadcrumb cli              |
+      | git config git-town.proposal-breadcrumb-single false     |
+      | git config git-town.push-branches true                   |
+      | git config git-town.push-hook true                       |
+      | git config git-town.share-new-branches push              |
+      | git config git-town.ship-delete-tracking-branch true     |
+      | git config git-town.ship-strategy fast-forward           |
+      | git config git-town.stash false                          |
+      | git config git-town.sync-feature-strategy rebase         |
+      | git config git-town.sync-perennial-strategy rebase       |
+      | git config git-town.sync-prototype-strategy rebase       |
+      | git config git-town.sync-tags true                       |
+      | git config git-town.sync-upstream false                  |
+      | git config git-town.unknown-branch-type observed         |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
