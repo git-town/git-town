@@ -118,7 +118,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("GitLab token", formatToken(config.NormalConfig.GitlabToken, redact))
 	fmt.Println()
 	print.Header("Propose")
-	print.Entry("lineage", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
+	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
 	print.Entry("lineage single stack", format.Bool(config.NormalConfig.ProposalsShowLineageSingleStack.Value()))
 	fmt.Println()
 	print.Header("Ship")

@@ -77,7 +77,7 @@ Feature: display configuration from Git metadata in detached head state
         GitLab token: (not set)
       
       Propose:
-        lineage: cli
+        breadcrumb: cli
         lineage single stack: yes
       
       Ship:

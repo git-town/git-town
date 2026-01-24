@@ -78,9 +78,14 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
+      <<<<<<< HEAD
         lineage: ci
         lineage single stack: yes
       
+      =======
+        breadcrumb: none
+      
+      >>>>>>> main
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
@@ -185,9 +190,14 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
+      <<<<<<< HEAD
         lineage: cli
         lineage single stack: yes
       
+      =======
+        breadcrumb: cli
+      
+      >>>>>>> main
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: yes
@@ -318,9 +328,14 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
+      <<<<<<< HEAD
         lineage: ci
         lineage single stack: yes
       
+      =======
+        breadcrumb: none
+      
+      >>>>>>> main
       Ship:
         delete tracking branch: no
         ignore uncommitted changes: no
@@ -393,7 +408,7 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
-        lineage: none
+        breadcrumb: none
         lineage single stack: no
       
       Ship:
@@ -474,9 +489,14 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
+      <<<<<<< HEAD
         lineage: none
         lineage single stack: no
       
+      =======
+        breadcrumb: none
+      
+      >>>>>>> main
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no

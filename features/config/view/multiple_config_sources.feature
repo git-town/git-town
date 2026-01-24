@@ -129,7 +129,7 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
-        lineage: cli
+        breadcrumb: cli
         lineage single stack: yes
       
       Ship:

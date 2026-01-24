@@ -94,7 +94,7 @@ Feature: display invalid Git metadata
         GitLab token: (not set)
       
       Propose:
-        lineage: none
+        breadcrumb: none
         lineage single stack: no
       
       Ship:

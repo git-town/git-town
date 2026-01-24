@@ -96,7 +96,7 @@ Feature: display configuration defined in environment variables
         GitLab token: gitlab-token
       
       Propose:
-        lineage: cli
+        breadcrumb: cli
         lineage single stack: no
       
       Ship:

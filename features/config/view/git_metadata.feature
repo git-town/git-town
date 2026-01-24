@@ -77,7 +77,7 @@ Feature: display configuration from Git metadata
         GitLab token: (not set)
       
       Propose:
-        lineage: cli
+        breadcrumb: cli
         lineage single stack: no
       
       Ship:
@@ -151,9 +151,14 @@ Feature: display configuration from Git metadata
         GitLab token: (not set)
       
       Propose:
+      <<<<<<< HEAD
         lineage: none
         lineage single stack: no
       
+      =======
+        breadcrumb: none
+      
+      >>>>>>> main
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
