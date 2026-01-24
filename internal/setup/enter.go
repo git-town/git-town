@@ -274,7 +274,11 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
-		proposalBreadcrumbSingle, exit, err = enterProposalBreadcrumbSingle(data)
+		if breadcrumb, hasBreadCrumb := proposalBreadcrumb.Get(); hasBreadCrumb {
+			if breadcrumb.EmbedBreadcrumb() {
+				proposalBreadcrumbSingle, exit, err = enterProposalBreadcrumbSingle(data)
+			}
+		}
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
