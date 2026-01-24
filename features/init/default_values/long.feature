@@ -41,7 +41,6 @@ Feature: Accepting all default values leads to a working setup
       | ignore-uncommitted          | enter      |
       | order                       | enter      |
       | proposal breadcrumb         | enter      |
-      | proposal breadcrumb single  | enter      |
       | config storage              | enter      |
 
   Scenario: result
@@ -54,7 +53,6 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.new-branch-type feature          |
       | git config git-town.order asc                        |
       | git config git-town.proposal-breadcrumb none         |
-      | git config git-town.proposal-breadcrumb-single true  |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
