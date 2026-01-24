@@ -35,9 +35,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
 		// update embedded lineage
-		updateProposalLineage := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
-		if updateProposalLineage && isOnline {
+		if updateBreadcrumb && isOnline {
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 				Config:          args.Config,
 				Program:         result,
