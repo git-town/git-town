@@ -179,7 +179,7 @@ EnterForgeData:
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
-	proposalsShowLineage := None[forgedomain.ProposalsShowLineage]()
+	proposalsShowLineage := None[forgedomain.ProposalBreadcrumb]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -622,11 +622,11 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 	})
 }
 
-func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalsShowLineage], dialogdomain.Exit, error) {
+func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
 	if data.Config.File.ProposalsShowLineage.IsSome() {
-		return None[forgedomain.ProposalsShowLineage](), false, nil
+		return None[forgedomain.ProposalBreadcrumb](), false, nil
 	}
-	return dialog.ProposalsShowLineage(dialog.Args[forgedomain.ProposalsShowLineage]{
+	return dialog.ProposalsShowLineage(dialog.Args[forgedomain.ProposalBreadcrumb]{
 		Global: data.Config.GitGlobal.ProposalsShowLineage,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ProposalsShowLineage,

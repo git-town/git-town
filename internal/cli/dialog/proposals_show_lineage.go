@@ -20,31 +20,31 @@ const (
 `
 )
 
-func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[forgedomain.ProposalsShowLineage], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.ProposalsShowLineage]]{}
+func ProposalsShowLineage(args Args[forgedomain.ProposalBreadcrumb]) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.ProposalBreadcrumb]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.ProposalsShowLineage]]{
-			Data: None[forgedomain.ProposalsShowLineage](),
+		entries = append(entries, list.Entry[Option[forgedomain.ProposalBreadcrumb]]{
+			Data: None[forgedomain.ProposalBreadcrumb](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
 
-	entries = append(entries, list.Entries[Option[forgedomain.ProposalsShowLineage]]{
+	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumb]]{
 		{
-			Data: Some(forgedomain.ProposalsShowLineageNone),
+			Data: Some(forgedomain.ProposalBreadcrumbNone),
 			Text: "no stack lineage in proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalsShowLineageCLI),
+			Data: Some(forgedomain.ProposalBreadcrumbCLI),
 			Text: "Git Town CLI embeds the stack lineage into proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalsShowLineageCI),
+			Data: Some(forgedomain.ProposalsBreadcrumbCI),
 			Text: "CI server embeds the stack lineage into proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsShowLineageTitle, proposalsShowLineageHelp, args.Inputs, "proposals-show-lineage")
-	fmt.Printf(messages.ProposalsLineage, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	fmt.Printf(messages.ProposalBreadcrumb, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

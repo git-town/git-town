@@ -67,7 +67,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		order                    Option[configdomain.Order]
 		perennialBranches        gitdomain.LocalBranchNames
 		perennialRegex           Option[configdomain.PerennialRegex]
-		proposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
+		proposalsShowLineage     Option[forgedomain.ProposalBreadcrumb]
 		pushBranches             Option[configdomain.PushBranches]
 		pushHook                 Option[configdomain.PushHook]
 		shareNewBranches         Option[configdomain.ShareNewBranches]
@@ -210,7 +210,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Propose != nil {
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
+			proposalsShowLineage, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Lineage, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}

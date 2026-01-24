@@ -369,7 +369,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
-	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalBreadcrumbCLI
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

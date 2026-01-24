@@ -61,7 +61,7 @@ type NormalConfig struct {
 	Order                    configdomain.Order
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
-	ProposalsShowLineage     forgedomain.ProposalsShowLineage
+	ProposalsShowLineage     forgedomain.ProposalBreadcrumb
 	PushBranches             configdomain.PushBranches
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
@@ -285,7 +285,7 @@ func DefaultNormalConfig() NormalConfig {
 		Order:                    configdomain.OrderAsc,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
-		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
+		ProposalsShowLineage:     forgedomain.ProposalBreadcrumbNone,
 		PushBranches:             true,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,

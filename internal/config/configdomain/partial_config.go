@@ -49,7 +49,7 @@ type PartialConfig struct {
 	Order                    Option[Order]
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
-	ProposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
+	ProposalsShowLineage     Option[forgedomain.ProposalBreadcrumb]
 	PushBranches             Option[PushBranches]
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]

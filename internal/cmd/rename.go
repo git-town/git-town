@@ -356,7 +356,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
 	}
-	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI
+	updateProposalLineage := data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalBreadcrumbCLI
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateProposalLineage && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

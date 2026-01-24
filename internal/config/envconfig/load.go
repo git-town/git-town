@@ -84,7 +84,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
-	proposalsShowLineage, errProposalsShowLineage := load(env, proposalsShowLineage, forgedomain.ParseProposalsShowLineage)
+	proposalsShowLineage, errProposalsShowLineage := load(env, proposalsShowLineage, forgedomain.ParseProposalBreadcrumb)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)

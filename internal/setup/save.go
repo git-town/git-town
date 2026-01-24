@@ -597,7 +597,7 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 	return nil
 }
 
-func saveProposalsShowLineage(valueToWriteToGit Option[forgedomain.ProposalsShowLineage], valueAlreadyInGit Option[forgedomain.ProposalsShowLineage], runner subshelldomain.Runner) error {
+func saveProposalsShowLineage(valueToWriteToGit Option[forgedomain.ProposalBreadcrumb], valueAlreadyInGit Option[forgedomain.ProposalBreadcrumb], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
