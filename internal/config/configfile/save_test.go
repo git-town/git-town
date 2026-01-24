@@ -116,6 +116,7 @@ origin-hostname = "forge"
 
 [propose]
 breadcrumb = "cli"
+breadcrumb-single = false
 
 [ship]
 delete-tracking-branch = true

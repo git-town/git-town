@@ -52,6 +52,7 @@ origin-hostname = "github.com"
 
 [propose]
 breadcrumb = "cli"
+breadcrumb-single = false
 
 [ship]
 delete-tracking-branch = false
@@ -102,7 +103,8 @@ upstream = true
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Breadcrumb: Ptr("cli"),
+					Breadcrumb:       Ptr("cli"),
+					BreadcrumbSingle: Ptr(false),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),
@@ -174,6 +176,7 @@ upstream = true
 				PerennialBranches:        gitdomain.NewLocalBranchNames("public", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbCLI),
+				ProposalBreadcrumbSingle: Some(forgedomain.ProposalBreadcrumbSingle(false)),
 				PushBranches:             None[configdomain.PushBranches](),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPush),
