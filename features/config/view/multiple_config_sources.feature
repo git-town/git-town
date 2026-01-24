@@ -16,7 +16,6 @@ Feature: show the configuration
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
 
-  @this
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
     And Git setting "git-town.auto-sync" is "false"

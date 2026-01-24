@@ -143,11 +143,11 @@
         "breadcrumb": {
           "type": "string"
         },
+        "breadcrumb-single": {
+          "type": "boolean"
+        },
         "lineage": {
           "type": "string"
-        },
-        "lineage-single-stack": {
-          "type": "boolean"
         }
       },
       "additionalProperties": false,
