@@ -70,7 +70,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 generate-json-schema:  # exports the JSON-Schema for the configuration file
 	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
 
-ghokin: tools/rta@${RTA_VERSION}
+ghokin: tools/rta@${RTA_VERSION}  # formats the Cucumber tests
 	@tools/rta ghokin fmt replace features/
 
 help:  # prints all available targets
