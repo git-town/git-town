@@ -140,6 +140,9 @@
     },
     "Propose": {
       "properties": {
+        "breadcrumb": {
+          "type": "string"
+        },
         "lineage": {
           "type": "string"
         }
