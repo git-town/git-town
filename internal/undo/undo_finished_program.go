@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
 	"github.com/git-town/git-town/v22/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v22/internal/undo/undostash"
@@ -33,6 +34,16 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	// undo branch changes
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
+		// update breadcrumb
+		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+		isOnline := args.Config.NormalConfig.Offline.IsOnline()
+		if updateBreadcrumb && isOnline {
+			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+				Config:          args.Config,
+				Program:         result,
+				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames(),
+			})
+		}
 	}
 	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
