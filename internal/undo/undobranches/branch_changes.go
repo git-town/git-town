@@ -59,6 +59,7 @@ type BranchChanges struct {
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
+
 	omniChanges := CategorizeLocalBranchChange(self.OmniChanged, args.Config)
 
 	// revert omni-changed perennial branches
