@@ -10,39 +10,39 @@ Feature: Accepting all default values leads to a working setup
     And Git Town is not configured
     And local Git setting "init.defaultbranch" is "main"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                            | KEYS       |
-      | welcome                           | enter      |
-      | aliases                           | enter      |
-      | main branch                       | enter      |
-      | perennial branches                | enter      |
-      | origin hostname                   | enter      |
-      | forge type                        | enter      |
-      | enter all                         | down enter |
-      | perennial regex                   | enter      |
-      | feature regex                     | enter      |
-      | contribution regex                | enter      |
-      | observed regex                    | enter      |
-      | branch prefix                     | enter      |
-      | new branch type                   | enter      |
-      | unknown branch type               | enter      |
-      | sync feature strategy             | enter      |
-      | sync perennial strategy           | enter      |
-      | sync prototype strategy           | enter      |
-      | sync upstream                     | enter      |
-      | auto-sync                         | enter      |
-      | sync-tags                         | enter      |
-      | detached                          | enter      |
-      | stash                             | enter      |
-      | share-new-branches                | enter      |
-      | push-branches                     | enter      |
-      | push-hook                         | enter      |
-      | ship-strategy                     | enter      |
-      | ship-delete-tracking branch       | enter      |
-      | ignore-uncommitted                | enter      |
-      | order                             | enter      |
-      | proposal breadcrumb               | enter      |
-      | proposals breadcrumb single stack | enter      |
-      | config storage                    | enter      |
+      | DIALOG                      | KEYS       |
+      | welcome                     | enter      |
+      | aliases                     | enter      |
+      | main branch                 | enter      |
+      | perennial branches          | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
+      | enter all                   | down enter |
+      | perennial regex             | enter      |
+      | feature regex               | enter      |
+      | contribution regex          | enter      |
+      | observed regex              | enter      |
+      | branch prefix               | enter      |
+      | new branch type             | enter      |
+      | unknown branch type         | enter      |
+      | sync feature strategy       | enter      |
+      | sync perennial strategy     | enter      |
+      | sync prototype strategy     | enter      |
+      | sync upstream               | enter      |
+      | auto-sync                   | enter      |
+      | sync-tags                   | enter      |
+      | detached                    | enter      |
+      | stash                       | enter      |
+      | share-new-branches          | enter      |
+      | push-branches               | enter      |
+      | push-hook                   | enter      |
+      | ship-strategy               | enter      |
+      | ship-delete-tracking branch | enter      |
+      | ignore-uncommitted          | enter      |
+      | order                       | enter      |
+      | proposal breadcrumb         | enter      |
+      | proposal breadcrumb single  | enter      |
+      | config storage              | enter      |
 
   Scenario: result
     Then Git Town runs the commands
