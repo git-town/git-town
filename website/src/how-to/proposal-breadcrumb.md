@@ -34,7 +34,7 @@ To enable this behavior, set
 If your team standardizes on Git Town and uses GitHub, you can set up the
 [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
 to automatically add and update breadcrumbs on all pull requests. This offloads
-the update logic to CI and ensures breadcrumbs get updated even when changes are
-made outside the local Git Town CLI.
+the update workload to CI and ensures breadcrumbs get updated even when changes
+are made outside the local Git Town CLI.
 
 To enable this behavior, configure the GitHub Action.
