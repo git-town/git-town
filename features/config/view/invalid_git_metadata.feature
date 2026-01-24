@@ -92,7 +92,7 @@ Feature: display invalid Git metadata
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
