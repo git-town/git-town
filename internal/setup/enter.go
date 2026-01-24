@@ -644,7 +644,7 @@ func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb],
 }
 
 func enterProposalBreadcrumbSingle(data Data) (Option[forgedomain.ProposalBreadcrumbSingle], dialogdomain.Exit, error) {
-	if data.Config.File.ProposalBreadcrumb.IsSome() {
+	if data.Config.File.ProposalBreadcrumbSingle.IsSome() {
 		return None[forgedomain.ProposalBreadcrumbSingle](), false, nil
 	}
 	return dialog.ProposalBreadcrumbSingle(dialog.Args[forgedomain.ProposalBreadcrumbSingle]{
