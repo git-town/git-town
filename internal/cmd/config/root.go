@@ -118,7 +118,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("GitLab token", formatToken(config.NormalConfig.GitlabToken, redact))
 	fmt.Println()
 	print.Header("Propose")
-	print.Entry("lineage", format.StringsSetting(config.NormalConfig.ProposalsShowLineage.String()))
+	print.Entry("lineage", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))

@@ -43,7 +43,7 @@ const (
 	offline                  = "GIT_TOWN_OFFLINE"
 	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
-	proposalsShowLineage     = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
+	proposalBreadcrumb       = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	pushBranches             = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
@@ -84,7 +84,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
-	proposalsShowLineage, errProposalsShowLineage := load(env, proposalsShowLineage, forgedomain.ParseProposalsShowLineage)
+	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, forgedomain.ParseProposalBreadcrumb)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -117,7 +117,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errOffline,
 		errOrder,
 		errPerennialRegex,
-		errProposalsShowLineage,
+		errProposalBreadcrumb,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -166,7 +166,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		Order:                    order,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
-		ProposalsShowLineage:     proposalsShowLineage,
+		ProposalBreadcrumb:       proposalBreadcrumb,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,

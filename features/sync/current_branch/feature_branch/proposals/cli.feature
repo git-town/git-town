@@ -21,7 +21,7 @@ Feature: sync the current feature branch and update proposals
       | 2  | branch-2      | branch-1      | branch-2 proposal | branch-2 body | https://example.com/pr/2 |
       | 3  | branch-3      | branch-2      | branch-3 proposal | branch-3 body | https://example.com/pr/3 |
       | 4  | other         | main          | other proposal    | other body    | https://example.com/pr/4 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "branch-2"
     When I run "git-town sync"
 

@@ -26,7 +26,7 @@ Feature: merge the current feature branch and update proposals
       | 1  | alpha         | main          | alpha proposal | alpha body | https://example.com/pr/1 |
       | 2  | beta          | alpha         | beta proposal  | beta body  | https://example.com/pr/2 |
       | 3  | gamma         | beta          | gamma proposal | gamma body | https://example.com/pr/3 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "beta"
     When I run "git-town merge"
     Then origin closes proposal #2

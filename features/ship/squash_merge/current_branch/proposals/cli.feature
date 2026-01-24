@@ -15,7 +15,7 @@ Feature: ship a parent branch and update proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE           | BODY        | URL                      |
       | 1  | parent        | main          | parent proposal | parent body | https://example.com/pr/1 |
       | 2  | child         | parent        | child proposal  | child body  | https://example.com/pr/2 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "parent"
     When I run "git-town ship -m 'parent done'"

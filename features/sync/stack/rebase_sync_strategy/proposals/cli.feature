@@ -19,7 +19,7 @@ Feature: sync stacked changes and update proposals
       | 1  | parent        | main          | parent proposal | parent body | https://example.com/pr/1 |
       | 2  | child         | parent        | child proposal  | child body  | https://example.com/pr/2 |
       | 3  | other         | main          | other proposal  | other body  | https://example.com/pr/3 |
-    And Git setting "git-town.proposals-show-lineage" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "cli"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "child"
     When I run "git-town sync --stack"
