@@ -52,7 +52,7 @@ Feature: show the configuration when using an alternative config file
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes

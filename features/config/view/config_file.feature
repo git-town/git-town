@@ -100,7 +100,7 @@ Feature: display information from config file
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes

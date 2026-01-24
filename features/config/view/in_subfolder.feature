@@ -53,7 +53,7 @@ Feature: show the configuration from a subfolder
         GitLab token: (not set)
 
       Propose:
-        lineage: none
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
