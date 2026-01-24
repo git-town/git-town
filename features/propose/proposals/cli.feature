@@ -14,7 +14,7 @@ Feature: propose with embedded lineage
       | branch-2 | local, origin | commit 2 |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE             | BODY          | URL                      |
-      |  1 | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
+      | 1  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
     And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "branch-2"
     And tool "open" is installed

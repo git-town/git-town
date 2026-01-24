@@ -10,7 +10,7 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | existing | local, origin | existing commit |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | BODY |
-      |  1 | existing      | main          | body |
+      | 1  | existing      | main          | body |
     And Git setting "git-town.proposal-breadcrumb" is "cli"
     And the current branch is "existing"
     When I run "git-town append new"
