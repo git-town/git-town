@@ -195,7 +195,7 @@ stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
 .PHONY: test
-test: tools/rta@${RTA_VERSION}  # runs all the tests
+test: node_modules tools/rta@${RTA_VERSION}  # runs all the tests
 	@tools/rta conc --show=failed \
 		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
