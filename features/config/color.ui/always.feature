@@ -318,8 +318,9 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: ci
+        breadcrumb: cli
         breadcrumb single stack: yes
+
       Ship:
         delete tracking branch: no
         ignore uncommitted changes: no
@@ -474,7 +475,7 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: none
-        breadcrumb stack: no
+        breadcrumb single stack: no
 
       Ship:
         delete tracking branch: yes
