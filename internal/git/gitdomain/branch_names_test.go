@@ -21,11 +21,7 @@ func TestBranchNames(t *testing.T) {
 
 		t.Run("local branches", func(t *testing.T) {
 			t.Parallel()
-			branchNames := gitdomain.BranchNames{
-				gitdomain.NewBranchName("main"),
-				gitdomain.NewBranchName("feature"),
-				gitdomain.NewBranchName("develop"),
-			}
+			branchNames := gitdomain.BranchNames{"main", "feature", "develop"}
 			have := branchNames.LocalBranchNames()
 			want := gitdomain.NewLocalBranchNames("main", "feature", "develop")
 			must.Eq(t, want, have)
@@ -33,11 +29,7 @@ func TestBranchNames(t *testing.T) {
 
 		t.Run("remote branches", func(t *testing.T) {
 			t.Parallel()
-			branchNames := gitdomain.BranchNames{
-				gitdomain.NewBranchName("origin/main"),
-				gitdomain.NewBranchName("origin/feature"),
-				gitdomain.NewBranchName("origin/develop"),
-			}
+			branchNames := gitdomain.BranchNames{"origin/main", "origin/feature", "origin/develop"}
 			have := branchNames.LocalBranchNames()
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
@@ -45,12 +37,7 @@ func TestBranchNames(t *testing.T) {
 
 		t.Run("mixed local and remote branches", func(t *testing.T) {
 			t.Parallel()
-			branchNames := gitdomain.BranchNames{
-				gitdomain.NewBranchName("main"),
-				gitdomain.NewBranchName("origin/feature"),
-				gitdomain.NewBranchName("develop"),
-				gitdomain.NewBranchName("origin/hotfix"),
-			}
+			branchNames := gitdomain.BranchNames{"main", "origin/feature", "develop", "origin/hotfix"}
 			have := branchNames.LocalBranchNames()
 			want := gitdomain.NewLocalBranchNames("main", "develop")
 			must.Eq(t, want, have)
