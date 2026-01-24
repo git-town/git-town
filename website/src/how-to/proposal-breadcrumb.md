@@ -37,4 +37,4 @@ to automatically add and update breadcrumbs on all pull requests. This offloads
 the update workload to CI and ensures breadcrumbs get updated even when changes
 are made outside the local Git Town CLI.
 
-To enable this behavior, configure the GitHub Action.
+To enable this behavior, set up the GitHub Action.
