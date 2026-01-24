@@ -195,14 +195,14 @@ stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
 .PHONY: test
-test:  # runs all the tests
+test: tools/rta@${RTA_VERSION}  # runs all the tests
 	@tools/rta conc --show=failed \
 		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
-test-go: install tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
+test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@tools/rta conc --show=failed \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
