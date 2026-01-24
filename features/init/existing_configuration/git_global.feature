@@ -66,7 +66,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ignore-uncommitted          | enter       |
       | order                       | enter       |
       | proposal breadcrumb         | enter       |
-      | proposal breadcrumb single  | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |
