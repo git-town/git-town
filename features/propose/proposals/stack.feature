@@ -48,14 +48,21 @@ Feature: propose an entire stack with embedded lineages
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-3 | git checkout branch-2                           |
-      | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      | BRANCH   | COMMAND                                                             |
+      | branch-3 | git checkout branch-2                                               |
+      | branch-2 | git reset --hard {{ sha 'commit 2' }}                               |
+      |          | git push --force-with-lease --force-if-includes                     |
+      |          | git checkout branch-3                                               |
+      | branch-3 | git reset --hard {{ sha 'commit 3' }}                               |
+      |          | git push --force-with-lease --force-if-includes                     |
+      |          | git checkout branch-2                                               |
+      |          | Finding all proposals for branch-1 ... main                         |
+      |          | Finding proposal from branch-1 into main ... #1 (branch-1 proposal) |
+      |          | Finding proposal from branch-2 into branch-1 ... none               |
+      |          | Finding proposal from branch-3 into branch-2 ... none               |
+      |          | Update body for #1 ... ok                                           |
+      |          | Finding all proposals for branch-2 ... none                         |
+      |          | Finding all proposals for branch-3 ... none                         |
     And the initial lineage exists now
     And the initial branches exist now
     And the initial proposals exist now

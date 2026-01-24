@@ -37,9 +37,14 @@ Feature: propose with embedded lineage
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
-      |          | git push --force-with-lease --force-if-includes |
+      | BRANCH   | COMMAND                                                             |
+      | branch-2 | git reset --hard {{ sha 'commit 2' }}                               |
+      |          | git push --force-with-lease --force-if-includes                     |
+      |          | Finding all proposals for branch-1 ... main                         |
+      |          | Finding proposal from branch-1 into main ... #1 (branch-1 proposal) |
+      |          | Finding proposal from branch-2 into branch-1 ... none               |
+      |          | Update body for #1 ... ok                                           |
+      |          | Finding all proposals for branch-2 ... none                         |
     And the initial lineage exists now
     And the initial branches exist now
     And the initial proposals exist now
