@@ -91,6 +91,7 @@ Feature: don't ask for information already provided by the config file
 
       [propose]
       breadcrumb = "none"
+      breadcrumb-single = false
 
       [ship]
       delete-tracking-branch = true
