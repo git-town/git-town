@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	proposalsBreadcrumbTitle = `Proposal Breadcrumb`
-	proposalBreadcrumbHelp   = `
+	proposalBreadcrumbTitle = `Proposal Breadcrumb`
+	proposalBreadcrumbHelp  = `
 	Should proposals contain a breadcrumb of proposals for all branches in the stack?
 
 	See https://www.git-town.com/how-to/github-actions-breadcrumb.html for details.
@@ -39,12 +39,12 @@ func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forge
 			Text: "Git Town CLI embeds the breadcrumb into proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalsBreadcrumbCI),
+			Data: Some(forgedomain.ProposalBreadcrumbCI),
 			Text: "CI server embeds the breadcrumb into proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsBreadcrumbTitle, proposalBreadcrumbHelp, args.Inputs, "proposal-breadcrumb")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbTitle, proposalBreadcrumbHelp, args.Inputs, "proposal-breadcrumb")
 	fmt.Printf(messages.ProposalBreadcrumb, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

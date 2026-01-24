@@ -14,7 +14,7 @@ type ProposalBreadcrumb string
 
 const (
 	ProposalBreadcrumbNone ProposalBreadcrumb = "none" // don't display lineage in proposals
-	ProposalsBreadcrumbCI  ProposalBreadcrumb = "ci"   // lineage is embedded into proposals via https://github.com/git-town/action
+	ProposalBreadcrumbCI   ProposalBreadcrumb = "ci"   // lineage is embedded into proposals via https://github.com/git-town/action
 	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
@@ -28,8 +28,8 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 		return None[ProposalBreadcrumb](), nil
 	case ProposalBreadcrumbNone.String():
 		return Some(ProposalBreadcrumbNone), nil
-	case ProposalsBreadcrumbCI.String():
-		return Some(ProposalsBreadcrumbCI), nil
+	case ProposalBreadcrumbCI.String():
+		return Some(ProposalBreadcrumbCI), nil
 	case ProposalBreadcrumbCLI.String():
 		return Some(ProposalBreadcrumbCLI), nil
 	}

@@ -27,17 +27,17 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 		},
 		{
 			give: "ci",
-			want: Some(forgedomain.ProposalsBreadcrumbCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
 			give: "CI",
-			want: Some(forgedomain.ProposalsBreadcrumbCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
 			give: "Ci",
-			want: Some(forgedomain.ProposalsBreadcrumbCI),
+			want: Some(forgedomain.ProposalBreadcrumbCI),
 			err:  false,
 		},
 		{
