@@ -95,9 +95,9 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
     And local Git setting "git-town.perennial-regex" still doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage-single-stack" still doesn't exist
-    And local Git setting "git-town.proposal-breadcrumb" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
