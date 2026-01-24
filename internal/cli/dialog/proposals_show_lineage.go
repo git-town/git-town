@@ -16,7 +16,7 @@ const (
 	proposalsShowLineageHelp  = `
 	How should Git Town share stack lineage in proposals?
 
-	See https://www.git-town.com/how-to/proposal-branch-stack.html for details.
+	See https://www.git-town.com/how-to/proposal-breadcrumb.html for details.
 `
 )
 

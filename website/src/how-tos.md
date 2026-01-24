@@ -8,7 +8,7 @@ Town. Learn how to:
 - Show the currently interrupted Git Town command in your
   [shell prompt](how-to/shell-prompt.md)
 
-- Add the [branch stack](how-to/proposal-branch-stack.md) to pull requests
+- Add the [branch stack](how-to/proposal-breadcrumb.mdto pull requests
 
 - Use Git Town with [forked repositories](how-to/forked-repo.md)
 
