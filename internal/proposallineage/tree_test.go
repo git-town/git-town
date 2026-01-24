@@ -29,6 +29,17 @@ func TestTreeNode(t *testing.T) {
 			have := tree.BranchCount()
 			must.EqOp(t, 5, have)
 		})
+		t.Run("single branch", func(t *testing.T) {
+			t.Parallel()
+			tree := proposallineage.TreeNode{
+				Branch: "main",
+				Children: []proposallineage.TreeNode{
+					{Branch: "branch-1"},
+				},
+			}
+			have := tree.BranchCount()
+			must.EqOp(t, 2, have)
+		})
 	})
 
 	t.Run("CalculateTree", func(t *testing.T) {
