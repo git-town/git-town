@@ -27,7 +27,7 @@ all supported forges and doesn't require any CI or workflow changes. Breadcrumbs
 only get updated if branch changes happen through the Git Town CLI.
 
 To enable this behavior, set
-[proposals-show-lineage](../preferences/proposals-show-lineage.md) to `cli`.
+[proposals-show-lineage](../preferences/proposal-breadcrumb.mdo `cli`.
 
 ### Use the GitHub action
 

@@ -89,7 +89,7 @@
     - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
   - [Propose]()
-    - [Proposals show lineage](preferences/proposals-show-lineage.md)
+    - [Proposals show lineage](preferences/proposal-breadcrumb.md
   - [Ship]()
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
