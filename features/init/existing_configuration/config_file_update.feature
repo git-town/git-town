@@ -1,6 +1,7 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
+  @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:
@@ -28,7 +29,7 @@ Feature: don't ask for information already provided by the config file
       github-connector = "api"
 
       [propose]
-      lineage = "none"
+      breadcrumb = "none"
 
       [ship]
       delete-tracking-branch = true
@@ -90,7 +91,7 @@ Feature: don't ask for information already provided by the config file
       origin-hostname = "github.com"
 
       [propose]
-      lineage = "none"
+      breadcrumb = "none"
 
       [ship]
       delete-tracking-branch = true

@@ -147,7 +147,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       origin-hostname = "github.example.com"
 
       [propose]
-      lineage = "cli"
+      breadcrumb = "cli"
 
       [ship]
       delete-tracking-branch = false

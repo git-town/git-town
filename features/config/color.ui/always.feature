@@ -120,7 +120,7 @@ Feature: show the configuration
       origin-hostname = "github.com"
 
       [propose]
-      lineage = "cli"
+      breadcrumb = "cli"
 
       [ship]
       delete-tracking-branch = true
