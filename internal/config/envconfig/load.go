@@ -86,7 +86,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, forgedomain.ParseProposalBreadcrumb)
-	proposalsShowLineageSingleStack, errProposalsShowLineageSingleStack := load(env, proposalsShowLineageSingleStack, gohacks.ParseBoolOpt[forgedomain.ProposalsShowLineageSingleStack])
+	proposalsShowLineageSingleStack, errProposalsShowLineageSingleStack := load(env, proposalsShowLineageSingleStack, gohacks.ParseBoolOpt[forgedomain.ProposalBreadcrumbSingle])
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -170,7 +170,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialBranches:               gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:                  perennialRegex,
 		ProposalBreadcrumb:              proposalBreadcrumb,
-		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
+		ProposalsBreadcrumbSingle: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,
 		ShareNewBranches:                shareNewBranches,

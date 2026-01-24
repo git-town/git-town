@@ -68,7 +68,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialBranches               gitdomain.LocalBranchNames
 		perennialRegex                  Option[configdomain.PerennialRegex]
 		proposalBreadcrumb              Option[forgedomain.ProposalBreadcrumb]
-		proposalsShowLineageSingleStack Option[forgedomain.ProposalsShowLineageSingleStack]
+		proposalsShowLineageSingleStack Option[forgedomain.ProposalBreadcrumbSingle]
 		pushBranches                    Option[configdomain.PushBranches]
 		pushHook                        Option[configdomain.PushHook]
 		shareNewBranches                Option[configdomain.ShareNewBranches]
@@ -220,7 +220,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Propose.LineageSingleStack != nil {
-			proposalsShowLineageSingleStack = Some(forgedomain.ProposalsShowLineageSingleStack(*data.Propose.LineageSingleStack))
+			proposalsShowLineageSingleStack = Some(forgedomain.ProposalBreadcrumbSingle(*data.Propose.LineageSingleStack))
 		}
 	}
 	if data.Ship != nil {
@@ -318,7 +318,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialBranches:               perennialBranches,
 		PerennialRegex:                  perennialRegex,
 		ProposalBreadcrumb:              proposalBreadcrumb,
-		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
+		ProposalsBreadcrumbSingle: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,
 		ShareNewBranches:                shareNewBranches,

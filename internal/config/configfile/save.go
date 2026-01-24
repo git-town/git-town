@@ -141,6 +141,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	}
 
 	proposalBreadcrumb, hasProposalBreadcrumb := data.ProposalBreadcrumb.Get()
+	proposalsBreadcrumbSingleStack, hasProposalBreadcrumbSingleStack := data.ProposalsBreadcrumbSingle.Get()
 	if hasProposalBreadcrumb {
 		result.WriteString("\n[propose]\n")
 		result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))

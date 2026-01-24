@@ -311,7 +311,7 @@ func SetProposalBreadcrumb(runner subshelldomain.Runner, value forgedomain.Propo
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumb, value.String())
 }
 
-func SetProposalsShowLineageSingleStack(runner subshelldomain.Runner, value forgedomain.ProposalsShowLineageSingleStack, scope configdomain.ConfigScope) error {
+func SetProposalsShowLineageSingleStack(runner subshelldomain.Runner, value forgedomain.ProposalBreadcrumbSingle, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyProposalsShowLineageSingleStack, value.String())
 }
 

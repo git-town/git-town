@@ -137,7 +137,7 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ProposalBreadcrumb.IsSome() {
 		_ = gitconfig.RemoveProposalBreadcrumb(runner)
 	}
-	if gitConfig.ProposalsShowLineageSingleStack.IsSome() {
+	if gitConfig.ProposalsBreadcrumbSingle.IsSome() {
 		_ = gitconfig.RemoveProposalsShowLineageSingleStack(runner)
 	}
 	if gitConfig.PushBranches.IsSome() {
@@ -285,9 +285,9 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveProposalBreadcrumb(userInput.Data.ProposalBreadcrumb, existingGitConfig.ProposalBreadcrumb, frontend),
 		)
 	}
-	if configFile.ProposalsShowLineageSingleStack.IsNone() {
+	if configFile.ProposalsBreadcrumbSingle.IsNone() {
 		fc.Check(
-			saveProposalsShowLineageSingleStack(userInput.Data.ProposalsShowLineageSingleStack, existingGitConfig.ProposalsShowLineageSingleStack, frontend),
+			saveProposalsShowLineageSingleStack(userInput.Data.ProposalsBreadcrumbSingle, existingGitConfig.ProposalsBreadcrumbSingle, frontend),
 		)
 	}
 	if configFile.PushBranches.IsNone() {
@@ -615,7 +615,7 @@ func saveProposalBreadcrumb(valueToWriteToGit Option[forgedomain.ProposalBreadcr
 	return gitconfig.RemoveProposalBreadcrumb(runner)
 }
 
-func saveProposalsShowLineageSingleStack(valueToWriteToGit Option[forgedomain.ProposalsShowLineageSingleStack], valueAlreadyInGit Option[forgedomain.ProposalsShowLineageSingleStack], runner subshelldomain.Runner) error {
+func saveProposalsShowLineageSingleStack(valueToWriteToGit Option[forgedomain.ProposalBreadcrumbSingle], valueAlreadyInGit Option[forgedomain.ProposalBreadcrumbSingle], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}

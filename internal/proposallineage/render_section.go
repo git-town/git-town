@@ -8,7 +8,7 @@ import (
 )
 
 // RenderSection provides the branch lineage for the given branch in Markdown format, ready to be embedded into a proposal body.
-func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBranchName, order configdomain.Order, showSingleStack forgedomain.ProposalsShowLineageSingleStack, connector Option[forgedomain.Connector]) string {
+func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBranchName, order configdomain.Order, showSingleStack forgedomain.ProposalBreadcrumbSingle, connector Option[forgedomain.Connector]) string {
 	// step 1: calculate the lineage tree for the given branch
 	tree := CalculateTree(currentBranch, lineage, order)
 

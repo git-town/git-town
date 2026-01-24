@@ -180,7 +180,7 @@ EnterForgeData:
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
 	proposalBreadcrumb := None[forgedomain.ProposalBreadcrumb]()
-	proposalsShowLineageSingleStack := None[forgedomain.ProposalsShowLineageSingleStack]()
+	proposalsShowLineageSingleStack := None[forgedomain.ProposalBreadcrumbSingle]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -318,7 +318,7 @@ EnterForgeData:
 		PerennialBranches:               perennialBranches,
 		PerennialRegex:                  perennialRegex,
 		ProposalBreadcrumb:              proposalBreadcrumb,
-		ProposalsShowLineageSingleStack: proposalsShowLineageSingleStack,
+		ProposalsBreadcrumbSingle: proposalsShowLineageSingleStack,
 		PushBranches:                    pushBranches,
 		PushHook:                        pushHook,
 		ShareNewBranches:                shareNewBranches,
@@ -639,14 +639,14 @@ func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb],
 	})
 }
 
-func enterProposalsShowLineageSingleStack(data Data) (Option[forgedomain.ProposalsShowLineageSingleStack], dialogdomain.Exit, error) {
+func enterProposalsShowLineageSingleStack(data Data) (Option[forgedomain.ProposalBreadcrumbSingle], dialogdomain.Exit, error) {
 	if data.Config.File.ProposalBreadcrumb.IsSome() {
-		return None[forgedomain.ProposalsShowLineageSingleStack](), false, nil
+		return None[forgedomain.ProposalBreadcrumbSingle](), false, nil
 	}
-	return dialog.ProposalShowLineageSingleStack(dialog.Args[forgedomain.ProposalsShowLineageSingleStack]{
-		Global: data.Config.GitGlobal.ProposalsShowLineageSingleStack,
+	return dialog.ProposalBreadcrumbSingle(dialog.Args[forgedomain.ProposalBreadcrumbSingle]{
+		Global: data.Config.GitGlobal.ProposalsBreadcrumbSingle,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.ProposalsShowLineageSingleStack,
+		Local:  data.Config.GitLocal.ProposalsBreadcrumbSingle,
 	})
 }
 
