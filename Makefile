@@ -195,8 +195,9 @@ stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
 .PHONY: test
-test: fix  # runs all the tests
+test:  # runs all the tests
 	@tools/rta conc --show=failed \
+		"make --no-print-directory fix" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory unit" \
 		"make --no-print-directory lint-all" \
