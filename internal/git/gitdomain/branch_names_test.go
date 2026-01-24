@@ -11,6 +11,8 @@ func TestBranchNames(t *testing.T) {
 	t.Parallel()
 
 	t.Run("LocalBranchNames", func(t *testing.T) {
+		t.Parallel()
+
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			branchNames := gitdomain.BranchNames{}
