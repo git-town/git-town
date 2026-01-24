@@ -25,6 +25,8 @@ Feature: propose single stack, show single stacks disabled
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                     |
+      |        | Finding all proposals for branch-1 ... none |
     And the initial lineage exists now
     And the initial branches exist now
