@@ -34,7 +34,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	// undo branch changes
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
-		// update embedded lineage
+		// update breadcrumb
 		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
 		if updateBreadcrumb && isOnline {
