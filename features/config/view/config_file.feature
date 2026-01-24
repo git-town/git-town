@@ -104,7 +104,7 @@ Feature: display information from config file
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: none
+        breadcrumb: cli
         breadcrumb single stack: no
 
       Ship:
@@ -123,4 +123,5 @@ Feature: display information from config file
         push branches: no
         sync tags: no
         sync with upstream: yes
+        auto-resolve phantom conflicts: no
       """

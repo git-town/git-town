@@ -78,7 +78,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: none
+        breadcrumb: cli
         breadcrumb single stack: yes
 
       Ship:

@@ -68,8 +68,8 @@ Feature: show the configuration
       origin-hostname = "github.com"
 
       [propose]
-      breadcrumb = "ci"
-      breadcrumb-single-stack = false
+      breadcrumb = "cli"
+      breadcrumb-single = false
 
       [ship]
       delete-tracking-branch = true
