@@ -8,7 +8,7 @@
   - [Forked repos](how-to/forked-repo.md)
   - [Hotfixes](how-to/hotfixes.md)
   - [LazyGit](how-to/lazygit.md)
-  - [Proposal breadcrumb](how-to/proposal-breadcrumb.md
+  - [Proposal breadcrumb](how-to/proposal-breadcrumb.md)
   - [Shell prompt](how-to/shell-prompt.md)
   - [Sync lineage](how-to/sync-lineage.md)
 - [Commands](all-commands.md)
