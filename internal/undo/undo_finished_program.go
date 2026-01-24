@@ -26,12 +26,15 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 			Message:        "Committing open changes to undo them",
 		})
 	}
+	// undo config changes
 	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
 		result.Value.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}
+	// undo branch changes
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
 	}
+	// undo stash changes
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
 		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
