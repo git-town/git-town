@@ -149,6 +149,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [propose]
       breadcrumb = "cli"
+      breadcrumb-single = true
 
       [ship]
       delete-tracking-branch = false
