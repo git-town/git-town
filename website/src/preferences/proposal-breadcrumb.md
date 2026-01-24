@@ -1,19 +1,16 @@
 # proposal-breadcrumb
 
-This setting makes Git Town embed a visual overview of the
+This setting makes the Git Town CLI embed a visual overview of the
 [branch stack](../stacked-changes.md) into proposals.
 
-You have several options for this:
-
-1. Let the Git Town executable create and maintain branch lineages of proposals.
-2. Use the
-   [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
+An alternative to doing this is setting up the
+[Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action).
 
 ## config file
 
 ```toml
 [sync]
-proposal-breadcrumb = cli
+proposal-breadcrumb = "cli"
 ```
 
 ## Git metadata
