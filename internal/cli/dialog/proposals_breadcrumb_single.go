@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	proposalBreadcrumbSingleTitle = `Show lineage for single stacks`
+	proposalBreadcrumbSingleTitle = `Show breadcrumb for single branches`
 	proposalBreadcrumbSingleHelp  = `
 Should Git Town display breadcrumbs for stacks that contain only a single branch?
 
