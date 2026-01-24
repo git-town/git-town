@@ -32,7 +32,7 @@ func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forge
 	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumb]]{
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbNone),
-			Text: "no breadcrumb in proposals",
+			Text: "no breadcrumb in proposals or the Git Town GitHub action does it",
 		},
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbCLI),
