@@ -1,4 +1,4 @@
-# proposals-show-lineage
+# proposal-breadcrumb
 
 This setting makes Git Town embed a visual overview of the
 [branch stack](../stacked-changes.md) into proposals.
@@ -13,7 +13,7 @@ You have several options for this:
 
 ```toml
 [sync]
-proposals-show-lineage = cli
+proposal-breadcrumb = cli
 ```
 
 ## Git metadata
@@ -21,7 +21,7 @@ proposals-show-lineage = cli
 To configure whether branches get pushed manually in Git, run this command:
 
 ```wrap
-git config [--global] git-town.proposals-show-lineage cli
+git config [--global] git-town.proposal-breadcrumb cli
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
@@ -30,4 +30,4 @@ your machine. Without it, the setting applies only to the current repository.
 ## environment variable
 
 You can configure whether branches get pushed by setting the
-`GIT_TOWN_PROPOSALS_SHOW_LINEAGE` environment variable.
+`GIT_TOWN_PROPOSAL_BREADCRUMB` environment variable.

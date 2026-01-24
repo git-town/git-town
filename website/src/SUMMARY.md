@@ -8,7 +8,7 @@
   - [Forked repos](how-to/forked-repo.md)
   - [Hotfixes](how-to/hotfixes.md)
   - [LazyGit](how-to/lazygit.md)
-  - [Proposal branch stack](how-to/proposal-breadcrumb.md
+  - [Proposal breadcrumb](how-to/proposal-breadcrumb.md
   - [Shell prompt](how-to/shell-prompt.md)
   - [Sync lineage](how-to/sync-lineage.md)
 - [Commands](all-commands.md)
@@ -89,7 +89,7 @@
     - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
   - [Propose]()
-    - [Proposals show lineage](preferences/proposal-breadcrumb.md
+    - [Proposal breadcrumb](preferences/proposal-breadcrumb.md
   - [Ship]()
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
