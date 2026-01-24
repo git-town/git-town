@@ -3,7 +3,6 @@ package undo
 import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/programs"
 	"github.com/git-town/git-town/v22/internal/undo/undobranches"
@@ -36,7 +35,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
 		// update embedded lineage
-		updateProposalLineage := args.Config.NormalConfig.ProposalBreadcrumb == forgedomain.ProposalBreadcrumbCLI
+		updateProposalLineage := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
 		if updateProposalLineage && isOnline {
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
