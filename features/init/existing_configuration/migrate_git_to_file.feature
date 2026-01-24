@@ -18,7 +18,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "release-.*"
-    And local Git setting "git-town.proposals-show-lineage" is "cli"
+    And local Git setting "git-town.proposal-breadcrumb" is "cli"
     And local Git setting "git-town.push-branches" is "true"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.share-new-branches" is "no"
@@ -64,7 +64,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | ship delete tracking branch | enter      |
       | ignore-uncommitted          | enter      |
       | order                       | enter      |
-      | proposals show lineage      | enter      |
+      | proposal breadcrumb         | enter      |
       | config storage              | down enter |
 
   Scenario: result
@@ -84,7 +84,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.observed-regex              |
       | git config --unset git-town.order                       |
       | git config --unset git-town.perennial-regex             |
-      | git config --unset git-town.proposals-show-lineage      |
+      | git config --unset git-town.proposal-breadcrumb         |
       | git config --unset git-town.push-branches               |
       | git config --unset git-town.push-hook                   |
       | git config --unset git-town.share-new-branches          |
@@ -108,7 +108,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
-    And local Git setting "git-town.proposals-show-lineage" now doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb" now doesn't exist
     And local Git setting "git-town.push-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.share-new-branches" now doesn't exist
@@ -123,7 +123,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -133,27 +133,27 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-type = "observed"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
       forge-type = "github"
       github-connector = "api"
       origin-hostname = "github.example.com"
-
+      
       [propose]
       lineage = "cli"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = false
@@ -182,7 +182,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.observed-regex" is now "other-.*"
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
-    And local Git setting "git-town.proposals-show-lineage" is now "cli"
+    And local Git setting "git-town.proposal-breadcrumb" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"

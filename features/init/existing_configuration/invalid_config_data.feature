@@ -74,7 +74,7 @@ Feature: Fix invalid configuration data
       | git config git-town.observed-regex obs                |
       | git config git-town.order desc                        |
       | git config git-town.perennial-regex per               |
-      | git config git-town.proposals-show-lineage none       |
+      | git config git-town.proposal-breadcrumb none          |
       | git config git-town.push-branches false               |
       | git config git-town.push-hook false                   |
       | git config git-town.share-new-branches push           |
