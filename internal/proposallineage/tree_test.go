@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestCalculateTree(t *testing.T) {
+func TestTreeNode(t *testing.T) {
 	t.Parallel()
 
 	t.Run("BranchCount", func(t *testing.T) {
