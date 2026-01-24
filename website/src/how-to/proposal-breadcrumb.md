@@ -1,8 +1,8 @@
-# Display the branch stack in proposals
+# Display a breadcrumb in proposals
 
-Git Town can render a visual breadcrumb in proposals (pull requests, merge
-requests) that shows where the current branch sits within its stack. This makes
-stacked changes explicit and easier to review.
+Git Town can render a visual breadcrumb in proposals that shows where the
+current branch sits within its stack. This makes stacked changes explicit and
+easier to review.
 
 ![example stack created by the Git Town GitHub action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
 
