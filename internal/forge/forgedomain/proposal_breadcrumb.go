@@ -17,7 +17,8 @@ const (
 	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
-func (self ProposalBreadcrumb) ShouldUpdateProposalLineage() bool {
+// EmbedBreadcrumb indicates whether the Git Town CLI should embed the breadcrumb into proposals.
+func (self ProposalBreadcrumb) EmbedBreadcrumb() bool {
 	return self == ProposalBreadcrumbCLI
 }
 
