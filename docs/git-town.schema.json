@@ -143,9 +143,6 @@
         "breadcrumb": {
           "type": "string"
         },
-        "breadcrumb-single": {
-          "type": "boolean"
-        },
         "lineage": {
           "type": "string"
         }
