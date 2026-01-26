@@ -12,6 +12,10 @@
 - `git-town detach` now correctly detaches branches with multiple children ([#5988](https://github.com/git-town/git-town/pull/5988)).
 - `git-town propose --stack` syncs branches correctly now ([#5973](https://github.com/git-town/git-town/pull/5973)).
 
+#### Contribution branches
+
+Shoutout to @AlexanderCiridae, @JaredSharplin, @ceilfors, @cjol, @cursor[bot], @davidolrik, @haltcase, @kevgo, @meowsus, @mrmarufpro, @mw00120, @nemith, @oleg-codaio, @ruudk, @stephenwade, @towry, @tranhl, @yaadata, @zodman for contributing code, ideas, and feedback to 122 shipped pull requests and 5 resolved issues!
+
 ## 22.4.0 (2025-12-24)
 
 #### New Features

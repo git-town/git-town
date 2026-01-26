@@ -2,7 +2,7 @@ RTA_VERSION = 0.28.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "22.4.0"
+RELEASE_VERSION := "22.5.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 contest: tools/rta@${RTA_VERSION}  # run the Contest server
