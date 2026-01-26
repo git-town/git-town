@@ -14,7 +14,7 @@
 
 #### Contribution branches
 
-Shoutout to @AlexanderCiridae, @JaredSharplin, @ceilfors, @cjol, @davidolrik, @haltcase, @kevgo, @meowsus, @mrmarufpro, @mw00120, @nemith, @oleg-codaio, @ruudk, @stephenwade, @towry, @tranhl, @yaadata, @zodman for contributing code, ideas, and feedback to 122 shipped pull requests and 5 resolved issues!
+Huge thanks to @AlexanderCiridae, @JaredSharplin, @ceilfors, @cjol, @davidolrik, @haltcase, @kevgo, @meowsus, @mrmarufpro, @mw00120, @nemith, @oleg-codaio, @ruudk, @stephenwade, @towry, @tranhl, @yaadata, @zodman for contributing code, ideas, and feedback to 122 shipped pull requests and 5 resolved issues!
 
 ## 22.4.0 (2025-12-24)
 
