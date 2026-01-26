@@ -29,7 +29,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"
@@ -77,7 +77,7 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
-        breadcrumb: cli
+        breadcrumb: stacks
       
       Ship:
         delete tracking branch: yes
@@ -121,7 +121,7 @@ Feature: show the configuration
       origin-hostname = "github.com"
       
       [propose]
-      breadcrumb = "cli"
+      breadcrumb = "stacks"
       
       [ship]
       delete-tracking-branch = true
@@ -182,7 +182,7 @@ Feature: show the configuration
         GitLab token: (not set)
       
       Propose:
-        breadcrumb: cli
+        breadcrumb: stacks
       
       Ship:
         delete tracking branch: yes

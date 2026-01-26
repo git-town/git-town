@@ -13,9 +13,9 @@ Feature: ship a parent branch and update proposals
       | child  | local, origin | child commit  |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE           | BODY        | URL                      |
-      | 1  | parent        | main          | parent proposal | parent body | https://example.com/pr/1 |
-      | 2  | child         | parent        | child proposal  | child body  | https://example.com/pr/2 |
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+      |  1 | parent        | main          | parent proposal | parent body | https://example.com/pr/1 |
+      |  2 | child         | parent        | child proposal  | child body  | https://example.com/pr/2 |
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "parent"
     When I run "git-town ship -m 'parent done'"
@@ -58,9 +58,9 @@ Feature: ship a parent branch and update proposals
       target: main
       body:
         child body
-
+      
         <!-- branch-stack-start -->
-
+      
         <!-- branch-stack-end -->
       """
 
@@ -91,8 +91,8 @@ Feature: ship a parent branch and update proposals
       target: parent
       body:
         child body
-
+      
         <!-- branch-stack-start -->
-
+      
         <!-- branch-stack-end -->
       """

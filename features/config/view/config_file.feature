@@ -41,7 +41,7 @@ Feature: display information from config file
       origin-hostname = "github.com"
       
       [propose]
-      breadcrumb = "cli"
+      breadcrumb = "stacks"
       
       [ship]
       delete-tracking-branch = true
@@ -103,7 +103,7 @@ Feature: display information from config file
         GitLab token: (not set)
       
       Propose:
-        breadcrumb: cli
+        breadcrumb: stacks
       
       Ship:
         delete tracking branch: yes

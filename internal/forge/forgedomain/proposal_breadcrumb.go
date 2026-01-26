@@ -14,8 +14,8 @@ type ProposalBreadcrumb string
 
 const (
 	ProposalBreadcrumbNone     ProposalBreadcrumb = "none"     // don't display lineage in proposals
-	ProposalBreadcrumbBranches ProposalBreadcrumb = "branches" // the Git Town CLI should embed breadcrumbs into proposals for all branches
 	ProposalBreadcrumbStacks   ProposalBreadcrumb = "stacks"   // the Git Town CLI should embed breadcrumbs into proposals for stacks with more than one branch
+	ProposalBreadcrumbBranches ProposalBreadcrumb = "branches" // the Git Town CLI should embed breadcrumbs into proposals for all branches
 )
 
 // EmbedBreadcrumb indicates whether the Git Town CLI should embed the breadcrumb into proposals.

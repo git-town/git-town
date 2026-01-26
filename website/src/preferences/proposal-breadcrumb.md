@@ -10,7 +10,7 @@ An alternative to doing this is setting up the
 
 ```toml
 [sync]
-proposal-breadcrumb = "cli"
+proposal-breadcrumb = "stacks"
 ```
 
 ## Git metadata
@@ -18,7 +18,7 @@ proposal-breadcrumb = "cli"
 To configure whether branches get pushed manually in Git, run this command:
 
 ```wrap
-git config [--global] git-town.proposal-breadcrumb cli
+git config [--global] git-town.proposal-breadcrumb stacks
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
