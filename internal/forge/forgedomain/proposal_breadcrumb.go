@@ -13,8 +13,8 @@ import (
 type ProposalBreadcrumb string
 
 const (
-	ProposalBreadcrumbNone ProposalBreadcrumb = "none" // don't display lineage in proposals
-	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
+	ProposalBreadcrumbNone ProposalBreadcrumb = "none"     // don't display lineage in proposals
+	ProposalBreadcrumbCLI  ProposalBreadcrumb = "branches" // the Git Town CLI should embed the lineage into proposals
 )
 
 // EmbedBreadcrumb indicates whether the Git Town CLI should embed the breadcrumb into proposals.
