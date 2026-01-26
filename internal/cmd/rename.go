@@ -356,7 +356,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
 	}
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
