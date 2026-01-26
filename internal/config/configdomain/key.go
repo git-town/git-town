@@ -242,6 +242,16 @@ var ObsoleteBranchLists = map[Key]BranchType{
 var ConfigUpdates = []ConfigUpdate{
 	{
 		Before: ConfigSetting{
+			Key:   KeyProposalBreadcrumb,
+			Value: "cli",
+		},
+		After: ConfigSetting{
+			Key:   KeyProposalBreadcrumb,
+			Value: "branch",
+		},
+	},
+	{
+		Before: ConfigSetting{
 			Key:   KeyDeprecatedAliasKill,
 			Value: "town kill",
 		},
