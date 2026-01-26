@@ -12,7 +12,7 @@ func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBr
 	// step 1: calculate the lineage tree for the given branch
 	tree := CalculateTree(currentBranch, lineage, order)
 
-	if breadcrumb.DisplayBreadcrumb(tree.BranchCount()) {
+	if !breadcrumb.DisplayBreadcrumb(tree.BranchCount()) {
 		return ""
 	}
 

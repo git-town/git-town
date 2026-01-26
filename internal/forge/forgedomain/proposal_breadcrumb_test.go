@@ -26,8 +26,13 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 			err:  false,
 		},
 		{
-			give: "cli",
+			give: "branches",
 			want: Some(forgedomain.ProposalBreadcrumbBranches),
+			err:  false,
+		},
+		{
+			give: "stacks",
+			want: Some(forgedomain.ProposalBreadcrumbStacks),
 			err:  false,
 		},
 		{

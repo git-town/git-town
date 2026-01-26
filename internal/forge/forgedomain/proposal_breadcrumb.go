@@ -53,6 +53,8 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 		return Some(ProposalBreadcrumbNone), nil
 	case ProposalBreadcrumbBranches.String():
 		return Some(ProposalBreadcrumbBranches), nil
+	case ProposalBreadcrumbStacks.String():
+		return Some(ProposalBreadcrumbStacks), nil
 	}
 	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposal-breadcrumb")
 	if err != nil {

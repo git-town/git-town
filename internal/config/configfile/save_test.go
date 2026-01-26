@@ -115,7 +115,7 @@ gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]
-breadcrumb = "stacks"
+breadcrumb = "branches"
 
 [ship]
 delete-tracking-branch = true
