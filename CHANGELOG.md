@@ -1,8 +1,20 @@
 # Git Town Changelog
 
-## 22.5.0 (unreleased)
+## 22.5.0 (2025-01-26)
 
-- The Git Town CLI can now embed branch lineage directly into proposals. To enable it, configure proposal-breadcrumb to `stacks` or `branches`.
+#### New Features
+
+- The Git Town CLI can now embed breadcrumbs in proposals. This helps reviewers understand where a branch sits in a stack. Enable it via the new `proposal-breadcrumb` setting and choose between `stacks` or `branches` ([docs](https://www.git-town.com/preferences/proposal-breadcrumb.html), [#3003](https://github.com/git-town/git-town/issues/3003)).
+- Added `git-town commit`, a new command that lets you commit changes from your current branch directly into an ancestor branch and then syncs those changes back into your current branch. This makes it much easier to work on complex, cross-cutting changes in one place while committing each part to the correct branch in your stack ([#5760](https://github.com/git-town/git-town/issues/5760)).
+
+#### Bug Fixes
+
+- Fixed `git-town detach` to correctly handle branches with multiple children ([#5988](https://github.com/git-town/git-town/pull/5988)).
+- Fixed `git-town propose --stack` to properly sync branches before proposing ([#5973](https://github.com/git-town/git-town/pull/5973)).
+
+#### Contribution branches
+
+Huge thanks to @AlexanderCiridae, @JaredSharplin, @ceilfors, @cjol, @davidolrik, @haltcase, @kevgo, @meowsus, @mrmarufpro, @mw00120, @nemith, @oleg-codaio, @ruudk, @stephenwade, @towry, @tranhl, @yaadata, @zodman for contributing code, ideas, and feedback to 122 shipped pull requests and 5 resolved issues!
 
 ## 22.4.0 (2025-12-24)
 
