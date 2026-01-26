@@ -35,7 +35,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
 		// update breadcrumb
-		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.Enabled()
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
 		if updateBreadcrumb && isOnline {
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

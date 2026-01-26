@@ -181,7 +181,7 @@ Start:
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

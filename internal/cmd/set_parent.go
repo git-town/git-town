@@ -469,7 +469,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		}
 	}
 	// update proposal lineages
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
 		parents := gitdomain.LocalBranchNames{}
