@@ -9,8 +9,8 @@
 
 #### Bug Fixes
 
-- `git-town detach` now correctly detaches branches with multiple children ([#5988](https://github.com/git-town/git-town/pull/5988)).
-- `git-town propose --stack` syncs branches correctly now ([#5973](https://github.com/git-town/git-town/pull/5973)).
+- Fixed `git-town detach` to correctly handle branches with multiple children ([#5988](https://github.com/git-town/git-town/pull/5988)).
+- Fixed `git-town propose --stack` to properly sync branches before proposing ([#5973](https://github.com/git-town/git-town/pull/5973)).
 
 #### Contribution branches
 
