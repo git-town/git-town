@@ -103,8 +103,7 @@ upstream = true
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Breadcrumb:       Ptr("cli"),
-					BreadcrumbSingle: Ptr(false),
+					Breadcrumb: Ptr("cli"),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),

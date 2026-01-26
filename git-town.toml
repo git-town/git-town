@@ -5,7 +5,7 @@ main = "main"
 perennials = ["public"]
 
 [propose]
-breadcrumb-single = false
+breadcrumb = "stacks"
 
 [ship]
 delete-tracking-branch = false
