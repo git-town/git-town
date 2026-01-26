@@ -149,7 +149,7 @@ Feature: display configuration from Git metadata
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: stacks
+        breadcrumb: none
 
       Ship:
         delete tracking branch: yes
