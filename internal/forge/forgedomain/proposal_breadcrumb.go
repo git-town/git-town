@@ -31,6 +31,7 @@ func (self ProposalBreadcrumb) DisplayBreadcrumb(stackSize int) bool {
 	panic(fmt.Sprintf("unexpected ProposalBreadcrumb: %#v", self))
 }
 
+// Enabled indicates whether the Git Town CLI should embed the breadcrumb into proposals.
 func (self ProposalBreadcrumb) Enabled() bool {
 	switch self {
 	case ProposalBreadcrumbBranches, ProposalBreadcrumbStacks:
