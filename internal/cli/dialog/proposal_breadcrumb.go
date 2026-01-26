@@ -35,7 +35,7 @@ func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forge
 			Text: "no breadcrumb in proposals, or use the Git Town GitHub Action",
 		},
 		{
-			Data: Some(forgedomain.ProposalBreadcrumbCLI),
+			Data: Some(forgedomain.ProposalBreadcrumbBranches),
 			Text: "Git Town CLI embeds the breadcrumb into proposals",
 		},
 	}...)

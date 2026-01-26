@@ -182,7 +182,7 @@ Start:
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
-	updateBreadcrumb := sharedData.config.NormalConfig.ProposalBreadcrumb.EmbedBreadcrumb()
+	updateBreadcrumb := sharedData.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
 		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{

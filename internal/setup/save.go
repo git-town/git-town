@@ -137,9 +137,6 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ProposalBreadcrumb.IsSome() {
 		_ = gitconfig.RemoveProposalBreadcrumb(runner)
 	}
-	if gitConfig.ProposalBreadcrumbSingle.IsSome() {
-		_ = gitconfig.RemoveProposalBreadcrumbSingle(runner)
-	}
 	if gitConfig.PushBranches.IsSome() {
 		_ = gitconfig.RemovePushBranches(runner)
 	}
@@ -283,11 +280,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.ProposalBreadcrumb.IsNone() {
 		fc.Check(
 			saveProposalBreadcrumb(userInput.Data.ProposalBreadcrumb, existingGitConfig.ProposalBreadcrumb, frontend),
-		)
-	}
-	if configFile.ProposalBreadcrumbSingle.IsNone() {
-		fc.Check(
-			saveProposalBreadcrumbSingle(userInput.Data.ProposalBreadcrumbSingle, existingGitConfig.ProposalBreadcrumbSingle, frontend),
 		)
 	}
 	if configFile.PushBranches.IsNone() {
@@ -613,16 +605,6 @@ func saveProposalBreadcrumb(valueToWriteToGit Option[forgedomain.ProposalBreadcr
 		return gitconfig.SetProposalBreadcrumb(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveProposalBreadcrumb(runner)
-}
-
-func saveProposalBreadcrumbSingle(valueToWriteToGit Option[forgedomain.ProposalBreadcrumbSingle], valueAlreadyInGit Option[forgedomain.ProposalBreadcrumbSingle], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.Equal(valueToWriteToGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetProposalBreadcrumbSingle(runner, value, configdomain.ConfigScopeLocal)
-	}
-	return gitconfig.RemoveProposalBreadcrumbSingle(runner)
 }
 
 func savePushBranches(valueToWriteToGit Option[configdomain.PushBranches], valueAlreadyInGit Option[configdomain.PushBranches], runner subshelldomain.Runner) error {

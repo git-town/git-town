@@ -27,7 +27,7 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 		},
 		{
 			give: "cli",
-			want: Some(forgedomain.ProposalBreadcrumbCLI),
+			want: Some(forgedomain.ProposalBreadcrumbBranches),
 			err:  false,
 		},
 		{
@@ -37,7 +37,7 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 		},
 		{
 			give: "true",
-			want: Some(forgedomain.ProposalBreadcrumbCLI),
+			want: Some(forgedomain.ProposalBreadcrumbBranches),
 			err:  false,
 		},
 		{
@@ -47,7 +47,7 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 		},
 		{
 			give: "yes",
-			want: Some(forgedomain.ProposalBreadcrumbCLI),
+			want: Some(forgedomain.ProposalBreadcrumbBranches),
 			err:  false,
 		},
 		{
@@ -57,7 +57,7 @@ func TestParseProposalBreadcrumb(t *testing.T) {
 		},
 		{
 			give: "1",
-			want: Some(forgedomain.ProposalBreadcrumbCLI),
+			want: Some(forgedomain.ProposalBreadcrumbBranches),
 			err:  false,
 		},
 		{

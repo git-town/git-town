@@ -311,10 +311,6 @@ func SetProposalBreadcrumb(runner subshelldomain.Runner, value forgedomain.Propo
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumb, value.String())
 }
 
-func SetProposalBreadcrumbSingle(runner subshelldomain.Runner, value forgedomain.ProposalBreadcrumbSingle, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumbSingle, value.String())
-}
-
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyPushBranches, strconv.FormatBool(bool(value)))
 }

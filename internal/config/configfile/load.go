@@ -68,7 +68,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialBranches        gitdomain.LocalBranchNames
 		perennialRegex           Option[configdomain.PerennialRegex]
 		proposalBreadcrumb       Option[forgedomain.ProposalBreadcrumb]
-		proposalBreadcrumbSingle Option[forgedomain.ProposalBreadcrumbSingle]
 		pushBranches             Option[configdomain.PushBranches]
 		pushHook                 Option[configdomain.PushHook]
 		shareNewBranches         Option[configdomain.ShareNewBranches]
@@ -219,9 +218,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumb, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Propose.BreadcrumbSingle != nil {
-			proposalBreadcrumbSingle = Some(forgedomain.ProposalBreadcrumbSingle(*data.Propose.BreadcrumbSingle))
-		}
 	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
@@ -318,7 +314,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		ProposalBreadcrumb:       proposalBreadcrumb,
-		ProposalBreadcrumbSingle: proposalBreadcrumbSingle,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,

@@ -103,7 +103,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
 	perennialRegex, errPerennialRegex := load(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
 	proposalBreadcrumb, errProposalBreadcrumb := load(snapshot, configdomain.KeyProposalBreadcrumb, forgedomain.ParseProposalBreadcrumb, ignoreUnknown)
-	proposalBreadcrumbSingle, errProposalBreadcrumbSingle := load(snapshot, configdomain.KeyProposalBreadcrumbSingle, gohacks.ParseBoolOpt[forgedomain.ProposalBreadcrumbSingle], ignoreUnknown)
 	pushBranches, errPushBranches := load(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
 	pushHook, errPushHook := load(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
 	shareNewBranches, errShareNewBranches := load(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
@@ -138,7 +137,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errOffline,
 		errPerennialRegex,
 		errProposalBreadcrumb,
-		errProposalBreadcrumbSingle,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -187,7 +185,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
 		ProposalBreadcrumb:       proposalBreadcrumb,
-		ProposalBreadcrumbSingle: proposalBreadcrumbSingle,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
