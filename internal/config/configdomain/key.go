@@ -3,6 +3,7 @@ package configdomain
 import (
 	"encoding/json"
 
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/pkg"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -247,7 +248,7 @@ var ConfigUpdates = []ConfigUpdate{
 		},
 		After: ConfigSetting{
 			Key:   KeyProposalBreadcrumb,
-			Value: "branch",
+			Value: string(forgedomain.ProposalBreadcrumbBranches),
 		},
 	},
 	{
