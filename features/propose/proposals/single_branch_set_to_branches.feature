@@ -1,4 +1,4 @@
-Feature: propose single branch, set to "branches"
+Feature: propose single branch with "branches" setting
 
   Background:
     Given a Git repo with origin

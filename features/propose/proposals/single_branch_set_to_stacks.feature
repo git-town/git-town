@@ -1,4 +1,4 @@
-Feature: propose single branch, set to "stacks"
+Feature: propose single branch with "stacks" setting
 
   Background:
     Given a Git repo with origin
