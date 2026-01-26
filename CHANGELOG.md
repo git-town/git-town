@@ -4,8 +4,8 @@
 
 #### New Features
 
-- The Git Town CLI can now embed breadcrumbs into proposals. To enable this feature, set the new configuration setting `proposal-breadcrumb` to `stacks` or `branches`. ([more info](https://www.git-town.com/preferences/proposal-breadcrumb.html), [#3003](https://github.com/git-town/git-town/issues/3003)).
-- The new `git-town commit` command allows committing changes you developed on the current branch into an ancestor branch without needing to switch to it, and syncs the committed changes back into the current branch. This allows making complex changes efficiently in one place, and committing parts of them into the correct branch in your stack ([#5760](https://github.com/git-town/git-town/issues/5760)).
+- The Git Town CLI can now embed breadcrumbs in proposals. This helps reviewers understand where a branch sits in a stack. Enable it via the new `proposal-breadcrumb` setting and choose between `stacks` or `branches`. ([docs](https://www.git-town.com/preferences/proposal-breadcrumb.html), [#3003](https://github.com/git-town/git-town/issues/3003)).
+- Added `git-town commit`, a new command that lets you commit changes from your current branch directly into an ancestor branch and then syncs those changes back into your current branch. This makes it much easier to work on complex, cross-cutting changes in one place while committing each part to the correct branch in your stack. ([#5760](https://github.com/git-town/git-town/issues/5760)).
 
 #### Bug Fixes
 
