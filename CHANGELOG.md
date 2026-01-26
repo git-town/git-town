@@ -2,7 +2,14 @@
 
 ## 22.5.0 (2025-01-26)
 
+#### New Features
+
 - The Git Town CLI can now embed breadcrumbs into proposals. To enable this feature, set the new configuration setting `proposal-breadcrumb` to `stacks` or `branches`. ([more info](), [#3003](https://github.com/git-town/git-town/issues/3003)).
+
+#### Bug Fixes
+
+- `git-town detach` now correctly detaches branches with multiple children ([#5988](https://github.com/git-town/git-town/pull/5988)).
+- `git-town propose --stack` syncs branches correctly now ([#5973](https://github.com/git-town/git-town/pull/5973)).
 
 ## 22.4.0 (2025-12-24)
 
