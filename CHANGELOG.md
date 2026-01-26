@@ -4,7 +4,7 @@
 
 #### New Features
 
-- The Git Town CLI can now embed breadcrumbs into proposals. To enable this feature, set the new configuration setting `proposal-breadcrumb` to `stacks` or `branches`. ([more info](), [#3003](https://github.com/git-town/git-town/issues/3003)).
+- The Git Town CLI can now embed breadcrumbs into proposals. To enable this feature, set the new configuration setting `proposal-breadcrumb` to `stacks` or `branches`. ([more info](https://www.git-town.com/preferences/proposal-breadcrumb.html), [#3003](https://github.com/git-town/git-town/issues/3003)).
 
 #### Bug Fixes
 
