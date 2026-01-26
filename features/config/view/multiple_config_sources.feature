@@ -31,7 +31,7 @@ Feature: show the configuration
     And Git setting "git-town.order" is "desc"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -65,6 +65,9 @@ Feature: show the configuration
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
+
+      [propose]
+      breadcrumb = "stacks"
 
       [ship]
       delete-tracking-branch = true
@@ -124,7 +127,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: cli
+        breadcrumb: stacks
 
       Ship:
         delete tracking branch: no

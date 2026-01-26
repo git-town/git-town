@@ -40,6 +40,9 @@ Feature: display information from config file
       github-connector = "gh"
       origin-hostname = "github.com"
 
+      [propose]
+      breadcrumb = "stacks"
+
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
@@ -100,7 +103,7 @@ Feature: display information from config file
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: none
+        breadcrumb: stacks
 
       Ship:
         delete tracking branch: yes
@@ -118,4 +121,5 @@ Feature: display information from config file
         push branches: no
         sync tags: no
         sync with upstream: yes
+        auto-resolve phantom conflicts: no
       """

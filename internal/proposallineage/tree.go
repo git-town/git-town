@@ -10,6 +10,14 @@ type TreeNode struct {
 	Children []TreeNode
 }
 
+func (self TreeNode) BranchCount() int {
+	result := 1
+	for _, child := range self.Children {
+		result += child.BranchCount()
+	}
+	return result
+}
+
 // CalculateTree provides the full lineage tree for the given branch,
 // from the perennial root to all leafs that have the given branch as a descendent.
 func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, order configdomain.Order) TreeNode {

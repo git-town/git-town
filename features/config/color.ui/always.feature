@@ -29,6 +29,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"
@@ -76,7 +77,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: none
+        breadcrumb: stacks
 
       Ship:
         delete tracking branch: yes
@@ -120,7 +121,7 @@ Feature: show the configuration
       origin-hostname = "github.com"
 
       [propose]
-      breadcrumb = "cli"
+      breadcrumb = "stacks"
 
       [ship]
       delete-tracking-branch = true
@@ -181,7 +182,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: cli
+        breadcrumb: stacks
 
       Ship:
         delete tracking branch: yes
@@ -216,6 +217,7 @@ Feature: show the configuration
     And Git setting "git-town.order" is "desc"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
+    And Git setting "git-town.proposal-breadcrumb" is "branches"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -247,6 +249,9 @@ Feature: show the configuration
       browser = "chrome"
       forge-type = "github"
       origin-hostname = "github.com"
+
+      [propose]
+      breadcrumb = "stacks"
 
       [ship]
       delete-tracking-branch = true
@@ -307,7 +312,7 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Propose:
-        breadcrumb: none
+        breadcrumb: branches
 
       Ship:
         delete tracking branch: no

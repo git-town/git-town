@@ -51,7 +51,7 @@ gitlab-connector = "glab"
 origin-hostname = "github.com"
 
 [propose]
-breadcrumb = "cli"
+breadcrumb = "stacks"
 
 [ship]
 delete-tracking-branch = false
@@ -102,7 +102,7 @@ upstream = true
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Breadcrumb: Ptr("cli"),
+					Breadcrumb: Ptr("stacks"),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),
@@ -173,7 +173,7 @@ upstream = true
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("public", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
-				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbCLI),
+				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbStacks),
 				PushBranches:             None[configdomain.PushBranches](),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPush),

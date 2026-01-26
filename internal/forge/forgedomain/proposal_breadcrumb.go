@@ -13,13 +13,33 @@ import (
 type ProposalBreadcrumb string
 
 const (
-	ProposalBreadcrumbNone ProposalBreadcrumb = "none" // don't display lineage in proposals
-	ProposalBreadcrumbCLI  ProposalBreadcrumb = "cli"  // the Git Town CLI should embed the lineage into proposals
+	ProposalBreadcrumbNone     ProposalBreadcrumb = "none"     // don't display lineage in proposals
+	ProposalBreadcrumbStacks   ProposalBreadcrumb = "stacks"   // the Git Town CLI should embed breadcrumbs into proposals for stacks with more than one branch
+	ProposalBreadcrumbBranches ProposalBreadcrumb = "branches" // the Git Town CLI should embed breadcrumbs into proposals for all branches
 )
 
-// Enabled indicates whether the Git Town CLI should embed the breadcrumb into proposals.
+// EmbedBreadcrumb indicates whether the user has configured to embed breadcrumbs into proposals.
+func (self ProposalBreadcrumb) DisplayBreadcrumb(stackSize int) bool {
+	switch self {
+	case ProposalBreadcrumbBranches:
+		return true
+	case ProposalBreadcrumbNone:
+		return false
+	case ProposalBreadcrumbStacks:
+		return stackSize > 2
+	}
+	panic(fmt.Sprintf("unexpected ProposalBreadcrumb: %#v", self))
+}
+
+// Enabled indicates whether the Git Town CLI should display the breadcrumb of the given size.
 func (self ProposalBreadcrumb) Enabled() bool {
-	return self == ProposalBreadcrumbCLI
+	switch self {
+	case ProposalBreadcrumbBranches, ProposalBreadcrumbStacks:
+		return true
+	case ProposalBreadcrumbNone:
+		return false
+	}
+	panic(fmt.Sprintf("unexpected ProposalBreadcrumb: %#v", self))
 }
 
 func (self ProposalBreadcrumb) String() string {
@@ -32,8 +52,10 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 		return None[ProposalBreadcrumb](), nil
 	case ProposalBreadcrumbNone.String():
 		return Some(ProposalBreadcrumbNone), nil
-	case ProposalBreadcrumbCLI.String():
-		return Some(ProposalBreadcrumbCLI), nil
+	case ProposalBreadcrumbBranches.String():
+		return Some(ProposalBreadcrumbBranches), nil
+	case ProposalBreadcrumbStacks.String():
+		return Some(ProposalBreadcrumbStacks), nil
 	}
 	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposal-breadcrumb")
 	if err != nil {
@@ -42,7 +64,7 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 	if parsed, has := parsedOpt.Get(); has {
 		if parsed {
 			// The CLI is configured with "true" --> assume the user wants the CLI to embed lineage into proposals.
-			return Some(ProposalBreadcrumbCLI), nil
+			return Some(ProposalBreadcrumbBranches), nil
 		}
 		return Some(ProposalBreadcrumbNone), nil
 	}

@@ -35,7 +35,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	}
 	for _, proposal := range proposals {
 		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
-		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
+		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Config.Value.NormalConfig.ProposalBreadcrumb, args.Connector)
 		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
 		if updatedProposalBody == oldProposalBody {
 			continue

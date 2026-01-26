@@ -1,4 +1,4 @@
-Feature: detach the current feature branch from a stack and update proposals
+Feature: delete the current feature branch from a stack and update proposals
 
   Background:
     Given a Git repo with origin
@@ -17,42 +17,28 @@ Feature: detach the current feature branch from a stack and update proposals
       | 3  | gamma1        | beta          | gamma1 proposal | gamma1 body | https://example.com/pr/3 |
       | 4  | gamma2        | beta          | gamma2 proposal | gamma2 body | https://example.com/pr/4 |
       | 5  | delta         | gamma2        | delta proposal  | delta body  | https://example.com/pr/5 |
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And the current branch is "beta"
-    When I run "git-town detach"
+    When I run "git-town delete"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | beta   | git fetch --prune --tags                                         |
-      |        | Finding proposal from beta into alpha ... #2 (beta proposal)     |
       |        | Finding proposal from gamma1 into beta ... #3 (gamma1 proposal)  |
       |        | Finding proposal from gamma2 into beta ... #4 (gamma2 proposal)  |
-      |        | git checkout gamma1                                              |
-      | gamma1 | git pull                                                         |
-      |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
-      |        | git push --force-with-lease                                      |
-      |        | git checkout gamma2                                              |
-      | gamma2 | git pull                                                         |
-      |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
-      |        | git push --force-with-lease                                      |
-      |        | git checkout delta                                               |
-      | delta  | git pull                                                         |
-      |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta         |
-      |        | git push --force-with-lease                                      |
-      |        | git checkout beta                                                |
-      | beta   | git -c rebase.updateRefs=false rebase --onto main alpha          |
-      |        | Updating target branch of proposal #2 to main ... ok             |
       |        | Updating target branch of proposal #3 to alpha ... ok            |
       |        | Updating target branch of proposal #4 to alpha ... ok            |
+      |        | git push origin :beta                                            |
+      |        | git checkout delta                                               |
+      | delta  | git branch -D beta                                               |
       |        | Finding all proposals for alpha ... main                         |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
       |        | Finding proposal from gamma1 into alpha ... #3 (gamma1 proposal) |
       |        | Finding proposal from gamma2 into alpha ... #4 (gamma2 proposal) |
       |        | Finding proposal from delta into gamma2 ... #5 (delta proposal)  |
       |        | Update body for #1 ... ok                                        |
-      |        | Finding all proposals for beta ... main                          |
-      |        | Finding proposal from beta into main ... #2 (beta proposal)      |
+      |        | Finding all proposals for beta ... alpha                         |
       |        | Update body for #2 ... ok                                        |
       |        | Finding all proposals for delta ... gamma2                       |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
@@ -69,11 +55,10 @@ Feature: detach the current feature branch from a stack and update proposals
           gamma1
           gamma2
             delta
-        beta
       """
     And the branches are now
-      | REPOSITORY    | BRANCHES                                 |
-      | local, origin | main, alpha, beta, delta, gamma1, gamma2 |
+      | REPOSITORY    | BRANCHES                           |
+      | local, origin | main, alpha, delta, gamma1, gamma2 |
     And no uncommitted files exist now
     And the proposals are now
       """
@@ -100,17 +85,11 @@ Feature: detach the current feature branch from a stack and update proposals
       url: https://example.com/pr/2
       number: 2
       source: beta
-      target: main
+      target: alpha
       body:
         beta body
 
         <!-- branch-stack-start -->
-
-        -------------------------
-        - main
-          - https://example.com/pr/2 :point_left:
-
-        <sup>[Stack](https://www.git-town.com/how-to/proposal-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
         <!-- branch-stack-end -->
 
@@ -169,16 +148,17 @@ Feature: detach the current feature branch from a stack and update proposals
         <sup>[Stack](https://www.git-town.com/how-to/proposal-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
         <!-- branch-stack-end -->
-
       """
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                         |
-      |        | Updating target branch of proposal #2 to alpha ... ok           |
+      | delta  | git branch beta {{ sha 'initial commit' }}                      |
+      |        | git push -u origin beta                                         |
       |        | Updating target branch of proposal #3 to beta ... ok            |
       |        | Updating target branch of proposal #4 to beta ... ok            |
+      |        | git checkout beta                                               |
       |        | Finding all proposals for alpha ... main                        |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)   |
       |        | Finding proposal from gamma1 into alpha ... none                |
@@ -186,8 +166,6 @@ Feature: detach the current feature branch from a stack and update proposals
       |        | Finding proposal from delta into gamma2 ... #5 (delta proposal) |
       |        | Update body for #1 ... ok                                       |
       |        | Finding all proposals for beta ... alpha                        |
-      |        | Finding proposal from beta into main ... none                   |
-      |        | Update body for #2 ... ok                                       |
       |        | Finding all proposals for delta ... gamma2                      |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)   |
       |        | Finding proposal from gamma2 into alpha ... none                |
@@ -230,12 +208,6 @@ Feature: detach the current feature branch from a stack and update proposals
         beta body
 
         <!-- branch-stack-start -->
-
-        -------------------------
-        - main
-          - beta :point_left:
-
-        <sup>[Stack](https://www.git-town.com/how-to/proposal-breadcrumb.html) generated by [Git Town](https://github.com/git-town/git-town)</sup>
 
         <!-- branch-stack-end -->
 

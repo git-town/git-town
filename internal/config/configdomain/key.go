@@ -3,6 +3,7 @@ package configdomain
 import (
 	"encoding/json"
 
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/pkg"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -240,6 +241,16 @@ var ObsoleteBranchLists = map[Key]BranchType{
 
 // ConfigUpdates defines the config that should have its keys and values to be updated
 var ConfigUpdates = []ConfigUpdate{
+	{
+		Before: ConfigSetting{
+			Key:   KeyProposalBreadcrumb,
+			Value: "cli",
+		},
+		After: ConfigSetting{
+			Key:   KeyProposalBreadcrumb,
+			Value: string(forgedomain.ProposalBreadcrumbBranches),
+		},
+	},
 	{
 		Before: ConfigSetting{
 			Key:   KeyDeprecatedAliasKill,

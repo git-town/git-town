@@ -11,6 +11,37 @@ import (
 func TestTreeNode(t *testing.T) {
 	t.Parallel()
 
+	t.Run("BranchCount", func(t *testing.T) {
+		t.Parallel()
+		t.Run("deep tree", func(t *testing.T) {
+			t.Parallel()
+			tree := proposallineage.TreeNode{
+				Branch: "main",
+				Children: []proposallineage.TreeNode{
+					{Branch: "branch-1"},
+					{Branch: "branch-2", Children: []proposallineage.TreeNode{
+						{Branch: "branch-2a", Children: []proposallineage.TreeNode{
+							{Branch: "branch-2a1"},
+						}},
+					}},
+				},
+			}
+			have := tree.BranchCount()
+			must.EqOp(t, 5, have)
+		})
+		t.Run("single branch", func(t *testing.T) {
+			t.Parallel()
+			tree := proposallineage.TreeNode{
+				Branch: "main",
+				Children: []proposallineage.TreeNode{
+					{Branch: "branch-1"},
+				},
+			}
+			have := tree.BranchCount()
+			must.EqOp(t, 2, have)
+		})
+	})
+
 	t.Run("CalculateTree", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch in a long lineage", func(t *testing.T) {

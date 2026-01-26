@@ -90,7 +90,7 @@ Feature: change existing information in Git metadata
       | git config git-town.observed-regex obs                   |
       | git config git-town.order asc                            |
       | git config git-town.perennial-regex per                  |
-      | git config git-town.proposal-breadcrumb cli              |
+      | git config git-town.proposal-breadcrumb stacks           |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
@@ -125,7 +125,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.perennial-regex" is now "per"
-    And local Git setting "git-town.proposal-breadcrumb" is now "cli"
+    And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "push"

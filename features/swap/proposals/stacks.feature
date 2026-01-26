@@ -19,7 +19,7 @@ Feature: swap a feature branch and update proposals
       | 1  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
       | 2  | branch-2      | branch-1      | branch-2 proposal | branch-2 body | https://example.com/pr/2 |
       | 3  | branch-3      | branch-2      | branch-3 proposal | branch-3 body | https://example.com/pr/3 |
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And the current branch is "branch-2"
     When I run "git-town swap"
 

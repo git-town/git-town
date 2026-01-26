@@ -72,7 +72,7 @@ func TestSave(t *testing.T) {
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           perennialRegex,
-				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbCLI),
+				ProposalBreadcrumb:       Some(forgedomain.ProposalBreadcrumbBranches),
 				PushBranches:             Some(configdomain.PushBranches(true)),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),
@@ -115,7 +115,7 @@ gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]
-breadcrumb = "cli"
+breadcrumb = "branches"
 
 [ship]
 delete-tracking-branch = true

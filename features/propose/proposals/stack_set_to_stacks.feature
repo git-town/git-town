@@ -1,4 +1,4 @@
-Feature: propose an entire stack with embedded lineages
+Feature: propose a stack with "stacks" setting
 
   Background:
     Given a Git repo with origin
@@ -16,7 +16,7 @@ Feature: propose an entire stack with embedded lineages
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE             | BODY          | URL                      |
       | 1  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
+    And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And the current branch is "branch-2"
     And tool "open" is installed
     When I run "git-town propose --stack"
