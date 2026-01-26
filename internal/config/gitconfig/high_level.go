@@ -142,10 +142,6 @@ func RemoveProposalBreadcrumb(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumb)
 }
 
-func RemoveProposalBreadcrumbSingle(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumbSingle)
-}
-
 func RemovePushBranches(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushBranches)
 }

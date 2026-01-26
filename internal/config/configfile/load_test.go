@@ -51,8 +51,7 @@ gitlab-connector = "glab"
 origin-hostname = "github.com"
 
 [propose]
-breadcrumb = "cli"
-breadcrumb-single = false
+breadcrumb = "stacks"
 
 [ship]
 delete-tracking-branch = false

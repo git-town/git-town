@@ -1,4 +1,4 @@
-Feature: propose single branch, breadcrumb-single enabled
+Feature: propose single branch, set to "branches"
 
   Background:
     Given a Git repo with origin
@@ -9,8 +9,7 @@ Feature: propose single branch, breadcrumb-single enabled
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
-    And Git setting "git-town.proposal-breadcrumb" is "cli"
-    And Git setting "git-town.proposal-breadcrumb-single" is "yes"
+    And Git setting "git-town.proposal-breadcrumb" is "branches"
     And the current branch is "branch-1"
     And tool "open" is installed
     When I run "git-town propose"
