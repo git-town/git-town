@@ -40,7 +40,7 @@ func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forge
 		},
 		{
 			Data: Some(forgedomain.ProposalBreadcrumbBranches),
-			Text: "Git Town CLI embeds the breadcrumbs for all branches into proposals",
+			Text: "Git Town CLI embeds the breadcrumbs into all proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
