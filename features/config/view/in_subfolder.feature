@@ -26,18 +26,18 @@ Feature: show the configuration from a subfolder
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -51,16 +51,15 @@ Feature: show the configuration from a subfolder
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         breadcrumb: none
-        breadcrumb single branch: no
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes

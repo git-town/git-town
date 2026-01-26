@@ -53,7 +53,6 @@ Feature: change existing information in Git metadata
       | ignore-uncommitted          | up enter               |
       | order                       | up enter               |
       | proposal breadcrumb         | down enter             |
-      | proposal breadcrumb single  | down enter             |
       | config storage              | enter                  |
 
   Scenario: result
@@ -92,7 +91,6 @@ Feature: change existing information in Git metadata
       | git config git-town.order asc                            |
       | git config git-town.perennial-regex per                  |
       | git config git-town.proposal-breadcrumb cli              |
-      | git config git-town.proposal-breadcrumb-single false     |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |

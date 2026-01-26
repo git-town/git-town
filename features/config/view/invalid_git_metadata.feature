@@ -13,7 +13,6 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.order" is "zonk"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposal-breadcrumb" is "zonk"
-    And local Git setting "git-town.proposal-breadcrumb-single" is "zonk"
     And local Git setting "git-town.push-branches" is "zonk"
     And local Git setting "git-town.push-hook" is "zonk"
     And local Git setting "git-town.share-new-branches" is "zonk"
@@ -39,7 +38,6 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
       Ignoring invalid value for "git-town.proposal-breadcrumb": "zonk"
-      Ignoring invalid value for "git-town.proposal-breadcrumb-single": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
@@ -52,7 +50,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.sync-tags": "zonk"
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
-
+      
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
@@ -67,18 +65,18 @@ Feature: display invalid Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -92,16 +90,15 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         breadcrumb: none
-        breadcrumb single branch: no
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes

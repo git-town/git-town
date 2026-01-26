@@ -39,7 +39,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is "none"
-    And local Git setting "git-town.proposal-breadcrumb-single" is "false"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
@@ -84,7 +83,6 @@ Feature: remove existing configuration in Git metadata
       | ignore-uncommitted          | up enter                                                                    | disable             |
       | order                       | up enter                                                                    |                     |
       | proposal breadcrumb         | down enter                                                                  |                     |
-      | proposal breadcrumb single  | up enter                                                                    |                     |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
@@ -119,7 +117,6 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.order asc                        |
       | git config --unset git-town.perennial-regex          |
       | git config git-town.proposal-breadcrumb cli          |
-      | git config git-town.proposal-breadcrumb-single true  |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
@@ -156,7 +153,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" is now "cli"
-    And local Git setting "git-town.proposal-breadcrumb-single" is now "true"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -197,7 +193,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is now "none"
-    And local Git setting "git-town.proposal-breadcrumb-single" is now "false"
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"
