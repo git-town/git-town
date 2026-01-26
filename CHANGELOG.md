@@ -1,8 +1,8 @@
 # Git Town Changelog
 
-## 22.5.0 (unreleased)
+## 22.5.0 (2025-01-26)
 
-- The Git Town CLI can now embed branch lineage directly into proposals. To enable it, configure proposal-breadcrumb to `stacks` or `branches`.
+- The Git Town CLI can now embed breadcrumbs into proposals. To enable this feature, set the new configuration setting `proposal-breadcrumb` to `stacks` or `branches`. ([more info](), [#3003](https://github.com/git-town/git-town/issues/3003)).
 
 ## 22.4.0 (2025-12-24)
 
