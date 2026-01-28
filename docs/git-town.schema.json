@@ -143,7 +143,13 @@
         "breadcrumb": {
           "type": "string"
         },
+        "direction": {
+          "type": "string"
+        },
         "lineage": {
+          "type": "string"
+        },
+        "style": {
           "type": "string"
         }
       },
