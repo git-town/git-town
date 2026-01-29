@@ -19,8 +19,8 @@ This setting accepts the following values:
 ## config file
 
 ```toml
-[sync]
-proposal-breadcrumb = "stacks"
+[propose]
+breadcrumb = "stacks"
 ```
 
 ## Git metadata
