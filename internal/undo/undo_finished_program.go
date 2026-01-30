@@ -41,7 +41,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
 				Config:          args.Config,
 				Program:         result,
-				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames(),
+				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames().Remove(args.Config.MainAndPerennials()...),
 			})
 		}
 	}
