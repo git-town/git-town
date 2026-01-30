@@ -15,7 +15,8 @@ type AddSyncProposalsProgramArgs struct {
 }
 
 func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
-	affectedBranches := args.Config.NormalConfig.Lineage.Clan(args.TouchedBranches, args.Config.MainAndPerennials())
+	touchedWithoutPerennials := args.TouchedBranches.Remove(args.Config.MainAndPerennials()...)
+	affectedBranches := args.Config.NormalConfig.Lineage.Clan(touchedWithoutPerennials, args.Config.MainAndPerennials())
 	for _, branch := range affectedBranches {
 		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
 	}
