@@ -64,12 +64,6 @@ commit message.
 Set the ship strategy in the [config file](../configuration-file.md):
 
 ```toml
-ship.strategy = "api"
-```
-
-or
-
-```toml
 [ship]
 strategy = "api"
 ```
@@ -79,7 +73,7 @@ strategy = "api"
 To manually configure the ship strategy in Git metadata, run:
 
 ```wrap
-git config [--global] git-town.ship-strategy <api|squash-merge>
+git config [--global] git-town.ship-strategy <always-merge|api|fast-forward|squash-merge>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
