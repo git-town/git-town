@@ -44,8 +44,6 @@ Feature: sync the current feature branch and update proposals
       |          | Finding all proposals for branch-3 ... branch-2                         |
       |          | Finding proposal from branch-2 into branch-1 ... #2 (branch-2 proposal) |
       |          | Update body for #3 ... ok                                               |
-      |          | Finding all proposals for other ... main                                |
-      |          | Update body for #4 ... ok                                               |
     And the proposals are now
       """
       url: https://example.com/pr/1
@@ -111,10 +109,6 @@ Feature: sync the current feature branch and update proposals
       target: main
       body:
         other body
-
-        <!-- branch-stack-start -->
-
-        <!-- branch-stack-end -->
       """
 
   Scenario: undo
@@ -130,6 +124,7 @@ Feature: sync the current feature branch and update proposals
       |          | Finding all proposals for branch-2 ... branch-1                         |
       |          | Finding all proposals for branch-3 ... branch-2                         |
       |          | Finding all proposals for other ... main                                |
+      |          | Update body for #4 ... ok                                               |
     And the initial branches and lineage exist now
     And the proposals are now
       """
