@@ -38,8 +38,6 @@ Feature: sync stacked changes and update proposals
       |        | Finding proposal from parent into main ... #1 (parent proposal)                        |
       |        | Finding proposal from child into parent ... #2 (child proposal)                        |
       |        | Update body for #2 ... ok                                                              |
-      |        | Finding all proposals for other ... main                                               |
-      |        | Update body for #3 ... ok                                                              |
       |        | Finding all proposals for parent ... main                                              |
       |        | Finding proposal from child into parent ... #2 (child proposal)                        |
       |        | Update body for #1 ... ok                                                              |
@@ -87,10 +85,6 @@ Feature: sync stacked changes and update proposals
       target: main
       body:
         other body
-
-        <!-- branch-stack-start -->
-
-        <!-- branch-stack-end -->
       """
 
   Scenario: undo
@@ -107,6 +101,7 @@ Feature: sync stacked changes and update proposals
       |        | Finding proposal from parent into main ... #1 (parent proposal) |
       |        | Finding proposal from child into parent ... #2 (child proposal) |
       |        | Finding all proposals for other ... main                        |
+      |        | Update body for #3 ... ok                                       |
       |        | Finding all proposals for parent ... main                       |
     And the initial branches and lineage exist now
     And the proposals are now
