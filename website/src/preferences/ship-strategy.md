@@ -32,7 +32,9 @@ in the official Git documentation for more information.
 ### fast-forward
 
 The `fast-forward` ship strategy prevents false merge conflicts when using
-[stacked changes](../stacked-changes.md). It runs
+[stacked changes](../stacked-changes.md) and allows to
+[Ship several branches in a stack](../how-to/ship-stack.md) without unnecessary
+CI runs. It runs
 [git merge --ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only)
 which fast-forwards the parent branch to contain the commits of the branch to
 ship and then pushes the new commits on the parent branch to the
