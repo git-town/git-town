@@ -100,7 +100,24 @@ OUTPUT END
 }
 
 func ReplaceSecrets(outputBytes []byte) []byte {
-	return outputBytes
+	lines := bytes.Split(outputBytes, []byte("\n"))
+	secretKeys := [][]byte{
+		[]byte("git-town.github-token"),
+		[]byte("git-town.gitlab-token"),
+		[]byte("git-town.forgejo-token"),
+		[]byte("git-town.bitbucket-app-password"),
+		[]byte("git-town.gitea-token"),
+		[]byte("user.email"),
+	}
+	for i, line := range lines {
+		for _, key := range secretKeys {
+			if bytes.Equal(line, key) && i+1 < len(lines) {
+				lines[i+1] = []byte("(redacted)")
+				break
+			}
+		}
+	}
+	return bytes.Join(lines, []byte("\n"))
 }
 
 func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
