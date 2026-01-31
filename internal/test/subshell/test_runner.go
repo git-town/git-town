@@ -239,7 +239,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	if self.Verbose {
 		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, stringslice.JoinArgs(args))
-		os.Stdout.Write(bytes.ReplaceAll(outputBuf.Bytes(), []byte{0x00}, []byte{'\n', '\n'}))
+		outputBytes := subshell.ReplaceZeroWithNewlines(outputBuf.Bytes())
+		os.Stdout.Write(outputBytes)
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
