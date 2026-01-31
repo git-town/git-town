@@ -99,10 +99,6 @@ OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
-func write(output bytestream.Sanitized) {
-	os.Stdout.Write(output)
-}
-
 func containsConcurrentGitAccess(text string) bool {
 	return strings.Contains(text, "fatal: Unable to create '") && strings.Contains(text, "index.lock': File exists.")
 }
@@ -116,4 +112,8 @@ func printHeader(env []string, cmd string, args ...string) {
 	}
 	text += cmd + " " + strings.Join(quoted, " ")
 	fmt.Println(colors.Bold().Styled(text))
+}
+
+func write(output bytestream.Sanitized) {
+	os.Stdout.Write(output)
 }
