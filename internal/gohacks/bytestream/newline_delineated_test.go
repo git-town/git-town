@@ -24,6 +24,13 @@ func TestNewlineDelineated(t *testing.T) {
 			want := Sanitized([]byte("hello world"))
 			must.SliceEqOp(t, want, have)
 		})
+		t.Run("deprecated Codeberg Token", func(t *testing.T) {
+			t.Parallel()
+			give := NewlineDelineated([]byte("hello\n\ngit-town.codeberg-token\n1234567890\n\nworld"))
+			have := give.Sanitize()
+			want := Sanitized([]byte("hello\n\ngit-town.codeberg-token\n(redacted)\n\nworld"))
+			must.SliceEqOp(t, want, have)
+		})
 		t.Run("GitHub Token", func(t *testing.T) {
 			t.Parallel()
 			give := NewlineDelineated([]byte("hello\n\ngit-town.github-token\n1234567890\n\nworld"))
