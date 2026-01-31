@@ -1,7 +1,6 @@
 package subshell
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
@@ -12,6 +11,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/bytestream"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/pkg/colors"
@@ -54,7 +54,7 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	}
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
-	var outputBytes []byte
+	var outputBytes bytestream.NullDelineated
 	var err error
 	for {
 		subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
@@ -79,9 +79,9 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		outputBytes = ReplaceZeroWithNewlines(outputBytes)
-		outputBytes = ReplaceSecrets(outputBytes)
-		os.Stdout.Write(outputBytes)
+		newlineDelineated := outputBytes.ToNewlines()
+		sanitized := newlineDelineated.Sanitize()
+		write(sanitized)
 	}
 	return outputText, err
 }
@@ -99,29 +99,8 @@ OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
-func ReplaceSecrets(outputBytes []byte) []byte {
-	lines := bytes.Split(outputBytes, []byte("\n"))
-	secretKeys := [][]byte{
-		[]byte("git-town.github-token"),
-		[]byte("git-town.gitlab-token"),
-		[]byte("git-town.forgejo-token"),
-		[]byte("git-town.bitbucket-app-password"),
-		[]byte("git-town.gitea-token"),
-		[]byte("user.email"),
-	}
-	for i, line := range lines {
-		for _, key := range secretKeys {
-			if bytes.Equal(line, key) && i+1 < len(lines) {
-				lines[i+1] = []byte("(redacted)")
-				break
-			}
-		}
-	}
-	return bytes.Join(lines, []byte("\n"))
-}
-
-func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
-	return bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'})
+func write(output bytestream.Sanitized) {
+	os.Stdout.Write(output)
 }
 
 func containsConcurrentGitAccess(text string) bool {
