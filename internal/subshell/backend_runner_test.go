@@ -67,6 +67,66 @@ OUTPUT END
 		})
 	})
 
+	t.Run("ReplaceSecrets", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty input", func(t *testing.T) {
+			t.Parallel()
+			give := []byte{}
+			have := subshell.ReplaceSecrets(give)
+			want := []byte{}
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("no secrets", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello world")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello world")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("GitHub Token", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nGITHUB_TOKEN\n1234567890\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nGITHUB_TOKEN\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("GitLab Token", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nGITLAB_TOKEN\n1234567890\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nGITLAB_TOKEN\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("Forgejo Token", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nFORGEJO_TOKEN\n1234567890\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nFORGEJO_TOKEN\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("Bitbucket Token", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nBITBUCKET_APP_PASSWORD\n1234567890\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nBITBUCKET_APP_PASSWORD\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("Gitea Token", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nGITEA_TOKEN\n1234567890\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nGITEA_TOKEN\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+		t.Run("user email", func(t *testing.T) {
+			t.Parallel()
+			give := []byte("hello\n\nuser.email\nuser@example.com\n\nworld")
+			have := subshell.ReplaceSecrets(give)
+			want := []byte("hello\n\nuser.email\n(redacted)\n\nworld")
+			must.SliceEqOp(t, want, have)
+		})
+	})
+
 	t.Run("ReplaceZeroWithNewlines", func(t *testing.T) {
 		t.Parallel()
 

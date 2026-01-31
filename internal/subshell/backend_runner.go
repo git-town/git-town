@@ -79,6 +79,7 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
+		outputBytes = ReplaceSecrets(outputBytes)
 		outputBytes = ReplaceZeroWithNewlines(outputBytes)
 		os.Stdout.Write(outputBytes)
 	}
@@ -96,6 +97,10 @@ OUTPUT START
 %s
 OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
+}
+
+func ReplaceSecrets(outputBytes []byte) []byte {
+	return outputBytes
 }
 
 func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
