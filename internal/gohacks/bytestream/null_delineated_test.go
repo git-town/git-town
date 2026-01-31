@@ -8,6 +8,8 @@ import (
 )
 
 func TestNullDelineated(t *testing.T) {
+	t.Parallel()
+
 	t.Run("ToNewlines", func(t *testing.T) {
 		t.Parallel()
 
