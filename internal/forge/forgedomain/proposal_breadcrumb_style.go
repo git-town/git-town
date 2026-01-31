@@ -11,8 +11,8 @@ import (
 type ProposalBreadcrumbStyle string
 
 const (
-	ProposalBreadcrumbStyleTree ProposalBreadcrumbStyle = "tree"
-	ProposalBreadcrumbStyleAuto ProposalBreadcrumbStyle = "auto"
+	ProposalBreadcrumbStyleTree ProposalBreadcrumbStyle = "tree" // always render the breadcrumb as a tree, even if linear
+	ProposalBreadcrumbStyleAuto ProposalBreadcrumbStyle = "auto" // render the breadcrumb flat if linear, otherwise as a tree
 )
 
 func (self ProposalBreadcrumbStyle) String() string {
