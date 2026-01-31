@@ -80,7 +80,7 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	@tools/rta conc --show=failed \
+	@tools/rta conc --show=names \
 		"make --no-print-directory lint-smoke" \
 		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
@@ -199,14 +199,14 @@ stats-release:  # displays statistics about the changes since the last release
 
 .PHONY: test
 test: install node_modules tools/rta@${RTA_VERSION}  # runs all the tests
-	@tools/rta conc --show=failed \
+	@tools/rta conc --show=names \
 		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
 test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
-	@tools/rta conc --show=failed \
+	@tools/rta conc --show=names \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
