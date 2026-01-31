@@ -1,6 +1,10 @@
 package bytestream
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+)
 
 // NewlineDelineated is raw Git output that is delineated by newlines.
 type NewlineDelineated []byte
@@ -8,13 +12,13 @@ type NewlineDelineated []byte
 func (self NewlineDelineated) Sanitize() Sanitized {
 	lines := bytes.Split(self, []byte("\n"))
 	secretKeys := [][]byte{
-		[]byte("git-town.bitbucket-app-password"),
-		[]byte("git-town.codeberg-token"),
-		[]byte("git-town.forgejo-token"),
-		[]byte("git-town.gitea-token"),
-		[]byte("git-town.github-token"),
-		[]byte("git-town.gitlab-token"),
-		[]byte("user.email"),
+		[]byte(configdomain.KeyBitbucketAppPassword),
+		[]byte(configdomain.KeyDeprecatedCodebergToken),
+		[]byte(configdomain.KeyForgejoToken),
+		[]byte(configdomain.KeyGiteaToken),
+		[]byte(configdomain.KeyGithubToken),
+		[]byte(configdomain.KeyGitlabToken),
+		[]byte(configdomain.KeyGitUserEmail),
 	}
 	for i, line := range lines {
 		for _, key := range secretKeys {
