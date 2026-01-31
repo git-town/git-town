@@ -78,6 +78,8 @@ Feature: show the configuration
 
       Propose:
         breadcrumb: stacks
+        breadcrumb direction: down
+        breadcrumb style: tree
 
       Ship:
         delete tracking branch: yes
