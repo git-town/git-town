@@ -167,8 +167,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialBranches:           gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: None[forgedomain.ProposalBreadcrumbDirection](), // not loaded from env vars
-		ProposalBreadcrumbStyle:     None[forgedomain.ProposalBreadcrumbStyle](),     // not loaded from env vars
+		ProposalBreadcrumbDirection: None[forgedomain.ProposalBreadcrumbDirection](), // TODO: load this from the env vars
+		ProposalBreadcrumbStyle:     None[forgedomain.ProposalBreadcrumbStyle](),     // TODO: load this from the env vars
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
