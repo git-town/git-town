@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/bytestream"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/subshell"
 	"github.com/git-town/git-town/v22/internal/test/envvars"
@@ -239,7 +240,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	if self.Verbose {
 		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, stringslice.JoinArgs(args))
-		os.Stdout.Write(subshell.ReplaceZeroWithNewlines(outputBuf.Bytes()))
+		os.Stdout.Write(bytestream.NullDelineated(outputBuf.Bytes()).ToNewlines())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}

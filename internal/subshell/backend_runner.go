@@ -1,7 +1,6 @@
 package subshell
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
@@ -12,6 +11,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/bytestream"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/pkg/colors"
@@ -54,7 +54,7 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	}
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
-	var outputBytes []byte
+	var outputBytes bytestream.NullDelineated
 	var err error
 	for {
 		subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
@@ -79,8 +79,9 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		outputBytes = ReplaceZeroWithNewlines(outputBytes)
-		os.Stdout.Write(outputBytes)
+		newlineDelineated := outputBytes.ToNewlines()
+		sanitized := newlineDelineated.Sanitize()
+		write(sanitized)
 	}
 	return outputText, err
 }
@@ -98,10 +99,6 @@ OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
-func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
-	return bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'})
-}
-
 func containsConcurrentGitAccess(text string) bool {
 	return strings.Contains(text, "fatal: Unable to create '") && strings.Contains(text, "index.lock': File exists.")
 }
@@ -115,4 +112,8 @@ func printHeader(env []string, cmd string, args ...string) {
 	}
 	text += cmd + " " + strings.Join(quoted, " ")
 	fmt.Println(colors.Bold().Styled(text))
+}
+
+func write(output bytestream.Sanitized) {
+	os.Stdout.Write(output)
 }
