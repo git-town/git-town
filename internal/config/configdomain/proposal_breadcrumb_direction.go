@@ -1,4 +1,4 @@
-package forgedomain
+package configdomain
 
 import (
 	"fmt"

@@ -179,7 +179,7 @@ EnterForgeData:
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
-	proposalBreadcrumb := None[forgedomain.ProposalBreadcrumb]()
+	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -313,8 +313,8 @@ EnterForgeData:
 		PerennialBranches:           perennialBranches,
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: None[forgedomain.ProposalBreadcrumbDirection](), // TODO: add this to the setup assistant
-		ProposalBreadcrumbStyle:     None[forgedomain.ProposalBreadcrumbStyle](),     // TODO: add this to the setup assistant
+		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](), // TODO: add this to the setup assistant
+		ProposalBreadcrumbStyle:     None[configdomain.ProposalBreadcrumbStyle](),     // TODO: add this to the setup assistant
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
@@ -624,11 +624,11 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 	})
 }
 
-func enterProposalBreadcrumb(data Data) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+func enterProposalBreadcrumb(data Data) (Option[configdomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
 	if data.Config.File.ProposalBreadcrumb.IsSome() {
-		return None[forgedomain.ProposalBreadcrumb](), false, nil
+		return None[configdomain.ProposalBreadcrumb](), false, nil
 	}
-	return dialog.ProposalBreadcrumb(dialog.Args[forgedomain.ProposalBreadcrumb]{
+	return dialog.ProposalBreadcrumb(dialog.Args[configdomain.ProposalBreadcrumb]{
 		Global: data.Config.GitGlobal.ProposalBreadcrumb,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ProposalBreadcrumb,

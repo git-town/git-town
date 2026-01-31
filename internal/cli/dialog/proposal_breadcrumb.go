@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -20,26 +20,26 @@ const (
 `
 )
 
-func ProposalBreadcrumb(args Args[forgedomain.ProposalBreadcrumb]) (Option[forgedomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.ProposalBreadcrumb]]{}
+func ProposalBreadcrumb(args Args[configdomain.ProposalBreadcrumb]) (Option[configdomain.ProposalBreadcrumb], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.ProposalBreadcrumb]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.ProposalBreadcrumb]]{
-			Data: None[forgedomain.ProposalBreadcrumb](),
+		entries = append(entries, list.Entry[Option[configdomain.ProposalBreadcrumb]]{
+			Data: None[configdomain.ProposalBreadcrumb](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
 
-	entries = append(entries, list.Entries[Option[forgedomain.ProposalBreadcrumb]]{
+	entries = append(entries, list.Entries[Option[configdomain.ProposalBreadcrumb]]{
 		{
-			Data: Some(forgedomain.ProposalBreadcrumbNone),
+			Data: Some(configdomain.ProposalBreadcrumbNone),
 			Text: "no breadcrumb in proposals, or use the Git Town GitHub Action",
 		},
 		{
-			Data: Some(forgedomain.ProposalBreadcrumbStacks),
+			Data: Some(configdomain.ProposalBreadcrumbStacks),
 			Text: "Git Town CLI embeds the breadcrumbs for stacks containing more than 2 branches into proposals",
 		},
 		{
-			Data: Some(forgedomain.ProposalBreadcrumbBranches),
+			Data: Some(configdomain.ProposalBreadcrumbBranches),
 			Text: "Git Town CLI embeds the breadcrumbs into all proposals",
 		},
 	}...)
