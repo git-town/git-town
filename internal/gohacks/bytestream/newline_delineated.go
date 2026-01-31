@@ -8,11 +8,12 @@ type NewlineDelineated []byte
 func (self NewlineDelineated) Sanitize() Sanitized {
 	lines := bytes.Split(self, []byte("\n"))
 	secretKeys := [][]byte{
+		[]byte("git-town.bitbucket-app-password"),
+		[]byte("git-town.codeberg-token"),
+		[]byte("git-town.forgejo-token"),
+		[]byte("git-town.gitea-token"),
 		[]byte("git-town.github-token"),
 		[]byte("git-town.gitlab-token"),
-		[]byte("git-town.forgejo-token"),
-		[]byte("git-town.bitbucket-app-password"),
-		[]byte("git-town.gitea-token"),
 		[]byte("user.email"),
 	}
 	for i, line := range lines {
