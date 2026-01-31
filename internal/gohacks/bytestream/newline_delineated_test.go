@@ -8,6 +8,7 @@ import (
 
 func TestNewlineDelineated(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Sanitize", func(t *testing.T) {
 		t.Parallel()
 		t.Run("empty input", func(t *testing.T) {
