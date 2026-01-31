@@ -77,6 +77,8 @@ Feature: display configuration from Git metadata in detached head state
 
       Propose:
         breadcrumb: branches
+        breadcrumb direction: down
+        breadcrumb style: tree
 
       Ship:
         delete tracking branch: yes
