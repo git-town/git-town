@@ -17,7 +17,11 @@ func TestParseProposalBreadcrumbStyle(t *testing.T) {
 	}{
 		{give: "", want: None[forgedomain.ProposalBreadcrumbStyle](), err: false},
 		{give: "tree", want: Some(forgedomain.ProposalBreadcrumbStyleTree), err: false},
+		{give: "TREE", want: Some(forgedomain.ProposalBreadcrumbStyleTree), err: false},
+		{give: "Tree", want: Some(forgedomain.ProposalBreadcrumbStyleTree), err: false},
 		{give: "auto", want: Some(forgedomain.ProposalBreadcrumbStyleAuto), err: false},
+		{give: "AUTO", want: Some(forgedomain.ProposalBreadcrumbStyleAuto), err: false},
+		{give: "Auto", want: Some(forgedomain.ProposalBreadcrumbStyleAuto), err: false},
 		{give: "zonk", want: None[forgedomain.ProposalBreadcrumbStyle](), err: true},
 	}
 	for _, tt := range tests {

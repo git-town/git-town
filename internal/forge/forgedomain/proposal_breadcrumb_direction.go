@@ -11,8 +11,8 @@ import (
 type ProposalBreadcrumbDirection string
 
 const (
-	ProposalBreadcrumbDirectionTopDown  ProposalBreadcrumbDirection = "top-down"
-	ProposalBreadcrumbDirectionBottomUp ProposalBreadcrumbDirection = "bottom-up"
+	ProposalBreadcrumbDirectionDown ProposalBreadcrumbDirection = "down"
+	ProposalBreadcrumbDirectionUp   ProposalBreadcrumbDirection = "up"
 )
 
 func (self ProposalBreadcrumbDirection) String() string {
@@ -23,10 +23,10 @@ func ParseProposalBreadcrumbDirection(value string, source string) (Option[Propo
 	switch strings.ToLower(strings.TrimSpace(value)) {
 	case "":
 		return None[ProposalBreadcrumbDirection](), nil
-	case ProposalBreadcrumbDirectionTopDown.String():
-		return Some(ProposalBreadcrumbDirectionTopDown), nil
-	case ProposalBreadcrumbDirectionBottomUp.String():
-		return Some(ProposalBreadcrumbDirectionBottomUp), nil
+	case ProposalBreadcrumbDirectionDown.String():
+		return Some(ProposalBreadcrumbDirectionDown), nil
+	case ProposalBreadcrumbDirectionUp.String():
+		return Some(ProposalBreadcrumbDirectionUp), nil
 	}
 	return None[ProposalBreadcrumbDirection](), fmt.Errorf(messages.ProposalBreadcrumbDirectionInvalid, source, value)
 }

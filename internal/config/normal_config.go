@@ -290,7 +290,7 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialBranches:           gitdomain.LocalBranchNames{},
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          forgedomain.ProposalBreadcrumbNone,
-		ProposalBreadcrumbDirection: forgedomain.ProposalBreadcrumbDirectionTopDown,
+		ProposalBreadcrumbDirection: forgedomain.ProposalBreadcrumbDirectionDown,
 		ProposalBreadcrumbStyle:     forgedomain.ProposalBreadcrumbStyleTree,
 		PushBranches:                true,
 		PushHook:                    true,
@@ -310,6 +310,11 @@ func DefaultNormalConfig() NormalConfig {
 
 func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults NormalConfig) NormalConfig {
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
+	proposalBreadcrumbDirection := partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection)
+	proposalBreadcrumbStyle := partial.ProposalBreadcrumbStyle.GetOr(defaults.ProposalBreadcrumbStyle)
+	if proposalBreadcrumbDirection == forgedomain.ProposalBreadcrumbDirectionUp {
+		proposalBreadcrumbStyle = forgedomain.ProposalBreadcrumbStyleAuto
+	}
 	return NormalConfig{
 		Aliases:                     partial.Aliases,
 		AutoResolve:                 partial.AutoResolve.GetOr(defaults.AutoResolve),
@@ -344,8 +349,8 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PerennialBranches:           partial.PerennialBranches,
 		PerennialRegex:              partial.PerennialRegex,
 		ProposalBreadcrumb:          partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
-		ProposalBreadcrumbDirection: partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection),
-		ProposalBreadcrumbStyle:     partial.ProposalBreadcrumbStyle.GetOr(defaults.ProposalBreadcrumbStyle),
+		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
+		ProposalBreadcrumbStyle:     proposalBreadcrumbStyle,
 		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),

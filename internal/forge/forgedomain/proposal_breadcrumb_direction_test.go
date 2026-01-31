@@ -16,8 +16,12 @@ func TestParseProposalBreadcrumbDirection(t *testing.T) {
 		err  bool
 	}{
 		{give: "", want: None[forgedomain.ProposalBreadcrumbDirection](), err: false},
-		{give: "top-down", want: Some(forgedomain.ProposalBreadcrumbDirectionTopDown), err: false},
-		{give: "bottom-up", want: Some(forgedomain.ProposalBreadcrumbDirectionBottomUp), err: false},
+		{give: "down", want: Some(forgedomain.ProposalBreadcrumbDirectionDown), err: false},
+		{give: "DOWN", want: Some(forgedomain.ProposalBreadcrumbDirectionDown), err: false},
+		{give: "Down", want: Some(forgedomain.ProposalBreadcrumbDirectionDown), err: false},
+		{give: "up", want: Some(forgedomain.ProposalBreadcrumbDirectionUp), err: false},
+		{give: "UP", want: Some(forgedomain.ProposalBreadcrumbDirectionUp), err: false},
+		{give: "Up", want: Some(forgedomain.ProposalBreadcrumbDirectionUp), err: false},
 		{give: "zonk", want: None[forgedomain.ProposalBreadcrumbDirection](), err: true},
 	}
 	for _, tt := range tests {

@@ -313,8 +313,8 @@ EnterForgeData:
 		PerennialBranches:           perennialBranches,
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: None[forgedomain.ProposalBreadcrumbDirection](), // the setup assistant doesn't ask for this
-		ProposalBreadcrumbStyle:     None[forgedomain.ProposalBreadcrumbStyle](),     // the setup assistant doesn't ask for this
+		ProposalBreadcrumbDirection: None[forgedomain.ProposalBreadcrumbDirection](), // TODO: add this to the setup assistant
+		ProposalBreadcrumbStyle:     None[forgedomain.ProposalBreadcrumbStyle](),     // TODO: add this to the setup assistant
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
