@@ -66,4 +66,9 @@ OUTPUT END
 			must.EqOp(t, "hello world", output)
 		})
 	})
+
+	t.Run("replaceZeroWithNewlines", func(t *testing.T) {
+		t.Parallel()
+		give := []byte{}
+	})
 }
