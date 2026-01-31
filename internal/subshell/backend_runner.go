@@ -79,7 +79,8 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		os.Stdout.Write(bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'}))
+		outputBytes = ReplaceZeroWithNewlines(outputBytes)
+		os.Stdout.Write(outputBytes)
 	}
 	return outputText, err
 }
@@ -95,6 +96,10 @@ OUTPUT START
 %s
 OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
+}
+
+func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
+	return bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'})
 }
 
 func containsConcurrentGitAccess(text string) bool {
