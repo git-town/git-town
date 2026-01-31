@@ -85,10 +85,6 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	return outputText, err
 }
 
-func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
-	return bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'})
-}
-
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
 	return fmt.Errorf(`
 ----------------------------------------
@@ -100,6 +96,10 @@ OUTPUT START
 %s
 OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
+}
+
+func ReplaceZeroWithNewlines(outputBytes []byte) []byte {
+	return bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'})
 }
 
 func containsConcurrentGitAccess(text string) bool {
