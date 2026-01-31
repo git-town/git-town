@@ -32,10 +32,12 @@ in the official Git documentation for more information.
 ### fast-forward
 
 The `fast-forward` ship strategy prevents false merge conflicts when using
-[stacked changes](../stacked-changes.md). It merges the branch to ship into its
-parent (typically the main branch) by running
+[stacked changes](../stacked-changes.md) and allows to
+[Ship several branches in a stack](../how-to/ship-stack.md) without unnecessary
+CI runs. It runs
 [git merge --ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only)
-and then pushes the new commits on the parent branch to the
+which fast-forwards the parent branch to contain the commits of the branch to
+ship and then pushes the new commits on the parent branch to the
 [development remote](dev-remote.md). This way the parent branch contains the
 exact same commits as the branch that has just been shipped.
 
@@ -64,12 +66,6 @@ commit message.
 Set the ship strategy in the [config file](../configuration-file.md):
 
 ```toml
-ship.strategy = "api"
-```
-
-or
-
-```toml
 [ship]
 strategy = "api"
 ```
@@ -79,7 +75,7 @@ strategy = "api"
 To manually configure the ship strategy in Git metadata, run:
 
 ```wrap
-git config [--global] git-town.ship-strategy <api|squash-merge>
+git config [--global] git-town.ship-strategy <always-merge|api|fast-forward|squash-merge>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

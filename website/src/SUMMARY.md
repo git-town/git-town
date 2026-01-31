@@ -10,6 +10,7 @@
   - [LazyGit](how-to/lazygit.md)
   - [Proposal breadcrumb](how-to/proposal-breadcrumb.md)
   - [Shell prompt](how-to/shell-prompt.md)
+  - [Ship several branches in a stack](how-to/ship-stack.md)
   - [Sync lineage](how-to/sync-lineage.md)
 - [Commands](all-commands.md)
   - [Basic workflow](basic-commands.md)
