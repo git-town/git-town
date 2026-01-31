@@ -67,9 +67,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		order                       Option[configdomain.Order]
 		perennialBranches           gitdomain.LocalBranchNames
 		perennialRegex              Option[configdomain.PerennialRegex]
-		proposalBreadcrumb          Option[forgedomain.ProposalBreadcrumb]
-		proposalBreadcrumbDirection Option[forgedomain.ProposalBreadcrumbDirection]
-		proposalBreadcrumbStyle     Option[forgedomain.ProposalBreadcrumbStyle]
+		proposalBreadcrumb          Option[configdomain.ProposalBreadcrumb]
+		proposalBreadcrumbDirection Option[configdomain.ProposalBreadcrumbDirection]
+		proposalBreadcrumbStyle     Option[configdomain.ProposalBreadcrumbStyle]
 		pushBranches                Option[configdomain.PushBranches]
 		pushHook                    Option[configdomain.PushHook]
 		shareNewBranches            Option[configdomain.ShareNewBranches]
@@ -213,19 +213,19 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.Propose != nil {
 		// load the deprecated "lineage" setting first so that "breadcrumb" can override the value later
 		if data.Propose.Lineage != nil {
-			proposalBreadcrumb, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Lineage, messages.ConfigFile)
+			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(*data.Propose.Lineage, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.Breadcrumb != nil {
-			proposalBreadcrumb, err = forgedomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
+			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.Direction != nil {
-			proposalBreadcrumbDirection, err = forgedomain.ParseProposalBreadcrumbDirection(*data.Propose.Direction, messages.ConfigFile)
+			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.Direction, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.Style != nil {
-			proposalBreadcrumbStyle, err = forgedomain.ParseProposalBreadcrumbStyle(*data.Propose.Style, messages.ConfigFile)
+			proposalBreadcrumbStyle, err = configdomain.ParseProposalBreadcrumbStyle(*data.Propose.Style, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}

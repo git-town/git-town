@@ -303,7 +303,7 @@ func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.Perennia
 	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
 }
 
-func SetProposalBreadcrumb(runner subshelldomain.Runner, value forgedomain.ProposalBreadcrumb, scope configdomain.ConfigScope) error {
+func SetProposalBreadcrumb(runner subshelldomain.Runner, value configdomain.ProposalBreadcrumb, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumb, value.String())
 }
 

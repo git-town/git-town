@@ -61,9 +61,9 @@ type NormalConfig struct {
 	Order                       configdomain.Order
 	PerennialBranches           gitdomain.LocalBranchNames
 	PerennialRegex              Option[configdomain.PerennialRegex]
-	ProposalBreadcrumb          forgedomain.ProposalBreadcrumb
-	ProposalBreadcrumbDirection forgedomain.ProposalBreadcrumbDirection
-	ProposalBreadcrumbStyle     forgedomain.ProposalBreadcrumbStyle
+	ProposalBreadcrumb          configdomain.ProposalBreadcrumb
+	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
+	ProposalBreadcrumbStyle     configdomain.ProposalBreadcrumbStyle
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
 	ShareNewBranches            configdomain.ShareNewBranches
@@ -289,9 +289,9 @@ func DefaultNormalConfig() NormalConfig {
 		Order:                       configdomain.OrderAsc,
 		PerennialBranches:           gitdomain.LocalBranchNames{},
 		PerennialRegex:              None[configdomain.PerennialRegex](),
-		ProposalBreadcrumb:          forgedomain.ProposalBreadcrumbNone,
-		ProposalBreadcrumbDirection: forgedomain.ProposalBreadcrumbDirectionDown,
-		ProposalBreadcrumbStyle:     forgedomain.ProposalBreadcrumbStyleTree,
+		ProposalBreadcrumb:          configdomain.ProposalBreadcrumbNone,
+		ProposalBreadcrumbDirection: configdomain.ProposalBreadcrumbDirectionDown,
+		ProposalBreadcrumbStyle:     configdomain.ProposalBreadcrumbStyleTree,
 		PushBranches:                true,
 		PushHook:                    true,
 		ShareNewBranches:            configdomain.ShareNewBranchesNone,
@@ -312,8 +312,8 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
 	proposalBreadcrumbDirection := partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection)
 	proposalBreadcrumbStyle := partial.ProposalBreadcrumbStyle.GetOr(defaults.ProposalBreadcrumbStyle)
-	if proposalBreadcrumbDirection == forgedomain.ProposalBreadcrumbDirectionUp {
-		proposalBreadcrumbStyle = forgedomain.ProposalBreadcrumbStyleAuto
+	if proposalBreadcrumbDirection == configdomain.ProposalBreadcrumbDirectionUp {
+		proposalBreadcrumbStyle = configdomain.ProposalBreadcrumbStyleAuto
 	}
 	return NormalConfig{
 		Aliases:                     partial.Aliases,

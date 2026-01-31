@@ -3,22 +3,22 @@ package proposallineage
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
 
 const spacesPerIndent = 2
 
-func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction forgedomain.ProposalBreadcrumbDirection, style forgedomain.ProposalBreadcrumbStyle) string {
+func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, style configdomain.ProposalBreadcrumbStyle) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 
-	flat := style == forgedomain.ProposalBreadcrumbStyleAuto && tree.IsLinear()
+	flat := style == configdomain.ProposalBreadcrumbStyleAuto && tree.IsLinear()
 
 	switch direction {
-	case forgedomain.ProposalBreadcrumbDirectionDown:
+	case configdomain.ProposalBreadcrumbDirectionDown:
 		renderNodeDown(&builder, tree, currentBranch, 0, false, flat)
-	case forgedomain.ProposalBreadcrumbDirectionUp:
+	case configdomain.ProposalBreadcrumbDirectionUp:
 		maxDepth := tree.MaxDepth()
 		renderNodeUp(&builder, tree, currentBranch, maxDepth, flat)
 	}

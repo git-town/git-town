@@ -49,9 +49,9 @@ type PartialConfig struct {
 	Order                       Option[Order]
 	PerennialBranches           gitdomain.LocalBranchNames
 	PerennialRegex              Option[PerennialRegex]
-	ProposalBreadcrumb          Option[forgedomain.ProposalBreadcrumb]
-	ProposalBreadcrumbDirection Option[forgedomain.ProposalBreadcrumbDirection]
-	ProposalBreadcrumbStyle     Option[forgedomain.ProposalBreadcrumbStyle]
+	ProposalBreadcrumb          Option[ProposalBreadcrumb]
+	ProposalBreadcrumbDirection Option[ProposalBreadcrumbDirection]
+	ProposalBreadcrumbStyle     Option[ProposalBreadcrumbStyle]
 	PushBranches                Option[PushBranches]
 	PushHook                    Option[PushHook]
 	ShareNewBranches            Option[ShareNewBranches]
