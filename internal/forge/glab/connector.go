@@ -89,7 +89,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 var _ forgedomain.ProposalSearcher = glabConnector // type check
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
+	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--output=json")
 	if err != nil {
 		return []forgedomain.Proposal{}, err
 	}
