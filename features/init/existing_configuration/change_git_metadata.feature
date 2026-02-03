@@ -55,6 +55,7 @@ Feature: change existing information in Git metadata
       | proposal breadcrumb         | down enter             |
       | config storage              | enter                  |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -62,10 +63,10 @@ Feature: change existing information in Git metadata
       | git config --global alias.compress "town compress"       |
       | git config --global alias.continue "town continue"       |
       | git config --global alias.contribute "town contribute"   |
+      | git config --global alias.delete "town delete"           |
       | git config --global alias.diff-parent "town diff-parent" |
       | git config --global alias.down "town down"               |
       | git config --global alias.hack "town hack"               |
-      | git config --global alias.delete "town delete"           |
       | git config --global alias.observe "town observe"         |
       | git config --global alias.park "town park"               |
       | git config --global alias.prepend "town prepend"         |
@@ -109,7 +110,10 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
+    And global Git setting "alias.down" is now "town down"
     And global Git setting "alias.hack" is now "town hack"
+    And global Git setting "alias.observe" is now "town observe"
+    And global Git setting "alias.park" is now "town park"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename" is now "town rename"
@@ -117,6 +121,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And global Git setting "alias.up" is now "town up"
     And local Git setting "git-town.contribution-regex" is now "cont"
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.feature-regex" is now "feat"

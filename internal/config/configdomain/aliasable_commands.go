@@ -26,14 +26,15 @@ func (self AliasableCommands) Strings() []string {
 // AllAliasableCommands provides all AliasType values.
 func AllAliasableCommands() AliasableCommands {
 	return AliasableCommands{
+		// keep-sorted start
 		AliasableCommandAppend,
 		AliasableCommandCompress,
 		AliasableCommandContinue,
 		AliasableCommandContribute,
+		AliasableCommandDelete,
 		AliasableCommandDiffParent,
 		AliasableCommandDown,
 		AliasableCommandHack,
-		AliasableCommandDelete,
 		AliasableCommandObserve,
 		AliasableCommandPark,
 		AliasableCommandPrepend,
@@ -44,5 +45,6 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandShip,
 		AliasableCommandSync,
 		AliasableCommandUp,
+		// keep-sorted end
 	}
 }
