@@ -104,6 +104,8 @@ Feature: change existing information in Git metadata
       | git config git-town.sync-upstream false                  |
       | git config git-town.unknown-branch-type observed         |
     And global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.compress" is now "town compress"
+    And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
