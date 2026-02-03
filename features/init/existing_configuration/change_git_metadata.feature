@@ -154,7 +154,6 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
     And global Git setting "alias.continue" now doesn't exist
-    And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
