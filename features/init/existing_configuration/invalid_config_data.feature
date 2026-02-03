@@ -135,9 +135,14 @@ Feature: Fix invalid configuration data
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
+    And global Git setting "alias.down" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
+    And global Git setting "alias.observe" now doesn't exist
+    And global Git setting "alias.park" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
@@ -145,6 +150,7 @@ Feature: Fix invalid configuration data
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    And global Git setting "alias.up" now doesn't exist
     And local Git setting "git-town.contribution-regex" is now "(cont"
     And local Git setting "git-town.dev-remote" now doesn't exist
     And local Git setting "git-town.feature-regex" is now "(feat"
