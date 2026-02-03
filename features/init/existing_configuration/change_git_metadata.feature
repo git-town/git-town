@@ -104,9 +104,14 @@ Feature: change existing information in Git metadata
       | git config git-town.sync-upstream false                  |
       | git config git-town.unknown-branch-type observed         |
     And global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.compress" is now "town compress"
+    And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
+    And global Git setting "alias.down" is now "town down"
     And global Git setting "alias.hack" is now "town hack"
+    And global Git setting "alias.observe" is now "town observe"
+    And global Git setting "alias.park" is now "town park"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename" is now "town rename"
@@ -114,6 +119,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And global Git setting "alias.up" is now "town up"
     And local Git setting "git-town.contribution-regex" is now "cont"
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.feature-regex" is now "feat"
@@ -144,9 +150,14 @@ Feature: change existing information in Git metadata
     When I run "git-town undo"
     Then Git Town runs no commands
     And global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
+    And global Git setting "alias.down" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
+    And global Git setting "alias.observe" now doesn't exist
+    And global Git setting "alias.park" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
@@ -154,6 +165,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    And global Git setting "alias.up" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist

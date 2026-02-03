@@ -85,9 +85,14 @@ Feature: don't change existing extended information when changing basic informat
     When I run "git-town undo"
     Then Git Town runs no commands
     And global Git setting "alias.append" still doesn't exist
+    And global Git setting "alias.compress" still doesn't exist
+    And global Git setting "alias.contribute" still doesn't exist
     And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
+    And global Git setting "alias.down" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
+    And global Git setting "alias.observe" still doesn't exist
+    And global Git setting "alias.park" still doesn't exist
     And global Git setting "alias.prepend" still doesn't exist
     And global Git setting "alias.propose" still doesn't exist
     And global Git setting "alias.rename" still doesn't exist
@@ -95,6 +100,7 @@ Feature: don't change existing extended information when changing basic informat
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    And global Git setting "alias.up" still doesn't exist
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.contribution-regex" is still "cont"
     And local Git setting "git-town.detached" is still "false"

@@ -14,6 +14,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.contribute" is "town contribute"
     And global Git setting "alias.delete" is "town delete"
     And global Git setting "alias.diff-parent" is "town diff-parent"
+    And global Git setting "alias.down" is "town down"
     And global Git setting "alias.hack" is "town hack"
     And global Git setting "alias.observe" is "town observe"
     And global Git setting "alias.park" is "town park"
@@ -24,6 +25,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
+    And global Git setting "alias.up" is "town up"
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.branch-prefix" is "kg-"
     And local Git setting "git-town.contribution-regex" is "other.*"
@@ -93,6 +95,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.contribute         |
       | git config --global --unset alias.delete             |
       | git config --global --unset alias.diff-parent        |
+      | git config --global --unset alias.down               |
       | git config --global --unset alias.hack               |
       | git config --global --unset alias.observe            |
       | git config --global --unset alias.park               |
@@ -103,6 +106,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent         |
       | git config --global --unset alias.ship               |
       | git config --global --unset alias.sync               |
+      | git config --global --unset alias.up                 |
       | git config git-town.perennial-branches ""            |
       | git config --unset git-town.hosting-origin-hostname  |
       | git config --unset git-town.forge-type               |
@@ -130,9 +134,14 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.sync-upstream true               |
       | git config git-town.unknown-branch-type feature      |
     And global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
+    And global Git setting "alias.down" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
+    And global Git setting "alias.observe" now doesn't exist
+    And global Git setting "alias.park" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
@@ -140,6 +149,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    And global Git setting "alias.up" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" is now "fork"
@@ -170,9 +180,14 @@ Feature: remove existing configuration in Git metadata
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.compress" is now "town compress"
+    And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
+    And global Git setting "alias.down" is now "town down"
     And global Git setting "alias.hack" is now "town hack"
+    And global Git setting "alias.observe" is now "town observe"
+    And global Git setting "alias.park" is now "town park"
     And global Git setting "alias.prepend" is now "town prepend"
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename" is now "town rename"
@@ -180,6 +195,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And global Git setting "alias.up" is now "town up"
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.branch-prefix" is now "kg-"
     And local Git setting "git-town.contribution-regex" is now "other.*"
