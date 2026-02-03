@@ -93,6 +93,7 @@ Feature: remove existing configuration in Git metadata
       | COMMAND                                              |
       | git config --global --unset alias.append             |
       | git config --global --unset alias.compress           |
+      | git config --global --unset alias.continue           |
       | git config --global --unset alias.contribute         |
       | git config --global --unset alias.delete             |
       | git config --global --unset alias.diff-parent        |
