@@ -61,10 +61,10 @@ Feature: change existing information in Git metadata
       | git config --global alias.append "town append"           |
       | git config --global alias.compress "town compress"       |
       | git config --global alias.contribute "town contribute"   |
+      | git config --global alias.delete "town delete"           |
       | git config --global alias.diff-parent "town diff-parent" |
       | git config --global alias.down "town down"               |
       | git config --global alias.hack "town hack"               |
-      | git config --global alias.delete "town delete"           |
       | git config --global alias.observe "town observe"         |
       | git config --global alias.park "town park"               |
       | git config --global alias.prepend "town prepend"         |
