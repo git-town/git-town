@@ -60,6 +60,7 @@ Feature: change existing information in Git metadata
       | COMMAND                                                  |
       | git config --global alias.append "town append"           |
       | git config --global alias.compress "town compress"       |
+      | git config --global alias.continue "town continue"       |
       | git config --global alias.contribute "town contribute"   |
       | git config --global alias.diff-parent "town diff-parent" |
       | git config --global alias.down "town down"               |
@@ -104,6 +105,7 @@ Feature: change existing information in Git metadata
       | git config git-town.sync-upstream false                  |
       | git config git-town.unknown-branch-type observed         |
     And global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -140,10 +142,12 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And the main branch is now "main"
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
