@@ -28,6 +28,7 @@ func AllAliasableCommands() AliasableCommands {
 	return AliasableCommands{
 		AliasableCommandAppend,
 		AliasableCommandCompress,
+		AliasableCommandContinue,
 		AliasableCommandContribute,
 		AliasableCommandDiffParent,
 		AliasableCommandDown,
