@@ -136,6 +136,7 @@ Feature: Fix invalid configuration data
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist

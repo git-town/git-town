@@ -86,6 +86,7 @@ Feature: don't change existing extended information when changing basic informat
     Then Git Town runs no commands
     And global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.compress" still doesn't exist
+    And global Git setting "alias.continue" still doesn't exist
     And global Git setting "alias.contribute" still doesn't exist
     And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
