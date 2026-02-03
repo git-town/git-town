@@ -147,7 +147,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And the main branch is now "main"
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
