@@ -11,6 +11,7 @@ Feature: remove existing configuration in Git metadata
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.compress" is "town compress"
+    And global Git setting "alias.continue" is "town continue"
     And global Git setting "alias.contribute" is "town contribute"
     And global Git setting "alias.delete" is "town delete"
     And global Git setting "alias.diff-parent" is "town diff-parent"
@@ -92,6 +93,7 @@ Feature: remove existing configuration in Git metadata
       | COMMAND                                              |
       | git config --global --unset alias.append             |
       | git config --global --unset alias.compress           |
+      | git config --global --unset alias.continue           |
       | git config --global --unset alias.contribute         |
       | git config --global --unset alias.delete             |
       | git config --global --unset alias.diff-parent        |
@@ -135,6 +137,7 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.unknown-branch-type feature      |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -181,6 +184,7 @@ Feature: remove existing configuration in Git metadata
     When I run "git-town undo"
     Then global Git setting "alias.append" is now "town append"
     And global Git setting "alias.compress" is now "town compress"
+    And global Git setting "alias.continue" is now "town continue"
     And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"

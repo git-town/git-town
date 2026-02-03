@@ -13,6 +13,7 @@ func (self AliasableCommand) String() string { return string(self) }
 const (
 	AliasableCommandAppend     = AliasableCommand("append")
 	AliasableCommandCompress   = AliasableCommand("compress")
+	AliasableCommandContinue   = AliasableCommand("continue")
 	AliasableCommandContribute = AliasableCommand("contribute")
 	AliasableCommandDiffParent = AliasableCommand("diff-parent")
 	AliasableCommandDown       = AliasableCommand("down")

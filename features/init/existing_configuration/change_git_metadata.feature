@@ -60,6 +60,7 @@ Feature: change existing information in Git metadata
       | COMMAND                                                  |
       | git config --global alias.append "town append"           |
       | git config --global alias.compress "town compress"       |
+      | git config --global alias.continue "town continue"       |
       | git config --global alias.contribute "town contribute"   |
       | git config --global alias.delete "town delete"           |
       | git config --global alias.diff-parent "town diff-parent" |
@@ -105,6 +106,7 @@ Feature: change existing information in Git metadata
       | git config git-town.unknown-branch-type observed         |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.compress" is now "town compress"
+    And global Git setting "alias.continue" is now "town continue"
     And global Git setting "alias.contribute" is now "town contribute"
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
@@ -151,6 +153,7 @@ Feature: change existing information in Git metadata
     Then Git Town runs no commands
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
+    And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.contribute" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist

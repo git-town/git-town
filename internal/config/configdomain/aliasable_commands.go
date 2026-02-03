@@ -29,6 +29,7 @@ func AllAliasableCommands() AliasableCommands {
 		// keep-sorted start
 		AliasableCommandAppend,
 		AliasableCommandCompress,
+		AliasableCommandContinue,
 		AliasableCommandContribute,
 		AliasableCommandDelete,
 		AliasableCommandDiffParent,
