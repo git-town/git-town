@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -30,6 +31,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 )
 
 func diffParentCommand() *cobra.Command {
+	addNameOnlyFlag, readNameOnlyFlag := flags.NameOnly()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
@@ -38,8 +40,9 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			nameOnly, errNameOnly := readNameOnlyFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errNameOnly, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -48,6 +51,7 @@ func diffParentCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
+				NameOnly:          nameOnly,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
@@ -57,6 +61,7 @@ func diffParentCommand() *cobra.Command {
 			return executeDiffParent(args, cliConfig)
 		},
 	}
+	addNameOnlyFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }

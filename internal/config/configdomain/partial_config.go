@@ -43,6 +43,7 @@ type PartialConfig struct {
 	IgnoreUncommitted           Option[IgnoreUncommitted]
 	Lineage                     Lineage
 	MainBranch                  Option[gitdomain.LocalBranchName]
+	NameOnly                    Option[NameOnly]
 	NewBranchType               Option[NewBranchType]
 	ObservedRegex               Option[ObservedRegex]
 	Offline                     Option[Offline]
@@ -105,6 +106,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		IgnoreUncommitted:           other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
 		MainBranch:                  other.MainBranch.Or(self.MainBranch),
+		NameOnly:                    other.NameOnly.Or(self.NameOnly),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:               other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                     other.Offline.Or(self.Offline),
