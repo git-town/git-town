@@ -22,9 +22,5 @@ Feature: rename the current branch
       |        | git push origin :old      |
     And the initial branches and lineage exist now
     And the initial commits exist now
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial branches and lineage exist now
-    And the initial commits exist now
+  #
+  # Cannot test undo because dry-run now doesn't create a runstate.
