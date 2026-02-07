@@ -18,4 +18,12 @@ func TestMerge(t *testing.T) {
 		want := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4}
 		must.Eq(t, want, have)
 	})
+
+	t.Run("first is nil", func(t *testing.T) {
+		t.Parallel()
+		map1 := map[string]int{"one": 1, "two": 2}
+		have := mapstools.Merge(nil, map1)
+		want := map[string]int{"one": 1, "two": 2}
+		must.Eq(t, want, have)
+	})
 }
