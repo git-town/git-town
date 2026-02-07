@@ -720,9 +720,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			state:        state,
-			command:      command,
 			captureState: false,
+			command:      command,
+			state:        state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -737,9 +737,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			state:        state,
-			command:      command,
 			captureState: false,
+			command:      command,
+			state:        state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode == 0 {
@@ -754,9 +754,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(runCommandArgs{
-			state:        state,
-			command:      command,
 			captureState: false,
+			command:      command,
+			state:        state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -802,9 +802,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		runCommand(runCommandArgs{
-			state:        ctx.Value(keyScenarioState).(*ScenarioState),
-			command:      command,
 			captureState: true,
+			command:      command,
+			state:        ctx.Value(keyScenarioState).(*ScenarioState),
 		})
 	})
 
@@ -1630,9 +1630,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 }
 
 type runCommandArgs struct {
-	state        *ScenarioState
-	command      string
 	captureState bool
+	command      string
+	state        *ScenarioState
 }
 
 func runCommand(args runCommandArgs) {
