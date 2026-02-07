@@ -35,6 +35,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			CommandsCounter:   args.Repo.CommandsCounter,
 			ConfigDir:         args.Repo.ConfigDir,
 			Connector:         args.Connector,
+			DryRun:            args.UnvalidatedConfig.NormalConfig.DryRun,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
 			Git:               args.Git,
