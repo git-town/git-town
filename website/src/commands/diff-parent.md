@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town diff-parent [--diff-filter=<value>] [-h | --help] [--name-only] [-v | --verbose]
+git town diff-parent [--diff-filter <value>] [-h | --help] [--name-only] [-v | --verbose]
 ```
 
 The _diff-parent_ command displays the changes made on a feature branch, i.e.
@@ -11,7 +11,11 @@ the diff between the current branch and its parent branch.
 
 ## Options
 
-#### `--diff-filter=<value>`
+#### `--diff-filter <value>`
+
+Calls
+[git diff --diff-filter](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRTUXB)
+with the given value.
 
 #### `-h`<br>`--help`
 
