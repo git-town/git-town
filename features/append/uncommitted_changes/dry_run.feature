@@ -23,10 +23,5 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And the initial branches and lineage exist now
     And the uncommitted file still exists
     And the initial commits exist now
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial lineage exists now
-    And the uncommitted file still exists
-    And the initial commits exist now
+  #
+  # Cannot test undo because dry-run now doesn't create a runstate.
