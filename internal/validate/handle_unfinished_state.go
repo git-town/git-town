@@ -97,6 +97,7 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigDir         configdomain.RepoConfigDir
 	Connector         Option[forgedomain.Connector]
+	DryRun            configdomain.DryRun
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands
@@ -127,6 +128,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		Config:                  validatedConfig,
 		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
+		DryRun:                  runState.DryRun,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
@@ -205,6 +207,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		Config:          validatedConfig,
 		ConfigDir:       args.ConfigDir,
 		Connector:       args.Connector,
+		DryRun:          args.DryRun,
 		FinalMessages:   args.FinalMessages,
 		Frontend:        args.Frontend,
 		Git:             args.Git,

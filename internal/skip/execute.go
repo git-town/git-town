@@ -29,6 +29,7 @@ type ExecuteArgs struct {
 	Config          config.ValidatedConfig
 	ConfigDir       configdomain.RepoConfigDir
 	Connector       Option[forgedomain.Connector]
+	DryRun          configdomain.DryRun
 	FinalMessages   stringslice.Collector
 	Frontend        subshelldomain.Runner
 	Git             git.Commands
@@ -69,6 +70,7 @@ func Execute(args ExecuteArgs) error {
 		Config:                  args.Config,
 		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
+		DryRun:                  args.DryRun,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
