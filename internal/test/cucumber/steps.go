@@ -719,7 +719,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState: false,
+			command:      command,
+			state:        state,
+			tty:          true,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -732,7 +737,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState: false,
+			command:      command,
+			state:        state,
+			tty:          true,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode == 0 {
 				return errors.New("this command should fail")
@@ -745,7 +755,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState: false,
+			command:      command,
+			state:        state,
+			tty:          true,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -789,8 +804,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, true)
+		runCommand(runCommandArgs{
+			captureState: true,
+			command:      command,
+			state:        ctx.Value(keyScenarioState).(*ScenarioState),
+			tty:          true,
+		})
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -830,6 +849,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
+	})
+
+	sc.Step(`^I run "([^"]+)" in a non-TTY shell$`, func(ctx context.Context, command string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(runCommandArgs{
+			captureState: true,
+			command:      command,
+			state:        state,
+			tty:          false,
+		})
 	})
 
 	sc.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(ctx context.Context, cmd, folderName string) {
@@ -1614,34 +1643,41 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 }
 
-func runCommand(state *ScenarioState, command string, captureState bool) {
-	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-	if captureState && hasDevRepo {
-		state.CaptureState()
-		updateInitialSHAs(state)
+type runCommandArgs struct {
+	captureState bool
+	command      string
+	state        *ScenarioState
+	tty          bool
+}
+
+func runCommand(args runCommandArgs) {
+	devRepo, hasDevRepo := args.state.fixture.DevRepo.Get()
+	if args.captureState && hasDevRepo {
+		args.state.CaptureState()
+		updateInitialSHAs(args.state)
 	}
 	var runResult subshell.RunResult
 	env := os.Environ()
-	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
+	if browserVariable, hasBrowserOverride := args.state.browserVariable.Get(); hasBrowserOverride {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
-		runResult = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
+		runResult = devRepo.MustQueryStringCodeWith(args.command, &subshell.Options{
 			Env: env,
 		})
 		devRepo.Reload()
 	} else {
-		parts := asserts.NoError1(shellquote.Split(command))
-		cmd, args := parts[0], parts[1:]
-		subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
-		subProcess.Dir = state.fixture.Dir
+		parts := asserts.NoError1(shellquote.Split(args.command))
+		cmd, params := parts[0], parts[1:]
+		subProcess := exec.CommandContext(context.Background(), cmd, params...) // #nosec
+		subProcess.Dir = args.state.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
 			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
 		}
 	}
-	state.runResult = Some(runResult)
+	args.state.runResult = Some(runResult)
 }
 
 func updateInitialSHAs(state *ScenarioState) {
