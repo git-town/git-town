@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/bytestream"
@@ -227,6 +228,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		}
 	} else {
 		subProcess.Stdin = nil
+		subProcess.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 		err = subProcess.Run()
 	}
 	exitCode := 0
