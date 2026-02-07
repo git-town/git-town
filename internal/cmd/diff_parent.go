@@ -51,14 +51,13 @@ func diffParentCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
-				NameOnly:          nameOnly,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeDiffParent(args, cliConfig)
+			return executeDiffParent(args, cliConfig, nameOnly)
 		},
 	}
 	addNameOnlyFlag(&cmd)
@@ -66,7 +65,7 @@ func diffParentCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDiffParent(args []string, cliConfig configdomain.PartialConfig) error {
+func executeDiffParent(args []string, cliConfig configdomain.PartialConfig, nameOnly Option[configdomain.NameOnly]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -90,7 +89,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	err = repo.Git.DiffParent(repo.Frontend, data.branch, data.parentBranch)
+	err = repo.Git.DiffParent(repo.Frontend, data.branch, data.parentBranch, nameOnly.GetOr(false))
 	if err != nil {
 		return err
 	}

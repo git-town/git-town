@@ -55,7 +55,6 @@ type NormalConfig struct {
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
 	Lineage                     configdomain.Lineage
-	NameOnly                    configdomain.NameOnly
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
 	Offline                     configdomain.Offline
@@ -127,7 +126,6 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
-		NameOnly:                    other.NameOnly.GetOr(self.NameOnly),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:               other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                     other.Offline.GetOr(self.Offline),
@@ -285,7 +283,6 @@ func DefaultNormalConfig() NormalConfig {
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
 		Lineage:                     configdomain.NewLineage(),
-		NameOnly:                    false,
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
 		Offline:                     false,
@@ -345,7 +342,6 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		HostingOriginHostname:       partial.HostingOriginHostname,
 		IgnoreUncommitted:           partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
 		Lineage:                     partial.Lineage,
-		NameOnly:                    partial.NameOnly.GetOr(defaults.NameOnly),
 		NewBranchType:               partial.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:               partial.ObservedRegex,
 		Offline:                     partial.Offline.GetOr(defaults.Offline),

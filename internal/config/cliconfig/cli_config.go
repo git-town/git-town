@@ -14,7 +14,6 @@ type NewArgs struct {
 	DisplayTypes      Option[configdomain.DisplayTypes]
 	DryRun            Option[configdomain.DryRun]
 	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
-	NameOnly          Option[configdomain.NameOnly]
 	Order             Option[configdomain.Order]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
@@ -49,7 +48,6 @@ func New(args NewArgs) configdomain.PartialConfig {
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  None[gitdomain.LocalBranchName](),
-		NameOnly:                    args.NameOnly,
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
 		Offline:                     None[configdomain.Offline](),
