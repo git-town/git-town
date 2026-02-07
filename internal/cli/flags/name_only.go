@@ -11,7 +11,7 @@ const nameOnlyLong = "name-only"
 // NameOnly provides type-safe access to the CLI arguments of type configdomain.NameOnly.
 func NameOnly() (AddFunc, ReadNameOnlyFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().Bool(nameOnlyLong, false, "show only the name of each changed file")
+		cmd.Flags().Bool(nameOnlyLong, false, "show only the names of changed files")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.NameOnly], error) {
 		return readBoolOptFlag[configdomain.NameOnly](cmd.Flags(), nameOnlyLong)
