@@ -8,7 +8,7 @@ import (
 
 const diffFilterLong = "diff-filter"
 
-// type-safe access to the CLI arguments of type gitdomain.ProposalBody
+// type-safe access to the CLI arguments of type gitdomain.DiffFilter
 func DiffFilter() (AddFunc, ReadDiffFilterFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().String(diffFilterLong, "", "set Git's --diff-filter flag")
