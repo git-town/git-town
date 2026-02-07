@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -30,6 +31,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 )
 
 func diffParentCommand() *cobra.Command {
+	addNameOnlyFlag, readNameOnlyFlag := flags.NameOnly()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
@@ -38,8 +40,9 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			nameOnly, errNameOnly := readNameOnlyFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errNameOnly, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -54,14 +57,15 @@ func diffParentCommand() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeDiffParent(args, cliConfig)
+			return executeDiffParent(args, cliConfig, nameOnly)
 		},
 	}
+	addNameOnlyFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeDiffParent(args []string, cliConfig configdomain.PartialConfig) error {
+func executeDiffParent(args []string, cliConfig configdomain.PartialConfig, nameOnly Option[configdomain.NameOnly]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -85,7 +89,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	err = repo.Git.DiffParent(repo.Frontend, data.branch, data.parentBranch)
+	err = repo.Git.DiffParent(repo.Frontend, data.branch, data.parentBranch, nameOnly.GetOr(false))
 	if err != nil {
 		return err
 	}

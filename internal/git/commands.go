@@ -490,8 +490,13 @@ func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gi
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
-	return runner.Run("git", "diff", "--merge-base", parentBranch.String(), branch.String())
+func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName, nameOnly configdomain.NameOnly) error {
+	args := []string{"diff"}
+	if nameOnly {
+		args = append(args, "--name-only")
+	}
+	args = append(args, "--merge-base", parentBranch.String(), branch.String())
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) DiscardOpenChanges(runner subshelldomain.Runner) error {
