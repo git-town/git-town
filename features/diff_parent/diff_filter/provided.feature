@@ -5,16 +5,19 @@ Feature: provide the diff filter
 
   @this
   Scenario: feature branch
+    And the commits
+      | BRANCH | LOCATION | MESSAGE     | FILE NAME         | FILE CONTENT |
+      | main   | local    | main commit | existing-file.txt | main content |
     Given the branches
       | NAME      | TYPE    | PARENT | LOCATIONS |
       | feature-1 | feature | main   | local     |
       | feature-2 | feature | main   | local     |
     And the commits
-      | BRANCH    | LOCATION | MESSAGE  | FILE NAME  |
-      | feature-1 | local    | commit 1 | file-1.txt |
-      | feature-2 | local    | commit 2 | file-2.txt |
+      | BRANCH    | LOCATION | MESSAGE  | FILE NAME         | FILE CONTENT      |
+      | feature-1 | local    | commit 1 | existing-file.txt | feature-1 content |
+      | feature-1 | local    | commit 1 | new-file.txt      | new content       |
+      | feature-2 | local    | commit 2 | other-file.txt    | content           |
     And the current branch is "feature-1"
-    And an uncommitted file "new-file" with content "content"
     When I run "git-town diff-parent --diff-filter=A"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
@@ -23,7 +26,7 @@ Feature: provide the diff filter
       """
       new-file
       """
-    And Git Town does not print "file-2.txt"
+    And Git Town does not print "existing-file.txt"
 
   Scenario: child branch
     Given the branches
