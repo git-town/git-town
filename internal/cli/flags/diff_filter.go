@@ -11,7 +11,7 @@ const diffFilterLong = "diff-filter"
 // type-safe access to the CLI arguments of type gitdomain.DiffFilter
 func DiffFilter() (AddFunc, ReadDiffFilterFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().String(diffFilterLong, "", "set Git's --diff-filter flag")
+		cmd.Flags().String(diffFilterLong, "", "use Git's --diff-filter flag")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.DiffFilter], error) {
 		if !cmd.Flags().Changed(diffFilterLong) {
