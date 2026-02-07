@@ -23,6 +23,7 @@ Feature: get only the names of changed files
       file-1A.txt
       file-1B.txt
       """
+    And Git Town does not print "file-2.txt"
 
   Scenario: child branch
     Given the branches
@@ -31,7 +32,7 @@ Feature: get only the names of changed files
       | child  | feature | parent | local     |
     And the commits
       | BRANCH | LOCATION | MESSAGE   | FILE NAME   |
-      | parent | local    | commit 1A | file-1A.txt |
+      | parent | local    | commit 1A | file-1.txt  |
       | child  | local    | commit 2A | file-2A.txt |
       | child  | local    | commit 2B | file-2B.txt |
     And the current branch is "child"
@@ -44,3 +45,4 @@ Feature: get only the names of changed files
       file-2A.txt
       file-2B.txt
       """
+    And Git Town does not print "file-1.txt"
