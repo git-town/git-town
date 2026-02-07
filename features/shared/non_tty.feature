@@ -9,7 +9,6 @@ Feature: non-TTY usage
       | BRANCH  | LOCATION      | MESSAGE |
       | feature | local, origin | commit  |
     And the current branch is "feature"
-    # And inspect the repo
     When I run "git-town append new" in a non-TTY shell
 
   @this
