@@ -1,4 +1,4 @@
-Feature: provide the diff filter
+Feature: provide a diff-filter
 
   Background:
     Given a Git repo with origin
