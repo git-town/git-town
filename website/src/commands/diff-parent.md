@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town diff-parent [-h | --help] [-v | --verbose]
+git town diff-parent [-h | --help] [--name-only] [-v | --verbose]
 ```
 
 The _diff-parent_ command displays the changes made on a feature branch, i.e.
