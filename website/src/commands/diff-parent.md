@@ -13,9 +13,11 @@ the diff between the current branch and its parent branch.
 
 #### `--diff-filter <value>`
 
-Calls
-[git diff --diff-filter](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRTUXB)
-with the given value.
+When set, forwards the given value to
+[git diff --diff-filter](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRTUXB).
+
+This allows you to restrict the diff to specific change types (for example,
+added, modified, or deleted files) using the same semantics as native Git.
 
 #### `-h`<br>`--help`
 
