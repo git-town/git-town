@@ -38,7 +38,6 @@ Feature: syncing a branch with independent changes where a commit was amended, a
     And I ran "git-town sync --dry-run"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                             |
@@ -49,10 +48,6 @@ Feature: syncing a branch with independent changes where a commit was amended, a
       | branch-2 | git push --force-with-lease --force-if-includes                                     |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
-      # TODO: make this test pass.
-      # Running "git-town sync --dry-run" before "git-town sync" should not change the rebase command.
-      # Without previous dry-run sync: it correctly runs `git rebase --onto branch-1 {{ sha 'branch-1 commit A' }}`.
-      # With previous dry-run sync: it wrongfully runs `git rebase branch-1`.
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                                                       |
