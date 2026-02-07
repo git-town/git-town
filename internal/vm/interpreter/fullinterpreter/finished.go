@@ -21,6 +21,7 @@ type finishedArgs struct {
 	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	ConfigDir       configdomain.RepoConfigDir
+	DryRun          configdomain.DryRun
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
 	Inputs          dialogcomponents.Inputs
@@ -57,8 +58,10 @@ func finished(args finishedArgs) error {
 	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished(endBranchesSnapshot)
 	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
-	if err = runstate.Save(args.RunState, runstatePath); err != nil {
-		return fmt.Errorf(messages.RunstateSaveProblem, err)
+	if !args.DryRun {
+		if err = runstate.Save(args.RunState, runstatePath); err != nil {
+			return fmt.Errorf(messages.RunstateSaveProblem, err)
+		}
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	args.Inputs.VerifyAllUsed()

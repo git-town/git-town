@@ -24,9 +24,5 @@ Feature: dry-run compressing the commits on a feature branch
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
     And the initial commits exist now
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial branches and lineage exist now
-    And the initial commits exist now
+  #
+  # Cannot test undo because dry-run now doesn't create a runstate.
