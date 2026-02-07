@@ -3,7 +3,6 @@ Feature: get only the names of changed files
   Background:
     Given a Git repo with origin
 
-  @this
   Scenario: feature branch
     Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
@@ -14,8 +13,8 @@ Feature: get only the names of changed files
     And the current branch is "feature"
     When I run "git-town diff-parent --name-only"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git diff --merge-base main feature |
+      | BRANCH  | COMMAND                                        |
+      | feature | git diff --name-only --merge-base main feature |
     And Git Town prints:
       """
       file.txt
