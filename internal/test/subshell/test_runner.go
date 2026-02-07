@@ -226,6 +226,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			return emptyResult, err
 		}
 	} else {
+		subProcess.Stdin = nil
 		err = subProcess.Run()
 	}
 	exitCode := 0
