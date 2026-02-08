@@ -228,7 +228,9 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		}
 	} else {
 		subProcess.Stdin = nil
-		subProcess.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+		if !opts.TTY {
+			subProcess.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+		}
 		err = subProcess.Run()
 	}
 	exitCode := 0
@@ -311,6 +313,9 @@ type Options struct {
 
 	// input to pipe into STDIN
 	Input Option[string] `exhaustruct:"optional"`
+
+	// whether to provide a TTY to the subshell
+	TTY bool
 }
 
 type RunResult struct {

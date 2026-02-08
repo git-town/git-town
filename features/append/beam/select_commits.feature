@@ -19,6 +19,7 @@ Feature: beam multiple commits onto a new child branch
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |

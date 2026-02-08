@@ -11,7 +11,6 @@ Feature: non-TTY usage
     And the current branch is "feature"
     When I run "git-town append new" in a non-TTY shell
 
-  @this
   Scenario: result
     Then Git Town prints the error:
       """
