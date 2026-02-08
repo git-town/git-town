@@ -40,7 +40,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			return config.EmptyValidatedConfig(), exit, err
 		}
 		if exit {
-			return config.EmptyValidatedConfig(), exit, err
+			return config.EmptyValidatedConfig(), exit, nil
 		}
 		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, enterAll, args.Frontend)
 		if err != nil {
