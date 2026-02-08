@@ -56,7 +56,9 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 
 	// show the dialog
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
-	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
+	if err == nil {
+		fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
+	}
 	return MainBranchResult{
 		ActualMainBranch: selection.GetOr(unscoped), // the user either selected a branch, or None if unscoped exists
 		UserChoice:       selection,
