@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/test/ostools"
 	"github.com/git-town/git-town/v22/internal/test/subshell"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -82,7 +83,7 @@ func TestMockingRunner(t *testing.T) {
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			ostools.CreateLsTool(toolPath)
-			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
+			res, err := r.QueryWith(&subshell.Options{Dir: Some("subdir")}, toolPath)
 			must.NoError(t, err)
 			must.EqOp(t, ostools.ScriptName("list-dir"), res)
 		})

@@ -837,7 +837,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: Some(folderName)})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})

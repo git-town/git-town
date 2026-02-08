@@ -194,11 +194,13 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	// mark as test run
 	opts.Env = append(opts.Env, subshell.TestToken+"=1")
 	// set the working dir
-	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
+	if dir, hasDir := opts.Dir.Get(); hasDir {
+		opts.Dir = Some(filepath.Join(self.WorkingDir, dir))
+	}
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
-	if len(opts.Dir) > 0 {
-		subProcess.Dir = opts.Dir
+	if dir, hasDir := opts.Dir.Get(); hasDir {
+		subProcess.Dir = dir
 	}
 	subProcess.Env = opts.Env
 	var outputBuf bytes.Buffer
@@ -297,7 +299,7 @@ func (self *TestRunner) createMockBinary(name string, content string) {
 type Options struct {
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
-	Dir string `exhaustruct:"optional"`
+	Dir Option[string] `exhaustruct:"optional"`
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
