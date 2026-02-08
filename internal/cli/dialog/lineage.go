@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"slices"
@@ -96,10 +97,14 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {
-			return LineageResult{
+			result := LineageResult{
 				AdditionalLineage:    additionalLineage,
 				AdditionalPerennials: additionalPerennials,
-			}, exit, err
+			}
+			if errors.Is(err, dialogcomponents.ErrNoTTY) {
+				return result, false, fmt.Errorf(messages.NoTTYParentBranchMissing, branchToVerify, branchToVerify)
+			}
+			return result, exit, err
 		}
 		if newParent == messages.SetParentNoneOption {
 			additionalPerennials = append(additionalPerennials, branchToVerify)
