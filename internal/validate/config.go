@@ -1,6 +1,8 @@
 package validate
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -9,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/setup"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -30,7 +33,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		var exit dialogdomain.Exit
 		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
-		if err != nil || exit {
+		if err != nil {
+			if errors.Is(err, dialogcomponents.ErrNoTTY) {
+				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing)
+			}
+			return config.EmptyValidatedConfig(), exit, err
+		}
+		if exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
 		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, enterAll, args.Frontend)
