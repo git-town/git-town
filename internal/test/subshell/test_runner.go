@@ -98,11 +98,11 @@ func (self *TestRunner) MockNoCommandsInstalled() {
 // MustQuery provides the output of the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (self *TestRunner) MustQuery(name string, arguments ...string) string {
-	return self.MustQueryWith(&Options{}, name, arguments...)
+	return self.MustQueryWith(&Options{Dir: None[string]()}, name, arguments...)
 }
 
 func (self *TestRunner) MustQueryStringCode(fullCmd string) RunResult {
-	return self.MustQueryStringCodeWith(fullCmd, &Options{})
+	return self.MustQueryStringCodeWith(fullCmd, &Options{Dir: None[string]()})
 }
 
 func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult {
@@ -128,13 +128,13 @@ func (self *TestRunner) MustRun(name string, arguments ...string) {
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return self.QueryWith(&Options{}, name, arguments...)
+	return self.QueryWith(&Options{Dir: None[string]()}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryString(fullCmd string) (string, error) {
-	return self.QueryStringWith(fullCmd, &Options{})
+	return self.QueryStringWith(fullCmd, &Options{Dir: None[string]()})
 }
 
 // QueryStringWith runs the given command (including possible arguments) using the given options.
@@ -149,7 +149,7 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := self.QueryWith(&Options{}, name, arguments...)
+	output, err := self.QueryWith(&Options{Dir: None[string]()}, name, arguments...)
 	return strings.TrimSpace(output), err
 }
 
@@ -262,12 +262,12 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (self *TestRunner) Run(name string, arguments ...string) error {
-	_, err := self.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+	_, err := self.QueryWith(&Options{IgnoreOutput: true, Dir: None[string]()}, name, arguments...)
 	return err
 }
 
 func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
-	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
+	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true, Dir: None[string]()}, name, arguments...)
 	return err
 }
 
@@ -299,7 +299,7 @@ func (self *TestRunner) createMockBinary(name string, content string) {
 type Options struct {
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
-	Dir Option[string] `exhaustruct:"optional"`
+	Dir Option[string]
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
