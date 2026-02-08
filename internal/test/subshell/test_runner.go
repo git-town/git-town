@@ -193,11 +193,9 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	// mark as test run
 	opts.Env = append(opts.Env, subshell.TestToken+"=1")
-	// set the working dir
-	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
-	subProcess.Dir = opts.Dir
+	subProcess.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	subProcess.Env = opts.Env
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
