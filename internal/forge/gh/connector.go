@@ -115,8 +115,17 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 		self.log.Failed(err.Error())
 		return []forgedomain.Proposal{}, err
 	}
-	self.log.Ok()
-	return ParseJSONOutput(out)
+	proposals, err := ParseJSONOutput(out)
+	if err != nil {
+		self.log.Failed(err.Error())
+		return []forgedomain.Proposal{}, err
+	}
+	ids := make([]string, len(proposals))
+	for p, proposal := range proposals {
+		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposal.Data.Data().Number))
+	}
+	self.log.Log(strings.Join(ids, ", "))
+	return proposals, err
 }
 
 // ============================================================================
