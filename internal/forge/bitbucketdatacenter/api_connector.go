@@ -3,12 +3,14 @@ package bitbucketdatacenter
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/carlmjohnson/requests"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/pkg/colors"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -88,16 +90,19 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 		return []forgedomain.Proposal{}, err
 	}
 	result := []forgedomain.Proposal{}
+	ids := []string{}
 	for _, pr := range resp.Values {
 		if pr.FromRef.ID == fromRefID {
 			proposalData := parsePullRequest(pr, self.RepositoryURL())
-			self.log.Success(fmt.Sprintf("#%d ", proposalData.Number))
 			proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
 			result = append(result, proposal)
+			ids = append(ids, colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number)))
 		}
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
+	} else {
+		self.log.Log(strings.Join(ids, ", "))
 	}
 	return result, nil
 }
