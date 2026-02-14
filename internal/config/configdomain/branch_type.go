@@ -87,15 +87,15 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 func (self BranchType) ShouldUpdateProposals() bool {
 	switch self {
 	case
-		BranchTypeMainBranch,
-		BranchTypePerennialBranch,
 		BranchTypeFeatureBranch,
 		BranchTypeParkedBranch,
 		BranchTypePrototypeBranch:
 		return true
 	case
-		BranchTypeObservedBranch,
 		BranchTypeContributionBranch:
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeObservedBranch,
 		return false
 	}
 	panic("unhandled branch type" + self.String())
