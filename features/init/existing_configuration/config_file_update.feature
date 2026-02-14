@@ -65,6 +65,8 @@ Feature: don't ask for information already provided by the config file
       | git config git-town.github-token gh-tok |
     And the configuration file is now:
       """
+      #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
       # See https://www.git-town.com/configuration-file for details
 
       [branches]
