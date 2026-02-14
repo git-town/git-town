@@ -18,6 +18,9 @@ func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
 	touchedWithoutPerennials := args.TouchedBranches.Remove(args.Config.MainAndPerennials()...)
 	affectedBranches := args.Config.NormalConfig.Lineage.Clan(touchedWithoutPerennials, args.Config.MainAndPerennials())
 	for _, branch := range affectedBranches {
+		if !args.Config.BranchType(branch).ShouldUpdateProposals() {
+			continue
+		}
 		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
 	}
 }

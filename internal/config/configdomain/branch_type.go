@@ -80,6 +80,27 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	panic("unhandled branch type" + self.String())
 }
 
+// ShouldUpdateProposals indicates whether proposals for branches of this type
+// should have their body updated with breadcrumbs.
+// Observed and contribution branches cannot be proposed or shipped,
+// so their proposals should not be modified by Git Town.
+func (self BranchType) ShouldUpdateProposals() bool {
+	switch self {
+	case
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypePrototypeBranch:
+		return true
+	case
+		BranchTypeContributionBranch:
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeObservedBranch,
+		return false
+	}
+	panic("unhandled branch type" + self.String())
+}
+
 func (self BranchType) String() string {
 	return string(self)
 }
