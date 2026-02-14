@@ -122,6 +122,8 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And the configuration file is now:
       """
+      #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
       # See https://www.git-town.com/configuration-file for details
 
       [branches]
