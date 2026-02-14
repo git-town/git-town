@@ -152,8 +152,9 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()), colors.BoldCyan().Styled(targetName))
-	err := self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--target-branch="+target.String())
+	err := self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--target-branch="+targetName)
 	self.log.Finished(err)
 	return err
 }
