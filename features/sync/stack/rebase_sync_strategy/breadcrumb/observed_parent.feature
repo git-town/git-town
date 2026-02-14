@@ -38,7 +38,6 @@ Feature: sync stacked changes without updating proposals of observed branches
       target: main
       body:
         observed body
-
       url: https://example.com/pr/2
       number: 2
       source: child
