@@ -26,9 +26,9 @@ Feature: sync stacked changes without updating proposals of observed branches
       | child  | git fetch --prune --tags                                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto observed {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                          |
-      |        | Finding all proposals for child ... observed                                              |
-      |        | Finding proposal from observed into main ... #1 (observed proposal)                       |
-      |        | Finding proposal from child into observed ... #2 (child proposal)                         |
+      |        | Finding all proposals for child ... observed                                             |
+      |        | Finding proposal from observed into main ... #1 (observed proposal)                      |
+      |        | Finding proposal from child into observed ... #2 (child proposal)                        |
       |        | Update body for #2 ... ok                                                                |
     And the proposals are now
       """
