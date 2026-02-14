@@ -92,10 +92,10 @@ func (self BranchType) ShouldUpdateProposals() bool {
 		BranchTypePrototypeBranch:
 		return true
 	case
-		BranchTypeContributionBranch:
+		BranchTypeContributionBranch,
 		BranchTypeMainBranch,
 		BranchTypePerennialBranch,
-		BranchTypeObservedBranch,
+		BranchTypeObservedBranch:
 		return false
 	}
 	panic("unhandled branch type" + self.String())
