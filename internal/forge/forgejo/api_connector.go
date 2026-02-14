@@ -96,7 +96,7 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 		proposalData := parsePullRequest(pullRequest)
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
 		result[p] = proposal
-		ids = append(ids, colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number)))
+		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number))
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
