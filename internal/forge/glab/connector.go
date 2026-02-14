@@ -126,10 +126,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 var _ forgedomain.ProposalMerger = glabConnector // type check
 
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	self.Log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
-	err := self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), number.String())
-	self.Log.Finished(err)
-	return err
+	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), number.String())
 }
 
 // ============================================================================
@@ -139,10 +136,7 @@ func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, mes
 var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
-	self.Log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()))
-	err := self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--description="+updatedDescription.String())
-	self.Log.Finished(err)
-	return err
+	return self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--description="+updatedDescription.String())
 }
 
 // ============================================================================
@@ -152,11 +146,7 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	targetName := target.String()
-	self.Log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()), colors.BoldCyan().Styled(targetName))
-	err := self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--target-branch="+targetName)
-	self.Log.Finished(err)
-	return err
+	return self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--target-branch="+target.String())
 }
 
 // ============================================================================
