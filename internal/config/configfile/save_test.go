@@ -141,6 +141,8 @@ upstream = true
 			t.Parallel()
 			have := configfile.RenderTOML(configdomain.PartialConfig{})
 			want := `
+#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
 # See https://www.git-town.com/configuration-file for details
 `[1:]
 			must.EqOp(t, want, have)

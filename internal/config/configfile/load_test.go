@@ -23,6 +23,8 @@ func TestConfigfile(t *testing.T) {
 		t.Run("complete content", func(t *testing.T) {
 			t.Parallel()
 			giveTOML := `
+#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
 # See https://www.git-town.com/configuration-file for details
 
 [branches]
