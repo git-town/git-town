@@ -124,7 +124,11 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 	for p, proposal := range proposals {
 		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposal.Data.Data().Number))
 	}
-	self.Log.Log(strings.Join(ids, ", "))
+	if len(proposals) == 0 {
+		self.Log.Success("none")
+	} else {
+		self.Log.Log(strings.Join(ids, ", "))
+	}
 	return proposals, err
 }
 
