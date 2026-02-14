@@ -97,7 +97,7 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 		proposalData := parsePullRequest(pullRequest)
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitea}
 		result[p] = proposal
-		ids = append(ids, colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number)))
+		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number))
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
