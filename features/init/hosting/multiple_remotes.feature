@@ -22,6 +22,8 @@ Feature: Configure a different development remote
       | git config --unset git-town.main-branch |
     And the configuration file is now:
       """
+      #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
       # See https://www.git-town.com/configuration-file for details
 
       [branches]
