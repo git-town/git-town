@@ -106,9 +106,7 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Title.String(),
 	})
-	if err != nil {
-		self.log.Ok()
-	}
+	self.log.Finished(err)
 	return err
 }
 

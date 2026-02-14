@@ -135,7 +135,10 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
+	err := self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -145,7 +148,10 @@ func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, mes
 var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
-	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--body="+updatedBody.String())
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()))
+	err := self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--body="+updatedBody.String())
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -155,7 +161,11 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 var _ forgedomain.ProposalTargetUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--base="+target.String())
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()), colors.BoldCyan().Styled(targetName))
+	err := self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--base="+targetName)
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
