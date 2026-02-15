@@ -462,7 +462,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
-		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          data.config,
 			Program:         prog,
 			TouchedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},

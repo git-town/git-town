@@ -410,7 +410,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
-		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          data.config,
 			Program:         prog,
 			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},

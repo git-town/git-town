@@ -14,13 +14,13 @@ type AddSyncProposalsProgramArgs struct {
 	TouchedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
 }
 
-func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
+func UpdateBreadcrumbsProgram(args AddSyncProposalsProgramArgs) {
 	touchedWithoutPerennials := args.TouchedBranches.Remove(args.Config.MainAndPerennials()...)
 	affectedBranches := args.Config.NormalConfig.Lineage.Clan(touchedWithoutPerennials, args.Config.MainAndPerennials())
 	for _, branch := range affectedBranches {
 		if !args.Config.BranchType(branch).ShouldUpdateProposals() {
 			continue
 		}
-		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
+		args.Program.Value.Add(&opcodes.ProposalUpdateBreadcrumb{Branch: branch})
 	}
 }

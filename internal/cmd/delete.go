@@ -373,7 +373,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
-		programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
 			Config:          data.config,
 			Program:         prog,
 			TouchedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
