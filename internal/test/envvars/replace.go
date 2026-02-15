@@ -2,6 +2,16 @@ package envvars
 
 import "strings"
 
+// HasPrefix indicates whether any environment variable name starts with the given prefix.
+func HasPrefix(envVars []string, prefix string) bool {
+	for _, envVar := range envVars {
+		if strings.HasPrefix(envVar, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
 // Replace provides a new envvars in which the entry with the given key contains the given value instead of its original value.
 // If no entry with the given key exists, appends one at the end.
 // This function assumes that keys are unique, i.e. no duplicate keys exist.
