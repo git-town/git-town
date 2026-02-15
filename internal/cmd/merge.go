@@ -372,7 +372,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
-		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          data.config,
 			Program:         prog,
 			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},

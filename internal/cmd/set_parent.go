@@ -480,7 +480,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		if hasNewParent {
 			parents = append(parents, newParent)
 		}
-		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          data.config,
 			Program:         NewMutable(&prog),
 			TouchedBranches: parents,

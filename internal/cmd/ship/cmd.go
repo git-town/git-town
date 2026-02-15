@@ -185,7 +185,7 @@ Start:
 	updateBreadcrumb := sharedData.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := sharedData.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
-		programs.UpdateBreadcrumbsProgram(programs.AddSyncProposalsProgramArgs{
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          sharedData.config,
 			Program:         prog,
 			TouchedBranches: oldClan.Remove(sharedData.initialBranch),
