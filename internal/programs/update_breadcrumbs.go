@@ -8,13 +8,13 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-type AddSyncProposalsProgramArgs struct {
+type UpdateBreadcrumbsArgs struct {
 	Config          config.ValidatedConfig
 	Program         Mutable[program.Program]
 	TouchedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
 }
 
-func UpdateBreadcrumbsProgram(args AddSyncProposalsProgramArgs) {
+func UpdateBreadcrumbsProgram(args UpdateBreadcrumbsArgs) {
 	touchedWithoutPerennials := args.TouchedBranches.Remove(args.Config.MainAndPerennials()...)
 	affectedBranches := args.Config.NormalConfig.Lineage.Clan(touchedWithoutPerennials, args.Config.MainAndPerennials())
 	for _, branch := range affectedBranches {
