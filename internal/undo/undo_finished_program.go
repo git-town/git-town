@@ -38,7 +38,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		updateBreadcrumb := args.Config.NormalConfig.ProposalBreadcrumb.Enabled()
 		isOnline := args.Config.NormalConfig.Offline.IsOnline()
 		if updateBreadcrumb && isOnline {
-			programs.AddSyncProposalsProgram(programs.AddSyncProposalsProgramArgs{
+			programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 				Config:          args.Config,
 				Program:         result,
 				TouchedBranches: args.RunState.TouchedBranches.LocalBranchNames(),

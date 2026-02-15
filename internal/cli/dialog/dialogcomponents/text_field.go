@@ -11,6 +11,9 @@ import (
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
+	if err := RequireTTY(); err != nil {
+		return "", false, err
+	}
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)
 	textInput.Prompt = args.Prompt

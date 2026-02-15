@@ -277,6 +277,9 @@ type NewSwitchBranchEntriesArgs struct {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+	if err := dialogcomponents.RequireTTY(); err != nil {
+		return "", false, err
+	}
 	entries := args.EntryData.entries()
 	initialBranchPos := None[int]()
 	if currentBranch, has := args.CurrentBranch.Get(); has {

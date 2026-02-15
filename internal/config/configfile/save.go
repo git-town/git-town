@@ -19,6 +19,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 
 func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
+	result.WriteString("#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json\n\n")
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
 	// keep-sorted start

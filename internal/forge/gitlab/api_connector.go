@@ -3,6 +3,7 @@ package gitlab
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -75,14 +76,17 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 		return []forgedomain.Proposal{}, err
 	}
 	result := make([]forgedomain.Proposal, len(mergeRequests))
+	ids := make([]string, len(mergeRequests))
 	for m, mergeRequest := range mergeRequests {
 		proposalData := parseMergeRequest(mergeRequest)
-		self.log.Success(proposalData.Target.String())
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitlab}
 		result[m] = proposal
+		ids[m] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number))
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
+	} else {
+		self.log.Log(strings.Join(ids, ", "))
 	}
 	return result, nil
 }

@@ -167,8 +167,14 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			StandardBranch: args.git.StandardBranch(args.backend),
 			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
-		if err != nil || exit {
+		if err != nil {
+			if errors.Is(err, dialogcomponents.ErrNoTTY) {
+				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing)
+			}
 			return config.EmptyValidatedConfig(), exit, err
+		}
+		if exit {
+			return config.EmptyValidatedConfig(), exit, nil
 		}
 		mainBranch = mainBranchResult.ActualMainBranch
 		if err = args.unvalidated.Value.SetMainBranch(mainBranch, args.backend); err != nil {

@@ -3,6 +3,7 @@ package forgejo
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v22/internal/cli/print"
@@ -90,14 +91,17 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 	}
 	pullRequests := filterPullRequests2(openPullRequests, branch)
 	result := make([]forgedomain.Proposal, len(pullRequests))
+	ids := make([]string, len(pullRequests))
 	for p, pullRequest := range pullRequests {
 		proposalData := parsePullRequest(pullRequest)
-		self.log.Success(proposalData.Target.String())
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
 		result[p] = proposal
+		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposalData.Number))
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
+	} else {
+		self.log.Log(strings.Join(ids, ", "))
 	}
 	return result, nil
 }

@@ -8,12 +8,14 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/github"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/pkg/colors"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -27,6 +29,7 @@ var (
 type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
+	Log      print.Logger
 }
 
 // ============================================================================
@@ -74,20 +77,27 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 var _ forgedomain.ProposalFinder = ghConnector // type-check
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	self.Log.Start(messages.APIProposalFindStart, branch, target)
 	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
+		self.Log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
 	proposals, err := ParseJSONOutput(out)
 	if err != nil {
+		self.Log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
 	switch len(proposals) {
 	case 0:
+		self.Log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	case 1:
+		proposal := proposals[0]
+		self.Log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+proposal.Data.Data().Number.String()), proposal.Data.Data().Title))
 		return Some(proposals[0]), nil
 	default:
+		self.Log.Success("multiple")
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposals), branch, target)
 	}
 }
@@ -99,11 +109,27 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 var _ forgedomain.ProposalSearcher = ghConnector // type-check
 
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	self.Log.Start(messages.APIProposalSearchStart, branch.String())
 	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
+		self.Log.Failed(err.Error())
 		return []forgedomain.Proposal{}, err
 	}
-	return ParseJSONOutput(out)
+	proposals, err := ParseJSONOutput(out)
+	if err != nil {
+		self.Log.Failed(err.Error())
+		return []forgedomain.Proposal{}, err
+	}
+	ids := make([]string, len(proposals))
+	for p, proposal := range proposals {
+		ids[p] = colors.BoldGreen().Styled(fmt.Sprintf("#%d", proposal.Data.Data().Number))
+	}
+	if len(proposals) == 0 {
+		self.Log.Success("none")
+	} else {
+		self.Log.Log(strings.Join(ids, ", "))
+	}
+	return proposals, err
 }
 
 // ============================================================================

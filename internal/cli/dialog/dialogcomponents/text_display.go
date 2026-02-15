@@ -10,6 +10,9 @@ import (
 )
 
 func TextDisplay(title, text string, inputs Inputs, dialogName string) (dialogdomain.Exit, error) {
+	if err := RequireTTY(); err != nil {
+		return false, err
+	}
 	model := textDisplayModel{
 		colors: dialogcolors.NewDialogColors(),
 		status: list.StatusActive,

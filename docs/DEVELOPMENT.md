@@ -318,7 +318,7 @@ Run all linters reliably like on CI:
 make lint-all
 ```
 
-Auto-fix all fixable issues, including code formatting:
+If the linter complains about formatting issues, run the formatters:
 
 <a type="make/command" dir="..">
 

@@ -69,6 +69,8 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		},
 	)
 	selection, exit, err := dialogcomponents.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), input, "unfinished-runstate")
-	fmt.Printf(messages.UnfinishedCommandHandle, dialogcomponents.FormattedSelection(string(selection), exit))
+	if err == nil {
+		fmt.Printf(messages.UnfinishedCommandHandle, dialogcomponents.FormattedSelection(string(selection), exit))
+	}
 	return selection, exit, err
 }
