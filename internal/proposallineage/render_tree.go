@@ -29,21 +29,28 @@ func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchNa
 
 func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool, flat bool) {
 	if node.BranchOrAncestorHasProposal() || !foundCurrent {
+		isCurrentBranch := node.Branch == currentBranch && !foundCurrent
 		indent := 0
 		if !flat {
 			indent = depth * spacesPerIndent
 		}
+		proposal, hasProposal := node.Proposal.Get()
 		builder.WriteString(strings.Repeat(" ", indent))
 		builder.WriteString("- ")
-		if proposal, hasProposal := node.Proposal.Get(); hasProposal {
-			builder.WriteString(proposal.Data.Data().URL)
-		} else {
-			builder.WriteString(node.Branch.String())
-		}
-		isCurrentBranch := node.Branch == currentBranch && !foundCurrent
 		if isCurrentBranch {
+			if hasProposal {
+				builder.WriteString(proposal.Data.Data().Title.String())
+			} else {
+				builder.WriteString(node.Branch.String())
+			}
 			builder.WriteString(" :point_left:")
 			foundCurrent = true
+		} else {
+			if hasProposal {
+				builder.WriteString(proposal.Data.Data().URL)
+			} else {
+				builder.WriteString(node.Branch.String())
+			}
 		}
 		builder.WriteString("\n")
 	}
