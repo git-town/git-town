@@ -81,7 +81,7 @@ func All() []shared.Opcode {
 		&ProgramEndOfBranch{},
 		&ProposalCreate{},
 		&ProposalUpdateBody{},
-		&ProposalUpdateLineage{},
+		&ProposalUpdateBreadcrumb{},
 		&ProposalUpdateSource{},
 		&ProposalUpdateTargetToGrandParent{},
 		&ProposalUpdateTarget{},

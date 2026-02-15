@@ -58,7 +58,7 @@ createProposal:
 
 	if args.Config.Value.NormalConfig.ProposalBreadcrumb.Enabled() {
 		// TODO: remove this once we embed the lineage when creating the proposal
-		args.PrependOpcodes(&ProposalUpdateLineage{
+		args.PrependOpcodes(&ProposalUpdateBreadcrumb{
 			Branch: self.Branch,
 		})
 	}

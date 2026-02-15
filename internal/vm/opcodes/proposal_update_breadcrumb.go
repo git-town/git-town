@@ -8,11 +8,11 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-type ProposalUpdateLineage struct {
+type ProposalUpdateBreadcrumb struct {
 	Branch gitdomain.LocalBranchName
 }
 
-func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
+func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
