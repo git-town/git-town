@@ -56,7 +56,6 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
-		ProposalBreadcrumbStyle:     None[configdomain.ProposalBreadcrumbStyle](),
 		PushHook:                    None[configdomain.PushHook](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),

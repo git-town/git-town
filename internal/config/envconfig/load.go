@@ -168,7 +168,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](), // TODO: load this from the env vars
-		ProposalBreadcrumbStyle:     None[configdomain.ProposalBreadcrumbStyle](),     // TODO: load this from the env vars
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
