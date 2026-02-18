@@ -719,7 +719,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -732,7 +736,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode == 0 {
 				return errors.New("this command should fail")
@@ -745,7 +753,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
-		runCommand(state, command, false)
+		runCommand(runCommandArgs{
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -790,7 +802,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, true)
+		runCommand(runCommandArgs{
+			captureState:  true,
+			command:       command,
+			scenarioState: state,
+		})
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -1614,34 +1630,40 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 }
 
-func runCommand(state *ScenarioState, command string, captureState bool) {
-	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-	if captureState && hasDevRepo {
-		state.CaptureState()
-		updateInitialSHAs(state)
+type runCommandArgs struct {
+	captureState  bool           // whether to take a snapshot of the state of the repository into the given ScenarioState before running this command
+	command       string         // the command to execute
+	scenarioState *ScenarioState // the ScenarioState instance for this E2E test
+}
+
+func runCommand(args runCommandArgs) {
+	devRepo, hasDevRepo := args.scenarioState.fixture.DevRepo.Get()
+	if args.captureState && hasDevRepo {
+		args.scenarioState.CaptureState()
+		updateInitialSHAs(args.scenarioState)
 	}
 	var runResult subshell.RunResult
 	env := os.Environ()
-	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
+	if browserVariable, hasBrowserOverride := args.scenarioState.browserVariable.Get(); hasBrowserOverride {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
-		runResult = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
+		runResult = devRepo.MustQueryStringCodeWith(args.command, &subshell.Options{
 			Env: env,
 		})
 		devRepo.Reload()
 	} else {
-		parts := asserts.NoError1(shellquote.Split(command))
-		cmd, args := parts[0], parts[1:]
-		subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
-		subProcess.Dir = state.fixture.Dir
+		parts := asserts.NoError1(shellquote.Split(args.command))
+		cmd, params := parts[0], parts[1:]
+		subProcess := exec.CommandContext(context.Background(), cmd, params...) // #nosec
+		subProcess.Dir = args.scenarioState.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
 			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
 		}
 	}
-	state.runResult = Some(runResult)
+	args.scenarioState.runResult = Some(runResult)
 }
 
 func updateInitialSHAs(state *ScenarioState) {
