@@ -720,9 +720,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -737,9 +737,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode == 0 {
@@ -754,9 +754,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -803,9 +803,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: true,
-			command:      command,
-			state:        state,
+			captureState:  true,
+			command:       command,
+			scenarioState: state,
 		})
 	})
 
@@ -1631,20 +1631,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 }
 
 type runCommandArgs struct {
-	captureState bool
-	command      string
-	state        *ScenarioState
+	captureState  bool           // whether to take a snapshot of the state of the repository into the given ScenarioState before running this command
+	command       string         // the command to execute
+	scenarioState *ScenarioState // the ScenarioState instance to use
 }
 
 func runCommand(args runCommandArgs) {
-	devRepo, hasDevRepo := args.state.fixture.DevRepo.Get()
+	devRepo, hasDevRepo := args.scenarioState.fixture.DevRepo.Get()
 	if args.captureState && hasDevRepo {
-		args.state.CaptureState()
-		updateInitialSHAs(args.state)
+		args.scenarioState.CaptureState()
+		updateInitialSHAs(args.scenarioState)
 	}
 	var runResult subshell.RunResult
 	env := os.Environ()
-	if browserVariable, hasBrowserOverride := args.state.browserVariable.Get(); hasBrowserOverride {
+	if browserVariable, hasBrowserOverride := args.scenarioState.browserVariable.Get(); hasBrowserOverride {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
@@ -1656,14 +1656,14 @@ func runCommand(args runCommandArgs) {
 		parts := asserts.NoError1(shellquote.Split(args.command))
 		cmd, params := parts[0], parts[1:]
 		subProcess := exec.CommandContext(context.Background(), cmd, params...) // #nosec
-		subProcess.Dir = args.state.fixture.Dir
+		subProcess.Dir = args.scenarioState.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
 			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
 		}
 	}
-	args.state.runResult = Some(runResult)
+	args.scenarioState.runResult = Some(runResult)
 }
 
 func updateInitialSHAs(state *ScenarioState) {
