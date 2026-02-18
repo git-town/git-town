@@ -1633,7 +1633,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 type runCommandArgs struct {
 	captureState  bool           // whether to take a snapshot of the state of the repository into the given ScenarioState before running this command
 	command       string         // the command to execute
-	scenarioState *ScenarioState // the ScenarioState instance to use
+	scenarioState *ScenarioState // the ScenarioState instance for this E2E test
 }
 
 func runCommand(args runCommandArgs) {
