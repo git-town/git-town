@@ -193,6 +193,10 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	// mark as test run
 	opts.Env = append(opts.Env, subshell.TestToken+"=1")
+	// disable TTY when no dialog inputs are provided to prevent subprocess hangs
+	if !envvars.HasPrefix(opts.Env, "GITTOWN_DIALOG_INPUT") {
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_NO_TTY", "1")
+	}
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
 	subProcess.Dir = filepath.Join(self.WorkingDir, opts.Dir)

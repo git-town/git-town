@@ -44,6 +44,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		args.Inputs,
 	)
 	if err != nil {
+		if errors.Is(err, dialogcomponents.ErrNoTTY) {
+			return configdomain.ProgramFlowExit, fmt.Errorf(messages.NoTTYUnfinishedState, runState.Command)
+		}
 		return configdomain.ProgramFlowExit, err
 	}
 	if exit {
