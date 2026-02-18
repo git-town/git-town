@@ -720,10 +720,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
-			tty:          true,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+			tty:           true,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -738,10 +738,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
-			tty:          true,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+			tty:           true,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode == 0 {
@@ -756,10 +756,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(runCommandArgs{
-			captureState: false,
-			command:      command,
-			state:        state,
-			tty:          true,
+			captureState:  false,
+			command:       command,
+			scenarioState: state,
+			tty:           true,
 		})
 		if runResult, hasRunResult := state.runResult.Get(); hasRunResult {
 			if runResult.ExitCode != 0 {
@@ -1670,14 +1670,14 @@ func runCommand(args runCommandArgs) {
 		parts := asserts.NoError1(shellquote.Split(args.command))
 		cmd, params := parts[0], parts[1:]
 		subProcess := exec.CommandContext(context.Background(), cmd, params...) // #nosec
-		subProcess.Dir = args.state.fixture.Dir
+		subProcess.Dir = args.scenarioState.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
 			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
 		}
 	}
-	args.state.runResult = Some(runResult)
+	args.scenarioState.runResult = Some(runResult)
 }
 
 func updateInitialSHAs(state *ScenarioState) {
