@@ -805,10 +805,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		runCommand(runCommandArgs{
-			captureState: true,
-			command:      command,
-			state:        ctx.Value(keyScenarioState).(*ScenarioState),
-			tty:          true,
+			captureState:  true,
+			command:       command,
+			scenarioState: ctx.Value(keyScenarioState).(*ScenarioState),
+			tty:           true,
 		})
 	})
 
@@ -854,10 +854,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I run "([^"]+)" in a non-TTY shell$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
-			captureState: true,
-			command:      command,
-			state:        state,
-			tty:          false,
+			captureState:  true,
+			command:       command,
+			scenarioState: state,
+			tty:           false,
 		})
 	})
 
@@ -1644,21 +1644,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 }
 
 type runCommandArgs struct {
-	captureState bool
-	command      string
-	state        *ScenarioState
-	tty          bool
+	captureState  bool
+	command       string
+	scenarioState *ScenarioState
+	tty           bool
 }
 
 func runCommand(args runCommandArgs) {
-	devRepo, hasDevRepo := args.state.fixture.DevRepo.Get()
+	devRepo, hasDevRepo := args.scenarioState.fixture.DevRepo.Get()
 	if args.captureState && hasDevRepo {
-		args.state.CaptureState()
-		updateInitialSHAs(args.state)
+		args.scenarioState.CaptureState()
+		updateInitialSHAs(args.scenarioState)
 	}
 	var runResult subshell.RunResult
 	env := os.Environ()
-	if browserVariable, hasBrowserOverride := args.state.browserVariable.Get(); hasBrowserOverride {
+	if browserVariable, hasBrowserOverride := args.scenarioState.browserVariable.Get(); hasBrowserOverride {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
