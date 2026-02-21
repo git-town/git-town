@@ -48,7 +48,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		mainBranch = userInput.ValidatedConfig.MainBranch
 	}
-
 	// enter and save missing parent branches
 	lineageResult, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchInfos:      args.BranchInfos,

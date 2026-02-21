@@ -351,6 +351,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
+	fmt.Println(err)
 	if err != nil || exit {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}

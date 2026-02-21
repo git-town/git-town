@@ -99,7 +99,7 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			return LineageResult{
 				AdditionalLineage:    additionalLineage,
 				AdditionalPerennials: additionalPerennials,
-			}, exit, err
+			}, exit, fmt.Errorf(messages.NoTTYParentBranchMissing, branchToVerify, err)
 		}
 		if newParent == messages.SetParentNoneOption {
 			additionalPerennials = append(additionalPerennials, branchToVerify)
