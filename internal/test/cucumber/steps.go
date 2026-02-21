@@ -712,6 +712,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
 			Input: Some(input.Content),
+			TTY:   true,
 		})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
@@ -818,7 +819,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, TTY: true})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
@@ -846,6 +847,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env: env,
+			TTY: true,
 		})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
@@ -866,7 +868,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName, TTY: true})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
@@ -919,7 +921,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for _, row := range envVars.Rows {
 			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
 		}
-		runResult := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		runResult := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env, TTY: true})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
@@ -1238,7 +1240,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		runResult := coworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		runResult := coworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, TTY: true})
 		state.runResult = Some(runResult)
 	})
 
@@ -1664,6 +1666,7 @@ func runCommand(args runCommandArgs) {
 	if hasDevRepo {
 		runResult = devRepo.MustQueryStringCodeWith(args.command, &subshell.Options{
 			Env: env,
+			TTY: args.tty,
 		})
 		devRepo.Reload()
 	} else {
