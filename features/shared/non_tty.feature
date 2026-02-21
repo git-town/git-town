@@ -19,7 +19,6 @@ Feature: non-TTY usage
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
-    # @this
 
     Examples:
       | BRANCH   | COMMAND                        |
@@ -38,7 +37,6 @@ Feature: non-TTY usage
       | branch-1 | ship                           |
       | branch-1 | skip                           |
       | branch-1 | swap                           |
-      | branch-1 | switch                         |
-      # | branch-1 | sync                           |
-      # | branch-1 | undo                           |
-      # | branch-1 | walk --all                     |
+      | branch-1 | sync                           |
+      | branch-1 | undo                           |
+      | branch-1 | walk --all                     |
