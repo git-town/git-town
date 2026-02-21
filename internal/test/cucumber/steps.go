@@ -805,10 +805,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(runCommandArgs{
 			captureState:  true,
 			command:       command,
-			scenarioState: ctx.Value(keyScenarioState).(*ScenarioState),
+			scenarioState: state,
 			tty:           true,
 		})
 	})
