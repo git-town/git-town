@@ -1,7 +1,6 @@
 @skipWindows
 Feature: no TTY, unknown parent
 
-  @debug @this
   Scenario:
     Given a Git repo with origin
     And the branches
@@ -12,4 +11,6 @@ Feature: no TTY, unknown parent
     Then Git Town prints the error:
       """
       cannot determine parent branch for "branch": no interactive terminal available
+
+      To configure, run "git checkout branch && git-town set-parent <parent-branch>"
       """

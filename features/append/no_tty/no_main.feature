@@ -5,8 +5,8 @@ Feature: no TTY, no main branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And Git Town is not configured
+    And the current branch is "existing"
     When I run "git-town append new" in a non-TTY shell
 
   Scenario: result

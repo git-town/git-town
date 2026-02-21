@@ -215,7 +215,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	NewBranchType = "New branch type:"
 
 	NoTTYMainBranchMissing   = "no main branch configured and no interactive terminal available.\nTo configure, run \"git config git-town.main-branch <branch>\".\nTo set up interactively, run \"git town init\" in a shell with TTY.\n"
-	NoTTYParentBranchMissing = "cannot determine parent branch for %q: %w"
+	NoTTYParentBranchMissing = "cannot determine parent branch for %[1]q: %[2]w\n\nTo configure, run \"git checkout %[1]s && git-town set-parent <parent-branch>\""
 
 	ObserveBranchIsLocal        = "branch %s is local only - branches you want to observe must have a remote branch because they are per definition other people's branches"
 	ObservedBranchCannotPark    = "cannot park observed branches"

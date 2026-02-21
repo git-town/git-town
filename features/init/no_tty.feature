@@ -9,7 +9,7 @@ Feature: init without TTY
 
   Scenario: result
     Then Git Town runs no commands
-    Then Git Town prints the error:
+    And Git Town prints the error:
       """
       no interactive terminal available
       """

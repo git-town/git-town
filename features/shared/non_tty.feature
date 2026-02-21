@@ -11,8 +11,8 @@ Feature: non-TTY usage
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
-    And the current branch is "<BRANCH>"
     And Git Town is not configured
+    And the current branch is "<BRANCH>"
     When I run "git-town <COMMAND>" in a non-TTY shell
     Then Git Town prints the error:
       """
