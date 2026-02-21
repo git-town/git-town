@@ -1,6 +1,6 @@
 Feature: non-TTY usage
 
-  Background:
+  Scenario Outline:
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE   | PARENT | LOCATIONS     |
@@ -10,9 +10,12 @@ Feature: non-TTY usage
       | feature | local, origin | commit  |
     And the current branch is "feature"
     When I run "git-town append new" in a non-TTY shell
-
-  Scenario: result
     Then Git Town prints the error:
       """
       no interactive terminal available
       """
+
+    @this
+    Examples:
+      | COMMAND    |
+      | append new |
