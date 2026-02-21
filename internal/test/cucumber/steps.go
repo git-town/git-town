@@ -936,7 +936,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for a, answer := range helpers.TableToInputEnv(input) {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
 		}
-		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		runResult := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, TTY: true})
 		state.runResult = Some(runResult)
 		devRepo.Reload()
 	})
