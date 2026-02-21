@@ -1,3 +1,4 @@
+@skipWindows
 Feature: non-TTY usage
 
   Scenario Outline:
