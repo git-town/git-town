@@ -14,5 +14,5 @@ Feature: non-TTY usage
   Scenario: result
     Then Git Town prints the error:
       """
-      could not open a new TTY: open /dev/tty: no such device or address
+      no interactive terminal available
       """
