@@ -224,10 +224,12 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	} else {
 		subProcess.Stdin = nil
 		if !opts.TTY {
-			// NOTE: TTY only gets disabled if the test says to do so.
-			// This helps make disabled TTY more explicit, and is necessary
-			// because some tests simulate input into dialogs via environment variables
-			// instead of providing opts.Input.
+			// NOTE: We only disable the TTY when a test explicitly requests it.
+			// This keeps TTY behavior explicit and predictable.
+			//
+			// Some tests simulate dialog input via environment variables rather
+			// than providing opts.Input. If we implicitly disabled the TTY when opts.Input is not set,
+			// those tests would fail.
 			disableTTY(subProcess)
 		}
 		err = subProcess.Run()
