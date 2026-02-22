@@ -1,3 +1,4 @@
+@skipWindows
 Feature: no TTY, missing main branch
 
   Scenario: main branch

@@ -1,3 +1,4 @@
+@skipWindows
 Feature: no TTY, missing parent branch
 
   Background:
