@@ -1,17 +1,18 @@
-Feature: no TTY, missing parent branch
+Feature: no TTY, missing main branch
 
-  Scenario: feature branch
+  Scenario: main branch
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE   | PARENT | LOCATIONS |
       | feature | (none) |        | local     |
     And the current branch is "feature"
+    And Git Town is not configured
     When I run "git-town diff-parent" in a non-TTY shell
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot determine parent branch for "feature": no interactive terminal available
+      Error: no main branch configured and no interactive terminal available.
       
-      To configure, run:
-      git checkout feature && git-town set-parent <parent-branch>
+      To configure, run "git config git-town.main-branch <branch>".
+      To set up interactively, run "git town init" in a shell with TTY.
       """

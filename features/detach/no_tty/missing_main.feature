@@ -19,6 +19,7 @@ Feature: no TTY, missing parent branch
     And Git Town prints the error:
       """
       no main branch configured and no interactive terminal available.
+      
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
