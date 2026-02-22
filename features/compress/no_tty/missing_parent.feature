@@ -7,9 +7,8 @@ Feature: no TTY, missing parent branch
       | NAME    | TYPE   | PARENT | LOCATIONS     |
       | feature | (none) |        | local, origin |
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | feature | local, origin | commit 1 | file_1    | content 1    |
-      |         |               | commit 2 | file_2    | content 2    |
+      | BRANCH  | LOCATION      | MESSAGE |
+      | feature | local, origin | commit  |
     And the current branch is "feature"
     When I run "git-town compress" in a non-TTY shell
 
