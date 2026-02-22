@@ -1,6 +1,5 @@
 @skipWindows
 Feature: no TTY, unknown parent
-  # @this
 
   Scenario:
     Given a Git repo with origin
