@@ -13,6 +13,12 @@ Feature: no TTY
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
+    And this lineage exists now
+      """
+      main
+        new
+          existing
+      """
 
   Scenario: undo
     When I run "git-town undo" in a non-TTY shell
