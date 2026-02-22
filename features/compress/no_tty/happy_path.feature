@@ -9,7 +9,7 @@ Feature: no TTY
     And the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
-      |         |               | commit 2 | file_2    | content 2    |
+      |         |               | commit 2 | file_1    | content 2    |
     And the current branch is "feature"
     When I run "git-town compress" in a non-TTY shell
 
@@ -20,3 +20,6 @@ Feature: no TTY
       |         | git reset --soft main --                        |
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature | local, origin | commit 1 | file_1    | content 2    |
