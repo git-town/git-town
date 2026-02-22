@@ -5,6 +5,7 @@
 #### New Features
 
 - Git Town no longer crashes when called by AI agents in subshells without TTY. The Git Town executable now detects the absence of a TTY and prints clear instructions which inputs are needed and how to provide them, in a format understandable by AI agents and humans ([#5995](https://github.com/git-town/git-town/issues/5995), [#6051](https://github.com/git-town/git-town/pull/6051)).
+- `git town diff-parent` now supports the new `--name-only` and `--diff-filter` flags that get passed through to the underlying `git diff` command ([#6046](https://github.com/git-town/git-town/issues/6046)).
 - The generated Git Town configuration file now contains a link to the JSON Schema. This enables IDE features and validation using tools like taplo ([#6058](https://github.com/git-town/git-town/issues/6058)).
 
 #### Bug Fixes
@@ -12,6 +13,7 @@
 - Git Town no longer adds breadcrumbs to the proposals of observed and contribution branches ([#6056](https://github.com/git-town/git-town/pull/6056)).
 - Forge connectors based on the `gh` and `glab` CLI now log API activities in the terminal output, similar to how the token-based connectors do it ([#6057](https://github.com/git-town/git-town/issues/6057)).
 - Git Town no longer crashes when syncing a branches that create the same file ([#6045](https://github.com/git-town/git-town/issues/6045)).
+- Git Town now syncs correctly following a dry-run of the sync ([#5944](https://github.com/git-town/git-town/issues/5944)).
 
 ## 22.5.0 (2025-01-26)
 
