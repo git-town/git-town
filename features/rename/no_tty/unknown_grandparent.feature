@@ -13,7 +13,7 @@ Feature: no TTY, unknown parent
     Then Git Town prints the error:
       """
       cannot determine parent branch for "branch-1": no interactive terminal available
-      
+
       To configure, run:
       git checkout branch-1 && git-town set-parent <parent-branch>
       """

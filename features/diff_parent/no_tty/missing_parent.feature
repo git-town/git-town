@@ -11,7 +11,7 @@ Feature: no TTY, missing parent branch
     And Git Town prints the error:
       """
       cannot determine parent branch for "feature": no interactive terminal available
-      
+
       To configure, run:
       git checkout feature && git-town set-parent <parent-branch>
       """

@@ -14,8 +14,8 @@ Feature: no TTY, missing main branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
-    And the current branch is "beta"
     And Git Town is not configured
+    And the current branch is "beta"
     When I run "git-town merge" in a non-TTY shell
 
   Scenario: result
@@ -25,7 +25,7 @@ Feature: no TTY, missing main branch
     And Git Town prints the error:
       """
       no main branch configured and no interactive terminal available.
-      
+
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
