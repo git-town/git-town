@@ -96,6 +96,9 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {
+			if err != nil {
+				err = fmt.Errorf(messages.NoTTYParentBranchMissing, branchToVerify, err)
+			}
 			return LineageResult{
 				AdditionalLineage:    additionalLineage,
 				AdditionalPerennials: additionalPerennials,

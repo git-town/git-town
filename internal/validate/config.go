@@ -35,7 +35,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
 		if err != nil {
 			if errors.Is(err, dialogcomponents.ErrNoTTY) {
-				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing)
+				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
 			}
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -48,7 +48,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		mainBranch = userInput.ValidatedConfig.MainBranch
 	}
-
 	// enter and save missing parent branches
 	lineageResult, exit, err := dialog.Lineage(dialog.LineageArgs{
 		BranchInfos:      args.BranchInfos,

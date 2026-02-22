@@ -169,7 +169,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		})
 		if err != nil {
 			if errors.Is(err, dialogcomponents.ErrNoTTY) {
-				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing)
+				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
 			}
 			return config.EmptyValidatedConfig(), exit, err
 		}

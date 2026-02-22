@@ -5,6 +5,7 @@
   ],
   "exclude": [
     "features/append/branch_prefix/config_file.feature",
+    "features/delete/no_tty/missing_parent.feature",
     "features/detach/merge_conflict/dependent_changes.feature",
     "features/end_to_end/ship_prototype_branch_and_sync.feature",
     "features/hack/branch_prefix/config_file.feature",

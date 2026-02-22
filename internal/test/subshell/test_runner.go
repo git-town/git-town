@@ -98,11 +98,11 @@ func (self *TestRunner) MockNoCommandsInstalled() {
 // MustQuery provides the output of the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (self *TestRunner) MustQuery(name string, arguments ...string) string {
-	return self.MustQueryWith(&Options{}, name, arguments...)
+	return self.MustQueryWith(&Options{TTY: true}, name, arguments...)
 }
 
 func (self *TestRunner) MustQueryStringCode(fullCmd string) RunResult {
-	return self.MustQueryStringCodeWith(fullCmd, &Options{})
+	return self.MustQueryStringCodeWith(fullCmd, &Options{TTY: true})
 }
 
 func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) RunResult {
@@ -128,13 +128,13 @@ func (self *TestRunner) MustRun(name string, arguments ...string) {
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return self.QueryWith(&Options{}, name, arguments...)
+	return self.QueryWith(&Options{TTY: true}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryString(fullCmd string) (string, error) {
-	return self.QueryStringWith(fullCmd, &Options{})
+	return self.QueryStringWith(fullCmd, &Options{TTY: true})
 }
 
 // QueryStringWith runs the given command (including possible arguments) using the given options.
@@ -149,7 +149,7 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := self.QueryWith(&Options{}, name, arguments...)
+	output, err := self.QueryWith(&Options{TTY: true}, name, arguments...)
 	return strings.TrimSpace(output), err
 }
 
@@ -222,6 +222,16 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			return emptyResult, err
 		}
 	} else {
+		subProcess.Stdin = nil
+		if !opts.TTY {
+			// NOTE: We only disable the TTY when a test explicitly requests it.
+			// This keeps TTY behavior explicit and predictable.
+			//
+			// Some tests simulate dialog input via environment variables rather
+			// than providing opts.Input. If we implicitly disabled the TTY when opts.Input is not set,
+			// those tests would fail.
+			disableTTY(subProcess)
+		}
 		err = subProcess.Run()
 	}
 	exitCode := 0
@@ -256,12 +266,12 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (self *TestRunner) Run(name string, arguments ...string) error {
-	_, err := self.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+	_, err := self.QueryWith(&Options{IgnoreOutput: true, TTY: true}, name, arguments...)
 	return err
 }
 
 func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
-	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
+	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true, TTY: true}, name, arguments...)
 	return err
 }
 
@@ -304,6 +314,9 @@ type Options struct {
 
 	// input to pipe into STDIN
 	Input Option[string] `exhaustruct:"optional"`
+
+	// whether to provide a TTY to the subshell
+	TTY bool
 }
 
 type RunResult struct {
