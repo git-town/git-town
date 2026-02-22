@@ -1,5 +1,5 @@
 @skipWindows
-Feature: no TTY
+Feature: no TTY, no main branch
 
   Background:
     Given a Git repo with origin
