@@ -224,6 +224,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	} else {
 		subProcess.Stdin = nil
 		if !opts.TTY {
+			// NOTE: we only disable TTY if the test is configured to do so
+			// because some tests simulate input into dialogs via environment variables.
 			disableTTY(subProcess)
 		}
 		err = subProcess.Run()
