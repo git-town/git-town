@@ -7,15 +7,18 @@ Feature: no TTY, no main branch
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
+    And Git Town is not configured
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
     When I run "git-town commit --down -m commit-1b" in a non-TTY shell
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                           |
-      | branch-2 | git checkout branch-1             |
-      | branch-1 | git commit -m commit-1b           |
-      |          | git checkout branch-2             |
-      | branch-2 | git merge --no-edit --ff branch-1 |
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      no main branch configured and no interactive terminal available.
+
+      To configure, run "git config git-town.main-branch <branch>".
+      To set up interactively, run "git town init" in a shell with TTY.
+      """
