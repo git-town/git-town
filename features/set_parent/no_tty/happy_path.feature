@@ -12,7 +12,19 @@ Feature: no TTY
 
   Scenario: result
     Then Git Town runs no commands
+    And this lineage exists now
+      """
+      main
+        branch-2
+          branch-1
+      """
 
   Scenario: undo
     When I run "git-town undo" in a non-TTY shell
     Then Git Town runs no commands
+    And this lineage exists now
+      """
+      main
+        branch-1
+        branch-2
+      """
