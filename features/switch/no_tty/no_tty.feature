@@ -1,4 +1,4 @@
-@skipWindows @messyoutput
+@skipWindows
 Feature: switch branches without TTY
 
   Scenario: switching to another branch

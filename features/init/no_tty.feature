@@ -1,4 +1,4 @@
-@skipWindows @messyoutput
+@skipWindows
 Feature: init without TTY
 
   Background:
