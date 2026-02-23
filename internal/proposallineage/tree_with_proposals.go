@@ -24,22 +24,6 @@ func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
 	return false
 }
 
-func (self TreeNodeWithProposal) Depth(fromMax int) int {
-	return fromMax - self.MaxDepth()
-}
-
-func (self TreeNodeWithProposal) IsLinear() bool {
-	if len(self.Children) > 1 {
-		return false
-	}
-	for _, child := range self.Children {
-		if !child.IsLinear() {
-			return false
-		}
-	}
-	return true
-}
-
 func (self TreeNodeWithProposal) MaxDepth() int {
 	maxChildDepth := 0
 	for _, child := range self.Children {
