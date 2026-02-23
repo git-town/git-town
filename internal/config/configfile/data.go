@@ -61,7 +61,6 @@ type Propose struct {
 	Breadcrumb *string `toml:"breadcrumb"`
 	Direction  *string `toml:"direction"`
 	Lineage    *string `toml:"lineage"`
-	Style      *string `toml:"style"`
 }
 
 type Ship struct {
