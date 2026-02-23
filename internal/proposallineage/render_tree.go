@@ -60,8 +60,6 @@ func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBr
 	onPathToRoot := childFoundCurrent || isCurrentBranch
 	// Render if: has proposal/descendant with proposal, OR on path from current to root
 	if node.BranchOrAncestorHasProposal() || onPathToRoot {
-		indent := 0
-		builder.WriteString(strings.Repeat(" ", indent))
 		builder.WriteString("- ")
 		if proposal, hasProposal := node.Proposal.Get(); hasProposal {
 			builder.WriteString(proposal.Data.Data().URL)
