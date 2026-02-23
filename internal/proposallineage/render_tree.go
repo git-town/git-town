@@ -25,12 +25,9 @@ func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchNa
 	return builder.String()
 }
 
-func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool, flat bool) {
+func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool) {
 	if node.BranchOrAncestorHasProposal() || !foundCurrent {
-		indent := 0
-		if !flat {
-			indent = depth * spacesPerIndent
-		}
+		indent := depth * spacesPerIndent
 		builder.WriteString(strings.Repeat(" ", indent))
 		builder.WriteString("- ")
 		if proposal, hasProposal := node.Proposal.Get(); hasProposal {
@@ -46,16 +43,16 @@ func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, current
 		builder.WriteString("\n")
 	}
 	for _, child := range node.Children {
-		renderNodeDown(builder, child, currentBranch, depth+1, foundCurrent, flat)
+		renderNodeDown(builder, child, currentBranch, depth+1, foundCurrent)
 	}
 }
 
-func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, maxDepth int, flat bool) bool {
+func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, maxDepth int) bool {
 	// First render children (they appear at top in up direction)
 	// foundCurrent propagates UP from children to parents
 	childFoundCurrent := false
 	for _, child := range node.Children {
-		if renderNodeUp(builder, child, currentBranch, maxDepth, flat) {
+		if renderNodeUp(builder, child, currentBranch, maxDepth) {
 			childFoundCurrent = true
 		}
 	}
@@ -65,10 +62,7 @@ func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBr
 	// Render if: has proposal/descendant with proposal, OR on path from current to root
 	if node.BranchOrAncestorHasProposal() || onPathToRoot {
 		depth := node.Depth(maxDepth)
-		indent := 0
-		if !flat {
-			indent = depth * spacesPerIndent
-		}
+		indent := depth * spacesPerIndent
 		builder.WriteString(strings.Repeat(" ", indent))
 		builder.WriteString("- ")
 		if proposal, hasProposal := node.Proposal.Get(); hasProposal {

@@ -78,7 +78,7 @@ func TestRender(t *testing.T) {
 			"feature-b2": "feature-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, configdomain.ProposalBreadcrumbStyleTree, Some(connector))
+		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
 		want := `
 
 -------------------------
@@ -100,7 +100,7 @@ func TestRender(t *testing.T) {
 			"feature-c": "feature-b",
 		})
 		var connector forgedomain.Connector = &failingFinder{}
-		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, configdomain.ProposalBreadcrumbStyleTree, Some(connector))
+		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
 		want := `
 
 -------------------------
@@ -120,7 +120,7 @@ func TestRender(t *testing.T) {
 			"feature-c":     "no-proposal-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbStacks, configdomain.ProposalBreadcrumbDirectionDown, configdomain.ProposalBreadcrumbStyleTree, Some(connector))
+		have := proposallineage.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbStacks, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
 		want := `
 
 -------------------------

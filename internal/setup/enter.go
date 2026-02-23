@@ -314,7 +314,6 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](), // TODO: add this to the setup assistant
-		ProposalBreadcrumbStyle:     None[configdomain.ProposalBreadcrumbStyle](),     // TODO: add this to the setup assistant
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
