@@ -28,15 +28,14 @@ func ProposalBreadcrumbDirection(args Args[configdomain.ProposalBreadcrumbDirect
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-
 	entries = append(entries, list.Entries[Option[configdomain.ProposalBreadcrumbDirection]]{
 		{
 			Data: Some(configdomain.ProposalBreadcrumbDirectionDown),
-			Text: "down from the root (default)",
+			Text: "down from the root, indented (default)",
 		},
 		{
 			Data: Some(configdomain.ProposalBreadcrumbDirectionUp),
-			Text: "up from the root",
+			Text: "up from the root, not indented",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
