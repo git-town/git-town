@@ -24,17 +24,6 @@ func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
 	return false
 }
 
-func (self TreeNodeWithProposal) MaxDepth() int {
-	maxChildDepth := 0
-	for _, child := range self.Children {
-		childDepth := child.MaxDepth()
-		if childDepth > maxChildDepth {
-			maxChildDepth = childDepth
-		}
-	}
-	return maxChildDepth + 1
-}
-
 func AddProposalsToTree(tree TreeNode, connector Option[forgedomain.Connector]) TreeNodeWithProposal {
 	return addProposalsToTreeHelper(tree, None[gitdomain.LocalBranchName](), connector)
 }
