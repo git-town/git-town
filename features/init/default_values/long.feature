@@ -44,7 +44,6 @@ Feature: Accepting all default values leads to a working setup
       | proposal breadcrumb direction | enter      |
       | config storage                | enter      |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
