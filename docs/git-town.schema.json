@@ -148,9 +148,6 @@
         },
         "lineage": {
           "type": "string"
-        },
-        "style": {
-          "type": "string"
         }
       },
       "additionalProperties": false,
