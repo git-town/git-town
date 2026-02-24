@@ -97,7 +97,6 @@ Feature: display configuration defined in environment variables
       Propose:
         breadcrumb: stacks
         breadcrumb direction: down
-        breadcrumb style: tree
 
       Ship:
         delete tracking branch: no

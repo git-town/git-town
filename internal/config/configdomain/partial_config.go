@@ -51,7 +51,6 @@ type PartialConfig struct {
 	PerennialRegex              Option[PerennialRegex]
 	ProposalBreadcrumb          Option[ProposalBreadcrumb]
 	ProposalBreadcrumbDirection Option[ProposalBreadcrumbDirection]
-	ProposalBreadcrumbStyle     Option[ProposalBreadcrumbStyle]
 	PushBranches                Option[PushBranches]
 	PushHook                    Option[PushHook]
 	ShareNewBranches            Option[ShareNewBranches]
@@ -113,7 +112,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PerennialRegex:              other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalBreadcrumb:          other.ProposalBreadcrumb.Or(self.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.Or(self.ProposalBreadcrumbDirection),
-		ProposalBreadcrumbStyle:     other.ProposalBreadcrumbStyle.Or(self.ProposalBreadcrumbStyle),
 		PushBranches:                other.PushBranches.Or(self.PushBranches),
 		PushHook:                    other.PushHook.Or(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.Or(self.ShareNewBranches),

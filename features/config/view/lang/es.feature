@@ -70,7 +70,6 @@ Feature: show the configuration in Spanish
       Propose:
         breadcrumb: none
         breadcrumb direction: down
-        breadcrumb style: tree
 
       Ship:
         delete tracking branch: yes

@@ -54,7 +54,6 @@ Feature: show the configuration when using an alternative config file
       Propose:
         breadcrumb: none
         breadcrumb direction: down
-        breadcrumb style: tree
 
       Ship:
         delete tracking branch: yes

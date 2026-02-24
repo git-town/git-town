@@ -69,7 +69,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialRegex              Option[configdomain.PerennialRegex]
 		proposalBreadcrumb          Option[configdomain.ProposalBreadcrumb]
 		proposalBreadcrumbDirection Option[configdomain.ProposalBreadcrumbDirection]
-		proposalBreadcrumbStyle     Option[configdomain.ProposalBreadcrumbStyle]
 		pushBranches                Option[configdomain.PushBranches]
 		pushHook                    Option[configdomain.PushHook]
 		shareNewBranches            Option[configdomain.ShareNewBranches]
@@ -224,10 +223,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.Direction, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Propose.Style != nil {
-			proposalBreadcrumbStyle, err = configdomain.ParseProposalBreadcrumbStyle(*data.Propose.Style, messages.ConfigFile)
-			ec.Check(err)
-		}
 	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
@@ -325,7 +320,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposalBreadcrumbStyle:     proposalBreadcrumbStyle,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

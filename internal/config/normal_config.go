@@ -63,7 +63,6 @@ type NormalConfig struct {
 	PerennialRegex              Option[configdomain.PerennialRegex]
 	ProposalBreadcrumb          configdomain.ProposalBreadcrumb
 	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
-	ProposalBreadcrumbStyle     configdomain.ProposalBreadcrumbStyle
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
 	ShareNewBranches            configdomain.ShareNewBranches
@@ -134,7 +133,6 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PerennialRegex:              other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalBreadcrumb:          other.ProposalBreadcrumb.GetOr(self.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.GetOr(self.ProposalBreadcrumbDirection),
-		ProposalBreadcrumbStyle:     other.ProposalBreadcrumbStyle.GetOr(self.ProposalBreadcrumbStyle),
 		PushBranches:                other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                    other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.GetOr(self.ShareNewBranches),
@@ -291,7 +289,6 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          configdomain.ProposalBreadcrumbNone,
 		ProposalBreadcrumbDirection: configdomain.ProposalBreadcrumbDirectionDown,
-		ProposalBreadcrumbStyle:     configdomain.ProposalBreadcrumbStyleTree,
 		PushBranches:                true,
 		PushHook:                    true,
 		ShareNewBranches:            configdomain.ShareNewBranchesNone,
@@ -311,10 +308,6 @@ func DefaultNormalConfig() NormalConfig {
 func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults NormalConfig) NormalConfig {
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
 	proposalBreadcrumbDirection := partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection)
-	proposalBreadcrumbStyle := partial.ProposalBreadcrumbStyle.GetOr(defaults.ProposalBreadcrumbStyle)
-	if proposalBreadcrumbDirection == configdomain.ProposalBreadcrumbDirectionUp {
-		proposalBreadcrumbStyle = configdomain.ProposalBreadcrumbStyleAuto
-	}
 	return NormalConfig{
 		Aliases:                     partial.Aliases,
 		AutoResolve:                 partial.AutoResolve.GetOr(defaults.AutoResolve),
@@ -350,7 +343,6 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PerennialRegex:              partial.PerennialRegex,
 		ProposalBreadcrumb:          partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposalBreadcrumbStyle:     proposalBreadcrumbStyle,
 		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
