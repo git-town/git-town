@@ -19,41 +19,42 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS                   |
-      | welcome                     | enter                  |
-      | aliases                     | a enter                |
-      | main branch                 | enter                  |
-      | perennial branches          | space down space enter |
-      | origin hostname             | c o d e enter          |
-      | forge type                  | up up enter            |
-      | github connector            | enter                  |
-      | github token                | g h - t o k enter      |
-      | token scope                 | enter                  |
-      | enter all                   | down enter             |
-      | perennial regex             | p e r enter            |
-      | feature regex               | f e a t enter          |
-      | contribution regex          | c o n t enter          |
-      | observed regex              | o b s enter            |
-      | branch prefix               | k g - enter            |
-      | new branch type             | down enter             |
-      | unknown branch type         | down enter             |
-      | sync feature strategy       | down enter             |
-      | sync perennial strategy     | down enter             |
-      | sync prototype strategy     | down enter             |
-      | sync upstream               | down enter             |
-      | auto sync                   | down enter             |
-      | sync tags                   | down enter             |
-      | detached                    | up enter               |
-      | stash                       | down enter             |
-      | share-new-branches          | down enter             |
-      | push branches               | down enter             |
-      | push hook                   | down enter             |
-      | ship strategy               | down down enter        |
-      | ship delete tracking branch | down enter             |
-      | ignore-uncommitted          | up enter               |
-      | order                       | up enter               |
-      | proposal breadcrumb         | down enter             |
-      | config storage              | enter                  |
+      | DIALOG                        | KEYS                   |
+      | welcome                       | enter                  |
+      | aliases                       | a enter                |
+      | main branch                   | enter                  |
+      | perennial branches            | space down space enter |
+      | origin hostname               | c o d e enter          |
+      | forge type                    | up up enter            |
+      | github connector              | enter                  |
+      | github token                  | g h - t o k enter      |
+      | token scope                   | enter                  |
+      | enter all                     | down enter             |
+      | perennial regex               | p e r enter            |
+      | feature regex                 | f e a t enter          |
+      | contribution regex            | c o n t enter          |
+      | observed regex                | o b s enter            |
+      | branch prefix                 | k g - enter            |
+      | new branch type               | down enter             |
+      | unknown branch type           | down enter             |
+      | sync feature strategy         | down enter             |
+      | sync perennial strategy       | down enter             |
+      | sync prototype strategy       | down enter             |
+      | sync upstream                 | down enter             |
+      | auto sync                     | down enter             |
+      | sync tags                     | down enter             |
+      | detached                      | up enter               |
+      | stash                         | down enter             |
+      | share-new-branches            | down enter             |
+      | push branches                 | down enter             |
+      | push hook                     | down enter             |
+      | ship strategy                 | down down enter        |
+      | ship delete tracking branch   | down enter             |
+      | ignore-uncommitted            | up enter               |
+      | order                         | up enter               |
+      | proposal breadcrumb           | down enter             |
+      | proposal breadcrumb direction | down enter             |
+      | config storage                | enter                  |
 
   Scenario: result
     Then Git Town runs the commands
@@ -92,6 +93,7 @@ Feature: change existing information in Git metadata
       | git config git-town.order asc                            |
       | git config git-town.perennial-regex per                  |
       | git config git-town.proposal-breadcrumb stacks           |
+      | git config git-town.proposal-breadcrumb-direction up     |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
@@ -134,6 +136,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.perennial-regex" is now "per"
     And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is now "up"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "push"
@@ -180,6 +183,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" now doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb-direction" now doesn't exist
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "no"
