@@ -1,5 +1,30 @@
 # Git Town Changelog
 
+## 22.6.0 (2025-02-22)
+
+#### New Features
+
+- Added a new [breadcrumb-direction](https://www.git-town.com/preferences/proposal-breadcrumb-direction.html) preference that lets you control how Git Town renders breadcrumbs in proposals: either up or down from the root branch ([#6024](https://github.com/git-town/git-town/pull/6024)).
+- `git town diff-parent` now supports `--name-only` and `--diff-filter`, both passed straight through to the underlying `git diff` invocation. This makes it easier to narrow diffs in larger stacks ([#6046](https://github.com/git-town/git-town/issues/6046)).
+- The generated Git Town configuration file now contains a link to its JSON Schema. This unlocks IDE autocomplete and validation ([#6058](https://github.com/git-town/git-town/issues/6058)).
+- The setup assistant now creates an alias for `git town continue` ([#6040](https://github.com/git-town/git-town/discussions/6040)).
+- `--verbose` output now redacts all tokens and secrets. You can now safely paste verbose logs into bug reports. To see actual tokens, run `git town config` ([#6029](https://github.com/git-town/git-town/issues/6029)).
+- The documentation now clarifies how to ship multiple branches from a stack without re-running CI between each one ([#6031](https://github.com/git-town/git-town/discussions/6031)).
+
+#### Bug Fixes
+
+- Fixed a crash when Git Town is invoked by AI agents in subshells without a TTY. We now detect missing TTYs and print clear, structured instructions describing the required inputs, readable by both humans and automation ([#5995](https://github.com/git-town/git-town/issues/5995), [#6051](https://github.com/git-town/git-town/pull/6051)).
+- Git Town no longer adds breadcrumbs to proposals of observed and contribution branches. Breadcrumbs are now limited to branches that you own ([#6056](https://github.com/git-town/git-town/pull/6056)).
+- Forge connectors using `gh` and `glab` now log API activity in the terminal, matching the behavior of token-based connectors ([#6057](https://github.com/git-town/git-town/issues/6057)).
+- Fixed a crash when syncing branches that introduce the same file ([#6045](https://github.com/git-town/git-town/issues/6045)).
+- `git town sync` now runs correctly after a dry-run ([#5944](https://github.com/git-town/git-town/issues/5944)).
+- The `glab` connector now correctly lists merge requests ([#6041](https://github.com/git-town/git-town/pull/6041)).
+- `git town sync --stack` now updates proposals only for the branches that are actually being synced ([#6021](https://github.com/git-town/git-town/issues/6021)).
+
+#### Contributors
+
+Huge thanks to @WhosNickDoglio, @bendrucker, @cannonpalms, @ichoosetoaccept, @izkreny, @jedymatt, @kevgo, @luan, @pcfreak30, @pradeepmurugesan, @ruudk, @syhol, @xmarkclx for contributing code, feedback, and ideas across 39 shipped pull requests and 13 resolved issues!
+
 ## 22.5.0 (2025-01-26)
 
 #### New Features
