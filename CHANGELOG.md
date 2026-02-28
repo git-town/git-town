@@ -4,22 +4,27 @@
 
 #### New Features
 
-- The new [breadcrumb-direction](https://www.git-town.com/preferences/proposal-breadcrumb-direction.html) setting allows rendering the breadcrumb that Git Town embeds into proposals from the root up or down ([#6024](https://github.com/git-town/git-town/pull/6024)).
-- `git town diff-parent` now supports the new `--name-only` and `--diff-filter` flags that get passed through to the underlying `git diff` command ([#6046](https://github.com/git-town/git-town/issues/6046)).
-- The generated Git Town configuration file now contains a link to the JSON Schema. This enables IDE features and validation using tools like taplo ([#6058](https://github.com/git-town/git-town/issues/6058)).
-- The Git Town setup assistant now also creates an alias for the `git town continue` command ([#6040](https://github.com/git-town/git-town/discussions/6040)).
-- The output of the `--verbose` flag now omits all tokens and secrets to make it easier to copy-paste this output into bug reports. To see the actual tokens used, run `git town config` ([#6029](https://github.com/git-town/git-town/issues/6029)).
-- The Git Town documentation clarifies how to ship multiple branches from a stack without re-running CI in between ([#6031](https://github.com/git-town/git-town/discussions/6031)).
+- Added a new [breadcrumb-direction](https://www.git-town.com/preferences/proposal-breadcrumb-direction.html) preference that lets you control how Git Town renders breadcrumbs in proposals: either up or down from the root branch ([#6024](https://github.com/git-town/git-town/pull/6024)).
+- `git town diff-parent` now supports `--name-only` and `--diff-filter`, both passed straight through to the underlying `git diff` invocation. This makes it much easier to narrow diffs in larger stacks ([#6046](https://github.com/git-town/git-town/issues/6046)).
+- The generated Git Town configuration file now contains a link to its JSON Schema. This unlocks IDE autocomplete and validation ([#6058](https://github.com/git-town/git-town/issues/6058)).
+- The setup assistant now creates an alias for `git town continue` ([#6040](https://github.com/git-town/git-town/discussions/6040)).
+- `--verbose` output now redacts all tokens and secrets. You can now safely paste verbose logs into bug reports. To see actual tokens, run `git town config` ([#6029](https://github.com/git-town/git-town/issues/6029)).
+- The documentation now clarifies how to ship multiple branches from a stack without re-running CI between each one ([#6031](https://github.com/git-town/git-town/discussions/6031)).
 
 #### Bug Fixes
 
-- Git Town no longer crashes when called by AI agents in subshells without TTY. The Git Town executable now detects the absence of a TTY and prints clear instructions which inputs are needed and how to provide them, in a format understandable by AI agents and humans ([#5995](https://github.com/git-town/git-town/issues/5995), [#6051](https://github.com/git-town/git-town/pull/6051)).
-- Git Town no longer adds breadcrumbs to the proposals of observed and contribution branches ([#6056](https://github.com/git-town/git-town/pull/6056)).
-- Forge connectors based on the `gh` and `glab` CLI now log API activities in the terminal output, similar to how the token-based connectors do it ([#6057](https://github.com/git-town/git-town/issues/6057)).
-- Git Town no longer crashes when syncing a branches that create the same file ([#6045](https://github.com/git-town/git-town/issues/6045)).
-- Git Town now syncs correctly following a dry-run of the sync ([#5944](https://github.com/git-town/git-town/issues/5944)).
-- The `glab` connector now lists merge requests properly ([#6041](https://github.com/git-town/git-town/pull/6041)).
-- `git town sync --stack` now only updates proposals of branches that are being synced ([#6021](https://github.com/git-town/git-town/issues/6021)).
+- Fixed a crash when Git Town is invoked by AI agents in subshells without a TTY. We now detect missing TTYs and print clear, structured instructions describing the required inputs, readable by both humans and automation ([#5995](https://github.com/git-town/git-town/issues/5995), [#6051](https://github.com/git-town/git-town/pull/6051)).
+- Git Town no longer adds breadcrumbs to proposals of observed and contribution branches. Breadcrumbs are now limited to branches that you own ([#6056](https://github.com/git-town/git-town/pull/6056)).
+- Forge connectors using `gh` and `glab` now log API activity in the terminal, matching the behavior of token-based connectors ([#6057](https://github.com/git-town/git-town/issues/6057)).
+- Fixed a crash when syncing branches that introduce the same file ([#6045](https://github.com/git-town/git-town/issues/6045)).
+- `git town sync` now runs correctly after a dry-run ([#5944](https://github.com/git-town/git-town/issues/5944)).
+- The `glab` connector now correctly lists merge requests ([#6041](https://github.com/git-town/git-town/pull/6041)).
+- `git town sync --stack` now updates proposals only for the branches that are actually being synced ([#6021](https://github.com/git-town/git-town/issues/6021)).
+
+#### Contributors
+
+Huge thanks to @WhosNickDoglio, @bendrucker, @cannonpalms, @ichoosetoaccept, @izkreny, @jedymatt, @kevgo, @luan, @pcfreak30, @pradeepmurugesan, @ruudk, @syhol, @xmarkclx for contributing code, feedback, and ideas across 39 shipped pull requests and 13 resolved issues!
+
 
 ## 22.5.0 (2025-01-26)
 
