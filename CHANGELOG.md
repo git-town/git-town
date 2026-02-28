@@ -4,7 +4,7 @@
 
 #### New Features
 
-- The new [breadcrumb-direction]() setting allows rendering the breadcrumb that Git Town embeds into proposals from the root up or down ([#6024](https://github.com/git-town/git-town/pull/6024)).
+- The new [breadcrumb-direction](https://www.git-town.com/preferences/proposal-breadcrumb-direction.html) setting allows rendering the breadcrumb that Git Town embeds into proposals from the root up or down ([#6024](https://github.com/git-town/git-town/pull/6024)).
 - `git town diff-parent` now supports the new `--name-only` and `--diff-filter` flags that get passed through to the underlying `git diff` command ([#6046](https://github.com/git-town/git-town/issues/6046)).
 - The generated Git Town configuration file now contains a link to the JSON Schema. This enables IDE features and validation using tools like taplo ([#6058](https://github.com/git-town/git-town/issues/6058)).
 - The Git Town setup assistant now also creates an alias for the `git town continue` command ([#6040](https://github.com/git-town/git-town/discussions/6040)).
