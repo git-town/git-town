@@ -180,6 +180,7 @@ EnterForgeData:
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
 	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
+	proposalBreadcrumbDirection := None[configdomain.ProposalBreadcrumbDirection]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -273,6 +274,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
+		proposalBreadcrumbDirection, exit, err = enterProposalBreadcrumbDirection(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
@@ -313,7 +318,7 @@ EnterForgeData:
 		PerennialBranches:           perennialBranches,
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](), // TODO: add this to the setup assistant
+		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
@@ -631,6 +636,17 @@ func enterProposalBreadcrumb(data Data) (Option[configdomain.ProposalBreadcrumb]
 		Global: data.Config.GitGlobal.ProposalBreadcrumb,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ProposalBreadcrumb,
+	})
+}
+
+func enterProposalBreadcrumbDirection(data Data) (Option[configdomain.ProposalBreadcrumbDirection], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalBreadcrumbDirection.IsSome() {
+		return None[configdomain.ProposalBreadcrumbDirection](), false, nil
+	}
+	return dialog.ProposalBreadcrumbDirection(dialog.Args[configdomain.ProposalBreadcrumbDirection]{
+		Global: data.Config.GitGlobal.ProposalBreadcrumbDirection,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.ProposalBreadcrumbDirection,
 	})
 }
 

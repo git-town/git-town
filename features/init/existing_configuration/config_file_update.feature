@@ -29,6 +29,7 @@ Feature: don't ask for information already provided by the config file
 
       [propose]
       breadcrumb = "none"
+      breadcrumb-direction = "up"
 
       [ship]
       delete-tracking-branch = true
@@ -93,6 +94,7 @@ Feature: don't ask for information already provided by the config file
 
       [propose]
       breadcrumb = "none"
+      breadcrumb-direction = "up"
 
       [ship]
       delete-tracking-branch = true

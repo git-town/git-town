@@ -25,6 +25,10 @@ Feature: don't ask for information already provided by the config file
       forge-type = "github"
       github-connector = "gh"
 
+      [propose]
+      breadcrumb = "stacks"
+      breadcrumb-direction = "down"
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
@@ -61,6 +65,8 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
+    And local Git setting "git-town.propose-breadcrumb" still doesn't exist
+    And local Git setting "git-town.propose-breadcrumb-direction" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist

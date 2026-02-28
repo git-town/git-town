@@ -19,6 +19,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "release-.*"
     And local Git setting "git-town.proposal-breadcrumb" is "stacks"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is "up"
     And local Git setting "git-town.push-branches" is "true"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.share-new-branches" is "no"
@@ -31,72 +32,74 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS       |
-      | welcome                     | enter      |
-      | aliases                     | enter      |
-      | main branch                 | enter      |
-      | perennial branches          | enter      |
-      | dev-remote                  | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
-      | github connector            | enter      |
-      | github token                | enter      |
-      | enter all                   | down enter |
-      | perennial regex             | enter      |
-      | feature regex               | enter      |
-      | contribution regex          | enter      |
-      | observed regex              | enter      |
-      | branch prefix               | enter      |
-      | new branch type             | enter      |
-      | unknown branch type         | enter      |
-      | sync feature strategy       | enter      |
-      | sync perennial strategy     | enter      |
-      | sync prototype strategy     | enter      |
-      | sync upstream               | enter      |
-      | auto sync                   | enter      |
-      | sync tags                   | enter      |
-      | detached                    | enter      |
-      | stash                       | enter      |
-      | share new branches          | enter      |
-      | push branches               | enter      |
-      | push hook                   | enter      |
-      | ship strategy               | enter      |
-      | ship delete tracking branch | enter      |
-      | ignore-uncommitted          | enter      |
-      | order                       | enter      |
-      | proposal breadcrumb         | enter      |
-      | config storage              | down enter |
+      | DIALOG                        | KEYS       |
+      | welcome                       | enter      |
+      | aliases                       | enter      |
+      | main branch                   | enter      |
+      | perennial branches            | enter      |
+      | dev-remote                    | enter      |
+      | origin hostname               | enter      |
+      | forge type                    | enter      |
+      | github connector              | enter      |
+      | github token                  | enter      |
+      | enter all                     | down enter |
+      | perennial regex               | enter      |
+      | feature regex                 | enter      |
+      | contribution regex            | enter      |
+      | observed regex                | enter      |
+      | branch prefix                 | enter      |
+      | new branch type               | enter      |
+      | unknown branch type           | enter      |
+      | sync feature strategy         | enter      |
+      | sync perennial strategy       | enter      |
+      | sync prototype strategy       | enter      |
+      | sync upstream                 | enter      |
+      | auto sync                     | enter      |
+      | sync tags                     | enter      |
+      | detached                      | enter      |
+      | stash                         | enter      |
+      | share new branches            | enter      |
+      | push branches                 | enter      |
+      | push hook                     | enter      |
+      | ship strategy                 | enter      |
+      | ship delete tracking branch   | enter      |
+      | ignore-uncommitted            | enter      |
+      | order                         | enter      |
+      | proposal breadcrumb           | enter      |
+      | proposal breadcrumb direction | enter      |
+      | config storage                | down enter |
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                                 |
-      | git config --unset git-town.auto-sync                   |
-      | git config --unset git-town.branch-prefix               |
-      | git config --unset git-town.contribution-regex          |
-      | git config --unset git-town.dev-remote                  |
-      | git config --unset git-town.feature-regex               |
-      | git config --unset git-town.forge-type                  |
-      | git config --unset git-town.github-connector            |
-      | git config --unset git-town.hosting-origin-hostname     |
-      | git config --unset git-town.ignore-uncommitted          |
-      | git config --unset git-town.main-branch                 |
-      | git config --unset git-town.new-branch-type             |
-      | git config --unset git-town.observed-regex              |
-      | git config --unset git-town.order                       |
-      | git config --unset git-town.perennial-regex             |
-      | git config --unset git-town.proposal-breadcrumb         |
-      | git config --unset git-town.push-branches               |
-      | git config --unset git-town.push-hook                   |
-      | git config --unset git-town.share-new-branches          |
-      | git config --unset git-town.ship-delete-tracking-branch |
-      | git config --unset git-town.ship-strategy               |
-      | git config --unset git-town.stash                       |
-      | git config --unset git-town.sync-feature-strategy       |
-      | git config --unset git-town.sync-perennial-strategy     |
-      | git config --unset git-town.sync-tags                   |
-      | git config --unset git-town.sync-upstream               |
-      | git config --unset git-town.unknown-branch-type         |
-      | git config --unset git-town.perennial-branches          |
+      | COMMAND                                                   |
+      | git config --unset git-town.auto-sync                     |
+      | git config --unset git-town.branch-prefix                 |
+      | git config --unset git-town.contribution-regex            |
+      | git config --unset git-town.dev-remote                    |
+      | git config --unset git-town.feature-regex                 |
+      | git config --unset git-town.forge-type                    |
+      | git config --unset git-town.github-connector              |
+      | git config --unset git-town.hosting-origin-hostname       |
+      | git config --unset git-town.ignore-uncommitted            |
+      | git config --unset git-town.main-branch                   |
+      | git config --unset git-town.new-branch-type               |
+      | git config --unset git-town.observed-regex                |
+      | git config --unset git-town.order                         |
+      | git config --unset git-town.perennial-regex               |
+      | git config --unset git-town.proposal-breadcrumb           |
+      | git config --unset git-town.proposal-breadcrumb-direction |
+      | git config --unset git-town.push-branches                 |
+      | git config --unset git-town.push-hook                     |
+      | git config --unset git-town.share-new-branches            |
+      | git config --unset git-town.ship-delete-tracking-branch   |
+      | git config --unset git-town.ship-strategy                 |
+      | git config --unset git-town.stash                         |
+      | git config --unset git-town.sync-feature-strategy         |
+      | git config --unset git-town.sync-perennial-strategy       |
+      | git config --unset git-town.sync-tags                     |
+      | git config --unset git-town.sync-upstream                 |
+      | git config --unset git-town.unknown-branch-type           |
+      | git config --unset git-town.perennial-branches            |
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
@@ -109,6 +112,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.order" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" now doesn't exist
+    And local Git setting "git-town.proposal-breadcrumb-direction" now doesn't exist
     And local Git setting "git-town.push-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.share-new-branches" now doesn't exist
@@ -150,6 +154,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [propose]
       breadcrumb = "stacks"
+      breadcrumb-direction = "up"
 
       [ship]
       delete-tracking-branch = false
@@ -185,6 +190,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is now "up"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"

@@ -253,6 +253,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PreviousCommandProblem                  = "The last Git Town command (%s) hit a problem %v ago.\n"
 	ProposalBodyUpdateProblem               = "cannot update proposal body: %v"
 	ProposalBreadcrumb                      = "Proposals display breadcrumb: %s\n"
+	ProposalBreadcrumbDirection             = "Proposals breadcrumb direction: %s\n"
 	ProposalBreadcrumbDirectionInvalid      = "invalid value for proposal-breadcrumb-direction in %s: %q, expected \"down\" or \"up\""
 	ProposalBreadcrumbInvalid               = "invalid value for proposal breadcrumb in %s: %q. Valid values are: none, stacks, branches"
 	ProposalFindProblem                     = "cannot find proposal: %s"
