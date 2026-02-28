@@ -9,6 +9,7 @@
 - The generated Git Town configuration file now contains a link to the JSON Schema. This enables IDE features and validation using tools like taplo ([#6058](https://github.com/git-town/git-town/issues/6058)).
 - The Git Town setup assistant now also creates an alias for the `git town continue` command ([#6040](https://github.com/git-town/git-town/discussions/6040)).
 - The output of the `--verbose` flag now omits all tokens and secrets to make it easier to copy-paste this output into bug reports. To see the actual tokens used, run `git town config` ([#6029](https://github.com/git-town/git-town/issues/6029)).
+- The Git Town documentation clarifies how to ship multiple branches from a stack without re-running CI in between ([#6031](https://github.com/git-town/git-town/discussions/6031)).
 
 #### Bug Fixes
 
@@ -18,6 +19,7 @@
 - Git Town no longer crashes when syncing a branches that create the same file ([#6045](https://github.com/git-town/git-town/issues/6045)).
 - Git Town now syncs correctly following a dry-run of the sync ([#5944](https://github.com/git-town/git-town/issues/5944)).
 - The `glab` connector now lists merge requests properly ([#6041](https://github.com/git-town/git-town/pull/6041)).
+- `git town sync --stack` now only updates proposals of branches that are being synced ([#6021](https://github.com/git-town/git-town/issues/6021)).
 
 ## 22.5.0 (2025-01-26)
 
