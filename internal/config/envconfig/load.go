@@ -11,52 +11,53 @@ import (
 )
 
 const (
-	autoResolve              = "GIT_TOWN_AUTO_RESOLVE"
-	autoSync                 = "GIT_TOWN_AUTO_SYNC"
-	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
-	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
-	branchPrefix             = "GIT_TOWN_BRANCH_PREFIX"
-	Browser                  = "BROWSER"
-	forgejoToken             = "GIT_TOWN_FORGEJO_TOKEN"
-	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
-	detached                 = "GIT_TOWN_DETACHED"
-	devRemote                = "GIT_TOWN_DEV_REMOTE"
-	displayTypes             = "GIT_TOWN_DISPLAY_TYPES"
-	dryRun                   = "GIT_TOWN_DRY_RUN"
-	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
-	forgeType                = "GIT_TOWN_FORGE_TYPE"
-	giteaToken               = "GIT_TOWN_GITEA_TOKEN"
-	gitAuthorEmail           = "GIT_AUTHOR_EMAIL"
-	gitAuthorName            = "GIT_AUTHOR_NAME"
-	gitCommitterEmail        = "GIT_COMMITTER_EMAIL"
-	gitCommitterName         = "GIT_COMMITTER_NAME"
-	githubConnectorType      = "GIT_TOWN_GITHUB_CONNECTOR"
-	githubToken              = "GIT_TOWN_GITHUB_TOKEN"
-	gitlabConnectorType      = "GIT_TOWN_GITLAB_CONNECTOR"
-	gitlabToken              = "GIT_TOWN_GITLAB_TOKEN"
-	ignoreUncommitted        = "GIT_TOWN_IGNORE_UNCOMMITTED"
-	mainBranch               = "GIT_TOWN_MAIN_BRANCH"
-	newBranchType            = "GIT_TOWN_NEW_BRANCH_TYPE"
-	observedRegex            = "GIT_TOWN_OBSERVED_REGEX"
-	order                    = "GIT_TOWN_ORDER"
-	originHostname           = "GIT_TOWN_ORIGIN_HOSTNAME"
-	offline                  = "GIT_TOWN_OFFLINE"
-	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
-	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
-	proposalBreadcrumb       = "GIT_TOWN_PROPOSAL_BREADCRUMB"
-	pushBranches             = "GIT_TOWN_PUSH_BRANCHES"
-	pushHook                 = "GIT_TOWN_PUSH_HOOK"
-	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
-	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
-	shipStrategy             = "GIT_TOWN_SHIP_STRATEGY"
-	stash                    = "GIT_TOWN_STASH"
-	syncFeatureStrategy      = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
-	syncPerennialStrategy    = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
-	syncPrototypeStrategy    = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
-	syncTags                 = "GIT_TOWN_SYNC_TAGS"
-	syncUpstream             = "GIT_TOWN_SYNC_UPSTREAM"
-	unknownBranchType        = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
-	verbose                  = "GIT_TOWN_VERBOSE"
+	autoResolve                 = "GIT_TOWN_AUTO_RESOLVE"
+	autoSync                    = "GIT_TOWN_AUTO_SYNC"
+	bitbucketAppPassword        = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
+	bitbucketUserName           = "GIT_TOWN_BITBUCKET_USERNAME"
+	branchPrefix                = "GIT_TOWN_BRANCH_PREFIX"
+	Browser                     = "BROWSER"
+	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
+	contributionRegex           = "GIT_TOWN_CONTRIBUTION_REGEX"
+	detached                    = "GIT_TOWN_DETACHED"
+	devRemote                   = "GIT_TOWN_DEV_REMOTE"
+	displayTypes                = "GIT_TOWN_DISPLAY_TYPES"
+	dryRun                      = "GIT_TOWN_DRY_RUN"
+	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
+	forgeType                   = "GIT_TOWN_FORGE_TYPE"
+	giteaToken                  = "GIT_TOWN_GITEA_TOKEN"
+	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
+	gitAuthorName               = "GIT_AUTHOR_NAME"
+	gitCommitterEmail           = "GIT_COMMITTER_EMAIL"
+	gitCommitterName            = "GIT_COMMITTER_NAME"
+	githubConnectorType         = "GIT_TOWN_GITHUB_CONNECTOR"
+	githubToken                 = "GIT_TOWN_GITHUB_TOKEN"
+	gitlabConnectorType         = "GIT_TOWN_GITLAB_CONNECTOR"
+	gitlabToken                 = "GIT_TOWN_GITLAB_TOKEN"
+	ignoreUncommitted           = "GIT_TOWN_IGNORE_UNCOMMITTED"
+	mainBranch                  = "GIT_TOWN_MAIN_BRANCH"
+	newBranchType               = "GIT_TOWN_NEW_BRANCH_TYPE"
+	observedRegex               = "GIT_TOWN_OBSERVED_REGEX"
+	order                       = "GIT_TOWN_ORDER"
+	originHostname              = "GIT_TOWN_ORIGIN_HOSTNAME"
+	offline                     = "GIT_TOWN_OFFLINE"
+	perennialBranches           = "GIT_TOWN_PERENNIAL_BRANCHES"
+	perennialRegex              = "GIT_TOWN_PERENNIAL_REGEX"
+	proposalBreadcrumb          = "GIT_TOWN_PROPOSAL_BREADCRUMB"
+	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
+	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
+	pushHook                    = "GIT_TOWN_PUSH_HOOK"
+	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
+	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
+	shipStrategy                = "GIT_TOWN_SHIP_STRATEGY"
+	stash                       = "GIT_TOWN_STASH"
+	syncFeatureStrategy         = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
+	syncPerennialStrategy       = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
+	syncPrototypeStrategy       = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
+	syncTags                    = "GIT_TOWN_SYNC_TAGS"
+	syncUpstream                = "GIT_TOWN_SYNC_UPSTREAM"
+	unknownBranchType           = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
+	verbose                     = "GIT_TOWN_VERBOSE"
 )
 
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
@@ -85,6 +86,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
+	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -118,6 +120,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errOrder,
 		errPerennialRegex,
 		errProposalBreadcrumb,
+		errProposalBreadcrumbDirection,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -167,7 +170,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialBranches:           gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](), // TODO: load this from the env vars
+		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
