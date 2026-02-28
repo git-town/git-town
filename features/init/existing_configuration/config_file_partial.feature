@@ -9,16 +9,16 @@ Feature: ask for information not provided by the config file
       main = "main"
       perennials = ["public"]
       order = "desc"
-      
+
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
-      
+
       [sync]
       auto-sync = false
       tags = false
