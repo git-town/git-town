@@ -13,7 +13,7 @@ This guide is for maintainers who make releases of Git Town.
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `22.6.0`
-    - double-digits: `22.5`
+    - double-digits: `22.6`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
