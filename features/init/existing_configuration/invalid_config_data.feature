@@ -14,7 +14,6 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.order" is "zonk"
     And local Git setting "git-town.perennial-regex" is "(per"
-    And local Git setting "git-town.propose-breadcrumb" is "zonk"
     And local Git setting "git-town.proposal-breadcrumb" is "wrongbreadcrumb"
     And local Git setting "git-town.proposal-breadcrumb-direction" is "wrongbreadcrumbdir"
     And local Git setting "git-town.push-branches" is "zonk"
