@@ -16,7 +16,7 @@ const (
 	proposalBreadcrumbDirectionHelp  = `
 	Which direction should proposal breadcrumbs have?
 
-	See https://www.git-town.com/how-to/proposal-breadcrumb-direction.html for details.
+	See https://www.git-town.com/preferences/proposal-breadcrumb-direction.html for details.
 `
 )
 
