@@ -219,8 +219,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Propose.Direction != nil {
-			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.Direction, messages.ConfigFile)
+		if data.Propose.BreadcrumbDirection != nil {
+			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.BreadcrumbDirection, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
