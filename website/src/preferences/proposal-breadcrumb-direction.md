@@ -1,7 +1,7 @@
 # proposal-breadcrumb-direction
 
 This setting allows to reverse the direction of the
-[breadcrumb](../how-to/proposal-breadcrumb.md).
+[breadcrumb](../how-to/proposal-breadcrumb.md) embedded in proposals.
 
 ## values
 
