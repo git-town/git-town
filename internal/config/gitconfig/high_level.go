@@ -142,6 +142,10 @@ func RemoveProposalBreadcrumb(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumb)
 }
 
+func RemoveProposalBreadcrumbDirection(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumbDirection)
+}
+
 func RemovePushBranches(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushBranches)
 }
@@ -305,6 +309,10 @@ func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.Perennia
 
 func SetProposalBreadcrumb(runner subshelldomain.Runner, value configdomain.ProposalBreadcrumb, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumb, value.String())
+}
+
+func SetProposalBreadcrumbDirection(runner subshelldomain.Runner, value configdomain.ProposalBreadcrumbDirection, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumbDirection, value.String())
 }
 
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {

@@ -29,6 +29,10 @@ dev-remote = "origin"
 origin-hostname = "" # use the hostname in the origin URL
 forge-type = "" # auto-detect
 
+[propose]
+breadcrumb = "none"
+breadcrumb-direction = "down"
+
 [ship]
 delete-tracking-branch = true
 strategy = "api"

@@ -35,6 +35,12 @@ following values:
   branch
 - `none` to not display breadcrumbs
 
+You can also set
+[proposal-breadcrumb-direction](../preferences/proposal-breadcrumb-direction.md):
+
+- `down` prints the breadcrumb from the root down
+- `up` prints the breadcrumb from the root up
+
 ### Use the GitHub action
 
 If your team standardizes on Git Town and uses GitHub, you can set up the
