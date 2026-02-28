@@ -5,7 +5,7 @@
 #### New Features
 
 - Added a new [breadcrumb-direction](https://www.git-town.com/preferences/proposal-breadcrumb-direction.html) preference that lets you control how Git Town renders breadcrumbs in proposals: either up or down from the root branch ([#6024](https://github.com/git-town/git-town/pull/6024)).
-- `git town diff-parent` now supports `--name-only` and `--diff-filter`, both passed straight through to the underlying `git diff` invocation. This makes it much easier to narrow diffs in larger stacks ([#6046](https://github.com/git-town/git-town/issues/6046)).
+- `git town diff-parent` now supports `--name-only` and `--diff-filter`, both passed straight through to the underlying `git diff` invocation. This makes it easier to narrow diffs in larger stacks ([#6046](https://github.com/git-town/git-town/issues/6046)).
 - The generated Git Town configuration file now contains a link to its JSON Schema. This unlocks IDE autocomplete and validation ([#6058](https://github.com/git-town/git-town/issues/6058)).
 - The setup assistant now creates an alias for `git town continue` ([#6040](https://github.com/git-town/git-town/discussions/6040)).
 - `--verbose` output now redacts all tokens and secrets. You can now safely paste verbose logs into bug reports. To see actual tokens, run `git town config` ([#6029](https://github.com/git-town/git-town/issues/6029)).
