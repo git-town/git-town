@@ -25,7 +25,6 @@
 
 Huge thanks to @WhosNickDoglio, @bendrucker, @cannonpalms, @ichoosetoaccept, @izkreny, @jedymatt, @kevgo, @luan, @pcfreak30, @pradeepmurugesan, @ruudk, @syhol, @xmarkclx for contributing code, feedback, and ideas across 39 shipped pull requests and 13 resolved issues!
 
-
 ## 22.5.0 (2025-01-26)
 
 #### New Features
