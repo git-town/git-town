@@ -31,11 +31,11 @@ func ProposalBreadcrumbDirection(args Args[configdomain.ProposalBreadcrumbDirect
 	entries = append(entries, list.Entries[Option[configdomain.ProposalBreadcrumbDirection]]{
 		{
 			Data: Some(configdomain.ProposalBreadcrumbDirectionDown),
-			Text: "down from the root, indented (default)",
+			Text: "down from the root",
 		},
 		{
 			Data: Some(configdomain.ProposalBreadcrumbDirectionUp),
-			Text: "up from the root, not indented",
+			Text: "up from the root",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
