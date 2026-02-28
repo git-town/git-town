@@ -145,8 +145,12 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	proposalBreadcrumbDirection, hasProposalBreadcrumbDirection := data.ProposalBreadcrumbDirection.Get()
 	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection {
 		result.WriteString("\n[propose]\n")
-		result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
-		result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
+		if hasProposalBreadcrumb {
+			result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
+		}
+		if hasProposalBreadcrumbDirection {
+			result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
+		}
 	}
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
