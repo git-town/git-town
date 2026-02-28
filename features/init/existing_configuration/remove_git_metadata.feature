@@ -42,6 +42,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is "none"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is "up"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
@@ -55,86 +56,88 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
-      | welcome                     | enter                                                                       |                     |
-      | aliases                     | n enter                                                                     | remove all aliases  |
-      | main branch                 | enter                                                                       |                     |
-      | perennial branches          | down space enter                                                            |                     |
-      | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
-      | forge type                  | up up up up up up enter                                                     | remove the override |
-      | enter all                   | down enter                                                                  |                     |
-      | perennial regex             | backspace backspace backspace backspace enter                               |                     |
-      | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
-      | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
-      | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
-      | branch prefix               | backspace backspace backspace enter                                         |                     |
-      | new branch type             | up enter                                                                    |                     |
-      | unknown branch type         | up enter                                                                    |                     |
-      | sync feature strategy       | up enter                                                                    |                     |
-      | sync perennial strategy     | down enter                                                                  |                     |
-      | sync prototype strategy     | up enter                                                                    |                     |
-      | sync upstream               | down enter                                                                  |                     |
-      | auto sync                   | up enter                                                                    |                     |
-      | sync tags                   | down enter                                                                  |                     |
-      | detached                    | down enter                                                                  |                     |
-      | stash                       | up enter                                                                    |                     |
-      | share new branches          | up enter                                                                    | enable              |
-      | push branches               | down enter                                                                  | enable              |
-      | push hook                   | down enter                                                                  | enable              |
-      | ship strategy               | down enter                                                                  |                     |
-      | ship delete tracking branch | down enter                                                                  | disable             |
-      | ignore-uncommitted          | up enter                                                                    | disable             |
-      | order                       | up enter                                                                    |                     |
-      | proposal breadcrumb         | down enter                                                                  |                     |
-      | config storage              | enter                                                                       | git metadata        |
+      | DIALOG                        | KEYS                                                                        | DESCRIPTION         |
+      | welcome                       | enter                                                                       |                     |
+      | aliases                       | n enter                                                                     | remove all aliases  |
+      | main branch                   | enter                                                                       |                     |
+      | perennial branches            | down space enter                                                            |                     |
+      | origin hostname               | backspace backspace backspace backspace enter                               | remove the override |
+      | forge type                    | up up up up up up enter                                                     | remove the override |
+      | enter all                     | down enter                                                                  |                     |
+      | perennial regex               | backspace backspace backspace backspace enter                               |                     |
+      | feature regex                 | backspace backspace backspace backspace backspace backspace enter           |                     |
+      | contribution regex            | backspace backspace backspace backspace backspace backspace backspace enter |                     |
+      | observed regex                | backspace backspace backspace backspace backspace enter                     |                     |
+      | branch prefix                 | backspace backspace backspace enter                                         |                     |
+      | new branch type               | up enter                                                                    |                     |
+      | unknown branch type           | up enter                                                                    |                     |
+      | sync feature strategy         | up enter                                                                    |                     |
+      | sync perennial strategy       | down enter                                                                  |                     |
+      | sync prototype strategy       | up enter                                                                    |                     |
+      | sync upstream                 | down enter                                                                  |                     |
+      | auto sync                     | up enter                                                                    |                     |
+      | sync tags                     | down enter                                                                  |                     |
+      | detached                      | down enter                                                                  |                     |
+      | stash                         | up enter                                                                    |                     |
+      | share new branches            | up enter                                                                    | enable              |
+      | push branches                 | down enter                                                                  | enable              |
+      | push hook                     | down enter                                                                  | enable              |
+      | ship strategy                 | down enter                                                                  |                     |
+      | ship delete tracking branch   | down enter                                                                  | disable             |
+      | ignore-uncommitted            | up enter                                                                    | disable             |
+      | order                         | up enter                                                                    |                     |
+      | proposal breadcrumb           | down enter                                                                  |                     |
+      | proposal breadcrumb direction | down enter                                                                  |                     |
+      | config storage                | enter                                                                       | git metadata        |
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                              |
-      | git config --global --unset alias.append             |
-      | git config --global --unset alias.compress           |
-      | git config --global --unset alias.continue           |
-      | git config --global --unset alias.contribute         |
-      | git config --global --unset alias.delete             |
-      | git config --global --unset alias.diff-parent        |
-      | git config --global --unset alias.down               |
-      | git config --global --unset alias.hack               |
-      | git config --global --unset alias.observe            |
-      | git config --global --unset alias.park               |
-      | git config --global --unset alias.prepend            |
-      | git config --global --unset alias.propose            |
-      | git config --global --unset alias.rename             |
-      | git config --global --unset alias.repo               |
-      | git config --global --unset alias.set-parent         |
-      | git config --global --unset alias.ship               |
-      | git config --global --unset alias.sync               |
-      | git config --global --unset alias.up                 |
-      | git config git-town.perennial-branches ""            |
-      | git config --unset git-town.hosting-origin-hostname  |
-      | git config --unset git-town.forge-type               |
-      | git config git-town.auto-sync true                   |
-      | git config --unset git-town.branch-prefix            |
-      | git config --unset git-town.contribution-regex       |
-      | git config git-town.detached false                   |
-      | git config --unset git-town.feature-regex            |
-      | git config git-town.ignore-uncommitted false         |
-      | git config git-town.new-branch-type feature          |
-      | git config --unset git-town.observed-regex           |
-      | git config git-town.order asc                        |
-      | git config --unset git-town.perennial-regex          |
-      | git config git-town.proposal-breadcrumb stacks       |
-      | git config git-town.push-branches true               |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.stash true                       |
-      | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
-      | git config git-town.sync-prototype-strategy merge    |
-      | git config git-town.sync-tags true                   |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.unknown-branch-type feature      |
+      | COMMAND                                                |
+      | git config --global --unset alias.append               |
+      | git config --global --unset alias.compress             |
+      | git config --global --unset alias.continue             |
+      | git config --global --unset alias.contribute           |
+      | git config --global --unset alias.delete               |
+      | git config --global --unset alias.diff-parent          |
+      | git config --global --unset alias.down                 |
+      | git config --global --unset alias.hack                 |
+      | git config --global --unset alias.observe              |
+      | git config --global --unset alias.park                 |
+      | git config --global --unset alias.prepend              |
+      | git config --global --unset alias.propose              |
+      | git config --global --unset alias.rename               |
+      | git config --global --unset alias.repo                 |
+      | git config --global --unset alias.set-parent           |
+      | git config --global --unset alias.ship                 |
+      | git config --global --unset alias.sync                 |
+      | git config --global --unset alias.up                   |
+      | git config git-town.perennial-branches ""              |
+      | git config --unset git-town.hosting-origin-hostname    |
+      | git config --unset git-town.forge-type                 |
+      | git config git-town.auto-sync true                     |
+      | git config --unset git-town.branch-prefix              |
+      | git config --unset git-town.contribution-regex         |
+      | git config git-town.detached false                     |
+      | git config --unset git-town.feature-regex              |
+      | git config git-town.ignore-uncommitted false           |
+      | git config git-town.new-branch-type feature            |
+      | git config --unset git-town.observed-regex             |
+      | git config git-town.order asc                          |
+      | git config --unset git-town.perennial-regex            |
+      | git config git-town.proposal-breadcrumb stacks         |
+      | git config git-town.proposal-breadcrumb-direction down |
+      | git config git-town.push-branches true                 |
+      | git config git-town.push-hook true                     |
+      | git config git-town.share-new-branches no              |
+      | git config git-town.ship-delete-tracking-branch true   |
+      | git config git-town.ship-strategy api                  |
+      | git config git-town.stash true                         |
+      | git config git-town.sync-feature-strategy merge        |
+      | git config git-town.sync-perennial-strategy rebase     |
+      | git config git-town.sync-prototype-strategy merge      |
+      | git config git-town.sync-tags true                     |
+      | git config git-town.sync-upstream true                 |
+      | git config git-town.unknown-branch-type feature        |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
     And global Git setting "alias.continue" now doesn't exist
@@ -166,6 +169,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is now "down"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -213,6 +217,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.proposal-breadcrumb" is now "none"
+    And local Git setting "git-town.proposal-breadcrumb-direction" is now "up"
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"
