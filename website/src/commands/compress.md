@@ -39,8 +39,9 @@ doesn't compress
 [contribution](https://www.git-town.com/preferences/contribution-branches)
 branches.
 
-Branches must be in sync to compress them; run `git town sync` before running
-this command.
+Branches must be in sync to compress them; run `git push` or `git town sync`
+before running this command. This avoids mixing rewriting history with resolving
+unrelated merge conflicts.
 
 ## Options
 
