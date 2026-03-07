@@ -27,6 +27,7 @@ type PartialConfig struct {
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
 	DevRemote                   Option[gitdomain.Remote]
+	DisplayDialogs              Option[DisplayDialogs]
 	DisplayTypes                Option[DisplayTypes]
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
@@ -88,6 +89,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.Or(self.Detached),
 		DevRemote:                   other.DevRemote.Or(self.DevRemote),
+		DisplayDialogs:              other.DisplayDialogs.Or(self.DisplayDialogs),
 		DisplayTypes:                other.DisplayTypes.Or(self.DisplayTypes),
 		DryRun:                      other.DryRun.Or(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),

@@ -1,6 +1,6 @@
 //go:build !windows
 
-package dialogcomponents
+package systemconfig
 
 import "os"
 

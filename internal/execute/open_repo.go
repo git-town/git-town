@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
@@ -100,6 +101,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), err
 		}
 	}
+	systemConfig := systemconfig.Load()
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		CliConfig:     args.CliConfig,
 		ConfigFile:    configFile,
@@ -109,6 +111,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		GitGlobal:     globalConfig,
 		GitLocal:      localConfig,
 		GitUnscoped:   unscopedConfig,
+		SystemConfig:  systemConfig,
 	})
 	backendRunner.Verbose = unvalidatedConfig.NormalConfig.Verbose
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{

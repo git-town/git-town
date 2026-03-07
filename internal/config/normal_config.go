@@ -40,6 +40,7 @@ type NormalConfig struct {
 	ContributionRegex           Option[configdomain.ContributionRegex]
 	Detached                    configdomain.Detached
 	DevRemote                   gitdomain.Remote
+	DisplayDialogs              configdomain.DisplayDialogs
 	DisplayTypes                configdomain.DisplayTypes
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
@@ -110,6 +111,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.GetOr(self.Detached),
 		DevRemote:                   other.DevRemote.GetOr(self.DevRemote),
+		DisplayDialogs:              other.DisplayDialogs.GetOr(self.DisplayDialogs),
 		DisplayTypes:                other.DisplayTypes.GetOr(self.DisplayTypes),
 		DryRun:                      other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
@@ -263,6 +265,7 @@ func DefaultNormalConfig() NormalConfig {
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
 		DevRemote:            gitdomain.RemoteOrigin,
+		DisplayDialogs:       true,
 		DisplayTypes: configdomain.DisplayTypes{
 			Quantifier:  configdomain.QuantifierNo,
 			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
@@ -320,6 +323,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ContributionRegex:           partial.ContributionRegex,
 		Detached:                    partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),
+		DisplayDialogs:              partial.DisplayDialogs.GetOr(defaults.DisplayDialogs),
 		DisplayTypes:                partial.DisplayTypes.GetOr(defaults.DisplayTypes),
 		DryRun:                      partial.DryRun.GetOr(defaults.DryRun),
 		FeatureRegex:                partial.FeatureRegex,
