@@ -8,11 +8,13 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
-	if err := RequireTTY(); err != nil {
-		return "", false, err
+	if !args.DisplayDialogs {
+		return "", false, systemconfig.ErrNoTTY
 	}
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)
@@ -33,12 +35,13 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 }
 
 type TextFieldArgs struct {
-	DialogName    string
-	ExistingValue string
-	Help          string
-	Inputs        Inputs
-	Prompt        string
-	Title         string
+	DialogName     string
+	DisplayDialogs configdomain.DisplayDialogs
+	ExistingValue  string
+	Help           string
+	Inputs         Inputs
+	Prompt         string
+	Title          string
 }
 
 type textFieldModel struct {

@@ -27,12 +27,13 @@ Git Town will not use the Forgejo API.
 
 func ForgejoToken(args Args[forgedomain.ForgejoToken]) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:    "forgejo-token",
-		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          forgejoTokenHelp,
-		Inputs:        args.Inputs,
-		Prompt:        messages.ForgejoTokenPrompt,
-		Title:         forgejoTokenTitle,
+		DialogName:     "forgejo-token",
+		DisplayDialogs: args.DisplayDialogs,
+		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
+		Help:           forgejoTokenHelp,
+		Inputs:         args.Inputs,
+		Prompt:         messages.ForgejoTokenPrompt,
+		Title:          forgejoTokenTitle,
 	})
 	newValue := forgedomain.ParseForgejoToken(input)
 	if args.Global.Equal(newValue) {

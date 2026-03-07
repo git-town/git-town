@@ -28,12 +28,13 @@ it's safe to leave it blank.
 
 func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:    "feature-regex",
-		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          FeatureRegexHelp,
-		Inputs:        args.Inputs,
-		Prompt:        messages.FeatureRegexPrompt,
-		Title:         featureRegexTitle,
+		DialogName:     "feature-regex",
+		DisplayDialogs: args.DisplayDialogs,
+		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
+		Help:           FeatureRegexHelp,
+		Inputs:         args.Inputs,
+		Prompt:         messages.FeatureRegexPrompt,
+		Title:          featureRegexTitle,
 	})
 	newValue, errNewValue := configdomain.ParseFeatureRegex(input, "dialog")
 	if args.Global.Equal(newValue) {

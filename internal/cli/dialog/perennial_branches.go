@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -52,7 +53,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	selections := []int{slices.Index(perennialCandidates, args.MainBranch)}
 	selections = append(selections, slice.FindMany(perennialCandidates, args.ImmutableGitPerennials)...)
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
-	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, "perennial-branches")
+	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, args.DisplayDialogs, "perennial-branches")
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectedBranches = selectedBranches.Remove(args.ImmutableGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
@@ -64,6 +65,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 }
 
 type PerennialBranchesArgs struct {
+	DisplayDialogs         configdomain.DisplayDialogs
 	ImmutableGitPerennials gitdomain.LocalBranchNames // perennial branches defined in the config file and the global Git metadata
 	Inputs                 dialogcomponents.Inputs
 	LocalBranches          gitdomain.LocalBranchNames

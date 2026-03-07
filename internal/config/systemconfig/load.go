@@ -1,75 +1,80 @@
-package cliconfig
+package systemconfig
 
 import (
+	"errors"
+	"os"
+
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/mattn/go-isatty"
 )
 
-type NewArgs struct {
-	AutoResolve       Option[configdomain.AutoResolve]
-	AutoSync          Option[configdomain.AutoSync]
-	Detached          Option[configdomain.Detached]
-	DisplayTypes      Option[configdomain.DisplayTypes]
-	DryRun            Option[configdomain.DryRun]
-	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
-	Order             Option[configdomain.Order]
-	PushBranches      Option[configdomain.PushBranches]
-	Stash             Option[configdomain.Stash]
-	Verbose           Option[configdomain.Verbose]
+// HasTTY reports whether an interactive terminal is available.
+func HasTTY() bool {
+	fd := os.Stdin.Fd()
+	if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
+		return true
+	}
+	return canOpenTTY()
 }
 
-func New(args NewArgs) configdomain.PartialConfig {
+func Load() configdomain.PartialConfig {
+	tty := HasTTY()
+	displayDialogs := configdomain.DisplayDialogs(tty)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
-		AutoResolve:                 args.AutoResolve,
-		AutoSync:                    args.AutoSync,
+		AutoResolve:                 None[configdomain.AutoResolve](),
+		AutoSync:                    None[configdomain.AutoSync](),
 		BitbucketAppPassword:        None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
 		Browser:                     None[configdomain.Browser](),
-		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           None[configdomain.ContributionRegex](),
-		Detached:                    args.Detached,
+		Detached:                    None[configdomain.Detached](),
 		DevRemote:                   None[gitdomain.Remote](),
-		DisplayDialogs:              None[configdomain.DisplayDialogs](),
-		DisplayTypes:                args.DisplayTypes,
-		DryRun:                      args.DryRun,
+		DisplayDialogs:              Some(displayDialogs),
+		DisplayTypes:                None[configdomain.DisplayTypes](),
+		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                None[configdomain.FeatureRegex](),
 		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgejoToken:                None[forgedomain.ForgejoToken](),
+		GitUserEmail:                None[gitdomain.GitUserEmail](),
+		GitUserName:                 None[gitdomain.GitUserName](),
+		GiteaToken:                  None[forgedomain.GiteaToken](),
 		GithubConnectorType:         None[forgedomain.GithubConnectorType](),
 		GithubToken:                 None[forgedomain.GithubToken](),
 		GitlabConnectorType:         None[forgedomain.GitlabConnectorType](),
 		GitlabToken:                 None[forgedomain.GitlabToken](),
-		GitUserEmail:                None[gitdomain.GitUserEmail](),
-		GitUserName:                 None[gitdomain.GitUserName](),
-		GiteaToken:                  None[forgedomain.GiteaToken](),
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
+		IgnoreUncommitted:           None[configdomain.IgnoreUncommitted](),
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  None[gitdomain.LocalBranchName](),
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
 		Offline:                     None[configdomain.Offline](),
-		Order:                       args.Order,
+		Order:                       None[configdomain.Order](),
 		PerennialBranches:           gitdomain.LocalBranchNames{},
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
+		PushBranches:                None[configdomain.PushBranches](),
 		PushHook:                    None[configdomain.PushHook](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
-		IgnoreUncommitted:           args.IgnoreUncommitted,
 		ShipStrategy:                None[configdomain.ShipStrategy](),
-		Stash:                       args.Stash,
+		Stash:                       None[configdomain.Stash](),
 		SyncFeatureStrategy:         None[configdomain.SyncFeatureStrategy](),
 		SyncPerennialStrategy:       None[configdomain.SyncPerennialStrategy](),
 		SyncPrototypeStrategy:       None[configdomain.SyncPrototypeStrategy](),
-		PushBranches:                args.PushBranches,
 		SyncTags:                    None[configdomain.SyncTags](),
 		SyncUpstream:                None[configdomain.SyncUpstream](),
 		UnknownBranchType:           None[configdomain.UnknownBranchType](),
-		Verbose:                     args.Verbose,
+		Verbose:                     None[configdomain.Verbose](),
 	}
 }
+
+// ErrNoTTY indicates that an interactive terminal is required but not available.
+var ErrNoTTY = errors.New("no interactive terminal available")

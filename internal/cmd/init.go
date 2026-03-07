@@ -6,9 +6,11 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -56,6 +58,9 @@ func initCommand() *cobra.Command {
 }
 
 func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
+	systemConfig := systemconfig.Load()
+	defaultConfig := config.DefaultNormalConfig()
+	displayDialogs := systemConfig.DisplayDialogs.GetOr(defaultConfig.DisplayDialogs)
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -79,7 +84,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
+	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir, displayDialogs)
 	if err != nil || exit {
 		return err
 	}

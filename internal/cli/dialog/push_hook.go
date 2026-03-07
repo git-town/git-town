@@ -46,7 +46,7 @@ func PushHook(args Args[configdomain.PushHook]) (Option[configdomain.PushHook], 
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, args.Inputs, "push-hook")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, args.Inputs, args.DisplayDialogs, "push-hook")
 	fmt.Printf(messages.PushHook, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -55,7 +56,7 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 	}
 
 	// show the dialog
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, args.DisplayDialogs, "main-branch")
 	if err == nil {
 		fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
 	}
@@ -66,6 +67,7 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 }
 
 type MainBranchArgs struct {
+	DisplayDialogs configdomain.DisplayDialogs
 	Inputs         dialogcomponents.Inputs
 	Local          Option[gitdomain.LocalBranchName]
 	LocalBranches  gitdomain.LocalBranchNames

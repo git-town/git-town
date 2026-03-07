@@ -17,6 +17,7 @@ const (
 var whiteList = []string{
 	"Aliases",
 	"BranchTypeOverrides",
+	"DisplayDialogs",
 	"DryRun",
 	"Verbose",
 }

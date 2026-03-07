@@ -3,6 +3,7 @@ package dialog
 import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 )
 
 const (
@@ -29,6 +30,6 @@ When you're ready, press ENTER or O to continue.
 `
 )
 
-func Welcome(inputs dialogcomponents.Inputs) (dialogdomain.Exit, error) {
-	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, "welcome")
+func Welcome(inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (dialogdomain.Exit, error) {
+	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, displayDialogs, "welcome")
 }

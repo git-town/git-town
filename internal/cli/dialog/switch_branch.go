@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -277,8 +278,8 @@ type NewSwitchBranchEntriesArgs struct {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	if err := dialogcomponents.RequireTTY(); err != nil {
-		return "", false, err
+	if !args.DisplayDialogs {
+		return "", false, systemconfig.ErrNoTTY
 	}
 	entries := args.EntryData.entries()
 	initialBranchPos := None[int]()
@@ -304,6 +305,7 @@ type SwitchBranchArgs struct {
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
+	DisplayDialogs     configdomain.DisplayDialogs
 	EntryData          EntryData
 	InputName          string
 	Inputs             dialogcomponents.Inputs

@@ -69,7 +69,7 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 	cursor := entries.IndexOfFunc(args.Local, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
-	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, args.Inputs, "forge-type")
+	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, args.Inputs, args.DisplayDialogs, "forge-type")
 	if newValue.IsNone() {
 		if args.Global.IsSome() {
 			fmt.Printf(messages.Forge, dialogcomponents.FormattedOption(newValue, true, exit))

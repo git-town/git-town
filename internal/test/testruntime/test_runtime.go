@@ -99,6 +99,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		GitGlobal:     configdomain.EmptyPartialConfig(),
 		GitLocal:      configdomain.EmptyPartialConfig(),
 		GitUnscoped:   configdomain.EmptyPartialConfig(),
+		SystemConfig:  configdomain.EmptyPartialConfig(),
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 	testCommands := commands.TestCommands{

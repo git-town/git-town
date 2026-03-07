@@ -38,7 +38,7 @@ func Order(args Args[configdomain.Order]) (Option[configdomain.Order], dialogdom
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, orderTitle, orderHelp, args.Inputs, "order")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, orderTitle, orderHelp, args.Inputs, args.DisplayDialogs, "order")
 	fmt.Printf(messages.Order, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

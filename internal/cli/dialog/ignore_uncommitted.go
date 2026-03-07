@@ -42,7 +42,7 @@ func IgnoreUncommitted(args Args[configdomain.IgnoreUncommitted]) (Option[config
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, ignoreUncommittedTitle, IgnoreUncommittedHelp, args.Inputs, "ignore-uncommitted")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, ignoreUncommittedTitle, IgnoreUncommittedHelp, args.Inputs, args.DisplayDialogs, "ignore-uncommitted")
 	fmt.Printf(messages.IgnoreUncommitted, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

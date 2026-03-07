@@ -56,6 +56,7 @@ const (
 	syncPrototypeStrategy       = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
 	syncTags                    = "GIT_TOWN_SYNC_TAGS"
 	syncUpstream                = "GIT_TOWN_SYNC_UPSTREAM"
+	term                        = "TERM"
 	unknownBranchType           = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
 	verbose                     = "GIT_TOWN_VERBOSE"
 )
@@ -67,6 +68,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	browser, errBrowser := load(env, Browser, configdomain.ParseBrowser)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
+	displayDialogs := configdomain.LoadDisplayDialogsFromEnv(env.Get(term))
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
@@ -148,6 +150,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   gitdomain.NewRemote(env.Get(devRemote)),
+		DisplayDialogs:              displayDialogs,
 		DisplayTypes:                displayTypesOpt,
 		DryRun:                      dryRun,
 		FeatureRegex:                featureRegex,

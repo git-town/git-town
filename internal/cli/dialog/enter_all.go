@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 )
 
 const (
@@ -17,7 +18,7 @@ You can re-run this assistant: git town init
 `
 )
 
-func EnterAll(inputs dialogcomponents.Inputs) (bool, dialogdomain.Exit, error) {
+func EnterAll(inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: false,
@@ -28,6 +29,6 @@ func EnterAll(inputs dialogcomponents.Inputs) (bool, dialogdomain.Exit, error) {
 			Text: `continue to the advanced configuration options`,
 		},
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, enterAllTitle, enterAllHelp, inputs, "enter-all")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, enterAllTitle, enterAllHelp, inputs, displayDialogs, "enter-all")
 	return selection, exit, err
 }

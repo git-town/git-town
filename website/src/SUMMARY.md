@@ -5,6 +5,7 @@
 - [Install](install.md)
 - [Configuration](configuration.md)
 - [How-to ...](how-tos.md)
+  - [Disabling the dialogs](how-to/disable-dialogs.md)
   - [Forked repos](how-to/forked-repo.md)
   - [Hotfixes](how-to/hotfixes.md)
   - [LazyGit](how-to/lazygit.md)

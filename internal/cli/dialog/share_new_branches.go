@@ -48,7 +48,7 @@ func ShareNewBranches(args Args[configdomain.ShareNewBranches]) (Option[configdo
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, args.Inputs, "share-new-branches")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, args.Inputs, args.DisplayDialogs, "share-new-branches")
 	fmt.Printf(messages.ShareNewBranches, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

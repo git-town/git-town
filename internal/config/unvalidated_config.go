@@ -21,6 +21,7 @@ type UnvalidatedConfig struct {
 	GitLocal          configdomain.PartialConfig // local Git metadata
 	GitUnscoped       configdomain.PartialConfig // unscoped Git metadata
 	NormalConfig      NormalConfig
+	SystemConfig      configdomain.PartialConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
 
@@ -54,6 +55,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) conf
 		env:      envConfig,
 		file:     self.File,
 		git:      unscopedGitConfig,
+		system:   self.SystemConfig,
 	})
 	self.GitUnscoped = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig
@@ -90,6 +92,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		env:      args.EnvConfig,
 		file:     args.ConfigFile,
 		git:      args.GitUnscoped,
+		system:   args.SystemConfig,
 	})
 	return UnvalidatedConfig{
 		CLI:               args.CliConfig,
@@ -100,6 +103,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		GitLocal:          args.GitLocal,
 		GitUnscoped:       args.GitUnscoped,
 		NormalConfig:      normalConfig,
+		SystemConfig:      args.SystemConfig,
 		UnvalidatedConfig: unvalidatedConfig,
 	}
 }
@@ -113,10 +117,12 @@ type NewUnvalidatedConfigArgs struct {
 	GitGlobal     configdomain.PartialConfig
 	GitLocal      configdomain.PartialConfig
 	GitUnscoped   configdomain.PartialConfig
+	SystemConfig  configdomain.PartialConfig
 }
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
+	result = result.Merge(args.system)
 	result = result.Merge(args.file)
 	result = result.Merge(args.git)
 	result = result.Merge(args.env)
@@ -130,4 +136,5 @@ type mergeConfigsArgs struct {
 	env      configdomain.PartialConfig // configuration data taken from environment variables
 	file     configdomain.PartialConfig // data of the configuration file
 	git      configdomain.PartialConfig
+	system   configdomain.PartialConfig
 }
