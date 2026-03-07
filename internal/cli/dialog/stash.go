@@ -52,7 +52,7 @@ func Stash(args Args[configdomain.Stash]) (Option[configdomain.Stash], dialogdom
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, stashTitle, stashHelp, args.Inputs, "stash")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, stashTitle, stashHelp, args.Inputs, args.DisplayDialogs, "stash")
 	fmt.Printf(messages.StashResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

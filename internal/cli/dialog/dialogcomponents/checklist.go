@@ -7,13 +7,15 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 // CheckList lets the user select zero, one, or many of the given entries.
-func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, dialogName string) ([]S, dialogdomain.Exit, error) {
-	if err := RequireTTY(); err != nil {
-		return nil, false, err
+func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) ([]S, dialogdomain.Exit, error) {
+	if !displayDialogs {
+		return nil, false, systemconfig.ErrNoTTY
 	}
 	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{

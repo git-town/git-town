@@ -47,7 +47,7 @@ func GitlabConnectorType(args Args[forgedomain.GitlabConnectorType]) (Option[for
 		},
 	}...)
 	cursor := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitlabConnectorTypeTitle, gitlabConnectorTypeHelp, args.Inputs, "gitlab-connector")
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitlabConnectorTypeTitle, gitlabConnectorTypeHelp, args.Inputs, args.DisplayDialogs, "gitlab-connector")
 	fmt.Printf(messages.GitlabConnectorTypeResult, dialogcomponents.FormattedSelection(selection.GetOrZero().String(), exit))
 	return selection, exit, err
 }

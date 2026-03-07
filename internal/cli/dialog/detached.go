@@ -47,7 +47,7 @@ func SyncDetached(args Args[configdomain.Detached]) (Option[configdomain.Detache
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, detachedTitle, detachedHelp, args.Inputs, "detached")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, detachedTitle, detachedHelp, args.Inputs, args.DisplayDialogs, "detached")
 	fmt.Printf(messages.DetachedResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

@@ -20,9 +20,9 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Enter(data Data, configDir configdomain.RepoConfigDir) (UserInput, dialogdomain.Exit, bool, error) {
+func Enter(data Data, configDir configdomain.RepoConfigDir, displayDialogs configdomain.DisplayDialogs) (UserInput, dialogdomain.Exit, bool, error) {
 	var emptyResult UserInput
-	exit, err := dialog.Welcome(data.Inputs)
+	exit, err := dialog.Welcome(data.Inputs, displayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}

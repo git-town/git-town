@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 )
@@ -37,7 +38,7 @@ const (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs) (Response, dialogdomain.Exit, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (Response, dialogdomain.Exit, error) {
 	entries := list.Entries[Response]{
 		{
 			Data: ResponseQuit,
@@ -68,7 +69,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 			Text: fmt.Sprintf(messages.UnfinishedRunStateBoth, command),
 		},
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), input, "unfinished-runstate")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), input, displayDialogs, "unfinished-runstate")
 	if err == nil {
 		fmt.Printf(messages.UnfinishedCommandHandle, dialogcomponents.FormattedSelection(string(selection), exit))
 	}

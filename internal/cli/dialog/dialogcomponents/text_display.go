@@ -7,11 +7,13 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 )
 
-func TextDisplay(title, text string, inputs Inputs, dialogName string) (dialogdomain.Exit, error) {
-	if err := RequireTTY(); err != nil {
-		return false, err
+func TextDisplay(title, text string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (dialogdomain.Exit, error) {
+	if !displayDialogs {
+		return false, systemconfig.ErrNoTTY
 	}
 	model := textDisplayModel{
 		colors: dialogcolors.NewDialogColors(),

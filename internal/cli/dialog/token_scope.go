@@ -21,7 +21,7 @@ or for all Git repos on this machine?
 )
 
 // TokenScope lets the user enter the GitHub API token.
-func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Inputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ConfigScope]{
 		{
 			Data: configdomain.ConfigScopeGlobal,
@@ -33,7 +33,7 @@ func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Input
 		},
 	}
 	defaultPos := entries.IndexOf(oldValue)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs, "token-scope")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs, displayDialogs, "token-scope")
 	fmt.Printf(messages.ForgeAPITokenLocation, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

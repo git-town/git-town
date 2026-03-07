@@ -41,7 +41,7 @@ func AutoSync(args Args[configdomain.AutoSync]) (Option[configdomain.AutoSync], 
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, autoSyncTitle, autoSyncHelp, args.Inputs, "auto-sync")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, autoSyncTitle, autoSyncHelp, args.Inputs, args.DisplayDialogs, "auto-sync")
 	fmt.Printf(messages.AutoSync, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

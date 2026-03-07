@@ -3,12 +3,14 @@ package dialog
 
 import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Args are arguments for dialogs that allow to enter a textual configuration value.
 type Args[T any] struct {
-	Global Option[T]
-	Inputs dialogcomponents.Inputs
-	Local  Option[T]
+	DisplayDialogs configdomain.DisplayDialogs
+	Global         Option[T]
+	Inputs         dialogcomponents.Inputs
+	Local          Option[T]
 }

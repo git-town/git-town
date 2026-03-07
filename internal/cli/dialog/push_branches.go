@@ -43,7 +43,7 @@ func PushBranches(args Args[configdomain.PushBranches]) (Option[configdomain.Pus
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushBranchesTitle, PushBranchesHelp, args.Inputs, "push-branches")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushBranchesTitle, PushBranchesHelp, args.Inputs, args.DisplayDialogs, "push-branches")
 	fmt.Printf(messages.PushBranches, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

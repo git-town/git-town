@@ -12,7 +12,7 @@ import (
 )
 
 func Load() configdomain.PartialConfig {
-	tty := hasTTY()
+	tty := HasTTY()
 	displayDialogs := configdomain.DisplayDialogs(tty)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
@@ -67,8 +67,8 @@ func Load() configdomain.PartialConfig {
 	}
 }
 
-// hasTTY reports whether an interactive terminal is available.
-func hasTTY() bool {
+// HasTTY reports whether an interactive terminal is available.
+func HasTTY() bool {
 	fd := os.Stdin.Fd()
 	if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
 		return true
