@@ -797,9 +797,10 @@ func enterUnknownBranchType(data Data) (Option[configdomain.UnknownBranchType], 
 		return None[configdomain.UnknownBranchType](), false, nil
 	}
 	return dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
-		Global: data.Config.GitGlobal.UnknownBranchType,
-		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.UnknownBranchType,
+		DisplayDialogs: data.Config.NormalConfig.DisplayDialogs,
+		Global:         data.Config.GitGlobal.UnknownBranchType,
+		Inputs:         data.Inputs,
+		Local:          data.Config.GitLocal.UnknownBranchType,
 	})
 }
 
