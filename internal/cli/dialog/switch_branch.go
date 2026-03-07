@@ -278,7 +278,7 @@ type NewSwitchBranchEntriesArgs struct {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	if args.DisplayDialogs {
+	if !args.DisplayDialogs {
 		return "", false, systemconfig.ErrNoTTY
 	}
 	entries := args.EntryData.entries()
