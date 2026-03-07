@@ -11,6 +11,15 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
+// HasTTY reports whether an interactive terminal is available.
+func HasTTY() bool {
+	fd := os.Stdin.Fd()
+	if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
+		return true
+	}
+	return canOpenTTY()
+}
+
 func Load() configdomain.PartialConfig {
 	tty := HasTTY()
 	displayDialogs := configdomain.DisplayDialogs(tty)
@@ -65,15 +74,6 @@ func Load() configdomain.PartialConfig {
 		UnknownBranchType:           None[configdomain.UnknownBranchType](),
 		Verbose:                     None[configdomain.Verbose](),
 	}
-}
-
-// HasTTY reports whether an interactive terminal is available.
-func HasTTY() bool {
-	fd := os.Stdin.Fd()
-	if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
-		return true
-	}
-	return canOpenTTY()
 }
 
 // ErrNoTTY indicates that an interactive terminal is required but not available.

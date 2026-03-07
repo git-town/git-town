@@ -176,7 +176,6 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DisplayDialogs: ,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
