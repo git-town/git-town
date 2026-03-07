@@ -122,6 +122,7 @@ EnterForgeData:
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
 		configDir:            configDir,
 		devURL:               devURL,
+		displayDialogs:       data.Config.NormalConfig.DisplayDialogs,
 		forgeTypeOpt:         actualForgeType,
 		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
@@ -296,6 +297,7 @@ EnterForgeData:
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   devRemote,
+		DisplayDialogs:              None[configdomain.DisplayDialogs](),
 		DisplayTypes:                None[configdomain.DisplayTypes](),
 		DryRun:                      None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:                featureRegex,
@@ -568,6 +570,7 @@ func enterMainBranch(data Data) (dialog.MainBranchResult, dialogdomain.Exit, err
 		}, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
+		DisplayDialogs: data.Config.NormalConfig.DisplayDialogs,
 		Inputs:         data.Inputs,
 		Local:          data.Config.GitLocal.MainBranch,
 		LocalBranches:  data.LocalBranches,
@@ -629,6 +632,7 @@ func enterPerennialBranches(data Data, mainBranch gitdomain.LocalBranchName) (gi
 		AppendAllMissing(data.Config.File.PerennialBranches).
 		AppendAllMissing(data.Config.GitGlobal.PerennialBranches)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		DisplayDialogs:         data.Config.NormalConfig.DisplayDialogs,
 		ImmutableGitPerennials: immutablePerennials,
 		Inputs:                 data.Inputs,
 		LocalBranches:          data.LocalBranches,

@@ -295,6 +295,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
+		DisplayDialogs:              None[configdomain.DisplayDialogs](),
 		DisplayTypes:                displayTypes,
 		DryRun:                      None[configdomain.DryRun](),
 		UnknownBranchType:           unknownBranchType,
