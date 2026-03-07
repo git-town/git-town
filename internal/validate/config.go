@@ -33,7 +33,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir, args.DisplayDialogs)
+		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir, args.Unvalidated.Value.NormalConfig.DisplayDialogs)
 		if err != nil {
 			if errors.Is(err, systemconfig.ErrNoTTY) {
 				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
@@ -99,7 +99,6 @@ type ConfigArgs struct {
 	ConfigDir          configdomain.RepoConfigDir
 	ConfigSnapshot     configdomain.BeginConfigSnapshot
 	Connector          Option[forgedomain.Connector]
-	DisplayDialogs     configdomain.DisplayDialogs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	Inputs             dialogcomponents.Inputs
