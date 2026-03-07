@@ -55,6 +55,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) conf
 		env:      envConfig,
 		file:     self.File,
 		git:      unscopedGitConfig,
+		system:   self.SystemConfig,
 	})
 	self.GitUnscoped = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig

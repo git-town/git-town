@@ -85,6 +85,7 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: args.Config.NormalConfig.DisplayTypes,
+			DisplayDialogs:     args.Config.NormalConfig.DisplayDialogs,
 			EntryData: EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,

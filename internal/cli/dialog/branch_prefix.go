@@ -29,12 +29,13 @@ it's safe to leave it blank.
 
 func BranchPrefix(args Args[configdomain.BranchPrefix]) (Option[configdomain.BranchPrefix], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:    "branch-prefix",
-		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          BranchPrefixHelp,
-		Inputs:        args.Inputs,
-		Prompt:        messages.BranchPrefixPrompt,
-		Title:         branchPrefixTitle,
+		DialogName:     "branch-prefix",
+		DisplayDialogs: args.DisplayDialogs,
+		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
+		Help:           BranchPrefixHelp,
+		Inputs:         args.Inputs,
+		Prompt:         messages.BranchPrefixPrompt,
+		Title:          branchPrefixTitle,
 	})
 	newValue, errNewValue := configdomain.ParseBranchPrefix(input, "dialog")
 	if args.Global.Equal(newValue) {
