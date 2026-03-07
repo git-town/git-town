@@ -1,4 +1,4 @@
-# Disabling the built-in dialogs
+# Disabling the dialogs
 
 Git Town tries to be an ergonomic CLI application. Rather than just telling you
 what is missing and how to enter it, it queries the needed information from you
