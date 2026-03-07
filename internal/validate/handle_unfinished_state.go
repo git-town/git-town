@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
@@ -171,9 +170,6 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
 		if err != nil {
-			if errors.Is(err, systemconfig.ErrNoTTY) {
-				return config.EmptyValidatedConfig(), false, errors.New(messages.NoTTYMainBranchMissing) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
-			}
 			return config.EmptyValidatedConfig(), exit, err
 		}
 		if exit {

@@ -8,12 +8,11 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 )
 
 func TextDisplay(title, text string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (dialogdomain.Exit, error) {
-	if !displayDialogs {
-		return false, systemconfig.ErrNoTTY
+	if err := displayDialogs.Verify(); err != nil {
+		return false, err
 	}
 	model := textDisplayModel{
 		colors: dialogcolors.NewDialogColors(),

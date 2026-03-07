@@ -9,12 +9,11 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
-	if !args.DisplayDialogs {
-		return "", false, systemconfig.ErrNoTTY
+	if err := args.DisplayDialogs.Verify(); err != nil {
+		return "", false, err
 	}
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)

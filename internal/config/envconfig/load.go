@@ -68,7 +68,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	browser, errBrowser := load(env, Browser, configdomain.ParseBrowser)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
-	displayDialogs := configdomain.LoadDisplayDialogsFromEnv(env.Get(term))
+	displayDialogs := configdomain.NewDisplayDialogsFromEnv(env.Get(term))
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)

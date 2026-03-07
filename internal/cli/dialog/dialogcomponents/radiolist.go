@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
@@ -16,9 +15,9 @@ const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.
 func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
-	if !displayDialogs {
+	if err := displayDialogs.Verify(); err != nil {
 		var zero S
-		return zero, false, systemconfig.ErrNoTTY
+		return zero, false, err
 	}
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),

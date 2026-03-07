@@ -8,14 +8,13 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 // CheckList lets the user select zero, one, or many of the given entries.
 func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) ([]S, dialogdomain.Exit, error) {
-	if !displayDialogs {
-		return nil, false, systemconfig.ErrNoTTY
+	if err := displayDialogs.Verify(); err != nil {
+		return nil, false, err
 	}
 	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{

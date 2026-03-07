@@ -1,7 +1,6 @@
 package systemconfig
 
 import (
-	"errors"
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -22,7 +21,7 @@ func HasTTY() bool {
 
 func Load() configdomain.PartialConfig {
 	tty := HasTTY()
-	displayDialogs := configdomain.DisplayDialogs(tty)
+	displayDialogs := configdomain.NewDisplayDialogsFromTTY(tty)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
 		AutoResolve:                 None[configdomain.AutoResolve](),
@@ -35,7 +34,7 @@ func Load() configdomain.PartialConfig {
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    None[configdomain.Detached](),
 		DevRemote:                   None[gitdomain.Remote](),
-		DisplayDialogs:              Some(displayDialogs),
+		DisplayDialogs:              displayDialogs,
 		DisplayTypes:                None[configdomain.DisplayTypes](),
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                None[configdomain.FeatureRegex](),
@@ -75,6 +74,3 @@ func Load() configdomain.PartialConfig {
 		Verbose:                     None[configdomain.Verbose](),
 	}
 }
-
-// ErrNoTTY indicates that an interactive terminal is required but not available.
-var ErrNoTTY = errors.New("no interactive terminal available")

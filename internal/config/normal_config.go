@@ -265,7 +265,7 @@ func DefaultNormalConfig() NormalConfig {
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
 		DevRemote:            gitdomain.RemoteOrigin,
-		DisplayDialogs:       true,
+		DisplayDialogs:       configdomain.ShowDisplayDialogs,
 		DisplayTypes: configdomain.DisplayTypes{
 			Quantifier:  configdomain.QuantifierNo,
 			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
