@@ -21,8 +21,8 @@ type UnvalidatedConfig struct {
 	GitLocal          configdomain.PartialConfig // local Git metadata
 	GitUnscoped       configdomain.PartialConfig // unscoped Git metadata
 	NormalConfig      NormalConfig
-	UnvalidatedConfig configdomain.UnvalidatedConfigData
 	SystemConfig      configdomain.PartialConfig
+	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
 
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
