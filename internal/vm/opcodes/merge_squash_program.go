@@ -20,7 +20,7 @@ type MergeSquashProgram struct {
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
-	selectedGitUser, exit, err := dialog.SquashCommitAuthor(self.Branch, self.Authors, args.Inputs)
+	selectedGitUser, exit, err := dialog.SquashCommitAuthor(self.Branch, self.Authors, args.Inputs, args.Config.Value.NormalConfig.DisplayDialogs)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}

@@ -153,7 +153,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	enterAll, exit, err := dialog.EnterAll(data.Inputs)
+	enterAll, exit, err := dialog.EnterAll(data.Inputs, displayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, enterAll, err
 	}
@@ -279,7 +279,7 @@ EnterForgeData:
 			return emptyResult, exit, false, err
 		}
 	}
-	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
+	configStorage, exit, err := dialog.ConfigStorage(data.Inputs, displayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
@@ -783,6 +783,7 @@ type enterTokenScopeArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
+	displayDialogs       configdomain.DisplayDialogs
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -858,13 +859,13 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 	if credentialsVerifier, canVerifyCredentials := connector.(forgedomain.CredentialVerifier); canVerifyCredentials {
 		verifyResult := credentialsVerifier.VerifyCredentials()
 		if verifyResult.AuthenticationError != nil {
-			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)
+			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs, args.displayDialogs)
 		}
 		if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
 			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, false))
 		}
 		if verifyResult.AuthorizationError != nil {
-			return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs)
+			return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs, args.displayDialogs)
 		}
 		fmt.Println(messages.CredentialsAccess)
 	}
@@ -877,6 +878,7 @@ type testForgeAuthArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	configDir            configdomain.RepoConfigDir
 	devURL               Option[giturl.Parts]
+	displayDialogs       configdomain.DisplayDialogs
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -895,19 +897,19 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
-			return dialog.TokenScope(existingScope, args.inputs)
+			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
 		case forgedomain.ForgeTypeForgejo:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
-			return dialog.TokenScope(existingScope, args.inputs)
+			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
-			return dialog.TokenScope(existingScope, args.inputs)
+			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
 		case forgedomain.ForgeTypeGithub:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGithubToken, args.data.Config.NormalConfig.GithubToken)
-			return dialog.TokenScope(existingScope, args.inputs)
+			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
 		case forgedomain.ForgeTypeGitlab:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitlabToken, args.data.Config.NormalConfig.GitlabToken)
-			return dialog.TokenScope(existingScope, args.inputs)
+			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
 		}
 	}
 	return configdomain.ConfigScopeLocal, false, nil
