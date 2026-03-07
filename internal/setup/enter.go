@@ -821,7 +821,6 @@ type enterTokenScopeArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
-	displayDialogs       configdomain.DisplayDialogs
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -936,19 +935,19 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
-			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
+			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.DisplayDialogs)
 		case forgedomain.ForgeTypeForgejo:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
-			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
+			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.DisplayDialogs)
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
-			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
+			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.DisplayDialogs)
 		case forgedomain.ForgeTypeGithub:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGithubToken, args.data.Config.NormalConfig.GithubToken)
-			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
+			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.DisplayDialogs)
 		case forgedomain.ForgeTypeGitlab:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitlabToken, args.data.Config.NormalConfig.GitlabToken)
-			return dialog.TokenScope(existingScope, args.inputs, args.displayDialogs)
+			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.DisplayDialogs)
 		}
 	}
 	return configdomain.ConfigScopeLocal, false, nil
