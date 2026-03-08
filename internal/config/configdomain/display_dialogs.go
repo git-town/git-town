@@ -1,11 +1,18 @@
 package configdomain
 
 import (
-	"errors"
 	"strings"
 
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
+
+type CannotDisplayDialogsError struct {
+	Reason string
+}
+
+func (self CannotDisplayDialogsError) Error() string {
+	return self.Reason
+}
 
 const ShowDisplayDialogs = DisplayDialogs("")
 
@@ -23,7 +30,7 @@ func (self DisplayDialogs) Verify() error {
 	if self == "" {
 		return nil
 	}
-	return errors.New(self.String())
+	return &CannotDisplayDialogsError{Reason: self.String()}
 }
 
 func NewDisplayDialogsFromEnv(envTerm string) Option[DisplayDialogs] {
