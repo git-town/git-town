@@ -152,7 +152,7 @@ func (self Lineage) Clan(branches gitdomain.LocalBranchNames, perennialBranches 
 
 // Descendants provides all branches that depend on the given branch in its lineage.
 func (self Lineage) Descendants(branch gitdomain.LocalBranchName, order Order) gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames{}
+	result := gitdomain.LocalBranchNames{} //nolint:prealloc
 	for _, child := range self.Children(branch, order) {
 		result = append(result, child)
 		result = append(result, self.Descendants(child, order)...)

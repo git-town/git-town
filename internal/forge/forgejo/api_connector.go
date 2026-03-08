@@ -257,11 +257,10 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 }
 
 func parsePullRequests(pullRequests []*forgejo.PullRequest) []forgedomain.Proposal {
-	result := []forgedomain.Proposal{}
-	for _, pullRequest := range pullRequests {
+	result := make([]forgedomain.Proposal, len(pullRequests))
+	for p, pullRequest := range pullRequests {
 		proposalData := parsePullRequest(pullRequest)
-		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
-		result = append(result, proposal)
+		result[p] = forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
 	}
 	return result
 }
