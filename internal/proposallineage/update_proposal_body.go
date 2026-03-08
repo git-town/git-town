@@ -17,15 +17,13 @@ func UpdateProposalBody(body gitdomain.ProposalBody, lineageSection string) gitd
 	wrappedLineage := stackStart + "\n" + lineageSection + "\n" + stackEnd + "\n"
 
 	// check for existing lineage section
-	startIdx := strings.Index(bodyStr, stackStart)
-	endIdx := strings.Index(bodyStr, stackEnd)
-	if startIdx != -1 && endIdx != -1 {
-		// Replace existing lineage section
-		endLineEnd := endIdx + len(stackEnd)
-		if endLineEnd < len(bodyStr) && bodyStr[endLineEnd] == '\n' {
-			endLineEnd++
+	before, after, hasStart := strings.Cut(bodyStr, stackStart)
+	if hasStart {
+		_, suffix, hasEnd := strings.Cut(after, stackEnd)
+		if hasEnd {
+			suffix = strings.TrimPrefix(suffix, "\n")
+			return gitdomain.ProposalBody(before + wrappedLineage + suffix)
 		}
-		return gitdomain.ProposalBody(bodyStr[:startIdx] + wrappedLineage + bodyStr[endLineEnd:])
 	}
 
 	// here there is no lineage section, check for stack marker
