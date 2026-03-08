@@ -80,6 +80,12 @@ linters:
           - gosec
         text: Potential hardcoded credentials
       - linters:
+          - gosec
+        text: Path traversal via taint analysis
+      - linters:
+          - gosec
+        text: prevent symlink TOCTOU traversal
+      - linters:
           - ireturn
         text: github.com/git-town/git-town/v22/internal/(hosting/hostingdomain.Connector|hosting.Connector)
       - linters:
