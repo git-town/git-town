@@ -66,8 +66,8 @@ func (self *DataTable) Expand(args handlebars.ExpandArgs) DataTable {
 	result := DataTable{}
 	for row := range self.Cells {
 		cells := make([]string, len(self.Cells[row]))
-		for c, cell := range self.Cells[row] {
-			cells[c] = handlebars.Expand(cell, args)
+		for col, cell := range self.Cells[row] {
+			cells[col] = handlebars.Expand(cell, args)
 		}
 		result.AddRow(cells...)
 	}
@@ -117,9 +117,9 @@ func (self *DataTable) columns() [][]string {
 	columns := self.Cells[0]
 	result := make([][]string, len(columns))
 	for c := range columns {
-		var colData []string
+		colData := make([]string, len(self.Cells))
 		for row := range self.Cells {
-			colData = append(colData, self.Cells[row][c])
+			colData[row] = self.Cells[row][c]
 		}
 		result[c] = colData
 	}
