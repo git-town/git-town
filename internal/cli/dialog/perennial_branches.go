@@ -49,7 +49,8 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 			Text:     branch.String(),
 		}
 	}
-	selections := []int{slices.Index(perennialCandidates, args.MainBranch)}
+	selections := make([]int, 0, 1+len(args.ImmutableGitPerennials)+len(args.LocalGitPerennials))
+	selections = append(selections, slices.Index(perennialCandidates, args.MainBranch))
 	selections = append(selections, slice.FindMany(perennialCandidates, args.ImmutableGitPerennials)...)
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, "perennial-branches")
