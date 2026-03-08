@@ -65,11 +65,9 @@ func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount
 func (self *DataTable) Expand(args handlebars.ExpandArgs) DataTable {
 	result := DataTable{}
 	for row := range self.Cells {
-		var cells []string
-		for col := range self.Cells[row] {
-			cell := self.Cells[row][col]
-			cell = handlebars.Expand(cell, args)
-			cells = append(cells, cell)
+		cells := make([]string, len(self.Cells[row]))
+		for c, cell := range self.Cells[row] {
+			cells[c] = handlebars.Expand(cell, args)
 		}
 		result.AddRow(cells...)
 	}
