@@ -19,13 +19,13 @@ Feature: sync a branch whose remote is gone while main is active in another work
       |            | git checkout feature-1A  |
       | feature-1A | git branch -D feature-1  |
       |            | git checkout feature-2   |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         feature-1A
         feature-2
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
