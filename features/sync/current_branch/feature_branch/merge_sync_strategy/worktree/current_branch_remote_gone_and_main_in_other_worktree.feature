@@ -33,4 +33,11 @@ Feature: sync a branch whose remote is gone while main is active in another work
       | BRANCH    | COMMAND                                         |
       | feature-2 | git branch feature-1 {{ sha 'initial commit' }} |
       |           | git checkout feature-1                          |
+    And this lineage exists now
+      """
+      main
+        feature-1
+          feature-1A
+        feature-2
+      """
     And the initial commits exist now
