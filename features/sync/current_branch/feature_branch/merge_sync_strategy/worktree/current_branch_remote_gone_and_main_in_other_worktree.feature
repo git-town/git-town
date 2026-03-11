@@ -1,4 +1,4 @@
-Feature: sync a branch whose remote is gone while main is active in another worktree
+Feature: sync a branch whose remote branch is gone while main is active in another worktree
 
   Background:
     Given a Git repo with origin
