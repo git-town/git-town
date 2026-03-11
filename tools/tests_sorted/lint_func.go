@@ -65,7 +65,7 @@ func lintFuncImpl(pos token.Position, funcType *ast.FuncType, funcBody *ast.Bloc
 // tRunSubtestNames returns a list of subtest names from `t.Run(...)`
 // invocations.
 func tRunSubtestNames(statements []ast.Stmt) ([]string, error) {
-	var subtests []string //nolint:prealloc // alexkohler/prealloc#16
+	var subtests []string
 	testNameExtractor := &matcher.FirstStringArgFromFuncCallExtractor{
 		FuncMatcher: &matcher.IdentSelectorMatcher{
 			Namespace: "t",
