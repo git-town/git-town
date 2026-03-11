@@ -56,3 +56,15 @@ function fish_prompt
   printf '%s> ' $yellow_pending_gittown_command
 end
 ```
+
+### Starship.rs
+
+For starship, add this entry to `~/.config/starship.toml` :
+
+```toml
+[custom.git-town]
+command = "git town status --pending"
+format = "[ $output ]($style)"
+style = "bg:yellow fg:black"
+when = "test -n \"$(git town status --pending)\" "
+```
