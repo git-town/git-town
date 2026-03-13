@@ -5,13 +5,16 @@ and provides additional Git commands for branch management and synchronization.
 
 ## Architecture
 
-Read [Git Town architecture](docs/ARCHITECTURE.md) for details about the architecture.
+Read [Git Town architecture](docs/ARCHITECTURE.md) for details about the
+architecture.
 
 ## Development Guidelines
 
-Read [Developing the Git Town source code](docs/DEVELOPMENT.md) for how to run tests.
+Read [Developing the Git Town source code](docs/DEVELOPMENT.md) for how to run
+tests.
 
-You can change any file in the current folder and its subfolders. Don't change anything outside the current folder.
+You can change any file in the current folder and its subfolders. Don't change
+anything outside the current folder.
 
 Don't commit changes: Never create new Git branches or make Git commits. I will
 review the changes you make and then commit them on my own
@@ -23,7 +26,8 @@ Write idiomatic Go except for these rules:
 - Use domain-specific types defined in the respective `*domain` packages. Create
   new types if applicable.
 
-Always add unit tests, and add end-to-end tests written in Cucumber to the "features" folder if applicable.
+Always add unit tests, and add end-to-end tests written in Cucumber to the
+"features" folder if applicable.
 
 ## Code Organization
 
