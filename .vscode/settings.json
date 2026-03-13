@@ -4,6 +4,5 @@
   ],
   "cucumber.glue": [
     "internal/test/cucumber/steps.go"
-  ],
-  "diffEditor.codeLens": true
+  ]
 }
