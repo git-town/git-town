@@ -150,7 +150,7 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
-		Body: Ptr(updatedBody.String()),
+		Body: new(updatedBody.String()),
 	})
 	self.log.Finished(err)
 	return err

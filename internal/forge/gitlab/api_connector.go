@@ -123,7 +123,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
-		Description: Ptr(updatedDescription.String()),
+		Description: new(updatedDescription.String()),
 	})
 	self.log.Finished(err)
 	return err
