@@ -135,7 +135,7 @@ func TestRenderTree(t *testing.T) {
 		}
 		want := `
 -------------------------
-- feature-1A :point_left:
+- **feature-1A** :point_left:
 - https://www.github.com/git-town/pull/1B
 - feature-1
 - main

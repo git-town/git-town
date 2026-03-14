@@ -67,7 +67,7 @@ func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBr
 	if node.BranchOrAncestorHasProposal() || onPathToRoot {
 		builder.WriteString("- ")
 		proposal, hasProposal := node.Proposal.Get()
-		if isCurrentBranch && hasProposal {
+		if isCurrentBranch {
 			builder.WriteString("**")
 			builder.WriteString(node.Branch.String())
 			builder.WriteString("**")
