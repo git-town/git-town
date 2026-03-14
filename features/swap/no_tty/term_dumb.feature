@@ -1,13 +1,15 @@
-Feature: TERM=dumb, no main branch
+@skipWindows
+Feature: no TTY, no main branch
 
   Background:
     Given a local Git repo
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS |
-      | existing | feature | main   | local     |
+      | NAME     | TYPE    | PARENT   | LOCATIONS |
+      | branch-1 | feature | main     | local     |
+      | branch-2 | feature | branch-1 | local     |
     And Git Town is not configured
-    And the current branch is "existing"
-    When I run "git-town append new" with these environment variables
+    And the current branch is "branch-2"
+    When I run "git-town swap" with these environment variables
       | TERM | dumb |
 
   Scenario: result

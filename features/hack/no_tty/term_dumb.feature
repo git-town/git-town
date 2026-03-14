@@ -1,3 +1,4 @@
+@skipWindows
 Feature: TERM=dumb, no main branch
 
   Background:
@@ -7,7 +8,7 @@ Feature: TERM=dumb, no main branch
       | existing | feature | main   | local     |
     And Git Town is not configured
     And the current branch is "existing"
-    When I run "git-town append new" with these environment variables
+    When I run "git-town hack new" with these environment variables
       | TERM | dumb |
 
   Scenario: result
