@@ -2,7 +2,6 @@
 authors = ["The Git Town authors"]
 description = "Git Town user manual"
 language = "en"
-multilingual = false
 src = "src"
 title = "Git Town 22.6"
 
