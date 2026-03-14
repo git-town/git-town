@@ -4,7 +4,7 @@ package systemconfig
 
 import "os"
 
-func canOpenTTY() bool {
+func canOpenTTY() HasTTY {
 	f, err := os.Open("CONIN$")
 	if err != nil {
 		return false

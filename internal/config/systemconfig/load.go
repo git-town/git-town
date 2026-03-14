@@ -1,26 +1,14 @@
 package systemconfig
 
 import (
-	"os"
-
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/mattn/go-isatty"
 )
 
-// HasTTY reports whether an interactive terminal is available.
-func HasTTY() bool {
-	fd := os.Stdin.Fd()
-	if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
-		return true
-	}
-	return canOpenTTY()
-}
-
 func Load() configdomain.PartialConfig {
-	tty := HasTTY()
+	tty := DetermineTTY()
 	displayDialogs := configdomain.NewDisplayDialogsFromTTY(tty)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},

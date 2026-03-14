@@ -41,7 +41,7 @@ func NewDisplayDialogsFromEnv(envTerm string) Option[DisplayDialogs] {
 	return None[DisplayDialogs]()
 }
 
-func NewDisplayDialogsFromTTY(tty bool) Option[DisplayDialogs] {
+func NewDisplayDialogsFromTTY(tty HasTTY) Option[DisplayDialogs] {
 	if tty {
 		return None[DisplayDialogs]()
 	}
