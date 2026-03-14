@@ -1,14 +1,15 @@
 # Disabling the interactive dialogs
 
-Git Town tries to be an ergonomic CLI application. Rather than just telling you
-what is missing and how to enter it, it queries the needed information from you
-right there when it needs it.
+Git Town is designed to be an ergonomic CLI. When it needs additional input, it
+asks for it directly instead of failing and telling you to re-run with
+additional flags.
 
-If you prefer a more conventional CLI application, you can set this environment
-variable while running Git Town:
+If you prefer a traditional, non-interactive CLI workflow, you can disable these
+dialogs by setting the terminal type to `dumb` when running Git Town:
 
 ```bash
 export TERM=dumb
 ```
 
-This suppresses the dialogs.
+When this environment variable is set, Git Town suppresses all interactive
+dialogs and behaves like a conventional CLI tool.
