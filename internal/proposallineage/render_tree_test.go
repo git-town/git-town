@@ -13,7 +13,7 @@ import (
 func TestRenderTree(t *testing.T) {
 	t.Parallel()
 
-	t.Run("down tree renders with indent", func(t *testing.T) {
+	t.Run("down trees render with indent", func(t *testing.T) {
 		t.Parallel()
 		// feature-1B has a proposal so it will be shown (sibling with PR)
 		tree := proposallineage.TreeNodeWithProposal{
@@ -55,7 +55,7 @@ func TestRenderTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("up tree renders flat", func(t *testing.T) {
+	t.Run("up trees render flat", func(t *testing.T) {
 		t.Parallel()
 		// feature-1B has a proposal so it will be shown (sibling with PR)
 		tree := proposallineage.TreeNodeWithProposal{
@@ -97,7 +97,7 @@ func TestRenderTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("with proposals", func(t *testing.T) {
+	t.Run("shows all clan members with proposals", func(t *testing.T) {
 		t.Parallel()
 		tree := proposallineage.TreeNodeWithProposal{
 			Branch: "main",
