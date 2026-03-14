@@ -36,7 +36,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
 		if err != nil {
 			if cannotDisplayDialogs, ok := errors.AsType[*configdomain.CannotDisplayDialogsError](err); ok {
-				return config.EmptyValidatedConfig(), false, fmt.Errorf(messages.NoTTYMainBranchMissing, cannotDisplayDialogs) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
+				return config.EmptyValidatedConfig(), true, fmt.Errorf(messages.NoTTYMainBranchMissing, cannotDisplayDialogs) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
 			}
 			return config.EmptyValidatedConfig(), exit, err
 		}
