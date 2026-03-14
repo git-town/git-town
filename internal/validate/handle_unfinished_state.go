@@ -153,6 +153,7 @@ func discardRunstate(runstatePath runstate.FilePath) (configdomain.ProgramFlow, 
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
 func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111")
 	mainBranch, hasMain := args.unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)

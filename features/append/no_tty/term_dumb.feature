@@ -10,23 +10,23 @@ Feature: TERM=dumb, no main branch
     When I run "git-town append new" with these environment variables
       | TERM | dumb |
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and dumb terminal configured.
+      no main branch configured and only a dumb terminal available.
       
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
 
   Scenario: undo
-    When I run "git-town undo" in a non-TTY shell
+    When I run "git-town undo" with these environment variables
+      | TERM | dumb |
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and no interactive terminal available.
+      no main branch configured and only a dumb terminal available.
       
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.

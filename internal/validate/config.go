@@ -1,6 +1,9 @@
 package validate
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -9,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/setup"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -31,6 +35,9 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		var exit dialogdomain.Exit
 		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir, args.Unvalidated.Value.NormalConfig.DisplayDialogs)
 		if err != nil {
+			if cannotDisplayDialogs, ok := errors.AsType[*configdomain.CannotDisplayDialogsError](err); ok {
+				return config.EmptyValidatedConfig(), false, fmt.Errorf(messages.NoTTYMainBranchMissing, cannotDisplayDialogs) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
+			}
 			return config.EmptyValidatedConfig(), exit, err
 		}
 		if exit {
