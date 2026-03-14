@@ -1,6 +1,6 @@
 module github.com/git-town/git-town/v22/tools/generate_json_schema
 
-go 1.24.9
+go 1.26.1
 
 require (
 	github.com/git-town/git-town/v22 v22.4.0

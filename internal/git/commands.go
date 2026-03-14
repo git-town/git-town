@@ -890,7 +890,7 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 			return stage, nil
 		}
 	}
-	return 0, fmt.Errorf("unknown stage ID: %q", value)
+	return 0, fmt.Errorf("unknown Git stage ID: %d", value)
 }
 
 type branchesQueryResult struct {

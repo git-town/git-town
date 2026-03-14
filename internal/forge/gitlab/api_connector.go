@@ -36,9 +36,9 @@ var _ forgedomain.ProposalFinder = apiConnector
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
-		State:        gitlab.Ptr("opened"),
-		SourceBranch: gitlab.Ptr(branch.String()),
-		TargetBranch: gitlab.Ptr(target.String()),
+		State:        new("opened"),
+		SourceBranch: new(branch.String()),
+		TargetBranch: new(target.String()),
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
@@ -67,8 +67,8 @@ var _ forgedomain.ProposalSearcher = apiConnector
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
-		State:        gitlab.Ptr("opened"),
-		SourceBranch: gitlab.Ptr(branch.String()),
+		State:        new("opened"),
+		SourceBranch: new(branch.String()),
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
@@ -104,10 +104,10 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), &gitlab.AcceptMergeRequestOptions{
-		SquashCommitMessage: gitlab.Ptr(message.String()),
-		Squash:              gitlab.Ptr(true),
+		SquashCommitMessage: new(message.String()),
+		Squash:              new(true),
 		// the branch will be deleted by Git Town
-		ShouldRemoveSourceBranch: gitlab.Ptr(false),
+		ShouldRemoveSourceBranch: new(false),
 	})
 	self.log.Finished(err)
 	return err
@@ -123,7 +123,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
-		Description: Ptr(updatedDescription.String()),
+		Description: new(updatedDescription.String()),
 	})
 	self.log.Finished(err)
 	return err
@@ -139,7 +139,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.Ptr(target.String()),
+		TargetBranch: new(target.String()),
 	})
 	self.log.Finished(err)
 	return err

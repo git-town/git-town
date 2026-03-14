@@ -77,53 +77,53 @@ upstream = true
 			must.NoError(t, err)
 			wantData := configfile.Data{
 				Branches: &configfile.Branches{
-					ContributionRegex: Ptr("^gittown-"),
+					ContributionRegex: new("^gittown-"),
 					DefaultType:       nil,
-					DisplayTypes:      Ptr("no main perennial"),
-					FeatureRegex:      Ptr("^kg-"),
-					Main:              Ptr("main"),
-					ObservedRegex:     Ptr(`^dependabot\/`),
-					Order:             Ptr("desc"),
-					PerennialRegex:    Ptr("release-.*"),
+					DisplayTypes:      new("no main perennial"),
+					FeatureRegex:      new("^kg-"),
+					Main:              new("main"),
+					ObservedRegex:     new(`^dependabot\/`),
+					Order:             new("desc"),
+					PerennialRegex:    new("release-.*"),
 					Perennials:        []string{"public", "staging"},
-					UnknownType:       Ptr("prototype"),
+					UnknownType:       new("prototype"),
 				},
 				Create: &configfile.Create{
-					BranchPrefix:     Ptr("feature-"),
-					NewBranchType:    Ptr("prototype"),
+					BranchPrefix:     new("feature-"),
+					NewBranchType:    new("prototype"),
 					PushNewBranches:  nil,
-					ShareNewBranches: Ptr("push"),
-					Stash:            Ptr(true),
+					ShareNewBranches: new("push"),
+					Stash:            new(true),
 				},
 				Hosting: &configfile.Hosting{
-					Browser:         Ptr("chrome"),
-					DevRemote:       Ptr("origin"),
-					ForgeType:       Ptr("github"),
-					GithubConnector: Ptr("gh"),
-					GitlabConnector: Ptr("glab"),
-					OriginHostname:  Ptr("github.com"),
+					Browser:         new("chrome"),
+					DevRemote:       new("origin"),
+					ForgeType:       new("github"),
+					GithubConnector: new("gh"),
+					GitlabConnector: new("glab"),
+					OriginHostname:  new("github.com"),
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Breadcrumb:          Ptr("stacks"),
-					BreadcrumbDirection: Ptr("up"),
+					Breadcrumb:          new("stacks"),
+					BreadcrumbDirection: new("up"),
 				},
 				Ship: &configfile.Ship{
-					DeleteTrackingBranch: Ptr(false),
-					IgnoreUncommitted:    Ptr(true),
-					Strategy:             Ptr("api"),
+					DeleteTrackingBranch: new(false),
+					IgnoreUncommitted:    new(true),
+					Strategy:             new("api"),
 				},
 				Sync: &configfile.Sync{
-					AutoResolve:       Ptr(false),
+					AutoResolve:       new(false),
 					AutoSync:          nil,
-					Detached:          Ptr(true),
-					FeatureStrategy:   Ptr("merge"),
-					PerennialStrategy: Ptr("rebase"),
-					PrototypeStrategy: Ptr("compress"),
+					Detached:          new(true),
+					FeatureStrategy:   new("merge"),
+					PerennialStrategy: new("rebase"),
+					PrototypeStrategy: new("compress"),
 					PushBranches:      nil,
-					PushHook:          Ptr(true),
-					Tags:              Ptr(false),
-					Upstream:          Ptr(true),
+					PushHook:          new(true),
+					Tags:              new(false),
+					Upstream:          new(true),
 				},
 				SyncStrategy:             nil,
 				CreatePrototypeBranches:  nil,
@@ -211,7 +211,7 @@ main = "main"
 			must.NoError(t, err)
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:           Ptr("main"),
+					Main:           new("main"),
 					Perennials:     nil,
 					PerennialRegex: nil,
 				},
@@ -234,7 +234,7 @@ branches.main = "main"
 			must.NoError(t, err)
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main: Ptr("main"),
+					Main: new("main"),
 				},
 			}
 			must.Eq(t, want, *have)
@@ -288,24 +288,24 @@ prototype-branches = "compress"
 			must.NoError(t, err)
 			wantData := configfile.Data{
 				Branches: &configfile.Branches{
-					DefaultType: Ptr("contribution"),
-					Main:        Ptr("main"),
+					DefaultType: new("contribution"),
+					Main:        new("main"),
 				},
 				Create: &configfile.Create{
-					PushNewBranches: Ptr(true),
+					PushNewBranches: new(true),
 				},
 				SyncStrategy: &configfile.SyncStrategy{
-					FeatureBranches:   Ptr("merge"),
-					PerennialBranches: Ptr("rebase"),
-					PrototypeBranches: Ptr("compress"),
+					FeatureBranches:   new("merge"),
+					PerennialBranches: new("rebase"),
+					PrototypeBranches: new("compress"),
 				},
-				CreatePrototypeBranches:  Ptr(true),
-				PushHook:                 Ptr(true),
-				PushNewBranches:          Ptr(true),
-				ShipDeleteTrackingBranch: Ptr(false),
-				ShipStrategy:             Ptr("api"),
-				SyncTags:                 Ptr(false),
-				SyncUpstream:             Ptr(true),
+				CreatePrototypeBranches:  new(true),
+				PushHook:                 new(true),
+				PushNewBranches:          new(true),
+				ShipDeleteTrackingBranch: new(false),
+				ShipStrategy:             new("api"),
+				SyncTags:                 new(false),
+				SyncUpstream:             new(true),
 			}
 			must.Eq(t, wantData, *haveData)
 

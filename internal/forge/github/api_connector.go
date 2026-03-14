@@ -120,7 +120,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
 	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number.Int(), &github.PullRequest{
-		Body: Ptr(updatedBody.String()),
+		Body: new(updatedBody.String()),
 	})
 	self.log.Finished(err)
 	return err
