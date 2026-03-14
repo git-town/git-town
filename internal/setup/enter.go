@@ -20,13 +20,13 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Enter(data Data, configDir configdomain.RepoConfigDir, displayDialogs configdomain.DisplayDialogs) (UserInput, dialogdomain.Exit, bool, error) {
+func Enter(data Data, configDir configdomain.RepoConfigDir) (UserInput, dialogdomain.Exit, bool, error) {
 	var emptyResult UserInput
-	exit, err := dialog.Welcome(data.Inputs, displayDialogs)
+	exit, err := dialog.Welcome(data.Inputs, data.Config.NormalConfig.DisplayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.Inputs)
+	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.Config.NormalConfig.DisplayDialogs, data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
@@ -154,7 +154,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}
-	enterAll, exit, err := dialog.EnterAll(data.Inputs, displayDialogs)
+	enterAll, exit, err := dialog.EnterAll(data.Inputs, data.Config.NormalConfig.DisplayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, enterAll, err
 	}
@@ -280,7 +280,7 @@ EnterForgeData:
 			return emptyResult, exit, false, err
 		}
 	}
-	configStorage, exit, err := dialog.ConfigStorage(data.Inputs, displayDialogs)
+	configStorage, exit, err := dialog.ConfigStorage(data.Inputs, data.Config.NormalConfig.DisplayDialogs)
 	if err != nil || exit {
 		return emptyResult, exit, false, err
 	}

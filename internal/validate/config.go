@@ -33,7 +33,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir, args.Unvalidated.Value.NormalConfig.DisplayDialogs)
+		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
 		if err != nil {
 			if cannotDisplayDialogs, ok := errors.AsType[*configdomain.CannotDisplayDialogsError](err); ok {
 				return config.EmptyValidatedConfig(), false, fmt.Errorf(messages.NoTTYMainBranchMissing, cannotDisplayDialogs) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.

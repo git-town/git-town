@@ -84,7 +84,8 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir, displayDialogs)
+	data.Config.NormalConfig.DisplayDialogs = displayDialogs
+	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err
 	}
