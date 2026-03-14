@@ -1,5 +1,4 @@
-@skipWindows
-Feature: dumb terminal, no main branch
+Feature: TERM=dumb, no main branch
 
   Background:
     Given a local Git repo
@@ -16,7 +15,7 @@ Feature: dumb terminal, no main branch
     And Git Town prints the error:
       """
       no main branch configured and only a dumb terminal available.
-
+      
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
@@ -28,7 +27,7 @@ Feature: dumb terminal, no main branch
     And Git Town prints the error:
       """
       no main branch configured and only a dumb terminal available.
-
+      
       To configure, run "git config git-town.main-branch <branch>".
       To set up interactively, run "git town init" in a shell with TTY.
       """
