@@ -8,8 +8,8 @@ import (
 )
 
 func Load() configdomain.PartialConfig {
-	tty := DetermineTTY()
-	displayDialogs := configdomain.NewDisplayDialogsFromTTY(tty)
+	hasTTY := DetermineTTY()
+	displayDialogs := configdomain.NewDisplayDialogsFromTTY(hasTTY)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
 		AutoResolve:                 None[configdomain.AutoResolve](),
