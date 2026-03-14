@@ -31,13 +31,14 @@ func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, current
 		builder.WriteString("- ")
 		isCurrentBranch := node.Branch == currentBranch && !foundCurrent
 		proposal, hasProposal := node.Proposal.Get()
-		if isCurrentBranch {
+		switch {
+		case isCurrentBranch:
 			builder.WriteString("**")
 			builder.WriteString(node.Branch.String())
 			builder.WriteString("**")
-		} else if hasProposal {
+		case hasProposal:
 			builder.WriteString(proposal.Data.Data().URL)
-		} else {
+		default:
 			builder.WriteString(node.Branch.String())
 		}
 		if isCurrentBranch {
@@ -67,13 +68,14 @@ func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBr
 	if node.BranchOrAncestorHasProposal() || onPathToRoot {
 		builder.WriteString("- ")
 		proposal, hasProposal := node.Proposal.Get()
-		if isCurrentBranch {
+		switch {
+		case isCurrentBranch:
 			builder.WriteString("**")
 			builder.WriteString(node.Branch.String())
 			builder.WriteString("**")
-		} else if hasProposal {
+		case hasProposal:
 			builder.WriteString(proposal.Data.Data().URL)
-		} else {
+		default:
 			builder.WriteString(node.Branch.String())
 		}
 		if isCurrentBranch {
