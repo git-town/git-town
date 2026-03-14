@@ -44,5 +44,5 @@ func NewDisplayDialogsFromTTY(tty bool) Option[DisplayDialogs] {
 	if tty {
 		return None[DisplayDialogs]()
 	}
-	return Some(DisplayDialogs("no TTY detected"))
+	return Some(DisplayDialogs("no interactive terminal available"))
 }
