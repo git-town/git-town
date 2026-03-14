@@ -22,16 +22,16 @@ const ShowDisplayDialogs = DisplayDialogs("")
 // If it is not an empty string, the string contains the reason why dialogs cannot be displayed.
 type DisplayDialogs string
 
-func (self DisplayDialogs) String() string {
-	return string(self)
-}
-
-// Verify indicates via an error if dialogs cannot be displayed.
-func (self DisplayDialogs) Verify() error {
+// Check indicates via an error if dialogs cannot be displayed.
+func (self DisplayDialogs) Check() error {
 	if self == "" {
 		return nil
 	}
 	return &CannotDisplayDialogsError{Reason: self.String()}
+}
+
+func (self DisplayDialogs) String() string {
+	return string(self)
 }
 
 func NewDisplayDialogsFromEnv(envTerm string) Option[DisplayDialogs] {

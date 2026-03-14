@@ -12,7 +12,7 @@ import (
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
-	if err := args.DisplayDialogs.Verify(); err != nil {
+	if err := args.DisplayDialogs.Check(); err != nil {
 		return "", true, err
 	}
 	textInput := textinput.New()

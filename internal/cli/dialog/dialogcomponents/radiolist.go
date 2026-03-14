@@ -15,7 +15,7 @@ const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.
 func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
-	if err := displayDialogs.Verify(); err != nil {
+	if err := displayDialogs.Check(); err != nil {
 		var zero S
 		return zero, true, err
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 func TextDisplay(title, text string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (dialogdomain.Exit, error) {
-	if err := displayDialogs.Verify(); err != nil {
+	if err := displayDialogs.Check(); err != nil {
 		return true, err
 	}
 	model := textDisplayModel{
