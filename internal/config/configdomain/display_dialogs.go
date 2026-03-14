@@ -35,7 +35,7 @@ func (self DisplayDialogs) Verify() error {
 
 func NewDisplayDialogsFromEnv(envTerm string) Option[DisplayDialogs] {
 	if strings.ToLower(envTerm) == "dumb" {
-		return Some(DisplayDialogs("dumb terminal configured"))
+		return Some(DisplayDialogs("only a dumb terminal available"))
 	}
 	return None[DisplayDialogs]()
 }
