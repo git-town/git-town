@@ -2,9 +2,13 @@
 
 package systemconfig
 
-import "os"
+import (
+	"os"
 
-func canOpenTTY() HasTTY {
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+)
+
+func canOpenTTY() configdomain.HasTTY {
 	f, err := os.Open("CONIN$")
 	if err != nil {
 		return false
