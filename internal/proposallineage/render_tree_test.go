@@ -108,7 +108,11 @@ func TestRenderTree(t *testing.T) {
 						{
 							Branch:   "feature-1A",
 							Children: []proposallineage.TreeNodeWithProposal{},
-							Proposal: None[forgedomain.Proposal](),
+							Proposal: Some(forgedomain.Proposal{
+								Data: forgedomain.ProposalData{
+									URL: "https://www.github.com/git-town/pull/1A",
+								},
+							}),
 						},
 						{
 							Branch:   "feature-1B",
