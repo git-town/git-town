@@ -83,7 +83,7 @@ func TestRender(t *testing.T) {
 
 -------------------------
 - main
-  - https://www.github.com/git-town/git-town/pull/1 :point_left:
+  - **feature-a** :point_left:
     - https://www.github.com/git-town/git-town/pull/2
     - https://www.github.com/git-town/git-town/pull/3
 
