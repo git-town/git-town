@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/config/systemconfig"
 	"github.com/git-town/git-town/v22/internal/execute"
@@ -59,8 +60,12 @@ func initCommand() *cobra.Command {
 
 func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 	systemConfig := systemconfig.Load()
+	envConfig, err := envconfig.Load(envconfig.NewEnvVars(os.Environ()))
+	if err != nil {
+		return err
+	}
 	defaultConfig := config.DefaultNormalConfig()
-	displayDialogs := systemConfig.DisplayDialogs.GetOr(defaultConfig.DisplayDialogs)
+	displayDialogs := envConfig.DisplayDialogs.GetOr(systemConfig.DisplayDialogs.GetOr(defaultConfig.DisplayDialogs))
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
