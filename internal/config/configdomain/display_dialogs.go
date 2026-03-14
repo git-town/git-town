@@ -14,6 +14,7 @@ func (self CannotDisplayDialogsError) Error() string {
 	return self.Reason
 }
 
+// ShowDisplayDialogs is a sentinal value for DisplayDialogs and indicates that dialogs can be displayed.
 const ShowDisplayDialogs = DisplayDialogs("")
 
 // DisplayDialogs indicates whether dialogs can be displayed.
