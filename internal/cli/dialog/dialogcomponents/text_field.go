@@ -13,7 +13,7 @@ import (
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 	if err := args.DisplayDialogs.Verify(); err != nil {
-		return "", false, err
+		return "", true, err
 	}
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)

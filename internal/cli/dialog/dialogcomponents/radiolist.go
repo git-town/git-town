@@ -17,7 +17,7 @@ const WindowSize = 9
 func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
 	if err := displayDialogs.Verify(); err != nil {
 		var zero S
-		return zero, false, err
+		return zero, true, err
 	}
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),

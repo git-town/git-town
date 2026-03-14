@@ -12,7 +12,7 @@ import (
 
 func TextDisplay(title, text string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) (dialogdomain.Exit, error) {
 	if err := displayDialogs.Verify(); err != nil {
-		return false, err
+		return true, err
 	}
 	model := textDisplayModel{
 		colors: dialogcolors.NewDialogColors(),
