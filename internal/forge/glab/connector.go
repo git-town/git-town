@@ -130,7 +130,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 var _ forgedomain.ProposalMerger = glabConnector // type check
 
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), number.String())
+	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--squash-message="+message.String(), number.String())
 }
 
 // ============================================================================
