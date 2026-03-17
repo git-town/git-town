@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/browser"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -28,7 +29,12 @@ func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	browser.Open(self.NewProposalURL(data), data.FrontendRunner, self.browser)
+	proposalURL := self.NewProposalURL(data)
+	if data.Headless {
+		fmt.Printf(messages.BrowserOpen, proposalURL)
+		return nil
+	}
+	browser.Open(proposalURL, data.FrontendRunner, self.browser)
 	return nil
 }
 

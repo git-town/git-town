@@ -55,6 +55,7 @@ Feature: show the configuration from a subfolder
       Propose:
         breadcrumb: none
         breadcrumb direction: down
+        headless: no
 
       Ship:
         delete tracking branch: yes

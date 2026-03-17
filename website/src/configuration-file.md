@@ -32,6 +32,7 @@ forge-type = "" # auto-detect
 [propose]
 breadcrumb = "none"
 breadcrumb-direction = "down"
+headless = false
 
 [ship]
 delete-tracking-branch = true

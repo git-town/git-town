@@ -55,6 +55,7 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
+headless = true
 
 [ship]
 delete-tracking-branch = false
@@ -107,6 +108,7 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
+					Headless:            new(true),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
@@ -179,6 +181,7 @@ upstream = true
 				PerennialRegex:              asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbStacks),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
+				ProposeHeadless:             Some(configdomain.ProposeHeadless(true)),
 				PushBranches:                None[configdomain.PushBranches](),
 				PushHook:                    Some(configdomain.PushHook(true)),
 				ShareNewBranches:            Some(configdomain.ShareNewBranchesPush),

@@ -60,6 +60,7 @@ func (self Hosting) IsEmpty() bool {
 type Propose struct {
 	Breadcrumb          *string `toml:"breadcrumb"`
 	BreadcrumbDirection *string `toml:"breadcrumb-direction"`
+	Headless            *bool   `toml:"headless"`
 	Lineage             *string `toml:"lineage"`
 }
 

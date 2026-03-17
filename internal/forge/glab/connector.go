@@ -53,7 +53,11 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
-	args = append(args, "--web")
+	if data.Headless {
+		args = append(args, "--yes")
+	} else {
+		args = append(args, "--web")
+	}
 	return self.Frontend.Run("glab", args...)
 }
 
@@ -130,7 +134,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 var _ forgedomain.ProposalMerger = glabConnector // type check
 
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), number.String())
+	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--squash-message="+message.String(), number.String())
 }
 
 // ============================================================================

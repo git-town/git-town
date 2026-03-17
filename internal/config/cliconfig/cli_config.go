@@ -15,6 +15,7 @@ type NewArgs struct {
 	DryRun            Option[configdomain.DryRun]
 	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
 	Order             Option[configdomain.Order]
+	ProposeHeadless   Option[configdomain.ProposeHeadless]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
 	Verbose           Option[configdomain.Verbose]
@@ -57,6 +58,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
+		ProposeHeadless:             args.ProposeHeadless,
 		PushHook:                    None[configdomain.PushHook](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),

@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
+git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [--headless] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
@@ -46,6 +46,14 @@ body text from STDIN.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
+
+#### `--headless`
+
+When called with the `--headless` flag, the _propose_ command creates the
+proposal without opening a browser window. This is useful in CI/CD pipelines and
+when working in headless environments. See the
+[propose-headless](../preferences/propose-headless.md) preference for making
+this permanent.
 
 #### `-h`<br>`--help`
 

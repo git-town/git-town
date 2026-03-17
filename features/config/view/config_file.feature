@@ -105,6 +105,7 @@ Feature: display information from config file
       Propose:
         breadcrumb: stacks
         breadcrumb direction: down
+        headless: no
 
       Ship:
         delete tracking branch: yes

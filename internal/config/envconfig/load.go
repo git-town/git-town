@@ -45,6 +45,7 @@ const (
 	perennialRegex              = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalBreadcrumb          = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
+	proposeHeadless             = "GIT_TOWN_PROPOSE_HEADLESS"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
@@ -89,6 +90,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
+	proposeHeadless, errProposeHeadless := load(env, proposeHeadless, gohacks.ParseBoolOpt[configdomain.ProposeHeadless])
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -123,6 +125,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
+		errProposeHeadless,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -174,6 +177,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
+		ProposeHeadless:             proposeHeadless,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

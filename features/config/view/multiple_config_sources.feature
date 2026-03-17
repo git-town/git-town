@@ -129,6 +129,7 @@ Feature: show the configuration
       Propose:
         breadcrumb: stacks
         breadcrumb direction: down
+        headless: no
 
       Ship:
         delete tracking branch: no

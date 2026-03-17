@@ -37,6 +37,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_ORDER                         | desc               |
       | GIT_TOWN_PROPOSAL_BREADCRUMB           | stacks             |
       | GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION | up                 |
+      | GIT_TOWN_PROPOSE_HEADLESS              | true               |
       | GIT_TOWN_ORIGIN_HOSTNAME               | codeforge          |
       | GIT_TOWN_OFFLINE                       | 1                  |
       | GIT_TOWN_PERENNIAL_BRANCHES            | qa staging         |
@@ -98,6 +99,7 @@ Feature: display configuration defined in environment variables
       Propose:
         breadcrumb: stacks
         breadcrumb direction: up
+        headless: yes
 
       Ship:
         delete tracking branch: no

@@ -143,13 +143,17 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	proposalBreadcrumb, hasProposalBreadcrumb := data.ProposalBreadcrumb.Get()
 	proposalBreadcrumbDirection, hasProposalBreadcrumbDirection := data.ProposalBreadcrumbDirection.Get()
-	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection {
+	proposeHeadless, hasProposeHeadless := data.ProposeHeadless.Get()
+	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection || hasProposeHeadless {
 		result.WriteString("\n[propose]\n")
 		if hasProposalBreadcrumb {
 			result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
 		}
 		if hasProposalBreadcrumbDirection {
 			result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
+		}
+		if hasProposeHeadless {
+			result.WriteString(fmt.Sprintf("headless = %t\n", proposeHeadless))
 		}
 	}
 

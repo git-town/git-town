@@ -55,6 +55,9 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if err := self.Frontend.Run("gh", args...); err != nil {
 		return err
 	}
+	if data.Headless {
+		return nil
+	}
 	// check if the proposal exists
 	proposal, err := self.FindProposal(data.Branch, data.ParentBranch)
 	if err != nil {

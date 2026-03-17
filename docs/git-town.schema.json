@@ -146,6 +146,9 @@
         "breadcrumb-direction": {
           "type": "string"
         },
+        "headless": {
+          "type": "boolean"
+        },
         "lineage": {
           "type": "string"
         }
