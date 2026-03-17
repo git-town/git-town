@@ -10,7 +10,7 @@ Feature: headless mode
     And the current branch is "feature"
     And tool "open" is installed
 
-  Scenario: --headless flag
+  Scenario: --headless flag with no existing proposal
     When I run "git-town propose --headless"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
@@ -22,7 +22,22 @@ Feature: headless mode
       """
     And the initial branches and lineage exist now
 
-  Scenario: propose-headless configured via Git setting
+  Scenario: --headless flag with existing proposal
+    Given the proposals
+      | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+    When I run "git-town propose --headless"
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                        |
+      | feature | git fetch --prune --tags                                                       |
+      |         | Finding proposal from feature into main ... #1 (Proposal from feature to main) |
+    And Git Town prints:
+      """
+      Please open in a browser: https://github.com/git-town/git-town/pull/123
+      """
+    And the initial proposals exist now
+
+  Scenario: propose-headless configured via Git setting with no existing proposal
     Given Git setting "git-town.propose-headless" is "true"
     When I run "git-town propose"
     Then Git Town runs the commands
@@ -34,3 +49,19 @@ Feature: headless mode
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And the initial branches and lineage exist now
+
+  Scenario: propose-headless configured via Git setting with existing proposal
+    Given the proposals
+      | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+    And Git setting "git-town.propose-headless" is "true"
+    When I run "git-town propose"
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                        |
+      | feature | git fetch --prune --tags                                                       |
+      |         | Finding proposal from feature into main ... #1 (Proposal from feature to main) |
+    And Git Town prints:
+      """
+      Please open in a browser: https://github.com/git-town/git-town/pull/123
+      """
+    And the initial proposals exist now
