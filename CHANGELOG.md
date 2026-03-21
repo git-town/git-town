@@ -4,9 +4,12 @@
 
 #### New Features
 
-- [Breadcrumbs](https://www.git-town.com/how-to/proposal-breadcrumb.html) no longer link the current branch, avoiding an error message on GitHub ([git-town/action#72](https://github.com/git-town/action/issues/72)).
-- Setting the environment variable `TERM=dumb` disables all interactive UI features ([#1201](https://github.com/git-town/git-town/issues/1201)).
-- Official instructions to add the Git Town status to starship prompts ([#6091](https://github.com/git-town/git-town/pull/6091)).
+- Git Town now respects the environment variable `TERM=dumb` and disables all interactive UI features when it's set and prints the CLI arguments to use to provide the needed information. This makes it safe to run in CI, headless environments (like AI agents), or terminal environments that don't support full interactivity ([#1201](https://github.com/git-town/git-town/issues/1201)).
+- Added docs for integrating Git Town status into Starship prompts ([#6091](https://github.com/git-town/git-town/pull/6091)).
+
+#### Bug Fixes
+
+- [Breadcrumbs](https://www.git-town.com/how-to/proposal-breadcrumb.html) no longer link the current branch. This prevents error notifications on GitHub ([git-town/action#72](https://github.com/git-town/action/issues/72)).
 
 #### Contributors
 
