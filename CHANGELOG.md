@@ -4,7 +4,7 @@
 
 #### New Features
 
-- Git Town now respects the environment variable `TERM=dumb` and disables all interactive UI features when it's set and prints the CLI arguments to use to provide the needed information. This makes it safe to run in CI, headless environments (like AI agents), or terminal environments that don't support full interactivity ([#1201](https://github.com/git-town/git-town/issues/1201)).
+- Git Town now respects the environment variable `TERM=dumb`. When set, all interactive UI features are disabled, and Git Town prints the CLI arguments that provide the needed information. This makes Git Town safe to run in CI, headless environments (like AI agents), or terminal environments that don't support full interactivity ([#1201](https://github.com/git-town/git-town/issues/1201)).
 - Added docs for integrating Git Town status into Starship prompts ([#6091](https://github.com/git-town/git-town/pull/6091)).
 
 #### Bug Fixes
