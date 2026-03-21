@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 22.7.0 (2026-03-21)
+
+#### New Features
+
+- [Breadcrumbs](https://www.git-town.com/how-to/proposal-breadcrumb.html) no longer link the current branch, avoiding an error message on GitHub ([git-town/action#72](https://github.com/git-town/action/issues/72)).
+- Setting the environment variable `TERM=dumb` disables all interactive UI features ([#1201](https://github.com/git-town/git-town/issues/1201)).
+- Official instructions to add the Git Town status to starship prompts ([#6091](https://github.com/git-town/git-town/pull/6091)).
+
 ## 22.6.0 (2025-02-22)
 
 #### New Features
