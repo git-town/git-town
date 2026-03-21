@@ -8,6 +8,10 @@
 - Setting the environment variable `TERM=dumb` disables all interactive UI features ([#1201](https://github.com/git-town/git-town/issues/1201)).
 - Official instructions to add the Git Town status to starship prompts ([#6091](https://github.com/git-town/git-town/pull/6091)).
 
+#### Contributors
+
+Big thanks to @heisencoder, @jakeleboeuf, @kevgo, @lud-wj, @stephenwade, @tugrulates, @zodman for contributing code, feedback, and ideas to 13 shipped pull requests and 5 resolved issues!
+
 ## 22.6.0 (2025-02-22)
 
 #### New Features
