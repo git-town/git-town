@@ -13,7 +13,7 @@
 
 #### Contributors
 
-Big thanks to @heisencoder, @jakeleboeuf, @kevgo, @lud-wj, @stephenwade, @tugrulates, @zodman for contributing code, feedback, and ideas to 13 shipped pull requests and 5 resolved issues!
+Big thanks to @heisencoder, @jakeleboeuf, @kevgo, @lud-wj, @stephenwade, @tugrulates, @zodman for code, feedback, and ideas across 13 pull requests and 5 resolved issues!
 
 ## 22.6.0 (2025-02-22)
 
