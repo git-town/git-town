@@ -258,7 +258,7 @@ unit-all: install  # runs all the unit tests
 	make --no-print-directory unit-text-runner
 
 unit-text-runner: ${RTA} node_modules
-	@$(NPM) run unit
+	@$(NODE) --test text-runner/**/*.test.ts
 
 unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
