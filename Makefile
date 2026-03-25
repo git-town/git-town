@@ -17,6 +17,7 @@ GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
 NPM          = $(RTA) npm
+NPX          = $(RTA) npx
 NODE         = $(RTA) node
 RTA          = tools/rta@$(RTA_VERSION)
 SCC          = $(RTA) scc
@@ -257,7 +258,7 @@ unit-all: install  # runs all the unit tests
 	make --no-print-directory unit-text-runner
 
 unit-text-runner: ${RTA} node_modules
-	@$(RTA) npm run unit
+	@$(NPM) run unit
 
 unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
@@ -269,11 +270,11 @@ update: ${RTA}  # updates all dependencies
 	go mod tidy
 	go work vendor
 	rm -rf node_modules package-lock.json
-	$(RTA) npx -y npm-check-updates -u
-	$(RTA) npm install
+	$(NPX) -y npm-check-updates -u
+	$(NPM) install
 	$(RTA) --update
-	$(RTA) dprint config update
-	$(RTA) dprint config update --config dprint-changelog.json
+	$(DPRINT) config update
+	$(DPRINT) config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
