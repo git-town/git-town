@@ -33,13 +33,13 @@
     {
       "type": "test-file",
       "files": "**/*.test.ts",
-      "run": "tools/rta node --test {{file}}"
+      "run": "tools/rta@0.30.0 node --test {{file}}"
     },
 
     {
       "type": "test-file-line",
       "files": "**/*.test.ts",
-      "run": "tools/rta node --test-only {{file}}"
+      "run": "tools/rta@0.30.0 node --test-only {{file}}"
     },
 
     {
