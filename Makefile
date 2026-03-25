@@ -11,6 +11,7 @@ CUCUMBERSORT = $(RTA) cucumber-sort
 DEADCODE     = $(RTA) deadcode
 DEPTH        = $(RTA) depth
 DPRINT       = $(RTA) dprint
+EXHAUSTRUCT  = $(RTA) exhaustruct
 GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
@@ -18,6 +19,7 @@ GOLANGCILINT = $(RTA) golangci-lint
 NPM          = $(RTA) npm
 NODE         = $(RTA) node
 RTA          = tools/rta@$(RTA_VERSION)
+SCC          = $(RTA) scc
 SHELLCHECK   = $(RTA) --optional shellcheck
 SHFMT        = $(RTA) shfmt
 STATICCHECK  = $(RTA) --from-source staticcheck
@@ -193,7 +195,7 @@ lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v22/...
 
 lint-smoke: ${RTA}  # runs only the essential linters
-	@$(RTA) exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+	@$(EXHAUSTRUCT) -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 # @$(RTA) ireturn --reject="github.com/git-town/git-town/v22/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
@@ -211,21 +213,21 @@ stats: ${RTA}  # shows code statistics
 		| grep -v '\./vendor/' \
 		| grep -v '\./.git/' \
 		| grep -v './website/book' \
-		| xargs $(RTA) scc
+		| xargs $(SCC)
 
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
 .PHONY: test
 test: install node_modules ${RTA}  # runs all the tests
-	@$(RTA) conc --show=names \
+	@$(CONC) --show=names \
 		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
 test-go: ${RTA}  # smoke tests while working on the Go code
-	@$(RTA) conc --show=names \
+	@$(CONC) --show=names \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
