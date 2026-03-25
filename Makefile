@@ -16,10 +16,12 @@ GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
 NPM          = $(RTA) npm
+NODE         = $(RTA) node
 RTA          = tools/rta@$(RTA_VERSION)
 SHELLCHECK   = $(RTA) --optional shellcheck
 SHFMT        = $(RTA) shfmt
 STATICCHECK  = $(RTA) --from-source staticcheck
+TEXTRUNNER   = $(NODE) node_modules/.bin/text-runner
 
 contest: ${RTA}  # run the Contest server
 	@$(RTA) contest
@@ -66,8 +68,8 @@ cukewin: install  # runs all end-to-end tests on Windows
 dependencies: ${RTA}  # prints the dependencies between the internal Go packages
 	@$(DEPTH) . | grep git-town
 
-doc: install node_modules @{RTA}  # tests the documentation
-	@$(RTA) node node_modules/.bin/text-runner --offline
+doc: install node_modules ${RTA}  # tests the documentation
+	@$(TEXTRUNNER) --offline
 
 fix: ${RTA}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
