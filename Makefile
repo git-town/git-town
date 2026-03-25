@@ -49,13 +49,13 @@ cukeverbose: install  # run all tests in "verbose.feature" files
 cukewin: install  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
-dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages
-	@tools/rta depth . | grep git-town
+dependencies: ${RTA}  # prints the dependencies between the internal Go packages
+	@$(RTA) depth . | grep git-town
 
 doc: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
-fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
+fix: ${RTA}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
@@ -72,8 +72,8 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 generate-json-schema:  # exports the JSON-Schema for the configuration file
 	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
 
-ghokin: tools/rta@${RTA_VERSION}  # formats the Cucumber tests
-	@tools/rta ghokin fmt replace features/
+ghokin: ${RTA}  # formats the Cucumber tests
+	@$(RTA) ghokin fmt replace features/
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -81,8 +81,8 @@ help:  # prints all available targets
 install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
-lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	@tools/rta conc --show=names \
+lint: node_modules ${RTA}  # lints the main codebase concurrently
+	@$(RTA) conc --show=names \
 		"make --no-print-directory lint-smoke" \
 		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
@@ -107,7 +107,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 		"tools/rta cucumber-sort check" \
 		"make --no-print-directory lint-configfile"
 
-lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
+lint-all: lint ${RTA}  # runs all linters
 	(cd website && make test)
 # tools/rta govulncheck ./...   TODO: enable when Go 1.24.11 is available widely
 	@echo lint tools/format_self
@@ -147,9 +147,9 @@ alphavet:
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v22/...
 
-keep-sorted: tools/rta@${RTA_VERSION}
-	tools/rta --install ripgrep
-	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
+keep-sorted: ${RTA}
+	$(RTA) --install ripgrep
+	$(RTA) keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
@@ -157,8 +157,8 @@ lint-cached-connectors:
 lint-collector-addf:
 	@(cd tools/collector_addf && go build) && ./tools/collector_addf/collector_addf
 
-lint-configfile: tools/rta@${RTA_VERSION}
-	@tools/rta taplo check git-town.toml
+lint-configfile: ${RTA}
+	@$(RTA) taplo check git-town.toml
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
@@ -175,8 +175,8 @@ lint-print-config:
 lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v22/...
 
-lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters
-	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+lint-smoke: ${RTA}  # runs only the essential linters
+	@$(RTA) exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 # @tools/rta ireturn --reject="github.com/git-town/git-town/v22/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
@@ -188,27 +188,27 @@ lint-tests-sorted:
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
 
-stats: tools/rta@${RTA_VERSION}  # shows code statistics
+stats: ${RTA}  # shows code statistics
 	@find . -type f \
 		| grep -v './node_modules' \
 		| grep -v '\./vendor/' \
 		| grep -v '\./.git/' \
 		| grep -v './website/book' \
-		| xargs tools/rta scc
+		| xargs $(RTA) scc
 
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
 
 .PHONY: test
-test: install node_modules tools/rta@${RTA_VERSION}  # runs all the tests
-	@tools/rta conc --show=names \
+test: install node_modules ${RTA}  # runs all the tests
+	@$(RTA) conc --show=names \
 		"make --no-print-directory cuke" \
 		"make --no-print-directory doc" \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
-test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
-	@tools/rta conc --show=names \
+test-go: ${RTA}  # smoke tests while working on the Go code
+	@$(RTA) conc --show=names \
 		"make --no-print-directory lint" \
 		"make --no-print-directory unit"
 
@@ -237,30 +237,30 @@ unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 	make --no-print-directory unit-text-runner
 
-unit-text-runner: tools/rta@${RTA_VERSION} node_modules
-	@tools/rta npm run unit
+unit-text-runner: ${RTA} node_modules
+	@$(RTA) npm run unit
 
 unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
 	cd website && make --no-print-directory unit
 
-update: tools/rta@${RTA_VERSION}  # updates all dependencies
+update: ${RTA}  # updates all dependencies
 	go get -u ./...
 	(cd tools/optioncompare && go get -u ./...)
 	go mod tidy
 	go work vendor
 	rm -rf node_modules package-lock.json
-	tools/rta npx -y npm-check-updates -u
-	tools/rta npm install
-	tools/rta --update
-	tools/rta dprint config update
-	tools/rta dprint config update --config dprint-changelog.json
+	$(RTA) npx -y npm-check-updates -u
+	$(RTA) npm install
+	$(RTA) --update
+	$(RTA) dprint config update
+	$(RTA) dprint config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-deadcode: tools/rta@${RTA_VERSION}
-	@tools/rta --install deadcode
-	@tools/rta conc --error-on-output --show=failed \
+deadcode: ${RTA}
+	@$(RTA) --install deadcode
+	@$(RTA) conc --error-on-output --show=failed \
 		"tools/rta deadcode github.com/git-town/git-town/tools/format_self" \
 		"tools/rta deadcode github.com/git-town/git-town/tools/format_unittests" \
 		"tools/rta deadcode github.com/git-town/git-town/tools/stats_release" \
@@ -293,7 +293,7 @@ tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 
-node_modules: package-lock.json tools/rta@${RTA_VERSION}
+node_modules: package-lock.json ${RTA}
 	@echo "Installing Node based tools"
 	tools/rta npm ci
 	@touch package-lock.json  # update timestamp so that Make doesn't re-install it on every command
