@@ -291,7 +291,7 @@ deadcode: tools/rta@${RTA_VERSION}
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
-	(cd tools && cat ~/run-that-app/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
+	(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 
 node_modules: package-lock.json tools/rta@${RTA_VERSION}
 	@echo "Installing Node based tools"
