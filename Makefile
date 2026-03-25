@@ -8,6 +8,7 @@ GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 RTA          = tools/rta@$(RTA_VERSION)
 ACTIONLINT   = $(RTA) actionlint
 CONC         = $(RTA) conc
+CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
 DEADCODE     = $(RTA) deadcode
 DEPTH        = $(RTA) depth
@@ -28,7 +29,7 @@ TAPLO        = $(RTA) taplo
 TEXTRUNNER   = $(NODE) node_modules/.bin/text-runner
 
 contest: ${RTA}  # run the Contest server
-	@$(RTA) contest
+	@$(CONTEST)
 
 cuke: install  # runs all end-to-end tests with nice output
 	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
