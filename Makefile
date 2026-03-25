@@ -162,7 +162,7 @@ lint-all: lint ${RTA}  # runs all linters
 	@echo lint tools/use_equal
 	@(cd tools/use_equal && make test)
 
-alphavet:
+alphavet: ${RTA}
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 fix-optioncompare-in-tests:
