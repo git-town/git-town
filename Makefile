@@ -1,12 +1,14 @@
-RTA_VERSION = 0.30.0  # run-that-app version to use
+RTA_VERSION = 0.31.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
 RELEASE_VERSION := "22.6.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
-contest: tools/rta@${RTA_VERSION}  # run the Contest server
-	@tools/rta contest
+RTA = tools/rta@$(RTA_VERSION)
+
+contest: ${RTA}  # run the Contest server
+	@$(RTA) contest
 
 cuke: install  # runs all end-to-end tests with nice output
 	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
@@ -289,9 +291,7 @@ deadcode: tools/rta@${RTA_VERSION}
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
-	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s ${RTA_VERSION})
-	@mv tools/rta tools/rta@${RTA_VERSION}
-	@ln -s rta@${RTA_VERSION} tools/rta
+	(cd tools && cat ~/run-that-app/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 
 node_modules: package-lock.json tools/rta@${RTA_VERSION}
 	@echo "Installing Node based tools"
