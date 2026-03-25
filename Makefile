@@ -5,6 +5,7 @@ RTA_VERSION = 0.30.0  # run-that-app version to use
 RELEASE_VERSION := "22.6.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
+RTA          = tools/rta@$(RTA_VERSION)
 ACTIONLINT   = $(RTA) actionlint
 CONC         = $(RTA) conc
 CUCUMBERSORT = $(RTA) cucumber-sort
@@ -19,7 +20,6 @@ GOLANGCILINT = $(RTA) golangci-lint
 NPM          = $(RTA) npm
 NPX          = $(RTA) npx
 NODE         = $(RTA) node
-RTA          = tools/rta@$(RTA_VERSION)
 SCC          = $(RTA) scc
 SHELLCHECK   = $(RTA) --optional shellcheck
 SHFMT        = $(RTA) shfmt
