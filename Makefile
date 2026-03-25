@@ -21,6 +21,7 @@ RTA          = tools/rta@$(RTA_VERSION)
 SHELLCHECK   = $(RTA) --optional shellcheck
 SHFMT        = $(RTA) shfmt
 STATICCHECK  = $(RTA) --from-source staticcheck
+TAPLO        = $(RTA) taplo
 TEXTRUNNER   = $(NODE) node_modules/.bin/text-runner
 
 contest: ${RTA}  # run the Contest server
@@ -164,8 +165,8 @@ fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v22/...
 
 keep-sorted: ${RTA}
-	$(RTA) --install ripgrep
-	$(RTA) keep-sorted $(shell $(RTA) ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
+	@$(RTA) --install ripgrep
+	@$(RTA) keep-sorted $(shell $(RTA) ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
@@ -174,7 +175,7 @@ lint-collector-addf:
 	@(cd tools/collector_addf && go build) && ./tools/collector_addf/collector_addf
 
 lint-configfile: ${RTA}
-	@$(RTA) taplo check git-town.toml
+	@$(TAPLO) check
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map

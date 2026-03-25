@@ -11,7 +11,6 @@ commands read and write the configuration entries for you so that you don't have
 to run Git configuration commands manually:
 
 <!-- keep-sorted start by_regex=["[^]]+"] -->
-
 - [git town completions](commands/completions.md) - set up shell autocomplete
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
@@ -21,5 +20,6 @@ to run Git configuration commands manually:
   configuration
 - [git town init](commands/init.md) - setup assistant for all config settings
 - [git town offline](commands/offline.md) - enable/disable offline mode
+
 
 <!-- keep-sorted end -->
