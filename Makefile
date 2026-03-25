@@ -274,13 +274,13 @@ update: ${RTA}  # updates all dependencies
 
 deadcode: ${RTA}
 	@$(RTA) --install deadcode
-	@$(RTA) conc --error-on-output --show=failed \
+	@$(CONC) --error-on-output --show=failed \
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_self" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_unittests" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/stats_release" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/structs_sorted" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/lint_steps" \
-		"$(DEADCODE) deadcode -test github.com/git-town/git-town/v22 \
+		"$(DEADCODE) -test github.com/git-town/git-town/v22 \
 			| grep -v BranchExists \
 			| grep -v 'Create$$' \
 			| grep -v CreateFile \
