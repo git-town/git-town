@@ -12,7 +12,7 @@ This guide is for maintainers who make releases of Git Town.
     the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `22.7.0`
+    - triple-digits: `22.7.1`
     - double-digits: `22.7`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
@@ -21,7 +21,7 @@ This guide is for maintainers who make releases of Git Town.
     - update `github.com/git-town/git-town/v22` (without trailing slash)
   - update the changelog with links to the website
 - ship the branch
-- `git sync --all && git checkout main && git tag v22.7.0 && git push --tags`
+- `git sync --all && git checkout main && git tag v22.7.1 && git push --tags`
 - wait for CI to finish the release:
   https://github.com/git-town/git-town/actions
 - edit the new unpublished release:
