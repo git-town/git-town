@@ -11,7 +11,6 @@
 
 Shoutout to @alexgeek, @kevgo, @yaadata for contributing code, feedback, and ideas to 4 shipped pull requests!
 
-
 ## 22.7.0 (2026-03-21)
 
 #### New Features
