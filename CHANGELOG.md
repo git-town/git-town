@@ -4,8 +4,8 @@
 
 #### Bug Fixes
 
-- Breadcrumbs show the proposal title for the current branch if available ([#6107](https://github.com/git-town/git-town/pull/6107)).
-- The `glab` connector now provides the commit message in the correct format ([#6105](https://github.com/git-town/git-town/pull/6105)).
+- Breadcrumbs now display the proposal title for the current branch when available ([#6107](https://github.com/git-town/git-town/pull/6107)).
+- Fixed commit message formatting in the `glab` connector ([#6105](https://github.com/git-town/git-town/pull/6105)).
 
 #### Contributors
 
