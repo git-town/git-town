@@ -32,14 +32,16 @@ func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, current
 		isCurrentBranch := node.Branch == currentBranch && !foundCurrent
 		proposal, hasProposal := node.Proposal.Get()
 		switch {
+		case isCurrentBranch && hasProposal:
+			builder.WriteString("**")
+			builder.WriteString(proposal.Data.Data().Title.String())
+			builder.WriteString("**")
 		case hasProposal:
-			if isCurrentBranch {
-				builder.WriteString("**")
-				builder.WriteString(proposal.Data.Data().Title.String())
-				builder.WriteString("**")
-			} else {
-				builder.WriteString(proposal.Data.Data().URL)
-			}
+			builder.WriteString(proposal.Data.Data().URL)
+		case isCurrentBranch:
+			builder.WriteString("**")
+			builder.WriteString(node.Branch.String())
+			builder.WriteString("**")
 		default:
 			builder.WriteString(node.Branch.String())
 		}
