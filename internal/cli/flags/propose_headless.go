@@ -11,7 +11,7 @@ const proposeHeadlessLong = "headless"
 // type-safe access to the CLI arguments of type configdomain.ProposeHeadless
 func ProposeHeadless() (AddFunc, ReadProposeHeadlessFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(proposeHeadlessLong, "", false, "create the proposal without opening a browser")
+		cmd.Flags().Bool(proposeHeadlessLong, false, "create the proposal without opening a browser")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.ProposeHeadless], error) {
 		return readBoolOptFlag[configdomain.ProposeHeadless](cmd.Flags(), proposeHeadlessLong)
