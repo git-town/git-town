@@ -50,7 +50,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		autoResolve                 Option[configdomain.AutoResolve]
 		autoSync                    Option[configdomain.AutoSync]
 		branchPrefix                Option[configdomain.BranchPrefix]
-		browser                     Option[configdomain.Browser]
+		browser                     Option[forgedomain.Browser]
 		contributionRegex           Option[configdomain.ContributionRegex]
 		detached                    Option[configdomain.Detached]
 		devRemote                   Option[gitdomain.Remote]
@@ -184,7 +184,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Browser != nil {
-			browser, err = configdomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
+			browser, err = forgedomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.Platform != nil {

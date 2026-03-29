@@ -1,4 +1,4 @@
-package configdomain
+package forgedomain
 
 import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"

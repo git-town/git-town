@@ -23,7 +23,7 @@ type PartialConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[BranchPrefix]
 	BranchTypeOverrides         BranchTypeOverrides
-	Browser                     Option[Browser]
+	Browser                     Option[forgedomain.Browser]
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
 	DevRemote                   Option[gitdomain.Remote]

@@ -1003,7 +1003,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^no tool to open browsers is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.browserVariable = Some(string(configdomain.NoBrowser))
+		state.browserVariable = Some(string(forgedomain.NoBrowser))
 	})
 
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {

@@ -115,7 +115,7 @@ type NewConnectorArgs struct {
 	Backend              subshelldomain.Querier
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
-	Browser              Option[configdomain.Browser]
+	Browser              Option[forgedomain.Browser]
 	ConfigDir            configdomain.RepoConfigDir
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]

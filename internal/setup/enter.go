@@ -292,7 +292,7 @@ EnterForgeData:
 		BitbucketUsername:           bitbucketUsername,
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		Browser:                     None[configdomain.Browser](),
+		Browser:                     None[forgedomain.Browser](),
 		ForgejoToken:                forgejoToken,
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
@@ -875,7 +875,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		Browser:              None[configdomain.Browser](),
+		Browser:              None[forgedomain.Browser](),
 		ConfigDir:            args.configDir,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,

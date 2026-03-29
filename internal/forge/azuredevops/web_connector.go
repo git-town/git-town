@@ -5,7 +5,6 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v22/internal/browser"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
@@ -20,7 +19,7 @@ var (
 // WebConnector provides connectivity to Azure DevOps through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser Option[configdomain.Browser]
+	browser Option[forgedomain.Browser]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
