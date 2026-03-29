@@ -53,7 +53,7 @@ func branchCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             order,
-				ProposeHeadless:   None[configdomain.ProposeHeadless](),
+				ProposeHeadless:   None[forgedomain.ProposeHeadless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,

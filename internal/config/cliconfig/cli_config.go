@@ -15,7 +15,7 @@ type NewArgs struct {
 	DryRun            Option[configdomain.DryRun]
 	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
 	Order             Option[configdomain.Order]
-	ProposeHeadless   Option[configdomain.ProposeHeadless]
+	ProposeHeadless   Option[forgedomain.ProposeHeadless]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
 	Verbose           Option[configdomain.Verbose]

@@ -24,7 +24,7 @@ type Connector interface {
 type CreateProposalArgs struct {
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner subshelldomain.Runner
-	Headless       bool
+	Headless       ProposeHeadless
 	MainBranch     gitdomain.LocalBranchName
 	ParentBranch   gitdomain.LocalBranchName
 	ProposalBody   Option[gitdomain.ProposalBody]

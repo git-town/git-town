@@ -64,7 +64,7 @@ type NormalConfig struct {
 	PerennialRegex              Option[configdomain.PerennialRegex]
 	ProposalBreadcrumb          configdomain.ProposalBreadcrumb
 	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
-	ProposeHeadless             configdomain.ProposeHeadless
+	ProposeHeadless             forgedomain.ProposeHeadless
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
 	ShareNewBranches            configdomain.ShareNewBranches

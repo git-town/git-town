@@ -74,7 +74,7 @@ func TestSave(t *testing.T) {
 				PerennialRegex:              perennialRegex,
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbBranches),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
-				ProposeHeadless:             Some(configdomain.ProposeHeadless(true)),
+				ProposeHeadless:             Some(forgedomain.ProposeHeadless(true)),
 				PushBranches:                Some(configdomain.PushBranches(true)),
 				PushHook:                    Some(configdomain.PushHook(true)),
 				ShareNewBranches:            Some(configdomain.ShareNewBranchesPropose),

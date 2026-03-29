@@ -52,7 +52,7 @@ type PartialConfig struct {
 	PerennialRegex              Option[PerennialRegex]
 	ProposalBreadcrumb          Option[ProposalBreadcrumb]
 	ProposalBreadcrumbDirection Option[ProposalBreadcrumbDirection]
-	ProposeHeadless             Option[ProposeHeadless]
+	ProposeHeadless             Option[forgedomain.ProposeHeadless]
 	PushBranches                Option[PushBranches]
 	PushHook                    Option[PushHook]
 	ShareNewBranches            Option[ShareNewBranches]
