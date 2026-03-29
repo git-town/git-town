@@ -35,10 +35,11 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 	}
 	openBrowserCommands := make([]string, 0, 11)
 	if browser, hasBrowser := config.Get(); hasBrowser {
-		if browser.NoBrowser() {
+		browserCmd, useBrowser := browser.Get()
+		if !useBrowser {
 			return None[string]()
 		}
-		openBrowserCommands = append(openBrowserCommands, browser.String())
+		openBrowserCommands = append(openBrowserCommands, browserCmd)
 	}
 	openBrowserCommands = append(openBrowserCommands,
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
