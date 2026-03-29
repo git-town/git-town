@@ -33,6 +33,10 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		//       So we are using "start" here.
 		return Some("start")
 	}
+	browser, hasBrowser := config.Get()
+	if hasBrowser && browser.NoBrowser() {
+		return None[string]()
+	}
 	openBrowserCommands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
@@ -45,10 +49,7 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		"mozilla",
 		"netscape",
 	}
-	if browser, hasBrowser := config.Get(); hasBrowser {
-		if browser.NoBrowser() {
-			return None[string]()
-		}
+	if hasBrowser {
 		openBrowserCommands = append([]string{browser.String()}, openBrowserCommands...)
 	}
 	for _, browserCommand := range openBrowserCommands {
