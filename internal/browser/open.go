@@ -41,6 +41,7 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 }
 
 // browserCommandsToUse provides the browser commands to use based on the config.
+// A None result means that the user wants to use no browser.
 func browserCommandsToUse(config Option[configdomain.Browser]) Option[[]string] {
 	browser, hasBrowser := config.Get()
 	if hasBrowser && browser.NoBrowser() {
