@@ -3,10 +3,10 @@ package browser
 
 import (
 	"fmt"
-	"os/exec"
 	"runtime"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/filesystem"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -33,11 +33,28 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		//       So we are using "start" here.
 		return Some("start")
 	}
-	browser, hasBrowser := config.Get()
-	if hasBrowser && browser.NoBrowser() {
+	browserCommands, useBrowser := browserCommandsToUse(config).Get()
+	if !useBrowser {
 		return None[string]()
 	}
-	openBrowserCommands := []string{
+	return filesystem.FirstExistingExecutable(browserCommands)
+}
+
+// browserCommandsToUse provides the browser commands to use based on the config.
+func browserCommandsToUse(config Option[configdomain.Browser]) Option[[]string] {
+	browser, hasBrowser := config.Get()
+	if hasBrowser && browser.NoBrowser() {
+		return None[[]string]()
+	}
+	if hasBrowser {
+		return Some(append([]string{browser.String()}, defaultBrowserCommands()...))
+	}
+	return Some(defaultBrowserCommands())
+}
+
+// defaultBrowserCommands provides the default browser commands Git Town knows about.
+func defaultBrowserCommands() []string {
+	return []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
 		"xdg-open",
@@ -49,14 +66,4 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		"mozilla",
 		"netscape",
 	}
-	if hasBrowser {
-		openBrowserCommands = append([]string{browser.String()}, openBrowserCommands...)
-	}
-	for _, browserCommand := range openBrowserCommands {
-		executable, err := exec.LookPath(browserCommand)
-		if err == nil && len(executable) > 0 {
-			return Some(browserCommand)
-		}
-	}
-	return None[string]()
 }
