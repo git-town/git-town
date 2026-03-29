@@ -32,9 +32,9 @@ func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) err
 	proposalURL := self.NewProposalURL(data)
 	if data.Headless {
 		fmt.Printf(messages.BrowserOpen, proposalURL)
-		return nil
+	} else {
+		browser.Open(proposalURL, data.FrontendRunner, self.browser)
 	}
-	browser.Open(proposalURL, data.FrontendRunner, self.browser)
 	return nil
 }
 

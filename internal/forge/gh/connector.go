@@ -55,14 +55,15 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if err := self.Frontend.Run("gh", args...); err != nil {
 		return err
 	}
-	if data.Headless {
-		return nil
-	}
 	proposal, err := self.FindProposal(data.Branch, data.ParentBranch)
 	if err != nil || proposal.IsNone() {
 		return err
 	}
-	return self.Frontend.Run("gh", "pr", "view", "--web")
+	args = []string{"pr", "view"}
+	if !data.Headless {
+		args = append(args, "--web")
+	}
+	return self.Frontend.Run("gh", args...)
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
