@@ -35,7 +35,6 @@ func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) err
 	} else {
 		browser.Open(proposalURL, data.FrontendRunner, self.browser)
 	}
-	browser.Open(proposalURL, data.FrontendRunner, self.browser)
 	return nil
 }
 
