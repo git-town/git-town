@@ -12,8 +12,7 @@ func FirstExistingExecutable(commands []string) Option[string] {
 		if command == "" {
 			continue
 		}
-		_, err := exec.LookPath(command)
-		if err == nil {
+		if _, err := exec.LookPath(command); err == nil {
 			return Some(command)
 		}
 	}
