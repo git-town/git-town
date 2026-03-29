@@ -33,15 +33,12 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		//       So we are using "start" here.
 		return Some("start")
 	}
-	openBrowserCommands := make([]string, 0, 11)
-	if browser, hasBrowser := config.Get(); hasBrowser {
-		browserCmd, useBrowser := browser.Get()
-		if !useBrowser {
-			return None[string]()
-		}
-		openBrowserCommands = append(openBrowserCommands, browserCmd)
+	browser, hasBrowser := config.Get()
+	browserCmd, useBrowser := browser.Get()
+	if hasBrowser && !useBrowser {
+		return None[string]()
 	}
-	openBrowserCommands = append(openBrowserCommands,
+	openBrowserCommands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
 		"xdg-open",
@@ -52,7 +49,10 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 		"opera",
 		"mozilla",
 		"netscape",
-	)
+	}
+	if hasBrowser && useBrowser {
+		openBrowserCommands = append([]string{browserCmd}, openBrowserCommands...)
+	}
 	for _, browserCommand := range openBrowserCommands {
 		executable, err := exec.LookPath(browserCommand)
 		if err == nil && len(executable) > 0 {
