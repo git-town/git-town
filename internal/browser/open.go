@@ -42,15 +42,15 @@ func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 
 // browserCommandsToUse provides the browser commands to use based on the config.
 // A None result means that the user wants to use no browser.
-func browserCommandsToUse(config Option[configdomain.Browser]) Option[[]string] {
-	browser, hasBrowser := config.Get()
-	if hasBrowser && browser.NoBrowser() {
+func browserCommandsToUse(browserConfig Option[configdomain.Browser]) Option[[]string] {
+	userBrowser, hasUserBrowser := browserConfig.Get()
+	if !hasUserBrowser {
+		return Some(defaultBrowserCommands())
+	}
+	if userBrowser.NoBrowser() {
 		return None[[]string]()
 	}
-	if hasBrowser {
-		return Some(append([]string{browser.String()}, defaultBrowserCommands()...))
-	}
-	return Some(defaultBrowserCommands())
+	return Some(append([]string{userBrowser.String()}, defaultBrowserCommands()...))
 }
 
 // defaultBrowserCommands provides the default browser commands Git Town knows about.
