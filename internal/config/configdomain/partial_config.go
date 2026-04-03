@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
@@ -23,7 +24,7 @@ type PartialConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[BranchPrefix]
 	BranchTypeOverrides         BranchTypeOverrides
-	Browser                     Option[Browser]
+	Browser                     Option[browserdomain.Browser]
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
 	DevRemote                   Option[gitdomain.Remote]

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
@@ -36,7 +37,7 @@ type NormalConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[configdomain.BranchPrefix]
 	BranchTypeOverrides         configdomain.BranchTypeOverrides
-	Browser                     Option[configdomain.Browser]
+	Browser                     Option[browserdomain.Browser]
 	ContributionRegex           Option[configdomain.ContributionRegex]
 	Detached                    configdomain.Detached
 	DevRemote                   gitdomain.Remote
@@ -263,7 +264,7 @@ func DefaultNormalConfig() NormalConfig {
 		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
 		BranchPrefix:         None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-		Browser:              None[configdomain.Browser](),
+		Browser:              None[browserdomain.Browser](),
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
 		DevRemote:            gitdomain.RemoteOrigin,

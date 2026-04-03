@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -150,7 +151,7 @@ upstream = true
 				BitbucketUsername:    None[forgedomain.BitbucketUsername](),
 				BranchPrefix:         Some(configdomain.BranchPrefix("feature-")),
 				BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-				Browser:              Some(configdomain.Browser("chrome")),
+				Browser:              Some(browserdomain.Browser("chrome")),
 				ContributionRegex:    asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test")),
 				Detached:             Some(configdomain.Detached(true)),
 				DevRemote:            Some(gitdomain.Remote("origin")),

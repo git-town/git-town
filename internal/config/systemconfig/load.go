@@ -1,6 +1,7 @@
 package systemconfig
 
 import (
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -18,7 +19,7 @@ func Load() configdomain.PartialConfig {
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		Browser:                     None[configdomain.Browser](),
+		Browser:                     None[browserdomain.Browser](),
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    None[configdomain.Detached](),
 		DevRemote:                   None[gitdomain.Remote](),

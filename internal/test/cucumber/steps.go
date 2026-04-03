@@ -15,6 +15,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/format"
 	"github.com/git-town/git-town/v22/internal/cli/print"
@@ -1003,7 +1004,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^no tool to open browsers is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.browserVariable = Some(string(configdomain.NoBrowser))
+		state.browserVariable = Some(string(browserdomain.NoBrowser))
 	})
 
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {

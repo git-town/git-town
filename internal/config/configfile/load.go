@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -50,7 +51,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		autoResolve                 Option[configdomain.AutoResolve]
 		autoSync                    Option[configdomain.AutoSync]
 		branchPrefix                Option[configdomain.BranchPrefix]
-		browser                     Option[configdomain.Browser]
+		browser                     Option[browserdomain.Browser]
 		contributionRegex           Option[configdomain.ContributionRegex]
 		detached                    Option[configdomain.Detached]
 		devRemote                   Option[gitdomain.Remote]
@@ -184,7 +185,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Browser != nil {
-			browser, err = configdomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
+			browser, err = browserdomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.Platform != nil {

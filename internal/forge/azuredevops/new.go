@@ -1,7 +1,7 @@
 package azuredevops
 
 import (
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -13,7 +13,7 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	Browser   Option[configdomain.Browser]
+	Browser   Option[browserdomain.Browser]
 	RemoteURL giturl.Parts
 }
 
