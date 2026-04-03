@@ -26,19 +26,26 @@ func Open(url string, frontend subshelldomain.Runner, config Option[browserdomai
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(config Option[browserdomain.Browser]) Option[string] {
+func OpenBrowserCommand(setting Option[browserdomain.Browser]) Option[string] {
+	browser, hasBrowser := setting.Get()
+	if !hasBrowser {
+		return defaultBrowserCommand()
+	}
+	browserCmd, useBrowser := browser.Get()
+	if !useBrowser {
+		return None[string]()
+	}
+	return Some(browserCmd)
+}
+
+func defaultBrowserCommand() Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
 		//       So we are using "start" here.
 		return Some("start")
 	}
-	browser, hasBrowser := config.Get()
-	browserCmd, useBrowser := browser.Get()
-	if hasBrowser && !useBrowser {
-		return None[string]()
-	}
-	openBrowserCommands := []string{
+	commands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
 		"xdg-open",
@@ -50,13 +57,10 @@ func OpenBrowserCommand(config Option[browserdomain.Browser]) Option[string] {
 		"mozilla",
 		"netscape",
 	}
-	if hasBrowser && useBrowser {
-		openBrowserCommands = append([]string{browserCmd}, openBrowserCommands...)
-	}
-	for _, browserCommand := range openBrowserCommands {
-		executable, err := exec.LookPath(browserCommand)
+	for _, command := range commands {
+		executable, err := exec.LookPath(command)
 		if err == nil && len(executable) > 0 {
-			return Some(browserCommand)
+			return Some(command)
 		}
 	}
 	return None[string]()
