@@ -1,0 +1,31 @@
+//go:build !windows
+
+package browser
+
+import (
+	"os/exec"
+
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
+
+func defaultBrowserCommand() Option[string] {
+	commands := []string{
+		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
+		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
+		"xdg-open",
+		"open",
+		"cygstart",
+		"x-www-browser",
+		"firefox",
+		"opera",
+		"mozilla",
+		"netscape",
+	}
+	for _, command := range commands {
+		executable, err := exec.LookPath(command)
+		if err == nil && len(executable) > 0 {
+			return Some(command)
+		}
+	}
+	return None[string]()
+}

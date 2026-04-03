@@ -3,8 +3,6 @@ package browser
 
 import (
 	"fmt"
-	"os/exec"
-	"runtime"
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -31,37 +29,9 @@ func OpenBrowserCommand(setting Option[browserdomain.Browser]) Option[string] {
 	if !hasBrowser {
 		return defaultBrowserCommand()
 	}
-	browserCmd, useBrowser := browser.Get()
+	customBrowserCmd, useBrowser := browser.Get()
 	if !useBrowser {
 		return None[string]()
 	}
-	return Some(browserCmd)
-}
-
-func defaultBrowserCommand() Option[string] {
-	if runtime.GOOS == "windows" {
-		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
-		//       In particular, "?" can be escaped via "\", but "=" cannot.
-		//       So we are using "start" here.
-		return Some("start")
-	}
-	commands := []string{
-		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
-		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
-		"xdg-open",
-		"open",
-		"cygstart",
-		"x-www-browser",
-		"firefox",
-		"opera",
-		"mozilla",
-		"netscape",
-	}
-	for _, command := range commands {
-		executable, err := exec.LookPath(command)
-		if err == nil && len(executable) > 0 {
-			return Some(command)
-		}
-	}
-	return None[string]()
+	return Some(customBrowserCmd)
 }
