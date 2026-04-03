@@ -7,6 +7,7 @@ import (
 	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -25,7 +26,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GithubToken]
-	Browser   Option[configdomain.Browser]
+	Browser   Option[browserdomain.Browser]
 	ConfigDir configdomain.RepoConfigDir
 	Log       print.Logger
 	RemoteURL giturl.Parts

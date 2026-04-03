@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -292,7 +293,7 @@ EnterForgeData:
 		BitbucketUsername:           bitbucketUsername,
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		Browser:                     None[configdomain.Browser](),
+		Browser:                     None[browserdomain.Browser](),
 		ForgejoToken:                forgejoToken,
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
@@ -875,7 +876,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		Browser:              None[configdomain.Browser](),
+		Browser:              None[browserdomain.Browser](),
 		ConfigDir:            args.configDir,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,

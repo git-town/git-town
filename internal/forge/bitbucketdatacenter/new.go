@@ -1,6 +1,7 @@
 package bitbucketdatacenter
 
 import (
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -53,7 +54,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 
 type NewConnectorArgs struct {
 	AppPassword Option[forgedomain.BitbucketAppPassword]
-	Browser     Option[configdomain.Browser]
+	Browser     Option[browserdomain.Browser]
 	ConfigDir   configdomain.RepoConfigDir
 	Log         print.Logger
 	RemoteURL   giturl.Parts

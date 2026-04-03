@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/azuredevops"
@@ -115,7 +116,7 @@ type NewConnectorArgs struct {
 	Backend              subshelldomain.Querier
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
-	Browser              Option[configdomain.Browser]
+	Browser              Option[browserdomain.Browser]
 	ConfigDir            configdomain.RepoConfigDir
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]

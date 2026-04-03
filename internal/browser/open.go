@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -14,7 +14,7 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend subshelldomain.Runner, config Option[configdomain.Browser]) {
+func Open(url string, frontend subshelldomain.Runner, config Option[browserdomain.Browser]) {
 	command, hasCommand := OpenBrowserCommand(config).Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
@@ -26,7 +26,7 @@ func Open(url string, frontend subshelldomain.Runner, config Option[configdomain
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
+func OpenBrowserCommand(config Option[browserdomain.Browser]) Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.

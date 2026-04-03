@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -52,7 +53,7 @@ func TestSave(t *testing.T) {
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
 				BranchPrefix:      Some(configdomain.BranchPrefix("feature-")),
-				Browser:           Some(configdomain.Browser("chrome")),
+				Browser:           Some(browserdomain.Browser("chrome")),
 				ContributionRegex: contributionRegex,
 				Detached:          Some(configdomain.Detached(true)),
 				DevRemote:         Some(gitdomain.RemoteOrigin),
