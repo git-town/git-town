@@ -95,7 +95,7 @@ While working on `3-rename-bar`, you discover another improvement for the
 architecture. Add it to `1-refactor`:
 
 ```sh
-git commit --down=2
+git commit --up=2
 ```
 
 This command does the following things:

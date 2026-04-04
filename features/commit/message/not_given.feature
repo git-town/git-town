@@ -13,7 +13,7 @@ Feature: enter the commit message interactively
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down" and enter "commit-1b" for the commit message
+    When I run "git-town commit --up" and enter "commit-1b" for the commit message
 
   Scenario: result
     Then Git Town runs the commands

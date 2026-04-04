@@ -12,8 +12,8 @@ suite("Document", () => {
       },
       {
         desc: "int argument",
-        give: ["-d int", "--down int"],
-        want: ["-d", "--down int"],
+        give: ["-d int", "--up int"],
+        want: ["-d", "--up int"],
       },
       {
         desc: "no argument",

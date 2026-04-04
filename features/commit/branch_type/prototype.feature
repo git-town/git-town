@@ -1,4 +1,4 @@
-Feature: commit down into a prototype branch
+Feature: commit up into a prototype branch
 
   Background:
     Given a Git repo with origin
@@ -9,18 +9,18 @@ Feature: commit down into a prototype branch
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m down-commit"
+    When I run "git-town commit --up -m up-commit"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
       | branch-2 | git checkout branch-1             |
-      | branch-1 | git commit -m down-commit         |
+      | branch-1 | git commit -m up-commit           |
       |          | git checkout branch-2             |
       | branch-2 | git merge --no-edit --ff branch-1 |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
-      | branch-1 | local    | down-commit | changes   | my changes   |
+      | BRANCH   | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local    | up-commit | changes   | my changes   |
 
   Scenario: undo
     When I run "git-town undo"
