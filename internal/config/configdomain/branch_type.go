@@ -12,12 +12,12 @@ type BranchType string
 
 const (
 	// keep-sorted start
-	BranchTypeMainBranch         = BranchType("main")
-	BranchTypePerennialBranch    = BranchType("perennial")
-	BranchTypeFeatureBranch      = BranchType("feature")
-	BranchTypeParkedBranch       = BranchType("parked")
 	BranchTypeContributionBranch = BranchType("contribution")
+	BranchTypeFeatureBranch      = BranchType("feature")
+	BranchTypeMainBranch         = BranchType("main")
 	BranchTypeObservedBranch     = BranchType("observed")
+	BranchTypeParkedBranch       = BranchType("parked")
+	BranchTypePerennialBranch    = BranchType("perennial")
 	BranchTypePrototypeBranch    = BranchType("prototype")
 	// keep-sorted end
 )
