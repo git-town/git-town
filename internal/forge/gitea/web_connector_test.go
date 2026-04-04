@@ -12,7 +12,6 @@ import (
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Run("without body", func(t *testing.T) {
 			give := forgedomain.ProposalData{

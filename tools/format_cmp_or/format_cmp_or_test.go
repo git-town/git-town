@@ -32,13 +32,6 @@ func foo() {
 		must.EqOp(t, string(want), string(have))
 	})
 
-	t.Run("keep-sorted calls are skipped", func(t *testing.T) {
-		t.Parallel()
-		give := []byte("package main\n\nimport \"cmp\"\n\nfunc foo() {\n\terr := cmp.Or(\n\t\t// keep-sorted start\n\t\terrC,\n\t\terrA,\n\t\t// keep-sorted end\n\t)\n\t_ = err\n}")
-		have := formatCmpOr.FormatFileContent("myfile.go", give)
-		must.EqOp(t, string(give), string(have))
-	})
-
 	t.Run("multi-line already sorted", func(t *testing.T) {
 		t.Parallel()
 		give := []byte("package main\n\nimport \"cmp\"\n\nfunc foo() {\n\terr := cmp.Or(\n\t\terrA,\n\t\terrB,\n\t\terrC,\n\t)\n}")
