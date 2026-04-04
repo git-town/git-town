@@ -44,7 +44,7 @@ func formatFile(path string) (bool, error) {
 	if string(newContent) == string(content) {
 		return false, nil
 	}
-	return true, os.WriteFile(path, newContent, 0600)
+	return true, os.WriteFile(path, newContent, 0o600)
 }
 
 // FormatFileContent sorts the arguments of all cmp.Or invocations in the given Go source.
