@@ -68,6 +68,7 @@ func foo() {
 		have := formatCmpOr.FormatFileContent("", give)
 		must.EqOp(t, string(give), string(have))
 	})
+
 	t.Run("single argument is skipped", func(t *testing.T) {
 		t.Parallel()
 		give := []byte(`
