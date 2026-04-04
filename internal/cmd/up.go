@@ -4,11 +4,9 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
-	"os"
 	"regexp"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -21,8 +19,8 @@ import (
 )
 
 const (
-	upShort = "Switch to the child branch"
-	upLong  = `Moves "up" in the stack by switching to the child of the current branch.`
+	upShort = "Switch to the parent branch"
+	upLong  = `Moves "up" in the stack by switching to the parent of the current branch.`
 )
 
 func upCmd() *cobra.Command {
@@ -47,7 +45,7 @@ func upCmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
-				Detached:          None[configdomain.Detached](),
+				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
@@ -99,30 +97,14 @@ Start:
 		return errors.New(messages.UpNoCurrentBranch)
 	}
 
-	// Get the child branches from lineage
-	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch, repo.UnvalidatedConfig.NormalConfig.Order)
-	var child gitdomain.LocalBranchName
-	switch len(children) {
-	case 0:
-		return fmt.Errorf(messages.UpNoChild, currentBranch)
-	case 1:
-		child = children[0]
-	default:
-		// more than one child --> let the user choose
-		inputs := dialogcomponents.LoadInputs(os.Environ())
-		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
-			ChildBranches:  children,
-			DisplayDialogs: repo.UnvalidatedConfig.NormalConfig.DisplayDialogs,
-			Inputs:         inputs,
-		})
-		if err != nil || exit {
-			return err
-		}
-		child = selectedChild
+	// Get the parent branch from lineage
+	parent, hasParent := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(currentBranch).Get()
+	if !hasParent {
+		return fmt.Errorf(messages.UpNoParent, currentBranch)
 	}
 
-	// check out the child branch
-	err = repo.Git.CheckoutBranch(repo.Frontend, child, args.merge)
+	// Check out the parent branch
+	err = repo.Git.CheckoutBranch(repo.Frontend, parent, args.merge)
 	if err != nil {
 		return err
 	}

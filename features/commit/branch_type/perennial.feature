@@ -9,7 +9,7 @@ Feature: commit into a perennial branch
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b"
+    When I run "git-town commit --up -m commit-1b"
 
   Scenario: result
     Then Git Town runs no commands

@@ -13,27 +13,27 @@ Feature: change the display order
   Scenario: CLI ascending
     When I run "git-town up --order=asc"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2024-03
           2024-04
           2025-06
-      *     2025-06-01
+            2025-06-01
       """
 
   Scenario: CLI descending
     When I run "git-town up --order=desc"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2025-06
-      *     2025-06-01
+            2025-06-01
           2024-04
           2024-03
       """
@@ -42,13 +42,13 @@ Feature: change the display order
     Given global Git setting "git-town.order" is "desc"
     When I run "git-town up"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2025-06
-      *     2025-06-01
+            2025-06-01
           2024-04
           2024-03
       """
@@ -57,13 +57,13 @@ Feature: change the display order
     Given local Git setting "git-town.order" is "desc"
     When I run "git-town up"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2025-06
-      *     2025-06-01
+            2025-06-01
           2024-04
           2024-03
       """
@@ -72,13 +72,13 @@ Feature: change the display order
     When I run "git-town up" with these environment variables
       | GIT_TOWN_ORDER | desc |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2025-06
-      *     2025-06-01
+            2025-06-01
           2024-04
           2024-03
       """
@@ -91,13 +91,13 @@ Feature: change the display order
       """
     When I run "git-town up"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND           |
+      | 2025-06 | git checkout main |
     And Git Town prints:
       """
-        main
+      * main
           2025-06
-      *     2025-06-01
+            2025-06-01
           2024-04
           2024-03
       """

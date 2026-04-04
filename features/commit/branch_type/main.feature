@@ -1,4 +1,4 @@
-Feature: commit down into the main branch
+Feature: commit up into the main branch
 
   Background:
     Given a Git repo with origin
@@ -8,7 +8,7 @@ Feature: commit down into the main branch
     And the current branch is "branch-1"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1"
+    When I run "git-town commit --up -m commit-1"
 
   Scenario: result
     Then Git Town runs no commands

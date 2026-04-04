@@ -173,18 +173,18 @@ Usage:
   git-town commit [flags]
 
 Flags:
-  -d, --down int[=1]     commit into the given ancestor branch
       --dry-run          print but do not run the Git commands
   -h, --help             help for commit
   -m, --message string   specify the commit message
+  -u, --up int[=1]       commit into the given ancestor branch
   -v, --verbose          display all Git commands run under the hood
 `)
       const have = output.flags()
       const want = [
-        ["-d", "--down int"],
         ["--dry-run"],
         ["-h", "--help"],
         ["-m", "--message string"],
+        ["-u", "--up int"],
         ["-v", "--verbose"],
       ]
       deepEqual(have, want)
