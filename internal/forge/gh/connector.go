@@ -30,8 +30,8 @@ var (
 type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
-	Log      print.Logger
 	Headless configdomain.Headless
+	Log      print.Logger
 }
 
 // ============================================================================

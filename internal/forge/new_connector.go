@@ -89,6 +89,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Connector: gh.Connector{
 					Backend:  args.Backend,
 					Frontend: args.Frontend,
+					Headless: args.Headless,
 					Log:      args.Log,
 				},
 				Cache: forgedomain.APICache{},
