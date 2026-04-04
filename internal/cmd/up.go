@@ -14,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -53,7 +52,7 @@ func upCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             order,
-				ProposeHeadless:   None[forgedomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.ProposeHeadless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,

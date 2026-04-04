@@ -48,7 +48,7 @@ func Load() configdomain.PartialConfig {
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
-		ProposeHeadless:             None[forgedomain.ProposeHeadless](),
+		ProposeHeadless:             None[configdomain.ProposeHeadless](),
 		PushBranches:                None[configdomain.PushBranches](),
 		PushHook:                    None[configdomain.PushHook](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),

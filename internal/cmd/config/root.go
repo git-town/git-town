@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +44,7 @@ func RootCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[forgedomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.ProposeHeadless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,

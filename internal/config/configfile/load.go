@@ -70,7 +70,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialRegex              Option[configdomain.PerennialRegex]
 		proposalBreadcrumb          Option[configdomain.ProposalBreadcrumb]
 		proposalBreadcrumbDirection Option[configdomain.ProposalBreadcrumbDirection]
-		proposeHeadless             Option[forgedomain.ProposeHeadless]
+		proposeHeadless             Option[configdomain.ProposeHeadless]
 		pushBranches                Option[configdomain.PushBranches]
 		pushHook                    Option[configdomain.PushHook]
 		shareNewBranches            Option[configdomain.ShareNewBranches]
@@ -226,7 +226,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Propose.Headless != nil {
-			proposeHeadless = Some(forgedomain.ProposeHeadless(*data.Propose.Headless))
+			proposeHeadless = Some(configdomain.ProposeHeadless(*data.Propose.Headless))
 		}
 	}
 	if data.Ship != nil {

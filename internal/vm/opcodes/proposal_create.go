@@ -51,7 +51,6 @@ createProposal:
 	err := connector.CreateProposal(forgedomain.CreateProposalArgs{
 		Branch:         self.Branch,
 		FrontendRunner: args.Frontend,
-		Headless:       args.Config.Value.NormalConfig.ProposeHeadless,
 		MainBranch:     self.MainBranch,
 		ParentBranch:   parentBranch,
 		ProposalBody:   self.ProposalBody,

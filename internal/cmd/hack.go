@@ -17,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
@@ -102,7 +101,7 @@ func hackCmd() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[forgedomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.ProposeHeadless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             stash,
 				Verbose:           verbose,

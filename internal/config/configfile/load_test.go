@@ -182,7 +182,7 @@ upstream = true
 				PerennialRegex:              asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbStacks),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
-				ProposeHeadless:             Some(forgedomain.ProposeHeadless(true)),
+				ProposeHeadless:             Some(configdomain.ProposeHeadless(true)),
 				PushBranches:                None[configdomain.PushBranches](),
 				PushHook:                    Some(configdomain.PushHook(true)),
 				ShareNewBranches:            Some(configdomain.ShareNewBranchesPush),

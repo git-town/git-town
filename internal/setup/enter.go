@@ -322,7 +322,7 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             None[forgedomain.ProposeHeadless](), // the setup assistant doesn't ask for this
+		ProposeHeadless:             None[configdomain.ProposeHeadless](), // the setup assistant doesn't ask for this
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
