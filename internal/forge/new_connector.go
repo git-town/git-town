@@ -32,6 +32,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
 			Browser:   args.Browser,
+			Headless:  args.Headless,
 			RemoteURL: remoteURL,
 		})
 	case forgedomain.ForgeTypeBitbucket:
@@ -39,6 +40,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
 			ConfigDir:   args.ConfigDir,
+			Headless:    args.Headless,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -48,6 +50,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
 			ConfigDir:   args.ConfigDir,
+			Headless:    args.Headless,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -57,6 +60,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			APIToken:  args.ForgejoToken,
 			Browser:   args.Browser,
 			ConfigDir: args.ConfigDir,
+			Headless:  args.Headless,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -65,6 +69,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			APIToken:  args.GiteaToken,
 			Browser:   args.Browser,
 			ConfigDir: args.ConfigDir,
+			Headless:  args.Headless,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -75,6 +80,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				APIToken:  args.GithubToken,
 				Browser:   args.Browser,
 				ConfigDir: args.ConfigDir,
+				Headless:  args.Headless,
 				Log:       args.Log,
 				RemoteURL: remoteURL,
 			})
@@ -126,6 +132,7 @@ type NewConnectorArgs struct {
 	GithubToken          Option[forgedomain.GithubToken]
 	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	GitlabToken          Option[forgedomain.GitlabToken]
+	Headless             configdomain.ProposeHeadless
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 }
