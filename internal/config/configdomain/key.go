@@ -43,9 +43,9 @@ const (
 	KeyAliasAppend                         = Key("alias.append")
 	KeyAliasCompress                       = Key("alias.compress")
 	KeyAliasContribute                     = Key("alias.contribute")
+	KeyAliasDelete                         = Key("alias.delete")
 	KeyAliasDiffParent                     = Key("alias.diff-parent")
 	KeyAliasHack                           = Key("alias.hack")
-	KeyAliasDelete                         = Key("alias.delete")
 	KeyAliasObserve                        = Key("alias.observe")
 	KeyAliasPark                           = Key("alias.park")
 	KeyAliasPrepend                        = Key("alias.prepend")
@@ -62,15 +62,15 @@ const (
 	KeyBranchPrefix                        = Key("git-town.branch-prefix")
 	KeyBrowser                             = Key("git-town.browser")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
-	KeyDeprecatedCodebergToken             = Key("git-town.codeberg-token")
+	KeyDeprecatedAliasKill                 = Key("alias.kill")
+	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedCodebergToken             = Key("git-town.codeberg-token")
 	KeyDeprecatedContributionBranches      = Key("git-town.contribution-branches")
 	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedDefaultBranchType         = Key("git-town.default-branch-type")
-	KeyDeprecatedAliasKill                 = Key("alias.kill")
-	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedHostingPlatform           = Key("git-town.hosting-platform")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
@@ -88,8 +88,10 @@ const (
 	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyDisplayTypes                        = Key("git-town.display-types")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
-	KeyForgejoToken                        = Key("git-town.forgejo-token")
 	KeyForgeType                           = Key("git-town.forge-type")
+	KeyForgejoToken                        = Key("git-town.forgejo-token")
+	KeyGitUserEmail                        = Key("user.email")
+	KeyGitUserName                         = Key("user.name")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGithubConnectorType                 = Key("git-town.github-connector")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
@@ -120,8 +122,6 @@ const (
 	KeySyncTags                            = Key("git-town.sync-tags")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
 	KeyUnknownBranchType                   = Key("git-town.unknown-branch-type")
-	KeyGitUserEmail                        = Key("user.email")
-	KeyGitUserName                         = Key("user.name")
 	// keep-sorted end
 )
 
@@ -219,10 +219,11 @@ func ParseKey(name string) Option[Key] {
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{
 	// keep-sorted start
-	KeyDeprecatedCodebergToken:             KeyForgejoToken,
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,
+	KeyDeprecatedCodebergToken:             KeyForgejoToken,
+	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
 	KeyDeprecatedHostingPlatform:           KeyForgeType,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyDeprecatedPushNewBranches,
@@ -232,7 +233,6 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedPushVerify:                KeyPushHook,
 	KeyDeprecatedShipDeleteRemoteBranch:    KeyShipDeleteTrackingBranch,
 	KeyDeprecatedSyncStrategy:              KeySyncFeatureStrategy,
-	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
 	// keep-sorted end
 }
 
