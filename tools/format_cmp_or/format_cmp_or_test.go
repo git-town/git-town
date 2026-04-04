@@ -12,20 +12,22 @@ func TestFormatFileContent(t *testing.T) {
 
 	t.Run("single-line unsorted", func(t *testing.T) {
 		t.Parallel()
-		give := []byte(`package main
+		give := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	if err := cmp.Or(errC, errA, errB); err != nil {}
-}`)
-		want := []byte(`package main
+}`[1:])
+		want := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	if err := cmp.Or(errA, errB, errC); err != nil {}
-}`)
+}`[1:])
 		have, err := formatCmpOr.FormatFileContent("", give)
 		must.NoError(t, err)
 		must.EqOp(t, string(want), string(have))
@@ -33,13 +35,14 @@ func foo() {
 
 	t.Run("single-line already sorted", func(t *testing.T) {
 		t.Parallel()
-		give := []byte(`package main
+		give := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	if err := cmp.Or(errA, errB, errC); err != nil {}
-}`)
+}`[1:])
 		have, err := formatCmpOr.FormatFileContent("", give)
 		must.NoError(t, err)
 		must.EqOp(t, string(give), string(have))
@@ -64,14 +67,15 @@ func foo() {
 
 	t.Run("non-identifier args are skipped", func(t *testing.T) {
 		t.Parallel()
-		give := []byte(`package main
+		give := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	v := cmp.Or(foo.Bar, foo.Baz)
 	_ = v
-}`)
+}`[1:])
 		have, err := formatCmpOr.FormatFileContent("", give)
 		must.NoError(t, err)
 		must.EqOp(t, string(give), string(have))
@@ -87,14 +91,15 @@ func foo() {
 
 	t.Run("single argument is skipped", func(t *testing.T) {
 		t.Parallel()
-		give := []byte(`package main
+		give := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	v := cmp.Or(errA)
 	_ = v
-}`)
+}`[1:])
 		have, err := formatCmpOr.FormatFileContent("", give)
 		must.NoError(t, err)
 		must.EqOp(t, string(give), string(have))
@@ -102,20 +107,22 @@ func foo() {
 
 	t.Run("case-insensitive sorting", func(t *testing.T) {
 		t.Parallel()
-		give := []byte(`package main
+		give := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	if err := cmp.Or(errVerbose, errAutoResolve, errDryRun); err != nil {}
-}`)
-		want := []byte(`package main
+}`[1:])
+		want := []byte(`
+package main
 
 import "cmp"
 
 func foo() {
 	if err := cmp.Or(errAutoResolve, errDryRun, errVerbose); err != nil {}
-}`)
+}`[1:])
 		have, err := formatCmpOr.FormatFileContent("", give)
 		must.NoError(t, err)
 		must.EqOp(t, string(want), string(have))
