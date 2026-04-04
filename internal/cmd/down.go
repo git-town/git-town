@@ -105,7 +105,7 @@ Start:
 	var child gitdomain.LocalBranchName
 	switch len(children) {
 	case 0:
-		return fmt.Errorf(messages.DownNoParent, currentBranch)
+		return fmt.Errorf(messages.DownNoChild, currentBranch)
 	case 1:
 		child = children[0]
 	default:

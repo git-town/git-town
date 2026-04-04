@@ -101,7 +101,7 @@ Start:
 	// Get the parent branch from lineage
 	parent, hasParent := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(currentBranch).Get()
 	if !hasParent {
-		return fmt.Errorf(messages.UpNoChild, currentBranch)
+		return fmt.Errorf(messages.UpNoParent, currentBranch)
 	}
 
 	// Check out the parent branch
