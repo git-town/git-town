@@ -39,9 +39,9 @@ into another branch without needing to change branches.`
 )
 
 func commitCmd() *cobra.Command {
-	addDownFlag, readDownFlag := flags.Down()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
+	addUpFlag, readUpFlag := flags.Up()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "commit",
@@ -50,11 +50,11 @@ func commitCmd() *cobra.Command {
 		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			down, errDown := readDownFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
+			up, errUp := readUpFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDown, errDryRun, errMessage, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errMessage, errUp, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -70,17 +70,17 @@ func commitCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCommit(cliConfig, message, down)
+			return executeCommit(cliConfig, message, up)
 		},
 	}
-	addDownFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
+	addUpFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) error {
+func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -93,7 +93,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCommitData(repo, commitMessage, down)
+	data, flow, err := determineCommitData(repo, commitMessage, up)
 	if err != nil {
 		return err
 	}
@@ -164,7 +164,7 @@ type commitData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (commitData, configdomain.ProgramFlow, error) {
+func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) (commitData, configdomain.ProgramFlow, error) {
 	var emptyCommitData commitData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
@@ -256,10 +256,10 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		return emptyCommitData, configdomain.ProgramFlowExit, err
 	}
 	var branchToCommitIntoOpt Option[gitdomain.LocalBranchName]
-	if down, hasDown := down.Get(); hasDown {
-		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, down.Value()).Get()
+	if up, hasUp := up.Get(); hasUp {
+		ancestor, hasAncestor := validatedConfig.NormalConfig.Lineage.Ancestor(initialBranch, up.Value()).Get()
 		if !hasAncestor {
-			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitDownNoAncestor, initialBranch)
+			return emptyCommitData, configdomain.ProgramFlowExit, fmt.Errorf(messages.CommitUpNoAncestor, initialBranch)
 		}
 		branchToCommitIntoOpt = Some(ancestor)
 	}

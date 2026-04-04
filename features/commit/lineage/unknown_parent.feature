@@ -14,7 +14,7 @@ Feature: commit from a branch with unknown parent
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b" and enter into the dialog:
+    When I run "git-town commit --up -m commit-1b" and enter into the dialog:
       | DIALOG                       | KEYS       |
       | parent branch for "branch-2" | down enter |
 
