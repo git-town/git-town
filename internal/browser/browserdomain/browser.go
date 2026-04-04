@@ -6,8 +6,11 @@ import (
 
 type Browser string
 
-func (self Browser) NoBrowser() bool {
-	return self == NoBrowser
+func (self Browser) Get() (string, bool) {
+	if self == NoBrowser {
+		return "", false
+	}
+	return self.String(), true
 }
 
 func (self Browser) String() string {

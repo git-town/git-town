@@ -3,10 +3,8 @@ package browser
 
 import (
 	"fmt"
-	"runtime"
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v22/internal/filesystem"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -26,45 +24,14 @@ func Open(url string, frontend subshelldomain.Runner, config Option[browserdomai
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(config Option[browserdomain.Browser]) Option[string] {
-	if runtime.GOOS == "windows" {
-		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
-		//       In particular, "?" can be escaped via "\", but "=" cannot.
-		//       So we are using "start" here.
-		return Some("start")
+func OpenBrowserCommand(customBrowserSetting Option[browserdomain.Browser]) Option[string] {
+	customBrowser, hasCustomBrowser := customBrowserSetting.Get()
+	if !hasCustomBrowser {
+		return defaultBrowserCommand()
 	}
-	browserCommands, useBrowser := browserCommandsToUse(config).Get()
+	customBrowserCmd, useBrowser := customBrowser.Get()
 	if !useBrowser {
 		return None[string]()
 	}
-	return filesystem.FirstExistingExecutable(browserCommands)
-}
-
-// browserCommandsToUse provides the browser commands to use based on the config.
-// A None result means that the user wants to use no browser.
-func browserCommandsToUse(browserConfig Option[browserdomain.Browser]) Option[[]string] {
-	userBrowser, hasUserBrowser := browserConfig.Get()
-	if !hasUserBrowser {
-		return Some(defaultBrowserCommands())
-	}
-	if userBrowser.NoBrowser() {
-		return None[[]string]()
-	}
-	return Some(append([]string{userBrowser.String()}, defaultBrowserCommands()...))
-}
-
-// defaultBrowserCommands provides the default browser commands Git Town knows about.
-func defaultBrowserCommands() []string {
-	return []string{
-		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
-		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
-		"xdg-open",
-		"open",
-		"cygstart",
-		"x-www-browser",
-		"firefox",
-		"opera",
-		"mozilla",
-		"netscape",
-	}
+	return Some(customBrowserCmd)
 }
