@@ -101,6 +101,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				APIToken:  args.GitlabToken,
 				Browser:   args.Browser,
 				ConfigDir: args.ConfigDir,
+				Headless:  args.Headless,
 				Log:       args.Log,
 				RemoteURL: remoteURL,
 			})
@@ -109,6 +110,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Connector: glab.Connector{
 					Backend:  args.Backend,
 					Frontend: args.Frontend,
+					Headless: args.Headless,
 					Log:      args.Log,
 				},
 				Cache: forgedomain.APICache{},

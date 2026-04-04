@@ -27,7 +27,7 @@ type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
 	Log      print.Logger
-	headless configdomain.ProposeHeadless
+	Headless configdomain.ProposeHeadless
 }
 
 // ============================================================================
@@ -55,7 +55,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
-	if self.headless {
+	if self.Headless {
 		args = append(args, "--yes")
 	} else {
 		args = append(args, "--web")

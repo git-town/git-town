@@ -886,6 +886,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		GithubToken:          args.githubToken,
 		GitlabConnectorType:  args.gitlabConnectorType,
 		GitlabToken:          args.gitlabToken,
+		Headless:             args.headless,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
 	})
@@ -926,6 +927,7 @@ type testForgeAuthArgs struct {
 	githubToken          Option[forgedomain.GithubToken]
 	gitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	gitlabToken          Option[forgedomain.GitlabToken]
+	headless             configdomain.ProposeHeadless
 	inputs               dialogcomponents.Inputs
 	remoteURL            Option[giturl.Parts]
 }
