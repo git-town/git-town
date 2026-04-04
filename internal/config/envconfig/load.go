@@ -110,7 +110,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
 	// keep-sorted end
 	err := cmp.Or(
-		// keep-sorted start
 		errAutoResolve,
 		errAutoSync,
 		errBranchPrefix,
@@ -145,7 +144,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errSyncUpstream,
 		errUnknownBranchType,
 		errVerbose,
-		// keep-sorted end
 	)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars

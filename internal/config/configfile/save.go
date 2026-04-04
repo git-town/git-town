@@ -34,7 +34,6 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
 	// keep-sorted end
 	if cmp.Or(
-		// keep-sorted start
 		hasContributionRegex,
 		hasDisplayTypes,
 		hasFeatureRegex,
@@ -44,7 +43,6 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasPerennialBranches,
 		hasPerennialRegex,
 		hasUnknownBranchType,
-		// keep-sorted end
 	) {
 		result.WriteString("\n[branches]\n")
 		// keep-sorted start block=yes
@@ -109,14 +107,12 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
 	// keep-sorted end
 	if cmp.Or(
-		// keep-sorted start
 		hasBrowser,
 		hasDevRemote,
 		hasForgeType,
 		hasGithubConnectorType,
 		hasGitlabConnectorType,
 		hasOriginHostName,
-		// keep-sorted end
 	) {
 		result.WriteString("\n[hosting]\n")
 		// keep-sorted start block=yes
@@ -186,7 +182,6 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	syncUpstream, hasUpstream := data.SyncUpstream.Get()
 	// keep-sorted end
 	if cmp.Or(
-		// keep-sorted start
 		hasAutoResolve,
 		hasAutoSync,
 		hasDetached,
@@ -197,7 +192,6 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasPushHook,
 		hasTags,
 		hasUpstream,
-		// keep-sorted end
 	) {
 		result.WriteString("\n[sync]\n")
 		// keep-sorted start block=yes
