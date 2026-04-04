@@ -1,4 +1,4 @@
-Feature: commit two down
+Feature: commit two up
 
   Background:
     Given a Git repo with origin
@@ -10,20 +10,20 @@ Feature: commit two down
     And the current branch is "branch-3"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down=2 -m down-commit"
+    When I run "git-town commit --up=2 -m up-commit"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
       | branch-3 | git checkout branch-1             |
-      | branch-1 | git commit -m down-commit         |
+      | branch-1 | git commit -m up-commit           |
       |          | git checkout branch-2             |
       | branch-2 | git merge --no-edit --ff branch-1 |
       |          | git checkout branch-3             |
       | branch-3 | git merge --no-edit --ff branch-2 |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
-      | branch-1 | local    | down-commit | changes   | my changes   |
+      | BRANCH   | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local    | up-commit | changes   | my changes   |
 
   Scenario: undo
     When I run "git-town undo"

@@ -10,7 +10,7 @@ Feature: TERM=dumb, no main branch
     And the current branch is "branch-2"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down -m commit-1b" with these environment variables
+    When I run "git-town commit --up -m commit-1b" with these environment variables
       | TERM | dumb |
 
   Scenario: result

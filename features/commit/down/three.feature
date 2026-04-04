@@ -1,4 +1,4 @@
-Feature: commit three down
+Feature: commit three up
 
   Background:
     Given a Git repo with origin
@@ -11,13 +11,13 @@ Feature: commit three down
     And the current branch is "branch-4"
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
-    When I run "git-town commit --down=3 -m down-commit"
+    When I run "git-town commit --up=3 -m up-commit"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
       | branch-4 | git checkout branch-1             |
-      | branch-1 | git commit -m down-commit         |
+      | branch-1 | git commit -m up-commit           |
       |          | git checkout branch-2             |
       | branch-2 | git merge --no-edit --ff branch-1 |
       |          | git checkout branch-3             |
@@ -25,8 +25,8 @@ Feature: commit three down
       |          | git checkout branch-4             |
       | branch-4 | git merge --no-edit --ff branch-3 |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
-      | branch-1 | local    | down-commit | changes   | my changes   |
+      | BRANCH   | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local    | up-commit | changes   | my changes   |
 
   Scenario: undo
     When I run "git-town undo"

@@ -6,12 +6,9 @@
 git town up [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
 
-The _up_ command moves one position up in the current stack by switching to a
-child of the current branch. After successfully switching branches, it displays
+The _up_ command moves one position up in the current stack by switching to the
+parent of the current branch. After successfully switching branches, it displays
 the branch hierarchy to show your new position in the stack.
-
-When the current branch has multiple children, an interactive dialog lets you
-choose which child branch to switch to.
 
 `git town up` is useful for navigating stacked changes without needing to
 remember branch names or use the interactive [switch](switch.md) command.
@@ -23,20 +20,20 @@ Consider this stack:
 ```
 main
  \
-* branch-1
+  branch-1
    \
-    branch-2
+*   branch-2
 ```
 
-After running `git town up` on the `branch-1` branch, you end up with this
+After running `git town up` on the `branch-2` branch, you end up with this
 stack:
 
 ```
 main
  \
-  branch-1
+* branch-1
    \
-*   branch-2
+    branch-2
 ```
 
 ## Options
@@ -59,7 +56,7 @@ flag. It attempts to merge uncommitted changes in your workspace into the target
 branch.
 
 This is useful when you have uncommitted changes in your current branch and want
-to move them up to a child branch.
+to move them up to the parent branch.
 
 #### `-o <asc|desc>`<br>`--order <asc|desc>`
 
