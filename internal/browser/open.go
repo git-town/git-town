@@ -24,12 +24,12 @@ func Open(url string, frontend subshelldomain.Runner, config Option[browserdomai
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(setting Option[browserdomain.Browser]) Option[string] {
-	browser, hasBrowser := setting.Get()
-	if !hasBrowser {
+func OpenBrowserCommand(customBrowserOpt Option[browserdomain.Browser]) Option[string] {
+	customBrowser, hasCustomBrowser := customBrowserOpt.Get()
+	if !hasCustomBrowser {
 		return defaultBrowserCommand()
 	}
-	customBrowserCmd, useBrowser := browser.Get()
+	customBrowserCmd, useBrowser := customBrowser.Get()
 	if !useBrowser {
 		return None[string]()
 	}
