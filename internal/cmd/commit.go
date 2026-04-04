@@ -39,7 +39,7 @@ into another branch without needing to change branches.`
 )
 
 func commitCmd() *cobra.Command {
-	addDownFlag, readDownFlag := flags.Down()
+	addDownFlag, readDownFlag := flags.Up()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -80,7 +80,7 @@ func commitCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) error {
+func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Up]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -164,7 +164,7 @@ type commitData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Down]) (commitData, configdomain.ProgramFlow, error) {
+func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], down Option[configdomain.Up]) (commitData, configdomain.ProgramFlow, error) {
 	var emptyCommitData commitData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
