@@ -221,6 +221,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
+		Headless:             config.ProposeHeadless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

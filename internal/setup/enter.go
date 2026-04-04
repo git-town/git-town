@@ -131,6 +131,7 @@ EnterForgeData:
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GithubToken),
 		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(data.Config.GitGlobal.GitlabConnectorType),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitlabToken),
+		headless:             data.Config.NormalConfig.ProposeHeadless,
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
 	})

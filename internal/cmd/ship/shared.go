@@ -66,6 +66,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
+		Headless:             config.ProposeHeadless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(args.repo.Backend),
 	})

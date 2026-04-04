@@ -195,6 +195,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
+		Headless:             config.ProposeHeadless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

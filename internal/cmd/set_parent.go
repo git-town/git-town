@@ -263,6 +263,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
+		Headless:             config.ProposeHeadless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

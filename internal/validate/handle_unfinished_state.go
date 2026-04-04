@@ -67,6 +67,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 			GithubToken:          normalConfig.GithubToken,
 			GitlabConnectorType:  normalConfig.GitlabConnectorType,
 			GitlabToken:          normalConfig.GitlabToken,
+			Headless:             normalConfig.ProposeHeadless,
 			Log:                  print.Logger{},
 			RemoteURL:            normalConfig.DevURL(args.Backend),
 		})
