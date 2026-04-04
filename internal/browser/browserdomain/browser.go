@@ -4,6 +4,8 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
+const NoBrowser = Browser("(none)")
+
 type Browser string
 
 func (self Browser) Get() (string, bool) {
@@ -23,5 +25,3 @@ func ParseBrowser(value, _ string) (Option[Browser], error) {
 	}
 	return Some(Browser(value)), nil
 }
-
-const NoBrowser = "(none)"
