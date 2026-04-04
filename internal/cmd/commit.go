@@ -73,9 +73,9 @@ func commitCmd() *cobra.Command {
 			return executeCommit(cliConfig, message, up)
 		},
 	}
-	addUpFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
+	addUpFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
