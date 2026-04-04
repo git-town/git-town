@@ -118,7 +118,7 @@ func prependCommand() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				Headless:   None[configdomain.Headless](),
+				Headless:          None[configdomain.Headless](),
 				PushBranches:      push,
 				Stash:             stash,
 				Verbose:           verbose,

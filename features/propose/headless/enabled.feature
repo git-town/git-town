@@ -25,7 +25,7 @@ Feature: headless mode
   Scenario: --headless flag with existing proposal
     Given the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
-      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     When I run "git-town propose --headless"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                        |
@@ -53,7 +53,7 @@ Feature: headless mode
   Scenario: headless configured via Git setting with existing proposal
     Given the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
-      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     And Git setting "git-town.headless" is "true"
     When I run "git-town propose"
     Then Git Town runs the commands

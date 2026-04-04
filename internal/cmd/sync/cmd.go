@@ -88,7 +88,7 @@ func Cmd() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				Headless:   None[configdomain.Headless](),
+				Headless:          None[configdomain.Headless](),
 				PushBranches:      pushBranches,
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
