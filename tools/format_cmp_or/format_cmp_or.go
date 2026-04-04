@@ -85,9 +85,9 @@ func FormatFileContent(path string, src []byte) []byte {
 }
 
 type replacement struct {
-	start   int
 	end     int
 	newText string
+	start   int
 }
 
 func isCmpOr(callExpr *ast.CallExpr) bool {
@@ -135,9 +135,9 @@ func computeReplacements(fset *token.FileSet, file *ast.File, callExpr *ast.Call
 			continue
 		}
 		reps = append(reps, replacement{
-			start:   fset.Position(arg.Pos()).Offset,
 			end:     fset.Position(arg.End()).Offset,
 			newText: sortedNames[i],
+			start:   fset.Position(arg.Pos()).Offset,
 		})
 	}
 	return reps
