@@ -11,6 +11,7 @@ import (
 type BranchType string
 
 const (
+	// keep-sorted start
 	BranchTypeMainBranch         = BranchType("main")
 	BranchTypePerennialBranch    = BranchType("perennial")
 	BranchTypeFeatureBranch      = BranchType("feature")
@@ -18,6 +19,7 @@ const (
 	BranchTypeContributionBranch = BranchType("contribution")
 	BranchTypeObservedBranch     = BranchType("observed")
 	BranchTypePrototypeBranch    = BranchType("prototype")
+	// keep-sorted end
 )
 
 func AllBranchTypes() []BranchType {

@@ -11,6 +11,7 @@ func (self AliasableCommand) Key() AliasKey {
 func (self AliasableCommand) String() string { return string(self) }
 
 const (
+	// keep-sorted start
 	AliasableCommandAppend     = AliasableCommand("append")
 	AliasableCommandCompress   = AliasableCommand("compress")
 	AliasableCommandContinue   = AliasableCommand("continue")
@@ -29,4 +30,5 @@ const (
 	AliasableCommandShip       = AliasableCommand("ship")
 	AliasableCommandSync       = AliasableCommand("sync")
 	AliasableCommandUp         = AliasableCommand("up")
+	// keep-sorted end
 )

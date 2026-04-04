@@ -9,6 +9,7 @@ func (self SyncStatus) String() string {
 }
 
 const (
+	// keep-sorted start
 	SyncStatusUpToDate        SyncStatus = "up to date"                 // the branch exists locally and remotely, the local branch is up to date
 	SyncStatusAhead           SyncStatus = "ahead"                      // the branch exists locally and remotely, the local branch is ahead of the remote branch
 	SyncStatusBehind          SyncStatus = "behind"                     // the branch exists locally and remotely, the local branch is behind the remote branch
@@ -17,4 +18,5 @@ const (
 	SyncStatusRemoteOnly      SyncStatus = "remote only"                // the branch exists only at the remote
 	SyncStatusDeletedAtRemote SyncStatus = "deleted at remote"          // the branch was deleted on the remote
 	SyncStatusOtherWorktree   SyncStatus = "active in another worktree" // the branch is active in another worktree and should not be synced
+	// keep-sorted end
 )
