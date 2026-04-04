@@ -21,6 +21,7 @@ type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GiteaToken]
 	Browser   Option[browserdomain.Browser]
 	ConfigDir configdomain.RepoConfigDir
+	Headless  configdomain.ProposeHeadless
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }
@@ -33,7 +34,8 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browser: args.Browser,
+		browser:  args.Browser,
+		headless: args.Headless,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
