@@ -30,11 +30,15 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	var err error
 	switch forgeType {
 	case forgedomain.ForgeTypeAzuredevops:
-		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
-			Browser:   args.Browser,
-			Headless:  args.Headless,
-			RemoteURL: remoteURL,
-		})
+		connector = azuredevops.WebConnector{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
+				Hostname:     remoteURL.Host,
+				Organization: remoteURL.Org,
+				Repository:   remoteURL.Repo,
+			},
+			Browser:  args.Browser,
+			Headless: args.Headless,
+		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword: args.BitbucketAppPassword,

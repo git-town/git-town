@@ -3,6 +3,7 @@ package azuredevops_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/forge/azuredevops"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -14,9 +15,15 @@ import (
 func TestWebConnector(t *testing.T) {
 	t.Parallel()
 	url := giturl.Parse("git@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").GetOrPanic()
-	connector := azuredevops.NewConnector(azuredevops.NewConnectorArgs{
-		RemoteURL: url,
-	})
+	connector := azuredevops.WebConnector{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
+			Hostname:     url.Host,
+			Organization: url.Org,
+			Repository:   url.Repo,
+		},
+		Browser:  None[browserdomain.Browser](),
+		Headless: false,
+	}
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()

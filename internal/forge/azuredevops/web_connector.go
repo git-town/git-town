@@ -21,21 +21,21 @@ var (
 // WebConnector provides connectivity to Azure DevOps through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser  Option[browserdomain.Browser]
-	headless configdomain.Headless
+	Browser  Option[browserdomain.Browser]
+	Headless configdomain.Headless
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner, self.browser)
+	browser.Open(self.RepositoryURL(), runner, self.Browser)
 	return nil
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	proposalURL := self.NewProposalURL(data)
-	if self.headless {
+	if self.Headless {
 		fmt.Printf(messages.BrowserOpen, proposalURL)
 	} else {
-		browser.Open(proposalURL, data.FrontendRunner, self.browser)
+		browser.Open(proposalURL, data.FrontendRunner, self.Browser)
 	}
 	return nil
 }
