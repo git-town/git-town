@@ -17,7 +17,7 @@ func main() {
 		if err != nil || dirEntry.IsDir() || !isGoFile(path) || shouldIgnorePath(path) {
 			return err
 		}
-		changed, err := formatFile(path)
+		changed, err := formatFile(path, dirEntry.Type().Perm())
 		if err != nil {
 			return err
 		}
@@ -32,7 +32,7 @@ func main() {
 	}
 }
 
-func formatFile(path string) (bool, error) {
+func formatFile(path string, perm fs.FileMode) (bool, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return false, err
@@ -41,7 +41,7 @@ func formatFile(path string) (bool, error) {
 	if string(newContent) == string(content) {
 		return false, nil
 	}
-	return true, os.WriteFile(path, newContent, 0o600)
+	return true, os.WriteFile(path, newContent, perm)
 }
 
 // FormatFileContent sorts the arguments of all cmp.Or invocations in the given Go source.
