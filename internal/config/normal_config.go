@@ -54,6 +54,7 @@ type NormalConfig struct {
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	Headless                    configdomain.Headless
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
 	Lineage                     configdomain.Lineage
@@ -65,7 +66,6 @@ type NormalConfig struct {
 	PerennialRegex              Option[configdomain.PerennialRegex]
 	ProposalBreadcrumb          configdomain.ProposalBreadcrumb
 	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
-	ProposeHeadless             configdomain.Headless
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
 	ShareNewBranches            configdomain.ShareNewBranches
@@ -137,7 +137,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PerennialRegex:              other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalBreadcrumb:          other.ProposalBreadcrumb.GetOr(self.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.GetOr(self.ProposalBreadcrumbDirection),
-		ProposeHeadless:             other.ProposeHeadless.GetOr(self.ProposeHeadless),
+		Headless:                    other.Headless.GetOr(self.Headless),
 		PushBranches:                other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                    other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.GetOr(self.ShareNewBranches),
@@ -295,7 +295,7 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialRegex:              None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:          configdomain.ProposalBreadcrumbNone,
 		ProposalBreadcrumbDirection: configdomain.ProposalBreadcrumbDirectionDown,
-		ProposeHeadless:             false,
+		Headless:                    false,
 		PushBranches:                true,
 		PushHook:                    true,
 		ShareNewBranches:            configdomain.ShareNewBranchesNone,
@@ -351,7 +351,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PerennialRegex:              partial.PerennialRegex,
 		ProposalBreadcrumb:          partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             partial.ProposeHeadless.GetOr(defaults.ProposeHeadless),
+		Headless:                    partial.Headless.GetOr(defaults.Headless),
 		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),

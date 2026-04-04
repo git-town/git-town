@@ -131,7 +131,7 @@ EnterForgeData:
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GithubToken),
 		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(data.Config.GitGlobal.GitlabConnectorType),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitlabToken),
-		headless:             data.Config.NormalConfig.ProposeHeadless,
+		headless:             data.Config.NormalConfig.Headless,
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
 	})
@@ -323,7 +323,7 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             None[configdomain.Headless](), // the setup assistant doesn't ask for this
+		Headless:             None[configdomain.Headless](), // the setup assistant doesn't ask for this
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

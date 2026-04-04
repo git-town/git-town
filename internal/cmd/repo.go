@@ -51,7 +51,7 @@ func repoCommand() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.Headless](),
+				Headless:   None[configdomain.Headless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
@@ -110,7 +110,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, er
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.ProposeHeadless,
+		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.RemoteURL(repo.Backend, remote),
 	})

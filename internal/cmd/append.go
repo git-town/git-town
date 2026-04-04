@@ -108,7 +108,7 @@ func appendCmd() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.Headless](),
+				Headless:          None[configdomain.Headless](),
 				PushBranches:      push,
 				Stash:             stash,
 				Verbose:           verbose,
@@ -268,7 +268,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.ProposeHeadless,
+		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
