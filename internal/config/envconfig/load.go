@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	// keep-sorted start
 	autoResolve                 = "GIT_TOWN_AUTO_RESOLVE"
 	autoSync                    = "GIT_TOWN_AUTO_SYNC"
 	bitbucketAppPassword        = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
@@ -61,9 +62,11 @@ const (
 	term                        = "TERM"
 	unknownBranchType           = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
 	verbose                     = "GIT_TOWN_VERBOSE"
+	// keep-sorted end
 )
 
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
+	// keep-sorted start
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
@@ -105,7 +108,9 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
 	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchType)
 	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
+	// keep-sorted end
 	err := cmp.Or(
+		// keep-sorted start
 		errAutoResolve,
 		errAutoSync,
 		errBranchPrefix,
@@ -140,6 +145,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errSyncUpstream,
 		errUnknownBranchType,
 		errVerbose,
+		// keep-sorted end
 	)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars
