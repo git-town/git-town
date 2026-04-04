@@ -124,6 +124,7 @@ const (
 )
 
 var keys = []Key{
+	// keep-sorted start
 	KeyAutoResolve,
 	KeyAutoSync,
 	KeyBitbucketAppPassword,
@@ -191,6 +192,7 @@ var keys = []Key{
 	KeySyncTags,
 	KeySyncUpstream,
 	KeyUnknownBranchType,
+	// keep-sorted end
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
