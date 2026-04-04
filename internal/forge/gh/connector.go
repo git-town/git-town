@@ -31,7 +31,7 @@ type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
 	Log      print.Logger
-	headless configdomain.ProposeHeadless
+	headless configdomain.Headless
 }
 
 // ============================================================================

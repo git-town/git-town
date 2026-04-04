@@ -58,7 +58,7 @@ func switchCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             order,
-				ProposeHeadless:   None[configdomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.Headless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             stash,
 				Verbose:           verbose,

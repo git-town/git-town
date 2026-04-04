@@ -15,7 +15,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	Browser   Option[browserdomain.Browser]
-	Headless  configdomain.ProposeHeadless
+	Headless  configdomain.Headless
 	RemoteURL giturl.Parts
 }
 

@@ -21,7 +21,7 @@ type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GiteaToken]
 	Browser   Option[browserdomain.Browser]
 	ConfigDir configdomain.RepoConfigDir
-	Headless  configdomain.ProposeHeadless
+	Headless  configdomain.Headless
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }

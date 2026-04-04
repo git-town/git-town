@@ -23,7 +23,7 @@ var (
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
 	browser  Option[browserdomain.Browser]
-	headless configdomain.ProposeHeadless
+	headless configdomain.Headless
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {

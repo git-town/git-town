@@ -108,7 +108,7 @@ func appendCmd() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.Headless](),
 				PushBranches:      push,
 				Stash:             stash,
 				Verbose:           verbose,

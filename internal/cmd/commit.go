@@ -65,7 +65,7 @@ func commitCmd() *cobra.Command {
 				DryRun:            dryRun,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.Headless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,

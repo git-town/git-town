@@ -134,7 +134,7 @@ type NewConnectorArgs struct {
 	GithubToken          Option[forgedomain.GithubToken]
 	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	GitlabToken          Option[forgedomain.GitlabToken]
-	Headless             configdomain.ProposeHeadless
+	Headless             configdomain.Headless
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 }

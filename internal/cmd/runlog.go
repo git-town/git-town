@@ -50,7 +50,7 @@ func runLogCommand() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.ProposeHeadless](),
+				ProposeHeadless:   None[configdomain.Headless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,

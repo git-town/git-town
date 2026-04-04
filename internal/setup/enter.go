@@ -323,7 +323,7 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             None[configdomain.ProposeHeadless](), // the setup assistant doesn't ask for this
+		ProposeHeadless:             None[configdomain.Headless](), // the setup assistant doesn't ask for this
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
@@ -928,7 +928,7 @@ type testForgeAuthArgs struct {
 	githubToken          Option[forgedomain.GithubToken]
 	gitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	gitlabToken          Option[forgedomain.GitlabToken]
-	headless             configdomain.ProposeHeadless
+	headless             configdomain.Headless
 	inputs               dialogcomponents.Inputs
 	remoteURL            Option[giturl.Parts]
 }
