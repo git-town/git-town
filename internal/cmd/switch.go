@@ -47,7 +47,7 @@ func switchCmd() *cobra.Command {
 			order, errOrder := readOrderFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errBranchTypes, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{

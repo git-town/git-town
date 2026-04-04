@@ -78,6 +78,7 @@ doc: install node_modules ${RTA}  # tests the documentation
 
 fix: ${RTA}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
+	go run tools/format_cmp_or/format_cmp_or.go
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	make --no-print-directory keep-sorted
@@ -131,6 +132,8 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 lint-all: lint ${RTA}  # runs all linters
 	(cd website && make test)
 # $(RTA) govulncheck ./...   TODO: enable when Go 1.24.11 is available widely
+	@echo lint tools/format_cmp_or
+	@(cd tools/format_cmp_or && make test)
 	@echo lint tools/format_self
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests

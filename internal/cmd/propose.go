@@ -78,7 +78,7 @@ func proposeCommand() *cobra.Command {
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errHeadless, errAutoResolve, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errDryRun, errHeadless, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
