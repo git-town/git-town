@@ -3,6 +3,7 @@ go 1.26.1
 use (
 	.
 	./tools/collector_addf
+	./tools/format_cmp_or
 	./tools/format_self
 	./tools/format_unittests
 	./tools/generate_json_schema

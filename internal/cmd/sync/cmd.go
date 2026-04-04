@@ -77,7 +77,7 @@ func Cmd() *cobra.Command {
 			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errGone, errPushBranches, errPrune, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errAutoResolve, errDetached, errDryRun, errGone, errPrune, errPushBranches, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
