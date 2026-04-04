@@ -42,9 +42,9 @@ func RootCmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
+				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Order:             None[configdomain.Order](),
-				ProposeHeadless:   None[configdomain.Headless](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
@@ -121,7 +121,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
 	print.Entry("breadcrumb direction", format.StringsSetting(config.NormalConfig.ProposalBreadcrumbDirection.String()))
-	print.Entry("headless", format.Bool(bool(config.NormalConfig.ProposeHeadless)))
+	print.Entry("headless", format.Bool(bool(config.NormalConfig.Headless)))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))

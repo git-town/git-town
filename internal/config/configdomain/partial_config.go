@@ -41,6 +41,7 @@ type PartialConfig struct {
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	Headless                    Option[Headless]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
 	Lineage                     Lineage
@@ -53,7 +54,6 @@ type PartialConfig struct {
 	PerennialRegex              Option[PerennialRegex]
 	ProposalBreadcrumb          Option[ProposalBreadcrumb]
 	ProposalBreadcrumbDirection Option[ProposalBreadcrumbDirection]
-	ProposeHeadless             Option[Headless]
 	PushBranches                Option[PushBranches]
 	PushHook                    Option[PushHook]
 	ShareNewBranches            Option[ShareNewBranches]
@@ -104,6 +104,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		GithubToken:                 other.GithubToken.Or(self.GithubToken),
 		GitlabConnectorType:         other.GitlabConnectorType.Or(self.GitlabConnectorType),
 		GitlabToken:                 other.GitlabToken.Or(self.GitlabToken),
+		Headless:                    other.Headless.Or(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
@@ -116,7 +117,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PerennialRegex:              other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalBreadcrumb:          other.ProposalBreadcrumb.Or(self.ProposalBreadcrumb),
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.Or(self.ProposalBreadcrumbDirection),
-		ProposeHeadless:             other.ProposeHeadless.Or(self.ProposeHeadless),
 		PushBranches:                other.PushBranches.Or(self.PushBranches),
 		PushHook:                    other.PushHook.Or(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.Or(self.ShareNewBranches),

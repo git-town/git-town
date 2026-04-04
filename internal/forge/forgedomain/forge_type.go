@@ -14,13 +14,15 @@ type ForgeType string
 func (self ForgeType) String() string { return string(self) }
 
 const (
+	// keep-sorted start
 	ForgeTypeAzuredevops         ForgeType = "azuredevops"
 	ForgeTypeBitbucket           ForgeType = "bitbucket"
 	ForgeTypeBitbucketDatacenter ForgeType = "bitbucket-datacenter"
 	ForgeTypeForgejo             ForgeType = "forgejo"
+	ForgeTypeGitea               ForgeType = "gitea"
 	ForgeTypeGithub              ForgeType = "github"
 	ForgeTypeGitlab              ForgeType = "gitlab"
-	ForgeTypeGitea               ForgeType = "gitea"
+	// keep-sorted end
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.
@@ -40,12 +42,14 @@ func ParseForgeType(name string, source string) (Option[ForgeType], error) {
 // forgeTypes provides all legal values for ForgeType
 func forgeTypes() []ForgeType {
 	return []ForgeType{
+		// keep-sorted start
 		ForgeTypeAzuredevops,
 		ForgeTypeBitbucket,
 		ForgeTypeBitbucketDatacenter,
 		ForgeTypeForgejo,
+		ForgeTypeGitea,
 		ForgeTypeGithub,
 		ForgeTypeGitlab,
-		ForgeTypeGitea,
+		// keep-sorted end
 	}
 }

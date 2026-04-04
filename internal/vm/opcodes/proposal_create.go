@@ -33,7 +33,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 			goto createProposal
 		}
 		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-			if args.Config.Value.NormalConfig.ProposeHeadless {
+			if args.Config.Value.NormalConfig.Headless {
 				args.FinalMessages.Addf(messages.BrowserOpen, existingProposal.Data.Data().URL)
 			} else {
 				args.PrependOpcodes(

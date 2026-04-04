@@ -60,6 +60,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		forgeType                   Option[forgedomain.ForgeType]
 		githubConnectorType         Option[forgedomain.GithubConnectorType]
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
+		headless                    Option[configdomain.Headless]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
 		mainBranch                  Option[gitdomain.LocalBranchName]
@@ -70,7 +71,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialRegex              Option[configdomain.PerennialRegex]
 		proposalBreadcrumb          Option[configdomain.ProposalBreadcrumb]
 		proposalBreadcrumbDirection Option[configdomain.ProposalBreadcrumbDirection]
-		proposeHeadless             Option[configdomain.Headless]
 		pushBranches                Option[configdomain.PushBranches]
 		pushHook                    Option[configdomain.PushHook]
 		shareNewBranches            Option[configdomain.ShareNewBranches]
@@ -226,7 +226,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Propose.Headless != nil {
-			proposeHeadless = Some(configdomain.Headless(*data.Propose.Headless))
+			headless = Some(configdomain.Headless(*data.Propose.Headless))
 		}
 	}
 	if data.Ship != nil {
@@ -314,6 +314,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
 		GiteaToken:                  None[forgedomain.GiteaToken](),
+		Headless:                    headless,
 		HostingOriginHostname:       hostingOriginHostname,
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  mainBranch,
@@ -326,7 +327,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             proposeHeadless,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

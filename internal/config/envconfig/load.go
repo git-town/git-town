@@ -12,13 +12,13 @@ import (
 )
 
 const (
+	// keep-sorted start
+	Browser                     = "BROWSER"
 	autoResolve                 = "GIT_TOWN_AUTO_RESOLVE"
 	autoSync                    = "GIT_TOWN_AUTO_SYNC"
 	bitbucketAppPassword        = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName           = "GIT_TOWN_BITBUCKET_USERNAME"
 	branchPrefix                = "GIT_TOWN_BRANCH_PREFIX"
-	Browser                     = "BROWSER"
-	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	contributionRegex           = "GIT_TOWN_CONTRIBUTION_REGEX"
 	detached                    = "GIT_TOWN_DETACHED"
 	devRemote                   = "GIT_TOWN_DEV_REMOTE"
@@ -26,27 +26,28 @@ const (
 	dryRun                      = "GIT_TOWN_DRY_RUN"
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
-	giteaToken                  = "GIT_TOWN_GITEA_TOKEN"
+	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
 	gitCommitterEmail           = "GIT_COMMITTER_EMAIL"
 	gitCommitterName            = "GIT_COMMITTER_NAME"
+	giteaToken                  = "GIT_TOWN_GITEA_TOKEN"
 	githubConnectorType         = "GIT_TOWN_GITHUB_CONNECTOR"
 	githubToken                 = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType         = "GIT_TOWN_GITLAB_CONNECTOR"
 	gitlabToken                 = "GIT_TOWN_GITLAB_TOKEN"
+	headless                    = "GIT_TOWN_HEADLESS"
 	ignoreUncommitted           = "GIT_TOWN_IGNORE_UNCOMMITTED"
 	mainBranch                  = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType               = "GIT_TOWN_NEW_BRANCH_TYPE"
 	observedRegex               = "GIT_TOWN_OBSERVED_REGEX"
+	offline                     = "GIT_TOWN_OFFLINE"
 	order                       = "GIT_TOWN_ORDER"
 	originHostname              = "GIT_TOWN_ORIGIN_HOSTNAME"
-	offline                     = "GIT_TOWN_OFFLINE"
 	perennialBranches           = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex              = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalBreadcrumb          = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
-	proposeHeadless             = "GIT_TOWN_PROPOSE_HEADLESS"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
@@ -61,9 +62,11 @@ const (
 	term                        = "TERM"
 	unknownBranchType           = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
 	verbose                     = "GIT_TOWN_VERBOSE"
+	// keep-sorted end
 )
 
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
+	// keep-sorted start
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
@@ -76,22 +79,22 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
 	gitAuthorEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitAuthorEmail)))
-	gitCommitterEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitCommitterEmail)))
-	gitUserEmail := gitAuthorEmailValue.Or(gitCommitterEmailValue)
 	gitAuthorNameValue := NewOption(gitdomain.GitUserName(env.Get(gitAuthorName)))
+	gitCommitterEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitCommitterEmail)))
 	gitCommitterNameValue := NewOption(gitdomain.GitUserName(env.Get(gitCommitterName)))
+	gitUserEmail := gitAuthorEmailValue.Or(gitCommitterEmailValue)
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
+	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
-	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
+	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
-	proposeHeadless, errProposeHeadless := load(env, proposeHeadless, gohacks.ParseBoolOpt[configdomain.Headless])
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -105,7 +108,9 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
 	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchType)
 	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
+	// keep-sorted end
 	err := cmp.Or(
+		// keep-sorted start
 		errAutoResolve,
 		errAutoSync,
 		errBranchPrefix,
@@ -118,6 +123,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errForgeType,
 		errGithubConnectorType,
 		errGitlabConnectorType,
+		errHeadless,
 		errIgnoreUncommitted,
 		errNewBranchType,
 		errObservedRegex,
@@ -126,7 +132,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
-		errProposeHeadless,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -140,6 +145,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errSyncUpstream,
 		errUnknownBranchType,
 		errVerbose,
+		// keep-sorted end
 	)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -178,7 +184,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposeHeadless:             proposeHeadless,
+		Headless:                    headless,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

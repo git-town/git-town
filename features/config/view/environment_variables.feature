@@ -30,6 +30,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_GITHUB_TOKEN                  | github-token       |
       | GIT_TOWN_GITLAB_CONNECTOR              | glab               |
       | GIT_TOWN_GITLAB_TOKEN                  | gitlab-token       |
+      | GIT_TOWN_HEADLESS                      | true               |
       | GIT_TOWN_IGNORE_UNCOMMITTED            | true               |
       | GIT_TOWN_MAIN_BRANCH                   | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE               | prototype          |
@@ -37,7 +38,6 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_ORDER                         | desc               |
       | GIT_TOWN_PROPOSAL_BREADCRUMB           | stacks             |
       | GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION | up                 |
-      | GIT_TOWN_PROPOSE_HEADLESS              | true               |
       | GIT_TOWN_ORIGIN_HOSTNAME               | codeforge          |
       | GIT_TOWN_OFFLINE                       | 1                  |
       | GIT_TOWN_PERENNIAL_BRANCHES            | qa staging         |

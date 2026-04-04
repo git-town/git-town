@@ -37,8 +37,8 @@ Feature: headless mode
       """
     And the initial proposals exist now
 
-  Scenario: propose-headless configured via Git setting with no existing proposal
-    Given Git setting "git-town.propose-headless" is "true"
+  Scenario: headless configured via Git setting with no existing proposal
+    Given Git setting "git-town.headless" is "true"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
@@ -50,11 +50,11 @@ Feature: headless mode
       """
     And the initial branches and lineage exist now
 
-  Scenario: propose-headless configured via Git setting with existing proposal
+  Scenario: headless configured via Git setting with existing proposal
     Given the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
       | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
-    And Git setting "git-town.propose-headless" is "true"
+    And Git setting "git-town.headless" is "true"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                        |

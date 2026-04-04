@@ -52,8 +52,7 @@ that would be run but doesn't execute them.
 When called with the `--headless` flag, the _propose_ command creates the
 proposal without opening a browser window. This is useful in CI/CD pipelines and
 when working in headless environments. See the
-[propose-headless](../preferences/propose-headless.md) preference for making
-this permanent.
+[headless](../preferences/headless.md] setting for making this permanent.
 
 #### `-h`<br>`--help`
 
