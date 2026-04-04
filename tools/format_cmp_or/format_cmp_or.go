@@ -37,7 +37,7 @@ func formatFile(path string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	newContent, err := FormatFileContent(content)
+	newContent, err := FormatFileContent(path, content)
 	if err != nil {
 		return false, err
 	}
@@ -49,9 +49,9 @@ func formatFile(path string) (bool, error) {
 
 // FormatFileContent sorts the arguments of all cmp.Or invocations in the given Go source.
 // Calls that already contain keep-sorted markers are skipped since they are managed by the keep-sorted tool.
-func FormatFileContent(src []byte) ([]byte, error) {
+func FormatFileContent(path string, src []byte) ([]byte, error) {
 	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, "", src, parser.ParseComments)
+	file, err := parser.ParseFile(fset, path, src, parser.ParseComments)
 	if err != nil {
 		fmt.Printf("Cannot parse file: %v\n", err)
 		return src, nil
@@ -120,7 +120,8 @@ func computeReplacements(fset *token.FileSet, file *ast.File, callExpr *ast.Call
 	}
 	// report calls already managed by keep-sorted.
 	if hasKeepSortedComment(fset, file, callExpr) {
-		fmt.Printf("%s:%d: remove keep-sorted marker: %v\n", file.Name.Name, fset.Position().Line, callExpr)
+		position := fset.Position(callExpr.Pos())
+		fmt.Printf("%s:%d: remove keep-sorted marker from cmp.Or call\n", position.Filename, position.Line)
 		return nil
 	}
 	sortedNames := make([]string, len(names))
