@@ -8,6 +8,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
+// defaultBrowserCommand provides the console command to open the default browser on Unix.
 func defaultBrowserCommand() Option[string] {
 	commands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
