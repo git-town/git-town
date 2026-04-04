@@ -15,8 +15,8 @@ Feature: commit from a branch with unknown parent
     And an uncommitted file "changes" with content "my changes"
     And I ran "git add changes"
     When I run "git-town commit --up -m commit-1b" and enter into the dialog:
-      | DIALOG                       | KEYS     |
-      | parent branch for "branch-2" | up enter |
+      | DIALOG                       | KEYS       |
+      | parent branch for "branch-2" | down enter |
 
   Scenario: result
     Then Git Town runs the commands
