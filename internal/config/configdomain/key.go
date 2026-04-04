@@ -39,6 +39,7 @@ func (self *Key) UnmarshalJSON(b []byte) error {
 }
 
 const (
+	// keep-sorted start
 	KeyAliasAppend                         = Key("alias.append")
 	KeyAliasCompress                       = Key("alias.compress")
 	KeyAliasContribute                     = Key("alias.contribute")
@@ -121,6 +122,7 @@ const (
 	KeyUnknownBranchType                   = Key("git-town.unknown-branch-type")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
+	// keep-sorted end
 )
 
 var keys = []Key{
@@ -216,6 +218,7 @@ func ParseKey(name string) Option[Key] {
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{
+	// keep-sorted start
 	KeyDeprecatedCodebergToken:             KeyForgejoToken,
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
@@ -230,6 +233,7 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedShipDeleteRemoteBranch:    KeyShipDeleteTrackingBranch,
 	KeyDeprecatedSyncStrategy:              KeySyncFeatureStrategy,
 	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
+	// keep-sorted end
 }
 
 // ObsoleteKeys defines the keys that are sunset and should get deleted
@@ -238,10 +242,12 @@ var ObsoleteKeys = []Key{
 }
 
 var ObsoleteBranchLists = map[Key]BranchType{
+	// keep-sorted start
 	KeyDeprecatedContributionBranches: BranchTypeContributionBranch,
 	KeyDeprecatedObservedBranches:     BranchTypeObservedBranch,
 	KeyDeprecatedParkedBranches:       BranchTypeParkedBranch,
 	KeyDeprecatedPrototypeBranches:    BranchTypePrototypeBranch,
+	// keep-sorted end
 }
 
 // ConfigUpdates defines the config that should have its keys and values to be updated
