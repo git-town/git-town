@@ -77,7 +77,7 @@ func compressCmd() *cobra.Command {
 			message, errMessage := readMessageFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errMessage, errDryRun, errCommitHook, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errCommitHook, errDryRun, errMessage, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
