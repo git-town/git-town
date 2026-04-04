@@ -30,8 +30,8 @@ var (
 type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
+	Headless configdomain.ProposeHeadless
 	Log      print.Logger
-	headless configdomain.ProposeHeadless
 }
 
 // ============================================================================
@@ -62,7 +62,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	if !self.headless {
+	if !self.Headless {
 		args = append(args, "--web")
 	}
 	return self.Frontend.Run("gh", args...)
