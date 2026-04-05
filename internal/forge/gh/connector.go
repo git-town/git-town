@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -29,6 +30,7 @@ var (
 // Connector talks to the GitHub API through the "gh" executable.
 type Connector struct {
 	Backend  subshelldomain.Querier
+	Browser  Option[browserdomain.Browser]
 	Frontend subshelldomain.Runner
 	Headless configdomain.Headless
 	Log      print.Logger
@@ -62,8 +64,11 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	if !self.Headless {
-		args = append(args, "--web")
+	if browser, hasBrowser := self.Browser.Get(); hasBrowser {
+		_, useBrowser := browser.Get()
+		if useBrowser && !self.Headless.Enabled() {
+			args = append(args, "--web")
+		}
 	}
 	return self.Frontend.Run("gh", args...)
 }
