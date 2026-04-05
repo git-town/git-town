@@ -1,5 +1,5 @@
 @skipWindows
-Feature: support many browsers and operating systems via the CLI
+Feature: set a custom browser via the CLI
 
   Background:
     Given a Git repo with origin
