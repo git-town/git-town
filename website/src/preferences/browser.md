@@ -6,6 +6,10 @@ commands like `open`, `xdg-open`, or `x-www-browser`.
 You can override this behavior to use a specific browser. Disable browser
 launching entirely by setting `(none)` as the browser executable.
 
+## via CLI flag
+
+Some Git Town commands allow setting the browser via the `--browser` CLI flag.
+
 ## configure in config file
 
 ```toml
