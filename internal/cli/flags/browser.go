@@ -16,8 +16,11 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 	}
 	readFlag := func(cmd *cobra.Command) (Option[browserdomain.Browser], error) {
 		negated, err := readNegatableFlag[bool](cmd.Flags(), browserLong)
-		if err == nil && negated.IsSome() {
-			return None[browserdomain.Browser](), nil
+		if err != nil {
+			return None[browserdomain.Browser](), err
+		}
+		if negated.IsSome() {
+			return Some(browserdomain.NoBrowser), nil
 		}
 		return readStringOptFlag[browserdomain.Browser](cmd.Flags(), browserLong)
 	}
