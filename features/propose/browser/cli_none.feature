@@ -16,3 +16,7 @@ Feature: disable the browser via the CLI
       | BRANCH  | COMMAND                                          |
       | feature | git fetch --prune --tags                         |
       |         | Finding proposal from feature into main ... none |
+    And Git Town prints:
+      """
+      Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
+      """
