@@ -7,7 +7,6 @@ Feature: set a custom browser via the CLI
     And tool "firefox" is installed
     When I run "git-town repo --browser=firefox"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                      |
