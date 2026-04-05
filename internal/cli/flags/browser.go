@@ -11,7 +11,7 @@ const browserLong = "browser"
 // type-safe access to the CLI arguments of type browserdomain.Browser
 func Browser() (AddFunc, ReadBrowserFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().String(browserLong, "", "configure the browser to use")
+		cmd.Flags().String(browserLong, "", "the browser executable to use")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[browserdomain.Browser], error) {
 		return readStringOptFlag[browserdomain.Browser](cmd.Flags(), browserLong)
