@@ -44,7 +44,7 @@ body text from STDIN.
 
 #### `--browser <executable>`
 
-Open the given browser instead of the default system browser.
+Calls the given browser executable instead of the default system browser.
 
 #### `--dry-run`
 
