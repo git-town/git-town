@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
@@ -48,6 +49,7 @@ func branchCmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
+				Browser:           None[browserdomain.Browser](),
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
