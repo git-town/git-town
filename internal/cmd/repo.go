@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/cli/flags"
@@ -32,6 +33,7 @@ where HOSTNAME matches what is in your ssh config file.`
 )
 
 func repoCommand() *cobra.Command {
+	addBrowserFlag, readBrowserFlag := flags.Browser()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo [remote]",
@@ -39,13 +41,15 @@ func repoCommand() *cobra.Command {
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			browser, errBrowser := readBrowserFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBrowser, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
+				Browser:           browser,
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
@@ -59,6 +63,7 @@ func repoCommand() *cobra.Command {
 			return executeRepo(args, cliConfig)
 		},
 	}
+	addBrowserFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
