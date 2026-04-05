@@ -11,7 +11,7 @@ launching entirely by setting `(none)` as the browser executable.
 The [propose](../commands/propose.md) and [repo](../commands/repo.md) commands
 allow setting the browser via the `--browser` CLI flag.
 
-For example, to open the repo using Firefox, run:
+For example, to open the repo homepage using Firefox, run:
 
 ```sh
 git-town repo --browser=firefox
