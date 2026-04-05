@@ -58,6 +58,7 @@ func proposeCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addBrowserFlag, readBrowserFlag := flags.Browser()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addHeadlessFlag, readHeadlessFlag := flags.Headless()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
@@ -73,17 +74,19 @@ func proposeCommand() *cobra.Command {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
+			browser, errBrowser := readBrowserFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			headless, errHeadless := readHeadlessFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errDryRun, errHeadless, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errBrowser, errDryRun, errHeadless, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          None[configdomain.AutoSync](),
+				Browser:           browser,
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
@@ -105,6 +108,7 @@ func proposeCommand() *cobra.Command {
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
+	addBrowserFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addHeadlessFlag(&cmd)
 	addAutoResolveFlag(&cmd)
