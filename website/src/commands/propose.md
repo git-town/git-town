@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [--browser <executable>] [(-f | --body-file) <path>] [--dry-run] [--headless] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
+git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable>] [--dry-run] [--headless] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
@@ -36,15 +36,15 @@ Disables automatic resolution of
 
 Pre-populate the body of the pull request with the given text.
 
-#### `--browser <executable>`
-
-Open the given browser instead of the default system browser.
-
 #### `-f <path>`<br>`--body-file <path>`
 
 When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
 body text from STDIN.
+
+#### `--browser <executable>`
+
+Open the given browser instead of the default system browser.
 
 #### `--dry-run`
 

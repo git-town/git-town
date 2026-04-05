@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town repo [<remote-name>] [-h | --help] [-v | --verbose]
+git town repo [<remote-name>] [--browser <executable>] [-h | --help] [-v | --verbose]
 ```
 
 The _repo_ command ("show me the repository") opens the homepage of the current
@@ -24,6 +24,10 @@ When called with an argument, it shows the repository at the remote with the
 given name.
 
 ## Options
+
+#### `--browser <executable>`
+
+Open the given browser instead of the default system browser.
 
 #### `-h`<br>`--help`
 
