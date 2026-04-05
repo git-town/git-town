@@ -15,11 +15,12 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		defineNegatedFlag(cmd.Flags(), browserLong, "don't open any browser windows")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[browserdomain.Browser], error) {
-		negated, err := readBoolOptFlag[bool](cmd.Flags(), negate+browserLong)
+		negatedOpt, err := readBoolOptFlag[bool](cmd.Flags(), negate+browserLong)
 		if err != nil {
 			return None[browserdomain.Browser](), err
 		}
-		if negated.IsSome() {
+		negated, hasNegated := negatedOpt.Get()
+		if hasNegated && negated {
 			return Some(browserdomain.NoBrowser), nil
 		}
 		return readStringOptFlag[browserdomain.Browser](cmd.Flags(), browserLong)
