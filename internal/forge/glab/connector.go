@@ -55,10 +55,12 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
-	if self.Headless {
-		args = append(args, "--yes")
-	} else {
+	if browser, hasBrowser := self.Browser.Get(); hasBrowser {
+		_, useBrowser := browser.Get()
+		if useBrowser && !self.Headless.Enabled() {
 		args = append(args, "--web")
+	} else {
+		args = append(args, "--yes")
 	}
 	return self.Frontend.Run("glab", args...)
 }

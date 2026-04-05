@@ -64,11 +64,11 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	if browser, hasBrowser := self.Browser.Get(); hasBrowser {
-		_, useBrowser := browser.Get()
-		if useBrowser && !self.Headless.Enabled() {
-			args = append(args, "--web")
-		}
+	browser, hasBrowser := self.Browser.Get()
+	_, useBrowser := browser.Get()
+	browserEnabled := !hasBrowser || (hasBrowser && useBrowser)
+	if browserEnabled && !self.Headless.Enabled() {
+		args = append(args, "--web")
 	}
 	return self.Frontend.Run("gh", args...)
 }
