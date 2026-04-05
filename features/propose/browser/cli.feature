@@ -9,6 +9,7 @@ Feature: set a custom browser via the CLI
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And tool "firefox" is installed
+    And tool "open" is installed
     When I run "git-town propose --browser=firefox"
 
   Scenario: result
