@@ -8,7 +8,14 @@ launching entirely by setting `(none)` as the browser executable.
 
 ## via CLI flag
 
-Some Git Town commands allow setting the browser via the `--browser` CLI flag.
+The [propose](../commands/propose.md) and [repo](../commands/repo.md) commands
+allow setting the browser via the `--browser` CLI flag.
+
+For example, to open the repo using Firefox, run:
+
+```sh
+git-town repo --browser=firefox
+```
 
 ## configure in config file
 
