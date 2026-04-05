@@ -12,8 +12,13 @@ const browserLong = "browser"
 func Browser() (AddFunc, ReadBrowserFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().String(browserLong, "", "the browser executable to use")
+		defineNegatedFlag(cmd.Flags(), browserLong, "don't open any browser windows")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[browserdomain.Browser], error) {
+		negated, err := readNegatableFlag[bool](cmd.Flags(), browserLong)
+		if err == nil && negated.IsSome() {
+			return None[browserdomain.Browser](), nil
+		}
 		return readStringOptFlag[browserdomain.Browser](cmd.Flags(), browserLong)
 	}
 	return addFlag, readFlag
