@@ -132,18 +132,18 @@ func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pendi
 		}
 		return
 	}
-	timeDiff := time.Since(unfinishedDetails.EndTime)
-	fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	if hasUnfinishedDetails {
+		timeDiff := time.Since(unfinishedDetails.EndTime)
+		fmt.Printf(messages.PreviousCommandProblem, state.Command, timeDiff)
+	}
 	if state.HasAbortProgram() {
 		fmt.Println(messages.UndoMessage)
 	}
 	if state.HasRunProgram() {
 		fmt.Println(messages.ContinueMessage)
 	}
-	if hasUnfinishedDetails {
-		if unfinishedDetails.CanSkip {
-			fmt.Println(messages.SkipMessage)
-		}
+	if hasUnfinishedDetails && unfinishedDetails.CanSkip {
+		fmt.Println(messages.SkipMessage)
 	}
 }
 
