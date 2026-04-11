@@ -21,12 +21,12 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs, interactivity, "credentials-no-access-to-api")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs, interactive, "credentials-no-access-to-api")
 	fmt.Printf(messages.CredentialsNoAccess, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection.Repeat(), exit, err
 }

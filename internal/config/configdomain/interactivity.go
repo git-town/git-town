@@ -6,43 +6,43 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// InteractivityEnabled is a sentinal value for Interactivity and indicates that interactivity is enabled.
-const InteractivityEnabled = Interactivity("")
+// InteractiveEnabled is a sentinal value that indicates that interactive mode is enabled.
+const InteractiveEnabled = Interactive("")
 
-// Interactivity indicates whether interactive features are enabled.
-// If it is an empty string, interactivity is enabled.
-// If it is not an empty string, the string contains the reason why interactivity is disabled.
-type Interactivity string
+// Interactive indicates whether interactive features are enabled.
+// If it is an empty string, interactive mode is enabled.
+// If it is not an empty string, interactive mode is disabled and the string contains the reason why.
+type Interactive string
 
-// Check indicates via an error if interactivity is enabled.
-// No error: interactivity is enabled.
-// Error: interactivity is disabled.
-func (self Interactivity) Check() error {
+// Check indicates via an error if interactive mode is enabled.
+// No error: interactive mode is enabled.
+// Error: interactive mode is disabled.
+func (self Interactive) Check() error {
 	if self == "" {
 		return nil
 	}
 	return &InteractivityError{Reason: string(self)}
 }
 
-func (self Interactivity) String() string {
+func (self Interactive) String() string {
 	if err := self.Check(); err != nil {
 		return "disabled: " + string(self)
 	}
 	return "enabled"
 }
 
-func NewInteractivityFromEnv(envTerm string) Option[Interactivity] {
+func NewInteractiveFromEnv(envTerm string) Option[Interactive] {
 	if strings.ToLower(envTerm) == "dumb" {
-		return Some(Interactivity("only a dumb terminal available"))
+		return Some(Interactive("only a dumb terminal available"))
 	}
-	return None[Interactivity]()
+	return None[Interactive]()
 }
 
-func NewInteractivityFromTTY(tty HasTTY) Option[Interactivity] {
+func NewInteractiveFromTTY(tty HasTTY) Option[Interactive] {
 	if tty {
-		return None[Interactivity]()
+		return None[Interactive]()
 	}
-	return Some(Interactivity("no interactive terminal available"))
+	return Some(Interactive("no interactive terminal available"))
 }
 
 // ------------------------------------------------------------------------------

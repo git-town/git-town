@@ -10,8 +10,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 )
 
-func TextDisplay(title, text string, inputs Inputs, interactivity configdomain.Interactivity, dialogName string) (dialogdomain.Exit, error) {
-	if err := interactivity.Check(); err != nil {
+func TextDisplay(title, text string, inputs Inputs, interactive configdomain.Interactive, dialogName string) (dialogdomain.Exit, error) {
+	if err := interactive.Check(); err != nil {
 		return true, err
 	}
 	model := textDisplayModel{

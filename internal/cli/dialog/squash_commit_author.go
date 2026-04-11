@@ -14,11 +14,11 @@ import (
 const squashCommitAuthorTitle = `Squash commit author`
 
 // SquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (gitdomain.Author, dialogdomain.Exit, error) {
+func SquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (gitdomain.Author, dialogdomain.Exit, error) {
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(authors...), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), inputs, interactivity, "squash-commit-author")
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(authors...), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), inputs, interactive, "squash-commit-author")
 	fmt.Printf(messages.SquashCommitAuthorSelection, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

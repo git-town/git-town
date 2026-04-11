@@ -56,7 +56,7 @@ type NormalConfig struct {
 	Headless                    configdomain.Headless
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
-	Interactivity               configdomain.Interactivity
+	Interactive                 configdomain.Interactive
 	Lineage                     configdomain.Lineage
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
@@ -128,7 +128,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		Headless:                    other.Headless.GetOr(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
-		Interactivity:               other.Interactivity.GetOr(self.Interactivity),
+		Interactive:                 other.Interactive.GetOr(self.Interactive),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:               other.ObservedRegex.Or(self.ObservedRegex),
@@ -286,7 +286,7 @@ func DefaultNormalConfig() NormalConfig {
 		Headless:                    false,
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
-		Interactivity:               configdomain.InteractivityEnabled,
+		Interactive:                 configdomain.InteractiveEnabled,
 		Lineage:                     configdomain.NewLineage(),
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
@@ -342,7 +342,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		Headless:                    partial.Headless.GetOr(defaults.Headless),
 		HostingOriginHostname:       partial.HostingOriginHostname,
 		IgnoreUncommitted:           partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
-		Interactivity:               partial.Interactivity.GetOr(defaults.Interactivity),
+		Interactive:                 partial.Interactive.GetOr(defaults.Interactive),
 		Lineage:                     partial.Lineage,
 		NewBranchType:               partial.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:               partial.ObservedRegex,

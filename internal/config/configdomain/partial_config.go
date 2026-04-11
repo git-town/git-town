@@ -43,7 +43,7 @@ type PartialConfig struct {
 	Headless                    Option[Headless]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
-	Interactivity               Option[Interactivity]
+	Interactive                 Option[Interactive]
 	Lineage                     Lineage
 	MainBranch                  Option[gitdomain.LocalBranchName]
 	NewBranchType               Option[NewBranchType]
@@ -106,7 +106,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Headless:                    other.Headless.Or(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
-		Interactivity:               other.Interactivity.Or(self.Interactivity),
+		Interactive:                 other.Interactive.Or(self.Interactive),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
 		MainBranch:                  other.MainBranch.Or(self.MainBranch),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),

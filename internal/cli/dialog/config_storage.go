@@ -33,12 +33,12 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (ConfigStorageOption, dialogdomain.Exit, error) {
+func ConfigStorage(inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (ConfigStorageOption, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionGit,
 		ConfigStorageOptionFile,
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs, interactivity, "config-storage")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs, interactive, "config-storage")
 	fmt.Printf(messages.ConfigStorage, dialogcomponents.FormattedSelection(selection.Short(), exit))
 	return selection, exit, err
 }

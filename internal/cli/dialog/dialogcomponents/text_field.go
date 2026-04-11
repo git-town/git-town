@@ -12,7 +12,7 @@ import (
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
-	if err := args.Interactivity.Check(); err != nil {
+	if err := args.Interactive.Check(); err != nil {
 		return "", true, err
 	}
 	textInput := textinput.New()
@@ -38,7 +38,7 @@ type TextFieldArgs struct {
 	ExistingValue string
 	Help          string
 	Inputs        Inputs
-	Interactivity configdomain.Interactivity
+	Interactive   configdomain.Interactive
 	Prompt        string
 	Title         string
 }
