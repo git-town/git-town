@@ -31,13 +31,13 @@ with the GitHub API.
 
 func GithubToken(args Args[forgedomain.GithubToken]) (Option[forgedomain.GithubToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:     "github-token",
+		DialogName:    "github-token",
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
+		Help:          githubTokenHelp,
+		Inputs:        args.Inputs,
 		Interactivity: args.Interactivity,
-		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
-		Help:           githubTokenHelp,
-		Inputs:         args.Inputs,
-		Prompt:         messages.GithubTokenPrompt,
-		Title:          githubTokenTitle,
+		Prompt:        messages.GithubTokenPrompt,
+		Title:         githubTokenTitle,
 	})
 	newValue := forgedomain.ParseGithubToken(input)
 	if args.Global.Equal(newValue) {

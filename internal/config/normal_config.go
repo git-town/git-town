@@ -41,7 +41,6 @@ type NormalConfig struct {
 	ContributionRegex           Option[configdomain.ContributionRegex]
 	Detached                    configdomain.Detached
 	DevRemote                   gitdomain.Remote
-	Interactivity               configdomain.Interactivity
 	DisplayTypes                configdomain.DisplayTypes
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
@@ -57,6 +56,7 @@ type NormalConfig struct {
 	Headless                    configdomain.Headless
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
+	Interactivity               configdomain.Interactivity
 	Lineage                     configdomain.Lineage
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
@@ -113,7 +113,6 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.GetOr(self.Detached),
 		DevRemote:                   other.DevRemote.GetOr(self.DevRemote),
-		Interactivity:               other.Interactivity.GetOr(self.Interactivity),
 		DisplayTypes:                other.DisplayTypes.GetOr(self.DisplayTypes),
 		DryRun:                      other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
@@ -129,6 +128,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		Headless:                    other.Headless.GetOr(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
+		Interactivity:               other.Interactivity.GetOr(self.Interactivity),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:               other.ObservedRegex.Or(self.ObservedRegex),

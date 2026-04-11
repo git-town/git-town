@@ -113,9 +113,9 @@ Start:
 		// more than one child --> let the user choose
 		inputs := dialogcomponents.LoadInputs(os.Environ())
 		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
-			ChildBranches:  children,
+			ChildBranches: children,
+			Inputs:        inputs,
 			Interactivity: repo.UnvalidatedConfig.NormalConfig.Interactivity,
-			Inputs:         inputs,
 		})
 		if err != nil || exit {
 			return err
