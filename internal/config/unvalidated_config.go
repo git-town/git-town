@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -126,10 +125,8 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, No
 	result = result.Merge(args.system)
 	result = result.Merge(args.env)
 	result = result.Merge(args.file)
-	fmt.Println("file", result.Browser)
 	result = result.Merge(args.git)
 	result = result.Merge(args.cli)
-	fmt.Println("cli", result.Browser)
 	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, args.defaults)
 }
 
