@@ -20,6 +20,6 @@ Feature: no TTY, missing parent branch
       """
       cannot determine parent branch for "feature": no interactive terminal available
 
-      To configure, run:
+      To configure:
       git checkout feature && git-town set-parent <parent-branch>
       """
