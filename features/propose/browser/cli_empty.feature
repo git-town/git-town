@@ -11,7 +11,6 @@ Feature: set an empty browser via the CLI
     And tool "open" is installed
     When I run "git-town propose --browser="
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
