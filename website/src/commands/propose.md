@@ -46,6 +46,8 @@ body text from STDIN.
 
 Calls the given browser executable instead of the default system browser.
 
+Set to `(none)` or an empty string to disable the browser.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands

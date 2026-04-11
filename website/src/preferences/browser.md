@@ -4,7 +4,7 @@ By default, Git Town launches your system's default browser by trying common
 commands like `open`, `xdg-open`, or `x-www-browser`.
 
 You can override this behavior to use a specific browser. Disable browser
-launching entirely by setting `(none)` as the browser executable.
+launching entirely by setting this option to `(none)` or an empty string.
 
 ## via CLI flag
 
@@ -22,6 +22,20 @@ git-town repo --browser=firefox
 ```toml
 [hosting]
 browser = "<browser executable>"
+```
+
+To disable the browser:
+
+```toml
+[hosting]
+browser = "(none)"
+```
+
+Or
+
+```toml
+[hosting]
+browser = ""
 ```
 
 ## configure in Git metadata

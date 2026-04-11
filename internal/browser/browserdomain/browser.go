@@ -25,3 +25,13 @@ func ParseBrowser(value, _ string) (Option[Browser], error) {
 	}
 	return Some(Browser(value)), nil
 }
+
+func ParseBrowserHas(value string, has bool) (Option[Browser], error) {
+	if !has {
+		return None[Browser](), nil
+	}
+	if value == "" {
+		return Some(NoBrowser), nil
+	}
+	return Some(Browser(value)), nil
+}

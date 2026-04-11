@@ -29,6 +29,8 @@ given name.
 
 Calls the given browser executable instead of the default system browser.
 
+Set to `(none)` or an empty string to disable the browser.
+
 #### `-h`<br>`--help`
 
 Display help for this command.

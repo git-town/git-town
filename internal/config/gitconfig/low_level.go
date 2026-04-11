@@ -39,6 +39,9 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 				UpdateDeprecatedSetting(backend, scope, configKey, newKey, value)
 				configKey = newKey
 			}
+			if configKey == configdomain.KeyBrowser && value == "" {
+				value = "(none)"
+			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
 				_ = RemoveConfigValue(backend, configdomain.ConfigScopeLocal, configKey)
 				continue
