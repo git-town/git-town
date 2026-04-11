@@ -370,7 +370,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", initialBranch),
 			Inputs:             inputs,
-			Interactive:      validatedConfig.NormalConfig.Interactive,
+			Interactive:        validatedConfig.NormalConfig.Interactive,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, initialBranch)),
 			UncommittedChanges: false,
 		})

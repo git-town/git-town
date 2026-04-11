@@ -171,7 +171,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:               interactive,
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),
