@@ -15,6 +15,8 @@ const InteractivityEnabled = Interactivity("")
 type Interactivity string
 
 // Check indicates via an error if interactivity is enabled.
+// No error: interactivity is enabled.
+// Error: interactivity is disabled.
 func (self Interactivity) Check() error {
 	if self == "" {
 		return nil
