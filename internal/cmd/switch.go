@@ -144,7 +144,6 @@ Start:
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
 		DisplayBranchTypes: repo.UnvalidatedConfig.NormalConfig.DisplayTypes,
-		DisplayDialogs:     repo.UnvalidatedConfig.NormalConfig.DisplayDialogs,
 		EntryData: dialog.EntryData{
 			EntriesAll:      entriesAll,
 			EntriesLocal:    entriesLocal,
@@ -152,6 +151,7 @@ Start:
 		},
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
+		Interactivity:      repo.UnvalidatedConfig.NormalConfig.Interactivity,
 		Title:              None[string](),
 		UncommittedChanges: data.uncommittedChanges,
 	})

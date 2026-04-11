@@ -166,7 +166,6 @@ Start:
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
 				DisplayBranchTypes: data.config.NormalConfig.DisplayTypes,
-				DisplayDialogs:     data.config.NormalConfig.DisplayDialogs,
 				EntryData: dialog.EntryData{
 					EntriesAll:      entriesAll,
 					EntriesLocal:    entriesLocal,
@@ -174,6 +173,7 @@ Start:
 				},
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
+				Interactivity:      data.config.NormalConfig.Interactivity,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
 				UncommittedChanges: false,
 			})

@@ -18,13 +18,13 @@ Please select which child branch to switch to.
 )
 
 type ChildBranchArgs struct {
-	ChildBranches  gitdomain.LocalBranchNames
-	DisplayDialogs configdomain.DisplayDialogs
-	Inputs         dialogcomponents.Inputs
+	ChildBranches gitdomain.LocalBranchNames
+	Inputs        dialogcomponents.Inputs
+	Interactivity configdomain.Interactivity
 }
 
 // ChildBranch lets the user select which child branch to switch to.
 func ChildBranch(args ChildBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	entries := list.NewEntries(args.ChildBranches...)
-	return dialogcomponents.RadioList(entries, 0, childBranchTitle, childBranchHelp, args.Inputs, args.DisplayDialogs, "child-branch")
+	return dialogcomponents.RadioList(entries, 0, childBranchTitle, childBranchHelp, args.Inputs, args.Interactivity, "child-branch")
 }

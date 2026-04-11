@@ -9,8 +9,8 @@ import (
 
 // Args are arguments for dialogs that allow to enter a textual configuration value.
 type Args[T any] struct {
-	DisplayDialogs configdomain.DisplayDialogs
-	Global         Option[T]
-	Inputs         dialogcomponents.Inputs
-	Local          Option[T]
+	Global        Option[T]
+	Inputs        dialogcomponents.Inputs
+	Interactivity configdomain.Interactivity
+	Local         Option[T]
 }

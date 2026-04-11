@@ -12,8 +12,8 @@ import (
 )
 
 // CheckList lets the user select zero, one, or many of the given entries.
-func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, displayDialogs configdomain.DisplayDialogs, dialogName string) ([]S, dialogdomain.Exit, error) {
-	if err := displayDialogs.Check(); err != nil {
+func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, interactivity configdomain.Interactivity, dialogName string) ([]S, dialogdomain.Exit, error) {
+	if err := interactivity.Check(); err != nil {
 		return nil, true, err
 	}
 	cursor := entries.FirstEnabled()

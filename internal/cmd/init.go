@@ -68,7 +68,7 @@ func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	defaultConfig := config.DefaultNormalConfig()
-	displayDialogs := envConfig.DisplayDialogs.GetOr(systemConfig.DisplayDialogs.GetOr(defaultConfig.DisplayDialogs))
+	interactivity := envConfig.Interactivity.GetOr(systemConfig.Interactivity.GetOr(defaultConfig.Interactivity))
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -92,7 +92,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	data.Config.NormalConfig.DisplayDialogs = displayDialogs
+	data.Config.NormalConfig.Interactivity = interactivity
 	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err

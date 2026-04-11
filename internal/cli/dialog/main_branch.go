@@ -56,7 +56,7 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 	}
 
 	// show the dialog
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, args.DisplayDialogs, "main-branch")
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, args.Interactivity, "main-branch")
 	if err == nil {
 		fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
 	}
@@ -67,8 +67,8 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 }
 
 type MainBranchArgs struct {
-	DisplayDialogs configdomain.DisplayDialogs
 	Inputs         dialogcomponents.Inputs
+	Interactivity  configdomain.Interactivity
 	Local          Option[gitdomain.LocalBranchName]
 	LocalBranches  gitdomain.LocalBranchNames
 	StandardBranch Option[gitdomain.LocalBranchName]

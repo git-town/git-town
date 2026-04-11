@@ -363,7 +363,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: validatedConfig.NormalConfig.DisplayTypes,
-			DisplayDialogs:     validatedConfig.NormalConfig.DisplayDialogs,
 			EntryData: dialog.EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,
@@ -371,6 +370,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", initialBranch),
 			Inputs:             inputs,
+			Interactivity:      validatedConfig.NormalConfig.Interactivity,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, initialBranch)),
 			UncommittedChanges: false,
 		})
@@ -389,7 +389,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		if err != nil {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.DisplayDialogs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactivity)
 		if err != nil || exit {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}

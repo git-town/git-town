@@ -18,7 +18,7 @@ You can re-run this assistant: git town init
 `
 )
 
-func EnterAll(inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (bool, dialogdomain.Exit, error) {
+func EnterAll(inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: false,
@@ -29,6 +29,6 @@ func EnterAll(inputs dialogcomponents.Inputs, displayDialogs configdomain.Displa
 			Text: `continue to the advanced configuration options`,
 		},
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, enterAllTitle, enterAllHelp, inputs, displayDialogs, "enter-all")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, enterAllTitle, enterAllHelp, inputs, interactivity, "enter-all")
 	return selection, exit, err
 }

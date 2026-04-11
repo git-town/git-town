@@ -12,7 +12,7 @@ import (
 )
 
 func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
-	if err := args.DisplayDialogs.Check(); err != nil {
+	if err := args.Interactivity.Check(); err != nil {
 		return "", true, err
 	}
 	textInput := textinput.New()
@@ -34,13 +34,13 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 }
 
 type TextFieldArgs struct {
-	DialogName     string
-	DisplayDialogs configdomain.DisplayDialogs
-	ExistingValue  string
-	Help           string
-	Inputs         Inputs
-	Prompt         string
-	Title          string
+	DialogName    string
+	ExistingValue string
+	Help          string
+	Inputs        Inputs
+	Interactivity configdomain.Interactivity
+	Prompt        string
+	Title         string
 }
 
 type textFieldModel struct {

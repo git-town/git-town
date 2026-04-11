@@ -30,6 +30,6 @@ When you're ready, press ENTER or O to continue.
 `
 )
 
-func Welcome(inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (dialogdomain.Exit, error) {
-	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, displayDialogs, "welcome")
+func Welcome(inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (dialogdomain.Exit, error) {
+	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, interactivity, "welcome")
 }
