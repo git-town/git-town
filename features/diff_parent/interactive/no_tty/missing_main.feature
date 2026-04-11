@@ -13,7 +13,7 @@ Feature: no TTY, missing main branch
     And Git Town prints the error:
       """
       Error: no main branch configured and no interactive terminal available.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
