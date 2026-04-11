@@ -28,7 +28,6 @@ type PartialConfig struct {
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
 	DevRemote                   Option[gitdomain.Remote]
-	DisplayDialogs              Option[DisplayDialogs]
 	DisplayTypes                Option[DisplayTypes]
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
@@ -44,6 +43,7 @@ type PartialConfig struct {
 	Headless                    Option[Headless]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
+	Interactivity               Option[Interactivity]
 	Lineage                     Lineage
 	MainBranch                  Option[gitdomain.LocalBranchName]
 	NewBranchType               Option[NewBranchType]
@@ -91,7 +91,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.Or(self.Detached),
 		DevRemote:                   other.DevRemote.Or(self.DevRemote),
-		DisplayDialogs:              other.DisplayDialogs.Or(self.DisplayDialogs),
 		DisplayTypes:                other.DisplayTypes.Or(self.DisplayTypes),
 		DryRun:                      other.DryRun.Or(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
@@ -107,6 +106,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Headless:                    other.Headless.Or(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
+		Interactivity:               other.Interactivity.Or(self.Interactivity),
 		Lineage:                     other.Lineage.Merge(self.Lineage),
 		MainBranch:                  other.MainBranch.Or(self.MainBranch),
 		NewBranchType:               other.NewBranchType.Or(self.NewBranchType),

@@ -38,7 +38,7 @@ const (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (Response, dialogdomain.Exit, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs, displayDialogs configdomain.Interactivity) (Response, dialogdomain.Exit, error) {
 	entries := list.Entries[Response]{
 		{
 			Data: ResponseQuit,

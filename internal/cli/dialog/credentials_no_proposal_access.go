@@ -21,7 +21,7 @@ Received error: %v
 `
 )
 
-func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
+func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.Inputs, displayDialogs configdomain.Interactivity) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,

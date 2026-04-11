@@ -73,7 +73,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowser)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
-	displayDialogs := configdomain.NewDisplayDialogsFromEnv(env.Get(term))
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
@@ -88,6 +87,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
+	interactivity := configdomain.NewInteractivityFromEnv(env.Get(term))
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
@@ -158,7 +158,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   gitdomain.NewRemote(env.Get(devRemote)),
-		DisplayDialogs:              displayDialogs,
 		DisplayTypes:                displayTypesOpt,
 		DryRun:                      dryRun,
 		FeatureRegex:                featureRegex,
@@ -172,6 +171,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		IgnoreUncommitted:           ignoreUncommitted,
+		Interactivity:               interactivity,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),

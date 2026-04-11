@@ -19,7 +19,7 @@ Please select which child branch to switch to.
 
 type ChildBranchArgs struct {
 	ChildBranches  gitdomain.LocalBranchNames
-	DisplayDialogs configdomain.DisplayDialogs
+	DisplayDialogs configdomain.Interactivity
 	Inputs         dialogcomponents.Inputs
 }
 

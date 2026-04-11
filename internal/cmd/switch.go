@@ -144,7 +144,7 @@ Start:
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
 		DisplayBranchTypes: repo.UnvalidatedConfig.NormalConfig.DisplayTypes,
-		DisplayDialogs:     repo.UnvalidatedConfig.NormalConfig.DisplayDialogs,
+		DisplayDialogs:     repo.UnvalidatedConfig.NormalConfig.Interactivity,
 		EntryData: dialog.EntryData{
 			EntriesAll:      entriesAll,
 			EntriesLocal:    entriesLocal,

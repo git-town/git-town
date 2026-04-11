@@ -67,7 +67,7 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 }
 
 type MainBranchArgs struct {
-	DisplayDialogs configdomain.DisplayDialogs
+	DisplayDialogs configdomain.Interactivity
 	Inputs         dialogcomponents.Inputs
 	Local          Option[gitdomain.LocalBranchName]
 	LocalBranches  gitdomain.LocalBranchNames

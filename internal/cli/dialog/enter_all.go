@@ -18,7 +18,7 @@ You can re-run this assistant: git town init
 `
 )
 
-func EnterAll(inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (bool, dialogdomain.Exit, error) {
+func EnterAll(inputs dialogcomponents.Inputs, displayDialogs configdomain.Interactivity) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: false,

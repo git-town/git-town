@@ -304,7 +304,7 @@ type SwitchBranchArgs struct {
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	DisplayDialogs     configdomain.DisplayDialogs
+	DisplayDialogs     configdomain.Interactivity
 	EntryData          EntryData
 	InputName          string
 	Inputs             dialogcomponents.Inputs

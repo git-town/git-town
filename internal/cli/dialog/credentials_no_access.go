@@ -21,7 +21,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, displayDialogs configdomain.Interactivity) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,

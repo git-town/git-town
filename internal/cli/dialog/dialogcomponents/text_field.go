@@ -35,7 +35,7 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 
 type TextFieldArgs struct {
 	DialogName     string
-	DisplayDialogs configdomain.DisplayDialogs
+	DisplayDialogs configdomain.Interactivity
 	ExistingValue  string
 	Help           string
 	Inputs         Inputs

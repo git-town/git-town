@@ -16,7 +16,7 @@ import (
 const commitsToBeamTitle = `Select the commits to beam into branch %q`
 
 // CommitsToBeam lets the user select commits to beam to the target branch.
-func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier subshelldomain.Querier, inputs dialogcomponents.Inputs, displayDialogs configdomain.DisplayDialogs) (gitdomain.Commits, dialogdomain.Exit, error) {
+func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier subshelldomain.Querier, inputs dialogcomponents.Inputs, displayDialogs configdomain.Interactivity) (gitdomain.Commits, dialogdomain.Exit, error) {
 	if len(commits) == 0 {
 		return gitdomain.Commits{}, false, nil
 	}
