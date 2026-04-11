@@ -166,7 +166,7 @@ Start:
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
 				DisplayBranchTypes: data.config.NormalConfig.DisplayTypes,
-				DisplayDialogs:     data.config.NormalConfig.Interactivity,
+				Interactivity:     data.config.NormalConfig.Interactivity,
 				EntryData: dialog.EntryData{
 					EntriesAll:      entriesAll,
 					EntriesLocal:    entriesLocal,

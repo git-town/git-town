@@ -31,7 +31,7 @@ Git Town will not use the Bitbucket API.
 func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:     "bitbucket-app-password",
-		DisplayDialogs: args.DisplayDialogs,
+		Interactivity: args.Interactivity,
 		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
 		Help:           bitbucketAppPasswordHelp,
 		Inputs:         args.Inputs,

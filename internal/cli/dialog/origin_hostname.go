@@ -26,7 +26,7 @@ if Git Town's auto-detection doesn't work.
 func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:     "origin-hostname",
-		DisplayDialogs: args.DisplayDialogs,
+		Interactivity: args.Interactivity,
 		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
 		Help:           OriginHostnameHelp,
 		Inputs:         args.Inputs,
