@@ -164,7 +164,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		var exit dialogdomain.Exit
 		mainBranchResult, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
 			Inputs:         args.inputs,
-			Interactive:  args.unvalidated.Value.NormalConfig.Interactive,
+			Interactive:    args.unvalidated.Value.NormalConfig.Interactive,
 			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
 			LocalBranches:  localBranches,
 			StandardBranch: args.git.StandardBranch(args.backend),
