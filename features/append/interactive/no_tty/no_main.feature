@@ -16,7 +16,8 @@ Feature: no TTY, no main branch
       """
       no main branch configured and no interactive terminal available.
       
-      To configure: git config git-town.main-branch <branch>
+      To configure:
+      git config git-town.main-branch <branch>
       """
 
   Scenario: undo
