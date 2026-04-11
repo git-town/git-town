@@ -370,7 +370,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", initialBranch),
 			Inputs:             inputs,
-			Interactivity:      validatedConfig.NormalConfig.Interactivity,
+			Interactive:        validatedConfig.NormalConfig.Interactive,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, initialBranch)),
 			UncommittedChanges: false,
 		})
@@ -389,7 +389,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		if err != nil {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactivity)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactive)
 		if err != nil || exit {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}

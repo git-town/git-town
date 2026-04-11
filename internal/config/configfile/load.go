@@ -315,7 +315,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GiteaToken:                  None[forgedomain.GiteaToken](),
 		Headless:                    headless,
 		HostingOriginHostname:       hostingOriginHostname,
-		Interactivity:               None[configdomain.Interactivity](),
+		Interactive:                 None[configdomain.Interactive](),
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  mainBranch,
 		NewBranchType:               newBranchType,

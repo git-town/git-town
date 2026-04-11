@@ -68,7 +68,7 @@ func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	defaultConfig := config.DefaultNormalConfig()
-	interactivity := envConfig.Interactivity.GetOr(systemConfig.Interactivity.GetOr(defaultConfig.Interactivity))
+	interactive := envConfig.Interactive.GetOr(systemConfig.Interactive.GetOr(defaultConfig.Interactive))
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -92,7 +92,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	data.Config.NormalConfig.Interactivity = interactivity
+	data.Config.NormalConfig.Interactive = interactive
 	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err

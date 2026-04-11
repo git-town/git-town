@@ -21,12 +21,12 @@ Received error: %v
 `
 )
 
-func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.Inputs, interactivity configdomain.Interactivity) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
+func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs, interactivity, "credentials-no-access-to-proposal")
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs, interactive, "credentials-no-access-to-proposal")
 	fmt.Printf(messages.CredentialsNoAccess, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection.Repeat(), exit, err
 }

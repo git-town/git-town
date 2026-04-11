@@ -115,7 +115,7 @@ Start:
 		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
 			ChildBranches: children,
 			Inputs:        inputs,
-			Interactivity: repo.UnvalidatedConfig.NormalConfig.Interactivity,
+			Interactive:   repo.UnvalidatedConfig.NormalConfig.Interactive,
 		})
 		if err != nil || exit {
 			return err

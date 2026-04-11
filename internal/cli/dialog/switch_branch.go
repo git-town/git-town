@@ -277,7 +277,7 @@ type NewSwitchBranchEntriesArgs struct {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	if err := args.Interactivity.Check(); err != nil {
+	if err := args.Interactive.Check(); err != nil {
 		return "", true, err
 	}
 	entries := args.EntryData.entries()
@@ -307,7 +307,7 @@ type SwitchBranchArgs struct {
 	EntryData          EntryData
 	InputName          string
 	Inputs             dialogcomponents.Inputs
-	Interactivity      configdomain.Interactivity
+	Interactive        configdomain.Interactive
 	Title              Option[string]
 	UncommittedChanges bool
 }

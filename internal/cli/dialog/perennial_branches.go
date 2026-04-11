@@ -53,7 +53,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	selections := []int{slices.Index(perennialCandidates, args.MainBranch)} //nolint:prealloc
 	selections = append(selections, slice.FindMany(perennialCandidates, args.ImmutableGitPerennials)...)
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
-	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, args.Interactivity, "perennial-branches")
+	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, args.Interactive, "perennial-branches")
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectedBranches = selectedBranches.Remove(args.ImmutableGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
@@ -67,7 +67,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 type PerennialBranchesArgs struct {
 	ImmutableGitPerennials gitdomain.LocalBranchNames // perennial branches defined in the config file and the global Git metadata
 	Inputs                 dialogcomponents.Inputs
-	Interactivity          configdomain.Interactivity
+	Interactive            configdomain.Interactive
 	LocalBranches          gitdomain.LocalBranchNames
 	LocalGitPerennials     gitdomain.LocalBranchNames
 	MainBranch             gitdomain.LocalBranchName

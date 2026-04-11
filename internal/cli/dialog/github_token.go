@@ -35,7 +35,7 @@ func GithubToken(args Args[forgedomain.GithubToken]) (Option[forgedomain.GithubT
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          githubTokenHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.GithubTokenPrompt,
 		Title:         githubTokenTitle,
 	})

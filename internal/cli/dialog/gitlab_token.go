@@ -32,7 +32,7 @@ func GitlabToken(args Args[forgedomain.GitlabToken]) (Option[forgedomain.GitlabT
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          gitlabTokenHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.GitlabTokenPrompt,
 		Title:         gitlabTokenTitle,
 	})

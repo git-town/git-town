@@ -44,7 +44,7 @@ func ProposalBreadcrumb(args Args[configdomain.ProposalBreadcrumb]) (Option[conf
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbTitle, proposalBreadcrumbHelp, args.Inputs, args.Interactivity, "proposal-breadcrumb")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbTitle, proposalBreadcrumbHelp, args.Inputs, args.Interactive, "proposal-breadcrumb")
 	fmt.Printf(messages.ProposalBreadcrumb, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

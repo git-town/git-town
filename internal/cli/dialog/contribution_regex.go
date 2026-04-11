@@ -32,7 +32,7 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          contributionRegexHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.ContributionRegexPrompt,
 		Title:         contributionRegexTitle,
 	})

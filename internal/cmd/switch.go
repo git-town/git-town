@@ -151,7 +151,7 @@ Start:
 		},
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
-		Interactivity:      repo.UnvalidatedConfig.NormalConfig.Interactivity,
+		Interactive:        repo.UnvalidatedConfig.NormalConfig.Interactive,
 		Title:              None[string](),
 		UncommittedChanges: data.uncommittedChanges,
 	})

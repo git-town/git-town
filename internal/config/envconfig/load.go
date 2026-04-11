@@ -87,7 +87,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
-	interactivity := configdomain.NewInteractivityFromEnv(env.Get(term))
+	interactive := configdomain.NewInteractiveFromEnv(env.Get(term))
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
@@ -171,7 +171,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactivity:               interactivity,
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),

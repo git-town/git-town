@@ -376,7 +376,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		if err != nil {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactivity)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactive)
 		if err != nil || exit {
 			return emptyResult, configdomain.ProgramFlowExit, err
 		}

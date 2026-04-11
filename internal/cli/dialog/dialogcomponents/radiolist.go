@@ -14,8 +14,8 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.
-func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, interactivity configdomain.Interactivity, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
-	if err := interactivity.Check(); err != nil {
+func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, interactive configdomain.Interactive, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
+	if err := interactive.Check(); err != nil {
 		var zero S
 		return zero, true, err
 	}

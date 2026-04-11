@@ -33,7 +33,7 @@ func BranchPrefix(args Args[configdomain.BranchPrefix]) (Option[configdomain.Bra
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          BranchPrefixHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.BranchPrefixPrompt,
 		Title:         branchPrefixTitle,
 	})

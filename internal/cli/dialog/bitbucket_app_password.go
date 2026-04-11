@@ -34,7 +34,7 @@ func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[f
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          bitbucketAppPasswordHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.BitbucketAppPasswordPrompt,
 		Title:         bitbucketAppPasswordTitle,
 	})

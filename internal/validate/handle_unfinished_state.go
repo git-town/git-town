@@ -42,7 +42,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		unfinishedDetails.EndTime,
 		unfinishedDetails.CanSkip,
 		args.Inputs,
-		args.UnvalidatedConfig.NormalConfig.Interactivity,
+		args.UnvalidatedConfig.NormalConfig.Interactive,
 	)
 	if err != nil {
 		return configdomain.ProgramFlowExit, err
@@ -164,7 +164,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		var exit dialogdomain.Exit
 		mainBranchResult, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
 			Inputs:         args.inputs,
-			Interactivity:  args.unvalidated.Value.NormalConfig.Interactivity,
+			Interactive:    args.unvalidated.Value.NormalConfig.Interactive,
 			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
 			LocalBranches:  localBranches,
 			StandardBranch: args.git.StandardBranch(args.backend),

@@ -10,7 +10,7 @@ import (
 
 func Load() configdomain.PartialConfig {
 	hasTTY := DetermineTTY()
-	interactivity := configdomain.NewInteractivityFromTTY(hasTTY)
+	interactive := configdomain.NewInteractiveFromTTY(hasTTY)
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
 		AutoResolve:                 None[configdomain.AutoResolve](),
@@ -23,7 +23,7 @@ func Load() configdomain.PartialConfig {
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    None[configdomain.Detached](),
 		DevRemote:                   None[gitdomain.Remote](),
-		Interactivity:               interactivity,
+		Interactive:                 interactive,
 		DisplayTypes:                None[configdomain.DisplayTypes](),
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                None[configdomain.FeatureRegex](),

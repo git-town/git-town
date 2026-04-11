@@ -32,7 +32,7 @@ func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.Fea
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          FeatureRegexHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.FeatureRegexPrompt,
 		Title:         featureRegexTitle,
 	})

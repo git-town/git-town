@@ -39,7 +39,7 @@ func ProposalBreadcrumbDirection(args Args[configdomain.ProposalBreadcrumbDirect
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbDirectionTitle, proposalBreadcrumbDirectionHelp, args.Inputs, args.Interactivity, "proposal-breadcrumb-direction")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalBreadcrumbDirectionTitle, proposalBreadcrumbDirectionHelp, args.Inputs, args.Interactive, "proposal-breadcrumb-direction")
 	fmt.Printf(messages.ProposalBreadcrumbDirection, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

@@ -31,7 +31,7 @@ func GiteaToken(args Args[forgedomain.GiteaToken]) (Option[forgedomain.GiteaToke
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          giteaTokenHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.GiteaTokenPrompt,
 		Title:         giteaTokenTitle,
 	})

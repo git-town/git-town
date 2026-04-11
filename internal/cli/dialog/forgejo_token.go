@@ -31,7 +31,7 @@ func ForgejoToken(args Args[forgedomain.ForgejoToken]) (Option[forgedomain.Forge
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          forgejoTokenHelp,
 		Inputs:        args.Inputs,
-		Interactivity: args.Interactivity,
+		Interactive:   args.Interactive,
 		Prompt:        messages.ForgejoTokenPrompt,
 		Title:         forgejoTokenTitle,
 	})

@@ -37,7 +37,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    args.Detached,
 		DevRemote:                   None[gitdomain.Remote](),
-		Interactivity:               None[configdomain.Interactivity](),
+		Interactive:                 None[configdomain.Interactive](),
 		DisplayTypes:                args.DisplayTypes,
 		DryRun:                      args.DryRun,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
