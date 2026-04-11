@@ -14,6 +14,6 @@ Feature: no TTY, unknown parent
       """
       cannot determine parent branch for "branch-1": no interactive terminal available
 
-      To configure, run:
+      To configure:
       git checkout branch-1 && git-town set-parent <parent-branch>
       """
