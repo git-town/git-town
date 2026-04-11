@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
 	"strings"
 
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -25,7 +24,7 @@ func (self Interactivity) Check() error {
 
 func (self Interactivity) String() string {
 	if err := self.Check(); err != nil {
-		return fmt.Sprintf("disabled: %s", err.Error())
+		return "disabled: " + err.Error()
 	}
 	return "enabled"
 }
