@@ -71,7 +71,7 @@ func BoolVarP(p *bool, name, shorthand string, value bool, usage string) {
 // Bool defines a bool flag with specified name, default value, and usage string.
 // The return value is the address of a bool variable that stores the value of the flag.
 func (f *FlagSet) Bool(name string, value bool, usage string) *bool {
-	return f.BoolP(name, "", value, usage)
+	return f.Bool(name, value, usage)
 }
 
 // BoolP is like Bool, but accepts a shorthand letter that can be used after a single dash.
@@ -84,7 +84,7 @@ func (f *FlagSet) BoolP(name, shorthand string, value bool, usage string) *bool 
 // Bool defines a bool flag with specified name, default value, and usage string.
 // The return value is the address of a bool variable that stores the value of the flag.
 func Bool(name string, value bool, usage string) *bool {
-	return BoolP(name, "", value, usage)
+	return Bool(name, value, usage)
 }
 
 // BoolP is like Bool, but accepts a shorthand letter that can be used after a single dash.
