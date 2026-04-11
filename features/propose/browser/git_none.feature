@@ -15,7 +15,6 @@ Feature: print the URL when no browser installed
     And tool "open" is installed
     When I run "git-town propose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                        |
