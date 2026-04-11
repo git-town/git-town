@@ -1,5 +1,4 @@
-@skipWindows
-Feature: no TTY, no main branch
+Feature: disable interactive mode via CLI
 
   Background:
     Given a local Git repo
@@ -8,23 +7,25 @@ Feature: no TTY, no main branch
       | existing | feature | main   | local     |
     And Git Town is not configured
     And the current branch is "existing"
-    When I run "git-town walk --all" in a non-TTY shell
+    When I run "git-town append new --interactive=false"
 
+  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and no interactive terminal available.
+      no main branch configured and only a dumb terminal available.
 
       To configure, run "git config git-town.main-branch <branch>".
       """
 
   Scenario: undo
-    When I run "git-town undo" in a non-TTY shell
+    When I run "git-town undo" with these environment variables
+      | TERM | dumb |
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and no interactive terminal available.
+      no main branch configured and only a dumb terminal available.
 
       To configure, run "git config git-town.main-branch <branch>".
       """
