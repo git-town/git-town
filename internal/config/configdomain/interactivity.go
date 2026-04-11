@@ -19,12 +19,12 @@ func (self Interactivity) Check() error {
 	if self == "" {
 		return nil
 	}
-	return &InteractivityError{Reason: self.String()}
+	return &InteractivityError{Reason: string(self)}
 }
 
 func (self Interactivity) String() string {
 	if err := self.Check(); err != nil {
-		return "disabled: " + err.Error()
+		return "disabled: " + string(self)
 	}
 	return "enabled"
 }
