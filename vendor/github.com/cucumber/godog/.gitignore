@@ -1,0 +1,13 @@
+/cmd/godog/godog
+/example/example
+**/vendor/*
+Gopkg.lock
+Gopkg.toml
+
+.DS_Store
+.idea
+.vscode
+
+_artifacts
+
+vendor

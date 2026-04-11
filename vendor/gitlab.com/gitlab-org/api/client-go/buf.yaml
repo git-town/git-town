@@ -1,0 +1,12 @@
+version: v2
+
+modules:
+  - path: .
+    excludes:
+      # these are mostly cache directories in CI
+      - .go
+      - .golangci-lint
+      - .mise
+
+deps:
+  - buf.build/bufbuild/protovalidate:v0.14.0

@@ -1,0 +1,138 @@
+//
+// Copyright 2021, Sander van Harmelen
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package gitlab
+
+import (
+	"context"
+	"net/url"
+	"strconv"
+
+	retryablehttp "github.com/hashicorp/go-retryablehttp"
+)
+
+// RequestOptionFunc can be passed to all API requests to customize the API request.
+type RequestOptionFunc func(*retryablehttp.Request) error
+
+// WithContext runs the request with the provided context
+func WithContext(ctx context.Context) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		newCtx := copyContextValues(req.Context(), ctx)
+
+		*req = *req.WithContext(newCtx)
+		return nil
+	}
+}
+
+// copyContextValues copy some context key and values in old context
+func copyContextValues(oldCtx context.Context, newCtx context.Context) context.Context {
+	checkRetry := checkRetryFromContext(oldCtx)
+
+	if checkRetry != nil {
+		newCtx = contextWithCheckRetry(newCtx, checkRetry)
+	}
+
+	return newCtx
+}
+
+// WithHeader takes a header name and value and appends it to the request headers.
+func WithHeader(name, value string) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		req.Header.Set(name, value)
+		return nil
+	}
+}
+
+// WithHeaders takes a map of header name/value pairs and appends them to the
+// request headers.
+func WithHeaders(headers map[string]string) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		for k, v := range headers {
+			req.Header.Set(k, v)
+		}
+		return nil
+	}
+}
+
+// WithKeysetPaginationParameters takes a "next" link from the Link header of a
+// response to a keyset-based paginated request and modifies the values of each
+// query parameter in the request with its corresponding response parameter.
+func WithKeysetPaginationParameters(nextLink string) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		nextURL, err := url.Parse(nextLink)
+		if err != nil {
+			return err
+		}
+		q := req.URL.Query()
+		for k, values := range nextURL.Query() {
+			q.Del(k)
+			for _, v := range values {
+				q.Add(k, v)
+			}
+		}
+		req.URL.RawQuery = q.Encode()
+		return nil
+	}
+}
+
+// WithOffsetPaginationParameters takes a page number and modifies the request
+// to use that page for offset-based pagination, overriding any existing page value.
+func WithOffsetPaginationParameters(page int) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		q := req.URL.Query()
+		q.Del("page")
+		q.Add("page", strconv.Itoa(page))
+		req.URL.RawQuery = q.Encode()
+		return nil
+	}
+}
+
+// WithSudo takes either a username or user ID and sets the SUDO request header.
+func WithSudo(uid any) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		user, err := parseID(uid)
+		if err != nil {
+			return err
+		}
+		req.Header.Set("SUDO", user)
+		return nil
+	}
+}
+
+// WithToken takes a token which is then used when making this one request.
+func WithToken(authType AuthType, token string) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		switch authType {
+		case JobToken:
+			req.Header.Set("JOB-TOKEN", token)
+		case OAuthToken:
+			req.Header.Set("Authorization", "Bearer "+token)
+		case PrivateToken:
+			req.Header.Set("PRIVATE-TOKEN", token)
+		}
+		return nil
+	}
+}
+
+// WithRequestRetry takes a `retryablehttp.CheckRetry` which is then used when making this one request.
+func WithRequestRetry(checkRetry retryablehttp.CheckRetry) RequestOptionFunc {
+	return func(req *retryablehttp.Request) error {
+		// Store checkRetry to context
+		ctx := contextWithCheckRetry(req.Context(), checkRetry)
+		*req = *req.WithContext(ctx)
+		return nil
+	}
+}
