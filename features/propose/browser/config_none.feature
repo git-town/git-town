@@ -3,12 +3,12 @@ Feature: set a custom browser via the config file
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town"
     And the committed configuration file:
       """
       [hosting]
       browser = "(none)"
       """
-    And the origin is "git@github.com:git-town/git-town"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

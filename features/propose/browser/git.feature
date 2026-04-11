@@ -9,9 +9,9 @@ Feature: set a custom browser via Git config
       | feature | feature | main   | local, origin |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
-      |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
-    And the current branch is "feature"
+      | 1  | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     And Git setting "git-town.browser" is "firefox"
+    And the current branch is "feature"
     And tool "firefox" is installed
     And tool "open" is installed
     When I run "git-town propose"
