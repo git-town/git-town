@@ -28,13 +28,13 @@ it's safe to leave it blank.
 
 func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:     "contribution-regex",
+		DialogName:    "contribution-regex",
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
+		Help:          contributionRegexHelp,
+		Inputs:        args.Inputs,
 		Interactivity: args.Interactivity,
-		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
-		Help:           contributionRegexHelp,
-		Inputs:         args.Inputs,
-		Prompt:         messages.ContributionRegexPrompt,
-		Title:          contributionRegexTitle,
+		Prompt:        messages.ContributionRegexPrompt,
+		Title:         contributionRegexTitle,
 	})
 	newValue, errNewValue := configdomain.ParseContributionRegex(input, "dialog")
 	if args.Global.Equal(newValue) {

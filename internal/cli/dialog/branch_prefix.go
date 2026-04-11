@@ -30,10 +30,10 @@ it's safe to leave it blank.
 func BranchPrefix(args Args[configdomain.BranchPrefix]) (Option[configdomain.BranchPrefix], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:     "branch-prefix",
-		Interactivity: args.Interactivity,
 		ExistingValue:  args.Local.Or(args.Global).StringOr(""),
 		Help:           BranchPrefixHelp,
 		Inputs:         args.Inputs,
+		Interactivity: args.Interactivity,
 		Prompt:         messages.BranchPrefixPrompt,
 		Title:          branchPrefixTitle,
 	})
