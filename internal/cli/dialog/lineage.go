@@ -92,7 +92,7 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
 			Inputs:             args.Inputs,
-			Interactive:      args.Config.NormalConfig.Interactive,
+			Interactive:        args.Config.NormalConfig.Interactive,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, branchToVerify)),
 			UncommittedChanges: false,
 		})

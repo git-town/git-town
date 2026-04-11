@@ -169,7 +169,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
-		Interactive:               None[configdomain.Interactive](),
+		Interactive:                 None[configdomain.Interactive](),
 		DisplayTypes:                displayTypes,
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                featureRegex,

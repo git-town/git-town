@@ -173,7 +173,7 @@ Start:
 				},
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
-				Interactive:      data.config.NormalConfig.Interactive,
+				Interactive:        data.config.NormalConfig.Interactive,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
 				UncommittedChanges: false,
 			})
