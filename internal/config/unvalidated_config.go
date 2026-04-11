@@ -123,9 +123,9 @@ type NewUnvalidatedConfigArgs struct {
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
 	result = result.Merge(args.system)
+	result = result.Merge(args.env)
 	result = result.Merge(args.file)
 	result = result.Merge(args.git)
-	result = result.Merge(args.env)
 	result = result.Merge(args.cli)
 	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, args.defaults)
 }
