@@ -3,6 +3,11 @@ Feature: set a custom browser via the config file
 
   Background:
     Given a Git repo with origin
+    And the committed configuration file:
+      """
+      [hosting]
+      browser = "firefox"
+      """
     And the origin is "git@github.com:git-town/git-town"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,11 +16,6 @@ Feature: set a custom browser via the config file
       | ID | SOURCE BRANCH | TARGET BRANCH | URL                                           |
       |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     And the current branch is "feature"
-    And the committed configuration file:
-      """
-      [hosting]
-      browser = "firefox"
-      """
     And tool "firefox" is installed
     And tool "open" is installed
     When I run "git-town propose"
