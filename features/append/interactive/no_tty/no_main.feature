@@ -15,8 +15,8 @@ Feature: no TTY, no main branch
     And Git Town prints the error:
       """
       no main branch configured and no interactive terminal available.
-
-      To configure, run "git config git-town.main-branch <branch>".
+      
+      To configure: git config git-town.main-branch <branch>
       """
 
   Scenario: undo
@@ -25,6 +25,7 @@ Feature: no TTY, no main branch
     And Git Town prints the error:
       """
       no main branch configured and no interactive terminal available.
-
-      To configure, run "git config git-town.main-branch <branch>".
+      
+      To configure:
+      git config git-town.main-branch <branch>
       """

@@ -20,6 +20,7 @@ Feature: TERM=dumb, missing parent branch
     And Git Town prints the error:
       """
       no main branch configured and only a dumb terminal available.
-
-      To configure, run "git config git-town.main-branch <branch>".
+      
+      To configure:
+      git config git-town.main-branch <branch>
       """
