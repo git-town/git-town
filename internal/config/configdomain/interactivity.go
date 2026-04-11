@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// InteractivityEnabled is a sentinal value for Interactivity and indicates that dialogs can be displayed.
+// InteractivityEnabled is a sentinal value for Interactivity and indicates that interactivity is enabled.
 const InteractivityEnabled = Interactivity("")
 
 // Interactivity indicates whether interactive features are enabled.
