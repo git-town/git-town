@@ -24,17 +24,11 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 			return Some(browserdomain.NoBrowser), nil
 		}
 		isChanged := cmd.Flags().Changed(browserLong)
-		if !isChanged {
-			return None[browserdomain.Browser](), nil
-		}
 		value, err := cmd.Flags().GetString(browserLong)
 		if err != nil {
 			return None[browserdomain.Browser](), err
 		}
-		if isChanged && value == "" {
-			return Some(browserdomain.NoBrowser), nil
-		}
-		return Some(browserdomain.Browser(value)), nil
+		return browserdomain.ParseBrowserHas(value, isChanged)
 	}
 	return addFlag, readFlag
 }
