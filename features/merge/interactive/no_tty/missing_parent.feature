@@ -19,7 +19,7 @@ Feature: no TTY, missing main branch
     And Git Town prints the error:
       """
       Error: cannot determine parent branch for "alpha": no interactive terminal available
-
-      To configure, run:
+      
+      To configure:
       git checkout alpha && git-town set-parent <parent-branch>
       """
