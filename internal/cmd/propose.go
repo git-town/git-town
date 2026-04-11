@@ -143,6 +143,7 @@ Start:
 	if err != nil {
 		return err
 	}
+	fmt.Println("111111111111111111111111111111111111111111111111111111111111111111111111111", data.config.NormalConfig.Browser)
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit:

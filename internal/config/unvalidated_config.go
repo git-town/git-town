@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -86,6 +87,9 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
+	fmt.Println("555555555555555555555555555555555555555555")
+	fmt.Println(args.CliConfig.Browser)
+	fmt.Println(args.Defaults.Browser)
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		cli:      args.CliConfig,
 		defaults: args.Defaults,
@@ -123,10 +127,15 @@ type NewUnvalidatedConfigArgs struct {
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
 	result = result.Merge(args.system)
+	fmt.Println("syntem", result.Browser)
 	result = result.Merge(args.file)
+	fmt.Println("file", result.Browser)
 	result = result.Merge(args.git)
+	fmt.Println("git", result.Browser)
 	result = result.Merge(args.env)
+	fmt.Println("env", result.Browser)
 	result = result.Merge(args.cli)
+	fmt.Println("cli", result.Browser)
 	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, args.defaults)
 }
 

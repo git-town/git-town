@@ -32,6 +32,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), fmt.Errorf("error loading configuration from environment variables: %w", err)
 	}
+	fmt.Println("77777777777777777777777", envConfig.Browser)
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
@@ -113,6 +114,8 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		GitUnscoped:   unscopedConfig,
 		SystemConfig:  systemConfig,
 	})
+	fmt.Println("33333333333333333333333333333333333333333", unscopedConfig.Browser)
+	fmt.Println("44444444444444444444444444444444444444444", unvalidatedConfig.NormalConfig.Browser)
 	backendRunner.Verbose = unvalidatedConfig.NormalConfig.Verbose
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

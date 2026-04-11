@@ -1662,7 +1662,10 @@ func runCommand(args runCommandArgs) {
 	}
 	var runResult subshell.RunResult
 	env := os.Environ()
+	fmt.Println("9999999999999999999999999999999999999999")
 	if browserVariable, hasBrowserOverride := args.scenarioState.browserVariable.Get(); hasBrowserOverride {
+		fmt.Println("9999999999999999999999999999999999999999aaaaaaaaaaaaaaaaaaaaaaaa", browserVariable)
+
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {

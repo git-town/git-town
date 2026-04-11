@@ -2,6 +2,7 @@ package envconfig
 
 import (
 	"cmp"
+	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -71,6 +72,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
 	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowser)
+	fmt.Println("888888888888888888888888888888888888", browser)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayDialogs := configdomain.NewDisplayDialogsFromEnv(env.Get(term))

@@ -12,9 +12,10 @@ Feature: print the URL when no browser installed
       |  1 | feature       | main          | https://github.com/git-town/git-town/pull/123 |
     And the current branch is "feature"
     And Git setting "git-town.browser" is "(none)"
+    And tool "open" is installed
     When I run "git-town propose"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                        |
