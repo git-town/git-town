@@ -57,6 +57,10 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
 }
 
+func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return ProposalReference(data)
+}
+
 func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", self.baseURL(), self.projectPath())
 }
@@ -71,4 +75,11 @@ func (self WebConnector) projectPath() string {
 
 func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
+}
+
+func ProposalReference(data forgedomain.ProposalData) string {
+	if data.Number.Int() > 0 {
+		return "!" + data.Number.String() + "+"
+	}
+	return forgedomain.ProposalReferenceFallback(data)
 }

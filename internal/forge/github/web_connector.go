@@ -59,10 +59,21 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 	return result
 }
 
+func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return ProposalReference(data)
+}
+
 func (self WebConnector) RepositoryURL() string {
 	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
 func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+}
+
+func ProposalReference(data forgedomain.ProposalData) string {
+	if data.Number.Int() > 0 {
+		return "#" + data.Number.String()
+	}
+	return forgedomain.ProposalReferenceFallback(data)
 }
