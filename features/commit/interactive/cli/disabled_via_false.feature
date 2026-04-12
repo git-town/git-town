@@ -13,7 +13,6 @@ Feature: no TTY, no main branch
     And I ran "git add changes"
     When I run "git-town commit --up -m commit-1b --interactive=false"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
