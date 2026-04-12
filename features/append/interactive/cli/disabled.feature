@@ -9,7 +9,6 @@ Feature: disable interactive mode via CLI
     And the current branch is "existing"
     When I run "git-town append new --interactive=false"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
@@ -21,13 +20,12 @@ Feature: disable interactive mode via CLI
       """
 
   Scenario: undo
-    When I run "git-town undo" with these environment variables
-      | TERM | dumb |
+    When I run "git-town undo --interactive=false"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and only a dumb terminal available.
+      no main branch configured and interactivity disabled via CLI.
       
-      To configure, run "git config git-town.main-branch <branch>".
-      To set up interactively, run "git town init" in a shell with TTY.
+      To configure:
+      git config git-town.main-branch <branch>
       """

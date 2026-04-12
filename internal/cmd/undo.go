@@ -27,6 +27,7 @@ import (
 const undoDesc = "Undo the most recent Git Town command"
 
 func undoCmd() *cobra.Command {
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "undo",
@@ -35,6 +36,7 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			interactive, err := readInteractiveFlag(cmd)
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
@@ -48,6 +50,7 @@ func undoCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -56,6 +59,7 @@ func undoCmd() *cobra.Command {
 			return executeUndo(cliConfig)
 		},
 	}
+	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
