@@ -51,6 +51,7 @@ func continueCmd() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[configdomain.Interactive](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
