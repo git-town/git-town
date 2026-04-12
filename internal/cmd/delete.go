@@ -67,6 +67,7 @@ main
 
 func deleteCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "delete [<branch>]",
@@ -75,8 +76,9 @@ func deleteCommand() *cobra.Command {
 		Long:  cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -88,6 +90,7 @@ func deleteCommand() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -97,6 +100,7 @@ func deleteCommand() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
