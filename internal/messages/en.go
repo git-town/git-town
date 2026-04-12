@@ -190,10 +190,11 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	HackBranchIsAlreadyFeature = "branch %s is already a feature branch"
 	HackTooManyArguments       = "please provide only one branch to create"
 
-	IgnoreUncommitted   = "Ship ignores uncommitted changes: %s\n"
-	InputAddOrRemove    = `invalid argument %q. Please provide either "add" or "remove"`
-	InputYesOrNo        = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	InvalidStatusOutput = `invalid "git status -z" output: %q`
+	IgnoreUncommitted           = "Ship ignores uncommitted changes: %s\n"
+	InputAddOrRemove            = `invalid argument %q. Please provide either "add" or "remove"`
+	InputYesOrNo                = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	InteractivityDisabledViaCLI = "interactivity disabled via CLI"
+	InvalidStatusOutput         = `invalid "git status -z" output: %q`
 
 	MainBranch                       = "Main branch: %s\n"
 	MainBranchCannotMakeContribution = "cannot make the main branch a contribution branch"
