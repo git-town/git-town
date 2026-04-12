@@ -25,7 +25,7 @@ func Interactive() (AddFunc, ReadInteractiveFlagFunc) {
 		if value {
 			return Some(configdomain.InteractiveEnabled), nil
 		}
-		return Some(configdomain.Interactive("disabled via CLI")), nil
+		return Some(configdomain.Interactive("interactivity disabled via CLI")), nil
 	}
 	return addFlag, readFlag
 }
