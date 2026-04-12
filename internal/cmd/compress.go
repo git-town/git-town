@@ -63,6 +63,7 @@ commit 1
 
 func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	addNoVerifyFlag, readNoVerifyFlag := flags.NoVerify()
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
@@ -75,10 +76,11 @@ func compressCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errCommitHook, errDryRun, errMessage, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errCommitHook, errDryRun, errInteractive, errMessage, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -90,6 +92,7 @@ func compressCmd() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -99,6 +102,7 @@ func compressCmd() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addMessageFlag(&cmd)
 	addNoVerifyFlag(&cmd)
 	addStackFlag(&cmd)
