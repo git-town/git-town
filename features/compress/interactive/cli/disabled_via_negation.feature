@@ -12,7 +12,7 @@ Feature: interactivity disabled, no main branch
       |         |               | commit 2 | file_2    | content 2    |
     And Git Town is not configured
     And the current branch is "feature"
-    When I run "git-town compress --interactive=false"
+    When I run "git-town compress --non-interactive"
 
   Scenario: result
     Then Git Town runs the commands
