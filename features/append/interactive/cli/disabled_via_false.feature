@@ -14,7 +14,7 @@ Feature: disable interactive mode via CLI
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via CLI.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
@@ -25,7 +25,7 @@ Feature: disable interactive mode via CLI
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via CLI.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

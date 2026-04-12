@@ -7,9 +7,9 @@ Feature: interactivity disabled, no main branch
       | NAME     | TYPE   | PARENT | LOCATIONS     |
       | branch-1 | (none) |        | local, origin |
       | branch-2 | (none) |        | local, origin |
+    And the current branch is "branch-1"
     And the current branch is "branch-2"
     And I ran "git-town set-parent branch-1"
-    And the current branch is "branch-1"
     When I run "git-town delete --interactive=false"
 
   Scenario: result
