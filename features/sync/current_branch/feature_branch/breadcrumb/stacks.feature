@@ -8,19 +8,22 @@ Feature: sync the current feature branch and update proposals
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
       | branch-3 | feature | branch-2 | local, origin |
-      | other    | feature | main     | local, origin |
+      | other-1  | feature | main     | local, origin |
+      | other-2  | feature | other-1  | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local, origin | branch-2 commit |
       | branch-3 | local, origin | branch-3 commit |
-      | other    | local, origin | other commit    |
+      | other-1  | local, origin | other-1 commit  |
+      | other-2  | local, origin | other-2 commit  |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | TITLE             | BODY          | URL                      |
       | 1  | branch-1      | main          | branch-1 proposal | branch-1 body | https://example.com/pr/1 |
       | 2  | branch-2      | branch-1      | branch-2 proposal | branch-2 body | https://example.com/pr/2 |
       | 3  | branch-3      | branch-2      | branch-3 proposal | branch-3 body | https://example.com/pr/3 |
-      | 4  | other         | main          | other proposal    | other body    | https://example.com/pr/4 |
+      | 4  | other-1       | main          | other-1 proposal  | other-1 body  | https://example.com/pr/4 |
+      | 5  | other-2       | other-1       | other-2 proposal  | other-2 body  | https://example.com/pr/5 |
     And Git setting "git-town.proposal-breadcrumb" is "stacks"
     And the current branch is "branch-2"
     When I run "git-town sync"
@@ -105,10 +108,16 @@ Feature: sync the current feature branch and update proposals
 
       url: https://example.com/pr/4
       number: 4
-      source: other
+      source: other-1
       target: main
       body:
-        other body
+        other-1 body
+      url: https://example.com/pr/5
+      number: 5
+      source: other-2
+      target: other-1
+      body:
+        other-2 body
       """
 
   Scenario: undo
@@ -123,8 +132,6 @@ Feature: sync the current feature branch and update proposals
       |          | Finding proposal from branch-3 into branch-2 ... #3 (branch-3 proposal) |
       |          | Finding all proposals for branch-2 ... branch-1                         |
       |          | Finding all proposals for branch-3 ... branch-2                         |
-      |          | Finding all proposals for other ... main                                |
-      |          | Update body for #4 ... ok                                               |
     And the initial branches and lineage exist now
     And the proposals are now
       """
@@ -187,12 +194,14 @@ Feature: sync the current feature branch and update proposals
 
       url: https://example.com/pr/4
       number: 4
-      source: other
+      source: other-1
       target: main
       body:
-        other body
-
-        <!-- branch-stack-start -->
-
-        <!-- branch-stack-end -->
+        other-1 body
+      url: https://example.com/pr/5
+      number: 5
+      source: other-2
+      target: other-1
+      body:
+        other-2 body
       """

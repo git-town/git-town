@@ -170,6 +170,7 @@ Start:
 		PushBranches:        data.config.NormalConfig.PushBranches,
 		Remotes:             data.remotes,
 	})
+	syncTouchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
@@ -187,10 +188,12 @@ Start:
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
+		// Seed breadcrumb updates from branches the sync program actually changed,
+		// not every branch considered for syncing.
 		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          data.config,
 			Program:         runProgram,
-			TouchedBranches: data.branchesToSync.BranchNames(),
+			TouchedBranches: syncTouchedBranches,
 		})
 	}
 
@@ -213,7 +216,7 @@ Start:
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
-		TouchedBranches:       optimizedProgram.TouchedBranches(),
+		TouchedBranches:       syncTouchedBranches.BranchNames(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
