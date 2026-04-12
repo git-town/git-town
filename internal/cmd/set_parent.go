@@ -64,6 +64,7 @@ main
 
 func setParentCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addNoParentFlag, readNoParentFlag := flags.NoParent()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -74,9 +75,10 @@ func setParentCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			noParent, errNoParent := readNoParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if cmp.Or(errAutoResolve, errNoParent, errVerbose) != nil {
+			if cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose) != nil {
 				return errVerbose
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -88,6 +90,7 @@ func setParentCommand() *cobra.Command {
 				DryRun:            None[configdomain.DryRun](),
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -97,6 +100,7 @@ func setParentCommand() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addNoParentFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

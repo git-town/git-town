@@ -61,6 +61,7 @@ func proposeCommand() *cobra.Command {
 	addBrowserFlag, readBrowserFlag := flags.Browser()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addHeadlessFlag, readHeadlessFlag := flags.Headless()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -77,10 +78,11 @@ func proposeCommand() *cobra.Command {
 			browser, errBrowser := readBrowserFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			headless, errHeadless := readHeadlessFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errBrowser, errDryRun, errHeadless, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errBrowser, errDryRun, errHeadless, errInteractive, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -92,6 +94,7 @@ func proposeCommand() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          headless,
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -112,6 +115,7 @@ func proposeCommand() *cobra.Command {
 	addDryRunFlag(&cmd)
 	addHeadlessFlag(&cmd)
 	addAutoResolveFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)

@@ -58,6 +58,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addGoneFlag, readGoneFlag := flags.Gone()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addPushFlag, readPushFlag := flags.Push()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -74,11 +75,12 @@ func Cmd() *cobra.Command {
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			gone, errGone := readGoneFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errAutoResolve, errDetached, errDryRun, errGone, errPrune, errPushBranches, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errAutoResolve, errDetached, errDryRun, errGone, errInteractive, errPrune, errPushBranches, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -90,6 +92,7 @@ func Cmd() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      pushBranches,
 				Stash:             None[configdomain.Stash](),
@@ -109,6 +112,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addGoneFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addPruneFlag(&cmd)
 	addPushFlag(&cmd)
 	addStackFlag(&cmd)
