@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 
@@ -36,9 +37,9 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			interactive, err := readInteractiveFlag(cmd)
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			interactive, errInteractive := readInteractiveFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
