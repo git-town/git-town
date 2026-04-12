@@ -10,7 +10,7 @@ const noVerifyLong = "no-verify"
 // type-safe access to the CLI arguments of type configdomain.CommitHook
 func NoVerify() (AddFunc, ReadNoVerifyFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(noVerifyLong, "", false, "do not run pre-commit hooks")
+		cmd.Flags().Bool(noVerifyLong, false, "do not run pre-commit hooks")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.CommitHook, error) {
 		result, err := readBoolFlag[configdomain.CommitHook](cmd.Flags(), noVerifyLong)
