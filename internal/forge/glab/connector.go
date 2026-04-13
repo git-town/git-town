@@ -99,6 +99,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 }
 
+func (self Connector) ProposalReference(data forgedomain.ProposalData) string {
+	return gitlab.ProposalReference(data)
+}
+
 // ============================================================================
 // search proposals
 // ============================================================================

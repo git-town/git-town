@@ -53,6 +53,10 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 		url.QueryEscape(data.ParentBranch.String()))
 }
 
+func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return forgedomain.ProposalReferenceFallback(data)
+}
+
 func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }

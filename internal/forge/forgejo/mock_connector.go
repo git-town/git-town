@@ -49,3 +49,46 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 	self.cache.RegisterLookupResult(source, target, Some(proposal))
 	return Some(proposal), nil
 }
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
+
+func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
+		return cachedSearchResult, nil
+	}
+	self.log.Start(messages.APIProposalSearchStart, source.String())
+	result := []forgedomain.Proposal{}
+	for _, data := range self.Proposals.FindBySource(source) {
+		self.log.Success(data.Target.String())
+		result = append(result, forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeForgejo})
+	}
+	if len(result) == 0 {
+		self.log.Success("none")
+	}
+	self.cache.RegisterSearchResult(source, result)
+	return result, nil
+}
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
+
+func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
+	self.cache.Clear(proposalData.Data().Number)
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()))
+	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
+	if !hasProposal {
+		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
+	}
+	proposal.Body = Some(newBody)
+	self.Proposals.Update(proposal)
+	mockproposals.Save(self.ProposalsPath, self.Proposals)
+	self.log.Finished(nil)
+	return nil
+}
