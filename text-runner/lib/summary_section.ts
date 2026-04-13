@@ -48,8 +48,9 @@ export class SummarySection {
 export function splitNegations(variations: string[]): string[] {
   const result: string[] = []
   for (const variation of variations) {
-    if (isNegatable(variation)) {
-      result.push(...splitNegation(variation))
+    const negation = isNegatable(variation)
+    if (negation !== "") {
+      result.push(...splitNegation(variation, negation))
     } else {
       result.push(variation)
     }
@@ -57,18 +58,24 @@ export function splitNegations(variations: string[]): string[] {
   return result
 }
 
-export function isNegatable(variation: string): boolean {
-  return variation.startsWith("--(no)-")
+export function isNegatable(variation: string): string {
+  if (variation.startsWith("--(no)-")) {
+    return "no"
+  }
+  if (variation.startsWith("--(non)-")) {
+    return "non"
+  }
+  return ""
 }
 
 export function splitNegation(variation: string): string[] {
   const result: string[] = []
   const name = variationName(variation)
   result.push(`--${name}`)
-  result.push(`--no-${name}`)
+  result.push(`--${negation}-${name}`)
   return result
 }
 
 export function variationName(variation: string): string {
-  return variation.substring(7)
+  return variation.substring(variation.startsWith("--no-") ? 7 : 8)
 }

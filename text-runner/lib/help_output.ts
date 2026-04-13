@@ -96,7 +96,7 @@ export function replaceValueNotation(flag: string): string {
 }
 
 export function isNegatedFlagsGroup(flags: string[]): boolean {
-  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-"))
+  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-") || flag.startsWith("--non-"))
 }
 
 export function getPositiveFlagName(negatedFlag: string): string {

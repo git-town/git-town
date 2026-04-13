@@ -8,7 +8,7 @@ suite("SummarySection", () => {
       {
         desc: "append command",
         give:
-          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
+          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(--non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
         want: [
           ["--auto-resolve", "--no-auto-resolve"],
           ["-b", "--beam"],
@@ -16,6 +16,7 @@ suite("SummarySection", () => {
           ["-d", "--detached", "--no-detached"],
           ["--dry-run"],
           ["-h", "--help"],
+          ["--interactive", "--non-interactive"],
           ["-m", "--message string"],
           ["--propose"],
           ["-p", "--prototype"],
@@ -77,6 +78,7 @@ suite("negations", () => {
   suite("isNegatable", () => {
     const tests = {
       "--(no)-detach": true,
+      "--(non)-interactive": true,
       "--beam": false,
     }
     for (const [give, want] of Object.entries(tests)) {
@@ -90,6 +92,7 @@ suite("negations", () => {
   suite("variationName", () => {
     const tests = {
       "--(no)-detach": "detach",
+      "--(non)-interactive": "interactive",
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -100,15 +103,14 @@ suite("negations", () => {
   })
 
   suite("splitNegation", () => {
-    const tests = {
-      "--(no)-detach": ["--detach", "--no-detach"],
-    }
-    for (const [give, want] of Object.entries(tests)) {
-      test(give, () => {
-        const have = splitNegation(give)
-        deepEqual(have, want)
-      })
-    }
+    test("no", () => {
+      const have = splitNegation("--(no)-detach", "no")
+      deepEqual(have, ["--detach", "--no-detach"])
+    })
+    test("non", () => {
+      const have = splitNegation("--(non)-interactive", "non")
+      deepEqual(have, ["--interactive", "--non-interactive"])
+    })
   })
 
   suite("splitNegations", () => {
