@@ -78,8 +78,8 @@ func setParentCommand() *cobra.Command {
 			interactive, errInteractive := readInteractiveFlag(cmd)
 			noParent, errNoParent := readNoParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose) != nil {
-				return errVerbose
+			if err := cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose); err != nil {
+				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
