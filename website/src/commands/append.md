@@ -82,6 +82,10 @@ that would be run but doesn't execute them.
 
 Display help for this command.
 
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables interactive mode.
+
 #### `-m <msg>`<br>`--message <msg>`
 
 Commit message to use together with `--commit`. Implies `--commit`.
