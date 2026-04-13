@@ -11,16 +11,16 @@ const interactiveLong = "interactive"
 
 // type-safe access to the CLI arguments of type configdomain.Interactive
 func Interactive() (AddFunc, ReadInteractiveFlagFunc) {
+	negateName := "non-" + interactiveLong
 	addFlag := func(cmd *cobra.Command) {
 		flags := cmd.Flags()
 		flags.Bool(interactiveLong, false, "enable or disable interactive dialogs")
-		negateName := "non-" + interactiveLong
 		flags.Bool(negateName, false, "disable interactive dialogs")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Interactive], error) {
 		// read negated flag
 		flags := cmd.Flags()
-		valueOpt, err := readBoolOptFlag[bool](flags, "non-"+interactiveLong)
+		valueOpt, err := readBoolOptFlag[bool](flags, negateName)
 		if err != nil {
 			return None[configdomain.Interactive](), err
 		}
