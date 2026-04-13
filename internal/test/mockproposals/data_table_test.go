@@ -56,6 +56,42 @@ body:
 		must.Eq(t, want, have)
 	})
 
+	t.Run("multiple proposals with trailing newline in body", func(t *testing.T) {
+		t.Parallel()
+		proposals := []forgedomain.ProposalData{
+			{
+				Number: forgedomain.ProposalNumber(1),
+				Source: gitdomain.NewLocalBranchName("branch-1"),
+				Target: gitdomain.NewLocalBranchName("main"),
+				Body:   gitdomain.NewProposalBodyOpt("Body 1\n"),
+				URL:    "https://example.com/pr/1",
+			},
+			{
+				Number: forgedomain.ProposalNumber(2),
+				Source: gitdomain.NewLocalBranchName("branch-2"),
+				Target: gitdomain.NewLocalBranchName("main"),
+				Body:   gitdomain.NewProposalBodyOpt("Body 2"),
+				URL:    "https://example.com/pr/2",
+			},
+		}
+		have := mockproposals.ToDocString(proposals)
+		want := `
+url: https://example.com/pr/1
+number: 1
+source: branch-1
+target: main
+body:
+  Body 1
+
+url: https://example.com/pr/2
+number: 2
+source: branch-2
+target: main
+body:
+  Body 2`[1:]
+		must.Eq(t, want, have)
+	})
+
 	t.Run("proposal with empty URL and body", func(t *testing.T) {
 		t.Parallel()
 		proposals := []forgedomain.ProposalData{
@@ -98,42 +134,6 @@ body:
   Line 1
 
   Line 3`[1:]
-		must.Eq(t, want, have)
-	})
-
-	t.Run("multiple proposals with trailing newline in body", func(t *testing.T) {
-		t.Parallel()
-		proposals := []forgedomain.ProposalData{
-			{
-				Number: forgedomain.ProposalNumber(1),
-				Source: gitdomain.NewLocalBranchName("branch-1"),
-				Target: gitdomain.NewLocalBranchName("main"),
-				Body:   gitdomain.NewProposalBodyOpt("Body 1\n"),
-				URL:    "https://example.com/pr/1",
-			},
-			{
-				Number: forgedomain.ProposalNumber(2),
-				Source: gitdomain.NewLocalBranchName("branch-2"),
-				Target: gitdomain.NewLocalBranchName("main"),
-				Body:   gitdomain.NewProposalBodyOpt("Body 2"),
-				URL:    "https://example.com/pr/2",
-			},
-		}
-		have := mockproposals.ToDocString(proposals)
-		want := `
-url: https://example.com/pr/1
-number: 1
-source: branch-1
-target: main
-body:
-  Body 1
-
-url: https://example.com/pr/2
-number: 2
-source: branch-2
-target: main
-body:
-  Body 2`[1:]
 		must.Eq(t, want, have)
 	})
 }
