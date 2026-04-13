@@ -112,6 +112,7 @@ Feature: sync the current feature branch and update proposals
       target: main
       body:
         other-1 body
+
       url: https://example.com/pr/5
       number: 5
       source: other-2
@@ -198,6 +199,7 @@ Feature: sync the current feature branch and update proposals
       target: main
       body:
         other-1 body
+
       url: https://example.com/pr/5
       number: 5
       source: other-2
