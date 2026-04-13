@@ -68,7 +68,7 @@ export function isNegatable(variation: string): string {
   return ""
 }
 
-export function splitNegation(variation: string): string[] {
+export function splitNegation(variation: string, negation: string): string[] {
   const result: string[] = []
   const name = variationName(variation)
   result.push(`--${name}`)
