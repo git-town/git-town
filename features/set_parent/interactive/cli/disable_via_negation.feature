@@ -8,7 +8,7 @@ Feature: interactivity disabled, no main branch
       | existing | feature | main   | local     |
     And Git Town is not configured
     And the current branch is "existing"
-    When I run "git-town set-parent new --interactive=false"
+    When I run "git-town set-parent new --non-interactive"
 
   Scenario: result
     Then Git Town runs no commands
@@ -21,7 +21,7 @@ Feature: interactivity disabled, no main branch
       """
 
   Scenario: undo
-    When I run "git-town undo --interactive=false"
+    When I run "git-town undo --non-interactive"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
