@@ -4,14 +4,17 @@ package forgedomain
 // no forge-specific shorthand available.
 func ProposalReferenceFallback(proposal ProposalData) string {
 	title := proposal.Title.String()
+	hasTitle := title != ""
+	hasURL := proposal.URL != ""
+	hasNumber := proposal.Number.Int() > 0
 	switch {
-	case title != "" && proposal.URL != "":
+	case hasTitle && hasURL:
 		return "[" + title + "](" + proposal.URL + ")"
-	case proposal.URL != "":
+	case hasURL:
 		return proposal.URL
-	case title != "":
+	case hasTitle:
 		return title
-	case proposal.Number.Int() > 0:
+	case hasNumber:
 		return "#" + proposal.Number.String()
 	default:
 		return ""
