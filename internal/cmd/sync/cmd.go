@@ -170,7 +170,7 @@ Start:
 		PushBranches:        data.config.NormalConfig.PushBranches,
 		Remotes:             data.remotes,
 	})
-	syncTouchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
+	touchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
@@ -193,7 +193,7 @@ Start:
 		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          data.config,
 			Program:         runProgram,
-			TouchedBranches: syncTouchedBranches,
+			TouchedBranches: touchedBranches,
 		})
 	}
 
@@ -216,7 +216,7 @@ Start:
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
-		TouchedBranches:       syncTouchedBranches.BranchNames(),
+		TouchedBranches:       touchedBranches.BranchNames(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
