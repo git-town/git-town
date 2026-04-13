@@ -19,8 +19,17 @@ export class SummarySection {
       // Check if this contains grouped arguments in parentheses
       const groupMatch = argText.match(/^\(([^)]+)\)(.*)/)
       if (groupMatch) {
-        // Extract the content inside parentheses and any content after (like <message>)
-        argText = groupMatch[1] + groupMatch[2]
+        const inner = groupMatch[1]
+        const rest = groupMatch[2]
+        // [(--non)-interactive] is stored as (--non) + -interactive; keep the (non)/(no)
+        // template so splitNegations can expand to --interactive and --non-interactive.
+        if (inner === "--no" && rest.startsWith("-")) {
+          argText = `--(no)-${rest.slice(1)}`
+        } else if (inner === "--non" && rest.startsWith("-")) {
+          argText = `--(non)-${rest.slice(1)}`
+        } else {
+          argText = inner + rest
+        }
       }
 
       if (!argText.trim().startsWith("-")) {
@@ -48,9 +57,9 @@ export class SummarySection {
 export function splitNegations(variations: string[]): string[] {
   const result: string[] = []
   for (const variation of variations) {
-    const negation = isNegatable(variation)
-    if (negation !== "") {
-      result.push(...splitNegation(variation, negation))
+    const negationKind = negationKindForVariation(variation)
+    if (negationKind !== null) {
+      result.push(...splitNegation(variation, negationKind))
     } else {
       result.push(variation)
     }
@@ -58,14 +67,18 @@ export function splitNegations(variations: string[]): string[] {
   return result
 }
 
-export function isNegatable(variation: string): string {
-  if (variation.startsWith("--(no)-")) {
-    return "no"
-  }
+function negationKindForVariation(variation: string): "no" | "non" | null {
   if (variation.startsWith("--(non)-")) {
     return "non"
   }
-  return ""
+  if (variation.startsWith("--(no)-")) {
+    return "no"
+  }
+  return null
+}
+
+export function isNegatable(variation: string): boolean {
+  return negationKindForVariation(variation) !== null
 }
 
 export function splitNegation(variation: string, negation: string): string[] {
@@ -77,5 +90,11 @@ export function splitNegation(variation: string, negation: string): string[] {
 }
 
 export function variationName(variation: string): string {
-  return variation.substring(variation.startsWith("--no-") ? 7 : 8)
+  if (variation.startsWith("--(non)-")) {
+    return variation.slice("--(non)-".length)
+  }
+  if (variation.startsWith("--(no)-")) {
+    return variation.slice("--(no)-".length)
+  }
+  throw new Error(`variation is not negatable: ${variation}`)
 }
