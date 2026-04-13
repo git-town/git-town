@@ -71,7 +71,10 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 
 func ToDocString(proposals []forgedomain.ProposalData) string {
 	result := strings.Builder{}
-	for _, proposal := range proposals {
+	for proposalIndex, proposal := range proposals {
+		if proposalIndex > 0 {
+			result.WriteString("\n")
+		}
 		result.WriteString("url:")
 		if proposal.URL != "" {
 			result.WriteString(" ")
@@ -85,7 +88,8 @@ func ToDocString(proposals []forgedomain.ProposalData) string {
 		result.WriteString(proposal.Target.String())
 		result.WriteString("\nbody:\n")
 		if body, hasBody := proposal.Body.Get(); hasBody {
-			result.WriteString(gohacks.IndentLines(body.String(), 2))
+			bodyText := strings.TrimRight(body.String(), "\r\n")
+			result.WriteString(gohacks.IndentLines(bodyText, 2))
 		}
 		result.WriteString("\n")
 	}
