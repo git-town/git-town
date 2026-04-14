@@ -50,9 +50,6 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 }
 
 func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
-	if data.Number.Int() > 0 {
-		return "#" + data.Number.String()
-	}
 	return forgedomain.ProposalReferenceFallback(data)
 }
 
