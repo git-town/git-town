@@ -19,6 +19,10 @@ type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective forge type is prepopulated with.
 	DefaultProposalMessage(proposal ProposalData) string
+
+	// ProposalReference provides a forge-specific textual reference for the given proposal
+	// that can be used in proposal breadcrumb lists.
+	ProposalReference(proposal ProposalData) string
 }
 
 type CreateProposalArgs struct {

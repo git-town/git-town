@@ -43,6 +43,10 @@ func (self *testFinder2) FindProposal(source, target gitdomain.LocalBranchName) 
 	}), nil
 }
 
+func (self *testFinder2) ProposalReference(data forgedomain.ProposalData) string {
+	return forgedomain.ProposalReferenceFallback(data)
+}
+
 func TestAddProposalsToTree(t *testing.T) {
 	t.Parallel()
 

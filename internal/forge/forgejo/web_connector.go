@@ -49,6 +49,10 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
 }
 
+func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return forgedomain.ProposalReferenceFallback(data)
+}
+
 func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }

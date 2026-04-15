@@ -20,5 +20,5 @@ func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBr
 	treeWithProposals := AddProposalsToTree(tree, connector)
 
 	// step 3: render the tree into Markdown format
-	return RenderTree(treeWithProposals, currentBranch, direction)
+	return RenderTree(treeWithProposals, currentBranch, direction, connector)
 }

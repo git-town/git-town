@@ -48,6 +48,10 @@ func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranc
 	return loadedProposal, err
 }
 
+func (self *CachedAPIConnector) ProposalReference(proposalData forgedomain.ProposalData) string {
+	return self.api.ProposalReference(proposalData)
+}
+
 // ============================================================================
 // search proposals
 // ============================================================================
