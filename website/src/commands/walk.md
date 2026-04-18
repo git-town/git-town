@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [-s | --stack] [-v | --verbose]
+git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [--(non)-interactive] [-s | --stack] [-v | --verbose]
 ```
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
@@ -62,6 +62,10 @@ execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-s`<br>`--stack`
 

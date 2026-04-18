@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town merge [--dry-run] [-h | --help] [-v | --verbose]
+git town merge [--dry-run] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
 The _merge_ command merges the current branch into the branch ahead of it in the
@@ -59,6 +59,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-v`<br>`--verbose`
 

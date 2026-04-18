@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town set-parent [<branch>] [--(no)-auto-resolve] [-h | --help] [--none] [-v | --verbose]
+git town set-parent [<branch>] [--(no)-auto-resolve] [-h | --help] [--(non)-interactive] [--none] [-v | --verbose]
 ```
 
 The _set-parent_ command moves a branch and all its children below another
@@ -90,6 +90,10 @@ Disables automatic resolution of
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `--none`
 

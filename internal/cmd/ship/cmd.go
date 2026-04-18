@@ -51,6 +51,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 func Cmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.IgnoreUncommitted()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
@@ -64,12 +65,13 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			ignoreUncommitted, errIgnoreUncommitted := readIgnoreUncommittedFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			messageFile, errMessageFile := readMessageFileFlag(cmd)
 			shipStrategy, errShipStrategy := readShipStrategyFlag(cmd)
 			toParent, errToParent := readToParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errIgnoreUncommitted, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errIgnoreUncommitted, errInteractive, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -81,6 +83,7 @@ func Cmd() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: ignoreUncommitted,
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -99,6 +102,7 @@ func Cmd() *cobra.Command {
 	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addIgnoreUncommittedFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)

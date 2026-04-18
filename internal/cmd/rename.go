@@ -44,6 +44,7 @@ Renaming perennial branches requires the --force flag.
 func renameCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "rename [<old_branch_name>] <new_branch_name>",
@@ -53,8 +54,9 @@ func renameCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			force, errForce := readForceFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errForce, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errForce, errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -66,6 +68,7 @@ func renameCommand() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -76,6 +79,7 @@ func renameCommand() *cobra.Command {
 	}
 	addDryRunFlag(&cmd)
 	addForceFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }

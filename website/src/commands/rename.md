@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-h | --help] [-v | --verbose]
+git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
 The _rename_ command renames the current branch and its tracking branch. The
@@ -39,6 +39,10 @@ flag.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-v`<br>`--verbose`
 

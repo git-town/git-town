@@ -41,6 +41,7 @@ into another branch without needing to change branches.`
 
 func commitCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
 	addUpFlag, readUpFlag := flags.Up()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -52,10 +53,11 @@ func commitCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			up, errUp := readUpFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errMessage, errUp, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errInteractive, errMessage, errUp, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -67,6 +69,7 @@ func commitCmd() *cobra.Command {
 				DryRun:            dryRun,
 				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -76,6 +79,7 @@ func commitCmd() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addMessageFlag(&cmd)
 	addUpFlag(&cmd)
 	addVerboseFlag(&cmd)

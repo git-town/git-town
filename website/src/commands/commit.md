@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [--dry-run] [-h | --help] [(-m | --message) <text>] [-u | --up uint] [-v | --verbose]
+git town commit [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <text>] [-u | --up uint] [-v | --verbose]
 ```
 
 The _commit_ command takes the currently staged changes and commits them into a
@@ -44,6 +44,10 @@ Print the Git commands that would be executed without actually running them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <text>`<br>`--message <text>`
 

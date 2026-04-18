@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town hack [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-stash] [--(no)-sync] [-v | --verbose]
+git town hack [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-stash] [--(no)-sync] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -86,6 +86,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <text>`<br>`--message <text>`
 

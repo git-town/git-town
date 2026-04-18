@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town detach [--dry-run] [-h | --help] [-v | --verbose]
+git town detach [--dry-run] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
 The _detach_ command removes the current branch from the stack it is in and
@@ -54,6 +54,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-v`<br>`--verbose`
 

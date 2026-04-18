@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]
+git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]
 ```
 
 The _append_ command creates a new feature branch with the given name as a
@@ -81,6 +81,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <msg>`<br>`--message <msg>`
 
