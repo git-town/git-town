@@ -10,7 +10,7 @@ Feature: interactivity disabled, no main branch
     And Git Town is not configured
     And Git setting "git-town.interactive" is "false"
     And the current branch is "beta"
-    When I run "git-town branch --interactive=false"
+    When I run "git-town branch"
 
   Scenario: result
     Then Git Town runs no commands

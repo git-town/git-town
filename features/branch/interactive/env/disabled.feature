@@ -9,7 +9,7 @@ Feature: interactivity disabled, no main branch
       | beta  | feature | alpha  | local, origin |
     And Git Town is not configured
     And the current branch is "beta"
-    When I run "git-town branch --interactive=false" with these environment variables
+    When I run "git-town branch" with these environment variables
       | GIT_TOWN_INTERACTIVE | false |
 
   Scenario: result
