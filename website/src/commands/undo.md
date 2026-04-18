@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town undo [-h | --help] [-v | --verbose]
+git town undo [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
 The _undo_ command reverts the last fully executed Git Town command. It performs
@@ -15,6 +15,10 @@ the state it was before you ran the problematic command.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-v`<br>`--verbose`
 

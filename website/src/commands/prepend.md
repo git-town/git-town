@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
+git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _prepend_ command creates a new feature branch as the parent of the current
@@ -84,6 +84,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <text>`<br>`--message <text>`
 

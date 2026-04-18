@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable> | --no-browser] [--dry-run] [--headless] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
+git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable> | --no-browser] [--dry-run] [--headless] [-h | --help] [--(non)-interactive] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
@@ -63,6 +63,10 @@ when working in headless environments. See the
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-s`<br>`--stack`
 

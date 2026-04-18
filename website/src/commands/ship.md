@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town ship [<branch-name>] [--dry-run] [-h | --help] [--(no)-ignore-uncommitted] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
+git town ship [<branch-name>] [--dry-run] [-h | --help] [--(no)-ignore-uncommitted] [--(non)-interactive] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 _Notice: Most people don't need to use this command. The recommended way to
@@ -47,6 +47,10 @@ Display help for this command.
 
 Overrides the [ignore-uncommitted](../preferences/ignore-uncommitted.md) setting
 for this call.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <text>`<br>`--message <text>`
 

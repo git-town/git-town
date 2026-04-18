@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [--gone] [-h | --help] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
+git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [--gone] [-h | --help] [--(non)-interactive] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -105,6 +105,10 @@ branches that were shipped or deleted at the remote.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-p`<br>`--prune`
 

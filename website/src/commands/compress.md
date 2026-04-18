@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town compress [--dry-run] [-h | --help] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]
+git town compress [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]
 ```
 
 The _compress_ command squashes all commits on a branch into a single commit.
@@ -53,6 +53,10 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <text>`<br>`--message <text>`
 
