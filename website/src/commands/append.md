@@ -84,7 +84,7 @@ Display help for this command.
 
 #### `--interactive`<br>`--non-interactive`
 
-Enables or disables interactive mode.
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-m <msg>`<br>`--message <msg>`
 

@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town branch [(-d | --display-types) <branch-types>] [-h | --help] [(-o | --order) <asc|desc>] [-v | --verbose]
+git town branch [(-d | --display-types) <branch-types>] [-h | --help] [--(non)-interactive] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
 
 The _branch_ command is Git Town's equivalent of the
@@ -22,6 +22,10 @@ addition to the branch name when showing a list of branches. More info
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-o <asc|desc>`<br>`--order <asc|desc>`
 
