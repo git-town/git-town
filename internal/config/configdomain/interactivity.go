@@ -3,6 +3,8 @@ package configdomain
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -29,6 +31,17 @@ func (self Interactive) String() string {
 		return "disabled: " + string(self)
 	}
 	return "enabled"
+}
+
+func ParseInteractive(value string, source string) (Option[Interactive], error) {
+	boolValue, err := gohacks.ParseBool[bool](value, source)
+	if err != nil {
+		return None[Interactive](), err
+	}
+	if boolValue {
+		return Some(InteractiveEnabled), nil
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
 func NewInteractiveFromEnv(envTerm string) Option[Interactive] {

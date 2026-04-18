@@ -98,6 +98,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	gitlabConnectorType, errGitlabConnectorType := load(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	headless, errHeadless := load(snapshot, configdomain.KeyHeadless, gohacks.ParseBoolOpt[configdomain.Headless], ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := load(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
+	interactive, errInteractive := load(snapshot, configdomain.KeyInteractive, configdomain.ParseInteractive, ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
@@ -135,6 +136,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errGitlabConnectorType,
 		errHeadless,
 		errIgnoreUncommitted,
+		errInteractive,
 		errLineage,
 		errNewBranchType,
 		errObservedRegex,
@@ -169,7 +171,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
-		Interactive:                 None[configdomain.Interactive](),
 		DisplayTypes:                displayTypes,
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                featureRegex,
@@ -184,6 +185,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		Headless:                    headless,
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(snapshot[configdomain.KeyHostingOriginHostname]),
 		IgnoreUncommitted:           ignoreUncommitted,
+		Interactive:                 interactive,
 		Lineage:                     lineage,
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(snapshot[configdomain.KeyMainBranch]),
 		NewBranchType:               newBranchType,

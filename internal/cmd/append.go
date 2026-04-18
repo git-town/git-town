@@ -168,6 +168,9 @@ Start:
 	if err != nil {
 		return err
 	}
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111111")
+	fmt.Println(repo.UnvalidatedConfig.GitLocal.Interactive)
+	fmt.Println(repo.UnvalidatedConfig.GitUnscoped.Interactive)
 	data, flow, err := determineAppendData(determineAppendDataArgs{
 		beam:          args.beam,
 		commit:        args.commit,

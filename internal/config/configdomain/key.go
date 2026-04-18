@@ -100,6 +100,7 @@ const (
 	KeyHeadless                            = Key("git-town.headless")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyIgnoreUncommitted                   = Key("git-town.ignore-uncommitted")
+	KeyInteractive                         = Key("git-town.interactive")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyNewBranchType                       = Key("git-town.new-branch-type")
 	KeyObservedRegex                       = Key("git-town.observed-regex")
@@ -172,6 +173,7 @@ var keys = []Key{
 	KeyHeadless,
 	KeyHostingOriginHostname,
 	KeyIgnoreUncommitted,
+	KeyInteractive,
 	KeyMainBranch,
 	KeyNewBranchType,
 	KeyObservedRegex,
