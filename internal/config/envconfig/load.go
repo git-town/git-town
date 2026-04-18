@@ -87,7 +87,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
-	interactive := configdomain.NewInteractiveFromEnv(env.Get(term))
+	interactive1, errInteractive1 := load(env, term, gohacks.ParseBoolOpt[bool])
+	interactive := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
@@ -124,6 +125,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errGitlabConnectorType,
 		errHeadless,
 		errIgnoreUncommitted,
+		errInteractive1,
 		errNewBranchType,
 		errObservedRegex,
 		errOffline,

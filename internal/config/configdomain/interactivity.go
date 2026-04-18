@@ -33,7 +33,7 @@ func (self Interactive) String() string {
 	return "enabled"
 }
 
-func ParseInteractive(value string, source string) (Option[Interactive], error) {
+func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive], error) {
 	boolValue, err := gohacks.ParseBool[bool](value, source)
 	if err != nil {
 		return None[Interactive](), err
@@ -44,11 +44,18 @@ func ParseInteractive(value string, source string) (Option[Interactive], error) 
 	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
-func NewInteractiveFromEnv(envTerm string) Option[Interactive] {
+func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Interactive] {
 	if strings.ToLower(envTerm) == "dumb" {
 		return Some(Interactive("only a dumb terminal available"))
 	}
-	return None[Interactive]()
+	envConfig, hasEnvConfig := envConfigOpt.Get()
+	if !hasEnvConfig {
+		return None[Interactive]()
+	}
+	if envConfig {
+		return Some(InteractiveEnabled)
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaEnv))
 }
 
 func NewInteractiveFromTTY(tty HasTTY) Option[Interactive] {
