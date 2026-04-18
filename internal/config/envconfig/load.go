@@ -38,6 +38,7 @@ const (
 	gitlabToken                 = "GIT_TOWN_GITLAB_TOKEN"
 	headless                    = "GIT_TOWN_HEADLESS"
 	ignoreUncommitted           = "GIT_TOWN_IGNORE_UNCOMMITTED"
+	interactive                 = "GIT_TOWN_INTERACTIVE"
 	mainBranch                  = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType               = "GIT_TOWN_NEW_BRANCH_TYPE"
 	observedRegex               = "GIT_TOWN_OBSERVED_REGEX"
@@ -87,8 +88,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
-	interactive1, errInteractive1 := load(env, term, gohacks.ParseBoolOpt[bool])
-	interactive := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
+	interactive1, errInteractive1 := load(env, interactive, gohacks.ParseBoolOpt[bool])
+	interactive2 := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
@@ -173,7 +174,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:                 interactive,
+		Interactive:                 interactive2,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),
