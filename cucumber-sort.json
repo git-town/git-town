@@ -166,5 +166,8 @@
     "^the initial tags exist now$",
     "^the initial proposals exist now$",
     "^the proposals are now$"
+  ],
+  "unknown-steps": [
+    "^I add an unrelated stash entry with file \".*\"$"
   ]
 }

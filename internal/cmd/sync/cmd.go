@@ -208,7 +208,7 @@ Start:
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        0,
+		BeginStashSize:        data.stashSize,
 		Command:               syncCommand,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
