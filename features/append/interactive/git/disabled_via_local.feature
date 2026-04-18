@@ -10,23 +10,22 @@ Feature: disable interactive mode via local Git config
     And Git Town is not configured
     When I run "git-town append new"
 
-  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via CLI.
+      no main branch configured and interactivity disabled via Git metadata.
       
       To configure:
       git config git-town.main-branch <branch>
       """
 
   Scenario: undo
-    When I run "git-town undo --interactive=false"
+    When I run "git-town undo"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via CLI.
+      no main branch configured and interactivity disabled via Git metadata.
       
       To configure:
       git config git-town.main-branch <branch>
