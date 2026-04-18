@@ -45,17 +45,17 @@ func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive
 }
 
 func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Interactive] {
+	envConfig, hasEnvConfig := envConfigOpt.Get()
+	if hasEnvConfig {
+		if envConfig {
+			return Some(InteractiveEnabled)
+		}
+		return Some(Interactive(messages.InteractivityDisabledViaEnv))
+	}
 	if strings.ToLower(envTerm) == "dumb" {
 		return Some(Interactive("only a dumb terminal available"))
 	}
-	envConfig, hasEnvConfig := envConfigOpt.Get()
-	if !hasEnvConfig {
-		return None[Interactive]()
-	}
-	if envConfig {
-		return Some(InteractiveEnabled)
-	}
-	return Some(Interactive(messages.InteractivityDisabledViaEnv))
+	return None[Interactive]()
 }
 
 func NewInteractiveFromTTY(tty HasTTY) Option[Interactive] {
