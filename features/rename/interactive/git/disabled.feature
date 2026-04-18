@@ -7,8 +7,8 @@ Feature: interactivity disabled, no main branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
     And Git Town is not configured
-    And the current branch is "existing"
     And Git setting "git-town.interactive" is "false"
+    And the current branch is "existing"
     When I run "git-town rename new"
 
   Scenario: result
@@ -16,7 +16,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
@@ -27,7 +27,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

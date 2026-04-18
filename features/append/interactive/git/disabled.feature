@@ -15,7 +15,7 @@ Feature: disable interactive mode via local Git config
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
@@ -26,7 +26,7 @@ Feature: disable interactive mode via local Git config
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

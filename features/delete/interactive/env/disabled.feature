@@ -6,8 +6,8 @@ Feature: interactivity disabled, no main branch
     And the branches
       | NAME     | TYPE   | PARENT | LOCATIONS     |
       | branch-1 | (none) |        | local, origin |
-    And the current branch is "branch-1"
     And Git Town is not configured
+    And the current branch is "branch-1"
     When I run "git-town delete" with these environment variables
       | GIT_TOWN_INTERACTIVE | false |
 
@@ -18,7 +18,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via environment variable.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

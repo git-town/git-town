@@ -11,8 +11,8 @@ Feature: interactivity disabled, no main branch
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
     And Git Town is not configured
-    And the current branch is "feature"
     And Git setting "git-town.interactive" is "false"
+    And the current branch is "feature"
     When I run "git-town compress"
 
   Scenario: result
@@ -22,7 +22,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

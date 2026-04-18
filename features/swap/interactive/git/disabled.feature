@@ -8,8 +8,8 @@ Feature: interactivity disabled, no main branch
       | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
     And Git Town is not configured
-    And the current branch is "branch-2"
     And Git setting "git-town.interactive" is "false"
+    And the current branch is "branch-2"
     When I run "git-town swap"
 
   Scenario: result
@@ -17,7 +17,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
@@ -28,7 +28,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """

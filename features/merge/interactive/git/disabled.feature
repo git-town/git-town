@@ -16,8 +16,8 @@ Feature: interactivity disabled, no main branch
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
     And Git Town is not configured
-    And the current branch is "beta"
     And Git setting "git-town.interactive" is "false"
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
@@ -27,7 +27,7 @@ Feature: interactivity disabled, no main branch
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via Git metadata.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
