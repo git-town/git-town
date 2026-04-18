@@ -8,14 +8,17 @@ Feature: interactivity disabled, no main branch
       | branch-1 | (none) |        | local, origin |
       | branch-2 | (none) |        | local, origin |
     And the current branch is "branch-1"
-    And I ran "git-town set-parent branch-1"
-    And the current branch is "branch-1"
+    And Git Town is not configured
     When I run "git-town delete --interactive=false"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                   |
-      | branch-1 | git fetch --prune --tags  |
-      |          | git push origin :branch-1 |
-      |          | git checkout branch-2     |
-      | branch-2 | git branch -D branch-1    |
+      | BRANCH   | COMMAND                  |
+      | branch-1 | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      no main branch configured and interactivity disabled via CLI.
+
+      To configure:
+      git config git-town.main-branch <branch>
+      """
