@@ -1,16 +1,17 @@
-# Interactive
+# Interactive Mode
 
-By default, when Git Town needs additional information from the user that wasn't
-provided via CLI flags, it asks directly for them via interactive dialogs. These
-interactive dialogs don't work in environments that have limited or no
-interactive terminal available. Git Town automatically disables interactivity
-when it detects missing or degraded terminal features. If that automated
-detection doesn't work in your situation, or you want to always disable
-interactivity, this setting is for you.
+Git Town prompts for missing input when required CLI flags are not provided.
 
-When interactivity is disabled, and Git Town needs additional information, it
-exits with an error message that describes the CLI flags to call Git Town with
-again to provide the needed information.
+These prompts require an interactive terminal. If the terminal is
+non-interactive or lacks required capabilities (for example, in CI or scripts),
+Git Town disables interactive mode automatically.
+
+If auto-detection is incorrect, or if you need consistent behavior, disable
+interactive mode explicitly using this setting.
+
+When interactive mode is disabled and required input is missing, Git Town exits
+with an error message explaining the flags needed to rerun the command
+non-interactively.
 
 ## via CLI flag
 
