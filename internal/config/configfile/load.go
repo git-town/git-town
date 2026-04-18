@@ -62,6 +62,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 		headless                    Option[configdomain.Headless]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
+		interactive                 Option[configdomain.Interactive]
 		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
 		mainBranch                  Option[gitdomain.LocalBranchName]
 		newBranchType               Option[configdomain.NewBranchType]
@@ -90,6 +91,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
+	}
+	if data.Interactive != nil {
+		interactive = configdomain.NewInteractiveFromConfigFile(*data.Interactive)
 	}
 	if data.PushNewBranches != nil {
 		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewBranches))
