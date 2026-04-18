@@ -5,8 +5,8 @@ Feature: disable interactive mode via environment variable
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And Git Town is not configured
+    And the current branch is "existing"
     When I run "git-town append new" with these environment variables
       | GIT_TOWN_INTERACTIVE | false |
 
@@ -15,7 +15,7 @@ Feature: disable interactive mode via environment variable
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via environment variable.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
@@ -27,7 +27,7 @@ Feature: disable interactive mode via environment variable
     And Git Town prints the error:
       """
       no main branch configured and interactivity disabled via environment variable.
-      
+
       To configure:
       git config git-town.main-branch <branch>
       """
