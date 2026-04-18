@@ -8,9 +8,9 @@ Feature: interactivity disabled, no main branch
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
     And Git Town is not configured
-    And Git setting "git-town.interactive" is "false"
     And the current branch is "beta"
-    When I run "git-town branch --interactive=false"
+    When I run "git-town branch --interactive=false" with these environment variables
+      | GIT_TOWN_INTERACTIVE | false |
 
   Scenario: result
     Then Git Town runs no commands
