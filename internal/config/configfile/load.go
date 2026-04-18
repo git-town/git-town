@@ -319,7 +319,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GiteaToken:                  None[forgedomain.GiteaToken](),
 		Headless:                    headless,
 		HostingOriginHostname:       hostingOriginHostname,
-		Interactive:                 None[configdomain.Interactive](),
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  mainBranch,
 		NewBranchType:               newBranchType,
