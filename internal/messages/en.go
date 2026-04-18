@@ -194,6 +194,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	InputAddOrRemove            = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	InteractivityDisabledViaCLI = "interactivity disabled via CLI"
+	InteractivityDisabledViaEnv = "interactivity disabled via environment variable"
+	InteractivityDisabledViaGit = "interactivity disabled via Git metadata"
 	InvalidStatusOutput         = `invalid "git status -z" output: %q`
 
 	MainBranch                       = "Main branch: %s\n"

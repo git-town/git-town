@@ -3,6 +3,8 @@ package configdomain
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -31,7 +33,25 @@ func (self Interactive) String() string {
 	return "enabled"
 }
 
-func NewInteractiveFromEnv(envTerm string) Option[Interactive] {
+func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive], error) {
+	boolValue, err := gohacks.ParseBool[bool](value, source)
+	if err != nil {
+		return None[Interactive](), err
+	}
+	if boolValue {
+		return Some(InteractiveEnabled), nil
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
+}
+
+func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Interactive] {
+	envConfig, hasEnvConfig := envConfigOpt.Get()
+	if hasEnvConfig {
+		if envConfig {
+			return Some(InteractiveEnabled)
+		}
+		return Some(Interactive(messages.InteractivityDisabledViaEnv))
+	}
 	if strings.ToLower(envTerm) == "dumb" {
 		return Some(Interactive("only a dumb terminal available"))
 	}
