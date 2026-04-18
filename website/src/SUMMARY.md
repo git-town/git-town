@@ -109,5 +109,6 @@
     - [Run pre-push hook](preferences/push-hook.md)
     - [Sync tags](preferences/sync-tags.md)
     - [Sync with upstream](preferences/sync-upstream.md)
+  - [Interactive mode](preferences/interactive.md)
   - [Offline mode](preferences/offline.md)
   - [Branch lineage](preferences/parent.md)
