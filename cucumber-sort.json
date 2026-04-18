@@ -112,6 +112,7 @@
     "^I amend this commit$",
     "^I add commit \".*\" to the \".*\" branch$",
     "^I add this commit to the .* branch",
+    "^I add an unrelated stash entry with file \".*\"$",
     "^I ran .* on branch",
     "^the current branch is \".*$",
     "^branch \".*\" is active in another worktree$",
@@ -166,8 +167,5 @@
     "^the initial tags exist now$",
     "^the initial proposals exist now$",
     "^the proposals are now$"
-  ],
-  "unknown-steps": [
-    "^I add an unrelated stash entry with file \".*\"$"
   ]
 }
