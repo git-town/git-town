@@ -10,23 +10,23 @@ Feature: disable interactive mode via environment variable
     When I run "git-town append new" with these environment variables
       | GIT_TOWN_INTERACTIVE | false |
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via Git metadata.
+      no main branch configured and interactivity disabled via environment variable.
       
       To configure:
       git config git-town.main-branch <branch>
       """
 
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo" with these environment variables
+      | GIT_TOWN_INTERACTIVE | false |
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via Git metadata.
+      no main branch configured and interactivity disabled via environment variable.
       
       To configure:
       git config git-town.main-branch <branch>
