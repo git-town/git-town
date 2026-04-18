@@ -13,23 +13,24 @@ Feature: disable interactive mode via CLI
     And the current branch is "existing"
     When I run "git-town append new"
 
-  @this
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | COMMAND                  |
+      | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via CLI.
+      no main branch configured and interactivity disabled via config file.
       
       To configure:
       git config git-town.main-branch <branch>
       """
 
   Scenario: undo
-    When I run "git-town undo --interactive=false"
+    When I run "git-town undo"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      no main branch configured and interactivity disabled via CLI.
+      no main branch configured and interactivity disabled via config file.
       
       To configure:
       git config git-town.main-branch <branch>
