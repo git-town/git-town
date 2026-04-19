@@ -1,15 +1,16 @@
 # Display the currently pending Git Town command in your shell prompt
 
 `git town status --pending` displays the name of the currently pending Git Town
-command. This allows you to have your shell prompt display a reminder when you
-need to run [git town continue](../commands/continue.md).
+command.
+This allows you to have your shell prompt display a reminder
+when you need to run [git town continue](../commands/continue.md).
 
 <img width="108" height="31" src="shell_prompt_example.gif">
 
 ### Bash
 
-To add this status indicator to your Bash prompt, add the following to your
-`.bashrc`:
+To add this status indicator to your Bash prompt,
+add the following to your `.bashrc`:
 
 ```bash
 function git_town_status {
