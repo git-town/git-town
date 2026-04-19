@@ -42,6 +42,7 @@ names = [
   "Git",
   "Q & A",
   "[git town",
+  "git-branches.toml",
   "git append",
   "git diff-parent",
   "git hack",
