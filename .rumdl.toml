@@ -101,10 +101,12 @@ html-elements = false
 enabled = true
 style = "aligned"
 
+# heading capitalization
 [MD063]
 style = "sentence-case"
 ignore-words = [
   "auto-sync",
   "config",
   "environment",
+  "options"
 ]
