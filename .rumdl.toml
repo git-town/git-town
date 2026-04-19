@@ -43,6 +43,7 @@ names = [
   "Q & A",
   "[git town",
   "git append",
+  "git branch",
   "git diff-parent",
   "git hack",
   "git ship",
