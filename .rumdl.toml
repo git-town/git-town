@@ -13,7 +13,7 @@ extend-disable = [
   "MD033", # allow inline HTML
 ]
 
-exclude = [".git", ".github", ".tools"]
+exclude = [".git", ".github", ".tools", "vendor", "CHANGELOG.md"]
 
 # Respect .gitignore files when scanning directories (default: true)
 respect-gitignore = true
