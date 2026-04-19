@@ -6,7 +6,7 @@
 git town skip [-h | --help] [--park] [-v | --verbose]
 ```
 
-The _skip_ command allows to skip a git branch with merge conflicts
+The _skip_ command allows to skip a branch with merge conflicts
 when syncing all feature branches.
 
 ## Options
