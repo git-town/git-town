@@ -12,6 +12,8 @@ extend-enable = [
 extend-disable = [
   "MD001", # heading levels should increment by one level at a time
   "MD033", # allow inline HTML
+  "MD041", # first line in file should be a top level heading
+  "MD059", # link text should be descriptive
 ]
 
 exclude = [".git", ".github", ".tools", "vendor", "CHANGELOG.md"]
