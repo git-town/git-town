@@ -172,7 +172,7 @@ Set an environment variable `GIT_TOWN_REMOTE` with the desired value of the
 Git Town will use that value for internal calculations,
 instead of what is configured in the repo.
 
-### Running on windows
+### Running on Windows
 
 If Cucumber tests produce garbled output on Windows,
 try running them inside Git Bash.
