@@ -102,6 +102,6 @@ style = "aligned"
 [MD063]
 style = "sentence-case"
 lowercase-words = [
-  "config file",
-  "environment variable",
+  "config",
+  "environment",
 ]
