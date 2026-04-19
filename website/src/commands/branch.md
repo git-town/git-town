@@ -7,17 +7,18 @@ git town branch [(-d | --display-types) <branch-types>] [-h | --help] [--(non)-i
 ```
 
 The _branch_ command is Git Town's equivalent of the
-[git branch](https://git-scm.com/docs/git-branch) command. It displays the local
-branch hierarchy, and the types of all branches except for main and feature
-branches.
+[git branch](https://git-scm.com/docs/git-branch) command.
+It displays the local branch hierarchy,
+and the types of all branches except for main and feature branches.
 
 ## Options
 
 #### `-d <branch-type>`<br>`--display-types <branch-type>`
 
-This flag allows customizing whether Git Town also displays the branch type in
-addition to the branch name when showing a list of branches. More info
-[here](../preferences/display-types.md#cli-flags).
+This flag allows customizing
+whether Git Town also displays the branch type in addition to the branch name
+when showing a list of branches.
+More info [here](../preferences/display-types.md#cli-flags).
 
 #### `-h`<br>`--help`
 

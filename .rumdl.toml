@@ -50,6 +50,7 @@ names = [
   "git sync",
   "git town append",
   "git town branch",
+  "git town commit",
   "git town completions",
   "git town compress",
   "git town config",
