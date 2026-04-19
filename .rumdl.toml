@@ -37,6 +37,8 @@ tables = false # Exclude tables from line length check
 names = [
   # keep-sorted start
   "Auto-resolve phantom conflicts",
+  "Bitbucket Cloud",
+  "Bitbucket Data Center",
   "Cucumber",
   "E2E",
   "Git Town",
