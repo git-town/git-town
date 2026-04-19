@@ -75,8 +75,8 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` parameter creates proposals for all branches of the
-stack that the current branch belongs to.
+The `--stack` aka `-s` parameter creates proposals for all branches of the stack
+that the current branch belongs to.
 
 #### `-t <text>`<br>`--title <text>`
 
