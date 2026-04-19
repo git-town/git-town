@@ -110,6 +110,7 @@ ignore-words = [
   "always-merge",
   "api",
   "auto-sync",
+  "compress",
   "config",
   "environment",
   "fast-forward",
@@ -119,7 +120,7 @@ ignore-words = [
   "proposal-breadcrumb-direction",
   "push-branches",
   "rebase",
-  "compress",
+  "ff-only",
   "squash-merge",
   # keep-sorted end
 ]
