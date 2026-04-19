@@ -51,6 +51,7 @@ names = [
   "git checkout",
   "git diff-parent",
   "git hack",
+  "git merge",
   "git ship",
   "git sync",
   "git town append",
