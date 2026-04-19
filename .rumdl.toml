@@ -35,6 +35,7 @@ tables = false # Exclude tables from line length check
 # Proper names that should be capitalized correctly
 [MD044]
 names = [
+# keep-sorted start
   "Git Town",
   "[git town",
   "git-town",
@@ -48,6 +49,7 @@ names = [
   "git town diff-parent",
   "git town hack",
   "git town sync"
+# keep-sorted end
 ]
 code-blocks = false
 html-elements = false
