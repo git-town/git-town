@@ -21,3 +21,28 @@ You can enable or disable interactive features for a single invocation:
 git-town <command> --interactive
 git-town <command> --non-interactive
 ```
+
+## config file
+
+In the [config file](../configuration-file.md) interactivity is configured as
+part of the general section.
+
+```toml
+interactive = false
+```
+
+## Git metadata
+
+To configure the main branch in Git, run this command:
+
+```wrap
+git config [--global] git-town.interactive <true|false>
+```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the main branch by setting the `GIT_TOWN_INTERACTIVE`
+environment variable.

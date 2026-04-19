@@ -63,6 +63,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		headless                    Option[configdomain.Headless]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
+		interactive                 Option[configdomain.Interactive]
 		mainBranch                  Option[gitdomain.LocalBranchName]
 		newBranchType               Option[configdomain.NewBranchType]
 		observedRegex               Option[configdomain.ObservedRegex]
@@ -90,6 +91,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
+	}
+	if data.Interactive != nil {
+		interactive = configdomain.NewInteractiveFromConfigFile(*data.Interactive)
 	}
 	if data.PushNewBranches != nil {
 		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewBranches))
@@ -315,7 +319,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GiteaToken:                  None[forgedomain.GiteaToken](),
 		Headless:                    headless,
 		HostingOriginHostname:       hostingOriginHostname,
-		Interactive:                 None[configdomain.Interactive](),
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  mainBranch,
 		NewBranchType:               newBranchType,

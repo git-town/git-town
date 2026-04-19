@@ -38,6 +38,13 @@ func (self Interactive) String() string {
 	return "enabled"
 }
 
+func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
+	if value {
+		return Some(InteractiveEnabled)
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
+}
+
 func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive], error) {
 	boolValue, err := gohacks.ParseBool[bool](value, source)
 	if err != nil {
