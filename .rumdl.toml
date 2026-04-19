@@ -36,6 +36,7 @@ tables = false # Exclude tables from line length check
 [MD044]
 names = [
   # keep-sorted start
+  "Auto-resolve phantom conflicts",
   "Cucumber",
   "E2E",
   "Git Town",
@@ -43,7 +44,6 @@ names = [
   "Q & A",
   "[git town",
   "auto-resolve",
-  "Auto-resolve phantom conflicts",
   "git append",
   "git branch",
   "git checkout",
@@ -101,3 +101,7 @@ style = "aligned"
 
 [MD063]
 style = "sentence-case"
+lowercase-words = [
+  "config file",
+  "environment variable",
+]
