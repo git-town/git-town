@@ -57,7 +57,7 @@ Display help for this command.
 #### `-m`<br>`--merge`
 
 The `--merge` aka `-m` flag has the same effect as the
-[Git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
+[git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 It attempts to merge uncommitted changes in your workspace into the target
 branch.
