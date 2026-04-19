@@ -1,4 +1,4 @@
-# High-level CLI for git
+# High-level CLI for Git
 
 Git Town solves the problem that using the Git CLI correctly is cumbersome
 and repetitive, and therefore many developers don't use Git to its full
