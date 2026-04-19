@@ -319,7 +319,7 @@ EnterForgeData:
 		GiteaToken:                  giteaToken,
 		HostingOriginHostname:       hostingOriginHostName,
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:                 None[configdomain.Interactive](),
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:                  mainBranchResult.UserChoice,
 		NewBranchType:               newBranchType,

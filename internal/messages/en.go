@@ -193,6 +193,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	IgnoreUncommitted                  = "Ship ignores uncommitted changes: %s\n"
 	InputAddOrRemove                   = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                       = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	Interactive                        = "Interactive: %s\n"
 	InteractivityDisabledViaCLI        = "interactivity disabled via CLI"
 	InteractivityDisabledViaConfigFile = "interactivity disabled via config file"
 	InteractivityDisabledViaEnv        = "interactivity disabled via environment variable"
