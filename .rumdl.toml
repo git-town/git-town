@@ -10,6 +10,7 @@ extend-enable = [
 
 # Additional rules to disable on top of the disable list (additive)
 extend-disable = [
+  "MD001", # heading levels should increment by one level at a time
   "MD033", # allow inline HTML
 ]
 
