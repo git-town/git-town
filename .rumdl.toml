@@ -42,7 +42,11 @@ names = [
   "Git",
   "Q & A",
   "[git town",
-  "git-town",
+  "git append",
+  "git diff-parent",
+  "git hack",
+  "git ship",
+  "git sync",
   "git town append",
   "git town branch",
   "git town completions",
@@ -77,6 +81,7 @@ names = [
   "git town sync",
   "git town undo",
   "git town up",
+  "git-town",
   # keep-sorted end
 ]
 code-blocks = false
