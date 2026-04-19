@@ -43,6 +43,7 @@ names = [
   "Q & A",
   "[git town",
   "auto-resolve",
+  "Auto-resolve phantom conflicts",
   "git append",
   "git branch",
   "git checkout",
