@@ -84,6 +84,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	go run tools/format_self/format_self.go
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
+	$(GOFUMPT) -l -w .
 	$(RUMDL) fmt
 	$(DPRINT) fmt
 	$(DPRINT) fmt --config dprint-changelog.json
