@@ -1,4 +1,4 @@
-# Bitbucket username
+# bitbucket-username
 
 Git Town can interact with Bitbucket Cloud
 and Bitbucket Data Center in your name,

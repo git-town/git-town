@@ -1,4 +1,4 @@
-# Ship strategy
+# ship-strategy
 
 This setting defines how [git town ship](../commands/ship.md) merges finished
 feature branches into the main branch.

@@ -1,4 +1,4 @@
-# Forgejo token
+# forgejo-token
 
 Git Town can interact with Forgejo-based forges
 (like Codeberg)

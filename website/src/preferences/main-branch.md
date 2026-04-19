@@ -1,4 +1,4 @@
-# Main branch
+# main-branch
 
 This setting stores the name of the main branch.
 The main branch is the default parent branch

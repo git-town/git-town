@@ -1,4 +1,4 @@
-# Branch prefix
+# branch-prefix
 
 When set, Git Town automatically adds this prefix to branches it creates.
 

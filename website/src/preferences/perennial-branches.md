@@ -1,4 +1,4 @@
-# Perennial branches
+# perennial-branches
 
 Perennial branches are long-lived branches.
 They have no parent and are never shipped.

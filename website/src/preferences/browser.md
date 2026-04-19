@@ -1,4 +1,4 @@
-# Browser
+# browser
 
 By default, Git Town launches your system's default browser by trying common
 commands like `open`, `xdg-open`, or `x-www-browser`.

@@ -1,4 +1,4 @@
-# Perennial sync strategy
+# sync-perennial-strategy
 
 This setting specifies how to update local perennial branches with changes from
 their tracking branches.

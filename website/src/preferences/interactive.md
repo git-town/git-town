@@ -1,4 +1,4 @@
-# Interactive mode
+# interactive
 
 Git Town prompts for missing input when required CLI flags are not provided.
 

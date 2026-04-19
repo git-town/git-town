@@ -1,4 +1,4 @@
-# GitLab token
+# gitlab-token
 
 Git Town can interact with GitLab in your name,
 for example to update pull requests as branches get created, shipped,

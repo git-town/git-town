@@ -1,4 +1,4 @@
-# Headless
+# headless
 
 The _headless_ preference disables all interactive features.
 When set, Git Town no longer:

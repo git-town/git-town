@@ -1,4 +1,4 @@
-# Origin hostname
+# origin-hostname
 
 If you use SSH identities,
 you can define the hostname of your source code repository with this setting.

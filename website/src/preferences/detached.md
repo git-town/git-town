@@ -1,4 +1,4 @@
-# Detached
+# detached
 
 This setting configures whether Git Town pulls new commits from the main
 or perennial branch at the root of your branch hierarchy.

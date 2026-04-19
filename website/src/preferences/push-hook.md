@@ -1,4 +1,4 @@
-# Run pre-push hook
+# push-hook
 
 This setting determines whether Git Town allows or prevents Git hooks
 while pushing branches.

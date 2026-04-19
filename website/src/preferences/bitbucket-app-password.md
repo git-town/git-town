@@ -1,4 +1,4 @@
-# Bitbucket access token
+# bitbucket-app-password
 
 ## Bitbucket Cloud
 

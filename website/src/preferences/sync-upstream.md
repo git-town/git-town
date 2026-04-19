@@ -1,4 +1,4 @@
-# Sync with upstream
+# sync-upstream
 
 This setting configures whether to pull in updates from the `upstream` remote.
 This is intended for codebases that are forks of other codebases

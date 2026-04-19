@@ -1,4 +1,4 @@
-# Order
+# order
 
 This setting allows you to change how Git Town orders branches it displays.
 

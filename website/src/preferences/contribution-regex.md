@@ -1,4 +1,4 @@
-# Contribution regex
+# contribution-regex
 
 Branches matching this regular expression are treated
 as [contribution branches](../branch-types.md#contribution-branches).

@@ -1,11 +1,11 @@
-# Feature regex
+# feature-regex
 
 Branches matching this regular expression are treated as feature branches.
 This setting is relevant only
 when the [unknown-branch-type](unknown-branch-type.md) setting is set to
 something different than "feature".
 
-## Configure in config file
+## config file
 
 In the [config file](../configuration-file.md),
 define the feature regex within the `[branches]` section:
@@ -15,7 +15,7 @@ define the feature regex within the `[branches]` section:
 feature-regex = "^my-*"
 ```
 
-## Configure in Git metadata
+## Git metadata
 
 To manually set the feature regex, use the following command:
 

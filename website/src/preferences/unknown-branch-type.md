@@ -1,4 +1,4 @@
-# Unknown branch type
+# unknown-branch-type
 
 This setting defines the branch type to use
 when Git Town cannot determine the branch type using all other configuration

@@ -1,4 +1,4 @@
-# Prototype sync strategy
+# sync-prototype-strategy
 
 This setting specifies how to update local
 [prototype branches](../branch-types.md#prototype-branches) with changes from

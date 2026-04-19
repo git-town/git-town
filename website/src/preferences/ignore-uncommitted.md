@@ -1,4 +1,4 @@
-# Ignore-uncommitted
+# ignore-uncommitted
 
 By default, Git Town refuses to [ship](../commands/ship.md) a branch
 if there are uncommitted changes,

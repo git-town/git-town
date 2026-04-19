@@ -1,4 +1,4 @@
-# Forge type
+# forge-type
 
 To talk to the API of your forge, Git Town needs to know which forge type
 (GitHub, Gitlab, Bitbucket, gitea, Forgejo, etc) you use.

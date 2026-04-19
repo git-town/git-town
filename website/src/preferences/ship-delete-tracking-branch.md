@@ -1,4 +1,4 @@
-# Delete tracking branch
+# ship-delete-tracking-branch
 
 Some forges like
 [GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)

@@ -1,4 +1,4 @@
-# Display types
+# display-types
 
 This setting allows you to change
 whether Git Town also displays the [branch type](../branch-types.md) in addition

@@ -1,4 +1,4 @@
-# Gitea token
+# gitea-token
 
 Git Town can interact with Gitea in your name,
 for example to update pull requests as branches get created, shipped,

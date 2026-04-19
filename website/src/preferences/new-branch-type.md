@@ -1,4 +1,4 @@
-# New branch type
+# new-branch-type
 
 This setting defines the [type](../branch-types.md)
 for new branches created using the [git town hack](../commands/hack.md),

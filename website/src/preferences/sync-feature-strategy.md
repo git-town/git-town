@@ -1,4 +1,4 @@
-# Feature sync strategy
+# sync-feature-strategy
 
 This setting specifies how to update local feature branches with changes from
 their parent and tracking branches.

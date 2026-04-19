@@ -1,4 +1,4 @@
-# Share new branches
+# share-new-branches
 
 This setting allows you to change how Git Town shares new branches created with
 [hack](../commands/hack.md), [append](../commands/append.md), or

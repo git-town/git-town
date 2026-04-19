@@ -1,4 +1,4 @@
-# Observed regex
+# observed-regex
 
 Branches matching this regular expression are treated
 as [observed branches](../branch-types.md#observed-branches).

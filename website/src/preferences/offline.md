@@ -1,4 +1,4 @@
-# Offline mode
+# offline
 
 If you have no internet connection,
 certain Git Town commands that perform network requests will fail.

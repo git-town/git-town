@@ -1,4 +1,4 @@
-# GitHub connector
+# github-connector
 
 Git Town can interact with GitHub in two different ways.
 

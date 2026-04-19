@@ -1,4 +1,4 @@
-# Stash uncommitted changes
+# stash
 
 This setting controls whether Git Town stashes uncommitted changes away
 before creating and switching to a new branch,

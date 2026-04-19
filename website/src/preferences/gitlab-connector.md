@@ -1,4 +1,4 @@
-# GitLab connector
+# gitlab-connector
 
 Git Town can interact with GitLab in two different ways.
 
