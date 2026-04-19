@@ -24,8 +24,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	interactive, hasInteractive := data.Interactive.Get()
 	if hasInteractive {
-		if interactive.Check()
-		result.WriteString(fmt.Sprintf("interactive = %t\n", interactive))
+		result.WriteString(fmt.Sprintf("\ninteractive = %t\n", interactive == configdomain.InteractiveEnabled))
 	}
 
 	// keep-sorted start
