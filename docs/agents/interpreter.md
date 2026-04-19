@@ -1,7 +1,7 @@
-# VM-Based Execution Framework
+# VM-Based execution framework
 
-Git Town uses an interpreter that executes self-modifying code consisting of
-Git-related opcodes:
+Git Town uses an interpreter
+that executes self-modifying code consisting of Git-related opcodes:
 
 - Commands inspect Git repo state and generate a program of opcodes
 - The interpreter (`internal/vm/`) executes these programs

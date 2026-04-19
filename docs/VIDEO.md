@@ -1,6 +1,7 @@
 # Creating animations of the development work
 
-First, install [gource](https://gource.io). It seems to work best on Windows.
+First, install [gource](https://gource.io).
+It seems to work best on Windows.
 
 Preview the generated movie:
 

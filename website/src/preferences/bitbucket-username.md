@@ -1,9 +1,11 @@
-# Bitbucket username
+# bitbucket-username
 
-Git Town can interact with Bitbucket Cloud and Bitbucket Data Center in your
-name, for example to update pull requests as branches get created, shipped, or
-deleted. To do so, Git Town needs your Bitbucket username and a
-[Bitbucket app password](bitbucket-app-password.md).
+Git Town can interact with Bitbucket Cloud
+and Bitbucket Data Center in your name,
+for example to update pull requests as branches get created, shipped,
+or deleted.
+To do so, Git Town needs your Bitbucket username
+and a [Bitbucket app password](bitbucket-app-password.md).
 
 ## config file
 
@@ -18,7 +20,8 @@ git config [--global] git-town.bitbucket-username <token>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

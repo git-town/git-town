@@ -9,8 +9,8 @@ git town observe [<branch-name>...] [-h | --help] [-v | --verbose]
 The _observe_ command makes some of your branches
 [observed](../branch-types.md#observed-branches) branches.
 
-To convert an observed branch back into a feature branch, use the
-[feature](feature.md) command.
+To convert an observed branch back into a feature branch,
+use the [feature](feature.md) command.
 
 ## Positional arguments
 
@@ -26,9 +26,9 @@ Observe branches "alpha" and "beta":
 git town observe alpha beta
 ```
 
-Check out a remote branch (that exists at the
-[development remote](../preferences/dev-remote.md) but not on your local
-machine) and make it observed:
+Check out a remote branch
+(that exists at the [development remote](../preferences/dev-remote.md) but not
+on your local machine) and make it observed:
 
 ```fish
 git town observe somebody-elses-branch

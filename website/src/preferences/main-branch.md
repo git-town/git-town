@@ -1,9 +1,10 @@
-# Main branch
+# main-branch
 
-This setting stores the name of the main branch. The main branch is the default
-parent branch for new feature branches created with
-[git town hack](../commands/hack.md) and the default branch into which Git Town
-[ships](../commands/ship.md) finished feature branches.
+This setting stores the name of the main branch.
+The main branch is the default parent branch
+for new feature branches created with [git town hack](../commands/hack.md)
+and the default branch into
+which Git Town [ships](../commands/ship.md) finished feature branches.
 
 ## config file
 
@@ -24,7 +25,8 @@ git config [--global] git-town.main-branch <value>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

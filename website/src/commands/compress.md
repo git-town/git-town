@@ -23,32 +23,33 @@ Let's compress these three commits into a single commit:
 git town compress
 ```
 
-Now your branch has a single commit with the name of the first commit but
-containing the changes of all three commits that existed on the branch before:
+Now your branch has a single commit with the name of the first commit
+but containing the changes of all three commits
+that existed on the branch before:
 
 ```bash
 $ git log --format='%s'
 commit 1
 ```
 
-Git Town compresses feature branches and
-[parked branches](https://www.git-town.com/preferences/parked-branches). It
-doesn't compress
+Git Town compresses feature branches
+and [parked branches](https://www.git-town.com/preferences/parked-branches).
+It doesn't compress
 [perennial](https://www.git-town.com/preferences/perennial-branches),
 [observed](https://www.git-town.com/preferences/observed-branches), and
 [contribution](https://www.git-town.com/preferences/contribution-branches)
 branches.
 
-Branches must be in sync to compress them; run `git push` or `git town sync`
-before running this command. This avoids mixing rewriting history with resolving
-unrelated merge conflicts.
+Branches must be in sync to compress them;
+run `git push` or `git town sync` before running this command.
+This avoids mixing rewriting history with resolving unrelated merge conflicts.
 
 ## Options
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command.
+It prints the Git commands that would be run but doesn't execute them.
 
 #### `-h`<br>`--help`
 
@@ -61,8 +62,10 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 #### `-m <text>`<br>`--message <text>`
 
 By default the now compressed commit uses the commit message of the first commit
-in the branch. You can provide a custom commit message for the squashed commit
-with the `--message <message>` aka `-m` flag, which works similar to the
+in the branch.
+You can provide a custom commit message
+for the squashed commit with the `--message <message>` aka `-m` flag,
+which works similar to the
 [-m flag for `git commit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--mltmsggt).
 
 Assuming you have a feature branch with these commits:
@@ -105,9 +108,10 @@ If you want to compress your commits every time you sync, choose the
 the respective branch type.
 
 Assuming you have a [stacked change](../stacked-changes.md) consisting of two
-feature branches. Each branch contains three commits.
+feature branches.
+Each branch contains three commits.
 
-```
+```sh
 main
  \
   branch-1
@@ -122,13 +126,13 @@ main
 
 Let's compress the commits in all branches of this stack:
 
-```
+```sh
 git town compress --stack
 ```
 
 Now your stack contains these branches and commits:
 
-```
+```sh
 main
  \
   branch-1
@@ -137,10 +141,10 @@ main
      * commit 2a
 ```
 
-As usual, the new `commit 1a` contains the changes made in `branch 1`, i.e. the
-changes from the old `commit 1a`, `commit 1b`, and `commit 1c`. The new
-`commit 2a` contains the changes made in `branch 2`, i.e. the changes from the
-old `commit 2a`, `commit 2b`, and `commit 2c`.
+As usual, the new `commit 1a` contains the changes made in `branch 1`,
+i.e. the changes from the old `commit 1a`, `commit 1b`, and `commit 1c`.
+The new `commit 2a` contains the changes made in `branch 2`,
+i.e. the changes from the old `commit 2a`, `commit 2b`, and `commit 2c`.
 
 #### `-v`<br>`--verbose`
 

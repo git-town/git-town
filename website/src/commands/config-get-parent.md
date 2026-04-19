@@ -8,8 +8,8 @@ git town config get-parent [<branch-name>] [-h | --help] [-v | --verbose]
 
 </a>
 
-The _config get-parent_ command outputs the parent branch of the current or
-given branch.
+The _config get-parent_ command outputs the parent branch of the current
+or given branch.
 
 ## Options
 

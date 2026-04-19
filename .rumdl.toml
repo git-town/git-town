@@ -1,0 +1,170 @@
+# rumdl configuration file
+
+[global]
+# Additional rules to enable on top of defaults (additive, does not replace)
+extend-enable = [
+  "MD060", # format tables
+  "MD063", # heading capitalization
+  "MD070", # nested code fence collision
+]
+
+# Additional rules to disable on top of the disable list (additive)
+extend-disable = [
+  "MD001", # heading levels should increment by one level at a time
+  "MD033", # allow inline HTML
+  "MD041", # first line in file should be a top level heading
+  "MD059", # link text should be descriptive
+]
+
+exclude = [".git", ".github", ".tools", "vendor", "CHANGELOG.md"]
+
+# Respect .gitignore files when scanning directories (default: true)
+respect-gitignore = true
+
+# Markdown flavor/dialect: standard (default), gfm, commonmark, mkdocs, mdx, quarto
+flavor = "gfm"
+
+# text-wrap
+[MD013]
+line-length = 80
+reflow = true # Enable automatic text reflow/wrapping
+reflow-mode = "semantic-line-breaks" # Reflow mode: "default", "normalize", "sentence-per-line", or "semantic-line-breaks" (default: "default")
+length-mode = "visual" # How to count line length: "visual", "chars", or "bytes" (default: "visual")
+code-blocks = false # Exclude code blocks from line length check
+tables = false # Exclude tables from line length check
+# headings = true  # Include headings in line length check
+
+# Proper names that should be capitalized correctly
+[MD044]
+names = [
+  # keep-sorted start
+  "Auto-resolve phantom conflicts",
+  "Bitbucket Cloud",
+  "Bitbucket Data Center",
+  "Cucumber",
+  "E2E",
+  "Git Town",
+  "Git",
+  "Q & A",
+  "Windows",
+  "[git town",
+  "auto-resolve",
+  "browser windows",
+  "git append",
+  "git branch",
+  "git checkout",
+  "git diff",
+  "git diff-parent",
+  "git hack",
+  "git merge",
+  "git ship",
+  "git sync",
+  "git town append",
+  "git town branch",
+  "git town commit",
+  "git town completions",
+  "git town compress",
+  "git town config",
+  "git town continue",
+  "git town contribute",
+  "git town delete",
+  "git town detach",
+  "git town diff-parent",
+  "git town down",
+  "git town feature",
+  "git town hack",
+  "git town help",
+  "git town init",
+  "git town merge",
+  "git town observe",
+  "git town offline",
+  "git town park",
+  "git town prepend",
+  "git town propose",
+  "git town prototype",
+  "git town rename",
+  "git town repo",
+  "git town runlog",
+  "git town set-parent",
+  "git town ship",
+  "git town skip",
+  "git town status",
+  "git town swap",
+  "git town switch",
+  "git town sync",
+  "git town undo",
+  "git town up",
+  "git town walk",
+  "git-branches.toml",
+  "git-flow",
+  "git-town",
+  # keep-sorted end
+]
+code-blocks = false
+html-elements = false
+
+# format tables
+[MD060]
+enabled = true
+style = "aligned"
+
+# heading capitalization
+[MD063]
+style = "sentence-case"
+ignore-words = [
+  # keep-sorted start
+  "always-merge",
+  "api",
+  "auto-sync",
+  "bitbucket-app-password",
+  "bitbucket-username",
+  "branch-prefix",
+  "browser",
+  "compress",
+  "config",
+  "contribution-regex",
+  "detached",
+  "dev-remote",
+  "display-types",
+  "environment",
+  "fast-forward",
+  "feature-regex",
+  "ff-only",
+  "forge-type",
+  "forgejo-token",
+  "gitea-token",
+  "github-connector",
+  "github-token",
+  "gitlab-connector",
+  "gitlab-token",
+  "headless",
+  "ignore-uncommitted",
+  "interactive",
+  "main-branch",
+  "merge",
+  "new-branch-type",
+  "observed-regex",
+  "offline",
+  "options",
+  "order",
+  "origin-hostname",
+  "perennial-branches",
+  "perennial-regex",
+  "proposal-breadcrumb",
+  "proposal-breadcrumb-direction",
+  "push-branches",
+  "push-hook",
+  "rebase",
+  "share-new-branches",
+  "ship-delete-tracking-branch",
+  "ship-strategy",
+  "squash-merge",
+  "stash",
+  "sync-feature-strategy",
+  "sync-perennial-strategy",
+  "sync-prototype-strategy",
+  "sync-tags",
+  "sync-upstream",
+  "unknown-branch-type",
+  # keep-sorted end
+]

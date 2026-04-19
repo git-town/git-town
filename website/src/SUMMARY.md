@@ -72,12 +72,12 @@
     - [Perennial branches](preferences/perennial-branches.md)
     - [Perennial regex](preferences/perennial-regex.md)
     - [Unknown branch type](preferences/unknown-branch-type.md)
-  - [Create]()
+  - [Create]() <!-- rumdl-disable-line MD042 -->
     - [Branch prefix](preferences/branch-prefix.md)
     - [New branch type](preferences/new-branch-type.md)
     - [Share new branches](preferences/share-new-branches.md)
     - [Stash](preferences/stash.md)
-  - [Hosting]()
+  - [Hosting]() <!-- rumdl-disable-line MD042 -->
     - [Browser](preferences/browser.md)
     - [Development remote](preferences/dev-remote.md)
     - [Forge Type](preferences/forge-type.md)
@@ -90,15 +90,15 @@
     - [GitHub token](preferences/github-token.md)
     - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
-  - [Propose]()
+  - [Propose]() <!-- rumdl-disable-line MD042 -->
     - [Headless](preferences/headless.md)
     - [Proposal breadcrumb](preferences/proposal-breadcrumb.md)
     - [Proposal breadcrumb direction](preferences/proposal-breadcrumb-direction.md)
-  - [Ship]()
+  - [Ship]() <!-- rumdl-disable-line MD042 -->
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
     - [Ship strategy](preferences/ship-strategy.md)
-  - [Sync]()
+  - [Sync]() <!-- rumdl-disable-line MD042 -->
     - [Auto-resolve phantom conflicts](preferences/auto-resolve.md)
     - [Auto-sync](preferences/auto-sync.md)
     - [Detached](preferences/detached.md)
