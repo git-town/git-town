@@ -77,6 +77,9 @@
         "hosting": {
           "$ref": "#/$defs/Hosting"
         },
+        "interactive": {
+          "type": "boolean"
+        },
         "propose": {
           "$ref": "#/$defs/Propose"
         },
