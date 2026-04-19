@@ -82,7 +82,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	// TODO: add keep-sorted to all blocks in this function
+	// keep-sorted start
 	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
 	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
@@ -121,6 +121,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncUpstream, errSyncUpstream := load(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream], ignoreUnknown)
 	unknownBranchTypeValue, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
+	// keep-sorted end
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,
