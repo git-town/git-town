@@ -20,7 +20,7 @@ type Interactive string
 // No error: interactive mode is enabled.
 // Error: interactive mode is disabled.
 func (self Interactive) Check() error {
-	if self == "" {
+	if self == InteractiveEnabled {
 		return nil
 	}
 	return &InteractivityError{Reason: string(self)}
