@@ -108,5 +108,6 @@ ignore-words = [
   "auto-sync",
   "config",
   "environment",
-  "options"
+  "options",
+  "proposal-breadcrumb-direction",
 ]

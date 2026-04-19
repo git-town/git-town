@@ -1,12 +1,13 @@
 # Gitea token
 
-Git Town can interact with Gitea in your name, for example to update pull
-requests as branches get created, shipped, or deleted. To do so, Git Town needs
-a personal access token for Gitea.
+Git Town can interact with Gitea in your name,
+for example to update pull requests as branches get created, shipped,
+or deleted.
+To do so, Git Town needs a personal access token for Gitea.
 
-To create an API token, click on your profile image, choose `Settings`, and then
-in the menu on the left `Applications`. You need an API token with these
-permissions:
+To create an API token, click on your profile image, choose `Settings`,
+and then in the menu on the left `Applications`.
+You need an API token with these permissions:
 
 - read and write the repository
 
@@ -23,7 +24,8 @@ git config [--global] git-town.gitea-token <token>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

@@ -30,7 +30,8 @@ git config [--global] git-town.order <asc|desc>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, this setting applies to the current Git repo.
+your machine.
+Without it, this setting applies to the current Git repo.
 
 ## environment variable
 

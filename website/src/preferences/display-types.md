@@ -1,8 +1,8 @@
 # Display types
 
-This setting allows you to change whether Git Town also displays the
-[branch type](../branch-types.md) in addition to the branch name when showing a
-list of branches.
+This setting allows you to change
+whether Git Town also displays the [branch type](../branch-types.md) in addition
+to the branch name when showing a list of branches.
 
 ## Allowed values
 
@@ -34,7 +34,8 @@ git config [--global] git-town.display-types <push|propose>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, this setting applies only to the current Git repo.
+your machine.
+Without it, this setting applies only to the current Git repo.
 
 ## Environment variable
 
