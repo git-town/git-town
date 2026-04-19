@@ -130,7 +130,7 @@ The `--push`/`--no-push` argument overrides the
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` parameter makes git town sync all branches in the stack
+The `--stack` aka `-s` parameter syncs all branches in the stack
 that the current branch belongs to.
 
 #### `-v`<br>`--verbose`
