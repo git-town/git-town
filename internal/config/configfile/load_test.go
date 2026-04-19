@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/kr/pretty"
@@ -27,6 +28,8 @@ func TestConfigfile(t *testing.T) {
 #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
 
 # See https://www.git-town.com/configuration-file for details
+
+interactive = false
 
 [branches]
 contribution-regex = "^gittown-"
@@ -78,6 +81,7 @@ upstream = true
 			haveData, err := configfile.Decode(giveTOML)
 			must.NoError(t, err)
 			wantData := configfile.Data{
+				Interactive: new(false),
 				Branches: &configfile.Branches{
 					ContributionRegex: new("^gittown-"),
 					DefaultType:       nil,
@@ -173,6 +177,7 @@ upstream = true
 				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
+				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),
 				MainBranch:                  Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
