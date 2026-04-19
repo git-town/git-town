@@ -18,7 +18,6 @@ like `release-v4.0-rev.1`, `release-v4.0-rev.2`, etc,
 you can define a [regular expression](perennial-regex.md)
 for them instead of listing them one by one.
 
-
 ## config file
 
 In the [config file](../configuration-file.md) the perennial branches are

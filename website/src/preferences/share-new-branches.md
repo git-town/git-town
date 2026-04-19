@@ -10,16 +10,17 @@ Allowed values:
   until you [sync](../commands/sync.md) or [propose](../commands/propose.md)
   them (default behavior).
 - **push:** Push new branches to the [development remote](dev-remote.md).
-- **propose:** Create a pull request for the new branch. This is similar to
-  always adding the [propose flag](../commands/hack.md#--propose).
+- **propose:** Create a pull request for the new branch.
+  This is similar to always adding the
+  [propose flag](../commands/hack.md#--propose).
 
-## in config file
+## config file
 
 ```toml
 create.share-new-branches = "push|propose"
 ```
 
-## in Git metadata
+## Git metadata
 
 To enable pushing new branches in Git, run this command:
 
@@ -28,7 +29,8 @@ git config [--global] git-town.share-new-branches <push|propose>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, this setting applies to the current Git repo.
+your machine.
+Without it, this setting applies to the current Git repo.
 
 ## environment variable
 

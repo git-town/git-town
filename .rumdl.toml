@@ -105,9 +105,17 @@ style = "aligned"
 [MD063]
 style = "sentence-case"
 ignore-words = [
+  # keep-sorted start
   "auto-sync",
   "config",
   "environment",
   "options",
+  "proposal-breadcrumb",
   "proposal-breadcrumb-direction",
+  "push-branches",
+  "api",
+  "always-merge",
+  "fast-forward",
+  "squash-merge",
+  # keep-sorted end
 ]
