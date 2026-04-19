@@ -26,6 +26,7 @@ func (self Interactive) Check() error {
 	return &InteractivityError{Reason: string(self)}
 }
 
+// IsEnabled indicates whether interactive mode is enabled.
 func (self Interactive) IsEnabled() bool {
 	return self == InteractiveEnabled
 }
