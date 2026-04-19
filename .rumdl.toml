@@ -107,16 +107,19 @@ style = "aligned"
 style = "sentence-case"
 ignore-words = [
   # keep-sorted start
+  "always-merge",
+  "api",
   "auto-sync",
   "config",
   "environment",
+  "fast-forward",
+  "merge",
   "options",
   "proposal-breadcrumb",
   "proposal-breadcrumb-direction",
   "push-branches",
-  "api",
-  "always-merge",
-  "fast-forward",
+  "rebase",
+  "compress",
   "squash-merge",
   # keep-sorted end
 ]
