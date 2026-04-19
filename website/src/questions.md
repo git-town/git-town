@@ -16,7 +16,7 @@ Git Town is flexible enough to support the most popular branching models like
 [trunk-based development](https://trunkbaseddevelopment.com).
 It even works if you commit directly to the main branch!
 
-### How is Git Town different from the [Git-flow](https://github.com/nvie/gitflow) tool?
+### How is Git Town different from the [git-flow](https://github.com/nvie/gitflow) tool?
 
 `git-flow` is a specialized Git extension designed around providing opinionated
 support for the Git Flow branching model.

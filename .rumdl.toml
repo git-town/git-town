@@ -94,6 +94,7 @@ names = [
   "git town up",
   "git town walk",
   "git-branches.toml",
+  "git-flow",
   "git-town",
   # keep-sorted end
 ]
