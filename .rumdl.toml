@@ -40,7 +40,7 @@ code-blocks = false  # Check code blocks for proper names (default: false, skips
 # format tables
 [MD060]
 enabled = true
-style = "aligned-no-space"
+style = "aligned"
 
 [MD063]
 style = "sentence-case"
