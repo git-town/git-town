@@ -34,7 +34,7 @@ tables = false # Exclude tables from line length check
 
 # Proper names that should be capitalized correctly
 [MD044]
-names = ["Git Town", "[git town", "E2E", "Cucumber"]
+names = ["Git Town", "[git town", "E2E", "Cucumber", "Q & A"]
 code-blocks = false  # Check code blocks for proper names (default: false, skips code blocks)
 
 # format tables

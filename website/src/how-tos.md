@@ -1,7 +1,8 @@
-# How To ...
+# How to
 
-This section covers practical tips and workflows for getting the most out of Git
-Town. Learn how to:
+This section covers practical tips and workflows
+for getting the most out of Git Town.
+Learn how to:
 
 - Set up [shell autocompletion](commands/completions.md)
 

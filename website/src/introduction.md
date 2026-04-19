@@ -1,23 +1,26 @@
-# High-level CLI for Git
+# High-level CLI for git
 
-Git Town solves the problem that using the Git CLI correctly is cumbersome and
-repetitive, and therefore many developers don't use Git to its full potential.
+Git Town solves the problem that using the Git CLI correctly is cumbersome
+and repetitive, and therefore many developers don't use Git to its full
+potential.
 
-Git isn't just a version control system; it's a flexible framework for creating
-various version control workflows. This flexibility means that most of us end up
-using ad-hoc workflows, either in our heads or through custom Bash scripts
-tailored to our needs. These manual workflows often lack proper specifications
-and don't handle errors and edge cases well.
+Git isn't just a version control system;
+it's a flexible framework for creating various version control workflows.
+This flexibility means that most of us end up using ad-hoc workflows,
+either in our heads or through custom Bash scripts tailored to our needs.
+These manual workflows often lack proper specifications and don't handle errors
+and edge cases well.
 
-Git Town is a reusable implementation of Git workflows for common usage
-scenarios like contributing to a centralized code repository on platforms like
-GitHub, GitLab, Bitbucket, Gitea, or Forgejo/Codeberg. Think of Git Town as your
-Bash scripts for Git, but fully engineered with rock-solid support for many use
-cases, edge cases, and error conditions.
+Git Town is a reusable implementation of Git workflows
+for common usage scenarios like contributing to a centralized code repository on
+platforms like GitHub, GitLab, Bitbucket, Gitea, or Forgejo/Codeberg.
+Think of Git Town as your Bash scripts for Git,
+but fully engineered with rock-solid support for many use cases, edge cases,
+and error conditions.
 
-With Git Town you can keep using Git the way you do now, but with extra commands
-to create various branch types, keep them in sync, compress, review, and ship
-them efficiently.
+With Git Town you can keep using Git the way you do now,
+but with extra commands to create various branch types, keep them in sync,
+compress, review, and ship them efficiently.
 
 <br>
 <p align="center">
@@ -32,8 +35,9 @@ Git Town is compatible with most common branching models like
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
 [trunk-based development](https://trunkbaseddevelopment.com) and even committing
-straight into the main branch. Git Town has special support for mono-repos and
-stacked changes. See also this
+straight into the main branch.
+Git Town has special support for mono-repos and stacked changes.
+See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
 
 ## What our users say
