@@ -90,15 +90,15 @@
     - [GitHub token](preferences/github-token.md)
     - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
-  - [Propose]()<!-- rumdl-disable-line MD042 -->
+  - [Propose]() <!-- rumdl-disable-line MD042 -->
     - [Headless](preferences/headless.md)
     - [Proposal breadcrumb](preferences/proposal-breadcrumb.md)
     - [Proposal breadcrumb direction](preferences/proposal-breadcrumb-direction.md)
-  - [Ship]()<!-- rumdl-disable-line MD042 -->
+  - [Ship]() <!-- rumdl-disable-line MD042 -->
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
     - [Ship strategy](preferences/ship-strategy.md)
-  - [Sync]()<!-- rumdl-disable-line MD042 -->
+  - [Sync]() <!-- rumdl-disable-line MD042 -->
     - [Auto-resolve phantom conflicts](preferences/auto-resolve.md)
     - [Auto-sync](preferences/auto-sync.md)
     - [Detached](preferences/detached.md)
