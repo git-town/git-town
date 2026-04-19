@@ -102,6 +102,7 @@ style = "aligned"
 [MD063]
 style = "sentence-case"
 ignore-words = [
+  "auto-sync",
   "config",
   "environment",
 ]
