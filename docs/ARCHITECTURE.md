@@ -6,10 +6,10 @@ The complexity in the Git Town codebase stems from balancing several challenging
 design objectives:
 
 1. **Extreme configurability:** Execute a highly variable and configurable set
-   of Git operations depending on the current status of the repository. Git
-   Town's business logic covers so many edge cases that most Git Town commands
-   aren't just a simple hard-coded scripts, they are executable programs
-   custom-built for your specific use case.
+   of Git operations depending on the status of the repository before the
+   command runs and while it runs. Git Town's business logic covers so many edge
+   cases that most Git Town commands aren't just a simple hard-coded scripts,
+   they are executable programs custom-built for your specific use case.
 2. **Terminate and resume:** When any operation in these programs fails,
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
@@ -205,15 +205,22 @@ it eliminates entire categories of bugs.
 
 #### Alphabetic sorting
 
-We sort files alphabetically wherever it makes sense. For example:
+We sort most things in this codebase alphabetically, for example:
 
 - struct fields and methods
 - function definitions
 - the order of unit tests
 
-This helps navigate larger files and locate things in them. It also prevents
-conflicts when two branches add something to the same file because additions no
-longer happen at the end of the file.
+While not ideal, this approach has several benefits:
+
+- It helps locate things efficiently.
+- It prevents conflicts when two branches add something to the same file because
+  both additions no longer happen at the end of the file.
+- It prevents bikeshed debates about how to order things.
+- It is the only ordering method for which everybody has the exact same
+  expectation how the end result should look like.
+- It allows automated sorting, freeing humans from manually moving things
+  around.
 
 #### All struct fields are required by default
 
