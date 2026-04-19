@@ -20,10 +20,14 @@ type Interactive string
 // No error: interactive mode is enabled.
 // Error: interactive mode is disabled.
 func (self Interactive) Check() error {
-	if self == InteractiveEnabled {
+	if self.IsEnabled() {
 		return nil
 	}
 	return &InteractivityError{Reason: string(self)}
+}
+
+func (self Interactive) IsEnabled() bool {
+	return self == InteractiveEnabled
 }
 
 func (self Interactive) String() string {
