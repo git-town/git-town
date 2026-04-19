@@ -316,7 +316,7 @@ deadcode: ${RTA}
 			| grep -v UseDefaultMessage \
 			|| true"
 
-tools/rta@${RTA_VERSION}:
+${RTA}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 
