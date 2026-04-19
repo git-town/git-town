@@ -127,7 +127,7 @@ make cukeall
 
 </a>
 
-### Run a subset of e2e tests
+### Run a subset of E2E tests
 
 Run all tests in the `features/append` folder or file:
 
