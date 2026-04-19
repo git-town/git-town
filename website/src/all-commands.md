@@ -1,7 +1,7 @@
 # Commands
 
-Run `git town` for an overview of all Git Town commands and
-`git town help <command>` for help with individual commands.
+Run `git town` for an overview of all Git Town commands
+and `git town help <command>` for help with individual commands.
 
 ### Basic workflow
 
