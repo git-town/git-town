@@ -6,11 +6,11 @@
 git town prototype [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
 
-The _prototype_ command marks some of your branches as
-[prototype branches](../branch-types.md#prototype-branches).
+The _prototype_ command marks some of your branches
+as [prototype branches](../branch-types.md#prototype-branches).
 
-To convert a prototype branch back into a feature branch, use the
-[feature](feature.md) command.
+To convert a prototype branch back into a feature branch,
+use the [feature](feature.md) command.
 
 ## Positional arguments
 

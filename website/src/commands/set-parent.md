@@ -6,10 +6,11 @@
 git town set-parent [<branch>] [--(no)-auto-resolve] [-h | --help] [--(non)-interactive] [--none] [-v | --verbose]
 ```
 
-The _set-parent_ command moves a branch and all its children below another
-branch. Consider this stack:
+The _set-parent_ command moves a branch
+and all its children below another branch.
+Consider this stack:
 
-```
+```sh
 main
  \
   feature-1
@@ -24,7 +25,7 @@ main
 
 Running `git town set-parent feature-A` creates this stack:
 
-```
+```sh
 main
  \
   feature-1
@@ -37,10 +38,10 @@ main
       feature-3
 ```
 
-You can also use `set-parent` to make a child branch a sibling branch. Consider
-this stack:
+You can also use `set-parent` to make a child branch a sibling branch.
+Consider this stack:
 
-```
+```sh
 main
  \
   feature-1
@@ -54,7 +55,7 @@ main
 
 Running `git town set-parent feature-1` creates this stack:
 
-```
+```sh
 main
  \
   feature-1
@@ -66,19 +67,20 @@ main
       feature-4
 ```
 
-Since set-parent changes commits, your branches must be in sync when running
-this command. Run [git town sync](sync.md) before running `git town set-parent`.
+Since set-parent changes commits,
+your branches must be in sync when running this command.
+Run [git town sync](sync.md) before running `git town set-parent`.
 
 After set-parent runs, the affected branches no longer contain changes made by
-their old parents. However, they don't see the changes made by their new parent
-branches yet. Please run [git town sync](sync.md) to pull in changes from the
-new parents.
+their old parents.
+However, they don't see the changes made by their new parent branches yet.
+Please run [git town sync](sync.md) to pull in changes from the new parents.
 
 ## Positional argument
 
-You can provide the name of the new parent for the current branch as an argument
-to this command. When called without arguments, queries the user for the new
-parent.
+You can provide the name of the new parent for the current branch
+as an argument to this command.
+When called without arguments, queries the user for the new parent.
 
 ## Options
 
@@ -97,8 +99,8 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `--none`
 
-The `--none` option assigns no parent (removes the assigned parent), making the
-branch a perennial branch.
+The `--none` option assigns no parent
+(removes the assigned parent), making the branch a perennial branch.
 
 #### `-v`<br>`--verbose`
 

@@ -22,9 +22,10 @@ Running without a subcommand shows the current Git Town configuration.
 
 #### `-d <branch-types>`<br>`--display-types <branch-types>`
 
-This flag allows customizing whether Git Town also displays the branch type in
-addition to the branch name when showing a list of branches. More info
-[here](../preferences/display-types.md#cli-flags).
+This flag allows customizing
+whether Git Town also displays the branch type in addition to the branch name
+when showing a list of branches.
+More info [here](../preferences/display-types.md#cli-flags).
 
 #### `-h`<br>`--help`
 

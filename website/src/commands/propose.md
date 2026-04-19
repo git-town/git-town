@@ -6,11 +6,13 @@
 git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable> | --no-browser] [--dry-run] [--headless] [-h | --help] [--(non)-interactive] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
-The _propose_ command helps create a new pull request (also known as merge
-request) for the current feature branch. It opens your forge's website to create
-a new proposal in your browser and pre-populates information like branch and
-source/target repository. It also [syncs](sync.md) the branch to merge before
-opening the pull request in [detached](sync.md#-d--detached--no-detached) mode.
+The _propose_ command helps create a new pull request
+(also known as merge request) for the current feature branch.
+It opens your forge's website to create a new proposal in your browser
+and pre-populates information like branch and source/target repository.
+It also [syncs](sync.md) the branch to merge
+before opening the pull request in [detached](sync.md#-d--detached--no-detached)
+mode.
 
 Proposing prototype and parked branches makes them feature branches.
 
@@ -22,7 +24,8 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-You can configure the browser which Git Town opens using the
+You can configure the browser
+which Git Town opens using the
 [BROWSER environment variable](../preferences/browser.md).
 
 ## Options
@@ -38,9 +41,10 @@ Pre-populate the body of the pull request with the given text.
 
 #### `-f <path>`<br>`--body-file <path>`
 
-When called with the `--body-file` aka `-f` flag, it pre-populates the body of
-the pull request with the content of the given file. The filename `-` reads the
-body text from STDIN.
+When called with the `--body-file` aka `-f` flag,
+it pre-populates the body of the pull request with the content of the given
+file.
+The filename `-` reads the body text from STDIN.
 
 #### `--browser <executable>`<br>`--no-browser`
 
@@ -50,15 +54,16 @@ Set to `(none)` or an empty string to disable the browser.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command.
+It prints the Git commands that would be run but doesn't execute them.
 
 #### `--headless`
 
-When called with the `--headless` flag, the _propose_ command creates the
-proposal without opening a browser window. This is useful in CI/CD pipelines and
-when working in headless environments. See the
-[headless](../preferences/headless.md) setting for making this permanent.
+When called with the `--headless` flag,
+the _propose_ command creates the proposal without opening a browser window.
+This is useful in CI/CD pipelines and when working in headless environments.
+See the [headless](../preferences/headless.md) setting
+for making this permanent.
 
 #### `-h`<br>`--help`
 
@@ -70,13 +75,14 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` parameter makes Git Town propose all branches in the
-stack that the current branch belongs to.
+The `--stack` aka `-s` parameter creates proposals for all branches of the stack
+that the current branch belongs to.
 
 #### `-t <text>`<br>`--title <text>`
 
-When called with the `--title <title>` aka `-t` flag, the _propose_ command
-pre-populate the title of the pull request to the given text.
+When called with the `--title <title>` aka `-t` flag,
+the _propose_ command pre-populate the title of the pull request to the given
+text.
 
 #### `-v`<br>`--verbose`
 
@@ -88,7 +94,8 @@ determine the repository state.
 You can configure the forge type with the
 [hosting-platform](../preferences/forge-type.md) setting.
 
-When using SSH identities, this command uses the hostname in the
+When using SSH identities,
+this command uses the hostname in the
 [hosting-origin-hostname](../preferences/hosting-origin-hostname.md) setting.
 
 ## See also

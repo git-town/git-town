@@ -3,11 +3,11 @@
 This setting controls whether the Git Town CLI embeds a visual representation of
 the [branch stack](../stacked-changes.md) (breadcrumbs) into proposals.
 
-If you prefer to handle this outside the CLI, you can achieve the same effect by
-using the
+If you prefer to handle this outside the CLI,
+you can achieve the same effect by using the
 [Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action).
 
-## values
+## options
 
 This setting accepts the following values:
 
@@ -32,7 +32,8 @@ git config [--global] git-town.proposal-breadcrumb stacks
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

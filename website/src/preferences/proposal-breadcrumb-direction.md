@@ -3,7 +3,7 @@
 Controls the direction of the [breadcrumb](../how-to/proposal-breadcrumb.md)
 that Git Town embeds into proposals.
 
-## values
+## options
 
 Supported values:
 

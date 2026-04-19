@@ -1,4 +1,4 @@
-# Integrate Git Town with [Lazygit](https://github.com/jesseduffield/lazygit)
+# Integrate Git Town with [lazygit](https://github.com/jesseduffield/lazygit)
 
 Example lazygit configuration file to integrate Git Town:
 

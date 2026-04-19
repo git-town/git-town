@@ -1,3 +1,5 @@
+# more info at https://github.com/kevgo/run-that-app
+
 actionlint 1.7.8
 alphavet 0.1.0
 conc 0.3.0
@@ -20,6 +22,7 @@ node 25.1.0
 npm 25.1.0
 npx 25.1.0
 ripgrep 15.1.0
+rumdl 0.1.75
 scc 3.6.0
 shellcheck system 0.11.0
 shfmt 3.12.0

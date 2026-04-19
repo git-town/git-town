@@ -6,9 +6,10 @@
 git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [--(non)-interactive] [-s | --stack] [-v | --verbose]
 ```
 
-The _walk_ command ("walking the branch hierarchy") executes a given command for
-each feature branch. It stops if the command exits with an error, giving you a
-chance to investigate and fix the issue.
+The _walk_ command ("walking the branch hierarchy") executes a given command
+for each feature branch.
+It stops if the command exits with an error,
+giving you a chance to investigate and fix the issue.
 
 - use [git town continue](continue.md) to retry the command on the current
   branch
@@ -17,15 +18,16 @@ chance to investigate and fix the issue.
 - use [git town status reset](status-reset.md) to abort the iteration and keep
   all changes made
 
-If no shell command is provided, drops you into an interactive shell for each
-branch. You can manually run any shell commands, then proceed to the next branch
-with [git town continue](continue.md)
+If no shell command is provided,
+drops you into an interactive shell for each branch.
+You can manually run any shell commands,
+then proceed to the next branch with [git town continue](continue.md)
 
 ## Examples
 
 Consider this stack:
 
-```
+```sh
 main
  \
   branch-1
@@ -56,8 +58,8 @@ Iterate through all local branches.
 
 #### `--dry-run`
 
-Test-drive this command: It prints the commands that would be run but doesn't
-execute them.
+Test-drive this command:
+It prints the commands that would be run but doesn't execute them.
 
 #### `-h`<br>`--help`
 

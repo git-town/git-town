@@ -1,9 +1,9 @@
-# Perennial regex
+# perennial-regex
 
 All branches matching this regular expression are considered
 [perennial branches](perennial-branches.md).
 
-## configure in config file
+## config file
 
 In the [config file](../configuration-file.md) the perennial regex exists inside
 the `[branches]` section:
@@ -13,7 +13,7 @@ the `[branches]` section:
 perennial-regex = "^release-.*"
 ```
 
-## configure in Git metadata
+## Git metadata
 
 You can configure the perennial branches manually by running:
 
@@ -22,7 +22,8 @@ git config [--global] git-town.perennial-regex 'release-.*'
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

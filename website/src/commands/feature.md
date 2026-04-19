@@ -23,9 +23,9 @@ Make branches "alpha" and "beta" feature branches:
 git town feature alpha beta
 ```
 
-Check out a remote branch (that exists at the
-[development remote](../preferences/dev-remote.md) but not on your local
-machine) and make it a feature branch:
+Check out a remote branch
+(that exists at the [development remote](../preferences/dev-remote.md) but not
+on your local machine) and make it a feature branch:
 
 ```fish
 git town feature somebody-elses-branch

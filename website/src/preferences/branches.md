@@ -5,19 +5,22 @@ branches.
 
 ## Long-lived branches
 
-Branches that live forever are called _perennial branches_. Typical names for
-perennial branches are `main`, `master`, `development`, `production`, or
-`staging`. Amongst these, the _main branch_ holds a special role: it is the the
-default base from which short-lived branches are cut, and into which short-lived
-branches are merged.
+Branches that live forever are called _perennial branches_.
+Typical names for perennial branches are `main`, `master`, `development`,
+`production`, or `staging`.
+Amongst these, the _main branch_ holds a special role:
+it is the the default base from which short-lived branches are cut,
+and into which short-lived branches are merged.
 
 ## Short-lived branches
 
-Short-lived branches typically used for active development. They are typically
-created from a perennial branch and merged back into the same perennial branch.
+Short-lived branches typically used for active development.
+They are typically created from a perennial branch
+and merged back into the same perennial branch.
 They can also form a hierarchy of branches called a
-[stack](../stacked-changes.md). Git Town distinguishes short-lived branches that
-you own vs those that you don't own.
+[stack](../stacked-changes.md).
+Git Town distinguishes short-lived branches that you own vs those
+that you don't own.
 
 ### Short-lived branches owned by you
 

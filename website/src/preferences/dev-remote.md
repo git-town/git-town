@@ -1,9 +1,10 @@
-# Development remote
+# dev-remote
 
 This setting lets you override the name of the Git remote used for development.
-This is the remote that branches get pushed to, and into which branches get
-shipped to. Usually that remote is called `origin`, which is also the default
-value for this setting.
+This is the remote that branches get pushed to,
+and into which branches get shipped to.
+Usually that remote is called `origin`,
+which is also the default value for this setting.
 
 ## config file
 
@@ -24,7 +25,8 @@ git config [--global] git-town.dev-remote <remote name>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 
