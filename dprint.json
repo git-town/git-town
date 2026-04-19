@@ -11,7 +11,7 @@
   },
   "yaml": {
   },
-  "includes": ["**/*.{js,ts,json,md}"],
+  "includes": ["**/*.{js,ts,json}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
   "plugins": [
     "https://plugins.dprint.dev/dockerfile-0.3.3.wasm",
