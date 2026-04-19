@@ -114,13 +114,13 @@ ignore-words = [
   "config",
   "environment",
   "fast-forward",
+  "ff-only",
   "merge",
   "options",
   "proposal-breadcrumb",
   "proposal-breadcrumb-direction",
   "push-branches",
   "rebase",
-  "ff-only",
   "squash-merge",
   # keep-sorted end
 ]

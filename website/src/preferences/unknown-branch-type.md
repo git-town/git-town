@@ -1,7 +1,8 @@
 # Unknown branch type
 
-This setting defines the branch type to use when Git Town cannot determine the
-branch type using all other configuration settings:
+This setting defines the branch type to use
+when Git Town cannot determine the branch type using all other configuration
+settings:
 
 - [main-branch](main-branch.md),
 - [perennial-branches](perennial-branches.md)
@@ -22,21 +23,17 @@ Possible values are:
 - `parked`
 - `prototype`
 
-## configuration via setup assistant
+## config file
 
-A great way to configure this setting is through the setup assistant.
-
-## configure in config file
-
-In the [config file](../configuration-file.md), the unknown branch type is
-specified in the `[branches]` section:
+In the [config file](../configuration-file.md),
+the unknown branch type is specified in the `[branches]` section:
 
 ```toml
 [branches]
 unknown-type = "feature"
 ```
 
-## configure in Git metadata
+## Git metadata
 
 You can manually configure the unknown branch type using Git metadata:
 
@@ -45,9 +42,11 @@ git config [--global] git-town.unknown-branch-type "feature"
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-You can configure the branch type Git Town should assume for unknown existing
-branches by setting the `GIT_TOWN_UNKNOWN_BRANCH_TYPE` environment variable.
+You can configure the branch type Git Town should assume
+for unknown existing branches by setting the `GIT_TOWN_UNKNOWN_BRANCH_TYPE`
+environment variable.
