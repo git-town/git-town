@@ -10,6 +10,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.detached" is "zonk"
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.ignore-uncommitted" is "zonk"
+    And local Git setting "git-town.interactive" is "zonk"
     And local Git setting "git-town.new-branch-type" is "zonk"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.order" is "zonk"
@@ -61,6 +62,7 @@ Feature: Fix invalid configuration data
       | order                         | down enter                    |
       | proposal breadcrumb           | enter                         |
       | proposal breadcrumb direction | enter                         |
+      | interactive                   | enter                         |
       | config storage                | enter                         |
 
   Scenario: result
@@ -98,6 +100,7 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.detached": "zonk"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
       Ignoring invalid value for "git-town.ignore-uncommitted": "zonk"
+      Ignoring invalid value for "git-town.interactive": "zonk"
       Ignoring invalid value for "git-town.new-branch-type": "zonk"
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
@@ -138,8 +141,14 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
 
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
+    Then Git Town runs no commands
+    And Git Town prints:
+      """
+      Ignoring invalid value for "git-town.interactive": "zonk"
+      """
     Then global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
     And global Git setting "alias.continue" now doesn't exist
