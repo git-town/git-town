@@ -34,7 +34,21 @@ tables = false # Exclude tables from line length check
 
 # Proper names that should be capitalized correctly
 [MD044]
-names = ["Git Town", "[git town", "git-town", "git-branches.toml", "E2E", "Cucumber", "Q & A", "Git", "git town append", "git diff-parent"]
+names = [
+  "Git Town",
+  "[git town",
+  "git-town",
+  "git-branches.toml",
+  "E2E",
+  "Cucumber",
+  "Q & A",
+  "Git",
+  "git town append",
+  "git town branch",
+  "git town diff-parent",
+  "git town hack",
+  "git town sync"
+]
 code-blocks = false
 html-elements = false
 
