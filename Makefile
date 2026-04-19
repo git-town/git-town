@@ -1,4 +1,4 @@
-RTA_VERSION = 0.30.0  # run-that-app version to use
+RTA_VERSION = 0.33.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -21,6 +21,7 @@ GOLANGCILINT = $(RTA) golangci-lint
 NPM          = $(RTA) npm
 NPX          = $(RTA) npx
 NODE         = $(RTA) node
+RUMDL        = $(RTA) rumdl
 SCC          = $(RTA) scc
 SHELLCHECK   = $(RTA) --optional shellcheck
 SHFMT        = $(RTA) shfmt
@@ -83,7 +84,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	go run tools/format_self/format_self.go
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
-	$(GOFUMPT) -l -w .
+	$(RUMDL) fmt
 	$(DPRINT) fmt
 	$(DPRINT) fmt --config dprint-changelog.json
 	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
@@ -123,6 +124,7 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 		"$(ACTIONLINT) " \
 		"$(STATICCHECK) ./..." \
 		"tools/ensure_no_files_with_dashes.sh" \
+		"$(RUMDL) check" \
 		"$(SHFMT) -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs $(SHELLCHECK)" \
 		"$(GOLANGCILINT) cache clean && $(GOLANGCILINT) run" \
 		"$(GHERKINLINT)" \

@@ -1,0 +1,45 @@
+# rumdl configuration file
+
+[global]
+# Additional rules to enable on top of defaults (additive, does not replace)
+extend-enable = [
+  "MD060", # format tables
+  "MD063", # heading capitalization
+  "MD070", # nested code fence collision
+]
+
+# Additional rules to disable on top of the disable list (additive)
+extend-disable = [
+  "MD033", # allow inline HTML
+]
+
+exclude = [".git", ".github", ".tools"]
+
+# Respect .gitignore files when scanning directories (default: true)
+respect-gitignore = true
+
+# Markdown flavor/dialect: standard (default), gfm, commonmark, mkdocs, mdx, quarto
+flavor = "gfm"
+
+# text-wrap
+[MD013]
+line-length = 80
+reflow = true # Enable automatic text reflow/wrapping
+reflow-mode = "semantic-line-breaks" # Reflow mode: "default", "normalize", "sentence-per-line", or "semantic-line-breaks" (default: "default")
+length-mode = "visual" # How to count line length: "visual", "chars", or "bytes" (default: "visual")
+code-blocks = false # Exclude code blocks from line length check
+tables = false # Exclude tables from line length check
+# headings = true  # Include headings in line length check
+
+# Proper names that should be capitalized correctly
+[MD044]
+names = ["Git Town"]
+# code-blocks = false  # Check code blocks for proper names (default: false, skips code blocks)
+
+# format tables
+[MD060]
+enabled = true
+style = "aligned-no-space"
+
+[MD063]
+style = "sentence-case"
