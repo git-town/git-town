@@ -144,7 +144,8 @@ debatable community standards.
 The name `self` is appropriately concise,
 being only four characters long but a properly readable English word.
 
-For more background please refer to https://michaelwhatcott.com/receiver-names-in-go and https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
+For more background please refer to
+<https://michaelwhatcott.com/receiver-names-in-go> and <https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f>.
 
 #### Generic container types for optionality and mutability
 
