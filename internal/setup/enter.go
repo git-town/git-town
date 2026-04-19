@@ -167,6 +167,7 @@ EnterForgeData:
 	detached := None[configdomain.Detached]()
 	featureRegex := None[configdomain.FeatureRegex]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
+	interactive := None[configdomain.Interactive]()
 	newBranchType := None[configdomain.NewBranchType]()
 	observedRegex := None[configdomain.ObservedRegex]()
 	order := None[configdomain.Order]()
@@ -280,6 +281,10 @@ EnterForgeData:
 			return emptyResult, exit, false, err
 		}
 		proposalBreadcrumbDirection, exit, err = enterProposalBreadcrumbDirection(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
+		interactive, exit, err = enterInteractive(data)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -564,6 +569,18 @@ func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], 
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
 		Local:       data.Config.GitLocal.IgnoreUncommitted,
+	})
+}
+
+func enterInteractive(data Data) (Option[configdomain.Interactive], dialogdomain.Exit, error) {
+	if data.Config.File.Interactive.IsSome() {
+		return None[configdomain.Interactive](), false, nil
+	}
+	return dialog.Interactive(dialog.Args[configdomain.Interactive]{
+		Global:      data.Config.GitGlobal.Interactive,
+		Inputs:      data.Inputs,
+		Interactive: data.Config.NormalConfig.Interactive,
+		Local:       data.Config.GitLocal.Interactive,
 	})
 }
 
