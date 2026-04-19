@@ -4,9 +4,6 @@
   "incremental": true,
   "json": {
   },
-  "markdown": {
-    "textWrap": "always"
-  },
   "toml": {
   },
   "typescript": {
