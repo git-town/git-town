@@ -1,6 +1,8 @@
 package undo
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -28,6 +30,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		})
 	}
 	// undo config changes
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111")
 	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
 		result.Value.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}

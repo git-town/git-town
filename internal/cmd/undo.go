@@ -67,6 +67,7 @@ func undoCmd() *cobra.Command {
 
 func executeUndo(cliConfig configdomain.PartialConfig) error {
 Start:
+	fmt.Println("222222222222222222222222222222222222222222222222222222222222222222222")
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		IgnoreUnknown:    false,
@@ -78,6 +79,7 @@ Start:
 	if err != nil {
 		return err
 	}
+	fmt.Println("333333333333333333333333333333333333333333333333333333333333333333333")
 	data, flow, err := determineUndoData(repo)
 	if err != nil {
 		return err
