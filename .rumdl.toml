@@ -42,7 +42,6 @@ names = [
   "Git",
   "Q & A",
   "[git town",
-  "git-branches.toml",
   "git append",
   "git diff-parent",
   "git hack",
@@ -82,6 +81,7 @@ names = [
   "git town sync",
   "git town undo",
   "git town up",
+  "git-branches.toml",
   "git-town",
   # keep-sorted end
 ]
