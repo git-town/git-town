@@ -92,6 +92,7 @@ names = [
   "git town walk",
   "git-branches.toml",
   "git-town",
+  "Windows",
   # keep-sorted end
 ]
 code-blocks = false
