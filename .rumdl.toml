@@ -84,6 +84,7 @@ names = [
   "git town sync",
   "git town undo",
   "git town up",
+  "git town walk",
   "git-branches.toml",
   "git-town",
   # keep-sorted end
