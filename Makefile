@@ -175,7 +175,7 @@ fix-optioncompare-in-tests:
 
 keep-sorted: ${RTA}
 	@$(RTA) --install ripgrep
-	@$(RTA) keep-sorted $(shell $(RTA) ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
+	@$(RTA) keep-sorted $(shell $(RTA) ripgrep -l --hidden 'keep-sorted end' ./ --glob '!{.git,Makefile}')
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
