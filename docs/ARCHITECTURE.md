@@ -6,10 +6,10 @@ The complexity in the Git Town codebase stems from balancing several challenging
 design objectives:
 
 1. **Extreme configurability:** Execute a highly variable and configurable set
-   of Git operations depending on the current status of the repository. Git
-   Town's business logic covers so many edge cases that most Git Town commands
-   aren't just a simple hard-coded scripts, they are executable programs
-   custom-built for your specific use case.
+   of Git operations depending on the status of the repository before the
+   command runs and while it runs. Git Town's business logic covers so many edge
+   cases that most Git Town commands aren't just a simple hard-coded scripts,
+   they are executable programs custom-built for your specific use case.
 2. **Terminate and resume:** When any operation in these programs fails,
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
