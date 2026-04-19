@@ -51,6 +51,7 @@ names = [
   "git append",
   "git branch",
   "git checkout",
+  "git diff",
   "git diff-parent",
   "git hack",
   "git merge",
