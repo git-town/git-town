@@ -22,6 +22,12 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result.WriteString("#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json\n\n")
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
+	interactive, hasInteractive := data.Interactive.Get()
+	if hasInteractive {
+		if interactive.Check()
+		result.WriteString(fmt.Sprintf("interactive = %t\n", interactive))
+	}
+
 	// keep-sorted start
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()

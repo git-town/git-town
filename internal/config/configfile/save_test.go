@@ -68,6 +68,7 @@ func TestSave(t *testing.T) {
 				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("forge"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
+				Interactive:                 Some(configdomain.InteractiveEnabled),
 				MainBranch:                  Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:               observedRegex,
@@ -93,6 +94,8 @@ func TestSave(t *testing.T) {
 #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
 
 # See https://www.git-town.com/configuration-file for details
+
+interactive = true
 
 [branches]
 contribution-regex = "contribution-"
