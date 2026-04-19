@@ -205,15 +205,22 @@ it eliminates entire categories of bugs.
 
 #### Alphabetic sorting
 
-We sort files alphabetically wherever it makes sense. For example:
+We sort most things in this codebase alphabetically, for example:
 
 - struct fields and methods
 - function definitions
 - the order of unit tests
 
-This helps navigate larger files and locate things in them. It also prevents
-conflicts when two branches add something to the same file because additions no
-longer happen at the end of the file.
+While not ideal, this approach has several benefits:
+
+- It helps locate things efficiently.
+- It prevents conflicts when two branches add something to the same file because
+  both additions no longer happen at the end of the file.
+- It prevents bikeshed debates about how to order things.
+- It is the only ordering method for which everybody has the exact same
+  expectation how the end result should look like.
+- It allows automated sorting, freeing humans from manually moving things
+  around.
 
 #### All struct fields are required by default
 
