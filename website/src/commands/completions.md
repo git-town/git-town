@@ -6,15 +6,16 @@
 git town completions (bash|fish|powershell|zsh) [-h | --help] [--no-descriptions]
 ```
 
-The _completions_ command outputs shell scripts that enable auto-completion for
-Git Town in Bash, Fish, PowerShell, or Zsh. When set up, typing
-`git town <tab key>` in your terminal will auto-complete subcommands.
+The _completions_ command outputs shell scripts that enable auto-completion
+for Git Town in Bash, Fish, PowerShell, or Zsh.
+When set up, typing `git town <tab key>` in your terminal will auto-complete
+subcommands.
 
 ### Bash
 
 To load autocompletion for Bash, run this command:
 
-```
+```sh
 source <(git town completions bash)
 ```
 
@@ -24,29 +25,29 @@ To load completions for each session, add the above line to your `.bashrc`.
 
 To load autocompletions for Fish, run this command:
 
-```
+```sh
 git town completions fish | source
 ```
 
-To load completions for each session, add the above line to your
-`~/.config/fish/config.fish`.
+To load completions for each session,
+add the above line to your `~/.config/fish/config.fish`.
 
 ### PowerShell
 
 To install autocompletions for PowerShell, run this command:
 
-```
+```sh
 git town completions powershell | Out-String | Invoke-Expression
 ```
 
-To load completions for each session, add the above line to your PowerShell
-profile.
+To load completions for each session,
+add the above line to your PowerShell profile.
 
 ### Zsh
 
 To load autocompletions for Zsh, run this command:
 
-```
+```sh
 source <(git town completions zsh)
 ```
 

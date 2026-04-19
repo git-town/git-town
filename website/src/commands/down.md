@@ -7,20 +7,22 @@ git town down [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o 
 ```
 
 The _down_ command moves one position down in the current stack by switching to
-a child of the current branch. After successfully switching branches, it
-displays the branch hierarchy to show your new position in the stack.
+a child of the current branch.
+After successfully switching branches,
+it displays the branch hierarchy to show your new position in the stack.
 
-When the current branch has multiple children, an interactive dialog lets you
-choose which child branch to switch to.
+When the current branch has multiple children,
+an interactive dialog lets you choose which child branch to switch to.
 
-`git town down` is useful for navigating stacked changes without needing to
-remember branch names or use the interactive [switch](switch.md) command.
+`git town down` is useful
+for navigating stacked changes without needing to remember branch names
+or use the interactive [switch](switch.md) command.
 
 ## Examples
 
 Consider this stack:
 
-```
+```sh
 main
  \
 * branch-1
@@ -28,10 +30,10 @@ main
     branch-2
 ```
 
-After running `git town down` on the `branch-1` branch, you end down with this
-stack:
+After running `git town down` on the `branch-1` branch,
+you end down with this stack:
 
-```
+```sh
 main
  \
   branch-1
@@ -43,9 +45,10 @@ main
 
 #### `-d <branch-types>`<br>`--display-types <branch-types>`
 
-This flag allows customizing whether Git Town also displays the branch type in
-addition to the branch name when showing a list of branches. More info
-[here](../preferences/display-types.md#cli-flags).
+This flag allows customizing
+whether Git Town also displays the branch type in addition to the branch name
+when showing a list of branches.
+More info [here](../preferences/display-types.md#cli-flags).
 
 #### `-h`<br>`--help`
 
@@ -54,12 +57,13 @@ Display help for this command.
 #### `-m`<br>`--merge`
 
 The `--merge` aka `-m` flag has the same effect as the
-[git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
-flag. It attempts to merge uncommitted changes in your workspace into the target
+[Git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
+flag.
+It attempts to merge uncommitted changes in your workspace into the target
 branch.
 
-This is useful when you have uncommitted changes in your current branch and want
-to move them down to a child branch.
+This is useful when you have uncommitted changes in your current branch
+and want to move them down to a child branch.
 
 #### `-o <asc|desc>`<br>`--order <asc|desc>`
 

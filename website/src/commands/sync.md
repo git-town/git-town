@@ -10,9 +10,9 @@ The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
 
 You can (and should) sync all branches many times per day without thinking about
-it, even in the middle of ongoing work. If a sync goes wrong, you can safely go
-back to the exact state you repo was in before the sync by running
-[git town undo](undo.md).
+it, even in the middle of ongoing work.
+If a sync goes wrong, you can safely go back to the exact state you repo was in
+before the sync by running [git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
@@ -24,13 +24,17 @@ back to the exact state you repo was in before the sync by running
 - does not pull, push, or merge depending on the configured
   [branch type](../branch-types.md)
 
-If the parent branch is not known, Git Town looks for a pull/merge request for
-this branch and uses its parent branch. Otherwise it prompts you for the parent.
+If the parent branch is not known,
+Git Town looks for a pull/merge request for this branch
+and uses its parent branch.
+Otherwise it prompts you for the parent.
 
 ### Sync frequently
 
-Merge conflicts are not fun and can break code. Minimize them by making it a
-habit to sync your branches regularly and frequently. When properly configured,
+Merge conflicts are not fun and can break code.
+Minimize them by making it a habit to sync your branches regularly
+and frequently.
+When properly configured,
 `git town sync --all` can synchronize all your local branches the right way
 without losing changes, even in edge cases.
 
@@ -49,32 +53,35 @@ If you don't sync because:
 
 ### Why does Git Town sometimes not sync the tracking or parent branch?
 
-Git Town detects whether there are any changes that need to be synced, and might
-skip unnecessary sync operations that wouldn't produce any changes.
+Git Town detects whether there are any changes that need to be synced,
+and might skip unnecessary sync operations that wouldn't produce any changes.
 
 ### Why does Git Town sometimes update a local branch whose tracking branch was deleted before deleting it?
 
-If a remote branch was deleted at the remote, it is considered obsolete and
-`git town sync` will remove its local counterpart. To guarantee that this
-doesn't lose unshipped changes in the local branch, `git town sync` needs to
-prove that the branch to be deleted contains no unshipped changes.
+If a remote branch was deleted at the remote,
+it is considered obsolete and `git town sync` will remove its local counterpart.
+To guarantee that this doesn't lose unshipped changes in the local branch,
+`git town sync` needs to prove
+that the branch to be deleted contains no unshipped changes.
 
-The easiest way to prove that is when the local branch was in sync with its
-tracking branch before Git Town runs `git fetch`. This is another reason to run
-`git town sync` regularly.
+The easiest way to prove that is
+when the local branch was in sync with its tracking branch
+before Git Town runs `git fetch`.
+This is another reason to run `git town sync` regularly.
 
 If a local shipped branch is not in sync with its tracking branch on your
 machine, Git Town must check for unshipped local changes by diffing the branch
-to delete against its parent branch. Only branches with an empty diff can be
-deleted safely. For this to work, Git Town needs to sync the branch first, even
-if it's going to be deleted right afterwards.
+to delete against its parent branch.
+Only branches with an empty diff can be deleted safely.
+For this to work, Git Town needs to sync the branch first,
+even if it's going to be deleted right afterwards.
 
 ## Options
 
 #### `-a`<br>`--all`
 
-By default this command syncs only the current branch. The `--all` aka `-a`
-parameter makes Git Town sync all local branches.
+By default this command syncs only the current branch.
+The `--all` aka `-a` parameter makes git town sync all local branches.
 
 #### `--auto-resolve`<br>`--no-auto-resolve`
 
@@ -84,23 +91,24 @@ Disables automatic resolution of
 #### `-d`<br>`--detached`<br>`--no-detached`
 
 The `--detached` aka `-d` flag enables
-[detached mode](../preferences/detached.md) for the current command. If detached
-mode is enabled through [configuration data](../preferences/detached.md), the
-`--no-detached` flag disables detached mode for the current command.
+[detached mode](../preferences/detached.md) for the current command.
+If detached mode is enabled through
+[configuration data](../preferences/detached.md), the `--no-detached` flag
+disables detached mode for the current command.
 
 In detached mode, feature branches don't receive updates from the perennial
-branch at the root of your branch hierarchy. This can be useful in busy
-monorepos.
+branch at the root of your branch hierarchy.
+This can be useful in busy monorepos.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command.
+It prints the Git commands that would be run but doesn't execute them.
 
 #### `--gone`
 
-Sync all local branches whose tracking branch is gone. This removes all local
-branches that were shipped or deleted at the remote.
+Sync all local branches whose tracking branch is gone.
+This removes all local branches that were shipped or deleted at the remote.
 
 #### `-h`<br>`--help`
 
@@ -112,8 +120,8 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 
 #### `-p`<br>`--prune`
 
-The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
-effectively don't make any changes.
+The `--prune` aka `-p` flag removes (prunes) empty branches,
+i.e. branches that effectively don't make any changes.
 
 #### `--push`<br>`--no-push`
 
@@ -122,7 +130,7 @@ The `--push`/`--no-push` argument overrides the
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+The `--stack` aka `-s` parameter makes git town sync all branches in the stack
 that the current branch belongs to.
 
 #### `-v`<br>`--verbose`
@@ -136,15 +144,16 @@ determine the repository state.
 whether perennial branches merge their tracking branch or rebase against it.
 
 [sync-feature-strategy](../preferences/sync-feature-strategy.md) configures
-whether feature branches merge their parent and tracking branches or rebase
-against them.
+whether feature branches merge their parent and tracking branches
+or rebase against them.
 
-If the repository contains a Git remote called `upstream` and the
-[sync-upstream](../preferences/sync-upstream.md) setting is enabled, Git Town
-also pulls new commits from the upstream's main branch.
+If the repository contains a Git remote called `upstream`
+and the [sync-upstream](../preferences/sync-upstream.md) setting is enabled,
+Git Town also pulls new commits from the upstream's main branch.
 
-[sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
-tags with the [development remote](../preferences/dev-remote.md).
+[sync-tags](../preferences/sync-tags.md) configures
+whether Git Town syncs Git tags with the
+[development remote](../preferences/dev-remote.md).
 
 ## See also
 

@@ -6,9 +6,9 @@
 git town status show [-h | --help] [-v | --verbose]
 ```
 
-The _status show_ command displays Git Town's runstate, i.e. detailed
-information about the currently suspended or previously executed Git Town
-command, including its path on the filesystem.
+The _status show_ command displays Git Town's runstate,
+i.e. detailed information about the currently suspended
+or previously executed Git Town command, including its path on the filesystem.
 
 ## Options
 
@@ -27,7 +27,7 @@ determine the repository state.
 
 - [runlog](runlog.md) displays an overview of the most recently executed Git
   Town commands
-- [status reset](status-reset.md) deletes the runstate. This can solve errors
-  after upgrading Git Town.
+- [status reset](status-reset.md) deletes the runstate.
+  This can solve errors after upgrading Git Town.
 
 <!-- keep-sorted end -->
