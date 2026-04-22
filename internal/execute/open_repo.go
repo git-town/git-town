@@ -63,17 +63,14 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	fmt.Println("4444444444444444444444444444444444444444444444444444444444444444444444444444")
 	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	fmt.Println("5555555555555555555555555555555555555555555555555555555555555555555555555555", args.IgnoreUnknown)
 	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, args.IgnoreUnknown, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	fmt.Println("6666666666666666666666666666666666666666666666666666666666666666666666666666")
 	unscopedSnapshot, err := gitconfig.LoadSnapshot(backendRunner, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return emptyOpenRepoResult(), err
