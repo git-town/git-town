@@ -36,6 +36,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.forge-type" is "github"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.ignore-uncommitted" is "true"
+    And local Git setting "git-town.interactive" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.observed-regex" is "obs.*"
     And local Git setting "git-town.order" is "desc"
@@ -88,8 +89,10 @@ Feature: remove existing configuration in Git metadata
       | order                         | up enter                                                                    |                     |
       | proposal breadcrumb           | down enter                                                                  |                     |
       | proposal breadcrumb direction | down enter                                                                  |                     |
+      | interactive                   | up enter                                                                    |                     |
       | config storage                | enter                                                                       | git metadata        |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
@@ -120,6 +123,7 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.detached false                     |
       | git config --unset git-town.feature-regex              |
       | git config git-town.ignore-uncommitted false           |
+      | git config git-town.interactive false                  |
       | git config git-town.new-branch-type feature            |
       | git config --unset git-town.observed-regex             |
       | git config git-town.order asc                          |
@@ -164,6 +168,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" is now "false"
+    And local Git setting "git-town.interactive" is now "false"
     And local Git setting "git-town.new-branch-type" is now "feature"
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" is now "asc"
