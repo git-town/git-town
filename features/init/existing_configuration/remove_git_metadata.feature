@@ -92,7 +92,6 @@ Feature: remove existing configuration in Git metadata
       | interactive                   | up enter                                                                    |                     |
       | config storage                | enter                                                                       | git metadata        |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
