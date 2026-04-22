@@ -14,6 +14,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.feature-regex" is "^feat-"
     And global Git setting "git-town.hosting-origin-hostname" is "git"
     And global Git setting "git-town.ignore-uncommitted" is "true"
+    And global Git setting "git-town.interactive" is "true"
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.observed-regex" is "^obs-"
@@ -67,6 +68,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | order                         | enter       |
       | proposal breadcrumb           | enter       |
       | proposal breadcrumb direction | enter       |
+      | interactive                   | enter       |
       | config storage                | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |

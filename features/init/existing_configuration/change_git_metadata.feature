@@ -11,6 +11,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ignore-uncommitted" is "true"
+    And local Git setting "git-town.interactive" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.push-branches" is "false"
@@ -54,6 +55,7 @@ Feature: change existing information in Git metadata
       | order                         | up enter               |
       | proposal breadcrumb           | down enter             |
       | proposal breadcrumb direction | down enter             |
+      | interactive                   | down enter             |
       | config storage                | enter                  |
 
   Scenario: result
@@ -88,6 +90,7 @@ Feature: change existing information in Git metadata
       | git config git-town.detached true                        |
       | git config git-town.feature-regex feat                   |
       | git config git-town.ignore-uncommitted false             |
+      | git config git-town.interactive false                    |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.observed-regex obs                   |
       | git config git-town.order asc                            |
@@ -131,6 +134,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.ignore-uncommitted" is now "false"
+    And local Git setting "git-town.interactive" is now "false"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.perennial-branches" is now "production qa"
@@ -179,6 +183,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" is now "true"
+    And local Git setting "git-town.interactive" is now "true"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist

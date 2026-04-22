@@ -42,6 +42,7 @@ Feature: Accepting all default values leads to a working setup
       | order                         | enter      |
       | proposal breadcrumb           | enter      |
       | proposal breadcrumb direction | enter      |
+      | interactive                   | enter      |
       | config storage                | enter      |
 
   Scenario: result
@@ -51,6 +52,7 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.auto-sync true                     |
       | git config git-town.detached false                     |
       | git config git-town.ignore-uncommitted true            |
+      | git config git-town.interactive true                   |
       | git config git-town.new-branch-type feature            |
       | git config git-town.order asc                          |
       | git config git-town.proposal-breadcrumb none           |
@@ -90,6 +92,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
+    And local Git setting "git-town.interactive" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist

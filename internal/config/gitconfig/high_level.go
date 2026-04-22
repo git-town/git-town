@@ -106,6 +106,10 @@ func RemoveIgnoreUncommitted(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyIgnoreUncommitted)
 }
 
+func RemoveInteractive(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyInteractive)
+}
+
 func RemoveMainBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
@@ -269,6 +273,10 @@ func SetGitlabToken(runner subshelldomain.Runner, value forgedomain.GitlabToken,
 
 func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
+}
+
+func SetInteractive(runner subshelldomain.Runner, value configdomain.Interactive, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyInteractive, strconv.FormatBool(value.IsEnabled()))
 }
 
 func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {

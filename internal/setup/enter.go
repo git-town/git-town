@@ -167,6 +167,7 @@ EnterForgeData:
 	detached := None[configdomain.Detached]()
 	featureRegex := None[configdomain.FeatureRegex]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
+	interactive := None[configdomain.Interactive]()
 	newBranchType := None[configdomain.NewBranchType]()
 	observedRegex := None[configdomain.ObservedRegex]()
 	order := None[configdomain.Order]()
@@ -283,6 +284,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
+		interactive, exit, err = enterInteractive(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs, data.Config.NormalConfig.Interactive)
 	if err != nil || exit {
@@ -314,7 +319,7 @@ EnterForgeData:
 		GiteaToken:                  giteaToken,
 		HostingOriginHostname:       hostingOriginHostName,
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:                 None[configdomain.Interactive](),
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:                  mainBranchResult.UserChoice,
 		NewBranchType:               newBranchType,
@@ -564,6 +569,18 @@ func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], 
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
 		Local:       data.Config.GitLocal.IgnoreUncommitted,
+	})
+}
+
+func enterInteractive(data Data) (Option[configdomain.Interactive], dialogdomain.Exit, error) {
+	if data.Config.File.Interactive.IsSome() {
+		return None[configdomain.Interactive](), false, nil
+	}
+	return dialog.Interactive(dialog.Args[configdomain.Interactive]{
+		Global:      data.Config.GitGlobal.Interactive,
+		Inputs:      data.Inputs,
+		Interactive: data.Config.NormalConfig.Interactive,
+		Local:       data.Config.GitLocal.Interactive,
 	})
 }
 
