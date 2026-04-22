@@ -65,6 +65,7 @@ Feature: Fix invalid configuration data
       | interactive                   | enter                         |
       | config storage                | enter                         |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
@@ -124,6 +125,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.contribution-regex" is now "cont"
     And local Git setting "git-town.detached" is now "true"
     And local Git setting "git-town.feature-regex" is now "feat"
+    And local Git setting "git-town.interactive" is now "false"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.order" is now "desc"
@@ -140,8 +142,8 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
+  # @debug @this
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands

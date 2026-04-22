@@ -68,7 +68,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	fmt.Println("5555555555555555555555555555555555555555555555555555555555555555555555555555")
+	fmt.Println("5555555555555555555555555555555555555555555555555555555555555555555555555555", args.IgnoreUnknown)
 	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, args.IgnoreUnknown, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
