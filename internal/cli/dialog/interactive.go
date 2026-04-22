@@ -38,7 +38,7 @@ func Interactive(args Args[configdomain.Interactive]) (Option[configdomain.Inter
 			Text: "enabled: prompt for missing input",
 		},
 		{
-			Data: Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
+			Data: Some(configdomain.Interactive("disabled")),
 			Text: "disabled: enter all input via CLI flags",
 		},
 	}...)
