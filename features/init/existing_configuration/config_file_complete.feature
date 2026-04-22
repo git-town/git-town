@@ -5,6 +5,8 @@ Feature: don't ask for information already provided by the config file
     Given a Git repo with origin
     And the committed configuration file:
       """
+      interactive = true
+
       [branches]
       main = "main"
       contribution-regex = "contribute-"
