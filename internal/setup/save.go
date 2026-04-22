@@ -119,6 +119,9 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.IgnoreUncommitted.IsSome() {
 		_ = gitconfig.RemoveIgnoreUncommitted(runner)
 	}
+	if gitConfig.Interactive.IsSome() {
+		_ = gitconfig.RemoveInteractive(runner)
+	}
 	if gitConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
@@ -258,6 +261,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.IgnoreUncommitted.IsNone() {
 		fc.Check(
 			saveIgnoreUncommitted(userInput.Data.IgnoreUncommitted, existingGitConfig.IgnoreUncommitted, frontend),
+		)
+	}
+	if configFile.Interactive.IsNone() {
+		fc.Check(
+			saveInteractive(userInput.Data.Interactive, existingGitConfig.Interactive, frontend),
 		)
 	}
 	if configFile.NewBranchType.IsNone() {
@@ -533,6 +541,16 @@ func saveIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitt
 		return gitconfig.SetIgnoreUncommitted(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveIgnoreUncommitted(runner)
+}
+
+func saveInteractive(valueToWriteToGit Option[configdomain.Interactive], valueAlreadyInGit Option[configdomain.Interactive], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetInteractive(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveInteractive(runner)
 }
 
 func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {

@@ -65,7 +65,6 @@ Feature: Fix invalid configuration data
       | interactive                   | enter                         |
       | config storage                | enter                         |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
@@ -76,6 +75,7 @@ Feature: Fix invalid configuration data
       | git config git-town.detached true                      |
       | git config git-town.feature-regex feat                 |
       | git config git-town.ignore-uncommitted false           |
+      | git config git-town.interactive true                   |
       | git config git-town.new-branch-type parked             |
       | git config git-town.observed-regex obs                 |
       | git config git-town.order desc                         |
@@ -125,7 +125,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.contribution-regex" is now "cont"
     And local Git setting "git-town.detached" is now "true"
     And local Git setting "git-town.feature-regex" is now "feat"
-    And local Git setting "git-town.interactive" is now "false"
+    And local Git setting "git-town.interactive" is now "true"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.order" is now "desc"
@@ -142,16 +142,11 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
-  # @debug @this
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And Git Town prints:
-      """
-      Ignoring invalid value for "git-town.interactive": "zonk"
-      """
-    Then global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.compress" now doesn't exist
     And global Git setting "alias.continue" now doesn't exist
     And global Git setting "alias.contribute" now doesn't exist
