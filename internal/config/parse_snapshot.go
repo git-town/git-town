@@ -221,12 +221,11 @@ func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, par
 	}
 	value, err := parseFunc(valueStr, key.String())
 	if err != nil {
+		var zero T
 		if ignoreUnknown {
 			fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
-			var zero T
 			return zero, nil
 		}
-		var zero T
 		return zero, err
 	}
 	return value, nil
