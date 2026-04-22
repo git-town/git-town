@@ -55,6 +55,7 @@ Feature: ask for information not provided by the config file
       | ship strategy                 | enter                 |
       | proposal breadcrumb           | enter                 |
       | proposal breadcrumb direction | enter                 |
+      | interactive                   | enter                 |
       | config storage                | enter                 |
     Then Git Town runs the commands
       | COMMAND                                                |
@@ -65,6 +66,7 @@ Feature: ask for information not provided by the config file
       | git config git-town.contribution-regex cont            |
       | git config git-town.detached false                     |
       | git config git-town.feature-regex feat                 |
+      | git config git-town.interactive true                   |
       | git config git-town.new-branch-type feature            |
       | git config git-town.observed-regex obs                 |
       | git config git-town.perennial-regex peren              |
