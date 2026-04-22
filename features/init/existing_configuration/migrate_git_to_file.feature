@@ -13,6 +13,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.github-connector" is "api"
     And local Git setting "git-town.hosting-origin-hostname" is "github.example.com"
     And local Git setting "git-town.ignore-uncommitted" is "true"
+    And local Git setting "git-town.interactive" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.observed-regex" is "other-.*"
     And local Git setting "git-town.order" is "desc"
@@ -67,6 +68,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | order                         | enter      |
       | proposal breadcrumb           | enter      |
       | proposal breadcrumb direction | enter      |
+      | interactive                   | enter      |
       | config storage                | down enter |
 
   Scenario: result
@@ -81,6 +83,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.github-connector              |
       | git config --unset git-town.hosting-origin-hostname       |
       | git config --unset git-town.ignore-uncommitted            |
+      | git config --unset git-town.interactive                   |
       | git config --unset git-town.main-branch                   |
       | git config --unset git-town.new-branch-type               |
       | git config --unset git-town.observed-regex                |
@@ -107,6 +110,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.github-connector" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" now doesn't exist
+    And local Git setting "git-town.interactive" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" now doesn't exist
@@ -127,9 +131,11 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
-
+      
       # See https://www.git-town.com/configuration-file for details
-
+      
+      interactive = true
+      
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -139,28 +145,28 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-type = "observed"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
       forge-type = "github"
       github-connector = "api"
       origin-hostname = "github.example.com"
-
+      
       [propose]
       breadcrumb = "stacks"
       breadcrumb-direction = "up"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = false
