@@ -5,6 +5,8 @@ Feature: don't ask for information already provided by the config file
     Given a Git repo with origin
     And the committed configuration file:
       """
+      interactive = true
+
       [branches]
       main = "main"
       contribution-regex = "contribute-"
@@ -69,6 +71,8 @@ Feature: don't ask for information already provided by the config file
       #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
 
       # See https://www.git-town.com/configuration-file for details
+
+      interactive = true
 
       [branches]
       contribution-regex = "contribute-"
