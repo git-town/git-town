@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -33,14 +34,14 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 			goto createProposal
 		}
 		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-			if args.Config.Value.NormalConfig.Headless {
-				args.FinalMessages.Addf(messages.BrowserOpen, existingProposal.Data.Data().URL)
-			} else {
+			if browserdomain.BrowserEnabled(args.Config.Value.NormalConfig.Browser) {
 				args.PrependOpcodes(
 					&BrowserOpen{
 						URL: existingProposal.Data.Data().URL,
 					},
 				)
+			} else {
+				args.FinalMessages.Addf(messages.BrowserOpen, existingProposal.Data.Data().URL)
 			}
 			return nil
 		}

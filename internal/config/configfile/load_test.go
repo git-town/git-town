@@ -174,7 +174,6 @@ upstream = true
 				GitUserEmail:                None[gitdomain.GitUserEmail](),
 				GitUserName:                 None[gitdomain.GitUserName](),
 				GiteaToken:                  None[forgedomain.GiteaToken](),
-				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),

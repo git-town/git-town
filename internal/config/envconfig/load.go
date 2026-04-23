@@ -36,7 +36,6 @@ const (
 	githubToken                 = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType         = "GIT_TOWN_GITLAB_CONNECTOR"
 	gitlabToken                 = "GIT_TOWN_GITLAB_TOKEN"
-	headless                    = "GIT_TOWN_HEADLESS"
 	ignoreUncommitted           = "GIT_TOWN_IGNORE_UNCOMMITTED"
 	interactive                 = "GIT_TOWN_INTERACTIVE"
 	mainBranch                  = "GIT_TOWN_MAIN_BRANCH"
@@ -86,7 +85,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
-	headless, errHeadless := load(env, headless, gohacks.ParseBoolOpt[configdomain.Headless])
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	interactive1, errInteractive1 := load(env, interactive, gohacks.ParseBoolOpt[bool])
 	interactive2 := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
@@ -124,7 +122,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errForgeType,
 		errGithubConnectorType,
 		errGitlabConnectorType,
-		errHeadless,
 		errIgnoreUncommitted,
 		errInteractive1,
 		errNewBranchType,
@@ -185,7 +182,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		Headless:                    headless,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

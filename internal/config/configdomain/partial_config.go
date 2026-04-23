@@ -40,7 +40,6 @@ type PartialConfig struct {
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
-	Headless                    Option[Headless]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
 	Interactive                 Option[Interactive]
@@ -103,7 +102,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		GithubToken:                 other.GithubToken.Or(self.GithubToken),
 		GitlabConnectorType:         other.GitlabConnectorType.Or(self.GitlabConnectorType),
 		GitlabToken:                 other.GitlabToken.Or(self.GitlabToken),
-		Headless:                    other.Headless.Or(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Interactive:                 other.Interactive.Or(self.Interactive),

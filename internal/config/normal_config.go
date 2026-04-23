@@ -53,7 +53,6 @@ type NormalConfig struct {
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
-	Headless                    configdomain.Headless
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
 	Interactive                 configdomain.Interactive
@@ -125,7 +124,6 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		GithubToken:                 other.GithubToken.Or(self.GithubToken),
 		GitlabConnectorType:         other.GitlabConnectorType.Or(self.GitlabConnectorType),
 		GitlabToken:                 other.GitlabToken.Or(self.GitlabToken),
-		Headless:                    other.Headless.GetOr(self.Headless),
 		HostingOriginHostname:       other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		IgnoreUncommitted:           other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
 		Interactive:                 other.Interactive.GetOr(self.Interactive),
@@ -283,7 +281,6 @@ func DefaultNormalConfig() NormalConfig {
 		GithubToken:                 None[forgedomain.GithubToken](),
 		GitlabConnectorType:         None[forgedomain.GitlabConnectorType](),
 		GitlabToken:                 None[forgedomain.GitlabToken](),
-		Headless:                    false,
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
 		Interactive:                 configdomain.InteractiveEnabled,
@@ -339,7 +336,6 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		GithubToken:                 partial.GithubToken,
 		GitlabConnectorType:         partial.GitlabConnectorType,
 		GitlabToken:                 partial.GitlabToken,
-		Headless:                    partial.Headless.GetOr(defaults.Headless),
 		HostingOriginHostname:       partial.HostingOriginHostname,
 		IgnoreUncommitted:           partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
 		Interactive:                 partial.Interactive.GetOr(defaults.Interactive),
