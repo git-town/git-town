@@ -40,7 +40,7 @@ func ParseBrowserHas(value string, has bool) (Option[Browser], error) {
 }
 
 // Indicates whether to use the browser, and if so, the executable to use.
-func UseBrowser(setting Option[Browser]) bool {
+func BrowserEnabled(setting Option[Browser]) bool {
 	browser, hasBrowser := setting.Get()
 	if !hasBrowser {
 		return true

@@ -62,15 +62,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	browserEnabled := false
-	browser, hasBrowser := self.Browser.Get()
-	if hasBrowser {
-		_, useBrowser := browser.Get()
-		browserEnabled = useBrowser
-	} else {
-		browserEnabled = false
-	}
-	if browserEnabled {
+	if browserdomain.BrowserEnabled(self.Browser) {
 		args = append(args, "--web")
 	}
 	return self.Frontend.Run("gh", args...)

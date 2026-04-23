@@ -17,7 +17,7 @@ func TestUseBrowser(t *testing.T) {
 		Some(browserdomain.Browser("chrome")): true,
 	}
 	for give, want := range tests {
-		have := browserdomain.UseBrowser(give)
+		have := browserdomain.BrowserEnabled(give)
 		must.EqOp(t, want, have)
 	}
 }
