@@ -107,6 +107,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
+					Browser:  args.Browser,
 					Frontend: args.Frontend,
 					Log:      args.Log,
 				},
