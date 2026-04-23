@@ -6,9 +6,12 @@ import (
 
 const NoBrowser = Browser("(none)")
 
+// Browser indicates a custom browser to use.
+// If set to "" or "(none)", browsers are disabled.
+// IF set to anything else, Git Town considers it the browser executable to use.
 type Browser string
 
-func (self Browser) Get() (string, bool) {
+func (self Browser) Get() (executable string, useBrowser bool) {
 	if self == NoBrowser {
 		return "", false
 	}

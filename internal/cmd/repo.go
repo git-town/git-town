@@ -116,7 +116,6 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, er
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.RemoteURL(repo.Backend, remote),
 	})

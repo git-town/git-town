@@ -906,7 +906,6 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		GithubToken:          args.githubToken,
 		GitlabConnectorType:  args.gitlabConnectorType,
 		GitlabToken:          args.gitlabToken,
-		Headless:             args.headless,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
 	})
