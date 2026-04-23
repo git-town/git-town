@@ -21,7 +21,6 @@ type NewConnectorArgs struct {
 	AppPassword Option[forgedomain.BitbucketAppPassword]
 	Browser     Option[browserdomain.Browser]
 	ConfigDir   configdomain.RepoConfigDir
-	Headless    configdomain.Headless
 	Log         print.Logger
 	RemoteURL   giturl.Parts
 	UserName    Option[forgedomain.BitbucketUsername]

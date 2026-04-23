@@ -12,7 +12,7 @@ const NoBrowser = Browser("(none)")
 type Browser string
 
 func (self Browser) Get() (executable string, useBrowser bool) {
-	if self == NoBrowser {
+	if self == NoBrowser || self == "" {
 		return "", false
 	}
 	return self.String(), true
