@@ -31,9 +31,9 @@ func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	proposalURL := self.NewProposalURL(data)
 	if browserdomain.BrowserEnabled(self.Browser) {
-		fmt.Printf(messages.BrowserOpen, proposalURL)
-	} else {
 		browser.Open(proposalURL, data.FrontendRunner, self.Browser)
+	} else {
+		fmt.Printf(messages.BrowserOpen, proposalURL)
 	}
 	return nil
 }
