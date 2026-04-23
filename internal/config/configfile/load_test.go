@@ -59,7 +59,6 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
-headless = true
 
 [ship]
 delete-tracking-branch = false
@@ -113,7 +112,6 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
-					Headless:            new(true),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),

@@ -124,7 +124,6 @@ origin-hostname = "forge"
 [propose]
 breadcrumb = "branches"
 breadcrumb-direction = "up"
-headless = true
 
 [ship]
 delete-tracking-branch = true

@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable> | --no-browser] [--dry-run] [--headless] [-h | --help] [--(non)-interactive] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
+git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--browser <executable> | --no-browser] [--dry-run] [-h | --help] [--(non)-interactive] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request
@@ -56,14 +56,6 @@ Set to `(none)` or an empty string to disable the browser.
 
 Use the `--dry-run` flag to test-drive this command.
 It prints the Git commands that would be run but doesn't execute them.
-
-#### `--headless`
-
-When called with the `--headless` flag,
-the _propose_ command creates the proposal without opening a browser window.
-This is useful in CI/CD pipelines and when working in headless environments.
-See the [headless](../preferences/headless.md) setting
-for making this permanent.
 
 #### `-h`<br>`--help`
 
