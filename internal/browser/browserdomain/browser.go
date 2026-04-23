@@ -11,7 +11,7 @@ const NoBrowser = Browser("(none)")
 // If set to anything else, Git Town considers it the browser executable to use.
 type Browser string
 
-func (self Browser) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns
+func (self Browser) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
 	if self == NoBrowser || self == "" {
 		return "", false
 	}
