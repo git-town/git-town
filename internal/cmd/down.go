@@ -52,7 +52,6 @@ func downCmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       None[configdomain.Interactive](),
 				Order:             order,

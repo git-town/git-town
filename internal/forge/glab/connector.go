@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/gitlab"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -25,8 +25,8 @@ var (
 // via the GitHub API.
 type Connector struct {
 	Backend  subshelldomain.Querier
+	Browser  Option[browserdomain.Browser]
 	Frontend subshelldomain.Runner
-	Headless configdomain.Headless
 	Log      print.Logger
 }
 
@@ -55,10 +55,10 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
-	if self.Headless {
-		args = append(args, "--yes")
-	} else {
+	if browserdomain.BrowserEnabled(self.Browser) {
 		args = append(args, "--web")
+	} else {
+		args = append(args, "--yes")
 	}
 	return self.Frontend.Run("glab", args...)
 }

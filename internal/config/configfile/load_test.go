@@ -59,7 +59,6 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
-headless = true
 
 [ship]
 delete-tracking-branch = false
@@ -113,7 +112,6 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
-					Headless:            new(true),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
@@ -174,7 +172,6 @@ upstream = true
 				GitUserEmail:                None[gitdomain.GitUserEmail](),
 				GitUserName:                 None[gitdomain.GitUserName](),
 				GiteaToken:                  None[forgedomain.GiteaToken](),
-				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),

@@ -65,7 +65,6 @@ func TestSave(t *testing.T) {
 				ForgeType:                   asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
 				GithubConnectorType:         Some(forgedomain.GithubConnectorTypeGh),
 				GitlabConnectorType:         Some(forgedomain.GitlabConnectorTypeGlab),
-				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("forge"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.InteractiveEnabled),
@@ -125,7 +124,6 @@ origin-hostname = "forge"
 [propose]
 breadcrumb = "branches"
 breadcrumb-direction = "up"
-headless = true
 
 [ship]
 delete-tracking-branch = true

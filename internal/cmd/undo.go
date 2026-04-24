@@ -49,7 +49,6 @@ func undoCmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
@@ -146,7 +145,6 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

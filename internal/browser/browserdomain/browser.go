@@ -6,10 +6,13 @@ import (
 
 const NoBrowser = Browser("(none)")
 
+// Browser indicates a custom browser to use.
+// If set to "" or "(none)", browsers are disabled.
+// If set to anything else, Git Town considers it the browser executable to use.
 type Browser string
 
-func (self Browser) Get() (string, bool) {
-	if self == NoBrowser {
+func (self Browser) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
+	if self == NoBrowser || self == "" {
 		return "", false
 	}
 	return self.String(), true
@@ -34,4 +37,14 @@ func ParseBrowserHas(value string, has bool) (Option[Browser], error) {
 		return Some(NoBrowser), nil
 	}
 	return Some(Browser(value)), nil
+}
+
+// Indicates whether to use the browser.
+func BrowserEnabled(setting Option[Browser]) bool {
+	browser, hasBrowser := setting.Get()
+	if !hasBrowser {
+		return true
+	}
+	_, useBrowser := browser.Get()
+	return useBrowser
 }

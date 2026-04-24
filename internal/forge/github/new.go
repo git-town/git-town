@@ -28,7 +28,6 @@ type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GithubToken]
 	Browser   Option[browserdomain.Browser]
 	ConfigDir configdomain.RepoConfigDir
-	Headless  configdomain.Headless
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }
@@ -40,8 +39,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browser:  args.Browser,
-		headless: args.Headless,
+		browser: args.Browser,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)

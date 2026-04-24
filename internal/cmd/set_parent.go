@@ -88,7 +88,6 @@ func setParentCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
@@ -269,7 +268,6 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

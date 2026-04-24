@@ -60,7 +60,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		forgeType                   Option[forgedomain.ForgeType]
 		githubConnectorType         Option[forgedomain.GithubConnectorType]
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
-		headless                    Option[configdomain.Headless]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
 		interactive                 Option[configdomain.Interactive]
@@ -229,9 +228,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.BreadcrumbDirection, messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Propose.Headless != nil {
-			headless = Some(configdomain.Headless(*data.Propose.Headless))
-		}
 	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
@@ -317,7 +313,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
 		GiteaToken:                  None[forgedomain.GiteaToken](),
-		Headless:                    headless,
 		HostingOriginHostname:       hostingOriginHostname,
 		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(),

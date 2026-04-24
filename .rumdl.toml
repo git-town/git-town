@@ -137,7 +137,6 @@ ignore-words = [
   "github-token",
   "gitlab-connector",
   "gitlab-token",
-  "headless",
   "ignore-uncommitted",
   "interactive",
   "main-branch",

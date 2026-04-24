@@ -67,7 +67,6 @@ func commitCmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
@@ -201,7 +200,6 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

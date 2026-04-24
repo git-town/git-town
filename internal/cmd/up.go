@@ -50,7 +50,6 @@ func upCmd() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       None[configdomain.Interactive](),
 				Order:             order,

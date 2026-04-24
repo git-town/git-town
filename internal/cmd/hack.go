@@ -103,7 +103,6 @@ func hackCmd() *cobra.Command {
 				Detached:          detached,
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
@@ -236,7 +235,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

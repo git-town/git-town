@@ -81,7 +81,6 @@ func Cmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: ignoreUncommitted,
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),

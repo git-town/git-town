@@ -90,7 +90,6 @@ func mergeCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
 				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
@@ -213,7 +212,6 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

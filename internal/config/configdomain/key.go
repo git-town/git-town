@@ -97,7 +97,6 @@ const (
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
 	KeyGitlabConnectorType                 = Key("git-town.gitlab-connector")
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
-	KeyHeadless                            = Key("git-town.headless")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyIgnoreUncommitted                   = Key("git-town.ignore-uncommitted")
 	KeyInteractive                         = Key("git-town.interactive")
@@ -170,7 +169,6 @@ var keys = []Key{
 	KeyGithubToken,
 	KeyGitlabConnectorType,
 	KeyGitlabToken,
-	KeyHeadless,
 	KeyHostingOriginHostname,
 	KeyIgnoreUncommitted,
 	KeyInteractive,
