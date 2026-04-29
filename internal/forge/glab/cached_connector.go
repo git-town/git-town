@@ -57,6 +57,10 @@ func (self *CachedConnector) FindProposal(source, target gitdomain.LocalBranchNa
 	return loadedProposal, err
 }
 
+func (self *CachedConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return self.Connector.ProposalReference(data)
+}
+
 // ============================================================================
 // search proposals
 // ============================================================================

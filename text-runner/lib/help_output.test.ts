@@ -47,9 +47,11 @@ Flags:
   -d, --detached          don't update the perennial root branch
       --dry-run           print but do not run the Git commands
   -h, --help              help for append
+      --interactive       enable interactive mode
   -m, --message string    the commit message
       --no-auto-resolve   don't auto-resolve
       --no-detached       disable detached
+      --non-interactive   disable interactive mode
       --no-push           don't push branches
       --no-stash          don't stash uncommitted changes
       --no-sync           don't sync branches
@@ -73,6 +75,7 @@ suite("HelpOutput", () => {
         ["-d", "--detached", "--no-detached"],
         ["--dry-run"],
         ["-h", "--help"],
+        ["--interactive", "--non-interactive"],
         ["-m", "--message string"],
         ["--propose"],
         ["-p", "--prototype"],
@@ -145,7 +148,9 @@ Usage:
 Flags:
       --dry-run          print but do not run the Git commands
   -h, --help             help for compress
+      --interactive      enable interactive mode
   -m, --message string   customize the commit message
+      --non-interactive  disable interactive mode
       --no-verify        do not run pre-commit hooks
   -s, --stack            Compress the entire stack
   -v, --verbose          display all Git commands run under the hood
@@ -154,6 +159,7 @@ Flags:
       const want = [
         ["--dry-run"],
         ["-h", "--help"],
+        ["--interactive", "--non-interactive"],
         ["-m", "--message string"],
         ["--no-verify"],
         ["-s", "--stack"],
@@ -175,7 +181,9 @@ Usage:
 Flags:
       --dry-run          print but do not run the Git commands
   -h, --help             help for commit
+      --interactive      enable interactive mode
   -m, --message string   specify the commit message
+      --non-interactive  disable interactive mode
   -u, --up int[=1]       commit into the given ancestor branch
   -v, --verbose          display all Git commands run under the hood
 `)
@@ -183,6 +191,7 @@ Flags:
       const want = [
         ["--dry-run"],
         ["-h", "--help"],
+        ["--interactive", "--non-interactive"],
         ["-m", "--message string"],
         ["-u", "--up int"],
         ["-v", "--verbose"],
@@ -204,9 +213,11 @@ suite("Lines", () => {
         new FlagLine("  -d, --detached          don't update the perennial root branch"),
         new FlagLine("      --dry-run           print but do not run the Git commands"),
         new FlagLine("  -h, --help              help for append"),
+        new FlagLine("      --interactive       enable interactive mode"),
         new FlagLine("  -m, --message string    the commit message"),
         new FlagLine("      --no-auto-resolve   don't auto-resolve"),
         new FlagLine("      --no-detached       disable detached"),
+        new FlagLine("      --non-interactive   disable interactive mode"),
         new FlagLine("      --no-push           don't push branches"),
         new FlagLine("      --no-stash          don't stash uncommitted changes"),
         new FlagLine("      --no-sync           don't sync branches"),

@@ -1,9 +1,10 @@
 # Git Town configuration file
 
 Git Town can be configured through a configuration file named **git-town.toml**,
-**.git-town.toml**, or **.git-branches.toml**. To create one, run:
+**.git-town.toml**, or **.git-branches.toml**.
+To create one, run:
 
-```
+```sh
 git town init
 ```
 
@@ -32,7 +33,6 @@ forge-type = "" # auto-detect
 [propose]
 breadcrumb = "none"
 breadcrumb-direction = "down"
-headless = false
 
 [ship]
 delete-tracking-branch = true

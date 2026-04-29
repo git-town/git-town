@@ -31,6 +31,7 @@ Git Town's equivalent of the "git branch" command.`
 
 func branchCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -41,9 +42,10 @@ func branchCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDisplayTypes, errOrder, errVerbose); err != nil {
+			if err := cmp.Or(errDisplayTypes, errInteractive, errOrder, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -53,8 +55,8 @@ func branchCmd() *cobra.Command {
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             order,
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -64,6 +66,7 @@ func branchCmd() *cobra.Command {
 		},
 	}
 	addDisplayTypesFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addOrderFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

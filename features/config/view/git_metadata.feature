@@ -78,7 +78,6 @@ Feature: display configuration from Git metadata
       Propose:
         breadcrumb: stacks
         breadcrumb direction: down
-        headless: no
 
       Ship:
         delete tracking branch: yes
@@ -153,7 +152,6 @@ Feature: display configuration from Git metadata
       Propose:
         breadcrumb: none
         breadcrumb direction: down
-        headless: no
 
       Ship:
         delete tracking branch: yes

@@ -1,4 +1,4 @@
-# Lint Cached Connectors
+# Lint cached connectors
 
 This linter verifies that cached connectors in `internal/forge` implement the
 same interfaces as their uncached counterparts.
@@ -12,10 +12,10 @@ The codebase has pairs of connectors:
 - **Cached connectors**: Wrappers that add caching (e.g., `CachedAPIConnector`,
   `CachedConnector`)
 
-Each cached connector should implement exactly the same interfaces as its
-uncached counterpart to ensure they are interchangeable.
+Each cached connector should implement exactly the same interfaces
+as its uncached counterpart to ensure they are interchangeable.
 
-## How It Works
+## How it works
 
 The linter:
 
@@ -25,7 +25,7 @@ The linter:
 3. Compares interfaces between cached and uncached versions
 4. Reports any missing interface implementations
 
-## Connector Pairs Checked
+## Connector pairs checked
 
 - `bitbucketcloud`: `APIConnector` / `CachedAPIConnector`
 - `bitbucketdatacenter`: `APIConnector` / `CachedAPIConnector`

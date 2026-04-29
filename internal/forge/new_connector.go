@@ -36,15 +36,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Organization: remoteURL.Org,
 				Repository:   remoteURL.Repo,
 			},
-			Browser:  args.Browser,
-			Headless: args.Headless,
+			Browser: args.Browser,
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
 			ConfigDir:   args.ConfigDir,
-			Headless:    args.Headless,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -54,7 +52,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			AppPassword: args.BitbucketAppPassword,
 			Browser:     args.Browser,
 			ConfigDir:   args.ConfigDir,
-			Headless:    args.Headless,
 			Log:         args.Log,
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
@@ -64,7 +61,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			APIToken:  args.ForgejoToken,
 			Browser:   args.Browser,
 			ConfigDir: args.ConfigDir,
-			Headless:  args.Headless,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -73,7 +69,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			APIToken:  args.GiteaToken,
 			Browser:   args.Browser,
 			ConfigDir: args.ConfigDir,
-			Headless:  args.Headless,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -84,7 +79,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				APIToken:  args.GithubToken,
 				Browser:   args.Browser,
 				ConfigDir: args.ConfigDir,
-				Headless:  args.Headless,
 				Log:       args.Log,
 				RemoteURL: remoteURL,
 			})
@@ -92,8 +86,8 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
 					Backend:  args.Backend,
+					Browser:  args.Browser,
 					Frontend: args.Frontend,
-					Headless: args.Headless,
 					Log:      args.Log,
 				},
 				Cache: forgedomain.APICache{},
@@ -106,7 +100,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				APIToken:  args.GitlabToken,
 				Browser:   args.Browser,
 				ConfigDir: args.ConfigDir,
-				Headless:  args.Headless,
 				Log:       args.Log,
 				RemoteURL: remoteURL,
 			})
@@ -114,8 +107,8 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
+					Browser:  args.Browser,
 					Frontend: args.Frontend,
-					Headless: args.Headless,
 					Log:      args.Log,
 				},
 				Cache: forgedomain.APICache{},
@@ -139,7 +132,6 @@ type NewConnectorArgs struct {
 	GithubToken          Option[forgedomain.GithubToken]
 	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	GitlabToken          Option[forgedomain.GitlabToken]
-	Headless             configdomain.Headless
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 }

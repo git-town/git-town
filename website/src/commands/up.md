@@ -7,8 +7,9 @@ git town up [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | 
 ```
 
 The _up_ command moves one position up in the current stack by switching to the
-parent of the current branch. After successfully switching branches, it displays
-the branch hierarchy to show your new position in the stack.
+parent of the current branch.
+After successfully switching branches,
+it displays the branch hierarchy to show your new position in the stack.
 
 `git town up` is useful for navigating stacked changes without needing to
 remember branch names or use the interactive [switch](switch.md) command.
@@ -17,7 +18,7 @@ remember branch names or use the interactive [switch](switch.md) command.
 
 Consider this stack:
 
-```
+```sh
 main
  \
   branch-1
@@ -25,10 +26,10 @@ main
 *   branch-2
 ```
 
-After running `git town up` on the `branch-2` branch, you end up with this
-stack:
+After running `git town up` on the `branch-2` branch,
+you end up with this stack:
 
-```
+```sh
 main
  \
 * branch-1
@@ -40,9 +41,10 @@ main
 
 #### `-d <branch-types>`<br>`--display-types <branch-types>`
 
-This flag allows customizing whether Git Town also displays the branch type in
-addition to the branch name when showing a list of branches. More info
-[here](../preferences/display-types.md#cli-flags).
+This flag allows customizing
+whether Git Town also displays the branch type in addition to the branch name
+when showing a list of branches.
+More info [here](../preferences/display-types.md#cli-flags).
 
 #### `-h`<br>`--help`
 
@@ -52,11 +54,12 @@ Display help for this command.
 
 The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
-flag. It attempts to merge uncommitted changes in your workspace into the target
+flag.
+It attempts to merge uncommitted changes in your workspace into the target
 branch.
 
-This is useful when you have uncommitted changes in your current branch and want
-to move them up to the parent branch.
+This is useful when you have uncommitted changes in your current branch
+and want to move them up to the parent branch.
 
 #### `-o <asc|desc>`<br>`--order <asc|desc>`
 

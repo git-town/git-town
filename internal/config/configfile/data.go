@@ -6,6 +6,7 @@ type Data struct {
 	Create                   *Create       `toml:"create"`
 	CreatePrototypeBranches  *bool         `toml:"create-prototype-branches"`
 	Hosting                  *Hosting      `toml:"hosting"`
+	Interactive              *bool         `toml:"interactive"`
 	Propose                  *Propose      `toml:"propose"`
 	PushHook                 *bool         `toml:"push-hook"`
 	PushNewBranches          *bool         `toml:"push-new-branches"`
@@ -60,7 +61,6 @@ func (self Hosting) IsEmpty() bool {
 type Propose struct {
 	Breadcrumb          *string `toml:"breadcrumb"`
 	BreadcrumbDirection *string `toml:"breadcrumb-direction"`
-	Headless            *bool   `toml:"headless"`
 	Lineage             *string `toml:"lineage"`
 }
 

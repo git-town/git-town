@@ -33,6 +33,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 
 func diffParentCommand() *cobra.Command {
 	addDiffFilterFlag, readDiffFilterFlag := flags.DiffFilter()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addNameOnlyFlag, readNameOnlyFlag := flags.NameOnly()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -43,9 +44,10 @@ func diffParentCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			diffFilter, errDiffFilter := readDiffFilterFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			nameOnly, errNameOnly := readNameOnlyFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDiffFilter, errNameOnly, errVerbose); err != nil {
+			if err := cmp.Or(errDiffFilter, errInteractive, errNameOnly, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -55,8 +57,8 @@ func diffParentCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -66,6 +68,7 @@ func diffParentCommand() *cobra.Command {
 		},
 	}
 	addDiffFilterFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addNameOnlyFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -131,7 +134,6 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

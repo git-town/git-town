@@ -10,7 +10,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/github"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -32,7 +31,6 @@ type Connector struct {
 	Backend  subshelldomain.Querier
 	Browser  Option[browserdomain.Browser]
 	Frontend subshelldomain.Runner
-	Headless configdomain.Headless
 	Log      print.Logger
 }
 
@@ -64,10 +62,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	browser, hasBrowser := self.Browser.Get()
-	_, useBrowser := browser.Get()
-	browserEnabled := !hasBrowser || (hasBrowser && useBrowser)
-	if browserEnabled && !self.Headless.Enabled() {
+	if browserdomain.BrowserEnabled(self.Browser) {
 		args = append(args, "--web")
 	}
 	return self.Frontend.Run("gh", args...)
@@ -107,6 +102,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		self.Log.Success("multiple")
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposals), branch, target)
 	}
+}
+
+func (self Connector) ProposalReference(data forgedomain.ProposalData) string {
+	return github.ProposalReference(data)
 }
 
 // ============================================================================

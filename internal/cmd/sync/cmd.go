@@ -58,6 +58,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addGoneFlag, readGoneFlag := flags.Gone()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addPushFlag, readPushFlag := flags.Push()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -74,11 +75,12 @@ func Cmd() *cobra.Command {
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			gone, errGone := readGoneFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errAutoResolve, errDetached, errDryRun, errGone, errPrune, errPushBranches, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errAutoResolve, errDetached, errDryRun, errGone, errInteractive, errPrune, errPushBranches, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -88,8 +90,8 @@ func Cmd() *cobra.Command {
 				Detached:          detached,
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      pushBranches,
 				Stash:             None[configdomain.Stash](),
@@ -109,6 +111,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addGoneFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addPruneFlag(&cmd)
 	addPushFlag(&cmd)
 	addStackFlag(&cmd)
@@ -170,6 +173,7 @@ Start:
 		PushBranches:        data.config.NormalConfig.PushBranches,
 		Remotes:             data.remotes,
 	})
+	touchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
@@ -187,10 +191,12 @@ Start:
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 	isOnline := data.config.NormalConfig.Offline.IsOnline()
 	if updateBreadcrumb && isOnline {
+		// Seed breadcrumb updates from branches the sync program actually changed,
+		// not every branch considered for syncing.
 		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
 			Config:          data.config,
 			Program:         runProgram,
-			TouchedBranches: data.branchesToSync.BranchNames(),
+			TouchedBranches: touchedBranches,
 		})
 	}
 
@@ -205,7 +211,7 @@ Start:
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        0,
+		BeginStashSize:        data.stashSize,
 		Command:               syncCommand,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -213,7 +219,7 @@ Start:
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
-		TouchedBranches:       optimizedProgram.TouchedBranches(),
+		TouchedBranches:       touchedBranches.BranchNames(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
@@ -287,7 +293,6 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

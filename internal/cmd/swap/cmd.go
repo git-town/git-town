@@ -65,6 +65,7 @@ const swapCommandName = "swap"
 func Cmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     swapCommandName,
@@ -75,8 +76,9 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errDryRun, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errDryRun, errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -86,8 +88,8 @@ func Cmd() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -98,6 +100,7 @@ func Cmd() *cobra.Command {
 	}
 	addAutoResolveFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -217,7 +220,6 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

@@ -71,6 +71,7 @@ Running "git town walk --stack make lint" produces this output:
 func walkCommand() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("iterate all local branches")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -81,9 +82,10 @@ func walkCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDryRun, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errDryRun, errInteractive, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -93,8 +95,8 @@ func walkCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -110,6 +112,7 @@ func walkCommand() *cobra.Command {
 	}
 	addAllFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -223,7 +226,6 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

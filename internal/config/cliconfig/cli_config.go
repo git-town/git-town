@@ -15,8 +15,8 @@ type NewArgs struct {
 	Detached          Option[configdomain.Detached]
 	DisplayTypes      Option[configdomain.DisplayTypes]
 	DryRun            Option[configdomain.DryRun]
-	Headless          Option[configdomain.Headless]
 	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
+	Interactive       Option[configdomain.Interactive]
 	Order             Option[configdomain.Order]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
@@ -37,7 +37,6 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    args.Detached,
 		DevRemote:                   None[gitdomain.Remote](),
-		Interactive:                 None[configdomain.Interactive](),
 		DisplayTypes:                args.DisplayTypes,
 		DryRun:                      args.DryRun,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
@@ -49,8 +48,8 @@ func New(args NewArgs) configdomain.PartialConfig {
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
 		GiteaToken:                  None[forgedomain.GiteaToken](),
-		Headless:                    args.Headless,
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
+		Interactive:                 args.Interactive,
 		Lineage:                     configdomain.NewLineage(),
 		MainBranch:                  None[gitdomain.LocalBranchName](),
 		NewBranchType:               None[configdomain.NewBranchType](),

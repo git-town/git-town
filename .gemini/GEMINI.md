@@ -1,9 +1,9 @@
 # Git Town
 
-Git Town is a CLI tool written in Go that provides additional Git commands for
-automating branch management, synchronization, and cleanup.
+Git Town is a CLI tool written in Go that provides additional Git commands
+for automating branch management, synchronization, and cleanup.
 
-## Development Guidelines
+## Development guidelines
 
 - you can change any file in the current folder and its subfolders
 - never change files outside the Git repository
@@ -21,36 +21,39 @@ make unit
 
 ### Linters
 
-Please execute the linters after making changes to verify the correctness of
-your changes. To run them, use the following command:
+Please execute the linters
+after making changes to verify the correctness of your changes.
+To run them, use the following command:
 
 ```bash
 make lint
 ```
 
-### End-to-End Tests
+### End-to-End tests
 
-End-to-end tests are defined in the "features" directory. They take a while to
-execute, so only run them to verify that everything still works after you are
-done making changes. To run all end-to-end tests:
+End-to-end tests are defined in the "features" directory.
+They take a while to execute,
+so only run them to verify that everything still works
+after you are done making changes.
+To run all end-to-end tests:
 
 ```bash
 make cuke
 ```
 
-## Key Architectural Components
+## Key architectural components
 
-#### VM-Based Execution Framework
+#### VM-Based execution framework
 
-Git Town uses an interpreter that executes self-modifying code consisting of
-Git-related opcodes:
+Git Town uses an interpreter
+that executes self-modifying code consisting of Git-related opcodes:
 
 - Commands inspect Git repo state and generate a program of opcodes
 - The interpreter (`internal/vm/`) executes these programs
 - Programs can modify themselves at runtime based on repo state
 - Runstate is persisted to disk for resume capability
 
-#### Subsystem Organization
+#### Subsystem organization
 
 The codebase is organized into orthogonal subsystems with `*domain` packages:
 
@@ -71,7 +74,7 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
   difference between snapshots of the Git repository and determines the Git
   commands to move the repository from one snapshot to another
 
-#### Important Directories
+#### Important directories
 
 - `internal/` - Core application code
 - `pkg/` - Public packages
@@ -79,15 +82,15 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
 - `tools/` - Custom linters and development tools
 - `website/` - Documentation website (mdBook)
 
-### Code Style Notes
+### Code style notes
 
 - Use descriptive naming over brevity
 - Method receivers use `self` instead of short abbreviations
 - Extensive use of domain-specific types in `*domain` packages
 
-## Common Development Tasks
+## Common development tasks
 
-### Debugging End-to-End Tests
+### Debugging End-to-End tests
 
 - Add the `@this` tag to a specific scenario and then run `make cukethis` to
   execute only the tagged scenario

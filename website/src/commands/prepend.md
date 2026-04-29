@@ -3,25 +3,26 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
+git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
 ```
 
-The _prepend_ command creates a new feature branch as the parent of the current
-branch. It does that by inserting the new feature branch between the current
-feature branch and it's existing parent.
+The _prepend_ command creates a new feature branch
+as the parent of the current branch.
+It does that by inserting the new feature branch between the current feature
+branch and it's existing parent.
 
 Consider this stack:
 
-```
+```sh
 main
  \
 * feature-2
 ```
 
-We are on the `feature-2` branch. After running `git town prepend feature-1`,
-our repository has this stack:
+We are on the `feature-2` branch.
+After running `git town prepend feature-1`, our repository has this stack:
 
-```
+```sh
 main
  \
 * feature-1
@@ -29,14 +30,18 @@ main
     feature-2
 ```
 
-If your Git workspace is clean (no uncommitted changes), it also
-[syncs](sync.md) the current feature branch to ensure you work on top of the
-current state of the repository. If the workspace is not clean (contains
-uncommitted changes), `git town prepend` does not perform this sync to let you
-commit your open changes.
+If your Git workspace is clean
+(no uncommitted changes),
+it also [syncs](sync.md) the current feature branch to ensure you work on top of
+the current state of the repository.
+If the workspace is not clean
+(contains uncommitted changes),
+`git town prepend` does not perform this sync to let you commit your open
+changes.
 
-If the branch you call this command from has a proposal, this command updates
-it. To do so, it pushes the new branch.
+If the branch you call this command from has a proposal,
+this command updates it.
+To do so, it pushes the new branch.
 
 ## Options
 
@@ -48,8 +53,10 @@ Disables automatic resolution of
 #### `-b`<br>`--beam`
 
 Moves ("beams") one or more commits from the current branch to the new parent
-branch that gets created. Lets you select the commits to beam via a visual
-dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
+branch that gets created.
+Lets you select the commits to beam via a visual dialog.
+Beaming suppresses all branch updates.
+Any merge conflicts encountered
 while beaming arise from moving the beamed commits.
 
 #### `--body <string>`
@@ -59,42 +66,50 @@ Requires `--propose`.
 
 #### `-c`<br>`--commit`
 
-When given, commits the currently staged changes into the branch to create and
-remains on the current branch. This is intended to quickly commit changes
-unrelated to the current branch into another branch and keep hacking on the
-current branch. Committing suppresses all branch updates to allow you to get
-your open changes committed.
+When given, commits the currently staged changes into the branch to create
+and remains on the current branch.
+This is intended to quickly commit changes unrelated to the current branch into
+another branch and keep hacking on the current branch.
+Committing suppresses all branch updates to allow you to get your open changes
+committed.
 
 #### `-d`<br>`--detached`<br>`--no-detached`
 
 The `--detached` aka `-d` flag enables
-[detached mode](../preferences/detached.md) for the current command. If detached
-mode is enabled through [configuration data](../preferences/detached.md), the
-`--no-detached` flag disables detached mode for the current command.
+[detached mode](../preferences/detached.md) for the current command.
+If detached mode is enabled through
+[configuration data](../preferences/detached.md), the `--no-detached` flag
+disables detached mode for the current command.
 
 In detached mode, feature branches don't receive updates from the perennial
-branch at the root of your branch hierarchy. This can be useful in busy
-monorepos.
+branch at the root of your branch hierarchy.
+This can be useful in busy monorepos.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command.
+It prints the Git commands that would be run but doesn't execute them.
 
 #### `-h`<br>`--help`
 
 Display help for this command.
 
+#### `--interactive`<br>`--non-interactive`
+
+Enables or disables [interactive](../preferences/interactive.md) dialogs.
+
 #### `-m <text>`<br>`--message <text>`
 
-Commit message to use together with `--commit`. Implies `--commit`.
+Commit message to use together with `--commit`.
+Implies `--commit`.
 
 #### `--propose`
 
 Propose the created branch.
 
-To always propose new branches, set the
-[share new branches](../preferences/share-new-branches.md) setting to `propose`.
+To always propose new branches,
+set the [share new branches](../preferences/share-new-branches.md) setting to
+`propose`.
 
 #### `-p`<br>`--prototype`
 
@@ -129,8 +144,8 @@ determine the repository state.
 
 If [share-new-branches](../preferences/share-new-branches.md) is configured,
 `git town hack` creates a remote tracking branch for the new feature branch.
-This behavior is disabled by default to make `git town hack` run fast. The first
-run of `git town sync` will create the remote tracking branch.
+This behavior is disabled by default to make `git town hack` run fast.
+The first run of `git town sync` will create the remote tracking branch.
 
 If the configuration setting
 [new-branch-type](../preferences/new-branch-type.md) is set, `git town prepend`

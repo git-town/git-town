@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/kr/pretty"
@@ -27,6 +28,8 @@ func TestConfigfile(t *testing.T) {
 #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
 
 # See https://www.git-town.com/configuration-file for details
+
+interactive = false
 
 [branches]
 contribution-regex = "^gittown-"
@@ -56,7 +59,6 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
-headless = true
 
 [ship]
 delete-tracking-branch = false
@@ -78,6 +80,7 @@ upstream = true
 			haveData, err := configfile.Decode(giveTOML)
 			must.NoError(t, err)
 			wantData := configfile.Data{
+				Interactive: new(false),
 				Branches: &configfile.Branches{
 					ContributionRegex: new("^gittown-"),
 					DefaultType:       nil,
@@ -109,7 +112,6 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
-					Headless:            new(true),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
@@ -170,9 +172,9 @@ upstream = true
 				GitUserEmail:                None[gitdomain.GitUserEmail](),
 				GitUserName:                 None[gitdomain.GitUserName](),
 				GiteaToken:                  None[forgedomain.GiteaToken](),
-				Headless:                    Some(configdomain.Headless(true)),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
+				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),
 				MainBranch:                  Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),

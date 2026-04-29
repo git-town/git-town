@@ -9,8 +9,8 @@ git town park [<branch-name>...] [-h | --help] [-v | --verbose]
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
 
-To convert a parked branch back into a feature branch, use the
-[feature](feature.md) command or [propose](propose.md) it.
+To convert a parked branch back into a feature branch,
+use the [feature](feature.md) command or [propose](propose.md) it.
 
 ## Positional arguments
 

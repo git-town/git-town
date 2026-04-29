@@ -70,6 +70,7 @@ main
 
 func detachCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     detachCommandName,
@@ -79,8 +80,9 @@ func detachCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -90,8 +92,8 @@ func detachCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -101,6 +103,7 @@ func detachCommand() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -217,7 +220,6 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

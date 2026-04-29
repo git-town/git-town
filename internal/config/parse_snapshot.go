@@ -82,13 +82,13 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	// TODO: add keep-sorted to all blocks in this function
+	// keep-sorted start
 	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
 	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
-	browserValue, hasBrowser := snapshot[configdomain.KeyBrowser]
-	browser, errBrowser := browserdomain.ParseBrowserHas(browserValue, hasBrowser)
+	browser1, hasBrowser := snapshot[configdomain.KeyBrowser]
+	browser2, errBrowser := browserdomain.ParseBrowserHas(browser1, hasBrowser)
 	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
 	detached, errDetached := load(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached], ignoreUnknown)
 	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
@@ -96,14 +96,14 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	forgeType, errForgeType := load(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
 	githubConnectorType, errGithubConnectorType := load(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitlabConnectorType := load(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
-	headless, errHeadless := load(snapshot, configdomain.KeyHeadless, gohacks.ParseBoolOpt[configdomain.Headless], ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := load(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
+	interactive, errInteractive := load(snapshot, configdomain.KeyInteractive, configdomain.NewInteractiveFromSnapshot, ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
-	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
-	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
+	newBranchType1, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
+	newBranchType2 := configdomain.NewBranchTypeOpt(newBranchType1)
 	observedRegex, errObservedRegex := load(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex, ignoreUnknown)
-	order, errOrder := load(snapshot, configdomain.KeyOrder, configdomain.ParseOrder, ignoreUnknown)
 	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
+	order, errOrder := load(snapshot, configdomain.KeyOrder, configdomain.ParseOrder, ignoreUnknown)
 	perennialRegex, errPerennialRegex := load(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
 	proposalBreadcrumb, errProposalBreadcrumb := load(snapshot, configdomain.KeyProposalBreadcrumb, configdomain.ParseProposalBreadcrumb, ignoreUnknown)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(snapshot, configdomain.KeyProposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection, ignoreUnknown)
@@ -118,8 +118,9 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, errSyncPrototypeStrategy := load(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy, ignoreUnknown)
 	syncTags, errSyncTags := load(snapshot, configdomain.KeySyncTags, gohacks.ParseBoolOpt[configdomain.SyncTags], ignoreUnknown)
 	syncUpstream, errSyncUpstream := load(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream], ignoreUnknown)
-	unknownBranchTypeValue, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
-	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
+	unknownBranchType1, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
+	unknownBranchType2 := configdomain.UnknownBranchTypeOpt(unknownBranchType1)
+	// keep-sorted end
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,
@@ -133,8 +134,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errForgeType,
 		errGithubConnectorType,
 		errGitlabConnectorType,
-		errHeadless,
 		errIgnoreUncommitted,
+		errInteractive,
 		errLineage,
 		errNewBranchType,
 		errObservedRegex,
@@ -164,12 +165,11 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         branchTypeOverrides,
-		Browser:                     browser,
+		Browser:                     browser2,
 		ForgejoToken:                forgedomain.ParseForgejoToken(snapshot[configdomain.KeyForgejoToken]),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
 		DevRemote:                   gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
-		Interactive:                 None[configdomain.Interactive](),
 		DisplayTypes:                displayTypes,
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                featureRegex,
@@ -181,12 +181,12 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		GitUserEmail:                gitdomain.ParseGitUserEmail(snapshot[configdomain.KeyGitUserEmail]),
 		GitUserName:                 gitdomain.ParseGitUserName(snapshot[configdomain.KeyGitUserName]),
 		GiteaToken:                  forgedomain.ParseGiteaToken(snapshot[configdomain.KeyGiteaToken]),
-		Headless:                    headless,
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(snapshot[configdomain.KeyHostingOriginHostname]),
 		IgnoreUncommitted:           ignoreUncommitted,
+		Interactive:                 interactive,
 		Lineage:                     lineage,
 		MainBranch:                  gitdomain.NewLocalBranchNameOption(snapshot[configdomain.KeyMainBranch]),
-		NewBranchType:               newBranchType,
+		NewBranchType:               newBranchType2,
 		ObservedRegex:               observedRegex,
 		Order:                       order,
 		Offline:                     offline,
@@ -205,7 +205,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncPrototypeStrategy:       syncPrototypeStrategy,
 		SyncTags:                    syncTags,
 		SyncUpstream:                syncUpstream,
-		UnknownBranchType:           unknownBranchType,
+		UnknownBranchType:           unknownBranchType2,
 		Verbose:                     None[configdomain.Verbose](),
 	}, err
 }
@@ -218,12 +218,11 @@ func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, par
 	}
 	value, err := parseFunc(valueStr, key.String())
 	if err != nil {
+		var zero T
 		if ignoreUnknown {
 			fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
-			var zero T
 			return zero, nil
 		}
-		var zero T
 		return zero, err
 	}
 	return value, nil

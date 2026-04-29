@@ -3,7 +3,7 @@
 This guide is for maintainers who make releases of Git Town.
 
 - `git checkout public && git merge main && git push && git checkout - && git branch -d public`
-  - Netlify deploy: https://app.netlify.com/sites/git-town/deploys
+  - Netlify deploy: <https://app.netlify.com/sites/git-town/deploys>
 - in a branch:
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
@@ -23,9 +23,9 @@ This guide is for maintainers who make releases of Git Town.
 - ship the branch
 - `git sync --all && git checkout main && git tag v22.7.1 && git push --tags`
 - wait for CI to finish the release:
-  https://github.com/git-town/git-town/actions
+  <https://github.com/git-town/git-town/actions>
 - edit the new unpublished release:
-  https://github.com/git-town/git-town/releases
+  <https://github.com/git-town/git-town/releases>
 - copy the changelog into the release notes
 - publish the release
 
@@ -34,7 +34,7 @@ This guide is for maintainers who make releases of Git Town.
 The website publishes from the `public` branch to avoid listing unreleased
 features to the public.
 
-```
+```sh
 git checkout public
 git merge main
 git push
@@ -42,12 +42,13 @@ git push
 
 ### Debugging the release script
 
-Debugging is best done on a separate fork of this codebase. This avoids
-accidental releases to the official location, which then trigger other
-automation at Homebrew, Scoop, Arch Linux, etc.
+Debugging is best done on a separate fork of this codebase.
+This avoids accidental releases to the official location,
+which then trigger other automation at Homebrew, Scoop, Arch Linux, etc.
 
-The release script is written in PowerShell because creating the .msi file
-requires Windows. It's best to debug it on a Windows machine.
+The release script is written in PowerShell
+because creating the .msi file requires Windows.
+It's best to debug it on a Windows machine.
 
 Test the compile step:
 
@@ -66,19 +67,20 @@ $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\
 
 ### Performing a manual release
 
-If the release script fails in production and doesn't create the release, and/or
-you want to investigate some release code, you can perform the release manually
-on a Windows machine using PowerShell.
+If the release script fails in production and doesn't create the release,
+and/or you want to investigate some release code,
+you can perform the release manually on a Windows machine using PowerShell.
 
 - move the affected Git tag to HEAD but only locally, DON'T PUSH THE TAG TO
   ORIGIN
 
-  ```
+  ```sh
   git tag -d <tag>
   git tag <tag>
   ```
 
 - run the release script
+
   ```powershell
   $env:GITHUB_TOKEN="<token>"
   $env:CHOCOLATEY_API_KEY="<key>"
@@ -87,7 +89,7 @@ on a Windows machine using PowerShell.
 
 - delete the local Git tag and download the real one from origin
 
-  ```
+  ```sh
   git tag -d <tag>
   git fetch --tags
   ```

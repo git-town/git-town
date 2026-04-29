@@ -96,12 +96,18 @@ export function replaceValueNotation(flag: string): string {
 }
 
 export function isNegatedFlagsGroup(flags: string[]): boolean {
-  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-"))
+  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-") || flag.startsWith("--non-"))
 }
 
 export function getPositiveFlagName(negatedFlag: string): string {
-  const baseName = negatedFlag.substring(5).split(" ")[0]
-  return "--" + baseName
+  const flagToken = negatedFlag.split(" ")[0]
+  if (flagToken.startsWith("--non-")) {
+    return "--" + flagToken.slice("--non-".length)
+  }
+  if (flagToken.startsWith("--no-")) {
+    return "--" + flagToken.slice("--no-".length)
+  }
+  return flagToken
 }
 
 export function matchesFlag(flag: string, positiveFlag: string): boolean {

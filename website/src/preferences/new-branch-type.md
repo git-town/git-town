@@ -1,8 +1,8 @@
-# New branch type
+# new-branch-type
 
-This setting defines the [type](../branch-types.md) for new branches created
-using the [git town hack](../commands/hack.md), [append](../commands/append.md),
-or [prepend](../commands/prepend.md) commands.
+This setting defines the [type](../branch-types.md)
+for new branches created using the [git town hack](../commands/hack.md),
+[append](../commands/append.md), or [prepend](../commands/prepend.md) commands.
 
 Before setting this, consider one of these more broadly applicable configuration
 entries:
@@ -14,7 +14,7 @@ entries:
 - [perennial-branches](perennial-branches.md)
 - [perennial-regex](perennial-regex.md)
 
-## values
+## options
 
 These values make sense for this setting:
 
@@ -42,7 +42,8 @@ git config [--global] git-town.new-branch-type <feature|parked|perennial|prototy
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

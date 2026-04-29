@@ -6,8 +6,8 @@
 git town status reset [-h | --help] [-v | --verbose]
 ```
 
-The _status reset_ command deletes the persisted runstate. This is only needed
-if the runstate is corrupted and causes Git Town to crash.
+The _status reset_ command deletes the persisted runstate.
+This is only needed if the runstate is corrupted and causes Git Town to crash.
 
 ## Options
 

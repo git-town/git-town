@@ -1,8 +1,8 @@
-# Origin hostname
+# origin-hostname
 
-If you use SSH identities, you can define the hostname of your source code
-repository with this setting. The given value should match the hostname in your
-SSH config file.
+If you use SSH identities,
+you can define the hostname of your source code repository with this setting.
+The given value should match the hostname in your SSH config file.
 
 ## config file
 
@@ -23,7 +23,8 @@ git config [--global] git-town.hosting-origin-hostname <hostname>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 

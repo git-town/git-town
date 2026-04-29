@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/browser"
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
@@ -22,8 +21,7 @@ var (
 // WebConnector provides connectivity to Bitbucket DataCenter through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser  Option[browserdomain.Browser]
-	headless configdomain.Headless
+	browser Option[browserdomain.Browser]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
@@ -33,10 +31,10 @@ func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	proposalURL := self.NewProposalURL(data)
-	if self.headless {
-		fmt.Printf(messages.BrowserOpen, proposalURL)
-	} else {
+	if browserdomain.BrowserEnabled(self.browser) {
 		browser.Open(proposalURL, data.FrontendRunner, self.browser)
+	} else {
+		fmt.Printf(messages.BrowserOpen, proposalURL)
 	}
 	return nil
 }
@@ -51,6 +49,10 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
+}
+
+func (self WebConnector) ProposalReference(data forgedomain.ProposalData) string {
+	return forgedomain.ProposalReferenceFallback(data)
 }
 
 func (self WebConnector) RepositoryURL() string {

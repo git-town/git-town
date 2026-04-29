@@ -14,10 +14,11 @@
 </p>
 
 Git Town provides additional Git commands that automate the creation,
-synchronization, shipping, and cleanup of Git branches. Compatible with all
-popular Git workflows like Git Flow, GitHub Flow, GitLab Flow, and trunk-based
-development. Supports mono-repos and stacked changes. Check out
-[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
+synchronization, shipping, and cleanup of Git branches.
+Compatible with all popular Git workflows like Git Flow, GitHub Flow,
+GitLab Flow, and trunk-based development.
+Supports mono-repos and stacked changes.
+Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Basic development commands
 
@@ -98,19 +99,20 @@ development. Supports mono-repos and stacked changes. Check out
 
 ## Installation
 
-See the [installation](https://www.git-town.com/install.html) and
-[configuration](https://www.git-town.com/configuration) instructions.
+See the [installation](https://www.git-town.com/install.html)
+and [configuration](https://www.git-town.com/configuration) instructions.
 
 ## Documentation
 
-The [Git Town website](https://www.git-town.com) provides documentation for Git
-Town users. `git town help [command]` shows help on the CLI.
+The [Git Town website](https://www.git-town.com) provides documentation
+for Git Town users.
+`git town help [command]` shows help on the CLI.
 
 ## Contributing
 
 Found a bug or have an idea for a new feature?
-[Open an issue](https://github.com/git-town/git-town/issues/new) or send a
-[pull request](https://help.github.com/articles/using-pull-requests)! Our
-[developer documentation](docs/DEVELOPMENT.md) helps you get started.
+[Open an issue](https://github.com/git-town/git-town/issues/new)
+or send a [pull request](https://help.github.com/articles/using-pull-requests)!
+Our [developer documentation](docs/DEVELOPMENT.md) helps you get started.
 
 [![Stargazers over time](https://starchart.cc/git-town/git-town.svg)](https://starchart.cc/git-town/git-town)

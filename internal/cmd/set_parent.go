@@ -64,6 +64,7 @@ main
 
 func setParentCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addNoParentFlag, readNoParentFlag := flags.NoParent()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -74,10 +75,11 @@ func setParentCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
 			noParent, errNoParent := readNoParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if cmp.Or(errAutoResolve, errNoParent, errVerbose) != nil {
-				return errVerbose
+			if err := cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose); err != nil {
+				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
@@ -86,8 +88,8 @@ func setParentCommand() *cobra.Command {
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
-				Headless:          None[configdomain.Headless](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -97,6 +99,7 @@ func setParentCommand() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
+	addInteractiveFlag(&cmd)
 	addNoParentFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -265,7 +268,6 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		GithubToken:          config.GithubToken,
 		GitlabConnectorType:  config.GitlabConnectorType,
 		GitlabToken:          config.GitlabToken,
-		Headless:             config.Headless,
 		Log:                  print.Logger{},
 		RemoteURL:            config.DevURL(repo.Backend),
 	})

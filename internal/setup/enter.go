@@ -130,7 +130,6 @@ EnterForgeData:
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GithubToken),
 		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(data.Config.GitGlobal.GitlabConnectorType),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitlabToken),
-		headless:             data.Config.NormalConfig.Headless,
 		inputs:               data.Inputs,
 		interactive:          data.Config.NormalConfig.Interactive,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
@@ -160,30 +159,33 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, enterAll, err
 	}
+	// keep-sorted start
 	autoSync := None[configdomain.AutoSync]()
-	perennialRegex := None[configdomain.PerennialRegex]()
-	featureRegex := None[configdomain.FeatureRegex]()
-	contributionRegex := None[configdomain.ContributionRegex]()
-	observedRegex := None[configdomain.ObservedRegex]()
 	branchPrefix := None[configdomain.BranchPrefix]()
-	order := None[configdomain.Order]()
+	contributionRegex := None[configdomain.ContributionRegex]()
+	detached := None[configdomain.Detached]()
+	featureRegex := None[configdomain.FeatureRegex]()
+	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
+	interactive := None[configdomain.Interactive]()
 	newBranchType := None[configdomain.NewBranchType]()
-	unknownBranchType := None[configdomain.UnknownBranchType]()
+	observedRegex := None[configdomain.ObservedRegex]()
+	order := None[configdomain.Order]()
+	perennialRegex := None[configdomain.PerennialRegex]()
+	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
+	proposalBreadcrumbDirection := None[configdomain.ProposalBreadcrumbDirection]()
+	pushBranches := None[configdomain.PushBranches]()
+	pushHook := None[configdomain.PushHook]()
+	shareNewBranches := None[configdomain.ShareNewBranches]()
+	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
+	shipStrategy := None[configdomain.ShipStrategy]()
+	stash := None[configdomain.Stash]()
 	syncFeatureStrategy := None[configdomain.SyncFeatureStrategy]()
 	syncPerennialStrategy := None[configdomain.SyncPerennialStrategy]()
 	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
-	syncUpstream := None[configdomain.SyncUpstream]()
 	syncTags := None[configdomain.SyncTags]()
-	detached := None[configdomain.Detached]()
-	stash := None[configdomain.Stash]()
-	shareNewBranches := None[configdomain.ShareNewBranches]()
-	pushBranches := None[configdomain.PushBranches]()
-	pushHook := None[configdomain.PushHook]()
-	shipStrategy := None[configdomain.ShipStrategy]()
-	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
-	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
-	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
-	proposalBreadcrumbDirection := None[configdomain.ProposalBreadcrumbDirection]()
+	syncUpstream := None[configdomain.SyncUpstream]()
+	unknownBranchType := None[configdomain.UnknownBranchType]()
+	// keep-sorted end
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -281,6 +283,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
+		interactive, exit, err = enterInteractive(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs, data.Config.NormalConfig.Interactive)
 	if err != nil || exit {
@@ -312,7 +318,7 @@ EnterForgeData:
 		GiteaToken:                  giteaToken,
 		HostingOriginHostname:       hostingOriginHostName,
 		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:                 None[configdomain.Interactive](),
+		Interactive:                 interactive,
 		Lineage:                     configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:                  mainBranchResult.UserChoice,
 		NewBranchType:               newBranchType,
@@ -323,7 +329,6 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		Headless:                    None[configdomain.Headless](), // the setup assistant doesn't ask for this
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
@@ -562,6 +567,18 @@ func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], 
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
 		Local:       data.Config.GitLocal.IgnoreUncommitted,
+	})
+}
+
+func enterInteractive(data Data) (Option[configdomain.Interactive], dialogdomain.Exit, error) {
+	if data.Config.File.Interactive.IsSome() {
+		return None[configdomain.Interactive](), false, nil
+	}
+	return dialog.Interactive(dialog.Args[configdomain.Interactive]{
+		Global:      data.Config.GitGlobal.Interactive,
+		Inputs:      data.Inputs,
+		Interactive: data.Config.NormalConfig.Interactive,
+		Local:       data.Config.GitLocal.Interactive,
 	})
 }
 
@@ -887,7 +904,6 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		GithubToken:          args.githubToken,
 		GitlabConnectorType:  args.gitlabConnectorType,
 		GitlabToken:          args.gitlabToken,
-		Headless:             args.headless,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
 	})
@@ -927,7 +943,6 @@ type testForgeAuthArgs struct {
 	githubToken          Option[forgedomain.GithubToken]
 	gitlabConnectorType  Option[forgedomain.GitlabConnectorType]
 	gitlabToken          Option[forgedomain.GitlabToken]
-	headless             configdomain.Headless
 	inputs               dialogcomponents.Inputs
 	interactive          configdomain.Interactive
 	remoteURL            Option[giturl.Parts]

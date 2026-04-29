@@ -190,10 +190,15 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	HackBranchIsAlreadyFeature = "branch %s is already a feature branch"
 	HackTooManyArguments       = "please provide only one branch to create"
 
-	IgnoreUncommitted   = "Ship ignores uncommitted changes: %s\n"
-	InputAddOrRemove    = `invalid argument %q. Please provide either "add" or "remove"`
-	InputYesOrNo        = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	InvalidStatusOutput = `invalid "git status -z" output: %q`
+	IgnoreUncommitted                  = "Ship ignores uncommitted changes: %s\n"
+	InputAddOrRemove                   = `invalid argument %q. Please provide either "add" or "remove"`
+	InputYesOrNo                       = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	Interactive                        = "Interactive: %s\n"
+	InteractivityDisabledViaCLI        = "interactivity disabled via CLI"
+	InteractivityDisabledViaConfigFile = "interactivity disabled via config file"
+	InteractivityDisabledViaEnv        = "interactivity disabled via environment variable"
+	InteractivityDisabledViaGit        = "interactivity disabled via Git metadata"
+	InvalidStatusOutput                = `invalid "git status -z" output: %q`
 
 	MainBranch                       = "Main branch: %s\n"
 	MainBranchCannotMakeContribution = "cannot make the main branch a contribution branch"
@@ -384,7 +389,7 @@ and will be removed in future versions of Git Town.`
 	UpNoCurrentBranch                       = "you need to be on a branch to go up"
 	UpNoParent                              = "branch %s has no parent"
 
-	ValueInvalid = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
+	ValueInvalid = `invalid value for %s: %q. Please provide either "yes" or "no"`
 
 	WalkAllOrStack   = "please provide either --all or --stack"
 	WalkDetachedHead = "please check out the branch from which to walk"

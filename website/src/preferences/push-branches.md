@@ -1,7 +1,7 @@
 # push-branches
 
-This setting determines whether Git Town pushes local branches and commits to
-the [development remote](dev-remote.md).
+This setting determines whether Git Town pushes local branches
+and commits to the [development remote](dev-remote.md).
 
 ## config file
 
@@ -19,7 +19,8 @@ git config [--global] git-town.push-branches <true|false>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, the setting applies only to the current repository.
+your machine.
+Without it, the setting applies only to the current repository.
 
 ## environment variable
 
