@@ -23,8 +23,8 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		if hasNegated && negated {
 			return Some(browserdomain.NoBrowser), nil
 		}
-		has := cmd.Flags().Changed(browserLong)
-		if !has {
+		flagProvided := cmd.Flags().Changed(browserLong)
+		if !flagProvided {
 			return None[browserdomain.Browser](), nil
 		}
 		value, err := cmd.Flags().GetString(browserLong)
