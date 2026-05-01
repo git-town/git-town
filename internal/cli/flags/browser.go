@@ -31,7 +31,7 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		if err != nil {
 			return None[browserdomain.Browser](), err
 		}
-		return browserdomain.ParseBrowser(value, "CLI flag "+browserLong)
+		return browserdomain.NewBrowserErr(value, "CLI flag "+browserLong)
 	}
 	return addFlag, readFlag
 }

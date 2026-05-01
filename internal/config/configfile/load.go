@@ -188,8 +188,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Browser != nil {
-			browser, err = browserdomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
-			ec.Check(err)
+			browser = NewOption(browserdomain.Browser(*data.Hosting.Browser))
 		}
 		if data.Hosting.Platform != nil {
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)

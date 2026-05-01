@@ -22,21 +22,22 @@ func (self Browser) String() string {
 	return string(self)
 }
 
-func ParseBrowser(value, _ string) (Option[Browser], error) {
-	if value == "" {
-		return None[Browser](), nil
-	}
-	return Some(Browser(value)), nil
+func NewBrowserErr(value, _ string) (Option[Browser], error) {
+	return NewOption(Browser(value)), nil
 }
 
-func ParseBrowserHas(value string, has bool) (Option[Browser], error) {
+func ParseBrowser(value string, has bool) Option[Browser] {
 	if !has {
-		return None[Browser](), nil
+		return None[Browser]()
 	}
 	if value == "" {
-		return Some(NoBrowser), nil
+		return Some(NoBrowser)
 	}
-	return Some(Browser(value)), nil
+	return Some(Browser(value))
+}
+
+func ParseBrowserErr(value string, has bool) (Option[Browser], error) {
+	return NewBrowserErr(value, "")
 }
 
 // Indicates whether to use the browser.
