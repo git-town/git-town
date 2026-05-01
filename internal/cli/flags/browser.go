@@ -24,11 +24,14 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 			return Some(browserdomain.NoBrowser), nil
 		}
 		has := cmd.Flags().Changed(browserLong)
+		if !has {
+			return None[browserdomain.Browser](), nil
+		}
 		value, err := cmd.Flags().GetString(browserLong)
 		if err != nil {
 			return None[browserdomain.Browser](), err
 		}
-		return browserdomain.ParseBrowserHas(value, has)
+		return browserdomain.ParseBrowser(value, "CLI flag "+browserLong)
 	}
 	return addFlag, readFlag
 }
