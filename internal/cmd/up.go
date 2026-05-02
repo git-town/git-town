@@ -46,7 +46,8 @@ func upCmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
-				BrowserExecutable:           None[browserdomain.BrowserExecutable](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
