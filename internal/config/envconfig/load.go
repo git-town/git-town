@@ -2,6 +2,7 @@ package envconfig
 
 import (
 	"cmp"
+	"os"
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -70,7 +71,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
-	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowser)
+	browserEnv, has := os.LookupEnv(Browser)
+	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserHas(browserEnv, has)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
@@ -153,7 +155,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		BrowserExecutable:           browser,
+		BrowserEnabled:              browserEnabled,
+		BrowserExecutable:           browserExecutable,
 		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
