@@ -7,7 +7,6 @@ Feature: set an empty browser via the CLI
     And tool "open" is installed
     When I run "git-town repo --browser="
 
-  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
