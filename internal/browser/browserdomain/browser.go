@@ -4,43 +4,43 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-const NoBrowser = Browser("(none)")
+const NoBrowser = BrowserExecutable("(none)")
 
-// Browser indicates a custom browser to use.
+// BrowserExecutable indicates a custom browser to use.
 // If set to "" or "(none)", browsers are disabled.
 // If set to anything else, Git Town considers it the browser executable to use.
-type Browser string
+type BrowserExecutable string
 
-func (self Browser) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
+func (self BrowserExecutable) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
 	if self == NoBrowser || self == "" {
 		return "", false
 	}
 	return self.String(), true
 }
 
-func (self Browser) String() string {
+func (self BrowserExecutable) String() string {
 	return string(self)
 }
 
-func ParseBrowser(value, _ string) (Option[Browser], error) {
+func ParseBrowser(value, _ string) (Option[BrowserExecutable], error) {
 	if value == "" {
-		return None[Browser](), nil
+		return None[BrowserExecutable](), nil
 	}
-	return Some(Browser(value)), nil
+	return Some(BrowserExecutable(value)), nil
 }
 
-func ParseBrowserHas(value string, has bool) (Option[Browser], error) {
+func ParseBrowserHas(value string, has bool) (Option[BrowserExecutable], error) {
 	if !has {
-		return None[Browser](), nil
+		return None[BrowserExecutable](), nil
 	}
 	if value == "" {
 		return Some(NoBrowser), nil
 	}
-	return Some(Browser(value)), nil
+	return Some(BrowserExecutable(value)), nil
 }
 
 // Indicates whether to use the browser.
-func BrowserEnabled(setting Option[Browser]) bool {
+func BrowserEnabled(setting Option[BrowserExecutable]) bool {
 	browser, hasBrowser := setting.Get()
 	if !hasBrowser {
 		return true

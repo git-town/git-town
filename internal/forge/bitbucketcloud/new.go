@@ -19,7 +19,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	AppPassword Option[forgedomain.BitbucketAppPassword]
-	Browser     Option[browserdomain.Browser]
+	Browser     Option[browserdomain.BrowserExecutable]
 	ConfigDir   configdomain.RepoConfigDir
 	Log         print.Logger
 	RemoteURL   giturl.Parts

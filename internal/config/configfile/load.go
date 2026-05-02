@@ -51,7 +51,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		autoResolve                 Option[configdomain.AutoResolve]
 		autoSync                    Option[configdomain.AutoSync]
 		branchPrefix                Option[configdomain.BranchPrefix]
-		browser                     Option[browserdomain.Browser]
+		browser                     Option[browserdomain.BrowserExecutable]
 		contributionRegex           Option[configdomain.ContributionRegex]
 		detached                    Option[configdomain.Detached]
 		devRemote                   Option[gitdomain.Remote]
@@ -296,7 +296,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		Browser:                     browser,
+		BrowserExecutable:                     browser,
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

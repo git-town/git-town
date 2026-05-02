@@ -153,7 +153,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		Browser:                     browser,
+		BrowserExecutable:                     browser,
 		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

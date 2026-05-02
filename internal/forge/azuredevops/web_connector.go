@@ -20,7 +20,7 @@ var (
 // WebConnector provides connectivity to Azure DevOps through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	Browser Option[browserdomain.Browser]
+	Browser Option[browserdomain.BrowserExecutable]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
