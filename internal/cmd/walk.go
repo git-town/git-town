@@ -216,7 +216,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		Browser:              config.Browser,
+		Browser:              config.BrowserExecutable,
 		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,

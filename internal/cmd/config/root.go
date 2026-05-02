@@ -107,7 +107,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.ShouldStash()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("browser", format.OptionalStringerSetting(config.NormalConfig.Browser))
+	print.Entry("browser", format.OptionalStringerSetting(config.NormalConfig.BrowserExecutable))
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))

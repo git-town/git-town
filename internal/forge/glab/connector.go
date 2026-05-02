@@ -24,10 +24,11 @@ var (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	Backend  subshelldomain.Querier
-	Browser  Option[browserdomain.BrowserExecutable]
-	Frontend subshelldomain.Runner
-	Log      print.Logger
+	Backend           subshelldomain.Querier
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
+	BrowserEnabled    browserdomain.BrowserEnabled
+	Frontend          subshelldomain.Runner
+	Log               print.Logger
 }
 
 // ============================================================================
@@ -55,7 +56,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
-	if browserdomain.BrowserEnabled(self.Browser) {
+	if self.BrowserEnabled {
 		args = append(args, "--web")
 	} else {
 		args = append(args, "--yes")

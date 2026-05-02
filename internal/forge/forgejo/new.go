@@ -33,7 +33,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browser: args.Browser,
+		browserExecutable: args.Browser,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)

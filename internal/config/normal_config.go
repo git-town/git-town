@@ -37,7 +37,8 @@ type NormalConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[configdomain.BranchPrefix]
 	BranchTypeOverrides         configdomain.BranchTypeOverrides
-	Browser                     Option[browserdomain.BrowserExecutable]
+	BrowserEnabled              browserdomain.BrowserEnabled
+	BrowserExecutable           Option[browserdomain.BrowserExecutable]
 	ContributionRegex           Option[configdomain.ContributionRegex]
 	Detached                    configdomain.Detached
 	DevRemote                   gitdomain.Remote
@@ -108,7 +109,8 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BitbucketUsername:           other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:                other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:         other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		Browser:                     other.BrowserExecutable.Or(self.Browser),
+		BrowserEnabled:              other.BrowserEnabled.GetOr(self.BrowserEnabled),
+		BrowserExecutable:           other.BrowserExecutable.Or(self.BrowserExecutable),
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.GetOr(self.Detached),
 		DevRemote:                   other.DevRemote.GetOr(self.DevRemote),
@@ -262,7 +264,8 @@ func DefaultNormalConfig() NormalConfig {
 		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
 		BranchPrefix:         None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-		Browser:              None[browserdomain.BrowserExecutable](),
+		BrowserEnabled:       true,
+		BrowserExecutable:    None[browserdomain.BrowserExecutable](),
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
 		DevRemote:            gitdomain.RemoteOrigin,
@@ -320,7 +323,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BitbucketUsername:           partial.BitbucketUsername,
 		BranchPrefix:                partial.BranchPrefix,
 		BranchTypeOverrides:         partial.BranchTypeOverrides,
-		Browser:                     partial.BrowserExecutable.Or(defaults.Browser),
+		BrowserExecutable:           partial.BrowserExecutable.Or(defaults.BrowserExecutable),
 		ContributionRegex:           partial.ContributionRegex,
 		Detached:                    partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),

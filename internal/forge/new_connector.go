@@ -86,7 +86,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
 					Backend:  args.Backend,
-					Browser:  args.Browser,
+					BrowserExecutable:  args.Browser,
 					Frontend: args.Frontend,
 					Log:      args.Log,
 				},
@@ -107,7 +107,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:  args.Backend,
-					Browser:  args.Browser,
+					BrowserExecutable:  args.Browser,
 					Frontend: args.Frontend,
 					Log:      args.Log,
 				},

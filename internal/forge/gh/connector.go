@@ -28,10 +28,11 @@ var (
 
 // Connector talks to the GitHub API through the "gh" executable.
 type Connector struct {
-	Backend  subshelldomain.Querier
-	Browser  Option[browserdomain.BrowserExecutable]
-	Frontend subshelldomain.Runner
-	Log      print.Logger
+	Backend           subshelldomain.Querier
+	BrowserEnabled    browserdomain.BrowserEnabled
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
+	Frontend          subshelldomain.Runner
+	Log               print.Logger
 }
 
 // ============================================================================
@@ -62,7 +63,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		return err
 	}
 	args = []string{"pr", "view"}
-	if browserdomain.BrowserEnabled(self.Browser) {
+	if self.BrowserEnabled {
 		args = append(args, "--web")
 	}
 	return self.Frontend.Run("gh", args...)

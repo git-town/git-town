@@ -20,18 +20,19 @@ var (
 // WebConnector provides connectivity to Forgejo through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser Option[browserdomain.BrowserExecutable]
+	browserExecutable Option[browserdomain.BrowserExecutable]
+	browserEnabled    browserdomain.BrowserEnabled
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner, self.browser)
+	browser.Open(self.RepositoryURL(), runner, self.browserExecutable)
 	return nil
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	proposalURL := self.NewProposalURL(data)
-	if browserdomain.BrowserEnabled(self.browser) {
-		browser.Open(proposalURL, data.FrontendRunner, self.browser)
+	if self.browserEnabled {
+		browser.Open(proposalURL, data.FrontendRunner, self.browserExecutable)
 	} else {
 		fmt.Printf(messages.BrowserOpen, proposalURL)
 	}
