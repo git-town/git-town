@@ -25,8 +25,8 @@ var (
 // via the GitHub API.
 type Connector struct {
 	Backend           subshelldomain.Querier
-	BrowserExecutable Option[browserdomain.BrowserExecutable]
 	BrowserEnabled    browserdomain.BrowserEnabled
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
 	Frontend          subshelldomain.Runner
 	Log               print.Logger
 }

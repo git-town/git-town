@@ -21,8 +21,8 @@ var (
 // WebConnector provides connectivity to Bitbucket DataCenter through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browserExecutable Option[browserdomain.BrowserExecutable]
 	browserEnabled    browserdomain.BrowserEnabled
+	browserExecutable Option[browserdomain.BrowserExecutable]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {

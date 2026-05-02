@@ -20,8 +20,8 @@ var (
 // WebConnector provides connectivity to gitea through the browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browserExecutable Option[browserdomain.BrowserExecutable]
 	browserEnabled    browserdomain.BrowserEnabled
+	browserExecutable Option[browserdomain.BrowserExecutable]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {

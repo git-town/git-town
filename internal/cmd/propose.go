@@ -86,8 +86,8 @@ func proposeCommand() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          None[configdomain.AutoSync](),
-				BrowserExecutable: browserExecutable,
 				BrowserEnabled:    browserEnabled,
+				BrowserExecutable: browserExecutable,
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
