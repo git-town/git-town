@@ -25,14 +25,14 @@ type WebConnector struct {
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner, self.BrowserExecutable)
+	browser.Open(self.RepositoryURL(), runner, self.BrowserExecutable, self.BrowserEnabled)
 	return nil
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	proposalURL := self.NewProposalURL(data)
 	if self.BrowserEnabled {
-		browser.Open(proposalURL, data.FrontendRunner, self.BrowserExecutable)
+		browser.Open(proposalURL, data.FrontendRunner, self.BrowserExecutable, self.BrowserEnabled)
 	} else {
 		fmt.Printf(messages.BrowserOpen, proposalURL)
 	}
