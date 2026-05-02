@@ -190,7 +190,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		Browser:              config.BrowserExecutable,
+		BrowserExecutable:              config.BrowserExecutable,
 		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,

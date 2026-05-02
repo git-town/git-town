@@ -894,7 +894,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		Browser:              None[browserdomain.BrowserExecutable](),
+		BrowserExecutable:              None[browserdomain.BrowserExecutable](),
 		ConfigDir:            args.configDir,
 		ForgeType:            args.forgeTypeOpt,
 		ForgejoToken:         args.forgejoToken,

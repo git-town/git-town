@@ -236,7 +236,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		Browser:              config.BrowserExecutable,
+		BrowserExecutable:              config.BrowserExecutable,
 		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,

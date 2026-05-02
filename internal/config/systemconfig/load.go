@@ -19,6 +19,7 @@ func Load() configdomain.PartialConfig {
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
+		BrowserEnabled:              None[browserdomain.BrowserEnabled](),
 		BrowserExecutable:           None[browserdomain.BrowserExecutable](),
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    None[configdomain.Detached](),

@@ -25,11 +25,12 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GithubToken]
-	Browser   Option[browserdomain.BrowserExecutable]
-	ConfigDir configdomain.RepoConfigDir
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken          Option[forgedomain.GithubToken]
+	BrowserEnabled    browserdomain.BrowserEnabled
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
+	ConfigDir         configdomain.RepoConfigDir
+	Log               print.Logger
+	RemoteURL         giturl.Parts
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
@@ -39,7 +40,8 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browserExecutable: args.Browser,
+		browserEnabled:    args.BrowserEnabled,
+		browserExecutable: args.BrowserExecutable,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)

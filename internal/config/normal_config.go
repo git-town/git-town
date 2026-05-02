@@ -324,6 +324,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BranchPrefix:                partial.BranchPrefix,
 		BranchTypeOverrides:         partial.BranchTypeOverrides,
 		BrowserExecutable:           partial.BrowserExecutable.Or(defaults.BrowserExecutable),
+		BrowserEnabled:              partial.BrowserEnabled.GetOr(defaults.BrowserEnabled),
 		ContributionRegex:           partial.ContributionRegex,
 		Detached:                    partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),

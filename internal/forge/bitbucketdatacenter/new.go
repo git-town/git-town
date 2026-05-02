@@ -24,7 +24,8 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browserExecutable: args.Browser,
+		browserEnabled:    args.BrowserEnabled,
+		browserExecutable: args.BrowserExecutable,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
@@ -53,10 +54,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 }
 
 type NewConnectorArgs struct {
-	AppPassword Option[forgedomain.BitbucketAppPassword]
-	Browser     Option[browserdomain.BrowserExecutable]
-	ConfigDir   configdomain.RepoConfigDir
-	Log         print.Logger
-	RemoteURL   giturl.Parts
-	UserName    Option[forgedomain.BitbucketUsername]
+	AppPassword       Option[forgedomain.BitbucketAppPassword]
+	BrowserEnabled    browserdomain.BrowserEnabled
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
+	ConfigDir         configdomain.RepoConfigDir
+	Log               print.Logger
+	RemoteURL         giturl.Parts
+	UserName          Option[forgedomain.BitbucketUsername]
 }
