@@ -2,6 +2,8 @@ package browserdomain
 
 import "strconv"
 
+const NoBrowser = BrowserExecutable("(none)")
+
 type BrowserEnabled bool
 
 func (self BrowserEnabled) Enabled() bool {
