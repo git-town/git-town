@@ -25,7 +25,7 @@ type PartialConfig struct {
 	BranchPrefix                Option[BranchPrefix]
 	BranchTypeOverrides         BranchTypeOverrides
 	BrowserExecutable           Option[browserdomain.BrowserExecutable]
-	BrowserEnabled              Option[bool]
+	BrowserEnabled              Option[browserdomain.BrowserEnabled]
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
 	DevRemote                   Option[gitdomain.Remote]

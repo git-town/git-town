@@ -99,7 +99,7 @@ func hackCmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          sync,
-				Browser:           None[browserdomain.BrowserExecutable](),
+				BrowserExecutable:           None[browserdomain.BrowserExecutable](),
 				Detached:          detached,
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,

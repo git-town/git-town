@@ -84,7 +84,7 @@ func Cmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          None[configdomain.AutoSync](),
-				Browser:           None[browserdomain.BrowserExecutable](),
+				BrowserExecutable:           None[browserdomain.BrowserExecutable](),
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,

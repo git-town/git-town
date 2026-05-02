@@ -74,7 +74,7 @@ func proposeCommand() *cobra.Command {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
-			browser, errBrowser := readBrowserFlag(cmd)
+			browserExecutable, browserEnabled, errBrowser := readBrowserFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
@@ -86,7 +86,8 @@ func proposeCommand() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          None[configdomain.AutoSync](),
-				Browser:           browser,
+				BrowserExecutable: browserExecutable,
+				BrowserEnabled:    browserEnabled,
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            dryRun,
