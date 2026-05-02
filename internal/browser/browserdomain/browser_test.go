@@ -23,7 +23,7 @@ func TestUseBrowser(t *testing.T) {
 
 		t.Run("set to empty string", func(t *testing.T) {
 			t.Parallel()
-			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("", false)
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("", true)
 			must.NoError(t, err)
 			must.True(t, haveExecutable.IsNone())
 			must.True(t, haveEnabled.EqualSome(browserdomain.BrowserEnabled(false)))
@@ -31,7 +31,7 @@ func TestUseBrowser(t *testing.T) {
 
 		t.Run("set to '(none)'", func(t *testing.T) {
 			t.Parallel()
-			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("(none)", false)
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("(none)", true)
 			must.NoError(t, err)
 			must.True(t, haveExecutable.IsNone())
 			must.True(t, haveEnabled.EqualSome(browserdomain.BrowserEnabled(false)))
@@ -39,10 +39,10 @@ func TestUseBrowser(t *testing.T) {
 
 		t.Run("set to an actual browser executable", func(t *testing.T) {
 			t.Parallel()
-			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("firefox", false)
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserHas("firefox", true)
 			must.NoError(t, err)
 			must.True(t, haveExecutable.EqualSome(browserdomain.BrowserExecutable("firefox")))
-			must.True(t, haveEnabled.EqualSome(browserdomain.BrowserEnabled(true)))
+			must.True(t, haveEnabled.IsNone())
 		})
 	})
 }

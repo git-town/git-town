@@ -10,5 +10,5 @@ func ParseBrowserHas(value string, has bool) (Option[BrowserExecutable], Option[
 	if value == "" || value == NoBrowser.String() {
 		return None[BrowserExecutable](), Some(BrowserEnabled(false)), nil
 	}
-	return Some(BrowserExecutable(value)), Some(BrowserEnabled(true)), nil
+	return Some(BrowserExecutable(value)), None[BrowserEnabled](), nil
 }
