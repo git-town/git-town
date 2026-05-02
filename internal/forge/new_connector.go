@@ -36,7 +36,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Organization: remoteURL.Org,
 				Repository:   remoteURL.Repo,
 			},
-			Browser: args.Browser,
+			BrowserExecutable: args.Browser,
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
