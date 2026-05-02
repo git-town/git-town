@@ -53,7 +53,7 @@ func TestSave(t *testing.T) {
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
 				BranchPrefix:      Some(configdomain.BranchPrefix("feature-")),
-				BrowserExecutable:           Some(browserdomain.BrowserExecutable("chrome")),
+				BrowserExecutable: Some(browserdomain.BrowserExecutable("chrome")),
 				ContributionRegex: contributionRegex,
 				Detached:          Some(configdomain.Detached(true)),
 				DevRemote:         Some(gitdomain.RemoteOrigin),

@@ -296,7 +296,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		BrowserExecutable:                     browser,
+		BrowserExecutable:           browser,
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

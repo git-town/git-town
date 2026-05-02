@@ -300,7 +300,7 @@ EnterForgeData:
 		BitbucketUsername:           bitbucketUsername,
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		BrowserExecutable:                     None[browserdomain.BrowserExecutable](),
+		BrowserExecutable:           None[browserdomain.BrowserExecutable](),
 		ForgejoToken:                forgejoToken,
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

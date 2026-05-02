@@ -32,7 +32,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		BrowserExecutable:                     args.Browser,
+		BrowserExecutable:           args.Browser,
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    args.Detached,

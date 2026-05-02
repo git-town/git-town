@@ -153,7 +153,7 @@ upstream = true
 				BitbucketUsername:    None[forgedomain.BitbucketUsername](),
 				BranchPrefix:         Some(configdomain.BranchPrefix("feature-")),
 				BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-				BrowserExecutable:              Some(browserdomain.BrowserExecutable("chrome")),
+				BrowserExecutable:    Some(browserdomain.BrowserExecutable("chrome")),
 				ContributionRegex:    asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test")),
 				Detached:             Some(configdomain.Detached(true)),
 				DevRemote:            Some(gitdomain.Remote("origin")),
