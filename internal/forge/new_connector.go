@@ -36,11 +36,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Organization: remoteURL.Org,
 				Repository:   remoteURL.Repo,
 			},
+			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:       args.BitbucketAppPassword,
+			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
 			Log:               args.Log,
@@ -50,6 +52,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:       args.BitbucketAppPassword,
+			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
 			Log:               args.Log,
@@ -59,6 +62,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeForgejo:
 		connector = forgejo.NewConnector(forgejo.NewConnectorArgs{
 			APIToken:          args.ForgejoToken,
+			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
 			Log:               args.Log,
@@ -67,6 +71,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:          args.GiteaToken,
+			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
 			Log:               args.Log,
@@ -77,6 +82,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		case forgedomain.GithubConnectorTypeAPI:
 			connector, err = github.NewConnector(github.NewConnectorArgs{
 				APIToken:          args.GithubToken,
+				BrowserEnabled:    args.BrowserEnabled,
 				BrowserExecutable: args.BrowserExecutable,
 				ConfigDir:         args.ConfigDir,
 				Log:               args.Log,
@@ -99,6 +105,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		case forgedomain.GitlabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:          args.GitlabToken,
+				BrowserEnabled:    args.BrowserEnabled,
 				BrowserExecutable: args.BrowserExecutable,
 				ConfigDir:         args.ConfigDir,
 				Log:               args.Log,
@@ -108,6 +115,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
 					Backend:           args.Backend,
+					BrowserEnabled:    args.BrowserEnabled,
 					BrowserExecutable: args.BrowserExecutable,
 					Frontend:          args.Frontend,
 					Log:               args.Log,
