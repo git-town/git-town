@@ -51,7 +51,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		autoResolve                 Option[configdomain.AutoResolve]
 		autoSync                    Option[configdomain.AutoSync]
 		branchPrefix                Option[configdomain.BranchPrefix]
-		browser                     Option[browserdomain.BrowserExecutable]
+		browserExecutable           Option[browserdomain.BrowserExecutable]
+		browserEnabled              Option[browserdomain.BrowserEnabled]
 		contributionRegex           Option[configdomain.ContributionRegex]
 		detached                    Option[configdomain.Detached]
 		devRemote                   Option[gitdomain.Remote]
@@ -188,7 +189,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Browser != nil {
-			browser, err = browserdomain.ParseBrowserHas(*data.Hosting.Browser, true)
+			browserExecutable, browserEnabled, err = browserdomain.ParseBrowserHas(*data.Hosting.Browser, true)
 			ec.Check(err)
 		}
 		if data.Hosting.Platform != nil {
@@ -296,7 +297,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		BrowserExecutable:           browser,
+		BrowserExecutable:           browserExecutable,
+		BrowserEnabled:              browserEnabled,
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
