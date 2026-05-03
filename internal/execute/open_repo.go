@@ -102,6 +102,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	systemConfig := systemconfig.Load()
+	fmt.Println("systemConfig.BrowserEnabled", systemConfig.BrowserEnabled)
+	fmt.Println("envConfig.BrowserEnabled", envConfig.BrowserEnabled)
+	fmt.Println("args.CliConfig.BrowserEnabled", args.CliConfig.BrowserEnabled)
+	fmt.Println("defaultConfig.BrowserEnabled", defaultConfig.BrowserEnabled)
+	fmt.Println("configFile.BrowserEnabled", configFile.BrowserEnabled)
+	fmt.Println("unscopedConfig.BrowserEnabled", unscopedConfig.BrowserEnabled)
+
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		CliConfig:     args.CliConfig,
 		ConfigFile:    configFile,
