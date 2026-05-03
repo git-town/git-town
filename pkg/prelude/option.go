@@ -154,6 +154,14 @@ func NewOption[T any](value T) Option[T] {
 	return Some(value)
 }
 
+// NewOption creates a new Option containing None if the given value is the zero value, otherwise Some.
+func NewOptionIfExists[T any](value T, has bool) Option[T] {
+	if !has {
+		return None[T]()
+	}
+	return Some(value)
+}
+
 // None instantiates an empty Option of the given type.
 func None[T any]() Option[T] {
 	return Option[T]{nil}

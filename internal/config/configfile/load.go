@@ -189,7 +189,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Browser != nil {
-			browserExecutable, browserEnabled, err = browserdomain.ParseBrowserHas(*data.Hosting.Browser, true)
+			browserExecutable, browserEnabled, err = browserdomain.ParseBrowserOpt(Some(*data.Hosting.Browser))
 			ec.Check(err)
 		}
 		if data.Hosting.Platform != nil {

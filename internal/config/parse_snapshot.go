@@ -88,7 +88,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
 	browser1, hasBrowser := snapshot[configdomain.KeyBrowser]
-	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserHas(browser1, hasBrowser)
+	browser1Opt := NewOptionIfExists(browser1, hasBrowser)
+	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserOpt(browser1Opt)
 	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
 	detached, errDetached := load(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached], ignoreUnknown)
 	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
