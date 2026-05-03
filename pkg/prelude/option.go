@@ -163,7 +163,9 @@ func NewOptionIfExists[T any](value T, has bool) Option[T] {
 	return None[T]()
 }
 
-func NewStrTypeOption[T ~string](valueOpt Option[string]) Option[T] {
+// NewOptionStrType converts the given Option[string]
+// into an Option[type-based-on-string].
+func NewOptionStrType[T ~string](valueOpt Option[string]) Option[T] {
 	if value, has := valueOpt.Get(); has {
 		return Some(T(value))
 	}
