@@ -26,6 +26,22 @@ func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 	return None[string]()
 }
 
+func (self EnvVars) GetFirstNonEmpty(name string, alternatives ...string) string {
+	if result, has := self.data[name]; has {
+		if len(result) > 0 {
+			return result
+		}
+	}
+	for _, alternative := range alternatives {
+		if result, has := self.data[alternative]; has {
+			if len(result) > 0 {
+				return result
+			}
+		}
+	}
+	return ""
+}
+
 func NewEnvVars(entries []string) EnvVars {
 	result := EnvVars{
 		data: map[string]string{},
