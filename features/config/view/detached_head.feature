@@ -62,7 +62,7 @@ Feature: display configuration from Git metadata in detached head state
         stash uncommitted changes: no
 
       Hosting:
-        browser: firefox
+        browser: firefox, enabled
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

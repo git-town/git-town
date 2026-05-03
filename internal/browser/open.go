@@ -12,7 +12,11 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend subshelldomain.Runner, executable Option[browserdomain.BrowserExecutable]) {
+func Open(url string, frontend subshelldomain.Runner, executable Option[browserdomain.BrowserExecutable], enabled browserdomain.BrowserEnabled) {
+	if !enabled {
+		fmt.Printf(messages.BrowserOpen, url)
+		return
+	}
 	command, hasCommand := OpenBrowserCommand(executable).Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
