@@ -65,5 +65,4 @@ Feature: display configuration inside a non-TTY environment
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
       """
