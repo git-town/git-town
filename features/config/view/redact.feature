@@ -13,7 +13,7 @@ Feature: redact API tokens in config output
     Then Git Town prints:
       """
       Hosting:
-        browser: (not set)
+        browser: (not set), enabled
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

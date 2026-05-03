@@ -113,7 +113,7 @@ Feature: show the configuration
         stash uncommitted changes: no
 
       Hosting:
-        browser: firefox
+        browser: firefox, enabled
         development remote: origin
         forge type: github
         origin hostname: github.com
