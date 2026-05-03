@@ -14,6 +14,7 @@ type EnvVars struct {
 }
 
 // Get provides the environment variable with the first matching given name.
+// TODO: delete this and use GetOpt everywhere instead. Rename GetOpt to Get.
 func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 	if result, has := self.data[name]; has {
 		return Some(result)
@@ -26,20 +27,20 @@ func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 	return None[string]()
 }
 
-func (self EnvVars) GetFirstNonEmpty(name string, alternatives ...string) string {
+func (self EnvVars) GetFirstNonEmpty(name string, alternatives ...string) Option[string] {
 	if result, has := self.data[name]; has {
 		if len(result) > 0 {
-			return result
+			return Some(result)
 		}
 	}
 	for _, alternative := range alternatives {
 		if result, has := self.data[alternative]; has {
 			if len(result) > 0 {
-				return result
+				return Some(result)
 			}
 		}
 	}
-	return ""
+	return None[string]()
 }
 
 func NewEnvVars(entries []string) EnvVars {
