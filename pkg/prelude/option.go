@@ -157,18 +157,17 @@ func NewOption[T any](value T) Option[T] {
 // NewOptionIfExists converts the optional value expressed in Go convention (value, has)
 // into a proper Option instance.
 func NewOptionIfExists[T any](value T, has bool) Option[T] {
-	if !has {
-		return None[T]()
+	if has {
+		return Some(value)
 	}
-	return Some(value)
+	return None[T]()
 }
 
 func NewStrTypeOption[T ~string](valueOpt Option[string]) Option[T] {
-	value, has := valueOpt.Get()
-	if !has {
-		return None[T]()
+	if value, has := valueOpt.Get(); has {
+		return Some(T(value))
 	}
-	return Some(T(value))
+	return None[T]()
 }
 
 // None instantiates an empty Option of the given type.
