@@ -4,6 +4,10 @@ import "strconv"
 
 type BrowserEnabled bool
 
+func (self BrowserEnabled) Disabled() bool {
+	return !self.Enabled()
+}
+
 func (self BrowserEnabled) Enabled() bool {
 	return bool(self)
 }
