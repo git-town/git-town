@@ -11,7 +11,7 @@ import (
 func TestUseBrowser(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ParseBrowserHas", func(t *testing.T) {
+	t.Run("ParseBrowserOpt", func(t *testing.T) {
 		t.Parallel()
 
 		t.Run("not configured", func(t *testing.T) {
