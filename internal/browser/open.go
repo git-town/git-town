@@ -12,7 +12,7 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend subshelldomain.Runner, config Option[browserdomain.Browser]) {
+func Open(url string, frontend subshelldomain.Runner, config Option[browserdomain.BrowserExecutable]) {
 	command, hasCommand := OpenBrowserCommand(config).Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
@@ -24,7 +24,7 @@ func Open(url string, frontend subshelldomain.Runner, config Option[browserdomai
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(customBrowserSetting Option[browserdomain.Browser]) Option[string] {
+func OpenBrowserCommand(customBrowserSetting Option[browserdomain.BrowserExecutable]) Option[string] {
 	customBrowser, hasCustomBrowser := customBrowserSetting.Get()
 	if !hasCustomBrowser {
 		return defaultBrowserCommand()

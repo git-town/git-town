@@ -84,7 +84,7 @@ func setParentCommand() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       autoResolve,
 				AutoSync:          None[configdomain.AutoSync](),
-				Browser:           None[browserdomain.Browser](),
+				Browser:           None[browserdomain.BrowserExecutable](),
 				Detached:          Some(configdomain.Detached(true)),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),

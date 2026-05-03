@@ -20,7 +20,7 @@ var (
 // WebConnector provides connectivity to GitHub through the GitHub website.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser Option[browserdomain.Browser]
+	browser Option[browserdomain.BrowserExecutable]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {

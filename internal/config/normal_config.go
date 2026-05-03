@@ -37,7 +37,7 @@ type NormalConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[configdomain.BranchPrefix]
 	BranchTypeOverrides         configdomain.BranchTypeOverrides
-	Browser                     Option[browserdomain.Browser]
+	Browser                     Option[browserdomain.BrowserExecutable]
 	ContributionRegex           Option[configdomain.ContributionRegex]
 	Detached                    configdomain.Detached
 	DevRemote                   gitdomain.Remote
@@ -108,7 +108,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BitbucketUsername:           other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:                other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:         other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		Browser:                     other.Browser.Or(self.Browser),
+		Browser:                     other.BrowserExecutable.Or(self.Browser),
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.GetOr(self.Detached),
 		DevRemote:                   other.DevRemote.GetOr(self.DevRemote),
@@ -262,7 +262,7 @@ func DefaultNormalConfig() NormalConfig {
 		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
 		BranchPrefix:         None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-		Browser:              None[browserdomain.Browser](),
+		Browser:              None[browserdomain.BrowserExecutable](),
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
 		DevRemote:            gitdomain.RemoteOrigin,
@@ -320,7 +320,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BitbucketUsername:           partial.BitbucketUsername,
 		BranchPrefix:                partial.BranchPrefix,
 		BranchTypeOverrides:         partial.BranchTypeOverrides,
-		Browser:                     partial.Browser.Or(defaults.Browser),
+		Browser:                     partial.BrowserExecutable.Or(defaults.Browser),
 		ContributionRegex:           partial.ContributionRegex,
 		Detached:                    partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),

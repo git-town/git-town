@@ -14,10 +14,10 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		cmd.Flags().String(browserLong, "", "the browser executable to use")
 		defineNegatedFlag(cmd.Flags(), browserLong, "don't open any browser windows")
 	}
-	readFlag := func(cmd *cobra.Command) (Option[browserdomain.Browser], error) {
+	readFlag := func(cmd *cobra.Command) (Option[browserdomain.BrowserExecutable], error) {
 		negatedOpt, err := readBoolOptFlag[bool](cmd.Flags(), negate+browserLong)
 		if err != nil {
-			return None[browserdomain.Browser](), err
+			return None[browserdomain.BrowserExecutable](), err
 		}
 		negated, hasNegated := negatedOpt.Get()
 		if hasNegated && negated {
@@ -26,7 +26,7 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		has := cmd.Flags().Changed(browserLong)
 		value, err := cmd.Flags().GetString(browserLong)
 		if err != nil {
-			return None[browserdomain.Browser](), err
+			return None[browserdomain.BrowserExecutable](), err
 		}
 		return browserdomain.ParseBrowserHas(value, has)
 	}
@@ -34,4 +34,4 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 }
 
 // ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
-type ReadBrowserFlagFunc func(*cobra.Command) (Option[browserdomain.Browser], error)
+type ReadBrowserFlagFunc func(*cobra.Command) (Option[browserdomain.BrowserExecutable], error)

@@ -54,7 +54,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 
 type NewConnectorArgs struct {
 	AppPassword Option[forgedomain.BitbucketAppPassword]
-	Browser     Option[browserdomain.Browser]
+	Browser     Option[browserdomain.BrowserExecutable]
 	ConfigDir   configdomain.RepoConfigDir
 	Log         print.Logger
 	RemoteURL   giturl.Parts

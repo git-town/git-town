@@ -165,7 +165,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         branchTypeOverrides,
-		Browser:                     browser2,
+		BrowserExecutable:           browser2,
 		ForgejoToken:                forgedomain.ParseForgejoToken(snapshot[configdomain.KeyForgejoToken]),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

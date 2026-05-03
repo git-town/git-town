@@ -104,7 +104,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	}
 
 	// keep-sorted start
-	browser, hasBrowser := data.Browser.Get()
+	browser, hasBrowser := data.BrowserExecutable.Get()
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGithubConnectorType := data.GithubConnectorType.Get()
