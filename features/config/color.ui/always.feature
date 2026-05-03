@@ -96,7 +96,6 @@ Feature: show the configuration
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
       """
 
   Scenario: all configured in config file
@@ -202,7 +201,6 @@ Feature: show the configuration
         push branches: yes
         sync tags: no
         sync with upstream: yes
-        auto-resolve phantom conflicts: no
       """
 
   Scenario: configured in both Git and config file
@@ -333,7 +331,6 @@ Feature: show the configuration
         push branches: yes
         sync tags: no
         sync with upstream: no
-        auto-resolve phantom conflicts: no
       """
 
   Scenario: all configured, with stacked changes
@@ -408,7 +405,6 @@ Feature: show the configuration
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
 
       Branch Lineage:
         main
@@ -489,5 +485,4 @@ Feature: show the configuration
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
       """
