@@ -22,3 +22,10 @@ func ParseObservedRegex(value string, source string) (Option[ObservedRegex], err
 	}
 	return None[ObservedRegex](), nil
 }
+
+func ParseObservedRegexOpt(valueOpt Option[string], source string) (Option[ObservedRegex], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseObservedRegex(value, source)
+	}
+	return None[ObservedRegex](), nil
+}

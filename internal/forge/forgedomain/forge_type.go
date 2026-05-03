@@ -27,9 +27,6 @@ const (
 
 // ParseForgeType provides the ForgeType enum matching the given text.
 func ParseForgeType(name string, source string) (Option[ForgeType], error) {
-	if name == "" {
-		return None[ForgeType](), nil
-	}
 	nameLower := strings.ToLower(name)
 	for _, forgeType := range forgeTypes() {
 		if nameLower == forgeType.String() {
@@ -37,6 +34,14 @@ func ParseForgeType(name string, source string) (Option[ForgeType], error) {
 		}
 	}
 	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, source, name)
+}
+
+func ParseForgeTypeOpt(valueOpt Option[string], source string) (Option[ForgeType], error) {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[ForgeType](), nil
+	}
+	return ParseForgeType(value, source)
 }
 
 // forgeTypes provides all legal values for ForgeType

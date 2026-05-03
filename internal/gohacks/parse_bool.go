@@ -25,8 +25,17 @@ func ParseBool[T ~bool](text, source string) (T, error) { //nolint:ireturn
 	return T(parsed), nil
 }
 
-func ParseBoolOpt[T ~bool](text, source string) (Option[T], error) {
+func Str2BoolOpt[T ~bool](text, source string) (Option[T], error) {
 	if text == "" {
+		return None[T](), nil
+	}
+	parsed, err := ParseBool[T](text, source)
+	return Some(parsed), err
+}
+
+func StrOpt2BoolOpt[T ~bool](textOpt Option[string], source string) (Option[T], error) {
+	text, has := textOpt.Get()
+	if !has {
 		return None[T](), nil
 	}
 	parsed, err := ParseBool[T](text, source)

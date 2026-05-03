@@ -21,12 +21,12 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(text string, source string) (Option[ShipStrategy], error) {
-	text = strings.TrimSpace(text)
-	if text == "" {
+func ParseShipStrategy(valueOpt Option[string], source string) (Option[ShipStrategy], error) {
+	value, has := valueOpt.Get()
+	if !has {
 		return None[ShipStrategy](), nil
 	}
-	text = strings.ToLower(text)
+	text := strings.ToLower(strings.TrimSpace(value))
 	for _, shipStrategy := range ShipStrategies() {
 		if shipStrategy.String() == text {
 			return Some(shipStrategy), nil

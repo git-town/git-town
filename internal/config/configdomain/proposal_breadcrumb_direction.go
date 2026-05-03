@@ -21,12 +21,17 @@ func (self ProposalBreadcrumbDirection) String() string {
 
 func ParseProposalBreadcrumbDirection(value string, source string) (Option[ProposalBreadcrumbDirection], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "":
-		return None[ProposalBreadcrumbDirection](), nil
 	case ProposalBreadcrumbDirectionDown.String():
 		return Some(ProposalBreadcrumbDirectionDown), nil
 	case ProposalBreadcrumbDirectionUp.String():
 		return Some(ProposalBreadcrumbDirectionUp), nil
 	}
 	return None[ProposalBreadcrumbDirection](), fmt.Errorf(messages.ProposalBreadcrumbDirectionInvalid, source, value)
+}
+
+func ParseProposalBreadcrumbDirectionOpt(valueOpt Option[string], source string) (Option[ProposalBreadcrumbDirection], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseProposalBreadcrumbDirection(value, source)
+	}
+	return None[ProposalBreadcrumbDirection](), nil
 }

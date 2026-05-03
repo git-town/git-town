@@ -34,3 +34,10 @@ func ParseSyncPerennialStrategy(value string, source string) (Option[SyncPerenni
 	}
 	return None[SyncPerennialStrategy](), err
 }
+
+func ParseSyncPerennialStrategyOpt(valueOpt Option[string], source string) (Option[SyncPerennialStrategy], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseSyncPerennialStrategy(value, source)
+	}
+	return None[SyncPerennialStrategy](), nil
+}

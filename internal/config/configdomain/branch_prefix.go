@@ -26,3 +26,11 @@ func ParseBranchPrefix(value, _ string) (Option[BranchPrefix], error) {
 	}
 	return Some(BranchPrefix(value)), nil
 }
+
+func ParseBranchPrefixOpt(valueOpt Option[string], _ string) (Option[BranchPrefix], error) {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[BranchPrefix](), nil
+	}
+	return Some(BranchPrefix(value)), nil
+}

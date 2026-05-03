@@ -48,8 +48,6 @@ func (self ProposalBreadcrumb) String() string {
 
 func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadcrumb], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "":
-		return None[ProposalBreadcrumb](), nil
 	case ProposalBreadcrumbNone.String():
 		return Some(ProposalBreadcrumbNone), nil
 	case ProposalBreadcrumbBranches.String():
@@ -57,7 +55,7 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 	case ProposalBreadcrumbStacks.String():
 		return Some(ProposalBreadcrumbStacks), nil
 	}
-	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposal-breadcrumb")
+	parsedOpt, err := gohacks.Str2BoolOpt[bool](value, "proposal-breadcrumb")
 	if err != nil {
 		return None[ProposalBreadcrumb](), fmt.Errorf(messages.ProposalBreadcrumbInvalid, source, value)
 	}
@@ -69,4 +67,11 @@ func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadc
 		return Some(ProposalBreadcrumbNone), nil
 	}
 	return None[ProposalBreadcrumb](), fmt.Errorf(messages.ProposalBreadcrumbInvalid, source, value)
+}
+
+func ParseProposalBreadcrumbOpt(valueOpt Option[string], source string) (Option[ProposalBreadcrumb], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseProposalBreadcrumb(value, source)
+	}
+	return None[ProposalBreadcrumb](), nil
 }

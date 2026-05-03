@@ -67,47 +67,47 @@ const (
 
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	// keep-sorted start
-	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
-	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
-	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
-	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowser)
-	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
-	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
-	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
-	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
-	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
-	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
+	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.StrOpt2BoolOpt[configdomain.AutoResolve])
+	autoSync, errAutoSync := load(env, autoSync, gohacks.StrOpt2BoolOpt[configdomain.AutoSync])
+	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefixOpt)
+	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowserOpt)
+	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegexOpt)
+	detached, errDetached := load(env, detached, gohacks.StrOpt2BoolOpt[configdomain.Detached])
+	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypesOpt)
+	dryRun, errDryRun := load(env, dryRun, gohacks.StrOpt2BoolOpt[configdomain.DryRun])
+	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegexOpt)
+	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeTypeOpt)
 	gitAuthorEmailValue := NewStrTypeOption[gitdomain.GitUserEmail](env.GetOpt(gitAuthorEmail))
 	gitAuthorNameValue := NewStrTypeOption[gitdomain.GitUserName](env.GetOpt(gitAuthorName))
 	gitCommitterEmailValue := NewStrTypeOption[gitdomain.GitUserEmail](env.GetOpt(gitCommitterEmail))
 	gitCommitterNameValue := NewStrTypeOption[gitdomain.GitUserName](env.GetOpt(gitCommitterName))
 	gitUserEmail := gitAuthorEmailValue.Or(gitCommitterEmailValue)
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
-	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
-	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
-	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
-	interactive1, errInteractive1 := load(env, interactive, gohacks.ParseBoolOpt[bool])
-	interactive2 := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
-	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
-	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
-	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
-	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
-	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
-	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
-	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
-	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
-	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
-	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
-	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
+	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorTypeOpt)
+	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorTypeOpt)
+	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.StrOpt2BoolOpt[configdomain.IgnoreUncommitted])
+	interactive1, errInteractive1 := load(env, interactive, gohacks.StrOpt2BoolOpt[bool])
+	interactive2 := configdomain.NewInteractiveFromEnv(env.GetOpt(term), interactive1)
+	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchTypeOpt)
+	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegexOpt)
+	offline, errOffline := load(env, offline, gohacks.StrOpt2BoolOpt[configdomain.Offline])
+	order, errOrder := configdomain.ParseOrderOpt(env.GetOpt(order), order)
+	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegexOpt)
+	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumbOpt)
+	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirectionOpt)
+	pushBranches, errPushBranches := load(env, pushBranches, gohacks.StrOpt2BoolOpt[configdomain.PushBranches])
+	pushHook, errPushHook := load(env, pushHook, gohacks.StrOpt2BoolOpt[configdomain.PushHook])
+	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranchesOpt)
+	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.StrOpt2BoolOpt[configdomain.ShipDeleteTrackingBranch])
 	shipStrategy, errShipStrategy := load(env, shipStrategy, configdomain.ParseShipStrategy)
-	stash, errStash := load(env, stash, gohacks.ParseBoolOpt[configdomain.Stash])
-	syncFeatureStrategy, errSyncFeatureStrategy := load(env, syncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)
-	syncPerennialStrategy, errSyncPerennialStrategy := load(env, syncPerennialStrategy, configdomain.ParseSyncPerennialStrategy)
-	syncPrototypeStrategy, errSyncPrototypeStrategy := load(env, syncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
-	syncTags, errSyncTags := load(env, syncTags, gohacks.ParseBoolOpt[configdomain.SyncTags])
-	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
-	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchType)
-	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
+	stash, errStash := load(env, stash, gohacks.StrOpt2BoolOpt[configdomain.Stash])
+	syncFeatureStrategy, errSyncFeatureStrategy := load(env, syncFeatureStrategy, configdomain.ParseSyncFeatureStrategyOpt)
+	syncPerennialStrategy, errSyncPerennialStrategy := load(env, syncPerennialStrategy, configdomain.ParseSyncPerennialStrategyOpt)
+	syncPrototypeStrategy, errSyncPrototypeStrategy := load(env, syncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategyOpt)
+	syncTags, errSyncTags := load(env, syncTags, gohacks.StrOpt2BoolOpt[configdomain.SyncTags])
+	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.StrOpt2BoolOpt[configdomain.SyncUpstream])
+	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchTypeOpt)
+	verbose, errVerbose := load(env, verbose, gohacks.StrOpt2BoolOpt[configdomain.Verbose])
 	// keep-sorted end
 	err := cmp.Or(
 		errAutoResolve,
@@ -149,31 +149,31 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:                 autoResolve,
 		AutoSync:                    autoSync,
-		BitbucketAppPassword:        forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
-		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
+		BitbucketAppPassword:        forgedomain.ParseBitbucketAppPassword(env.GetOpt(bitbucketAppPassword)),
+		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.GetOpt(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
 		BrowserExecutable:           browser,
-		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
+		ForgejoToken:                forgedomain.ParseForgejoToken(env.GetOpt(forgejoToken)),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
-		DevRemote:                   gitdomain.NewRemote(env.Get(devRemote)),
+		DevRemote:                   gitdomain.NewRemote(env.GetOpt(devRemote)),
 		DisplayTypes:                displayTypesOpt,
 		DryRun:                      dryRun,
 		FeatureRegex:                featureRegex,
 		ForgeType:                   forgeType,
 		GithubConnectorType:         githubConnectorType,
-		GithubToken:                 forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
+		GithubToken:                 forgedomain.ParseGithubToken(env.GetOpt(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitlabConnectorType:         gitlabConnectorType,
-		GitlabToken:                 forgedomain.ParseGitlabToken(env.Get(gitlabToken)),
+		GitlabToken:                 forgedomain.ParseGitlabToken(env.GetOpt(gitlabToken)),
 		GitUserEmail:                gitUserEmail,
 		GitUserName:                 gitUserName,
-		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
-		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
+		GiteaToken:                  forgedomain.ParseGiteaToken(env.GetOpt(giteaToken)),
+		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.GetOpt(originHostname)),
 		IgnoreUncommitted:           ignoreUncommitted,
 		Interactive:                 interactive2,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
-		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
+		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.GetOpt(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:               observedRegex,
 		Offline:                     offline,
@@ -198,6 +198,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	}, err
 }
 
-func load[T any](env EnvVars, varName string, parser func(string, string) (T, error)) (T, error) { //nolint:ireturn
-	return parser(env.Get(varName), varName)
+func load[T any](env EnvVars, varName string, parser func(Option[string], string) (T, error)) (T, error) { //nolint:ireturn
+	return parser(env.GetOpt(varName), varName)
 }

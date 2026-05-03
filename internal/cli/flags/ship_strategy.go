@@ -14,7 +14,7 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 		cmd.Flags().StringP(shipStrategyLong, "s", "", "override the ship-strategy")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.ShipStrategy], error) {
-		value, err := cmd.Flags().GetString(shipStrategyLong)
+		value, err := readStringOptFlag[string](cmd.Flags(), shipStrategyLong)
 		if err != nil {
 			return None[configdomain.ShipStrategy](), err
 		}

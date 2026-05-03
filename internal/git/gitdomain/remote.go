@@ -9,12 +9,11 @@ import (
 // Remote represents a Git remote.
 type Remote string
 
-func NewRemote(id string) Option[Remote] {
-	id = strings.TrimSpace(id)
-	if len(id) == 0 {
-		return None[Remote]()
+func NewRemote(idOpt Option[string]) Option[Remote] {
+	if id, has := idOpt.Get(); has {
+		return Some(Remote(strings.TrimSpace(id)))
 	}
-	return Some(Remote(id))
+	return None[Remote]()
 }
 
 func (self Remote) String() string {

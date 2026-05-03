@@ -28,13 +28,17 @@ func GitlabConnectorTypes() []GitlabConnectorType {
 }
 
 func ParseGitlabConnectorType(text string, source string) (Option[GitlabConnectorType], error) {
-	if text == "" {
-		return None[GitlabConnectorType](), nil
-	}
 	for _, connectorType := range GitlabConnectorTypes() {
 		if connectorType.String() == text {
 			return Some(connectorType), nil
 		}
 	}
 	return None[GitlabConnectorType](), fmt.Errorf(messages.GitlabConnectorTypeUnknown, source, text)
+}
+
+func ParseGitlabConnectorTypeOpt(valueOpt Option[string], source string) (Option[GitlabConnectorType], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseGitlabConnectorType(value, source)
+	}
+	return None[GitlabConnectorType](), nil
 }

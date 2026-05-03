@@ -21,3 +21,10 @@ func ParsePerennialRegex(value string, source string) (Option[PerennialRegex], e
 	}
 	return None[PerennialRegex](), err
 }
+
+func ParsePerennialRegexOpt(valueOpt Option[string], source string) (Option[PerennialRegex], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParsePerennialRegex(value, source)
+	}
+	return None[PerennialRegex](), nil
+}

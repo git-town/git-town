@@ -13,10 +13,9 @@ func (self ForgejoToken) String() string {
 	return string(self)
 }
 
-func ParseForgejoToken(value string) Option[ForgejoToken] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[ForgejoToken]()
+func ParseForgejoToken(valueOpt Option[string]) Option[ForgejoToken] {
+	if value, has := valueOpt.Get(); has {
+		return Some(ForgejoToken(strings.TrimSpace(value)))
 	}
-	return Some(ForgejoToken(value))
+	return None[ForgejoToken]()
 }

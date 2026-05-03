@@ -29,7 +29,7 @@ func ParseBrowser(value, _ string) (Option[BrowserExecutable], error) {
 	return Some(BrowserExecutable(value)), nil
 }
 
-func ParseBrowserOpt(valueOpt Option[string]) (Option[BrowserExecutable], error) {
+func ParseBrowserOpt(valueOpt Option[string], _ string) (Option[BrowserExecutable], error) {
 	value, has := valueOpt.Get()
 	if !has {
 		return None[BrowserExecutable](), nil

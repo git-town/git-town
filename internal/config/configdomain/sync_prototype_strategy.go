@@ -38,3 +38,10 @@ func ParseSyncPrototypeStrategy(value string, source string) (Option[SyncPrototy
 	}
 	return None[SyncPrototypeStrategy](), err
 }
+
+func ParseSyncPrototypeStrategyOpt(valueOpt Option[string], source string) (Option[SyncPrototypeStrategy], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseSyncPrototypeStrategy(value, source)
+	}
+	return None[SyncPrototypeStrategy](), nil
+}

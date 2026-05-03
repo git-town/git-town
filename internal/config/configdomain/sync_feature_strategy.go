@@ -34,3 +34,10 @@ func ParseSyncFeatureStrategy(value string, source string) (Option[SyncFeatureSt
 	}
 	return None[SyncFeatureStrategy](), err
 }
+
+func ParseSyncFeatureStrategyOpt(valueOpt Option[string], source string) (Option[SyncFeatureStrategy], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseSyncFeatureStrategy(value, source)
+	}
+	return None[SyncFeatureStrategy](), nil
+}

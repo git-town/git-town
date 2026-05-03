@@ -12,10 +12,9 @@ func (self BitbucketAppPassword) String() string {
 	return string(self)
 }
 
-func ParseBitbucketAppPassword(value string) Option[BitbucketAppPassword] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[BitbucketAppPassword]()
+func ParseBitbucketAppPassword(valueOpt Option[string]) Option[BitbucketAppPassword] {
+	if value, has := valueOpt.Get(); has {
+		return Some(BitbucketAppPassword(strings.TrimSpace(value)))
 	}
-	return Some(BitbucketAppPassword(value))
+	return None[BitbucketAppPassword]()
 }

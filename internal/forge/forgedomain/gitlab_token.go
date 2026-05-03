@@ -13,10 +13,9 @@ func (self GitlabToken) String() string {
 	return string(self)
 }
 
-func ParseGitlabToken(value string) Option[GitlabToken] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[GitlabToken]()
+func ParseGitlabToken(valueOpt Option[string]) Option[GitlabToken] {
+	if value, has := valueOpt.Get(); has {
+		return Some(GitlabToken(strings.TrimSpace(value)))
 	}
-	return Some(GitlabToken(value))
+	return None[GitlabToken]()
 }

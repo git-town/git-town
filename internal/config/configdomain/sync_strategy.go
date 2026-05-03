@@ -21,11 +21,7 @@ const (
 )
 
 func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
-	text = strings.TrimSpace(text)
-	if text == "" {
-		return None[SyncStrategy](), nil
-	}
-	text = strings.ToLower(text)
+	text = strings.ToLower(strings.TrimSpace(text))
 	for _, syncStrategy := range SyncStrategies() {
 		if syncStrategy.String() == text {
 			return Some(syncStrategy), nil

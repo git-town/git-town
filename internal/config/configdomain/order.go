@@ -27,8 +27,6 @@ func (self Order) String() string {
 
 func ParseOrder(value string, source string) (Option[Order], error) {
 	switch strings.ToLower(value) {
-	case "":
-		return None[Order](), nil
 	case "a", "as", "asc":
 		return Some(OrderAsc), nil
 	case "d", "de", "des", "desc":
@@ -36,4 +34,11 @@ func ParseOrder(value string, source string) (Option[Order], error) {
 	default:
 		return None[Order](), fmt.Errorf(messages.OrderInvalid, source, value)
 	}
+}
+
+func ParseOrderOpt(valueOpt Option[string], source string) (Option[Order], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseOrder(value, source)
+	}
+	return None[Order](), nil
 }

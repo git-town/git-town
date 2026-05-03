@@ -12,10 +12,9 @@ func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func ParseHostingOriginHostname(value string) Option[HostingOriginHostname] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[HostingOriginHostname]()
+func ParseHostingOriginHostname(valueOpt Option[string]) Option[HostingOriginHostname] {
+	if value, has := valueOpt.Get(); has {
+		return Some(HostingOriginHostname(strings.TrimSpace(value)))
 	}
-	return Some(HostingOriginHostname(value))
+	return None[HostingOriginHostname]()
 }

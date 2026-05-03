@@ -22,3 +22,18 @@ func ParseContributionRegex(value string, source string) (Option[ContributionReg
 	}
 	return None[ContributionRegex](), nil
 }
+
+func ParseContributionRegexOpt(valueOpt Option[string], source string) (Option[ContributionRegex], error) {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[ContributionRegex](), nil
+	}
+	verifiedRegexOpt, err := ParseRegex(value)
+	if err != nil {
+		return None[ContributionRegex](), fmt.Errorf(messages.CannotParse, source, err)
+	}
+	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), nil
+	}
+	return None[ContributionRegex](), nil
+}

@@ -21,3 +21,11 @@ func ParseFeatureRegex(value string, source string) (Option[FeatureRegex], error
 	}
 	return None[FeatureRegex](), err
 }
+
+func ParseFeatureRegexOpt(valueOpt Option[string], source string) (Option[FeatureRegex], error) {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[FeatureRegex](), nil
+	}
+	return ParseFeatureRegex(value, source)
+}

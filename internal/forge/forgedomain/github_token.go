@@ -13,10 +13,9 @@ func (self GithubToken) String() string {
 	return string(self)
 }
 
-func ParseGithubToken(value string) Option[GithubToken] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[GithubToken]()
+func ParseGithubToken(valueOpt Option[string]) Option[GithubToken] {
+	if value, has := valueOpt.Get(); has {
+		return Some(GithubToken(strings.TrimSpace(value)))
 	}
-	return Some(GithubToken(value))
+	return None[GithubToken]()
 }

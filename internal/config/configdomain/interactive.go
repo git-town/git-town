@@ -56,7 +56,7 @@ func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive
 	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
-func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Interactive] {
+func NewInteractiveFromEnv(envTermOpt Option[string], envConfigOpt Option[bool]) Option[Interactive] {
 	envConfig, hasEnvConfig := envConfigOpt.Get()
 	if hasEnvConfig {
 		if envConfig {
@@ -64,8 +64,10 @@ func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Int
 		}
 		return Some(Interactive(messages.InteractivityDisabledViaEnv))
 	}
-	if strings.ToLower(envTerm) == "dumb" {
-		return Some(Interactive("only a dumb terminal available"))
+	if envTerm, hasEnvTerm := envTermOpt.Get(); hasEnvTerm {
+		if strings.ToLower(envTerm) == "dumb" {
+			return Some(Interactive("only a dumb terminal available"))
+		}
 	}
 	return None[Interactive]()
 }

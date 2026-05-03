@@ -14,9 +14,11 @@ func NewLocalBranchName(id string) LocalBranchName {
 	return LocalBranchName(id)
 }
 
-func NewLocalBranchNameOption(id string) Option[LocalBranchName] {
-	if isValidLocalBranchName(id) {
-		return Some(NewLocalBranchName(id))
+func NewLocalBranchNameOption(idOpt Option[string]) Option[LocalBranchName] {
+	if id, has := idOpt.Get(); has {
+		if isValidLocalBranchName(id) {
+			return Some(NewLocalBranchName(id))
+		}
 	}
 	return None[LocalBranchName]()
 }

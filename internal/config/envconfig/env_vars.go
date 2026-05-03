@@ -14,19 +14,6 @@ type EnvVars struct {
 }
 
 // Get provides the environment variable with the first matching given name.
-func (self EnvVars) Get(name string, alternatives ...string) string {
-	if result, has := self.data[name]; has {
-		return result
-	}
-	for _, alternative := range alternatives {
-		if result, has := self.data[alternative]; has {
-			return result
-		}
-	}
-	return ""
-}
-
-// Get provides the environment variable with the first matching given name.
 func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 	if result, has := self.data[name]; has {
 		return Some(result)

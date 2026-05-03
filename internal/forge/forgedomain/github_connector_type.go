@@ -28,13 +28,18 @@ func GithubConnectorTypes() []GithubConnectorType {
 }
 
 func ParseGithubConnectorType(text string, source string) (Option[GithubConnectorType], error) {
-	if text == "" {
-		return None[GithubConnectorType](), nil
-	}
 	for _, connectorType := range GithubConnectorTypes() {
 		if connectorType.String() == text {
 			return Some(connectorType), nil
 		}
 	}
 	return None[GithubConnectorType](), fmt.Errorf(messages.GithubConnectorTypeUnknown, source, text)
+}
+
+func ParseGithubConnectorTypeOpt(valueOpt Option[string], source string) (Option[GithubConnectorType], error) {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[GithubConnectorType](), nil
+	}
+	return ParseGithubConnectorType(value, source)
 }

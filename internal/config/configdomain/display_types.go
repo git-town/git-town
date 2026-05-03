@@ -75,9 +75,6 @@ func (self DisplayTypes) String() string {
 }
 
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
-	if len(text) == 0 {
-		return None[DisplayTypes](), nil
-	}
 	parseDisplayTypesOnce.Do(func() {
 		parseDisplayTypesRegex = regexp.MustCompile(`[ +\-&_]`)
 	})
@@ -110,6 +107,13 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		BranchTypes: branchTypes,
 		Quantifier:  quantifier,
 	}), nil
+}
+
+func ParseDisplayTypesOpt(valueOpt Option[string], source string) (Option[DisplayTypes], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseDisplayTypes(value, source)
+	}
+	return None[DisplayTypes](), nil
 }
 
 var (

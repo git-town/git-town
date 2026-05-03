@@ -27,9 +27,6 @@ func (self ShareNewBranches) String() string {
 }
 
 func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches], error) {
-	if value == "" {
-		return None[ShareNewBranches](), nil
-	}
 	parsed, err := gohacks.ParseBool[bool](value, source)
 	if err == nil && !parsed {
 		return Some(ShareNewBranchesNone), nil
@@ -40,6 +37,13 @@ func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches
 		}
 	}
 	return None[ShareNewBranches](), fmt.Errorf("invalid value for %q: %q", source, value)
+}
+
+func ParseShareNewBranchesOpt(valueOpt Option[string], source string) (Option[ShareNewBranches], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseShareNewBranches(value, source)
+	}
+	return None[ShareNewBranches](), nil
 }
 
 func ParseShareNewBranchesDeprecatedBool(value bool) ShareNewBranches {

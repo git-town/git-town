@@ -13,10 +13,9 @@ func (self GiteaToken) String() string {
 	return string(self)
 }
 
-func ParseGiteaToken(value string) Option[GiteaToken] {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return None[GiteaToken]()
+func ParseGiteaToken(valueOpt Option[string]) Option[GiteaToken] {
+	if value, has := valueOpt.Get(); has {
+		return Some(GiteaToken(strings.TrimSpace(value)))
 	}
-	return Some(GiteaToken(value))
+	return None[GiteaToken]()
 }
