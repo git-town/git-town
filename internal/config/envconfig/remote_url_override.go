@@ -6,6 +6,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
+// TODO: reveive the pre-loaded env vars as an argument
 func RemoteURLOverride() Option[string] {
-	return NewOption(os.Getenv("GIT_TOWN_REMOTE"))
+	return NewOptionIfExists(os.LookupEnv("GIT_TOWN_REMOTE"))
 }
