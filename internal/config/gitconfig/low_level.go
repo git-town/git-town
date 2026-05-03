@@ -84,7 +84,7 @@ func RemoteURL(backend subshelldomain.Querier, remote gitdomain.Remote) Option[s
 		// If we get an error here, we simply don't use the origin remote.
 		return None[string]()
 	}
-	return NewOption(strings.TrimSpace(output))
+	return Some(strings.TrimSpace(output))
 }
 
 func RemoveConfigValue(runner subshelldomain.Runner, scope configdomain.ConfigScope, key configdomain.Key) error {
