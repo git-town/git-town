@@ -1,6 +1,10 @@
 package envconfig
 
-import "strings"
+import (
+	"strings"
+
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
 
 // EnvVars is an immutable representation of all environment variables.
 // It allows efficient lookup of environment variables in O(1) time
@@ -20,6 +24,19 @@ func (self EnvVars) Get(name string, alternatives ...string) string {
 		}
 	}
 	return ""
+}
+
+// Get provides the environment variable with the first matching given name.
+func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
+	if result, has := self.data[name]; has {
+		return Some(result)
+	}
+	for _, alternative := range alternatives {
+		if result, has := self.data[alternative]; has {
+			return Some(result)
+		}
+	}
+	return None[string]()
 }
 
 func NewEnvVars(entries []string) EnvVars {

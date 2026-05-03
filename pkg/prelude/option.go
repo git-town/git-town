@@ -163,6 +163,14 @@ func NewOptionIfExists[T any](value T, has bool) Option[T] {
 	return Some(value)
 }
 
+func NewStrTypeOption[T ~string](valueOpt Option[string]) Option[T] {
+	value, has := valueOpt.Get()
+	if !has {
+		return None[T]()
+	}
+	return Some(T(value))
+}
+
 // None instantiates an empty Option of the given type.
 func None[T any]() Option[T] {
 	return Option[T]{nil}
