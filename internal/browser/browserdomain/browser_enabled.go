@@ -8,6 +8,10 @@ func (self BrowserEnabled) Enabled() bool {
 	return bool(self)
 }
 
+func (self BrowserEnabled) Disabled() bool {
+	return !self.Enabled()
+}
+
 func (self BrowserEnabled) String() string {
 	return strconv.FormatBool(bool(self))
 }
