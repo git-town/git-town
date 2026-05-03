@@ -5,6 +5,8 @@ package browserdomain
 // If set to anything else, Git Town considers it the browser executable to use.
 type BrowserExecutable string
 
+const NoBrowser = BrowserExecutable("(none)")
+
 func (self BrowserExecutable) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
 	if self == NoBrowser || self == "" {
 		return "", false
