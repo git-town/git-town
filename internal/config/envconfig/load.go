@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -77,8 +76,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
-	gitUserEmail := NewOption(gitdomain.GitUserEmail(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail)))
-	gitUserName := NewOption(gitdomain.GitUserName(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName)))
+	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
+	gitUserName := gitdomain.ParseGitUserNameOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])

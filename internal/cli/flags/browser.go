@@ -23,12 +23,11 @@ func Browser() (AddFunc, ReadBrowserFlagFunc) {
 		if hasNegated && negated {
 			return Some(browserdomain.NoBrowser), nil
 		}
-		has := cmd.Flags().Changed(browserLong)
-		value, err := cmd.Flags().GetString(browserLong)
+		value, err := readStringOptFlag[string](cmd.Flags(), browserLong)
 		if err != nil {
 			return None[browserdomain.BrowserExecutable](), err
 		}
-		return browserdomain.ParseBrowserHas(value, has)
+		return browserdomain.ParseBrowserOpt(value)
 	}
 	return addFlag, readFlag
 }
