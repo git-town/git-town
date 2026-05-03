@@ -169,7 +169,6 @@ Feature: display configuration from Git metadata
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
 
       Branch Lineage:
         main
