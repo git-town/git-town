@@ -11,7 +11,7 @@ Feature: browser is disabled when no TTY is available
     And tool "open" is installed
     When I run "git-town propose" in a non-TTY shell
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
