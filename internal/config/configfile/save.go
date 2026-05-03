@@ -126,7 +126,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted start block=yes
 		if hasBrowserExecutable {
 			result.WriteString(fmt.Sprintf("browser = %q\n", browserExecutable))
-		} else if !hasBrowserEnabled && browserEnabled.Enabled() {
+		} else if hasBrowserEnabled && browserEnabled.Disabled() {
 			result.WriteString(fmt.Sprintf("browser = %q\n", browserdomain.NoBrowser))
 		}
 		if hasDevRemote {

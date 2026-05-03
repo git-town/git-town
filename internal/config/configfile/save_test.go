@@ -155,6 +155,23 @@ upstream = true
 		})
 	})
 
+	t.Run("browser disabled", func(t *testing.T) {
+		t.Parallel()
+		have := configfile.RenderTOML(configdomain.PartialConfig{
+			BrowserEnabled:    Some(browserdomain.BrowserEnabled(false)),
+			BrowserExecutable: None[browserdomain.BrowserExecutable](),
+		})
+		want := `
+#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
+
+# See https://www.git-town.com/configuration-file for details
+
+[hosting]
+browser = "(none)"
+`[1:]
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.PartialConfig{}
