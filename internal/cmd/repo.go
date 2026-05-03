@@ -41,7 +41,7 @@ func repoCommand() *cobra.Command {
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			browser, errBrowser := readBrowserFlag(cmd)
+			browserExecutable, browserEnabled, errBrowser := readBrowserFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errBrowser, errVerbose); err != nil {
 				return err
@@ -49,7 +49,8 @@ func repoCommand() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
-				Browser:           browser,
+				BrowserEnabled:    browserEnabled,
+				BrowserExecutable: browserExecutable,
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
@@ -105,7 +106,8 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, er
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		Browser:              config.Browser,
+		BrowserEnabled:       config.BrowserEnabled,
+		BrowserExecutable:    config.BrowserExecutable,
 		ConfigDir:            repo.ConfigDir,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,

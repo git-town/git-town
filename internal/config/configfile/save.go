@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
@@ -104,7 +105,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	}
 
 	// keep-sorted start
-	browser, hasBrowser := data.BrowserExecutable.Get()
+	browserEnabled, hasBrowserEnabled := data.BrowserEnabled.Get()
+	browserExecutable, hasBrowserExecutable := data.BrowserExecutable.Get()
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGithubConnectorType := data.GithubConnectorType.Get()
@@ -112,7 +114,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
 	// keep-sorted end
 	if cmp.Or(
-		hasBrowser,
+		hasBrowserEnabled,
+		hasBrowserExecutable,
 		hasDevRemote,
 		hasForgeType,
 		hasGithubConnectorType,
@@ -121,8 +124,10 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	) {
 		result.WriteString("\n[hosting]\n")
 		// keep-sorted start block=yes
-		if hasBrowser {
-			result.WriteString(fmt.Sprintf("browser = %q\n", browser))
+		if hasBrowserExecutable {
+			result.WriteString(fmt.Sprintf("browser = %q\n", browserExecutable))
+		} else if hasBrowserEnabled && browserEnabled.Disabled() {
+			result.WriteString(fmt.Sprintf("browser = %q\n", browserdomain.NoBrowser))
 		}
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))

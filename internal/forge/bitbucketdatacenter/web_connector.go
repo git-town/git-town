@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/browser"
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -21,21 +20,17 @@ var (
 // WebConnector provides connectivity to Bitbucket DataCenter through the web browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
-	browser Option[browserdomain.BrowserExecutable]
+	browserEnabled    browserdomain.BrowserEnabled
+	browserExecutable Option[browserdomain.BrowserExecutable]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner, self.browser)
+	browser.Open(self.RepositoryURL(), runner, self.browserExecutable, self.browserEnabled)
 	return nil
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	proposalURL := self.NewProposalURL(data)
-	if browserdomain.BrowserEnabled(self.browser) {
-		browser.Open(proposalURL, data.FrontendRunner, self.browser)
-	} else {
-		fmt.Printf(messages.BrowserOpen, proposalURL)
-	}
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner, self.browserExecutable, self.browserEnabled)
 	return nil
 }
 

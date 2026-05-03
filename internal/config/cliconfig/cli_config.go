@@ -11,7 +11,8 @@ import (
 type NewArgs struct {
 	AutoResolve       Option[configdomain.AutoResolve]
 	AutoSync          Option[configdomain.AutoSync]
-	Browser           Option[browserdomain.BrowserExecutable]
+	BrowserEnabled    Option[browserdomain.BrowserEnabled]
+	BrowserExecutable Option[browserdomain.BrowserExecutable]
 	Detached          Option[configdomain.Detached]
 	DisplayTypes      Option[configdomain.DisplayTypes]
 	DryRun            Option[configdomain.DryRun]
@@ -32,7 +33,8 @@ func New(args NewArgs) configdomain.PartialConfig {
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		BrowserExecutable:           args.Browser,
+		BrowserEnabled:              args.BrowserEnabled,
+		BrowserExecutable:           args.BrowserExecutable,
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		ContributionRegex:           None[configdomain.ContributionRegex](),
 		Detached:                    args.Detached,

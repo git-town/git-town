@@ -1,14 +1,8 @@
-Feature: show the configuration when using an alternative config file
+Feature: display configuration inside a non-TTY environment
 
-  Scenario: all configured in config file with alternative filename
+  Scenario: browser is enabled in non-TTY environment
     Given a Git repo with origin
-    And an uncommitted file ".git-branches.toml" with content:
-      """
-      [branches]
-      main = "main"
-      perennials = [ "public", "staging" ]
-      """
-    When I run "git-town config"
+    When I run "git-town config" in a non-TTY shell
     Then Git Town prints:
       """
       Branches:
@@ -19,7 +13,7 @@ Feature: show the configuration when using an alternative config file
         observed branches: (none)
         observed regex: (not set)
         parked branches: (none)
-        perennial branches: public, staging
+        perennial branches: (none)
         perennial regex: (not set)
         prototype branches: (none)
         unknown branch type: feature
