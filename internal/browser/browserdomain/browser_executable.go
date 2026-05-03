@@ -1,5 +1,7 @@
 package browserdomain
 
+const NoBrowser = BrowserExecutable("(none)")
+
 // BrowserExecutable indicates a custom browser to use.
 // If set to "" or "(none)", browsers are disabled.
 // If set to anything else, Git Town considers it the browser executable to use.
