@@ -95,7 +95,6 @@ Feature: display configuration from Git metadata in detached head state
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: no
 
       Branch Lineage:
         main

@@ -140,7 +140,6 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("push branches", format.Bool(config.NormalConfig.PushBranches.ShouldPush()))
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.ShouldSyncTags()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.ShouldSyncUpstream()))
-	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage, config.NormalConfig.Order))
