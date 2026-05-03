@@ -50,8 +50,11 @@ func readNegatableFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], e
 
 // provides the value of the CLI flag with the given name and optional string-based type
 func readStringOptFlag[T ~string](flags *pflag.FlagSet, name string) (Option[T], error) {
-	value, err := flags.GetString(name)
-	return NewOption(T(value)), err
+	if flags.Changed(name) {
+		value, err := flags.GetString(name)
+		return Some(T(value)), err
+	}
+	return None[T](), nil
 }
 
 // provides the value of the CLI flag with the given name and optional int-based type
