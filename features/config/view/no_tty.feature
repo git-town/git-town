@@ -32,7 +32,7 @@ Feature: display configuration inside a non-TTY environment
         stash uncommitted changes: yes
 
       Hosting:
-        browser: (not set), enabled
+        browser: (not set), disabled
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
