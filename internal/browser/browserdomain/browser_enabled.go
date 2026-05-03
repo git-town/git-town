@@ -11,3 +11,10 @@ func (self BrowserEnabled) Enabled() bool {
 func (self BrowserEnabled) String() string {
 	return strconv.FormatBool(bool(self))
 }
+
+func (self BrowserEnabled) StringHumanized() string {
+	if self.Enabled() {
+		return "enabled"
+	}
+	return "disabled"
+}
