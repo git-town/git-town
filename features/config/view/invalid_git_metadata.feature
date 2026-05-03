@@ -111,5 +111,4 @@ Feature: display invalid Git metadata
         push branches: yes
         sync tags: yes
         sync with upstream: yes
-        auto-resolve phantom conflicts: yes
       """
