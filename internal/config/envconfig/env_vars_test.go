@@ -38,6 +38,7 @@ func TestEnviron(t *testing.T) {
 			must.EqOp(t, "", have)
 		})
 	})
+
 	t.Run("GetFirstNonEmpty", func(t *testing.T) {
 		t.Parallel()
 		t.Run("returns primary when non-empty", func(t *testing.T) {
