@@ -2,14 +2,12 @@ package envconfig
 
 import (
 	"cmp"
-	"os"
 
 	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -71,8 +69,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
-	browserEnv, has := os.LookupEnv(Browser)
-	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserOpt(NewOptionIfExists(browserEnv, has))
+	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserOpt(env.GetOpt(Browser))
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
