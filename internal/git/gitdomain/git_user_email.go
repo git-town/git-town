@@ -19,3 +19,10 @@ func ParseGitUserEmail(value string) Option[GitUserEmail] {
 	}
 	return Some(GitUserEmail(value))
 }
+
+func ParseGitUserEmailOpt(valueOpt Option[string]) Option[GitUserEmail] {
+	if value, has := valueOpt.Get(); has {
+		return Some(GitUserEmail(value))
+	}
+	return None[GitUserEmail]()
+}
