@@ -1,10 +1,7 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v22/internal/browser"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -14,10 +11,6 @@ type BrowserOpen struct {
 }
 
 func (self *BrowserOpen) Run(args shared.RunArgs) error {
-	if args.Config.Value.NormalConfig.BrowserEnabled {
-		browser.Open(self.URL, args.Frontend, args.Config.Value.NormalConfig.BrowserExecutable)
-	} else {
-		fmt.Printf(messages.BrowserOpen, self.URL)
-	}
+	browser.Open(self.URL, args.Frontend, args.Config.Value.NormalConfig.BrowserExecutable, args.Config.Value.NormalConfig.BrowserEnabled)
 	return nil
 }
