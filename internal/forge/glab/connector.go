@@ -24,11 +24,10 @@ var (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	Backend           subshelldomain.Querier
-	BrowserEnabled    browserdomain.BrowserEnabled
-	BrowserExecutable Option[browserdomain.BrowserExecutable]
-	Frontend          subshelldomain.Runner
-	Log               print.Logger
+	Backend        subshelldomain.Querier
+	BrowserEnabled browserdomain.BrowserEnabled
+	Frontend       subshelldomain.Runner
+	Log            print.Logger
 }
 
 // ============================================================================

@@ -28,11 +28,10 @@ var (
 
 // Connector talks to the GitHub API through the "gh" executable.
 type Connector struct {
-	Backend           subshelldomain.Querier
-	BrowserEnabled    browserdomain.BrowserEnabled
-	BrowserExecutable Option[browserdomain.BrowserExecutable]
-	Frontend          subshelldomain.Runner
-	Log               print.Logger
+	Backend        subshelldomain.Querier
+	BrowserEnabled browserdomain.BrowserEnabled
+	Frontend       subshelldomain.Runner
+	Log            print.Logger
 }
 
 // ============================================================================

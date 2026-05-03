@@ -91,11 +91,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
-					Backend:           args.Backend,
-					BrowserEnabled:    args.BrowserEnabled,
-					BrowserExecutable: args.BrowserExecutable,
-					Frontend:          args.Frontend,
-					Log:               args.Log,
+					Backend:        args.Backend,
+					BrowserEnabled: args.BrowserEnabled,
+					Frontend:       args.Frontend,
+					Log:            args.Log,
 				},
 				Cache: forgedomain.APICache{},
 			}
@@ -114,11 +113,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		case forgedomain.GitlabConnectorTypeGlab:
 			connector = &glab.CachedConnector{
 				Connector: glab.Connector{
-					Backend:           args.Backend,
-					BrowserEnabled:    args.BrowserEnabled,
-					BrowserExecutable: args.BrowserExecutable,
-					Frontend:          args.Frontend,
-					Log:               args.Log,
+					Backend:        args.Backend,
+					BrowserEnabled: args.BrowserEnabled,
+					Frontend:       args.Frontend,
+					Log:            args.Log,
 				},
 				Cache: forgedomain.APICache{},
 			}
