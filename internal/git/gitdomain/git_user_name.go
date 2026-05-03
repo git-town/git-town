@@ -19,3 +19,10 @@ func ParseGitUserName(value string) Option[GitUserName] {
 	}
 	return Some(GitUserName(value))
 }
+
+func ParseGitUserNameOpt(valueOpt Option[string]) Option[GitUserName] {
+	if value, has := valueOpt.Get(); has {
+		return Some(GitUserName(value))
+	}
+	return None[GitUserName]()
+}
