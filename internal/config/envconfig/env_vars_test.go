@@ -39,7 +39,7 @@ func TestEnviron(t *testing.T) {
 		})
 	})
 
-	t.Run("GetFirstNonEmpty", func(t *testing.T) {
+	t.Run("GetFirstNonEmptyOpt", func(t *testing.T) {
 		t.Parallel()
 		t.Run("returns primary when non-empty", func(t *testing.T) {
 			t.Parallel()
@@ -47,8 +47,8 @@ func TestEnviron(t *testing.T) {
 				"PRIMARY=value-a",
 				"ALT=value-b",
 			})
-			have := env.GetFirstNonEmpty("PRIMARY", "ALT")
-			must.EqOp(t, "value-a", have)
+			have := env.GetFirstNonEmptyOpt("PRIMARY", "ALT")
+			must.True(t, have.EqualSome("value-a"))
 		})
 		t.Run("skips empty primary and returns first non-empty alternative", func(t *testing.T) {
 			t.Parallel()
@@ -56,8 +56,8 @@ func TestEnviron(t *testing.T) {
 				"PRIMARY=",
 				"ALT=from-alt",
 			})
-			have := env.GetFirstNonEmpty("PRIMARY", "ALT")
-			must.EqOp(t, "from-alt", have)
+			have := env.GetFirstNonEmptyOpt("PRIMARY", "ALT")
+			must.True(t, have.EqualSome("from-alt"))
 		})
 		t.Run("uses first non-empty alternative in order", func(t *testing.T) {
 			t.Parallel()
@@ -67,8 +67,8 @@ func TestEnviron(t *testing.T) {
 				"C=pick-me",
 				"D=after",
 			})
-			have := env.GetFirstNonEmpty("A", "B", "C", "D")
-			must.EqOp(t, "pick-me", have)
+			have := env.GetFirstNonEmptyOpt("A", "B", "C", "D")
+			must.True(t, have.EqualSome("pick-me"))
 		})
 		t.Run("returns empty when all names missing or empty", func(t *testing.T) {
 			t.Parallel()
@@ -76,14 +76,14 @@ func TestEnviron(t *testing.T) {
 				"OTHER=ok",
 				"EMPTY=",
 			})
-			have := env.GetFirstNonEmpty("MISSING", "EMPTY")
-			must.EqOp(t, "", have)
+			have := env.GetFirstNonEmptyOpt("MISSING", "EMPTY")
+			must.True(t, have.IsNone())
 		})
 		t.Run("returns empty when env is empty", func(t *testing.T) {
 			t.Parallel()
 			env := envconfig.NewEnvVars([]string{})
-			have := env.GetFirstNonEmpty("ANY")
-			must.EqOp(t, "", have)
+			have := env.GetFirstNonEmptyOpt("ANY")
+			must.True(t, have.IsNone())
 		})
 	})
 }
