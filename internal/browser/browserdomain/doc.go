@@ -3,7 +3,8 @@ package browserdomain
 
 import . "github.com/git-town/git-town/v22/pkg/prelude"
 
-func ParseBrowserHas(value string, has bool) (Option[BrowserExecutable], Option[BrowserEnabled], error) {
+func ParseBrowserOpt(valueOpt Option[string]) (Option[BrowserExecutable], Option[BrowserEnabled], error) {
+	value, has := valueOpt.Get()
 	if !has {
 		return None[BrowserExecutable](), None[BrowserEnabled](), nil
 	}
