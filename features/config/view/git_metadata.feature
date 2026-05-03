@@ -62,7 +62,7 @@ Feature: display configuration from Git metadata
         stash uncommitted changes: no
 
       Hosting:
-        browser: firefox
+        browser: firefox, enabled
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
@@ -136,7 +136,7 @@ Feature: display configuration from Git metadata
         stash uncommitted changes: yes
 
       Hosting:
-        browser: (not set)
+        browser: (not set), enabled
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

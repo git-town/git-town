@@ -24,6 +24,7 @@ type PartialConfig struct {
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[BranchPrefix]
 	BranchTypeOverrides         BranchTypeOverrides
+	BrowserEnabled              Option[browserdomain.BrowserEnabled]
 	BrowserExecutable           Option[browserdomain.BrowserExecutable]
 	ContributionRegex           Option[ContributionRegex]
 	Detached                    Option[Detached]
@@ -86,6 +87,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketUsername:           other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:                other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:         other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
+		BrowserEnabled:              other.BrowserEnabled.Or(self.BrowserEnabled),
 		BrowserExecutable:           other.BrowserExecutable.Or(self.BrowserExecutable),
 		ContributionRegex:           other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                    other.Detached.Or(self.Detached),

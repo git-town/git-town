@@ -43,6 +43,19 @@ func (self EnvVars) GetFirstNonEmpty(name string, alternatives ...string) Option
 	return None[string]()
 }
 
+// GetOpt provides the content of the environment variable with the first matching given name.
+func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
+	if result, has := self.data[name]; has {
+		return Some(result)
+	}
+	for _, alternative := range alternatives {
+		if result, has := self.data[alternative]; has {
+			return Some(result)
+		}
+	}
+	return None[string]()
+}
+
 func NewEnvVars(entries []string) EnvVars {
 	result := EnvVars{
 		data: map[string]string{},

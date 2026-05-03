@@ -1,9 +1,5 @@
 package browserdomain
 
-import (
-	. "github.com/git-town/git-town/v22/pkg/prelude"
-)
-
 const NoBrowser = BrowserExecutable("(none)")
 
 // BrowserExecutable indicates a custom browser to use.
@@ -20,32 +16,4 @@ func (self BrowserExecutable) Get() (executable string, useBrowser bool) { //nol
 
 func (self BrowserExecutable) String() string {
 	return string(self)
-}
-
-func ParseBrowser(value, _ string) (Option[BrowserExecutable], error) {
-	if value == "" {
-		return None[BrowserExecutable](), nil
-	}
-	return Some(BrowserExecutable(value)), nil
-}
-
-func ParseBrowserOpt(valueOpt Option[string], _ string) (Option[BrowserExecutable], error) {
-	value, has := valueOpt.Get()
-	if !has {
-		return None[BrowserExecutable](), nil
-	}
-	if value == "" || value == NoBrowser.String() {
-		return Some(NoBrowser), nil
-	}
-	return Some(BrowserExecutable(value)), nil
-}
-
-// Indicates whether to use the browser.
-func BrowserEnabled(setting Option[BrowserExecutable]) bool {
-	browser, hasBrowser := setting.Get()
-	if !hasBrowser {
-		return true
-	}
-	_, useBrowser := browser.Get()
-	return useBrowser
 }

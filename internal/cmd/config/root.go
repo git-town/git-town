@@ -40,7 +40,8 @@ func RootCmd() *cobra.Command {
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
 				AutoSync:          None[configdomain.AutoSync](),
-				Browser:           None[browserdomain.BrowserExecutable](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
 				Detached:          None[configdomain.Detached](),
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
@@ -107,7 +108,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.ShouldStash()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("browser", format.OptionalStringerSetting(config.NormalConfig.Browser))
+	print.Entry("browser", format.OptionalStringerSetting(config.NormalConfig.BrowserExecutable)+", "+config.NormalConfig.BrowserEnabled.StringHumanized())
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))

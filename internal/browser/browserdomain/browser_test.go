@@ -10,14 +10,40 @@ import (
 
 func TestUseBrowser(t *testing.T) {
 	t.Parallel()
-	tests := map[Option[browserdomain.BrowserExecutable]]bool{
-		None[browserdomain.BrowserExecutable]():         true,
-		Some(browserdomain.BrowserExecutable("")):       false,
-		Some(browserdomain.BrowserExecutable("(none)")): false,
-		Some(browserdomain.BrowserExecutable("chrome")): true,
-	}
-	for give, want := range tests {
-		have := browserdomain.BrowserEnabled(give)
-		must.EqOp(t, want, have)
-	}
+
+	t.Run("ParseBrowserOpt", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("not configured", func(t *testing.T) {
+			t.Parallel()
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserOpt(None[string]())
+			must.NoError(t, err)
+			must.True(t, haveExecutable.IsNone())
+			must.True(t, haveEnabled.IsNone())
+		})
+
+		t.Run("set to empty string", func(t *testing.T) {
+			t.Parallel()
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserOpt(Some(""))
+			must.NoError(t, err)
+			must.True(t, haveExecutable.IsNone())
+			must.True(t, haveEnabled.EqualSome(browserdomain.BrowserEnabled(false)))
+		})
+
+		t.Run("set to '(none)'", func(t *testing.T) {
+			t.Parallel()
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserOpt(Some("(none)"))
+			must.NoError(t, err)
+			must.True(t, haveExecutable.IsNone())
+			must.True(t, haveEnabled.EqualSome(browserdomain.BrowserEnabled(false)))
+		})
+
+		t.Run("set to an actual browser executable", func(t *testing.T) {
+			t.Parallel()
+			haveExecutable, haveEnabled, err := browserdomain.ParseBrowserOpt(Some("firefox"))
+			must.NoError(t, err)
+			must.True(t, haveExecutable.EqualSome(browserdomain.BrowserExecutable("firefox")))
+			must.True(t, haveEnabled.IsNone())
+		})
+	})
 }

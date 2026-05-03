@@ -82,7 +82,7 @@ Feature: display configuration defined in environment variables
         stash uncommitted changes: no
 
       Hosting:
-        browser: firefox
+        browser: firefox, enabled
         development remote: my-fork
         forge type: gitlab
         origin hostname: codeforge

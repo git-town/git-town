@@ -89,7 +89,7 @@ Feature: display information from config file
         stash uncommitted changes: no
 
       Hosting:
-        browser: chrome
+        browser: chrome, enabled
         development remote: origin
         forge type: github
         origin hostname: github.com

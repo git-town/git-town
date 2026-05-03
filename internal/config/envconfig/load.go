@@ -69,7 +69,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.StrOpt2BoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.StrOpt2BoolOpt[configdomain.AutoSync])
 	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefixOpt)
-	browser, errBrowser := load(env, Browser, browserdomain.ParseBrowserOpt)
+	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserOpt(env.GetOpt(Browser))
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegexOpt)
 	detached, errDetached := load(env, detached, gohacks.StrOpt2BoolOpt[configdomain.Detached])
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypesOpt)
@@ -148,7 +148,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.GetOpt(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		BrowserExecutable:           browser,
+		BrowserEnabled:              browserEnabled,
+		BrowserExecutable:           browserExecutable,
 		ForgejoToken:                forgedomain.ParseForgejoToken(env.GetOpt(forgejoToken)),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,

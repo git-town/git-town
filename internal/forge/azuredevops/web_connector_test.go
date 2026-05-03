@@ -21,7 +21,7 @@ func TestWebConnector(t *testing.T) {
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
-		Browser: None[browserdomain.BrowserExecutable](),
+		BrowserExecutable: None[browserdomain.BrowserExecutable](),
 	}
 
 	t.Run("NewProposalURL", func(t *testing.T) {
