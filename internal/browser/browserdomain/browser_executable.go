@@ -33,7 +33,7 @@ func ParseBrowserHas(value string, has bool) (Option[BrowserExecutable], error) 
 	if !has {
 		return None[BrowserExecutable](), nil
 	}
-	if value == "" {
+	if value == "" || value == NoBrowser.String() {
 		return Some(NoBrowser), nil
 	}
 	return Some(BrowserExecutable(value)), nil
