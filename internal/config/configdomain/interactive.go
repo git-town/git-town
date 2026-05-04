@@ -70,13 +70,6 @@ func NewInteractiveFromEnv(envTerm string, envConfigOpt Option[bool]) Option[Int
 	return None[Interactive]()
 }
 
-func NewInteractiveFromTTY(tty HasTTY) Option[Interactive] {
-	if tty {
-		return None[Interactive]()
-	}
-	return Some(Interactive("no interactive terminal available"))
-}
-
 // ------------------------------------------------------------------------------
 
 type InteractivityError struct {
