@@ -327,6 +327,7 @@ func walkProgram(args []string, data walkData) program.Program {
 					Executable: executable,
 					Args:       callArgs,
 				},
+				&opcodes.ExitToShellIfUncommittedChanges{},
 			)
 		} else {
 			prog.Value.Add(

@@ -614,6 +614,15 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 	return false, nil
 }
 
+func (self *Commands) HasUncommittedFiles(querier subshelldomain.Querier) (bool, error) {
+	output, err := querier.Query("git", "status", "-z", "--untracked-files=all")
+	git diff-index --quiet HEAD
+	if err != nil {
+		return false, err
+	}
+	return len(output) > 0, nil
+}
+
 func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
