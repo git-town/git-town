@@ -1633,13 +1633,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.browserVariable = Some(name)
 	})
 
-	sc.Step(`^tool "format" is installed$`, func(ctx context.Context) {
+	sc.Step(`^tool format is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateMockBinary("format", `
 #!/usr/bin/env bash
+
 echo "new line" >> file
-`)
+`[1:])
 	})
 
 	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {

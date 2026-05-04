@@ -14,10 +14,10 @@ Feature: handle created uncommitted changes
       | branch-2 | local    | commit 2 | file      | content 2    |
       | branch-3 | local    | commit 3 | file      | content 3    |
     And the current branch is "branch-2"
-    And tool "format" is installed
+    And tool format is installed
     When I run "git-town walk --all format"
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
