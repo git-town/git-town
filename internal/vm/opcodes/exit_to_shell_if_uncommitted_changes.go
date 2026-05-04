@@ -1,6 +1,10 @@
 package opcodes
 
-import "github.com/git-town/git-town/v22/internal/vm/shared"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/vm/shared"
+)
 
 type ExitToShellIfUncommittedChanges struct{}
 
@@ -9,8 +13,8 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("1111111111111111111111111111111111111111111", uncommittedFiles)
 	if len(uncommittedFiles) > 0 {
-		// print
 		args.PrependOpcodes(&ExitToShell{})
 	}
 	return nil

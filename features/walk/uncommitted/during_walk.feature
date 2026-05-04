@@ -17,7 +17,7 @@ Feature: handle created uncommitted changes
     And tool "format" is installed
     When I run "git-town walk --all format"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |

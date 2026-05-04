@@ -1633,20 +1633,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.browserVariable = Some(name)
 	})
 
-	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.MockCommand(tool)
-		state.browserVariable = Some(tool)
-	})
-
-	sc.Step(`^tool "format" is installed:$`, func(ctx context.Context) {
+	sc.Step(`^tool "format" is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateMockBinary("format", `
 #!/usr/bin/env bash
 echo "new line" >> file
 `)
+	})
+
+	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.MockCommand(tool)
+		state.browserVariable = Some(tool)
 	})
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
