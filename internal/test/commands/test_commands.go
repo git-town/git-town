@@ -586,18 +586,6 @@ func (self *TestCommands) Tags() []string {
 	return stringslice.NonEmptyLines(output)
 }
 
-// UncommittedFiles provides the names of the files not committed into Git.
-func (self *TestCommands) UncommittedFiles() []string {
-	output := self.MustQuery("git", "status", "-z", "--untracked-files=all")
-	statuses, err := prodgit.ParseGitStatusZ(output)
-	asserts.NoError(err)
-	result := make([]string, 0, len(statuses))
-	for _, status := range statuses {
-		result = append(result, status.Path)
-	}
-	return result
-}
-
 func (self *TestCommands) UnstashOpenFiles() error {
 	return self.Run("git", "stash", "pop")
 }

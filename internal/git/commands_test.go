@@ -1601,6 +1601,15 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("UncommittedFiles", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.CreateFile("f1.txt", "one")
+		runtime.CreateFile("f2.txt", "two")
+		files := asserts.NoError1(runtime.Git.UncommittedFiles(runtime.TestRunner))
+		must.Eq(t, []string{"f1.txt", "f2.txt"}, files)
+	})
+
 	t.Run("lastBranchInRef", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{

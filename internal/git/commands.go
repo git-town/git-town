@@ -614,15 +614,6 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 	return false, nil
 }
 
-func (self *Commands) HasUncommittedFiles(querier subshelldomain.Querier) (bool, error) {
-	output, err := querier.Query("git", "status", "-z", "--untracked-files=all")
-	git diff-index --quiet HEAD
-	if err != nil {
-		return false, err
-	}
-	return len(output) > 0, nil
-}
-
 func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
@@ -878,6 +869,23 @@ func (self *Commands) Stash(runner subshelldomain.Runner) error {
 func (self *Commands) StashSize(querier subshelldomain.Querier) (gitdomain.StashSize, error) {
 	output, err := querier.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
+}
+
+// UncommittedFiles provides the names of the files not committed into Git.
+func (self *Commands) UncommittedFiles(querier subshelldomain.Querier) ([]string, error) {
+	output, err := querier.Query("git", "status", "-z", "--untracked-files=all")
+	if err != nil {
+		return []string{}, err
+	}
+	statuses, err := ParseGitStatusZ(output)
+	if err != nil {
+		return []string{}, err
+	}
+	result := make([]string, 0, len(statuses))
+	for _, status := range statuses {
+		result = append(result, status.Path)
+	}
+	return result, nil
 }
 
 func (self *Commands) UndoLastCommit(runner subshelldomain.Runner) error {

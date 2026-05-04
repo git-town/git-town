@@ -5,11 +5,12 @@ import "github.com/git-town/git-town/v22/internal/vm/shared"
 type ExitToShellIfUncommittedChanges struct{}
 
 func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
-	hasUncommittedFiles, err := args.Git.HasUncommittedFiles(args.Backend)
+	uncommittedFiles, err := args.Git.UncommittedFiles(args.Backend)
 	if err != nil {
 		return err
 	}
-	if hasUncommittedFiles {
+	if len(uncommittedFiles) > 0 {
+		// print
 		args.PrependOpcodes(&ExitToShell{})
 	}
 	return nil

@@ -224,7 +224,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
+		files := asserts.NoError1(devRepo.Git.UncommittedFiles(devRepo.TestRunner))
 		want := []string{filename}
 		if !reflect.DeepEqual(files, want) {
 			return fmt.Errorf("expected %s but found %s", want, files)
@@ -1010,7 +1010,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
+		files := asserts.NoError1(devRepo.Git.UncommittedFiles(devRepo.TestRunner))
 		if len(files) > 0 {
 			return fmt.Errorf("unexpected uncommitted files: %s", files)
 		}
