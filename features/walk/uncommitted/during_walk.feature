@@ -73,7 +73,6 @@ Feature: handle created uncommitted changes
       Please commit your changes or stash them before you switch branches.
       """
 
-  @this
   Scenario: finish the walk by manually committing and continuing
     Given I ran "git add ."
     And I ran "git commit -m changes"
