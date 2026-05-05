@@ -33,7 +33,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, enterAll, err := setup.Enter(setupData, args.ConfigDir)
+		userInput, exit, minimal, enterAll, err := setup.Enter(setupData, args.ConfigDir)
 		if err != nil {
 			if interactivityError, ok := errors.AsType[*configdomain.InteractivityError](err); ok {
 				return config.EmptyValidatedConfig(), true, fmt.Errorf(messages.NoTTYMainBranchMissing, interactivityError) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
@@ -43,7 +43,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		if exit {
 			return config.EmptyValidatedConfig(), exit, nil
 		}
-		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, enterAll, args.Frontend)
+		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, minimal, enterAll, args.Frontend)
 		if err != nil {
 			return config.EmptyValidatedConfig(), exit, err
 		}

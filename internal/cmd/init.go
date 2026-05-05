@@ -94,11 +94,11 @@ Start:
 		goto Start
 	}
 	data.Config.NormalConfig.Interactive = interactive
-	userInput, exit, enterAll, err := setup.Enter(data, repo.ConfigDir)
+	userInput, exit, minimal, enterAll, err := setup.Enter(data, repo.ConfigDir)
 	if err != nil || exit {
 		return err
 	}
-	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, enterAll, repo.Frontend); err != nil {
+	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, minimal, enterAll, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
