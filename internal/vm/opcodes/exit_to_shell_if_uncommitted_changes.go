@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -12,7 +14,7 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 		return err
 	}
 	if len(uncommittedFiles) > 0 {
-		args.PrependOpcodes(&ExitToShell{})
+		return errors.New()
 	}
 	return nil
 }

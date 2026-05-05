@@ -391,8 +391,12 @@ and will be removed in future versions of Git Town.`
 
 	ValueInvalid = `invalid value for %s: %q. Please provide either "yes" or "no"`
 
-	WalkAllOrStack   = "please provide either --all or --stack"
-	WalkDetachedHead = "please check out the branch from which to walk"
-	WalkDone         = "Branch walk done."
-	WalkNoDryRun     = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
+	WalkAllOrStack         = "please provide either --all or --stack"
+	WalkDetachedHead       = "please check out the branch from which to walk"
+	WalkDone               = "Branch walk done."
+	WalkNoDryRun           = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
+	WalkUncommittedChanges = `Uncommitted changes detected.
+To continue after having committed the changes, run "git town continue".
+To continue with the uncommitted changes on the next branch, run "git town skip".
+To abort and go back to where you started, run "git town undo".`
 )
