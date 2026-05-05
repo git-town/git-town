@@ -62,32 +62,16 @@ Feature: handle created uncommitted changes
       """
 
   @this
-  Scenario: skip runs the given script on the next branch
+  Scenario: keep the changes and skip to the next branch
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-1 | git checkout branch-2 |
-      | branch-2 | test                  |
     And Git Town prints the error:
       """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
+      Your local changes to the following files would be overwritten by checkout:
       """
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
-      | branch-3 | test                  |
     And Git Town prints the error:
       """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      """
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-2 |
-    And Git Town prints:
-      """
-      Branch walk done.
+      Please commit your changes or stash them before you switch branches.
       """
