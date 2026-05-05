@@ -58,6 +58,14 @@ Feature: handle created uncommitted changes
       To continue with the uncommitted changes on the next branch, run "git town skip".
       To abort and go back to where you started, run "git town undo".
       """
+    Given I ran "git add ."
+    And I ran "git commit -m changes"
+    When I run "git-town continue"
+    Then Git Town runs no commands
+    And Git Town prints:
+      """
+      Branch walk done.
+      """
 
   Scenario: keep the changes and skip to the next branch
     When I run "git-town skip"
@@ -71,28 +79,4 @@ Feature: handle created uncommitted changes
     And Git Town prints the error:
       """
       Please commit your changes or stash them before you switch branches.
-      """
-
-  Scenario: finish the walk by manually committing and continuing
-    Given I ran "git add ."
-    And I ran "git commit -m changes"
-    When I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
-      | branch-2 | format                |
-    And Git Town prints the error:
-      """
-      Uncommitted changes detected.
-      To continue after having committed the changes, run "git town continue".
-      To continue with the uncommitted changes on the next branch, run "git town skip".
-      To abort and go back to where you started, run "git town undo".
-      """
-    Given I ran "git add ."
-    And I ran "git commit -m changes"
-    When I run "git-town continue"
-    Then Git Town runs no commands
-    And Git Town prints:
-      """
-      Branch walk done.
       """
