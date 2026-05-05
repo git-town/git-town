@@ -17,7 +17,6 @@ Feature: handle created uncommitted changes
     And tool format is installed
     When I run "git-town walk --all format"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
@@ -35,17 +34,18 @@ Feature: handle created uncommitted changes
       To abort and go back to where you started, run "git town undo".
       """
 
-  Scenario: continue re-runs the failed script
+  Scenario: continue without committing the changes
     When I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND |
-      | branch-1 | test    |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
+      Uncommitted changes detected.
+      To continue after having committed the changes, run "git town continue".
+      To continue with the uncommitted changes on the next branch, run "git town skip".
+      To abort and go back to where you started, run "git town undo".
       """
 
+  @this
   Scenario: skip runs the given script on the next branch
     When I run "git-town skip"
     Then Git Town runs the commands
