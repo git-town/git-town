@@ -8,8 +8,8 @@ git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [
 
 The _walk_ command ("walking the branch hierarchy") executes a given command
 for each feature branch.
-It stops if the command exits with an error,
-giving you a chance to investigate and fix the issue.
+It stops if the command exits with an error or if the command produces uncommitted changes,
+giving you a chance to commit the changed files or investigate and fix any issues.
 
 - use [git town continue](continue.md) to retry the command on the current
   branch
