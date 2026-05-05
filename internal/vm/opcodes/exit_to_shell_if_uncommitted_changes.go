@@ -3,6 +3,7 @@ package opcodes
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -14,7 +15,7 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 		return err
 	}
 	if len(uncommittedFiles) > 0 {
-		return errors.New()
+		return errors.New(messages.WalkUncommittedChanges)
 	}
 	return nil
 }

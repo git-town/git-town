@@ -29,9 +29,10 @@ Feature: handle created uncommitted changes
       """
     And Git Town prints the error:
       """
+      Uncommitted changes detected.
       To continue after having committed the changes, run "git town continue".
       To continue with the uncommitted changes on the next branch, run "git town skip".
-      To go back to where you started, run "git town undo".
+      To abort and go back to where you started, run "git town undo".
       """
 
   Scenario: continue re-runs the failed script
