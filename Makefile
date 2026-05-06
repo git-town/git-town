@@ -293,7 +293,7 @@ deadcode: ${RTA}
 		"$(DEADCODE) github.com/git-town/git-town/tools/stats_release" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/structs_sorted" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/lint_steps" \
-		"$(DEADCODE) -test github.com/git-town/git-town/v22 \
+		"$(DEADCODE) -test github.com/git-town/git-town/v23 \
 			| grep -v BranchExists \
 			| grep -v 'Create$$' \
 			| grep -v CreateFile \

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // BranchInfos contains the BranchInfos for all branches in a repo.

@@ -18,7 +18,7 @@ This guide is for maintainers who make releases of Git Town.
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
     - update `github.com/git-town/git-town/v23/` everywhere in this repo
-    - update `github.com/git-town/git-town/v22` (without trailing slash)
+    - update `github.com/git-town/git-town/v23` (without trailing slash)
   - update the changelog with links to the website
 - ship the branch
 - `git sync --all && git checkout main && git tag v23.0.0 && git push --tags`
