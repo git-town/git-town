@@ -59,6 +59,7 @@ func All() []shared.Opcode {
 		&ConflictResolve{},
 		&ConnectorProposalMerge{},
 		&ExecuteShellCommand{},
+		&ExitToShellIfUncommittedChanges{},
 		&ExitToShell{},
 		&FetchUpstream{},
 		&FileRemove{},

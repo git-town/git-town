@@ -871,6 +871,23 @@ func (self *Commands) StashSize(querier subshelldomain.Querier) (gitdomain.Stash
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
+// UncommittedFiles provides the names of the files not committed into Git.
+func (self *Commands) UncommittedFiles(querier subshelldomain.Querier) ([]string, error) {
+	output, err := querier.Query("git", "status", "-z", "--untracked-files=all")
+	if err != nil {
+		return []string{}, err
+	}
+	statuses, err := ParseGitStatusZ(output)
+	if err != nil {
+		return []string{}, err
+	}
+	result := make([]string, 0, len(statuses))
+	for _, status := range statuses {
+		result = append(result, status.Path)
+	}
+	return result, nil
+}
+
 func (self *Commands) UndoLastCommit(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state/runlog"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -85,7 +86,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	message := runErr.Error()
-	message += messages.UndoContinueGuidance
+	if errors.Is(runErr, opcodes.ErrWalkUncommittedChanges) {
+		message += messages.WalkUncommittedChangesGuidance
+	} else {
+		message += messages.UndoContinueGuidance
+	}
 	if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
 		if unfinishedDetails.CanSkip {
 			message += messages.ContinueSkipGuidance

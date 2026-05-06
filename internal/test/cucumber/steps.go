@@ -117,6 +117,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFolder(name)
 	})
 
+	sc.Step(`^a formatter with name "format" is installed$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateMockBinary("format", `
+#!/usr/bin/env bash
+
+# this executable creates an uncommitted change in the repo
+
+echo "new line" >> file
+`[1:])
+	})
+
 	sc.Step(`^a Git repo with origin$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
@@ -224,7 +236,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
+		files := asserts.NoError1(devRepo.Git.UncommittedFiles(devRepo.TestRunner))
 		want := []string{filename}
 		if !reflect.DeepEqual(files, want) {
 			return fmt.Errorf("expected %s but found %s", want, files)
@@ -1010,7 +1022,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
+		files := asserts.NoError1(devRepo.Git.UncommittedFiles(devRepo.TestRunner))
 		if len(files) > 0 {
 			return fmt.Errorf("unexpected uncommitted files: %s", files)
 		}
