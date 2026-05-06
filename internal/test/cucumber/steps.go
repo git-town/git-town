@@ -117,6 +117,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFolder(name)
 	})
 
+	sc.Step(`^a formatter with name "format" is installed$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateMockBinary("format", `
+#!/usr/bin/env bash
+
+# this executable creates an uncommitted change in the repo
+
+echo "new line" >> file
+`[1:])
+	})
+
 	sc.Step(`^a Git repo with origin$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
@@ -1624,18 +1636,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("mismatching lineage")
 		}
 		return nil
-	})
-
-	sc.Step(`^a formatter with name "format" is installed$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateMockBinary("format", `
-#!/usr/bin/env bash
-
-# this executable creates an uncommitted change in the repo
-
-echo "new line" >> file
-`[1:])
 	})
 
 	sc.Step(`^tool "([^"]*)" is broken$`, func(ctx context.Context, name string) {

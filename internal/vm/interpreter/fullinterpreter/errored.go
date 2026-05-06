@@ -86,7 +86,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	message := runErr.Error()
-	if errors.Is(runErr, opcodes.WalkUncommittedChangesError) {
+	if errors.Is(runErr, opcodes.ErrWalkUncommittedChanges) {
 		message += messages.WalkUncommittedChangesGuidance
 	} else {
 		message += messages.UndoContinueGuidance

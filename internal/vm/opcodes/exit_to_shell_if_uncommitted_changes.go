@@ -15,11 +15,11 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 		return err
 	}
 	if len(uncommittedFiles) > 0 {
-		return WalkUncommittedChangesError
+		return ErrWalkUncommittedChanges
 	}
 	return nil
 }
 
-// WalkUncommittedChangesError indicates uncommitted changes in the repo
+// ErrWalkUncommittedChanges indicates uncommitted changes in the repo
 // that the user needs to commit before the Git Town command can continue.
-var WalkUncommittedChangesError = errors.New(messages.WalkUncommittedChanges)
+var ErrWalkUncommittedChanges = errors.New(messages.WalkUncommittedChanges)
