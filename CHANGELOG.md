@@ -4,7 +4,7 @@
 
 #### BREAKING CHANGES
 
-- The [up]() and [down]() commands are now switched. This aligns them better with Git Town's branch model and how it gets displayed ([#6085](https://github.com/git-town/git-town/issues/6085)).
+- The [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands are now switched. `up` now moves to the parent branch, `down` to the child branch. This aligns them with how Git Town displays branch hierarchies ([#6085](https://github.com/git-town/git-town/issues/6085)).
 - When Git Town is run by other programs, for example AI agents, it now automatically disables all interactive features and doesn't open browser windows ([#6123](https://github.com/git-town/git-town/issues/6123)).
 - The [walk](https://www.git-town.com/commands/walk.html) command now exits to the shell if the executed command produced uncommitted changes. This gives you a chance to commit them manually before continuing ([#6171](https://github.com/git-town/git-town/issues/6171)).
 - When evaluating configuration data, Git Town now uses this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
