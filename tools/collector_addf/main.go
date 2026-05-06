@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v22/pkg/asserts"
+	"github.com/git-town/git-town/v23/pkg/asserts"
 	"golang.org/x/tools/go/packages"
 )
 

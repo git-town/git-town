@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v22/internal/vm/shared"
+	"github.com/git-town/git-town/v23/internal/vm/shared"
 )
 
 // CherryPickContinue continues a suspended cherry-pick operation.

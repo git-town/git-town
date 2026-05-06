@@ -3,9 +3,9 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/config"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/config"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

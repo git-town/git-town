@@ -1,11 +1,11 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // PartialConfig contains configuration data as it is stored in one of the configuration sources for Git Town:

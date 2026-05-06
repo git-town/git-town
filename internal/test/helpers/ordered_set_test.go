@@ -3,8 +3,8 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/test/helpers"
 	"github.com/shoenig/test/must"
 )
 

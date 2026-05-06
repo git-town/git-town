@@ -3,9 +3,9 @@ package mockproposals
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 type MockProposals []forgedomain.ProposalData

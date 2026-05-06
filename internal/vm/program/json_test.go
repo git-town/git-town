@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/vm/opcodes"
-	"github.com/git-town/git-town/v22/internal/vm/program"
+	"github.com/git-town/git-town/v23/internal/vm/opcodes"
+	"github.com/git-town/git-town/v23/internal/vm/program"
 	"github.com/shoenig/test/must"
 )
 

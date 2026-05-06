@@ -9,8 +9,8 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/cmd"
+	"github.com/git-town/git-town/v23/internal/cli/print"
+	"github.com/git-town/git-town/v23/internal/cmd"
 )
 
 func main() {

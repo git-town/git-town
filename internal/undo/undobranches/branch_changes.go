@@ -3,13 +3,13 @@ package undobranches
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v22/internal/config"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/undo/undodomain"
-	"github.com/git-town/git-town/v22/internal/vm/opcodes"
-	"github.com/git-town/git-town/v22/internal/vm/program"
+	"github.com/git-town/git-town/v23/internal/config"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/internal/undo/undodomain"
+	"github.com/git-town/git-town/v23/internal/vm/opcodes"
+	"github.com/git-town/git-town/v23/internal/vm/program"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.

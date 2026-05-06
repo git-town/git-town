@@ -6,12 +6,12 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/test/datatable"
-	"github.com/git-town/git-town/v22/internal/test/fixture"
-	"github.com/git-town/git-town/v22/internal/test/helpers"
-	"github.com/git-town/git-town/v22/internal/test/subshell"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/test/datatable"
+	"github.com/git-town/git-town/v23/internal/test/fixture"
+	"github.com/git-town/git-town/v23/internal/test/helpers"
+	"github.com/git-town/git-town/v23/internal/test/subshell"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.

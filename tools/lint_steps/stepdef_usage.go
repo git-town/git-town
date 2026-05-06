@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/git-town/git-town/v22/pkg/asserts"
-	"github.com/git-town/git-town/v22/pkg/set"
+	"github.com/git-town/git-town/v23/pkg/asserts"
+	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 var unusedWhitelist = []string{
