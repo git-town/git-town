@@ -54,8 +54,8 @@ linters:
       allow:
         - error
         - stdlib
-        - github.com/git-town/git-town/v22/internal/git.FrontendRunner
-        - github.com/git-town/git-town/v22/internal/git.BackendRunner
+        - github.com/git-town/git-town/v23/internal/git.FrontendRunner
+        - github.com/git-town/git-town/v23/internal/git.BackendRunner
     tagliatelle:
       case:
         rules:
@@ -87,7 +87,7 @@ linters:
         text: prevent symlink TOCTOU traversal
       - linters:
           - ireturn
-        text: github.com/git-town/git-town/v22/internal/(hosting/hostingdomain.Connector|hosting.Connector)
+        text: github.com/git-town/git-town/v23/internal/(hosting/hostingdomain.Connector|hosting.Connector)
       - linters:
           - ireturn
         path: internal/gohacks/cache/cache.go

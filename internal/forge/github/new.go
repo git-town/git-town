@@ -7,16 +7,16 @@ import (
 	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
 
-	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/git/giturl"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/subshell"
-	"github.com/git-town/git-town/v22/internal/test/mockproposals"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v23/internal/cli/print"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/internal/subshell"
+	"github.com/git-town/git-town/v23/internal/test/mockproposals"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // Detect indicates whether the current repository is hosted on a GitHub server.

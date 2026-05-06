@@ -1,5 +1,36 @@
 # Git Town Changelog
 
+## 23.0.0 (2026-05-06)
+
+#### BREAKING CHANGES
+
+- The [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands have swapped behavior. `up` now switches to the parent branch, `down` to the child branch. This matches how Git Town visualizes branch hierarchies ([#6085](https://github.com/git-town/git-town/issues/6085)).
+- When Git Town now detects when it runs in a non-interactive environment, for example when it is executed by AI agents, and automatically disables all interactive dialogs and browser launches ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- The [walk](https://www.git-town.com/commands/walk.html) command now stops and returns control to the shell when the executed command leaves uncommitted changes behind. This lets you review and commit changes before proceeding ([#6171](https://github.com/git-town/git-town/issues/6171)).
+- Configuration precedence has changed. Git Town now resolves configuration in this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
+  1. CLI flags
+  2. Git metadata
+  3. configuration file
+  4. environment variables
+  5. system-specific settings
+  6. default values
+
+#### New Features
+
+- Added a new [interactive](https://www.git-town.com/preferences/interactive.html) setting to control how Git Town handles missing input.
+  - When enabled, Git Town prompts for missing information interactively.
+  - When disabled, Git Town exits with an error explaining which CLI flags to provide instead ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- Added `--browser` and `--no-browser` CLI flags to override the configured [browser](https://www.git-town.com/preferences/browser.html) per invocation ([#6123](https://github.com/git-town/git-town/pull/6123)).
+- [Proposal breadcrumbs](https://www.git-town.com/how-to/proposal-breadcrumb.html) now use forge-specific formatting ([#6144](https://github.com/git-town/git-town/pull/6144)).
+
+#### Bug Fixes
+
+- Git Town now only fetches proposal data for branches that are part of the current operation ([#6080](https://github.com/git-town/git-town/issues/6080), [#6092](https://github.com/git-town/git-town/issues/6092)).
+
+#### Contributors
+
+Big thanks to @WhosNickDoglio, @alexgeek, @chickenandpork, @endigma, @kevgo, @mrmarufpro, @pcfreak30, @sheldonhull, @stephenwade, @tippfehlr, @wkjung, @yaadata for contributing code, ideas, and feedback to 65 shipped pull requests and 11 resolved issues!
+
 ## 22.7.1 (20226-03-26)
 
 #### Bug Fixes

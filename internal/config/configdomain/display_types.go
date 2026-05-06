@@ -7,8 +7,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/git-town/git-town/v22/internal/gohacks/slice"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // DisplayTypes specifies whether to display branch types in the CLI output.

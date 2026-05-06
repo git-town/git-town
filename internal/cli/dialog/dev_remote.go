@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v22/internal/config"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v23/internal/config"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/messages"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (

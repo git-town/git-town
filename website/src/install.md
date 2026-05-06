@@ -117,7 +117,7 @@ If you have the [Go compiler](https://go.dev) installed,
 you can compile the latest version of Git Town from source by running:
 
 ```sh
-go install github.com/git-town/git-town/v22@latest
+go install github.com/git-town/git-town/v23@latest
 ```
 
 ## New releases

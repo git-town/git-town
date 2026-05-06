@@ -1,10 +1,10 @@
 package gh
 
 import (
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // type checks

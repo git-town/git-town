@@ -1,9 +1,9 @@
-module github.com/git-town/git-town/v22/tools/generate_json_schema
+module github.com/git-town/git-town/v23/tools/generate_json_schema
 
 go 1.26.1
 
 require (
-	github.com/git-town/git-town/v22 v22.4.0
+	github.com/git-town/git-town/v23 v23.0.0
 	github.com/invopop/jsonschema v0.13.0
 	github.com/shoenig/test v1.12.2
 )

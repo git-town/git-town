@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v23/internal/messages"
 )
 
 // ConfigScope defines the type of Git configuration used.

@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
-	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/git/giturl"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/pkg/colors"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/cli/print"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/pkg/colors"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // type checks

@@ -3,8 +3,8 @@ package configdomain
 import (
 	"regexp"
 
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // VerifiedRegex is a regular expression in the Git Town configuration

@@ -1,8 +1,8 @@
 package gitlab
 
 import (
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 

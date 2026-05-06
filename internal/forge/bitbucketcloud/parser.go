@@ -4,9 +4,9 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/messages"
 )
 
 func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {

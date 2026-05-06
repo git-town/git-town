@@ -1,13 +1,13 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v22/internal/config"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/vm/opcodes"
-	"github.com/git-town/git-town/v22/internal/vm/program"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/git-town/git-town/v22/pkg/set"
+	"github.com/git-town/git-town/v23/internal/config"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/vm/opcodes"
+	"github.com/git-town/git-town/v23/internal/vm/program"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 // BranchProgram syncs the given branch.

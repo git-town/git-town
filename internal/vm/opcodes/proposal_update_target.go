@@ -3,10 +3,10 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/vm/shared"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/internal/vm/shared"
 )
 
 // ProposalUpdateTarget updates the target of the proposal with the given number at the forge.

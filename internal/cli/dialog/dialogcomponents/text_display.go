@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcolors"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 )
 
 func TextDisplay(title, text string, inputs Inputs, interactive configdomain.Interactive, dialogName string) (dialogdomain.Exit, error) {

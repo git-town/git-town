@@ -5,7 +5,7 @@ package systemconfig
 import (
 	"os"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 )
 
 func canOpenTTY() configdomain.HasTTY {

@@ -3,8 +3,8 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/cli/flags"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/cli/flags"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
