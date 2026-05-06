@@ -12,7 +12,7 @@ Feature: handle created uncommitted changes
       | branch-1 | local    | commit 1 | file      | content 1    |
       | branch-2 | local    | commit 2 | file      | content 2    |
     And the current branch is "branch-2"
-    And tool format is installed
+    And a formatter with name "format" is installed
     When I run "git-town walk --all format"
 
   Scenario: result

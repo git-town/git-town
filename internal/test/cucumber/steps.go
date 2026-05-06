@@ -1626,7 +1626,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^tool format is installed$`, func(ctx context.Context) {
+	sc.Step(`^a formatter with name "format" is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateMockBinary("format", `
