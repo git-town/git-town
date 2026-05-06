@@ -9,7 +9,7 @@
 
 #### New Features
 
-- The new [interactive`
+- The new [interactive](https://www.git-town.com/preferences/interactive.html) setting allows you to configure how Git Town asks for missing information. When enabled, Git Town asks for missing information via interactive dialogs. When disabled, Git Town exits with an error message describing how to provide the missing information via CLI flags ([#6123](https://github.com/git-town/git-town/issues/6123)).
 
 #### Bug Fixes
 
