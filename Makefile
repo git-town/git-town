@@ -2,7 +2,7 @@ RTA_VERSION = 0.33.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "22.7.1"
+RELEASE_VERSION := "23.0.0"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
