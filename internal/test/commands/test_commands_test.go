@@ -928,25 +928,15 @@ A  file2.txt`[1:]
 		must.Eq(t, []string{"v1.0.0", "v2.0.0"}, tags)
 	})
 
-	t.Run("UncommittedFiles", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.CreateFile("f1.txt", "one")
-		runtime.CreateFile("f2.txt", "two")
-		files := runtime.UncommittedFiles()
-		must.Eq(t, []string{"f1.txt", "f2.txt"}, files)
-	})
-
 	t.Run("UnstashOpenFiles", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateFile("file1.txt", "content")
 		runtime.StashOpenFiles()
-		uncommitted := runtime.UncommittedFiles()
+		uncommitted := asserts.NoError1(runtime.Git.UncommittedFiles(runtime.TestRunner))
 		must.Len(t, 0, uncommitted)
-		err := runtime.UnstashOpenFiles()
-		must.NoError(t, err)
-		files := runtime.UncommittedFiles()
+		asserts.NoError(runtime.UnstashOpenFiles())
+		files := asserts.NoError1(runtime.Git.UncommittedFiles(runtime.TestRunner))
 		must.Eq(t, []string{"file1.txt"}, files)
 	})
 }

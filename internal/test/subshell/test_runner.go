@@ -49,23 +49,31 @@ type TestRunner struct {
 	usesBinDir bool
 }
 
+// CreateMockBinary creates an executable with the given name and content in ms.binDir.
+func (self *TestRunner) CreateMockBinary(name string, content string) {
+	self.createBinDir()
+	binaryPath := filepath.Join(self.BinDir, name)
+	//nolint:gosec // intentionally creating an executable here
+	asserts.NoError(os.WriteFile(binaryPath, []byte(content), 0o744))
+}
+
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (self *TestRunner) MockBrokenCommand(name string) {
 	content := "#!/usr/bin/env bash\n\nexit 1"
-	self.createMockBinary(name, content)
+	self.CreateMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
 func (self *TestRunner) MockCommand(name string) {
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	self.createMockBinary(name, content)
+	self.CreateMockBinary(name, content)
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
 func (self *TestRunner) MockCommitMessage(message string) {
 	editorPath := "git_editor"
 	self.gitEditor = Some(editorPath)
-	self.createMockBinary(editorPath, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+	self.CreateMockBinary(editorPath, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
@@ -73,7 +81,7 @@ func (self *TestRunner) MockGit(version string) {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
-		self.createMockBinary("git.cmd", content)
+		self.CreateMockBinary("git.cmd", content)
 		return
 	}
 	// create Unix binary
@@ -86,13 +94,13 @@ fi`
 	gitPath, err := exec.LookPath("git")
 	asserts.NoError(err)
 	content := fmt.Sprintf(mockGit, version, gitPath)
-	self.createMockBinary("git", content)
+	self.CreateMockBinary("git", content)
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (self *TestRunner) MockNoCommandsInstalled() {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	self.createMockBinary("which", content)
+	self.CreateMockBinary("which", content)
 }
 
 // MustQuery provides the output of the given command with the given arguments.
@@ -289,14 +297,6 @@ func (self *TestRunner) createBinDir() {
 	}
 	asserts.NoError(os.Mkdir(self.BinDir, 0o700))
 	self.usesBinDir = true
-}
-
-// createMockBinary creates an executable with the given name and content in ms.binDir.
-func (self *TestRunner) createMockBinary(name string, content string) {
-	self.createBinDir()
-	binaryPath := filepath.Join(self.BinDir, name)
-	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(binaryPath, []byte(content), 0o744))
 }
 
 // Options defines optional arguments for ShellRunner.RunWith().
