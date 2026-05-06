@@ -4,16 +4,16 @@
 
 #### BREAKING CHANGES
 
-- The [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands are now switched. `up` now moves to the parent branch, `down` to the child branch. This aligns them with how Git Town displays branch hierarchies ([#6085](https://github.com/git-town/git-town/issues/6085)).
-- When Git Town is run by other programs, for example AI agents, it now automatically disables all interactive features and doesn't open browser windows ([#6123](https://github.com/git-town/git-town/issues/6123)).
-- The [walk](https://www.git-town.com/commands/walk.html) command now exits to the shell if the executed command produced uncommitted changes. This gives you a chance to commit them manually before continuing ([#6171](https://github.com/git-town/git-town/issues/6171)).
-- When evaluating configuration data, Git Town now uses this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
-  - CLI flags
-  - Git metadata
-  - configuration file
-  - environment variables
-  - system-specific settings
-  - default values
+- The [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands have swapped behavior. `up` now switches to the parent branch, `down` to the child branch. This matches how Git Town visualizes branch hierarchies ([#6085](https://github.com/git-town/git-town/issues/6085)).
+- When Git Town now detects when it runs in a non-interactive environment, for example when it is executed by AI agents, and automatically disables all interactive dialogs and browser launches ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- The [walk](https://www.git-town.com/commands/walk.html) command now stops and returns control to the shell when the executed command leaves uncommitted changes behind. This lets you review and commit changes before proceeding ([#6171](https://github.com/git-town/git-town/issues/6171)).
+- Configuration precedence has changed. Git Town now resolves configuration in this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
+  1. CLI flags
+  2. Git metadata
+  2. configuration file
+  2. environment variables
+  2. system-specific settings
+  2. default values
 
 #### New Features
 
