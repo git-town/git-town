@@ -17,13 +17,15 @@
 
 #### New Features
 
-- The new [interactive](https://www.git-town.com/preferences/interactive.html) setting allows you to configure how Git Town asks for missing information. When enabled, Git Town asks for missing information via interactive dialogs. When disabled, Git Town exits with an error message describing how to provide the missing information via CLI flags ([#6123](https://github.com/git-town/git-town/issues/6123)).
-- Git Town now has `--browser` and `--no-browser` CLI flags that allow you to override the existing [browser](https://www.git-town.com/preferences/browser.html) configuration setting for each command ([#6123](https://github.com/git-town/git-town/pull/6123)).
-- Breadcrumbs in proposals now use a forge-specific format ([#6144](https://github.com/git-town/git-town/pull/6144)).
+- Added a new [interactive](https://www.git-town.com/preferences/interactive.html) setting to control how Git Town handles missing input.
+  - When enabled, Git Town prompts for missing information interactively.
+  - When disabled, Git Town exits with an error explaining which CLI flags to provide instead ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- Added `--browser` and `--no-browser` CLI flags to override the configured [browser](https://www.git-town.com/preferences/browser.html) per invocation ([#6123](https://github.com/git-town/git-town/pull/6123)).
+- [Proposal breadcrumbs](https://www.git-town.com/how-to/proposal-breadcrumb.html) now use forge-specific formatting ([#6144](https://github.com/git-town/git-town/pull/6144)).
 
 #### Bug Fixes
 
-- Git Town now only looks up proposals for branches that actually get worked on ([#6080](https://github.com/git-town/git-town/issues/6080), [#6092](https://github.com/git-town/git-town/issues/6092)).
+- Git Town now only fetches proposal data for branches that are part of the current operation ([#6080](https://github.com/git-town/git-town/issues/6080), [#6092](https://github.com/git-town/git-town/issues/6092)).
 
 #### Contributors
 
