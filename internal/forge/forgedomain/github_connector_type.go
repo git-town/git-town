@@ -3,8 +3,8 @@ package forgedomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/messages"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/messages"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // GithubConnectorType describes the various ways in which Git Town can connect to the GitHub API.

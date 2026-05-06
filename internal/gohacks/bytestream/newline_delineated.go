@@ -3,7 +3,7 @@ package bytestream
 import (
 	"bytes"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 )
 
 // NewlineDelineated is raw Git output that is delineated by newlines.

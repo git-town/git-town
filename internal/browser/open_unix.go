@@ -3,8 +3,8 @@
 package browser
 
 import (
-	"github.com/git-town/git-town/v22/internal/filesystem"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/filesystem"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // defaultBrowserCommand provides the console command to open the default browser on Unix.

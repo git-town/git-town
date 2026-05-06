@@ -1,10 +1,10 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/undo/undodomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/git-town/git-town/v22/pkg/set"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/undo/undodomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 // BranchSpan represents changes of a branch over time.

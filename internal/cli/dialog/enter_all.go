@@ -1,10 +1,10 @@
 package dialog
 
 import (
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 )
 
 const (

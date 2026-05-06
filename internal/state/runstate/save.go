@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v23/internal/messages"
 )
 
 // Save stores the given run state for the given Git repo to disk.

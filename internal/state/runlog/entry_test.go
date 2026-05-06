@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/state/runlog"
-	"github.com/git-town/git-town/v22/pkg/asserts"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/state/runlog"
+	"github.com/git-town/git-town/v23/pkg/asserts"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

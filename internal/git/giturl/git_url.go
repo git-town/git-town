@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // Parts contains recognized parts of a Git URL.

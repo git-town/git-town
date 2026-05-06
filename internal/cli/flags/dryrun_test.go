@@ -3,9 +3,9 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/cli/flags"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/cli/flags"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )

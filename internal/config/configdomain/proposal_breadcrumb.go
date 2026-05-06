@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v22/internal/gohacks"
-	"github.com/git-town/git-town/v22/internal/messages"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/messages"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // ProposalBreadcrumb indicates whether and how proposals should display the stack lineage of the respective branch.

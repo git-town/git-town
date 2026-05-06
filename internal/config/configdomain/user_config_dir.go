@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 )
 
 // UserConfigDir is the directory that contains the user-specific configuration on this machine,

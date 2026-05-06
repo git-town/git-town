@@ -1,14 +1,14 @@
 package bitbucketcloud
 
 import (
-	"github.com/git-town/git-town/v22/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/giturl"
-	"github.com/git-town/git-town/v22/internal/subshell"
-	"github.com/git-town/git-town/v22/internal/test/mockproposals"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v23/internal/cli/print"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/subshell"
+	"github.com/git-town/git-town/v23/internal/test/mockproposals"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
 )
 

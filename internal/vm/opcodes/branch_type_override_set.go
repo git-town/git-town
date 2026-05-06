@@ -3,12 +3,12 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/gitconfig"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/vm/shared"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/config/gitconfig"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/internal/vm/shared"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // BranchTypeOverrideSet registers the branch with the given name as a contribution branch in the Git config.

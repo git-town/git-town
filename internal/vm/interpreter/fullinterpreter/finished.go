@@ -3,18 +3,18 @@ package fullinterpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/print"
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/gitconfig"
-	"github.com/git-town/git-town/v22/internal/git"
-	"github.com/git-town/git-town/v22/internal/gohacks"
-	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/state/runlog"
-	"github.com/git-town/git-town/v22/internal/state/runstate"
-	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v23/internal/cli/print"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/config/gitconfig"
+	"github.com/git-town/git-town/v23/internal/git"
+	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v23/internal/state/runlog"
+	"github.com/git-town/git-town/v23/internal/state/runstate"
+	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 type finishedArgs struct {

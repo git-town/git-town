@@ -3,7 +3,7 @@ package filesystem
 import (
 	"os/exec"
 
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // FirstExistingExecutable provides the first existing executable from the given list of executable names.

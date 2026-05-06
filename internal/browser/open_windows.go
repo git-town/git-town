@@ -2,7 +2,7 @@
 
 package browser
 
-import . "github.com/git-town/git-town/v22/pkg/prelude"
+import . "github.com/git-town/git-town/v23/pkg/prelude"
 
 // defaultBrowserCommand provides the console command to open the default browser on Windows.
 func defaultBrowserCommand() Option[string] {

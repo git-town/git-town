@@ -2,7 +2,7 @@ RTA_VERSION = 0.33.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "22.7.1"
+RELEASE_VERSION := "23.0.0"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
@@ -54,7 +54,7 @@ cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v22/internal/cmd.version=-dev -X github.com/git-town/git-town/v22/internal/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v23/internal/cmd.version=-dev -X github.com/git-town/git-town/v23/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
@@ -172,7 +172,7 @@ alphavet: ${RTA}
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 fix-optioncompare-in-tests:
-	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v22/...
+	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v23/...
 
 keep-sorted: ${RTA}
 	@$(RTA) --install ripgrep
@@ -200,11 +200,11 @@ lint-print-config:
 	@(cd tools/print_config_exhaustive && go build) && ./tools/print_config_exhaustive/print_config_exhaustive
 
 lint-optioncompare:
-	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v22/...
+	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v23/...
 
 lint-smoke: ${RTA}  # runs only the essential linters
 	@$(EXHAUSTRUCT) -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
-# @$(RTA) ireturn --reject="github.com/git-town/git-town/v22/pkg/prelude.Option" github.com/git-town/git-town/...
+# @$(RTA) ireturn --reject="github.com/git-town/git-town/v23/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -293,7 +293,7 @@ deadcode: ${RTA}
 		"$(DEADCODE) github.com/git-town/git-town/tools/stats_release" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/structs_sorted" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/lint_steps" \
-		"$(DEADCODE) -test github.com/git-town/git-town/v22 \
+		"$(DEADCODE) -test github.com/git-town/git-town/v23 \
 			| grep -v BranchExists \
 			| grep -v 'Create$$' \
 			| grep -v CreateFile \

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".

@@ -38,3 +38,12 @@ Configuration data exists on multiple levels:
    ```bash
    GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config
    ```
+
+Git Town evaluates configuration data in this order:
+
+1. CLI flags
+2. Git metadata
+3. configuration file
+4. environment variables
+5. system-specific settings
+6. default settings

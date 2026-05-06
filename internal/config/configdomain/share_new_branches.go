@@ -3,8 +3,8 @@ package configdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/gohacks"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // ShareNewBranches describes how newly created branches should be shared with the rest of the team.

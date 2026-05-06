@@ -3,7 +3,7 @@ package runstate
 import (
 	"path/filepath"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 )
 
 // FilePath is the path to the runstate file.

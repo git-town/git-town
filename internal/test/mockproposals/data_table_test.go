@@ -3,9 +3,9 @@ package mockproposals_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/test/mockproposals"
+	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/test/mockproposals"
 	"github.com/shoenig/test/must"
 )
 
