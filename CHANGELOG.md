@@ -25,6 +25,10 @@
 
 - Git Town now only looks up proposals for branches that actually get worked on ([#6080](https://github.com/git-town/git-town/issues/6080), [#6092](https://github.com/git-town/git-town/issues/6092)).
 
+#### Contributors
+
+Big thanks to @WhosNickDoglio, @alexgeek, @chickenandpork, @endigma, @kevgo, @mrmarufpro, @pcfreak30, @sheldonhull, @stephenwade, @tippfehlr, @wkjung, @yaadata for contributing code, ideas, and feedback to 65 shipped pull requests and 11 resolved issues!
+
 ## 22.7.1 (20226-03-26)
 
 #### Bug Fixes
