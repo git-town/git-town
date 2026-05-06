@@ -6,12 +6,22 @@
 
 - When Git Town is run by other programs, for example AI agents, it now automatically disables all interactive features and doesn't open browser windows ([#6123](https://github.com/git-town/git-town/issues/6123)).
 - The [walk](https://www.git-town.com/commands/walk.html) command now exits to the shell if the executed command produced uncommitted changes. This gives you a chance to commit them manually before continuing ([#6171](https://github.com/git-town/git-town/issues/6171)).
+- When evaluating configuration data, Git Town now uses this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
+  - CLI flags
+  - Git metadata
+  - configuration file
+  - environment variables
+  - system-specific settings
+  - default values
 
 #### New Features
 
 - The new [interactive](https://www.git-town.com/preferences/interactive.html) setting allows you to configure how Git Town asks for missing information. When enabled, Git Town asks for missing information via interactive dialogs. When disabled, Git Town exits with an error message describing how to provide the missing information via CLI flags ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- Breadcrumbs in proposals now use a forge-specific format ([#6144](https://github.com/git-town/git-town/pull/6144)).
 
 #### Bug Fixes
+
+- Git Town now only looks up proposals for branches that actually get worked on ([#6080](https://github.com/git-town/git-town/issues/6080), [#6092](https://github.com/git-town/git-town/issues/6092)).
 
 ## 22.7.1 (20226-03-26)
 
