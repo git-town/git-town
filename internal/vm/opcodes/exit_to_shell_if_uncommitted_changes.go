@@ -20,4 +20,8 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 	return nil
 }
 
+// WalkUncommittedChangesError is a sentinel error
+// that indicates that the "walk" command has detected uncommitted changes
+// and wants to exit to the shell to allow the user to commit them
+// before continuing to walk the next branch.
 var WalkUncommittedChangesError = errors.New(messages.WalkUncommittedChanges)
