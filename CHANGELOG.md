@@ -4,6 +4,7 @@
 
 #### BREAKING CHANGES
 
+- The [up]() and [down]() commands are now switched. This aligns them better with Git Town's branch model and how it gets displayed ([#6085](https://github.com/git-town/git-town/issues/6085)).
 - When Git Town is run by other programs, for example AI agents, it now automatically disables all interactive features and doesn't open browser windows ([#6123](https://github.com/git-town/git-town/issues/6123)).
 - The [walk](https://www.git-town.com/commands/walk.html) command now exits to the shell if the executed command produced uncommitted changes. This gives you a chance to commit them manually before continuing ([#6171](https://github.com/git-town/git-town/issues/6171)).
 - When evaluating configuration data, Git Town now uses this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
@@ -17,6 +18,7 @@
 #### New Features
 
 - The new [interactive](https://www.git-town.com/preferences/interactive.html) setting allows you to configure how Git Town asks for missing information. When enabled, Git Town asks for missing information via interactive dialogs. When disabled, Git Town exits with an error message describing how to provide the missing information via CLI flags ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- Git Town now has `--browser` and `--no-browser` CLI flags that allow you to override the existing [browser](https://www.git-town.com/preferences/browser.html) configuration setting for each command ([#6123](https://github.com/git-town/git-town/pull/6123)).
 - Breadcrumbs in proposals now use a forge-specific format ([#6144](https://github.com/git-town/git-town/pull/6144)).
 
 #### Bug Fixes
