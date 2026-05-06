@@ -10,10 +10,10 @@
 - Configuration precedence has changed. Git Town now resolves configuration in this order ([#6136](https://github.com/git-town/git-town/pull/6136)):
   1. CLI flags
   2. Git metadata
-  2. configuration file
-  2. environment variables
-  2. system-specific settings
-  2. default values
+  3. configuration file
+  4. environment variables
+  5. system-specific settings
+  6. default values
 
 #### New Features
 
