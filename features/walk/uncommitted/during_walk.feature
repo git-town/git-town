@@ -22,13 +22,13 @@ Feature: handle created uncommitted changes
       | branch-1 | format                |
     And Git Town prints the error:
       """
-      uncommitted changes detected.
+      uncommitted changes detected
       """
     And Git Town prints the error:
       """
       To continue after having committed the changes, run "git town continue".
       To continue with the uncommitted changes on the next branch, run "git town skip".
-      To abort and go back to where you started, run "git town undo"
+      To abort and go back to where you started, run "git town undo".
       """
 
   Scenario: keep the uncommitted changes and continue
@@ -36,13 +36,13 @@ Feature: handle created uncommitted changes
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      uncommitted changes detected.
+      uncommitted changes detected
       """
     And Git Town prints the error:
       """
       To continue after having committed the changes, run "git town continue".
       To continue with the uncommitted changes on the next branch, run "git town skip".
-      To abort and go back to where you started, run "git town undo"
+      To abort and go back to where you started, run "git town undo".
       """
 
   Scenario: commit the changes and continue
@@ -55,13 +55,13 @@ Feature: handle created uncommitted changes
       | branch-2 | format                |
     And Git Town prints the error:
       """
-      uncommitted changes detected.
+      uncommitted changes detected
       """
     And Git Town prints the error:
       """
       To continue after having committed the changes, run "git town continue".
       To continue with the uncommitted changes on the next branch, run "git town skip".
-      To abort and go back to where you started, run "git town undo"
+      To abort and go back to where you started, run "git town undo".
       """
     Given I ran "git add ."
     And I ran "git commit -m changes"

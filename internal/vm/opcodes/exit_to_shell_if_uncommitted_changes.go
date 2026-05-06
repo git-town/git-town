@@ -15,7 +15,9 @@ func (self *ExitToShellIfUncommittedChanges) Run(args shared.RunArgs) error {
 		return err
 	}
 	if len(uncommittedFiles) > 0 {
-		return errors.New(messages.WalkUncommittedChanges)
+		return WalkUncommittedChangesError
 	}
 	return nil
 }
+
+var WalkUncommittedChangesError = errors.New(messages.WalkUncommittedChanges)
