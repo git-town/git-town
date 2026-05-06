@@ -1632,7 +1632,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateMockBinary("format", `
 #!/usr/bin/env bash
 
-# this executable creates some uncommitted changes in the repo
+# this executable creates an uncommitted change in the repo
 
 echo "new line" >> file
 `[1:])
