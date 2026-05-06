@@ -1,5 +1,18 @@
 # Git Town Changelog
 
+## 23.0.0 (2026-05-06)
+
+#### BREAKING CHANGES
+
+- When Git Town is run by other programs, for example AI agents, it now automatically disables all interactive features and doesn't open browser windows ([#6123](https://github.com/git-town/git-town/issues/6123)).
+- The [walk](https://www.git-town.com/commands/walk.html) command now exits to the shell if the executed command produced uncommitted changes. This gives you a chance to commit them manually before continuing ([#6171](https://github.com/git-town/git-town/issues/6171)).
+
+#### New Features
+
+- The new [interactive`
+
+#### Bug Fixes
+
 ## 22.7.1 (20226-03-26)
 
 #### Bug Fixes
