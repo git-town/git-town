@@ -50,6 +50,8 @@ linters:
       struct-method: true
       # Checks if the constructors and/or structure methods are sorted alphabetically.
       alphabetical: true
+    gomoddirectives:
+      replace-local: true
     ireturn:
       allow:
         - error
