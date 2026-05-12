@@ -1,5 +1,9 @@
 # Git Town Changelog
 
+## 23.0.1 (2026-05-11)
+
+Re-releasing v23.0.0 that partially failed to propagate to all distribution channels.
+
 ## 23.0.0 (2026-05-06)
 
 #### BREAKING CHANGES
