@@ -1,5 +1,5 @@
 @skipWindows
-Feature: handle created uncommitted changes
+Feature: handle created uncommitted changes created during the walk
 
   Background:
     Given a Git repo with origin
