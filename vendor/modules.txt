@@ -97,7 +97,7 @@ github.com/dustin/go-humanize
 # github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f
 ## explicit; go 1.16
 github.com/erikgeiser/coninput
-# github.com/git-town/git-town/v23 v23.0.0 => .
+# github.com/git-town/git-town/v23 v23.0.1 => .
 ## explicit; go 1.26.1
 # github.com/go-fed/httpsig v1.1.0
 ## explicit; go 1.13
