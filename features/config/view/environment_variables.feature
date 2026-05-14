@@ -73,7 +73,7 @@ Feature: display configuration defined in environment variables
       Configuration:
         offline: yes
         git user name: user
-        git user email: email@example.com
+        git user email: (configured)
 
       Create:
         branch prefix: acme-
@@ -87,13 +87,13 @@ Feature: display configuration defined in environment variables
         forge type: gitlab
         origin hostname: codeforge
         Bitbucket username: bitbucket-user
-        Bitbucket app password: bitbucket-password
-        Forgejo token: forgejo-token
-        Gitea token: gitea-token
+        Bitbucket app password: (configured)
+        Forgejo token: (configured)
+        Gitea token: (configured)
         GitHub connector: gh
-        GitHub token: github-token
+        GitHub token: (configured)
         GitLab connector: glab
-        GitLab token: gitlab-token
+        GitLab token: (configured)
 
       Propose:
         breadcrumb: stacks

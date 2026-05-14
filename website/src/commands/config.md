@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town config [(-d | --display-types) <type>] [-h | --help] [--redact] [-v | --verbose]
+git town config [(-d | --display-types) <type>] [-h | --help] [--redact[=false]] [-v | --verbose]
 ```
 
 The _config_ command displays and updates the local Git Town configuration.
@@ -31,9 +31,10 @@ More info [here](../preferences/display-types.md#cli-flags).
 
 Display help for this command.
 
-#### `--redact`
+#### `--redact[=false]`
 
-When set, does not output sensitive information like tokens.
+Hides sensitive information like tokens from the output.
+This is enabled by default; pass `--redact=false` to show the raw values.
 
 #### `-v`<br>`--verbose`
 

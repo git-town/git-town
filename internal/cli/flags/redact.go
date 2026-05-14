@@ -10,7 +10,7 @@ const redactLong = "redact"
 // Redact provides type-safe access to the CLI arguments for redacting sensitive information.
 func Redact() (AddFunc, ReadRedactFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().Bool(redactLong, false, "hide sensitive information from the output")
+		cmd.Flags().Bool(redactLong, true, "hide sensitive information from the output")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Redact, error) {
 		return readBoolFlag[configdomain.Redact](cmd.Flags(), redactLong)
