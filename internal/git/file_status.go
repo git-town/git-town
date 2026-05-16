@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -25,9 +26,9 @@ func FileStatusIsUntracked(status FileStatus) bool {
 }
 
 // ParseGitStatusZ parses the output of "git status -z" into a slice of FileStatus.
-func ParseGitStatusZ(output string) ([]FileStatus, error) {
+func ParseGitStatusZ(output gohacks.ZString) ([]FileStatus, error) {
 	var result []FileStatus
-	entries := strings.Split(output, "\x00")
+	entries := output.Lines()
 	for i := 0; i < len(entries); i++ {
 		entry := entries[i]
 		if entry == "" {

@@ -778,7 +778,7 @@ func (self *Commands) RenameBranch(runner subshelldomain.Runner, oldName, newNam
 }
 
 func (self *Commands) RepoStatus(backend subshelldomain.RunnerQuerier) (gitdomain.RepoStatus, error) {
-	output, err := backend.Query("git", "status", "-z", "--ignore-submodules")
+	output, err := backend.QueryZ("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -873,7 +873,7 @@ func (self *Commands) StashSize(querier subshelldomain.Querier) (gitdomain.Stash
 
 // UncommittedFiles provides the names of the files not committed into Git.
 func (self *Commands) UncommittedFiles(querier subshelldomain.Querier) ([]string, error) {
-	output, err := querier.Query("git", "status", "-z", "--untracked-files=all")
+	output, err := querier.QueryZ("git", "status", "-z", "--untracked-files=all")
 	if err != nil {
 		return []string{}, err
 	}

@@ -125,6 +125,10 @@ func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string)
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
+func (self *TestRunner) MustQueryZ(name string, arguments ...string) gohacks.ZString {
+	return gohacks.ZString(self.MustQuery(name, arguments...))
+}
+
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (self *TestRunner) MustRun(name string, arguments ...string) {
