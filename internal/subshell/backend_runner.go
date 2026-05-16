@@ -37,6 +37,11 @@ func (self BackendRunner) QueryTrim(executable string, args ...string) (string, 
 	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
+func (self BackendRunner) QueryZ(executable string, args ...string) (gohacks.ZString, error) {
+	result, err := self.execute([]string{}, executable, args...)
+	return gohacks.ZString(result), err
+}
+
 func (self BackendRunner) Run(executable string, args ...string) error {
 	_, err := self.execute([]string{}, executable, args...)
 	return err

@@ -23,11 +23,11 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 	if hasScope {
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
-	output, err := backend.Query("git", cmdArgs...)
+	output, err := backend.QueryZ("git", cmdArgs...)
 	if err != nil || output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
-	for line := range strings.SplitSeq(output, "\x00") {
+	for _, line := range output.Lines() {
 		if len(line) == 0 {
 			continue
 		}
