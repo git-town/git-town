@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/test/handlebars"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -105,7 +105,7 @@ func (self *DataTable) String() string {
 	result := strings.Builder{}
 	for row := range self.Cells {
 		for col := range self.Cells[row] {
-			result.WriteString(fmt.Sprintf(formatStrings[col], gohacks.EscapeNewLines(self.Cells[row][col])))
+			result.WriteString(fmt.Sprintf(formatStrings[col], stringss.EscapeNewLines(self.Cells[row][col])))
 		}
 		result.WriteString("|\n")
 	}
