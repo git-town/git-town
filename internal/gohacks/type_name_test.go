@@ -12,11 +12,11 @@ func TestTypeName(t *testing.T) {
 	t.Parallel()
 	sha := gitdomain.NewSHA("123456")
 	tests := map[any]string{
-		"hello":                             "string",
-		123:                                 "int",
+		"hello":                                 "string",
+		123:                                     "int",
 		gitdomain.LocalBranchNameOrPanic("foo"): "LocalBranchName", // instance of a struct
-		&sha:                                "SHA",             // pointer variable
-		nil:                                 "nil",
+		&sha:                                    "SHA",             // pointer variable
+		nil:                                     "nil",
 	}
 	for give, want := range tests {
 		have := gohacks.TypeName(give)
