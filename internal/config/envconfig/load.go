@@ -77,7 +77,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
 	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
-	gitUserName := gitdomain.ParseGitUserNameOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
+	gitUserName := gitdomain.GitUserNameOptFromStringOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
