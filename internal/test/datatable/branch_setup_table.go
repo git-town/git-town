@@ -28,12 +28,12 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 		for c, cell := range row.Cells {
 			switch headers.Cells[c].Value {
 			case "NAME":
-				name = gitdomain.NewLocalBranchNameOption(cell.Value)
+				name = gitdomain.LocalBranchNameOpt(cell.Value)
 			case "TYPE":
 				branchType = asserts.NoError1(configdomain.ParseBranchType(cell.Value, "cucumber table"))
 			case "PARENT":
 				if len(cell.Value) > 0 {
-					parent = gitdomain.NewLocalBranchNameOption(cell.Value)
+					parent = gitdomain.LocalBranchNameOpt(cell.Value)
 				}
 			case "LOCATIONS":
 				if cell.Value == "" {

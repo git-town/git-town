@@ -10,16 +10,16 @@ import (
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName string
 
-func NewRemoteBranchName(id string) RemoteBranchName {
+func RemoteBranchNameOrPanic(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
 	return RemoteBranchName(id)
 }
 
-func NewRemoteBranchNameOption(id string) Option[RemoteBranchName] {
+func RemoteBranchNameOpt(id string) Option[RemoteBranchName] {
 	if isValidRemoteBranchName(id) {
-		return Some(NewRemoteBranchName(id))
+		return Some(RemoteBranchNameOrPanic(id))
 	}
 	return None[RemoteBranchName]()
 }
@@ -47,7 +47,7 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	remoteName, branchname, _ := strings.Cut(string(self), "/")
-	return Remote(remoteName), NewLocalBranchName(branchname)
+	return Remote(remoteName), LocalBranchNameOrPanic(branchname)
 }
 
 func (self RemoteBranchName) Remote() Remote {

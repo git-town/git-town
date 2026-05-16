@@ -169,7 +169,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		IgnoreUncommitted:           ignoreUncommitted,
 		Interactive:                 interactive2,
 		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
-		MainBranch:                  gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
+		MainBranch:                  gitdomain.LocalBranchNameOpt(env.Get(mainBranch)),
 		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:               observedRegex,
 		Offline:                     offline,

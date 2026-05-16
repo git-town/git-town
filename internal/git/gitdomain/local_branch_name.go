@@ -7,16 +7,16 @@ import . "github.com/git-town/git-town/v23/pkg/prelude"
 // i.e. a local branch name that is unknown or not configured.
 type LocalBranchName string
 
-func NewLocalBranchName(id string) LocalBranchName {
+func LocalBranchNameOrPanic(id string) LocalBranchName {
 	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")
 	}
 	return LocalBranchName(id)
 }
 
-func NewLocalBranchNameOption(id string) Option[LocalBranchName] {
+func LocalBranchNameOpt(id string) Option[LocalBranchName] {
 	if isValidLocalBranchName(id) {
-		return Some(NewLocalBranchName(id))
+		return Some(LocalBranchNameOrPanic(id))
 	}
 	return None[LocalBranchName]()
 }
