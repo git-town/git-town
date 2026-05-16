@@ -1,4 +1,4 @@
-Feature: handle uncommitted files
+Feature: stash uncommitted files before the walk
 
   Background:
     Given a Git repo with origin
