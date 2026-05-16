@@ -9,7 +9,7 @@ import (
 
 func TestZStringLines(t *testing.T) {
 	t.Parallel()
-	tests := map[stringss.ZString][]string{
+	tests := map[stringss.ZeroDelineated][]string{
 		"":                    {""},
 		"single":              {"single"},
 		"a\x00b":              {"a", "b"},

@@ -38,9 +38,9 @@ func (self BackendRunner) QueryTrim(executable string, args ...string) (string, 
 	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
-func (self BackendRunner) QueryZ(executable string, args ...string) (stringss.ZString, error) {
+func (self BackendRunner) QueryZ(executable string, args ...string) (stringss.ZeroDelineated, error) {
 	result, err := self.execute([]string{}, executable, args...)
-	return stringss.ZString(result), err
+	return stringss.ZeroDelineated(result), err
 }
 
 func (self BackendRunner) Run(executable string, args ...string) error {

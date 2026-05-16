@@ -14,7 +14,7 @@ func TestParseGitStatusZ(t *testing.T) {
 
 	t.Run("copied file", func(t *testing.T) {
 		t.Parallel()
-		give := stringss.ZString("C  vendor/golang.org/x/mod/PATENTS\x00vendor/golang.org/x/exp/PATENTS\x00")
+		give := stringss.ZeroDelineated("C  vendor/golang.org/x/mod/PATENTS\x00vendor/golang.org/x/exp/PATENTS\x00")
 		have, err := git.ParseGitStatusZ(give)
 		must.NoError(t, err)
 		want := []git.FileStatus{
@@ -29,7 +29,7 @@ func TestParseGitStatusZ(t *testing.T) {
 
 	t.Run("one file", func(t *testing.T) {
 		t.Parallel()
-		give := stringss.ZString(" M internal/git/parse_git_status_z.go\x00")
+		give := stringss.ZeroDelineated(" M internal/git/parse_git_status_z.go\x00")
 		have, err := git.ParseGitStatusZ(give)
 		must.NoError(t, err)
 		want := []git.FileStatus{
@@ -44,7 +44,7 @@ func TestParseGitStatusZ(t *testing.T) {
 
 	t.Run("renamed file", func(t *testing.T) {
 		t.Parallel()
-		give := stringss.ZString("R  internal/git/parse_git_status_z.go\x00internal/git/parse_git_status.go\x00")
+		give := stringss.ZeroDelineated("R  internal/git/parse_git_status_z.go\x00internal/git/parse_git_status.go\x00")
 		have, err := git.ParseGitStatusZ(give)
 		must.NoError(t, err)
 		want := []git.FileStatus{
@@ -59,7 +59,7 @@ func TestParseGitStatusZ(t *testing.T) {
 
 	t.Run("two files", func(t *testing.T) {
 		t.Parallel()
-		give := stringss.ZString(" M internal/git/parse_git_status_z.go\x00 M internal/git/parse_git_status_z_test.go\x00")
+		give := stringss.ZeroDelineated(" M internal/git/parse_git_status_z.go\x00 M internal/git/parse_git_status_z_test.go\x00")
 		have, err := git.ParseGitStatusZ(give)
 		must.NoError(t, err)
 		want := []git.FileStatus{
