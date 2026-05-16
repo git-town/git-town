@@ -51,13 +51,13 @@ func TestParseBranchSetupTable(t *testing.T) {
 			{
 				Name:       "feature-1",
 				BranchType: Some(configdomain.BranchTypeFeatureBranch),
-				Parent:     gitdomain.NewLocalBranchNameOption("main"),
+				Parent:     gitdomain.LocalBranchNameOpt("main"),
 				Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 			},
 			{
 				Name:       "feature-2",
 				BranchType: Some(configdomain.BranchTypeFeatureBranch),
-				Parent:     gitdomain.NewLocalBranchNameOption("main"),
+				Parent:     gitdomain.LocalBranchNameOpt("main"),
 				Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 			},
 		}

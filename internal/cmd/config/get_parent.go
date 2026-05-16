@@ -73,7 +73,7 @@ func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error
 			childBranch = currentBranch
 		}
 	} else {
-		childBranch = gitdomain.NewLocalBranchName(args[0])
+		childBranch = gitdomain.LocalBranchNameOrPanic(args[0])
 	}
 	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
 	if parent, hasParent := parentOpt.Get(); hasParent {

@@ -25,15 +25,15 @@ func TestToDocString(t *testing.T) {
 		proposals := []forgedomain.ProposalData{
 			{
 				Number: forgedomain.ProposalNumber(1),
-				Source: gitdomain.NewLocalBranchName("branch-1"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("branch-1"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt(""),
 				URL:    "https://example.com/pr/1",
 			},
 			{
 				Number: forgedomain.ProposalNumber(2),
-				Source: gitdomain.NewLocalBranchName("branch-2"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("branch-2"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt("Body 2"),
 				URL:    "https://example.com/pr/2",
 			},
@@ -61,15 +61,15 @@ body:
 		proposals := []forgedomain.ProposalData{
 			{
 				Number: forgedomain.ProposalNumber(1),
-				Source: gitdomain.NewLocalBranchName("branch-1"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("branch-1"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt("Body 1\n"),
 				URL:    "https://example.com/pr/1",
 			},
 			{
 				Number: forgedomain.ProposalNumber(2),
-				Source: gitdomain.NewLocalBranchName("branch-2"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("branch-2"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt("Body 2"),
 				URL:    "https://example.com/pr/2",
 			},
@@ -97,8 +97,8 @@ body:
 		proposals := []forgedomain.ProposalData{
 			{
 				Number: forgedomain.ProposalNumber(999),
-				Source: gitdomain.NewLocalBranchName("test"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("test"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt(""),
 				URL:    "",
 			},
@@ -118,8 +118,8 @@ body:`[1:]
 		proposals := []forgedomain.ProposalData{
 			{
 				Number: forgedomain.ProposalNumber(789),
-				Source: gitdomain.NewLocalBranchName("feature"),
-				Target: gitdomain.NewLocalBranchName("main"),
+				Source: gitdomain.LocalBranchNameOrPanic("feature"),
+				Target: gitdomain.LocalBranchNameOrPanic("main"),
 				Body:   gitdomain.NewProposalBodyOpt("Line 1\n\nLine 3"),
 				URL:    "https://example.com/pr/789",
 			},
