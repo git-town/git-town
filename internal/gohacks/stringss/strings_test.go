@@ -1,9 +1,9 @@
-package gohacks_test
+package stringss_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,7 +17,7 @@ func TestEscapeNewLines(t *testing.T) {
 		"three\nnew\nlines\n": "three\\nnew\\nlines\\n",
 	}
 	for give, want := range tests {
-		have := gohacks.EscapeNewLines(give)
+		have := stringss.EscapeNewLines(give)
 		must.EqOp(t, want, have)
 	}
 }
@@ -27,14 +27,14 @@ func TestIndent(t *testing.T) {
 
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		have := gohacks.IndentLines("", 2)
+		have := stringss.IndentLines("", 2)
 		must.EqOp(t, "", have)
 	})
 
 	t.Run("indent by 2 spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
-		have := gohacks.IndentLines(give, 2)
+		have := stringss.IndentLines(give, 2)
 		want := "  one\n  two\n  three"
 		must.EqOp(t, want, have)
 	})
@@ -42,7 +42,7 @@ func TestIndent(t *testing.T) {
 	t.Run("indent by 4 spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
-		have := gohacks.IndentLines(give, 4)
+		have := stringss.IndentLines(give, 4)
 		want := "    one\n    two\n    three"
 		must.EqOp(t, want, have)
 	})
@@ -59,7 +59,7 @@ func TestLeadingWhitespace(t *testing.T) {
 		"    ":       "    ",   // only whitespace
 	}
 	for give, want := range tests {
-		have := gohacks.LeadingWhitespace(give)
+		have := stringss.LeadingWhitespace(give)
 		must.EqOp(t, want, have)
 	}
 }
