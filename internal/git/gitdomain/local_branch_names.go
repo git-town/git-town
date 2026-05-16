@@ -23,10 +23,9 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 	parts := strings.Split(names, " ")
 	result := make(LocalBranchNames, 0, len(parts))
 	for _, part := range parts {
-		if len(part) == 0 {
-			continue
+		if len(part) > 0 {
+			result = append(result, NewLocalBranchName(part))
 		}
-		result = append(result, NewLocalBranchName(part))
 	}
 	return result
 }
