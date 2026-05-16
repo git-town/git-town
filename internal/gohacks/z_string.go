@@ -2,7 +2,7 @@ package gohacks
 
 import "strings"
 
-// ZString is a string where lines are terminated by a zero byte.
+// ZString is a string in which lines are terminated by a zero byte.
 type ZString string
 
 func (self ZString) Lines() []string {
