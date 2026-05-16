@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/cache"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -304,7 +305,7 @@ func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdoma
 
 func (self *Commands) CommitMessage(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
 	output, err := querier.QueryTrim("git", "show", "--no-patch", "--format=%B", sha.String())
-	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
+	return gitdomain.CommitMessage(output), err
 }
 
 func (self *Commands) CommitStart(runner subshelldomain.Runner) error {
@@ -323,7 +324,7 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
-	lines := stringslice.NonEmptyLines(output)
+	lines := stringslice.NonEmptyLines(output.String())
 	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
 		sha, message, ok := strings.Cut(line, " ")
@@ -344,7 +345,7 @@ func (self *Commands) CommitsInPerennialBranch(querier subshelldomain.Querier) (
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
-	lines := stringslice.Lines(output)
+	lines := stringslice.Lines(output.String())
 	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
 		if len(line) == 0 {
@@ -367,7 +368,7 @@ func (self *Commands) ContentBlobInfo(querier subshelldomain.Querier, branch git
 	if err != nil || len(output) == 0 {
 		return None[Blob](), err
 	}
-	sha, err := ParseLsTreeOutput(output)
+	sha, err := ParseLsTreeOutput(output.String())
 	return Some(sha), err
 }
 
@@ -437,7 +438,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) 
 		return None[gitdomain.LocalBranchName](), err
 	}
 	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
-		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
+		rebaseHeadFilePath := filepath.Join(gitDir.String(), rebaseHeadFileName)
 		content, err := os.ReadFile(rebaseHeadFilePath)
 		if err != nil {
 			continue
@@ -464,7 +465,7 @@ func (self *Commands) CurrentBranchUncached(querier subshelldomain.Querier) (Opt
 		return None[gitdomain.LocalBranchName](), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if output != "" {
-		return Some(gitdomain.LocalBranchNameOrPanic(output)), nil
+		return Some(gitdomain.LocalBranchNameOrPanic(output.String())), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
 	return self.CurrentBranchDuringRebase(querier)
@@ -535,7 +536,7 @@ func (self *Commands) FirstCommitMessageInBranch(runner subshelldomain.Querier, 
 	if err != nil {
 		return None[gitdomain.CommitMessage](), err
 	}
-	lines := stringslice.Lines(output)
+	lines := stringslice.Lines(output.String())
 	if len(lines) == 0 {
 		return None[gitdomain.CommitMessage](), nil
 	}
@@ -571,7 +572,7 @@ func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error
 	gitVersionOnce.Do(func() {
 		gitVersionRegex = regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
 	})
-	matches := gitVersionRegex.FindStringSubmatch(output)
+	matches := gitVersionRegex.FindStringSubmatch(output.String())
 	if matches == nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
@@ -605,7 +606,7 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 		return false, err
 	}
 	for _, rebaseDirName := range []string{"rebase-merge", "rebase-apply"} {
-		rebaseDirPath := filepath.Join(gitDir, rebaseDirName)
+		rebaseDirPath := filepath.Join(gitDir.String(), rebaseDirName)
 		stat, err := os.Stat(rebaseDirPath)
 		if err == nil && stat.IsDir() {
 			return true, nil
@@ -674,11 +675,10 @@ func (self *Commands) OriginHead(querier subshelldomain.Querier) Option[gitdomai
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
-	output = strings.TrimSpace(output)
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return Some(gitdomain.LocalBranchName(LastBranchInRef(output)))
+	return Some(gitdomain.LocalBranchName(LastBranchInRef(output.String())))
 }
 
 func (self *Commands) PopStash(runner subshelldomain.Runner) error {
@@ -698,7 +698,7 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier subshelldomain.Querier)
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return gitdomain.LocalBranchNameOpt(output)
+	return gitdomain.LocalBranchNameOpt(output.String())
 }
 
 func (self *Commands) Pull(runner subshelldomain.Runner) error {
@@ -761,7 +761,7 @@ func (self *Commands) RemotesUncached(querier subshelldomain.Querier) (gitdomain
 	if out == "" {
 		return gitdomain.Remotes{}, nil
 	}
-	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
+	return gitdomain.NewRemotes(stringslice.Lines(out.String())...), nil
 }
 
 // RemoveCommit removes the given commit from the current branch
@@ -829,7 +829,7 @@ func (self *Commands) RootDirectory(querier subshelldomain.Querier) Option[gitdo
 	if err != nil {
 		return None[gitdomain.RepoRootDir]()
 	}
-	return Some(gitdomain.NewRepoRootDir(filepath.FromSlash(output)))
+	return Some(gitdomain.NewRepoRootDir(filepath.FromSlash(output.String())))
 }
 
 func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
@@ -1004,7 +1004,7 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 }
 
 // provides the path of the `.git` directory of the current repository.
-func (self *Commands) gitDirectory(querier subshelldomain.Querier) (string, error) {
+func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.TrimmedString, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
 	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
 }
