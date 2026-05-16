@@ -3,6 +3,7 @@ package forgedomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -27,12 +28,12 @@ func GithubConnectorTypes() []GithubConnectorType {
 	}
 }
 
-func ParseGithubConnectorType(text string, source string) (Option[GithubConnectorType], error) {
+func ParseGithubConnectorType(text stringss.TrimmedString, source string) (Option[GithubConnectorType], error) {
 	if text == "" {
 		return None[GithubConnectorType](), nil
 	}
 	for _, connectorType := range GithubConnectorTypes() {
-		if connectorType.String() == text {
+		if connectorType.String() == text.String() {
 			return Some(connectorType), nil
 		}
 	}

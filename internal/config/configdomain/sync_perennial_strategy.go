@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -24,7 +25,7 @@ const (
 	SyncPerennialStrategyFFOnly = SyncPerennialStrategy(SyncStrategyFFOnly)
 )
 
-func ParseSyncPerennialStrategy(value string, source string) (Option[SyncPerennialStrategy], error) {
+func ParseSyncPerennialStrategy(value stringss.TrimmedString, source string) (Option[SyncPerennialStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncPerennialStrategy](), fmt.Errorf(messages.CannotParse, source, err)

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -20,7 +21,7 @@ func (self BranchPrefix) Apply(branch gitdomain.LocalBranchName) gitdomain.Local
 
 func (self BranchPrefix) String() string { return string(self) }
 
-func ParseBranchPrefix(value, _ string) (Option[BranchPrefix], error) {
+func ParseBranchPrefix(value stringss.TrimmedString, _ string) (Option[BranchPrefix], error) {
 	if value == "" {
 		return None[BranchPrefix](), nil
 	}

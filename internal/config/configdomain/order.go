@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -25,8 +26,8 @@ func (self Order) String() string {
 	return string(self)
 }
 
-func ParseOrder(value string, source string) (Option[Order], error) {
-	switch strings.ToLower(value) {
+func ParseOrder(value stringss.TrimmedString, source string) (Option[Order], error) {
+	switch strings.ToLower(value.String()) {
 	case "":
 		return None[Order](), nil
 	case "a", "as", "asc":

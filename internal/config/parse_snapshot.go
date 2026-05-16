@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v23/pkg/colors"
@@ -32,14 +33,14 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, igno
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		value = strings.TrimSpace(value)
-		if value == "" {
+		trimmedValue := stringss.TrimSpace(value)
+		if trimmedValue.String() == "" {
 			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
+		branchTypeOpt, err := configdomain.ParseBranchType(trimmedValue, key.String())
 		if err != nil {
 			if ignoreUnknown {
 				fmt.Printf("Ignoring unknown branch type override for %q: %s\n", branch, value)
@@ -211,13 +212,13 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.TrimmedString, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
 		var zero T
 		return zero, nil
 	}
-	value, err := parseFunc(valueStr, key.String())
+	value, err := parseFunc(stringss.TrimSpace(valueStr), key.String())
 	if err != nil {
 		var zero T
 		if ignoreUnknown {

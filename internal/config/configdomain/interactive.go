@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -45,7 +46,7 @@ func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
 	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
 }
 
-func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive], error) {
+func NewInteractiveFromSnapshot(value stringss.TrimmedString, source string) (Option[Interactive], error) {
 	boolValue, err := gohacks.ParseBool[bool](value, source)
 	if err != nil {
 		return None[Interactive](), err

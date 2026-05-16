@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -11,8 +12,8 @@ type FeatureRegex struct {
 	VerifiedRegex
 }
 
-func ParseFeatureRegex(value string, source string) (Option[FeatureRegex], error) {
-	verifiedRegexOpt, err := ParseRegex(value)
+func ParseFeatureRegex(value stringss.TrimmedString, source string) (Option[FeatureRegex], error) {
+	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[FeatureRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}

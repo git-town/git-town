@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -20,14 +21,13 @@ const (
 	SyncStrategyCompress = SyncStrategy("compress")
 )
 
-func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
-	text = strings.TrimSpace(text)
+func ParseSyncStrategy(text stringss.TrimmedString) (Option[SyncStrategy], error) {
 	if text == "" {
 		return None[SyncStrategy](), nil
 	}
-	text = strings.ToLower(text)
+	lower := strings.ToLower(text.String())
 	for _, syncStrategy := range SyncStrategies() {
-		if syncStrategy.String() == text {
+		if syncStrategy.String() == lower {
 			return Some(syncStrategy), nil
 		}
 	}

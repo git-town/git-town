@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -24,7 +25,7 @@ const (
 	SyncFeatureStrategyCompress = SyncFeatureStrategy(SyncStrategyCompress)
 )
 
-func ParseSyncFeatureStrategy(value string, source string) (Option[SyncFeatureStrategy], error) {
+func ParseSyncFeatureStrategy(value stringss.TrimmedString, source string) (Option[SyncFeatureStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncFeatureStrategy](), fmt.Errorf(messages.CannotParse, source, err)

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -46,8 +47,8 @@ func (self ProposalBreadcrumb) String() string {
 	return string(self)
 }
 
-func ParseProposalBreadcrumb(value string, source string) (Option[ProposalBreadcrumb], error) {
-	switch strings.ToLower(strings.TrimSpace(value)) {
+func ParseProposalBreadcrumb(value stringss.TrimmedString, source string) (Option[ProposalBreadcrumb], error) {
+	switch strings.ToLower(value.String()) {
 	case "":
 		return None[ProposalBreadcrumb](), nil
 	case ProposalBreadcrumbNone.String():

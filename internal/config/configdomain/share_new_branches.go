@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -26,7 +27,7 @@ func (self ShareNewBranches) String() string {
 	return string(self)
 }
 
-func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches], error) {
+func ParseShareNewBranches(value stringss.TrimmedString, source string) (Option[ShareNewBranches], error) {
 	if value == "" {
 		return None[ShareNewBranches](), nil
 	}
@@ -35,7 +36,7 @@ func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches
 		return Some(ShareNewBranchesNone), nil
 	}
 	for _, option := range ShareNewBranchValues {
-		if value == option.String() {
+		if value.String() == option.String() {
 			return Some(option), nil
 		}
 	}

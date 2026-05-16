@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -34,12 +35,12 @@ func AllBranchTypes() []BranchType {
 	}
 }
 
-func ParseBranchType(text string, source string) (Option[BranchType], error) {
-	if len(text) == 0 || text == messages.DialogResultNone {
+func ParseBranchType(text stringss.TrimmedString, source string) (Option[BranchType], error) {
+	if text == "" || text == messages.DialogResultNone {
 		return None[BranchType](), nil
 	}
 	for _, branchType := range AllBranchTypes() {
-		if strings.HasPrefix(branchType.String(), text) {
+		if strings.HasPrefix(branchType.String(), text.String()) {
 			return Some(branchType), nil
 		}
 	}
