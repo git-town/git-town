@@ -14,7 +14,7 @@ func TestBranchTypeOverrideKey(t *testing.T) {
 
 	t.Run("Branch", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.LocalBranchName("my-branch")
+		branch := gitdomain.LocalBranchNameOrPanic("my-branch")
 		key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
 		have := key.Branch()
 		must.EqOp(t, branch, have)
