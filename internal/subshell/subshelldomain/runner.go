@@ -1,7 +1,7 @@
 // Package subshelldomain defines types around subshells.
 package subshelldomain
 
-import "github.com/git-town/git-town/v23/internal/gohacks"
+import "github.com/git-town/git-town/v23/internal/gohacks/stringss"
 
 type Runner interface {
 	Run(executable string, args ...string) error
@@ -11,7 +11,7 @@ type Runner interface {
 type Querier interface {
 	Query(executable string, args ...string) (string, error)
 	QueryTrim(executable string, args ...string) (string, error)
-	QueryZ(executable string, args ...string) (gohacks.ZString, error)
+	QueryZ(executable string, args ...string) (stringss.ZString, error)
 }
 
 type RunnerQuerier interface {
