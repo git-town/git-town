@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/bytestream"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v23/internal/subshell"
@@ -269,6 +270,11 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		ExitCode: exitCode,
 		Output:   output,
 	}, err
+}
+
+func (self *TestRunner) QueryZ(name string, arguments ...string) (gohacks.ZString, error) {
+	result, err := self.Query(name, arguments...)
+	return gohacks.ZString(result), err
 }
 
 // Run runs the given command with the given arguments.
