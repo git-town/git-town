@@ -13,10 +13,10 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v23/internal/git"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v23/internal/gohacks/slice"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v23/internal/test/datatable"
 	"github.com/git-town/git-town/v23/internal/test/subshell"
@@ -137,7 +137,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 	lines := stringslice.NonEmptyLines(output)
 	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
-		parts := gohacks.ZString(line).Lines()
+		parts := stringss.ZString(line).Lines()
 		commit := testgit.Commit{
 			Branch:  branch,
 			SHA:     gitdomain.NewSHA(parts[0]),
