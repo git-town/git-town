@@ -54,7 +54,7 @@ func ParseLsFilesUnmergedLine(line string) (Blob, UnmergedStage, string, error) 
 	if !match {
 		return Blob{}, 0, "", fmt.Errorf("cannot read SHA portion from output of \"git ls-files --unmerged\": %q", line)
 	}
-	sha, err := gitdomain.NewSHAErr(shaText)
+	sha, err := gitdomain.SHAErrFromString(shaText)
 	if err != nil {
 		return Blob{}, 0, "", fmt.Errorf("invalid SHA (%w) in output of \"git ls-files --unmerged\": %q", err, line)
 	}

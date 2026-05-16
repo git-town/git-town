@@ -10,7 +10,7 @@ func (self Author) String() string {
 	return string(self)
 }
 
-func NewAuthorOpt(name string) Option[Author] {
+func AuthorOptFromString(name string) Option[Author] {
 	if len(name) == 0 {
 		return None[Author]()
 	}

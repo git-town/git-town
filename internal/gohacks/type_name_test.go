@@ -10,7 +10,7 @@ import (
 
 func TestTypeName(t *testing.T) {
 	t.Parallel()
-	sha := gitdomain.NewSHA("123456")
+	sha := gitdomain.SHAFromString("123456")
 	tests := map[any]string{
 		"hello":                                 "string",
 		123:                                     "int",

@@ -50,7 +50,7 @@ func ParseLsTreeOutput(output string) (Blob, error) {
 	if !match {
 		return EmptyBlob(), fmt.Errorf("cannot read SHA from the output of \"git ls-tree\": %q", output)
 	}
-	sha, err := gitdomain.NewSHAErr(shaText)
+	sha, err := gitdomain.SHAErrFromString(shaText)
 	if err != nil {
 		return EmptyBlob(), fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
 	}

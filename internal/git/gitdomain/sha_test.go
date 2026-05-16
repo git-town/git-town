@@ -14,7 +14,7 @@ func TestSHA(t *testing.T) {
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		sha := gitdomain.NewSHA("123456")
+		sha := gitdomain.SHAFromString("123456")
 		have, err := json.MarshalIndent(sha, "", "  ")
 		must.NoError(t, err)
 		want := `"123456"`
@@ -26,35 +26,35 @@ func TestSHA(t *testing.T) {
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			sha := gitdomain.NewSHA(text)
+			sha := gitdomain.SHAFromString(text)
 			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("")
+			gitdomain.SHAFromString("")
 		})
 		t.Run("does not allow spaces", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("abc def")
+			gitdomain.SHAFromString("abc def")
 		})
 		t.Run("does not allow uppercase characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("ABCDEF")
+			gitdomain.SHAFromString("ABCDEF")
 		})
 		t.Run("does not allow non-hex characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("abcdefg")
+			gitdomain.SHAFromString("abcdefg")
 		})
 	})
 
 	t.Run("Truncate", func(t *testing.T) {
 		t.Parallel()
-		give := gitdomain.NewSHA("12345678901234567890123456789012")
-		want := gitdomain.NewSHA("1234567")
+		give := gitdomain.SHAFromString("12345678901234567890123456789012")
+		want := gitdomain.SHAFromString("1234567")
 		have := give.Truncate(7)
 		must.EqOp(t, want, have)
 	})
@@ -65,7 +65,7 @@ func TestSHA(t *testing.T) {
 		var have gitdomain.SHA
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := gitdomain.NewSHA("123456")
+		want := gitdomain.SHAFromString("123456")
 		must.EqOp(t, want, have)
 	})
 }

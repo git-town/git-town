@@ -2,10 +2,10 @@ package flags
 
 import (
 	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 }
 
 func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, error) {
-	branchTypeNames := SplitBranchTypeNames(text)
+	branchTypeNames := SplitBranchTypeNames(stringss.TrimSpace(text))
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
 		branchTypeOpt, err := configdomain.ParseBranchType(branchTypeName, source)
@@ -44,12 +44,11 @@ func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, er
 	return result, nil
 }
 
-func SplitBranchTypeNames(text string) []string {
-	text = strings.TrimSpace(text)
+func SplitBranchTypeNames(text stringss.TrimmedString) []string {
 	splitBranchOnce.Do(func() {
 		splitBranchRegex = regexp.MustCompile(`[,\+&\|]`)
 	})
-	splitted := splitBranchRegex.Split(text, -1)
+	splitted := splitBranchRegex.Split(text.String(), -1)
 	result := make([]string, 0, len(splitted))
 	for _, split := range splitted {
 		if len(split) > 0 {

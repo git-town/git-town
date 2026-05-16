@@ -95,7 +95,7 @@ func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(commitMessage),
-			SHA:     gitdomain.NewSHA(sha),
+			SHA:     gitdomain.SHAFromString(sha),
 		})
 	}
 	return result
@@ -140,7 +140,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		parts := stringss.ZeroDelineated(line).Lines()
 		commit := testgit.Commit{
 			Branch:  branch,
-			SHA:     gitdomain.NewSHA(parts[0]),
+			SHA:     gitdomain.SHAFromString(parts[0]),
 			Message: gitdomain.CommitMessage(parts[1]),
 			Author:  gitdomain.Author(parts[2]),
 		}
@@ -545,7 +545,7 @@ func (self *TestCommands) RenameRemote(oldName, newName string) {
 // SHAforBranch provides the SHA that the given branch points to.
 func (self *TestCommands) SHAforBranch(branch gitdomain.LocalBranchName) gitdomain.SHA {
 	output := self.MustQuery("git", "rev-parse", branch.String())
-	return gitdomain.NewSHA(output)
+	return gitdomain.SHAFromString(output)
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
@@ -558,7 +558,7 @@ func (self *TestCommands) SHAsForCommit(message gitdomain.CommitMessage) gitdoma
 	for text := range strings.SplitSeq(output, "\n") {
 		shaText, commitMessage, found := strings.Cut(text, " ")
 		if found && commitMessage == message.String() {
-			sha := gitdomain.NewSHA(shaText)
+			sha := gitdomain.SHAFromString(shaText)
 			shasWithMessage = append(shasWithMessage, sha)
 		}
 	}

@@ -7,7 +7,7 @@ type SHAs []SHA
 func NewSHAs(ids ...string) SHAs {
 	result := make(SHAs, len(ids))
 	for i, id := range ids {
-		result[i] = NewSHA(id)
+		result[i] = SHAFromString(id)
 	}
 	return result
 }
