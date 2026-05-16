@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestZStringLines(t *testing.T) {
+func TestZeroDelineated(t *testing.T) {
 	t.Parallel()
 	tests := map[stringss.ZeroDelineated][]string{
 		"":                    {""},
