@@ -144,11 +144,6 @@ func (self *TestRunner) Query(name string, arguments ...string) (string, error) 
 	return self.QueryWith(&Options{TTY: true}, name, arguments...)
 }
 
-func (self *TestRunner) QueryZ(name string, arguments ...string) (gohacks.ZString, error) {
-	result, err := self.Query(name, arguments...)
-	return gohacks.ZString(result), err
-}
-
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryString(fullCmd string) (string, error) {
@@ -279,6 +274,11 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		ExitCode: exitCode,
 		Output:   output,
 	}, err
+}
+
+func (self *TestRunner) QueryZ(name string, arguments ...string) (gohacks.ZString, error) {
+	result, err := self.Query(name, arguments...)
+	return gohacks.ZString(result), err
 }
 
 // Run runs the given command with the given arguments.
