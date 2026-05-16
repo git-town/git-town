@@ -3,6 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 )
 
@@ -12,11 +13,11 @@ type SHA string
 
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
-func NewSHA(id string) SHA {
+func NewSHA(id stringss.TrimmedString) SHA {
 	return asserts.NoError1(NewSHAErr(id))
 }
 
-func NewSHAErr(id string) (SHA, error) {
+func NewSHAErr(id stringss.TrimmedString) (SHA, error) {
 	if !validateSHA(id) {
 		return SHA(""), fmt.Errorf("%q is not a valid Git SHA", id)
 	}
@@ -24,7 +25,7 @@ func NewSHAErr(id string) (SHA, error) {
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
-func validateSHA(content string) bool {
+func validateSHA(content stringss.TrimmedString) bool {
 	if len(content) < 6 {
 		return false
 	}
@@ -53,5 +54,5 @@ func (self SHA) String() string {
 // This is only for test code.
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {
-	return NewSHA(self.String()[:newLen])
+	return SHA(self.String()[:newLen])
 }
