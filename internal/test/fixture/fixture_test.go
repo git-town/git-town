@@ -137,7 +137,7 @@ func TestFixture(t *testing.T) {
 		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
 		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the commits
-		mainBranch := gitdomain.NewLocalBranchName("main")
+		mainBranch := gitdomain.LocalBranchNameOrPanic("main")
 		cloned.CreateCommits([]testgit.Commit{
 			{
 				Branch:      mainBranch,

@@ -38,7 +38,7 @@ func TestValidatedConfig(t *testing.T) {
 			"parked":      false,
 		}
 		for give, want := range tests {
-			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
+			have := config.IsMainOrPerennialBranch(gitdomain.LocalBranchNameOrPanic(give))
 			fmt.Println(give)
 			must.Eq(t, want, have)
 		}
@@ -95,13 +95,13 @@ func TestValidatedConfig(t *testing.T) {
 
 	t.Run("RemovePerennialRoot", func(t *testing.T) {
 		t.Parallel()
-		contribution := gitdomain.NewLocalBranchName("contribution")
-		feature1 := gitdomain.NewLocalBranchName("feature1")
-		feature2 := gitdomain.NewLocalBranchName("feature2")
-		main := gitdomain.NewLocalBranchName("main")
-		observed := gitdomain.NewLocalBranchName("observed")
-		perennial1 := gitdomain.NewLocalBranchName("perennial-1")
-		perennial2 := gitdomain.NewLocalBranchName("perennial-2")
+		contribution := gitdomain.LocalBranchNameOrPanic("contribution")
+		feature1 := gitdomain.LocalBranchNameOrPanic("feature1")
+		feature2 := gitdomain.LocalBranchNameOrPanic("feature2")
+		main := gitdomain.LocalBranchNameOrPanic("main")
+		observed := gitdomain.LocalBranchNameOrPanic("observed")
+		perennial1 := gitdomain.LocalBranchNameOrPanic("perennial-1")
+		perennial2 := gitdomain.LocalBranchNameOrPanic("perennial-2")
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*", "test")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{

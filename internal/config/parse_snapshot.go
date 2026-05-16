@@ -75,7 +75,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 		}
-		parent := gitdomain.NewLocalBranchName(value)
+		parent := gitdomain.LocalBranchNameOrPanic(value)
 		result = result.Set(child, parent)
 	}
 	return result, nil

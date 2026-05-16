@@ -451,11 +451,11 @@ func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
 		branch := line[2:]
-		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
+		allBranches = append(allBranches, gitdomain.LocalBranchNameOrPanic(branch))
 		switch marker {
 		case 'H', '-':
 		case 'W':
-			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
+			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.LocalBranchNameOrPanic(branch))
 		default:
 			panic(fmt.Sprintf("unexpected marker %q in line %q", marker, line))
 		}

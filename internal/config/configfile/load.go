@@ -118,7 +118,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
-			mainBranch = gitdomain.NewLocalBranchNameOption(Some(*data.Branches.Main))
+			mainBranch = gitdomain.LocalBranchNameOpt(*data.Branches.Main)
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
