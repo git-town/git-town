@@ -1,15 +1,15 @@
-package gohacks_test
+package stringss_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
 func TestZStringLines(t *testing.T) {
 	t.Parallel()
-	tests := map[gohacks.ZString][]string{
+	tests := map[stringss.ZString][]string{
 		"":                    {""},
 		"single":              {"single"},
 		"a\x00b":              {"a", "b"},

@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/test/helpers"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -89,7 +89,7 @@ func ToDocString(proposals []forgedomain.ProposalData) string {
 		result.WriteString("\nbody:\n")
 		if body, hasBody := proposal.Body.Get(); hasBody {
 			bodyText := strings.TrimRight(body.String(), "\r\n")
-			result.WriteString(gohacks.IndentLines(bodyText, 2))
+			result.WriteString(stringss.IndentLines(bodyText, 2))
 		}
 		result.WriteString("\n")
 	}

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 // ChangeFeatureFile updates the given section of the given feature file with the given new section.
@@ -48,7 +48,7 @@ func ChangeFeatureFile(filePath, oldSection, newSection string) error {
 	}
 
 	// indent the new section the same way the old one is indented in the file
-	indentation := gohacks.LeadingWhitespace(fileLines[startLine])
+	indentation := stringss.LeadingWhitespace(fileLines[startLine])
 	indentedNewSectionLines := stringslice.ChangeIndentNonEmpty(newSectionLines, indentation)
 
 	// replace the old section with the new one
