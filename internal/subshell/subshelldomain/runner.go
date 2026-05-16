@@ -10,8 +10,8 @@ type Runner interface {
 
 type Querier interface {
 	Query(executable string, args ...string) (string, error)
-	QueryZ(executable string, args ...string) (gohacks.ZString, error)
 	QueryTrim(executable string, args ...string) (string, error)
+	QueryZ(executable string, args ...string) (gohacks.ZString, error)
 }
 
 type RunnerQuerier interface {
