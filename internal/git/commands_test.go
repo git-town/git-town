@@ -801,9 +801,9 @@ func TestBackendCommands(t *testing.T) {
 			branch1Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "branch-1", Some(initial)))
 			branch2Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "branch-2", Some(initial)))
 			initialCommits := asserts.NoError1(local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]()))
-			branch3Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "origin/branch-3", gitdomain.NewLocalBranchNameOption("origin/initial")))
+			branch3Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "origin/branch-3", gitdomain.NewLocalBranchNameOption(Some("origin/initial"))))
 			want := gitdomain.BranchesSnapshot{
-				Active: gitdomain.NewLocalBranchNameOption("branch-2"),
+				Active: Some(gitdomain.NewLocalBranchName("branch-2")),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: branch1Commits[0].SHA}),
@@ -887,7 +887,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, branch, gitdomain.NewLocalBranchNameOption("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, branch, Some(gitdomain.NewLocalBranchName("initial"))))
 			haveMessages := commits.Messages()
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
 			must.Eq(t, wantMessages, haveMessages)
@@ -897,7 +897,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
-			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime, branch, gitdomain.NewLocalBranchNameOption("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime, branch, gitdomain.NewLocalBranchNameOption(Some("initial"))))
 			must.EqOp(t, 0, len(commits))
 		})
 		t.Run("main branch contains commits", func(t *testing.T) {
@@ -1030,7 +1030,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.SetDefaultGitBranch("main")
 		have := gitconfig.DefaultBranch(runtime)
-		want := gitdomain.NewLocalBranchNameOption("main")
+		want := Some(gitdomain.NewLocalBranchName("main"))
 		must.Eq(t, want, have)
 	})
 
@@ -1057,7 +1057,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, Some(gitdomain.NewLocalBranchName("alpha")), "main")
 			want := []git.PhantomConflict{
 				{
 					FilePath:   "file",
@@ -1087,7 +1087,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, Some(gitdomain.NewLocalBranchName("alpha")), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1112,7 +1112,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, Some(gitdomain.NewLocalBranchName("alpha")), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1137,7 +1137,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, Some(gitdomain.NewLocalBranchName("alpha")), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1343,7 +1343,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch("feature1")
 		runtime.CheckoutBranch("feature2")
 		have := runtime.Git.PreviouslyCheckedOutBranch(runtime.TestRunner)
-		must.Eq(t, gitdomain.NewLocalBranchNameOption("feature1"), have)
+		must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 	})
 
 	t.Run("RebaseInProgress", func(t *testing.T) {
@@ -1572,7 +1572,7 @@ func TestBackendCommands(t *testing.T) {
 			FileName:    "file1",
 			Message:     "first commit",
 		})
-		commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, "branch", gitdomain.NewLocalBranchNameOption("initial")))
+		commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, "branch", Some(gitdomain.NewLocalBranchName("initial"))))
 		have := asserts.NoError1(runtime.Git.ShortenSHA(runtime, commits[0].SHA))
 		must.True(t, len(commits[0].SHA.String()) == 40)
 		must.True(t, len(have.String()) == 7)
