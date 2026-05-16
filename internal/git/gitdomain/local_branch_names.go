@@ -12,7 +12,7 @@ type LocalBranchNames []LocalBranchName
 func NewLocalBranchNames(names ...string) LocalBranchNames {
 	result := make(LocalBranchNames, len(names))
 	for n, name := range names {
-		result[n] = NewLocalBranchName(name)
+		result[n] = LocalBranchNameOrPanic(name)
 	}
 	return result
 }
@@ -24,7 +24,7 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(parts))
 	for _, part := range parts {
 		if len(part) > 0 {
-			result = append(result, NewLocalBranchName(part))
+			result = append(result, LocalBranchNameOrPanic(part))
 		}
 	}
 	return result

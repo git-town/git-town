@@ -19,12 +19,12 @@ import (
 
 func TestBackendCommands(t *testing.T) {
 	t.Parallel()
-	initial := gitdomain.NewLocalBranchName("initial")
+	initial := gitdomain.LocalBranchNameOrPanic("initial")
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		branch := gitdomain.NewLocalBranchName("branch")
+		branch := gitdomain.LocalBranchNameOrPanic("branch")
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch,
@@ -47,8 +47,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch has a merge commit", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			branch2 := gitdomain.NewLocalBranchName("branch-2")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
+			branch2 := gitdomain.LocalBranchNameOrPanic("branch-2")
 			asserts.NoError(runtime.Git.CreateAndCheckoutBranch(runtime, branch1))
 			runtime.CreateBranch(branch2, branch1.BranchName())
 			runtime.CreateCommit(testgit.Commit{
@@ -65,7 +65,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch has no merge commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			asserts.NoError(runtime.Git.CreateAndCheckoutBranch(runtime, branch1))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
@@ -95,7 +95,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch without commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch := gitdomain.NewLocalBranchName("branch")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
 			runtime.CreateBranch(branch, initial.BranchName())
 			have := asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
 			must.False(t, have)
@@ -109,7 +109,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				Message:     "commit 1",
 			})
-			branch := gitdomain.NewLocalBranchName("branch")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
 			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
@@ -137,7 +137,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "test/file1",
 				Message:     "commit 1",
 			})
-			branch := gitdomain.NewLocalBranchName("test")
+			branch := gitdomain.LocalBranchNameOrPanic("test")
 			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
@@ -365,9 +365,9 @@ func TestBackendCommands(t *testing.T) {
 			runtime.CheckoutBranch("branch1")
 			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
 			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("initial"),
-				gitdomain.NewLocalBranchName("branch1"),
-				gitdomain.NewLocalBranchName("branch2"),
+				gitdomain.LocalBranchNameOrPanic("initial"),
+				gitdomain.LocalBranchNameOrPanic("branch1"),
+				gitdomain.LocalBranchNameOrPanic("branch2"),
 			}, available)
 		})
 
@@ -380,8 +380,8 @@ func TestBackendCommands(t *testing.T) {
 			runtime.AddWorktree(worktreeDir, "branch1")
 			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
 			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("initial"),
-				gitdomain.NewLocalBranchName("branch2"),
+				gitdomain.LocalBranchNameOrPanic("initial"),
+				gitdomain.LocalBranchNameOrPanic("branch2"),
 			}, available)
 		})
 
@@ -393,7 +393,7 @@ func TestBackendCommands(t *testing.T) {
 			local.Fetch()
 			available := asserts.NoError1(local.Git.BranchesAvailableInCurrentWorktree(local))
 			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("initial"),
+				gitdomain.LocalBranchNameOrPanic("initial"),
 			}, available)
 		})
 
@@ -402,7 +402,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
 			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("initial"),
+				gitdomain.LocalBranchNameOrPanic("initial"),
 			}, available)
 		})
 	})
@@ -789,7 +789,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file",
 				Message:     "[ci skip] local and origin commit",
 			})
-			local.PushBranchToRemote(gitdomain.NewLocalBranchName("branch-2"), gitdomain.RemoteOrigin)
+			local.PushBranchToRemote(gitdomain.LocalBranchNameOrPanic("branch-2"), gitdomain.RemoteOrigin)
 			origin.CreateBranch("branch-3", initial.BranchName()) // Remote only
 			origin.CreateCommit(testgit.Commit{
 				Branch:      "branch-3",
@@ -801,9 +801,9 @@ func TestBackendCommands(t *testing.T) {
 			branch1Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "branch-1", Some(initial)))
 			branch2Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "branch-2", Some(initial)))
 			initialCommits := asserts.NoError1(local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]()))
-			branch3Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "origin/branch-3", gitdomain.NewLocalBranchNameOption("origin/initial")))
+			branch3Commits := asserts.NoError1(local.Git.CommitsInBranch(local, "origin/branch-3", gitdomain.LocalBranchNameOpt("origin/initial")))
 			want := gitdomain.BranchesSnapshot{
-				Active: gitdomain.NewLocalBranchNameOption("branch-2"),
+				Active: gitdomain.LocalBranchNameOpt("branch-2"),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: branch1Commits[0].SHA}),
@@ -860,7 +860,7 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		branch := gitdomain.NewLocalBranchName("branch1")
+		branch := gitdomain.LocalBranchNameOrPanic("branch1")
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CheckoutBranch(branch)
 		currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime.TestRunner)).GetOrPanic()
@@ -875,7 +875,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch := gitdomain.NewLocalBranchName("branch1")
+			branch := gitdomain.LocalBranchNameOrPanic("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   branch,
@@ -887,7 +887,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2",
 			})
-			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, branch, gitdomain.NewLocalBranchNameOption("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, branch, gitdomain.LocalBranchNameOpt("initial")))
 			haveMessages := commits.Messages()
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
 			must.Eq(t, wantMessages, haveMessages)
@@ -895,9 +895,9 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch := gitdomain.NewLocalBranchName("branch1")
+			branch := gitdomain.LocalBranchNameOrPanic("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
-			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime, branch, gitdomain.NewLocalBranchNameOption("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime, branch, gitdomain.LocalBranchNameOpt("initial")))
 			must.EqOp(t, 0, len(commits))
 		})
 		t.Run("main branch contains commits", func(t *testing.T) {
@@ -929,7 +929,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch := gitdomain.NewLocalBranchName("branch1")
+			branch := gitdomain.LocalBranchNameOrPanic("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   branch,
@@ -941,7 +941,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2\n\nbody line 2a\nbody line 2b",
 			})
-			commits := asserts.NoError1(runtime.Git.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.NewBranchName("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.BranchNameOrPanic("initial")))
 			haveMessages := commits.Messages()
 			// this method returns commit titles only, use CommitMessage() to get the full commit message for a particular commit
 			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
@@ -950,9 +950,9 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("feature branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch := gitdomain.NewLocalBranchName("branch1")
+			branch := gitdomain.LocalBranchNameOrPanic("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
-			commits := asserts.NoError1(runtime.Git.CommitsInFeatureBranch(runtime, branch, gitdomain.NewBranchName("initial")))
+			commits := asserts.NoError1(runtime.Git.CommitsInFeatureBranch(runtime, branch, gitdomain.BranchNameOrPanic("initial")))
 			must.EqOp(t, 0, len(commits))
 		})
 	})
@@ -961,7 +961,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CheckoutBranch(initial)
-		branch := gitdomain.NewLocalBranchName("branch1")
+		branch := gitdomain.LocalBranchNameOrPanic("branch1")
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CheckoutBranch(branch)
 		branch = asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
@@ -1003,8 +1003,8 @@ func TestBackendCommands(t *testing.T) {
 			origin := testruntime.CreateGitTown(t)
 			repoDir := t.TempDir()
 			repo := testruntime.Clone(origin.TestRunner, repoDir)
-			branch := gitdomain.NewLocalBranchName("branch")
-			main := gitdomain.NewLocalBranchName("main")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
+			main := gitdomain.LocalBranchNameOrPanic("main")
 			repo.CheckoutBranch(main)
 			repo.CreateAndCheckoutFeatureBranch(branch, main)
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
@@ -1016,8 +1016,8 @@ func TestBackendCommands(t *testing.T) {
 			origin := testruntime.CreateGitTown(t)
 			repoDir := t.TempDir()
 			repo := testruntime.Clone(origin.TestRunner, repoDir)
-			branch := gitdomain.NewLocalBranchName("branch")
-			main := gitdomain.NewLocalBranchName("main")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
+			main := gitdomain.LocalBranchNameOrPanic("main")
 			repo.CheckoutBranch(main)
 			repo.CreateAndCheckoutFeatureBranch(branch, main)
 			have := repo.Git.CurrentBranchHasTrackingBranch(repo)
@@ -1030,7 +1030,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.SetDefaultGitBranch("main")
 		have := gitconfig.DefaultBranch(runtime)
-		want := gitdomain.NewLocalBranchNameOption("main")
+		want := gitdomain.LocalBranchNameOpt("main")
 		must.Eq(t, want, have)
 	})
 
@@ -1057,7 +1057,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.LocalBranchNameOpt("alpha"), "main")
 			want := []git.PhantomConflict{
 				{
 					FilePath:   "file",
@@ -1087,7 +1087,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.LocalBranchNameOpt("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1112,7 +1112,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.LocalBranchNameOpt("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1137,7 +1137,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.LocalBranchNameOpt("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
@@ -1155,8 +1155,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch has one commit", func(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
-			branch := gitdomain.NewLocalBranchName("branch")
-			main := gitdomain.NewLocalBranchName("main")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
+			main := gitdomain.LocalBranchNameOrPanic("main")
 			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
@@ -1170,8 +1170,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch has multiple commits", func(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
-			branch := gitdomain.NewLocalBranchName("branch")
-			main := gitdomain.NewLocalBranchName("main")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
+			main := gitdomain.LocalBranchNameOrPanic("main")
 			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
@@ -1203,7 +1203,7 @@ func TestBackendCommands(t *testing.T) {
 			origin := testruntime.CreateGitTown(t)
 			repoDir := t.TempDir()
 			repo := testruntime.Clone(origin.TestRunner, repoDir)
-			branch := gitdomain.NewLocalBranchName("branch")
+			branch := gitdomain.LocalBranchNameOrPanic("branch")
 			main := gitdomain.RemoteBranchNameOrPanic("origin/main")
 			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
@@ -1235,8 +1235,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("first branch matches", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("b1")
-			branch2 := gitdomain.NewLocalBranchName("b2")
+			branch1 := gitdomain.LocalBranchNameOrPanic("b1")
+			branch2 := gitdomain.LocalBranchNameOrPanic("b2")
 			runtime.CreateBranch(branch1, initial.BranchName())
 			runtime.CreateBranch(branch2, initial.BranchName())
 			have := runtime.Git.FirstExistingBranch(runtime, branch1, branch2)
@@ -1246,8 +1246,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("second branch matches", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("b1")
-			branch2 := gitdomain.NewLocalBranchName("b2")
+			branch1 := gitdomain.LocalBranchNameOrPanic("b1")
+			branch2 := gitdomain.LocalBranchNameOrPanic("b2")
 			runtime.CreateBranch(branch2, initial.BranchName())
 			have := runtime.Git.FirstExistingBranch(runtime, branch1, branch2)
 			want := Some(branch2)
@@ -1256,8 +1256,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("no branch matches", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("b1")
-			branch2 := gitdomain.NewLocalBranchName("b2")
+			branch1 := gitdomain.LocalBranchNameOrPanic("b1")
+			branch2 := gitdomain.LocalBranchNameOrPanic("b2")
 			have := runtime.Git.FirstExistingBranch(runtime, branch1, branch2)
 			want := None[gitdomain.LocalBranchName]()
 			must.EqOp(t, want, have)
@@ -1266,7 +1266,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("MergeFastForward", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
+		branch := gitdomain.LocalBranchNameOrPanic("branch")
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
@@ -1285,7 +1285,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("MergeNoFastForward", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
+		branch := gitdomain.LocalBranchNameOrPanic("branch")
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
@@ -1304,7 +1304,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("MergeNoFastForwardWithCommitMessage", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
+		branch := gitdomain.LocalBranchNameOrPanic("branch")
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
@@ -1343,7 +1343,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch("feature1")
 		runtime.CheckoutBranch("feature2")
 		have := runtime.Git.PreviouslyCheckedOutBranch(runtime.TestRunner)
-		must.Eq(t, gitdomain.NewLocalBranchNameOption("feature1"), have)
+		must.Eq(t, gitdomain.LocalBranchNameOpt("feature1"), have)
 	})
 
 	t.Run("RebaseInProgress", func(t *testing.T) {
@@ -1357,7 +1357,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("in progress", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			branch1 := gitdomain.NewLocalBranchName("branch1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch1")
 			runtime.CreateBranch(branch1, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
@@ -1365,7 +1365,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file",
 				Message:     "commit 1",
 			})
-			branch2 := gitdomain.NewLocalBranchName("branch2")
+			branch2 := gitdomain.LocalBranchNameOrPanic("branch2")
 			runtime.CreateBranch(branch2, initial.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch2,
@@ -1409,7 +1409,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("during rebase", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
-				branch1 := gitdomain.NewLocalBranchName("branch1")
+				branch1 := gitdomain.LocalBranchNameOrPanic("branch1")
 				runtime.CreateBranch(branch1, initial.BranchName())
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
@@ -1432,7 +1432,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("during merge conflict", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
-				branch1 := gitdomain.NewLocalBranchName("branch1")
+				branch1 := gitdomain.LocalBranchNameOrPanic("branch1")
 				runtime.CreateBranch(branch1, initial.BranchName())
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
@@ -1511,7 +1511,7 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("ResetCurrentBranchToSHA", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		branch1 := gitdomain.NewLocalBranchName("branch1")
+		branch1 := gitdomain.LocalBranchNameOrPanic("branch1")
 		runtime.CreateBranch(branch1, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch1,
@@ -1519,7 +1519,7 @@ func TestBackendCommands(t *testing.T) {
 			FileName:    "file1",
 			Message:     "commit 1",
 		})
-		branch2 := gitdomain.NewLocalBranchName("branch2")
+		branch2 := gitdomain.LocalBranchNameOrPanic("branch2")
 		runtime.CreateBranch(branch2, branch1.BranchName())
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch2,
@@ -1564,7 +1564,7 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("ShortenSHA", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		branch := gitdomain.NewLocalBranchName("branch")
+		branch := gitdomain.LocalBranchNameOrPanic("branch")
 		runtime.CreateBranch(branch, initial.BranchName())
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch,
@@ -1572,7 +1572,7 @@ func TestBackendCommands(t *testing.T) {
 			FileName:    "file1",
 			Message:     "first commit",
 		})
-		commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, "branch", gitdomain.NewLocalBranchNameOption("initial")))
+		commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime.TestRunner, "branch", gitdomain.LocalBranchNameOpt("initial")))
 		have := asserts.NoError1(runtime.Git.ShortenSHA(runtime, commits[0].SHA))
 		must.True(t, len(commits[0].SHA.String()) == 40)
 		must.True(t, len(have.String()) == 7)

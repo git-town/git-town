@@ -174,7 +174,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			sha2 := gitdomain.NewSHA("222222")
 			bs := undobranches.BranchSpan{
@@ -226,7 +226,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni remove", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			branchSpan := undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
@@ -270,7 +270,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("add a new local branch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: None[gitdomain.BranchInfo](),
@@ -287,7 +287,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
@@ -322,7 +322,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("changed a local branch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			sha2 := gitdomain.NewSHA("222222")
 			branchSpan := undobranches.BranchSpan{
@@ -351,7 +351,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			sha2 := gitdomain.NewSHA("222222")
 			branchSpan := undobranches.BranchSpan{
@@ -403,7 +403,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("removed a local branch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
@@ -423,7 +423,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			bs := undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{

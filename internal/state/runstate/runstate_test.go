@@ -42,7 +42,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			EndBranchesSnapshot: Some(gitdomain.BranchesSnapshot{
-				Active: gitdomain.NewLocalBranchNameOption("branch-1"),
+				Active: gitdomain.LocalBranchNameOpt("branch-1"),
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: "111111"}),

@@ -174,7 +174,7 @@ Start:
 		commitMessage: args.commitMessage,
 		propose:       args.propose,
 		prototype:     args.prototype,
-		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
+		targetBranch:  gitdomain.LocalBranchNameOrPanic(args.arg),
 	}, repo)
 	if err != nil {
 		return err

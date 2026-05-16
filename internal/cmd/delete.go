@@ -247,7 +247,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}
 	var branchToDelete gitdomain.LocalBranchName
 	if len(args) > 0 {
-		branchToDelete = gitdomain.NewLocalBranchName(args[0])
+		branchToDelete = gitdomain.LocalBranchNameOrPanic(args[0])
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToDelete = activeBranch
 	} else {

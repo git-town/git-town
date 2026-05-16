@@ -194,7 +194,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), err
 			}
-			currentBranchOpt = gitdomain.NewLocalBranchNameOption(headSHA.String())
+			currentBranchOpt = gitdomain.LocalBranchNameOpt(headSHA.String())
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
 				Local:      Some(gitdomain.BranchData{Name: gitdomain.LocalBranchName(headSHA.String()), SHA: headSHA}),
@@ -444,7 +444,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) 
 		}
 		refName := strings.TrimSpace(string(content))
 		if branchName, isBranchName := strings.CutPrefix(refName, "refs/heads/"); isBranchName {
-			return Some(gitdomain.NewLocalBranchName(branchName)), nil
+			return Some(gitdomain.LocalBranchNameOrPanic(branchName)), nil
 		}
 		// rebase head name is not a branch name
 		break
@@ -464,7 +464,7 @@ func (self *Commands) CurrentBranchUncached(querier subshelldomain.Querier) (Opt
 		return None[gitdomain.LocalBranchName](), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if output != "" {
-		return Some(gitdomain.NewLocalBranchName(output)), nil
+		return Some(gitdomain.LocalBranchNameOrPanic(output)), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
 	return self.CurrentBranchDuringRebase(querier)
@@ -698,7 +698,7 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier subshelldomain.Querier)
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return gitdomain.NewLocalBranchNameOption(output)
+	return gitdomain.LocalBranchNameOpt(output)
 }
 
 func (self *Commands) Pull(runner subshelldomain.Runner) error {
@@ -959,12 +959,12 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	for l, line := range lines {
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
-		branchName := gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:"))
+		branchName := gitdomain.BranchNameOrPanic(strings.TrimPrefix(parts[1], "branchname:"))
 		sha := gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:"))
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-		upstreamOption := gitdomain.NewRemoteBranchNameOpt(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
+		upstreamOption := gitdomain.RemoteBranchNameOpt(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
 		track := strings.TrimPrefix(parts[7], "track:")
 		result[l] = branchesQueryResult{
 			BranchName:     branchName,
