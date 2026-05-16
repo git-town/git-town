@@ -22,7 +22,7 @@ func TestRunState(t *testing.T) {
 			BranchInfosLastRun: Some(gitdomain.BranchInfos{
 				{
 					Local:      Some(gitdomain.BranchData{Name: "branch", SHA: "111111"}),
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+					RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusAhead,
 				},
@@ -46,7 +46,7 @@ func TestRunState(t *testing.T) {
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: "branch-1", SHA: "111111"}),
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
+						RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 						SyncStatus: gitdomain.SyncStatusNotInSync,
 					},

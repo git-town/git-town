@@ -16,13 +16,13 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is at the origin remote", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.NewRemoteBranchName("origin/branch")
+			branch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
 			want := gitdomain.NewLocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.NewRemoteBranchName("upstream/branch")
+			branch := gitdomain.RemoteBranchNameOrPanic("upstream/branch")
 			want := gitdomain.NewLocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
@@ -30,7 +30,7 @@ func TestRemoteBranchName(t *testing.T) {
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.NewRemoteBranchName("origin/branch-1")
+		branch := gitdomain.RemoteBranchNameOrPanic("origin/branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
 		must.NoError(t, err)
 		want := `"origin/branch-1"`
@@ -41,24 +41,24 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("valid remote branch name", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.NewRemoteBranchName("origin/branch")
+			branch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
 			must.EqOp(t, "origin/branch", branch.String())
 		})
 		t.Run("local branch name", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewRemoteBranchName("branch")
+			gitdomain.RemoteBranchNameOrPanic("branch")
 		})
 		t.Run("empty branch name", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewRemoteBranchName("")
+			gitdomain.RemoteBranchNameOrPanic("")
 		})
 	})
 
 	t.Run("Parts", func(t *testing.T) {
 		t.Parallel()
-		remoteBranch := gitdomain.NewRemoteBranchName("origin/branch")
+		remoteBranch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
 		must.EqOp(t, gitdomain.RemoteOrigin, remote)
 		must.EqOp(t, "branch", localBranch)
@@ -70,7 +70,7 @@ func TestRemoteBranchName(t *testing.T) {
 		var have gitdomain.RemoteBranchName
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := gitdomain.NewRemoteBranchName("origin/branch-1")
+		want := gitdomain.RemoteBranchNameOrPanic("origin/branch-1")
 		must.EqOp(t, want, have)
 	})
 }

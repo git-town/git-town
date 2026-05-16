@@ -129,7 +129,7 @@ func TestNewSwitchBranch(t *testing.T) {
 			t.Run("disabled", func(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
-				remote := gitdomain.NewRemoteBranchName("origin/remote")
+				remote := gitdomain.RemoteBranchNameOrPanic("origin/remote")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -164,11 +164,11 @@ func TestNewSwitchBranch(t *testing.T) {
 					grandchild: child,
 				})
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/child")), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: grandchild}), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: main}), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{Local: None[gitdomain.BranchData](), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: grandchild}), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/grandchild")), SyncStatus: gitdomain.SyncStatusUpToDate},
+					gitdomain.BranchInfo{Local: None[gitdomain.BranchData](), RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/child")), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{Local: Some(gitdomain.BranchData{Name: grandchild}), RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/grandchild")), SyncStatus: gitdomain.SyncStatusUpToDate},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
@@ -192,7 +192,7 @@ func TestNewSwitchBranch(t *testing.T) {
 			t.Run("enabled", func(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
-				remote := gitdomain.NewRemoteBranchName("origin/remote")
+				remote := gitdomain.RemoteBranchNameOrPanic("origin/remote")
 				lineage := configdomain.NewLineageWith(configdomain.LineageData{
 					local: main,
 				})

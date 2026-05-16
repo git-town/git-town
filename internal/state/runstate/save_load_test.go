@@ -126,9 +126,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPopIfExists{},
 				&opcodes.StashPopIfNeeded{InitialStashSize: 2},
 				&opcodes.StashOpenChanges{},
-				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch")), PushBranches: true},
-				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
-				&opcodes.SyncFeatureBranchRebase{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.NewSHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch")), PushBranches: true},
+				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456")), TrackingBranch: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch"))},
+				&opcodes.SyncFeatureBranchRebase{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.NewSHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{

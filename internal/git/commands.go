@@ -168,7 +168,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			})
 		default:
 			// Not using `BranchName.RemoteName()` because it might not necessarily be prefixed with "origin/".
-			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName.String())
+			remoteBranchName := gitdomain.RemoteBranchNameOrPanic(branch.BranchName.String())
 			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
 				existingBranchWithTracking.RemoteSHA = Some(branch.SHA)
 			} else {
@@ -964,7 +964,7 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
+		upstreamOption := gitdomain.NewRemoteBranchNameOpt(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
 		track := strings.TrimPrefix(parts[7], "track:")
 		result[l] = branchesQueryResult{
 			BranchName:     branchName,

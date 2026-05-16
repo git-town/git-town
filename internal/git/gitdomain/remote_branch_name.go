@@ -10,16 +10,16 @@ import (
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName string
 
-func NewRemoteBranchName(id string) RemoteBranchName {
+func RemoteBranchNameOrPanic(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
 	return RemoteBranchName(id)
 }
 
-func NewRemoteBranchNameOption(id string) Option[RemoteBranchName] {
+func NewRemoteBranchNameOpt(id string) Option[RemoteBranchName] {
 	if isValidRemoteBranchName(id) {
-		return Some(NewRemoteBranchName(id))
+		return Some(RemoteBranchNameOrPanic(id))
 	}
 	return None[RemoteBranchName]()
 }

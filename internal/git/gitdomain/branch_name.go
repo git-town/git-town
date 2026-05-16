@@ -40,9 +40,9 @@ func (self BranchName) RefName() string {
 // RemoteName provides the remote version of this branch name.
 func (self BranchName) RemoteName() RemoteBranchName {
 	if strings.HasPrefix(string(self), "origin/") {
-		return NewRemoteBranchName(string(self))
+		return RemoteBranchNameOrPanic(string(self))
 	}
-	return NewRemoteBranchName("origin/" + string(self))
+	return RemoteBranchNameOrPanic("origin/" + string(self))
 }
 
 // String implements the fmt.Stringer interface.
