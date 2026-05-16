@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/bytestream"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/pkg/colors"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -37,9 +38,9 @@ func (self BackendRunner) QueryTrim(executable string, args ...string) (string, 
 	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
-func (self BackendRunner) QueryZ(executable string, args ...string) (gohacks.ZString, error) {
+func (self BackendRunner) QueryZ(executable string, args ...string) (stringss.ZString, error) {
 	result, err := self.execute([]string{}, executable, args...)
-	return gohacks.ZString(result), err
+	return stringss.ZString(result), err
 }
 
 func (self BackendRunner) Run(executable string, args ...string) error {
