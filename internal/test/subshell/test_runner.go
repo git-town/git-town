@@ -157,9 +157,9 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (stringss.TrimmedString, error) {
 	output, err := self.QueryWith(&Options{TTY: true}, name, arguments...)
-	return strings.TrimSpace(output), err
+	return stringss.Trim(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.

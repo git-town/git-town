@@ -43,7 +43,7 @@ func (self *Commands) BranchAuthors(querier subshelldomain.Querier, branch, pare
 	if err != nil {
 		return []gitdomain.Author{}, err
 	}
-	lines := stringslice.Lines(output)
+	lines := stringslice.Lines(output.String())
 	result := make([]gitdomain.Author, len(lines))
 	for l, line := range lines {
 		line = strings.TrimSpace(line)
@@ -87,7 +87,7 @@ func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, l
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, localBranch, trackingBranch, err)
 	}
-	lines := strings.Split(out, "\n")
+	lines := strings.Split(out.String(), "\n")
 	if len(lines) != 2 {
 		return false, fmt.Errorf("unexpected output of git rev-parse: expected 2 lines, got %d: %s", len(lines), strings.Join(lines, ", "))
 	}
