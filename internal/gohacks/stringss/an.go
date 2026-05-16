@@ -1,4 +1,4 @@
-package gohacks
+package stringss
 
 import (
 	"strings"

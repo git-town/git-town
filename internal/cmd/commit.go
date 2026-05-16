@@ -19,7 +19,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/state/runstate"
 	"github.com/git-town/git-town/v23/internal/validate"
@@ -341,7 +341,7 @@ func validateCommitData(data commitData) error {
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.CommitIntoMainBranch)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeObservedBranch:
-		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, gohacks.An(data.branchTypeToCommitInto.String()), data.branchTypeToCommitInto)
+		return fmt.Errorf(messages.CommitWrongBranchType, data.branchToCommitInto, stringss.An(data.branchTypeToCommitInto.String()), data.branchTypeToCommitInto)
 	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
 	}
 	return nil

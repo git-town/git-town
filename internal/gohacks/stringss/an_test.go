@@ -1,9 +1,9 @@
-package gohacks_test
+package stringss_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
@@ -26,7 +26,7 @@ func TestAn(t *testing.T) {
 	}
 
 	for give, want := range tests {
-		have := gohacks.An(give)
+		have := stringss.An(give)
 		must.EqOp(t, want, have)
 	}
 }
