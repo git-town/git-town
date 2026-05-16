@@ -172,7 +172,7 @@ upstream = true
 				GitUserEmail:                None[gitdomain.GitUserEmail](),
 				GitUserName:                 None[gitdomain.GitUserName](),
 				GiteaToken:                  None[forgedomain.GiteaToken](),
-				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
+				HostingOriginHostname:       configdomain.ParseHostingOriginHostname(Some("github.com")),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),

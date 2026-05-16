@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 type LocalBranchNames []LocalBranchName
@@ -19,7 +20,11 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 
 // ParseLocalBranchNames constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
-func ParseLocalBranchNames(names string) LocalBranchNames {
+func ParseLocalBranchNames(namesOpt Option[string]) LocalBranchNames {
+	names, has := namesOpt.Get()
+	if !has {
+		return LocalBranchNames{}
+	}
 	parts := strings.Split(names, " ")
 	result := make(LocalBranchNames, 0, len(parts))
 	for _, part := range parts {

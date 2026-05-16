@@ -21,11 +21,7 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(valueOpt Option[string], source string) (Option[ShipStrategy], error) {
-	value, has := valueOpt.Get()
-	if !has {
-		return None[ShipStrategy](), nil
-	}
+func ParseShipStrategy(value string, source string) (Option[ShipStrategy], error) {
 	text := strings.ToLower(strings.TrimSpace(value))
 	for _, shipStrategy := range ShipStrategies() {
 		if shipStrategy.String() == text {
@@ -33,6 +29,13 @@ func ParseShipStrategy(valueOpt Option[string], source string) (Option[ShipStrat
 		}
 	}
 	return None[ShipStrategy](), fmt.Errorf(messages.ConfigShipStrategyUnknown, source, text)
+}
+
+func ParseShipStrategyOpt(valueOpt Option[string], source string) (Option[ShipStrategy], error) {
+	if value, has := valueOpt.Get(); has {
+		return ParseShipStrategy(value, source)
+	}
+	return None[ShipStrategy](), nil
 }
 
 func ShipStrategies() []ShipStrategy {

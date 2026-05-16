@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (
@@ -174,7 +175,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ObservedRegex:               observedRegex,
 		Offline:                     offline,
 		Order:                       order,
-		PerennialBranches:           gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
+		PerennialBranches:           gitdomain.ParseLocalBranchNames(env.GetOpt(perennialBranches)),
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,

@@ -9,11 +9,12 @@ import (
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
+func TextField(args TextFieldArgs) (Option[string], dialogdomain.Exit, error) {
 	if err := args.Interactive.Check(); err != nil {
-		return "", true, err
+		return None[string](), true, err
 	}
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)
@@ -30,7 +31,7 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 	SendInputs(args.DialogName, args.Inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textFieldModel)
-	return result.textInput.Value(), result.status == list.StatusExit, err
+	return Some(result.textInput.Value()), result.status == list.StatusExit, err
 }
 
 type TextFieldArgs struct {

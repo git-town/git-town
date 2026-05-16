@@ -118,7 +118,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
-			mainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
+			mainBranch = gitdomain.NewLocalBranchNameOption(Some(*data.Branches.Main))
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
@@ -197,7 +197,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.DevRemote != nil {
-			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
+			devRemote = gitdomain.NewRemote(Some(*data.Hosting.DevRemote))
 		}
 		if data.Hosting.ForgeType != nil {
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
@@ -212,7 +212,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
-			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
+			hostingOriginHostname = configdomain.ParseHostingOriginHostname(Some(*data.Hosting.OriginHostname))
 		}
 	}
 	if data.Propose != nil {

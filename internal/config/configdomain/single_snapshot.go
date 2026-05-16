@@ -1,6 +1,9 @@
 package configdomain
 
-import "github.com/git-town/git-town/v23/internal/gohacks/mapstools"
+import (
+	"github.com/git-town/git-town/v23/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
+)
 
 // SingleSnapshot contains all of the local or global Git metadata config settings.
 type SingleSnapshot map[Key]string
@@ -23,6 +26,14 @@ func (self SingleSnapshot) Aliases() Aliases {
 		result[key.AliasableCommand()] = value
 	}
 	return result
+}
+
+// GetOpt provides the snapshot content for the given key as an Option.
+func (self SingleSnapshot) GetOpt(key Key) Option[string] {
+	if value, has := self[key]; has {
+		return Some(value)
+	}
+	return None[string]()
 }
 
 // LineageEntries provides all the keys that describe lineage entries
