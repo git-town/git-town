@@ -12,7 +12,7 @@ func (self GitUserName) String() string {
 	return string(self)
 }
 
-func GitUserNameFromString(value string) Option[GitUserName] {
+func GitUserNameOptFromString(value string) Option[GitUserName] {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return None[GitUserName]()
@@ -20,7 +20,7 @@ func GitUserNameFromString(value string) Option[GitUserName] {
 	return Some(GitUserName(value))
 }
 
-func GitUserNameFromStringOpt(valueOpt Option[string]) Option[GitUserName] {
+func GitUserNameOptFromStringOpt(valueOpt Option[string]) Option[GitUserName] {
 	if value, has := valueOpt.Get(); has {
 		return Some(GitUserName(value))
 	}

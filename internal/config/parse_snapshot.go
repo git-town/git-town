@@ -180,7 +180,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		GitlabConnectorType:         gitlabConnectorType,
 		GitlabToken:                 forgedomain.ParseGitlabToken(snapshot[configdomain.KeyGitlabToken]),
 		GitUserEmail:                gitdomain.ParseGitUserEmail(snapshot[configdomain.KeyGitUserEmail]),
-		GitUserName:                 gitdomain.GitUserNameFromString(snapshot[configdomain.KeyGitUserName]),
+		GitUserName:                 gitdomain.GitUserNameOptFromString(snapshot[configdomain.KeyGitUserName]),
 		GiteaToken:                  forgedomain.ParseGiteaToken(snapshot[configdomain.KeyGiteaToken]),
 		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(snapshot[configdomain.KeyHostingOriginHostname]),
 		IgnoreUncommitted:           ignoreUncommitted,
