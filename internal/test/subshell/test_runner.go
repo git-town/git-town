@@ -272,9 +272,9 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}, err
 }
 
-func (self *TestRunner) QueryZ(name string, arguments ...string) (stringss.ZString, error) {
+func (self *TestRunner) QueryZ(name string, arguments ...string) (stringss.ZeroDelineated, error) {
 	result, err := self.Query(name, arguments...)
-	return stringss.ZString(result), err
+	return stringss.ZeroDelineated(result), err
 }
 
 // Run runs the given command with the given arguments.

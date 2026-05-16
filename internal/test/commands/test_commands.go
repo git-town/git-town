@@ -137,7 +137,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 	lines := stringslice.NonEmptyLines(output)
 	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
-		parts := stringss.ZString(line).Lines()
+		parts := stringss.ZeroDelineated(line).Lines()
 		commit := testgit.Commit{
 			Branch:  branch,
 			SHA:     gitdomain.NewSHA(parts[0]),

@@ -26,7 +26,7 @@ func FileStatusIsUntracked(status FileStatus) bool {
 }
 
 // ParseGitStatusZ parses the output of "git status -z" into a slice of FileStatus.
-func ParseGitStatusZ(output stringss.ZString) ([]FileStatus, error) {
+func ParseGitStatusZ(output stringss.ZeroDelineated) ([]FileStatus, error) {
 	var result []FileStatus
 	entries := output.Lines()
 	for i := 0; i < len(entries); i++ {
