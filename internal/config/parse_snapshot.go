@@ -192,7 +192,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ObservedRegex:               observedRegex,
 		Order:                       order,
 		Offline:                     offline,
-		PerennialBranches:           gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
+		PerennialBranches:           load(snapshot, configdomain.KeyPerennialBranches, gitdomain.ParseLocalBranchNames),
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
