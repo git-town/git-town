@@ -7,12 +7,11 @@ import (
 	"sync"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 // UserConfigDir is the directory that contains the user-specific configuration on this machine,
 // i.e. ~/.config.
-type UserConfigDir stringss.Trimmed
+type UserConfigDir string
 
 // RepoConfigDir provides the file path where Git Town stores data for the given Git repo inside this UserConfigDir.
 func (self UserConfigDir) RepoConfigDir(repoDir gitdomain.RepoRootDir) RepoConfigDir {
