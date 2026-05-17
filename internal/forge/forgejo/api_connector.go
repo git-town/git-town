@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/pkg/colors"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -248,8 +249,8 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Active:       pullRequest.State == forgejo.StateOpen,
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       forgedomain.ProposalNumber(pullRequest.Index),
-		Source:       gitdomain.LocalBranchNameOrPanic(pullRequest.Head.Ref),
-		Target:       gitdomain.LocalBranchNameOrPanic(pullRequest.Base.Ref),
+		Source:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Head.Ref)),
+		Target:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Base.Ref)),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,

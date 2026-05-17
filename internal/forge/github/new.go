@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/subshell"
 	"github.com/git-town/git-town/v23/internal/test/mockproposals"
@@ -89,8 +90,8 @@ func parsePullRequest(pullRequest *github.PullRequest) forgedomain.ProposalData 
 		Active:       pullRequest.GetState() == "open",
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.GetBody()),
 		Number:       forgedomain.ProposalNumber(pullRequest.GetNumber()),
-		Source:       gitdomain.LocalBranchNameOrPanic(pullRequest.Head.GetRef()),
-		Target:       gitdomain.LocalBranchNameOrPanic(pullRequest.Base.GetRef()),
+		Source:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Head.GetRef())),
+		Target:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Base.GetRef())),
 		Title:        gitdomain.ProposalTitle(pullRequest.GetTitle()),
 		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
 		URL:          *pullRequest.HTMLURL,

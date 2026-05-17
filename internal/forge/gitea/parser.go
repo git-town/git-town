@@ -4,6 +4,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
@@ -31,8 +32,8 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 		Active:       pullRequest.State == "open",
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       forgedomain.ProposalNumber(pullRequest.Index),
-		Source:       gitdomain.LocalBranchNameOrPanic(pullRequest.Head.Ref),
-		Target:       gitdomain.LocalBranchNameOrPanic(pullRequest.Base.Ref),
+		Source:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Head.Ref)),
+		Target:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.Base.Ref)),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
