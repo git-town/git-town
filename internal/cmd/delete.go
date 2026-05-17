@@ -21,6 +21,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/programs"
 	"github.com/git-town/git-town/v23/internal/state/runstate"
@@ -247,7 +248,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}
 	var branchToDelete gitdomain.LocalBranchName
 	if len(args) > 0 {
-		branchToDelete = gitdomain.LocalBranchNameOrPanic(args[0])
+		branchToDelete = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToDelete = activeBranch
 	} else {

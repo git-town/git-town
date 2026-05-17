@@ -1,27 +1,30 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v23/pkg/prelude"
+import (
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
+)
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
-type LocalBranchName string
+type LocalBranchName stringss.Trimmed
 
-func LocalBranchNameOrPanic(id string) LocalBranchName {
+func LocalBranchNameOrPanic(id stringss.Trimmed) LocalBranchName {
 	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")
 	}
 	return LocalBranchName(id)
 }
 
-func LocalBranchNameOpt(id string) Option[LocalBranchName] {
+func LocalBranchNameOpt(id stringss.Trimmed) Option[LocalBranchName] {
 	if isValidLocalBranchName(id) {
-		return Some(LocalBranchNameOrPanic(id))
+		return Some(LocalBranchName(id))
 	}
 	return None[LocalBranchName]()
 }
 
-func isValidLocalBranchName(value string) bool {
+func isValidLocalBranchName(value stringss.Trimmed) bool {
 	return len(value) > 0
 }
 

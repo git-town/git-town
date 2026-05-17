@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 	"github.com/shoenig/test/must"
 )
@@ -26,28 +27,28 @@ func TestSHA(t *testing.T) {
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			sha := gitdomain.NewSHA(text)
+			sha := gitdomain.NewSHAOrPanic(stringss.Trim(text))
 			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("")
+			gitdomain.NewSHAOrPanic("")
 		})
 		t.Run("does not allow spaces", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("abc def")
+			gitdomain.NewSHAOrPanic("abc def")
 		})
 		t.Run("does not allow uppercase characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("ABCDEF")
+			gitdomain.NewSHAOrPanic("ABCDEF")
 		})
 		t.Run("does not allow non-hex characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			gitdomain.NewSHA("abcdefg")
+			gitdomain.NewSHAOrPanic("abcdefg")
 		})
 	})
 

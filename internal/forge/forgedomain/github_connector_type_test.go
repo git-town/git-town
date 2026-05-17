@@ -5,13 +5,14 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
 func TestParseGithubConnectorType(t *testing.T) {
 	t.Parallel()
-	tests := map[string]struct {
+	tests := map[stringss.Trimmed]struct {
 		val Option[forgedomain.GithubConnectorType]
 		err error
 	}{

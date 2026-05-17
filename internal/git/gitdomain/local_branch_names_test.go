@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
@@ -92,7 +93,7 @@ func TestLocalBranchNames(t *testing.T) {
 
 	t.Run("ParseLocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]gitdomain.LocalBranchNames{
+		tests := map[stringss.Trimmed]gitdomain.LocalBranchNames{
 			"one two":      {"one", "two"},
 			" one   two  ": {"one", "two"},
 			"   ":          {},
