@@ -13,7 +13,7 @@ func TestLocalBranchName(t *testing.T) {
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.LocalBranchNameOrPanic("branch-1")
+		branch := gitdomain.LocalBranchName("branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
 		must.NoError(t, err)
 		want := `"branch-1"`
@@ -22,7 +22,7 @@ func TestLocalBranchName(t *testing.T) {
 
 	t.Run("NewLocalBranchName and String", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.LocalBranchNameOrPanic("branch-1")
+		branch := gitdomain.LocalBranchName("branch-1")
 		must.EqOp(t, "branch-1", branch.String())
 	})
 
@@ -32,7 +32,7 @@ func TestLocalBranchName(t *testing.T) {
 		var have gitdomain.LocalBranchName
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := gitdomain.LocalBranchNameOrPanic("branch-1")
+		want := gitdomain.LocalBranchName("branch-1")
 		must.EqOp(t, want, have)
 	})
 }

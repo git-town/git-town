@@ -15,7 +15,7 @@ func TestSHA(t *testing.T) {
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		sha := gitdomain.SHAFromString("123456")
+		sha := gitdomain.SHA("123456")
 		have, err := json.MarshalIndent(sha, "", "  ")
 		must.NoError(t, err)
 		want := `"123456"`
@@ -54,8 +54,8 @@ func TestSHA(t *testing.T) {
 
 	t.Run("Truncate", func(t *testing.T) {
 		t.Parallel()
-		give := gitdomain.SHAFromString("12345678901234567890123456789012")
-		want := gitdomain.SHAFromString("1234567")
+		give := gitdomain.SHA("12345678901234567890123456789012")
+		want := gitdomain.SHA("1234567")
 		have := give.Truncate(7)
 		must.EqOp(t, want, have)
 	})
@@ -66,7 +66,7 @@ func TestSHA(t *testing.T) {
 		var have gitdomain.SHA
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := gitdomain.SHAFromString("123456")
+		want := gitdomain.SHA("123456")
 		must.EqOp(t, want, have)
 	})
 }

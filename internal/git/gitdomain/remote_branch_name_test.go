@@ -16,21 +16,21 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is at the origin remote", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
-			want := gitdomain.LocalBranchNameOrPanic("branch")
+			branch := gitdomain.RemoteBranchName("origin/branch")
+			want := gitdomain.LocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.RemoteBranchNameOrPanic("upstream/branch")
-			want := gitdomain.LocalBranchNameOrPanic("branch")
+			branch := gitdomain.RemoteBranchName("upstream/branch")
+			want := gitdomain.LocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 	})
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		branch := gitdomain.RemoteBranchNameOrPanic("origin/branch-1")
+		branch := gitdomain.RemoteBranchName("origin/branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
 		must.NoError(t, err)
 		want := `"origin/branch-1"`
@@ -41,7 +41,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("valid remote branch name", func(t *testing.T) {
 			t.Parallel()
-			branch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
+			branch := gitdomain.RemoteBranchName("origin/branch")
 			must.EqOp(t, "origin/branch", branch.String())
 		})
 		t.Run("local branch name", func(t *testing.T) {
@@ -58,7 +58,7 @@ func TestRemoteBranchName(t *testing.T) {
 
 	t.Run("Parts", func(t *testing.T) {
 		t.Parallel()
-		remoteBranch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
+		remoteBranch := gitdomain.RemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
 		must.EqOp(t, gitdomain.RemoteOrigin, remote)
 		must.EqOp(t, "branch", localBranch)
@@ -70,7 +70,7 @@ func TestRemoteBranchName(t *testing.T) {
 		var have gitdomain.RemoteBranchName
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := gitdomain.RemoteBranchNameOrPanic("origin/branch-1")
+		want := gitdomain.RemoteBranchName("origin/branch-1")
 		must.EqOp(t, want, have)
 	})
 }
