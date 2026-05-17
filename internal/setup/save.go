@@ -143,6 +143,9 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ProposalBreadcrumbDirection.IsSome() {
 		_ = gitconfig.RemoveProposalBreadcrumbDirection(runner)
 	}
+	if gitConfig.ProposalBreadcrumbExcludeBranches.IsSome() {
+		_ = gitconfig.RemoveProposalBreadcrumbExcludeBranches(runner)
+	}
 	if gitConfig.PushBranches.IsSome() {
 		_ = gitconfig.RemovePushBranches(runner)
 	}
@@ -298,6 +301,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveProposalBreadcrumbDirection(userInput.Data.ProposalBreadcrumbDirection, existingGitConfig.ProposalBreadcrumbDirection, frontend),
 		)
 	}
+	if configFile.ProposalBreadcrumbExcludeBranches.IsNone() {
+		fc.Check(
+			saveProposalBreadcrumbExcludeBranches(userInput.Data.ProposalBreadcrumbExcludeBranches, existingGitConfig.ProposalBreadcrumbExcludeBranches, frontend),
+		)
+	}
 	if configFile.PushBranches.IsNone() {
 		fc.Check(
 			savePushBranches(userInput.Data.PushBranches, existingGitConfig.PushBranches, frontend),
@@ -403,6 +411,16 @@ func saveBranchPrefix(valueToWriteToGit Option[configdomain.BranchPrefix], value
 	}
 	_ = gitconfig.RemoveBranchPrefix(runner)
 	return nil
+}
+
+func saveProposalBreadcrumbExcludeBranches(valueToWriteToGit Option[configdomain.ProposalBreadcrumbExcludeBranches], valueAlreadyInGit Option[configdomain.ProposalBreadcrumbExcludeBranches], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetProposalBreadcrumbExcludeBranches(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveProposalBreadcrumbExcludeBranches(runner)
 }
 
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {

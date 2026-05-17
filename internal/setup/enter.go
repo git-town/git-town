@@ -173,6 +173,7 @@ EnterForgeData:
 	perennialRegex := None[configdomain.PerennialRegex]()
 	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
 	proposalBreadcrumbDirection := None[configdomain.ProposalBreadcrumbDirection]()
+	proposalBreadcrumbExcludeBranches := None[configdomain.ProposalBreadcrumbExcludeBranches]()
 	pushBranches := None[configdomain.PushBranches]()
 	pushHook := None[configdomain.PushHook]()
 	shareNewBranches := None[configdomain.ShareNewBranches]()
@@ -280,6 +281,10 @@ EnterForgeData:
 			return emptyResult, exit, false, err
 		}
 		proposalBreadcrumbDirection, exit, err = enterProposalBreadcrumbDirection(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
+		proposalBreadcrumbExcludeBranches, exit, err = enterProposalBreadcrumbExcludeBranches(data, proposalBreadcrumb)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -672,6 +677,24 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
 		Local:       data.Config.GitLocal.PerennialRegex,
+	})
+}
+
+func enterProposalBreadcrumbExcludeBranches(data Data, enteredProposalBreadcrumb Option[configdomain.ProposalBreadcrumb]) (Option[configdomain.ProposalBreadcrumbExcludeBranches], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalBreadcrumbExcludeBranches.IsSome() {
+		return None[configdomain.ProposalBreadcrumbExcludeBranches](), false, nil
+	}
+	effectiveProposalBreadcrumb := enteredProposalBreadcrumb.GetOr(data.Config.NormalConfig.ProposalBreadcrumb)
+	switch effectiveProposalBreadcrumb {
+	case configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbStacks:
+	case configdomain.ProposalBreadcrumbNone:
+		return None[configdomain.ProposalBreadcrumbExcludeBranches](), false, nil
+	}
+	return dialog.ProposalBreadcrumbExcludeBranches(dialog.Args[configdomain.ProposalBreadcrumbExcludeBranches]{
+		Global:      data.Config.GitGlobal.ProposalBreadcrumbExcludeBranches,
+		Inputs:      data.Inputs,
+		Interactive: data.Config.NormalConfig.Interactive,
+		Local:       data.Config.GitLocal.ProposalBreadcrumbExcludeBranches,
 	})
 }
 

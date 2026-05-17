@@ -33,43 +33,44 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                        | KEYS       |
-      | welcome                       | enter      |
-      | aliases                       | enter      |
-      | main branch                   | enter      |
-      | perennial branches            | enter      |
-      | dev-remote                    | enter      |
-      | origin hostname               | enter      |
-      | forge type                    | enter      |
-      | github connector              | enter      |
-      | github token                  | enter      |
-      | enter all                     | down enter |
-      | perennial regex               | enter      |
-      | feature regex                 | enter      |
-      | contribution regex            | enter      |
-      | observed regex                | enter      |
-      | branch prefix                 | enter      |
-      | new branch type               | enter      |
-      | unknown branch type           | enter      |
-      | sync feature strategy         | enter      |
-      | sync perennial strategy       | enter      |
-      | sync prototype strategy       | enter      |
-      | sync upstream                 | enter      |
-      | auto sync                     | enter      |
-      | sync tags                     | enter      |
-      | detached                      | enter      |
-      | stash                         | enter      |
-      | share new branches            | enter      |
-      | push branches                 | enter      |
-      | push hook                     | enter      |
-      | ship strategy                 | enter      |
-      | ship delete tracking branch   | enter      |
-      | ignore-uncommitted            | enter      |
-      | order                         | enter      |
-      | proposal breadcrumb           | enter      |
-      | proposal breadcrumb direction | enter      |
-      | interactive                   | enter      |
-      | config storage                | down enter |
+      | DIALOG                               | KEYS       |
+      | welcome                              | enter      |
+      | aliases                              | enter      |
+      | main branch                          | enter      |
+      | perennial branches                   | enter      |
+      | dev-remote                           | enter      |
+      | origin hostname                      | enter      |
+      | forge type                           | enter      |
+      | github connector                     | enter      |
+      | github token                         | enter      |
+      | enter all                            | down enter |
+      | perennial regex                      | enter      |
+      | feature regex                        | enter      |
+      | contribution regex                   | enter      |
+      | observed regex                       | enter      |
+      | branch prefix                        | enter      |
+      | new branch type                      | enter      |
+      | unknown branch type                  | enter      |
+      | sync feature strategy                | enter      |
+      | sync perennial strategy              | enter      |
+      | sync prototype strategy              | enter      |
+      | sync upstream                        | enter      |
+      | auto sync                            | enter      |
+      | sync tags                            | enter      |
+      | detached                             | enter      |
+      | stash                                | enter      |
+      | share new branches                   | enter      |
+      | push branches                        | enter      |
+      | push hook                            | enter      |
+      | ship strategy                        | enter      |
+      | ship delete tracking branch          | enter      |
+      | ignore-uncommitted                   | enter      |
+      | order                                | enter      |
+      | proposal breadcrumb                  | enter      |
+      | proposal breadcrumb direction        | enter      |
+      | proposal-breadcrumb-exclude-branches | enter      |
+      | interactive                          | enter      |
+      | config storage                       | down enter |
 
   Scenario: result
     Then Git Town runs the commands
@@ -161,6 +162,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       [propose]
       breadcrumb = "stacks"
       breadcrumb-direction = "up"
+      breadcrumb-exclude-branches = []
 
       [ship]
       delete-tracking-branch = false
