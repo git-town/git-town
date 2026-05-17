@@ -3,11 +3,13 @@ package proposallineage
 import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 type TreeNode struct {
-	Branch   gitdomain.LocalBranchName
-	Children []TreeNode
+	Branch        gitdomain.LocalBranchName
+	Children      Forest
+	LineageParent Option[gitdomain.LocalBranchName]
 }
 
 func (self TreeNode) BranchCount() int {
@@ -25,20 +27,21 @@ func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineag
 	root := ancestorsAndBranch[0]
 	descendants := lineage.Descendants(branch, order)
 	relevantBranches := append(ancestorsAndBranch, descendants...)
-	return buildTree(root, lineage, relevantBranches, order)
+	return buildTree(root, None[gitdomain.LocalBranchName](), lineage, relevantBranches, order)
 }
 
 // buildTree provides the TreeNodes for the given branch and all its descendents.
-func buildTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode {
-	children := []TreeNode{}
+func buildTree(branch gitdomain.LocalBranchName, lineageParent Option[gitdomain.LocalBranchName], lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode {
+	children := make(Forest, 0)
 	for _, child := range lineage.Children(branch, order) {
 		if includeBranches.Contains(child) {
-			childNode := buildTree(child, lineage, includeBranches, order)
+			childNode := buildTree(child, Some(branch), lineage, includeBranches, order)
 			children = append(children, childNode)
 		}
 	}
 	return TreeNode{
-		Branch:   branch,
-		Children: children,
+		Branch:        branch,
+		Children:      children,
+		LineageParent: lineageParent,
 	}
 }

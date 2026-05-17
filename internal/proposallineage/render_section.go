@@ -5,13 +5,16 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 type RenderSectionArgs struct {
+	BranchTypes   configdomain.BranchesAndTypes
 	Breadcrumb    configdomain.ProposalBreadcrumb
 	Connector     Option[forgedomain.Connector]
 	CurrentBranch gitdomain.LocalBranchName
 	Direction     configdomain.ProposalBreadcrumbDirection
+	Excluded      set.Set[configdomain.BranchType]
 	Lineage       configdomain.Lineage
 	Order         configdomain.Order
 }
@@ -21,13 +24,24 @@ func RenderSection(args RenderSectionArgs) string {
 	// step 1: calculate the lineage tree for the given branch
 	tree := CalculateTree(args.CurrentBranch, args.Lineage, args.Order)
 
-	if !args.Breadcrumb.DisplayBreadcrumb(tree.BranchCount()) {
+	forest := FilterTree(
+		tree,
+		args.BranchTypes,
+		args.Excluded,
+	)
+
+	branchCount := forest.BranchCount()
+	if branchCount == 0 {
+		return ""
+	}
+
+	if !args.Breadcrumb.DisplayBreadcrumb(branchCount) {
 		return ""
 	}
 
 	// step 2: add proposals to the tree
-	treeWithProposals := AddProposalsToTree(tree, args.Connector)
+	forestWithProposals := AddProposalsToForest(forest, args.Connector)
 
-	// step 3: render the tree into Markdown format
-	return RenderTree(treeWithProposals, args.CurrentBranch, args.Direction, args.Connector)
+	// step 3: render the tree[s] into Markdown format
+	return RenderForest(forestWithProposals, args.CurrentBranch, args.Direction, args.Connector)
 }

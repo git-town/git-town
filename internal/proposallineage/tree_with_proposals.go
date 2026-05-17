@@ -7,9 +7,10 @@ import (
 )
 
 type TreeNodeWithProposal struct {
-	Branch   gitdomain.LocalBranchName
-	Children []TreeNodeWithProposal
-	Proposal Option[forgedomain.Proposal]
+	Branch        gitdomain.LocalBranchName
+	Children      ForestWithProposals
+	LineageParent Option[gitdomain.LocalBranchName]
+	Proposal      Option[forgedomain.Proposal]
 }
 
 func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
@@ -25,19 +26,20 @@ func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
 }
 
 func AddProposalsToTree(tree TreeNode, connector Option[forgedomain.Connector]) TreeNodeWithProposal {
-	return addProposalsToTreeHelper(tree, None[gitdomain.LocalBranchName](), connector)
+	return addProposalsToTreeHelper(tree, connector)
 }
 
-func addProposalsToTreeHelper(tree TreeNode, parent Option[gitdomain.LocalBranchName], connector Option[forgedomain.Connector]) TreeNodeWithProposal {
-	proposal := loadProposal(tree.Branch, parent, connector)
-	children := make([]TreeNodeWithProposal, len(tree.Children))
+func addProposalsToTreeHelper(tree TreeNode, connector Option[forgedomain.Connector]) TreeNodeWithProposal {
+	proposal := loadProposal(tree.Branch, tree.LineageParent, connector)
+	children := make(ForestWithProposals, len(tree.Children))
 	for i, child := range tree.Children {
-		children[i] = addProposalsToTreeHelper(child, Some(tree.Branch), connector)
+		children[i] = addProposalsToTreeHelper(child, connector)
 	}
 	return TreeNodeWithProposal{
-		Branch:   tree.Branch,
-		Children: children,
-		Proposal: proposal,
+		Branch:        tree.Branch,
+		Children:      children,
+		LineageParent: tree.LineageParent,
+		Proposal:      proposal,
 	}
 }
 
