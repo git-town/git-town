@@ -1,11 +1,13 @@
 package browserdomain
 
+import "github.com/git-town/git-town/v23/internal/gohacks/stringss"
+
 const NoBrowser = BrowserExecutable("(none)")
 
 // BrowserExecutable indicates a custom browser to use.
 // If set to "" or "(none)", browsers are disabled.
 // If set to anything else, Git Town considers it the browser executable to use.
-type BrowserExecutable string
+type BrowserExecutable stringss.Trimmed
 
 func (self BrowserExecutable) Get() (executable string, useBrowser bool) { //nolint: nonamedreturns // the names really help understand the meaning of the return variables here
 	if self == NoBrowser || self == "" {

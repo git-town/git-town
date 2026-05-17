@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
-type RemoteBranchName string
+type RemoteBranchName stringss.Trimmed
 
 func RemoteBranchNameOrPanic(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
@@ -47,7 +48,7 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	remoteName, branchname, _ := strings.Cut(string(self), "/")
-	return Remote(remoteName), LocalBranchNameOrPanic(branchname)
+	return Remote(remoteName), LocalBranchNameOrPanic(stringss.Trim(branchname))
 }
 
 func (self RemoteBranchName) Remote() Remote {

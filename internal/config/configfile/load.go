@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -118,20 +119,20 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
-			mainBranch = gitdomain.LocalBranchNameOpt(*data.Branches.Main)
+			mainBranch = gitdomain.LocalBranchNameOpt(stringss.Trim(*data.Branches.Main))
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex, messages.ConfigFile)
+			perennialRegex, err = configdomain.ParsePerennialRegex(stringss.Trim(*data.Branches.PerennialRegex), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType, messages.ConfigFile)
+			branchType, err := configdomain.ParseBranchType(stringss.Trim(*data.Branches.DefaultType), messages.ConfigFile)
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.DisplayTypes != nil {
-			displayTypes, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, messages.ConfigFile)
+			displayTypes, err = configdomain.ParseDisplayTypes(stringss.Trim(*data.Branches.DisplayTypes), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.FeatureRegex != nil {
@@ -156,22 +157,22 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.Order != nil {
-			order, err = configdomain.ParseOrder(*data.Branches.Order, messages.ConfigFile)
+			order, err = configdomain.ParseOrder(stringss.Trim(*data.Branches.Order), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.UnknownType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType, messages.ConfigFile)
+			branchType, err := configdomain.ParseBranchType(stringss.Trim(*data.Branches.UnknownType), messages.ConfigFile)
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.BranchPrefix != nil {
-			branchPrefix, err = configdomain.ParseBranchPrefix(*data.Create.BranchPrefix, messages.ConfigFile)
+			branchPrefix, err = configdomain.ParseBranchPrefix(stringss.Trim(*data.Create.BranchPrefix), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Create.NewBranchType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
+			branchType, err := configdomain.ParseBranchType(stringss.Trim(*data.Create.NewBranchType), messages.ConfigFile)
 			ec.Check(err)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
@@ -180,7 +181,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
-			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches.String())
+			shareNewBranches, err = configdomain.ParseShareNewBranches(stringss.Trim(*data.Create.ShareNewBranches), configdomain.KeyShareNewBranches.String())
 			ec.Check(err)
 		}
 		if data.Create.Stash != nil {
@@ -193,40 +194,40 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.Platform != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)
+			forgeType, err = forgedomain.ParseForgeType(stringss.Trim(*data.Hosting.Platform), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.DevRemote != nil {
-			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
+			devRemote = gitdomain.NewRemote(stringss.Trim(*data.Hosting.DevRemote))
 		}
 		if data.Hosting.ForgeType != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
+			forgeType, err = forgedomain.ParseForgeType(stringss.Trim(*data.Hosting.ForgeType), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GithubConnector != nil {
-			githubConnectorType, err = forgedomain.ParseGithubConnectorType(*data.Hosting.GithubConnector, messages.ConfigFile)
+			githubConnectorType, err = forgedomain.ParseGithubConnectorType(stringss.Trim(*data.Hosting.GithubConnector), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GitlabConnector != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(*data.Hosting.GitlabConnector, messages.ConfigFile)
+			gitlabConnectorType, err = forgedomain.ParseGitlabConnectorType(stringss.Trim(*data.Hosting.GitlabConnector), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
-			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
+			hostingOriginHostname = configdomain.ParseHostingOriginHostname(stringss.Trim(*data.Hosting.OriginHostname))
 		}
 	}
 	if data.Propose != nil {
 		// load the deprecated "lineage" setting first so that "breadcrumb" can override the value later
 		if data.Propose.Lineage != nil {
-			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(*data.Propose.Lineage, messages.ConfigFile)
+			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(stringss.Trim(*data.Propose.Lineage), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.Breadcrumb != nil {
-			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(*data.Propose.Breadcrumb, messages.ConfigFile)
+			proposalBreadcrumb, err = configdomain.ParseProposalBreadcrumb(stringss.Trim(*data.Propose.Breadcrumb), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Propose.BreadcrumbDirection != nil {
-			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(*data.Propose.BreadcrumbDirection, messages.ConfigFile)
+			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(stringss.Trim(*data.Propose.BreadcrumbDirection), messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
@@ -243,15 +244,15 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches, messages.ConfigFile)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(stringss.Trim(*data.SyncStrategy.FeatureBranches), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches, messages.ConfigFile)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(stringss.Trim(*data.SyncStrategy.PerennialBranches), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches, messages.ConfigFile)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(stringss.Trim(*data.SyncStrategy.PrototypeBranches), messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
@@ -266,15 +267,15 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
 		if data.Sync.FeatureStrategy != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy, messages.ConfigFile)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(stringss.Trim(*data.Sync.FeatureStrategy), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PerennialStrategy != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy, messages.ConfigFile)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(stringss.Trim(*data.Sync.PerennialStrategy), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PrototypeStrategy != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy, messages.ConfigFile)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(stringss.Trim(*data.Sync.PrototypeStrategy), messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PushBranches != nil {

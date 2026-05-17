@@ -9,23 +9,23 @@ import (
 
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
-type SHA string
+type SHA stringss.Trimmed
 
-// NewSHA creates a new SHA instance with the given value.
-// The value is verified for correctness.
-func NewSHA(id stringss.TrimmedString) SHA {
-	return asserts.NoError1(NewSHAErr(id))
-}
-
-func NewSHAErr(id stringss.TrimmedString) (SHA, error) {
+func NewSHA(id stringss.Trimmed) (SHA, error) {
 	if !validateSHA(id) {
 		return SHA(""), fmt.Errorf("%q is not a valid Git SHA", id)
 	}
 	return SHA(id), nil
 }
 
+// NewSHAOrPanic creates a new SHA instance with the given value.
+// The value is verified for correctness.
+func NewSHAOrPanic(id stringss.Trimmed) SHA {
+	return asserts.NoError1(NewSHA(id))
+}
+
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
-func validateSHA(content stringss.TrimmedString) bool {
+func validateSHA(content stringss.Trimmed) bool {
 	if len(content) < 6 {
 		return false
 	}
@@ -50,9 +50,14 @@ func (self SHA) String() string {
 	return string(self)
 }
 
+// TrimmedString provides the content of this SHA as a trimmed string.
+func (self SHA) TrimmedString() stringss.Trimmed {
+	return stringss.Trimmed(self)
+}
+
 // Truncate reduces the length of this SHA to the given length.
 // This is only for test code.
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {
-	return SHA(self.String()[:newLen])
+	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
 }

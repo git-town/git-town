@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/validate"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -174,7 +175,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 	if !hasCurrentBranch {
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branch := gitdomain.LocalBranchNameOrPanic(slice.FirstElementOr(args, currentBranch.String()))
+	branch := gitdomain.LocalBranchNameOrPanic(stringss.Trim(slice.FirstElementOr(args, currentBranch.String())))
 	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
 			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branch)

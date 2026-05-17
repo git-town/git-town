@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -45,7 +46,7 @@ func TestBranchPrefix(t *testing.T) {
 
 	t.Run("ParseBranchPrefix", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[configdomain.BranchPrefix]{
+		tests := map[stringss.Trimmed]Option[configdomain.BranchPrefix]{
 			"":        None[configdomain.BranchPrefix](),
 			"prefix-": Some(configdomain.BranchPrefix("prefix-")),
 		}

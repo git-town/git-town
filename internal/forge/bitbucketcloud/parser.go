@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 )
 
@@ -139,8 +140,8 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 			Active:       isActive,
 			MergeWithAPI: false,
 			Number:       number,
-			Source:       gitdomain.LocalBranchNameOrPanic(source6),
-			Target:       gitdomain.LocalBranchNameOrPanic(destination6),
+			Source:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(source6)),
+			Target:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(destination6)),
 			Title:        gitdomain.ProposalTitle(title2),
 			Body:         gitdomain.NewProposalBodyOpt(body2),
 			URL:          url6,

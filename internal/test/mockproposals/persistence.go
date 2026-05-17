@@ -7,12 +7,13 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // MockProposalPath is the path to the mock proposals file.
-type MockProposalPath string
+type MockProposalPath stringss.Trimmed
 
 func (self MockProposalPath) String() string {
 	return string(self)
