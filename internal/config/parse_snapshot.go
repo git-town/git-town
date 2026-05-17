@@ -162,7 +162,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		AutoResolve:                 autoResolve,
 		AutoSync:                    autoSync,
 		BitbucketAppPassword:        load(snapshot, configdomain.KeyBitbucketAppPassword, forgedomain.ParseBitbucketAppPassword),
-		BitbucketUsername:           forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
+		BitbucketUsername:           load(snapshot, configdomain.KeyBitbucketUsername, forgedomain.ParseBitbucketUsername),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         branchTypeOverrides,
 		BrowserExecutable:           browserExecutable,

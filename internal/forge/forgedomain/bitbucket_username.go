@@ -1,8 +1,7 @@
 package forgedomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -12,8 +11,7 @@ func (self BitbucketUsername) String() string {
 	return string(self)
 }
 
-func ParseBitbucketUsername(value string) Option[BitbucketUsername] {
-	value = strings.TrimSpace(value)
+func ParseBitbucketUsername(value stringss.TrimmedString) Option[BitbucketUsername] {
 	if value == "" {
 		return None[BitbucketUsername]()
 	}
