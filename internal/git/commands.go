@@ -332,7 +332,7 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 			continue
 		}
 		result = append(result, gitdomain.Commit{
-			Message: gitdomain.CommitMessage(message),
+			Message: gitdomain.CommitMessage(stringss.Trim(message)),
 			SHA:     gitdomain.NewSHAOrPanic(stringss.Trim(sha)),
 		})
 	}
