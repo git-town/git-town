@@ -1,8 +1,7 @@
 package configdomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -12,8 +11,7 @@ func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func ParseHostingOriginHostname(value string) Option[HostingOriginHostname] {
-	value = strings.TrimSpace(value)
+func ParseHostingOriginHostname(value stringss.TrimmedString) Option[HostingOriginHostname] {
 	if value == "" {
 		return None[HostingOriginHostname]()
 	}
