@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
@@ -12,8 +13,8 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 		Active:       !pullRequest.Closed,
 		MergeWithAPI: false,
 		Number:       forgedomain.ProposalNumber(pullRequest.ID),
-		Source:       gitdomain.LocalBranchNameOrPanic(pullRequest.FromRef.DisplayID),
-		Target:       gitdomain.LocalBranchNameOrPanic(pullRequest.ToRef.DisplayID),
+		Source:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.FromRef.DisplayID)),
+		Target:       gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(pullRequest.ToRef.DisplayID)),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Description),
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),

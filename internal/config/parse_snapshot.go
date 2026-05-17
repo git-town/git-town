@@ -170,7 +170,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ForgejoToken:                load(snapshot, configdomain.KeyForgejoToken, forgedomain.ParseForgejoToken),
 		ContributionRegex:           contributionRegex,
 		Detached:                    detached,
-		DevRemote:                   gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
+		DevRemote:                   load(snapshot, configdomain.KeyDevRemote, gitdomain.NewRemote),
 		DisplayTypes:                displayTypes,
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                featureRegex,

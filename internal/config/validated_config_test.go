@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/git/giturl"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/test/testruntime"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -28,7 +29,7 @@ func TestValidatedConfig(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			},
 		}
-		tests := map[string]bool{
+		tests := map[stringss.TrimmedString]bool{
 			"feature":     false,
 			"main":        true,
 			"perennial-1": true,

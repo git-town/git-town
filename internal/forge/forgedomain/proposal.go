@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 )
 
@@ -30,7 +31,7 @@ func (self *Proposal) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(mapping["forge-type"], &forgeTypeName); err != nil {
 		return err
 	}
-	forgeTypeOpt, err := ParseForgeType(forgeTypeName, "JSON")
+	forgeTypeOpt, err := ParseForgeType(stringss.TrimSpace(forgeTypeName), "JSON")
 	if err != nil {
 		return err
 	}
