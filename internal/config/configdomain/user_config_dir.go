@@ -12,7 +12,7 @@ import (
 
 // UserConfigDir is the directory that contains the user-specific configuration on this machine,
 // i.e. ~/.config.
-type UserConfigDir stringss.TrimmedString
+type UserConfigDir stringss.Trimmed
 
 // RepoConfigDir provides the file path where Git Town stores data for the given Git repo inside this UserConfigDir.
 func (self UserConfigDir) RepoConfigDir(repoDir gitdomain.RepoRootDir) RepoConfigDir {

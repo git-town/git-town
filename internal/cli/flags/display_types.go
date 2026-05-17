@@ -24,7 +24,7 @@ func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 		if err != nil {
 			return None[configdomain.DisplayTypes](), err
 		}
-		return configdomain.ParseDisplayTypes(stringss.TrimSpace(text), "CLI flag "+displayTypesLong)
+		return configdomain.ParseDisplayTypes(stringss.Trim(text), "CLI flag "+displayTypesLong)
 	}
 	return addFlag, readFlag
 }

@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-func ParseBool[T ~bool](text stringss.TrimmedString, source string) (T, error) { //nolint:ireturn
+func ParseBool[T ~bool](text stringss.Trimmed, source string) (T, error) { //nolint:ireturn
 	switch strings.ToLower(text.String()) {
 	case "":
 		return false, fmt.Errorf(messages.ValueInvalid, source, text)
@@ -26,7 +26,7 @@ func ParseBool[T ~bool](text stringss.TrimmedString, source string) (T, error) {
 	return T(parsed), nil
 }
 
-func ParseBoolOpt[T ~bool](text stringss.TrimmedString, source string) (Option[T], error) {
+func ParseBoolOpt[T ~bool](text stringss.Trimmed, source string) (Option[T], error) {
 	if text == "" {
 		return None[T](), nil
 	}

@@ -195,6 +195,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	}, err
 }
 
-func load[T any](env EnvVars, varName string, parser func(stringss.TrimmedString, string) (T, error)) (T, error) { //nolint:ireturn
+func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
 	return parser(env.Get(varName), varName)
 }

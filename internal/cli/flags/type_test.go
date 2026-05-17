@@ -14,7 +14,7 @@ func TestBranchTypeFlag(t *testing.T) {
 
 	t.Run("ParseBranchTypes", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString][]configdomain.BranchType{
+		tests := map[stringss.Trimmed][]configdomain.BranchType{
 			"":                      {},
 			"contribution":          {configdomain.BranchTypeContributionBranch},
 			"feature":               {configdomain.BranchTypeFeatureBranch},
@@ -50,7 +50,7 @@ func TestBranchTypeFlag(t *testing.T) {
 
 	t.Run("SplitBranchTypeNames", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString][]stringss.TrimmedString{
+		tests := map[stringss.Trimmed][]stringss.Trimmed{
 			"":                   {},
 			"feature":            {"feature"},
 			"feature,observed":   {"feature", "observed"},

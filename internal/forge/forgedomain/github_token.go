@@ -6,13 +6,13 @@ import (
 )
 
 // GithubToken is a bearer token to use with the GitHub API.
-type GithubToken stringss.TrimmedString
+type GithubToken stringss.Trimmed
 
 func (self GithubToken) String() string {
 	return string(self)
 }
 
-func ParseGithubToken(value stringss.TrimmedString) Option[GithubToken] {
+func ParseGithubToken(value stringss.Trimmed) Option[GithubToken] {
 	if value == "" {
 		return None[GithubToken]()
 	}

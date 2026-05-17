@@ -46,7 +46,7 @@ func TestBranchPrefix(t *testing.T) {
 
 	t.Run("ParseBranchPrefix", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]Option[configdomain.BranchPrefix]{
+		tests := map[stringss.Trimmed]Option[configdomain.BranchPrefix]{
 			"":        None[configdomain.BranchPrefix](),
 			"prefix-": Some(configdomain.BranchPrefix("prefix-")),
 		}

@@ -13,7 +13,7 @@ type ObservedRegex struct {
 	VerifiedRegex
 }
 
-func ParseObservedRegex(value stringss.TrimmedString, source string) (Option[ObservedRegex], error) {
+func ParseObservedRegex(value stringss.Trimmed, source string) (Option[ObservedRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[ObservedRegex](), fmt.Errorf(messages.ObservedRegexCannotParse, value, source, err)

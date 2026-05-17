@@ -6,13 +6,13 @@ import (
 )
 
 // GitlabToken is a bearer token to use with the GitLab API.
-type GitlabToken stringss.TrimmedString
+type GitlabToken stringss.Trimmed
 
 func (self GitlabToken) String() string {
 	return string(self)
 }
 
-func ParseGitlabToken(value stringss.TrimmedString) Option[GitlabToken] {
+func ParseGitlabToken(value stringss.Trimmed) Option[GitlabToken] {
 	if value == "" {
 		return None[GitlabToken]()
 	}

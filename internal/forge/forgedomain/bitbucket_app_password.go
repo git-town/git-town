@@ -5,13 +5,13 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type BitbucketAppPassword stringss.TrimmedString
+type BitbucketAppPassword stringss.Trimmed
 
 func (self BitbucketAppPassword) String() string {
 	return string(self)
 }
 
-func ParseBitbucketAppPassword(value stringss.TrimmedString) Option[BitbucketAppPassword] {
+func ParseBitbucketAppPassword(value stringss.Trimmed) Option[BitbucketAppPassword] {
 	if value == "" {
 		return None[BitbucketAppPassword]()
 	}

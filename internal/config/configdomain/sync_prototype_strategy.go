@@ -29,7 +29,7 @@ func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFea
 	return SyncPrototypeStrategy(syncFeatureStrategy)
 }
 
-func ParseSyncPrototypeStrategy(value stringss.TrimmedString, source string) (Option[SyncPrototypeStrategy], error) {
+func ParseSyncPrototypeStrategy(value stringss.Trimmed, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncPrototypeStrategy](), fmt.Errorf(messages.CannotParse, source, err)

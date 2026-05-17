@@ -32,7 +32,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, igno
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		trimmedValue := stringss.TrimSpace(value)
+		trimmedValue := stringss.Trim(value)
 		if trimmedValue.String() == "" {
 			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
@@ -64,7 +64,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		valueTrimmed := stringss.TrimSpace(value)
+		valueTrimmed := stringss.Trim(value)
 		if valueTrimmed == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
@@ -212,23 +212,23 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 }
 
 // TODO: make this a method of SingleSnapshot
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.TrimmedString) T) T { //nolint:ireturn
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed) T) T { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
 		var zero T
 		return zero
 	}
-	return parseFunc(stringss.TrimSpace(valueStr))
+	return parseFunc(stringss.Trim(valueStr))
 }
 
 // TODO: make this a method of SingleSnapshot
-func loadErr[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.TrimmedString, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
+func loadErr[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
 		var zero T
 		return zero, nil
 	}
-	value, err := parseFunc(stringss.TrimSpace(valueStr), key.String())
+	value, err := parseFunc(stringss.Trim(valueStr), key.String())
 	if err != nil {
 		var zero T
 		if ignoreUnknown {

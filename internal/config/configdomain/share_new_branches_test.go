@@ -28,7 +28,7 @@ func TestParseShareNewBranches(t *testing.T) {
 
 	t.Run("valid values", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]Option[configdomain.ShareNewBranches]{
+		tests := map[stringss.Trimmed]Option[configdomain.ShareNewBranches]{
 			"no":      Some(configdomain.ShareNewBranchesNone),
 			"false":   Some(configdomain.ShareNewBranchesNone),
 			"0":       Some(configdomain.ShareNewBranchesNone),

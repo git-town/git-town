@@ -26,7 +26,7 @@ var counter helpers.AtomicCounter
 func (self *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
-		self.Branch = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(value))
+		self.Branch = gitdomain.LocalBranchNameOrPanic(stringss.Trim(value))
 	case "LOCATION":
 		self.Locations = NewLocations(value)
 	case "MESSAGE":

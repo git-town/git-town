@@ -8,7 +8,7 @@ import (
 
 // Location is a location within a Git repo.
 // Examples for locations are SHA addresses of commits or branch names.
-type Location stringss.TrimmedString
+type Location stringss.Trimmed
 
 func NewLocation(id string) Location {
 	return Location(id)

@@ -7,7 +7,7 @@ import (
 )
 
 // CommitMessage is the entire textual messages of a Git commit.
-type CommitMessage stringss.TrimmedString
+type CommitMessage stringss.Trimmed
 
 // CommitMessageParts describes the parts of a Git commit message.
 type CommitMessageParts struct {

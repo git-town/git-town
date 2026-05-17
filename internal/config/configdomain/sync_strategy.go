@@ -21,7 +21,7 @@ const (
 	SyncStrategyCompress = SyncStrategy("compress")
 )
 
-func ParseSyncStrategy(text stringss.TrimmedString) (Option[SyncStrategy], error) {
+func ParseSyncStrategy(text stringss.Trimmed) (Option[SyncStrategy], error) {
 	if text == "" {
 		return None[SyncStrategy](), nil
 	}

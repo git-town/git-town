@@ -175,7 +175,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (diffPa
 	if !hasCurrentBranch {
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branch := gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(slice.FirstElementOr(args, currentBranch.String())))
+	branch := gitdomain.LocalBranchNameOrPanic(stringss.Trim(slice.FirstElementOr(args, currentBranch.String())))
 	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
 			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branch)

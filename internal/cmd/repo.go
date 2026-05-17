@@ -94,7 +94,7 @@ func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
-		remoteOpt = gitdomain.NewRemote(stringss.TrimSpace(args[0]))
+		remoteOpt = gitdomain.NewRemote(stringss.Trim(args[0]))
 	} else {
 		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
 	}

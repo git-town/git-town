@@ -24,12 +24,12 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 		if err != nil {
 			return []configdomain.BranchType{}, err
 		}
-		return ParseBranchTypes(stringss.TrimSpace(value), "--type flag")
+		return ParseBranchTypes(stringss.Trim(value), "--type flag")
 	}
 	return addFlag, readFlag
 }
 
-func ParseBranchTypes(text stringss.TrimmedString, source string) ([]configdomain.BranchType, error) {
+func ParseBranchTypes(text stringss.Trimmed, source string) ([]configdomain.BranchType, error) {
 	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
@@ -44,14 +44,14 @@ func ParseBranchTypes(text stringss.TrimmedString, source string) ([]configdomai
 	return result, nil
 }
 
-func SplitBranchTypeNames(text stringss.TrimmedString) []stringss.TrimmedString {
+func SplitBranchTypeNames(text stringss.Trimmed) []stringss.Trimmed {
 	splitBranchOnce.Do(func() {
 		splitBranchRegex = regexp.MustCompile(`[,\+&\|]`)
 	})
 	splitted := splitBranchRegex.Split(text.String(), -1)
-	result := make([]stringss.TrimmedString, 0, len(splitted))
+	result := make([]stringss.Trimmed, 0, len(splitted))
 	for _, split := range splitted {
-		trimmedSplit := stringss.TrimSpace(split)
+		trimmedSplit := stringss.Trim(split)
 		if len(trimmedSplit) > 0 {
 			result = append(result, trimmedSplit)
 		}

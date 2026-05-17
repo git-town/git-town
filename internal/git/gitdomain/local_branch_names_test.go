@@ -93,7 +93,7 @@ func TestLocalBranchNames(t *testing.T) {
 
 	t.Run("ParseLocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]gitdomain.LocalBranchNames{
+		tests := map[stringss.Trimmed]gitdomain.LocalBranchNames{
 			"one two":      {"one", "two"},
 			" one   two  ": {"one", "two"},
 			"   ":          {},

@@ -120,7 +120,7 @@ func appendCmd() *cobra.Command {
 				Verbose:           verbose,
 			})
 			return executeAppend(executeAppendArgs{
-				arg:           stringss.TrimSpace(args[0]),
+				arg:           stringss.Trim(args[0]),
 				beam:          beam,
 				cliConfig:     cliConfig,
 				commit:        commit,
@@ -147,7 +147,7 @@ func appendCmd() *cobra.Command {
 }
 
 type executeAppendArgs struct {
-	arg           stringss.TrimmedString
+	arg           stringss.Trimmed
 	beam          configdomain.Beam
 	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit

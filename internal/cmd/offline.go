@@ -79,7 +79,7 @@ func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig)
 	case 1:
-		err = setOfflineStatus(stringss.TrimSpace(args[0]), repo.Frontend)
+		err = setOfflineStatus(stringss.Trim(args[0]), repo.Frontend)
 		if err != nil {
 			return err
 		}
@@ -102,7 +102,7 @@ func displayOfflineStatus(config config.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.NormalConfig.Offline.IsOffline()))
 }
 
-func setOfflineStatus(text stringss.TrimmedString, runner subshelldomain.Runner) error {
+func setOfflineStatus(text stringss.Trimmed, runner subshelldomain.Runner) error {
 	value, err := gohacks.ParseBool[configdomain.Offline](text, "offline status")
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)

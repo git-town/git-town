@@ -20,7 +20,7 @@ func (self ProposalBreadcrumbDirection) String() string {
 	return string(self)
 }
 
-func ParseProposalBreadcrumbDirection(value stringss.TrimmedString, source string) (Option[ProposalBreadcrumbDirection], error) {
+func ParseProposalBreadcrumbDirection(value stringss.Trimmed, source string) (Option[ProposalBreadcrumbDirection], error) {
 	switch strings.ToLower(value.String()) {
 	case "":
 		return None[ProposalBreadcrumbDirection](), nil

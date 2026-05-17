@@ -6,7 +6,7 @@ import (
 )
 
 // ProposalBody is the body of a proposal
-type ProposalBody stringss.TrimmedString
+type ProposalBody stringss.Trimmed
 
 // String implements the fmt.Stringer interface.
 func (self ProposalBody) String() string {

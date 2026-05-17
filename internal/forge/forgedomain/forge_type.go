@@ -27,7 +27,7 @@ const (
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.
-func ParseForgeType(name stringss.TrimmedString, source string) (Option[ForgeType], error) {
+func ParseForgeType(name stringss.Trimmed, source string) (Option[ForgeType], error) {
 	if name == "" {
 		return None[ForgeType](), nil
 	}

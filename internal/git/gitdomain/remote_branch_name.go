@@ -9,7 +9,7 @@ import (
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
-type RemoteBranchName stringss.TrimmedString
+type RemoteBranchName stringss.Trimmed
 
 func RemoteBranchNameOrPanic(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
@@ -48,7 +48,7 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	remoteName, branchname, _ := strings.Cut(string(self), "/")
-	return Remote(remoteName), LocalBranchNameOrPanic(stringss.TrimSpace(branchname))
+	return Remote(remoteName), LocalBranchNameOrPanic(stringss.Trim(branchname))
 }
 
 func (self RemoteBranchName) Remote() Remote {

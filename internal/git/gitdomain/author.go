@@ -6,7 +6,7 @@ import (
 )
 
 // Author represents the author of a commit in the format "name <email>"
-type Author stringss.TrimmedString
+type Author stringss.Trimmed
 
 // String implements the fmt.Stringer interface.
 func (self Author) String() string {

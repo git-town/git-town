@@ -46,7 +46,7 @@ func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
 	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
 }
 
-func NewInteractiveFromSnapshot(value stringss.TrimmedString, source string) (Option[Interactive], error) {
+func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
 	boolValue, err := gohacks.ParseBool[bool](value, source)
 	if err != nil {
 		return None[Interactive](), err
@@ -57,7 +57,7 @@ func NewInteractiveFromSnapshot(value stringss.TrimmedString, source string) (Op
 	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
-func NewInteractiveFromEnv(envTerm stringss.TrimmedString, envConfigOpt Option[bool]) Option[Interactive] {
+func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) Option[Interactive] {
 	envConfig, hasEnvConfig := envConfigOpt.Get()
 	if hasEnvConfig {
 		if envConfig {

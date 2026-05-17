@@ -8,9 +8,9 @@ import (
 )
 
 // BranchName is the name of a local or remote Git branch.
-type BranchName stringss.TrimmedString
+type BranchName stringss.Trimmed
 
-func BranchNameOrPanic(id stringss.TrimmedString) BranchName {
+func BranchNameOrPanic(id stringss.Trimmed) BranchName {
 	if !isValidBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid Git branch name", id))
 	}
@@ -24,7 +24,7 @@ func (self BranchName) IsLocal() bool {
 
 // LocalName provides the (theoretical) local version of this branch name.
 func (self BranchName) LocalName() LocalBranchName {
-	return LocalBranchNameOrPanic(stringss.TrimSpace(strings.TrimPrefix(string(self), "origin/")))
+	return LocalBranchNameOrPanic(stringss.Trim(strings.TrimPrefix(string(self), "origin/")))
 }
 
 func (self BranchName) Location() Location {
@@ -53,6 +53,6 @@ func (self BranchName) String() string {
 }
 
 // isValidBranchName indicates whether the given text is a valid branch name.
-func isValidBranchName(text stringss.TrimmedString) bool {
+func isValidBranchName(text stringss.Trimmed) bool {
 	return len(text) != 0
 }

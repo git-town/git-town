@@ -12,7 +12,7 @@ type FeatureRegex struct {
 	VerifiedRegex
 }
 
-func ParseFeatureRegex(value stringss.TrimmedString, source string) (Option[FeatureRegex], error) {
+func ParseFeatureRegex(value stringss.Trimmed, source string) (Option[FeatureRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[FeatureRegex](), fmt.Errorf(messages.CannotParse, source, err)

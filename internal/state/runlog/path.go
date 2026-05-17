@@ -8,7 +8,7 @@ import (
 )
 
 // FilePath is the path to the runlog file.
-type FilePath stringss.TrimmedString
+type FilePath stringss.Trimmed
 
 func (self FilePath) String() string {
 	return string(self)

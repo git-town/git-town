@@ -35,7 +35,7 @@ func AllBranchTypes() []BranchType {
 	}
 }
 
-func ParseBranchType(text stringss.TrimmedString, source string) (Option[BranchType], error) {
+func ParseBranchType(text stringss.Trimmed, source string) (Option[BranchType], error) {
 	if text == "" || text == messages.DialogResultNone {
 		return None[BranchType](), nil
 	}

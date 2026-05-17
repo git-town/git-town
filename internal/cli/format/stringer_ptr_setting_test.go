@@ -11,7 +11,7 @@ import (
 
 func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
-	tests := map[stringss.TrimmedString]string{
+	tests := map[stringss.Trimmed]string{
 		"my token": "my token",
 		"":         "(not set)",
 	}

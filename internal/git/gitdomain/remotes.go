@@ -12,7 +12,7 @@ type Remotes []Remote
 func NewRemotes(remotes ...string) Remotes {
 	result := make(Remotes, 0, len(remotes))
 	for _, remoteName := range remotes {
-		if remote, hasRemote := NewRemote(stringss.TrimSpace(remoteName)).Get(); hasRemote {
+		if remote, hasRemote := NewRemote(stringss.Trim(remoteName)).Get(); hasRemote {
 			result = append(result, remote)
 		}
 	}

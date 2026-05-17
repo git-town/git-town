@@ -333,7 +333,7 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(message),
-			SHA:     gitdomain.SHAFromString(stringss.TrimSpace(sha)),
+			SHA:     gitdomain.SHAFromString(stringss.Trim(sha)),
 		})
 	}
 	slices.Reverse(result)
@@ -356,8 +356,8 @@ func (self *Commands) CommitsInPerennialBranch(querier subshelldomain.Querier) (
 			continue
 		}
 		result = append(result, gitdomain.Commit{
-			Message: gitdomain.CommitMessage(stringss.TrimSpace(message)),
-			SHA:     gitdomain.SHAFromString(stringss.TrimSpace(sha)),
+			Message: gitdomain.CommitMessage(stringss.Trim(message)),
+			SHA:     gitdomain.SHAFromString(stringss.Trim(sha)),
 		})
 	}
 	return result, nil
@@ -445,7 +445,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) 
 		}
 		refName := strings.TrimSpace(string(content))
 		if branchName, isBranchName := strings.CutPrefix(refName, "refs/heads/"); isBranchName {
-			return Some(gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(branchName))), nil
+			return Some(gitdomain.LocalBranchNameOrPanic(stringss.Trim(branchName))), nil
 		}
 		// rebase head name is not a branch name
 		break
@@ -959,8 +959,8 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	for l, line := range lines {
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
-		branchName := gitdomain.BranchNameOrPanic(stringss.TrimSpace(strings.TrimPrefix(parts[1], "branchname:")))
-		sha := gitdomain.SHAFromString(stringss.TrimmedString(strings.TrimPrefix(parts[2], "sha:")))
+		branchName := gitdomain.BranchNameOrPanic(stringss.Trim(strings.TrimPrefix(parts[1], "branchname:")))
+		sha := gitdomain.SHAFromString(stringss.Trimmed(strings.TrimPrefix(parts[2], "sha:")))
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
@@ -1004,7 +1004,7 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 }
 
 // provides the path of the `.git` directory of the current repository.
-func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.TrimmedString, error) {
+func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.Trimmed, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
 	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
 }

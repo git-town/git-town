@@ -228,10 +228,10 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	var newBranchName gitdomain.LocalBranchName
 	if len(args) == 1 {
 		oldBranchName = initialBranch
-		newBranchName = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
+		newBranchName = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
 	} else {
-		oldBranchName = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
-		newBranchName = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[1]))
+		oldBranchName = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
+		newBranchName = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[1]))
 	}
 	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
 		newBranchName = prefix.Apply(newBranchName)

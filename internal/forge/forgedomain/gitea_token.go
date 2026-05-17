@@ -6,13 +6,13 @@ import (
 )
 
 // GiteaToken is a bearer token to use with the Gitea API.
-type GiteaToken stringss.TrimmedString
+type GiteaToken stringss.Trimmed
 
 func (self GiteaToken) String() string {
 	return string(self)
 }
 
-func ParseGiteaToken(value stringss.TrimmedString) Option[GiteaToken] {
+func ParseGiteaToken(value stringss.Trimmed) Option[GiteaToken] {
 	if value == "" {
 		return None[GiteaToken]()
 	}

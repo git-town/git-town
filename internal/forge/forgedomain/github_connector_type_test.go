@@ -12,7 +12,7 @@ import (
 
 func TestParseGithubConnectorType(t *testing.T) {
 	t.Parallel()
-	tests := map[stringss.TrimmedString]struct {
+	tests := map[stringss.Trimmed]struct {
 		val Option[forgedomain.GithubConnectorType]
 		err error
 	}{

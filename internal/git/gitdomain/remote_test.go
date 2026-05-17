@@ -11,7 +11,7 @@ import (
 
 func TestNewRemote(t *testing.T) {
 	t.Parallel()
-	tests := map[stringss.TrimmedString]Option[gitdomain.Remote]{
+	tests := map[stringss.Trimmed]Option[gitdomain.Remote]{
 		"origin":   Some(gitdomain.RemoteOrigin),
 		"upstream": Some(gitdomain.RemoteUpstream),
 		"foo":      gitdomain.NewRemote("foo"),

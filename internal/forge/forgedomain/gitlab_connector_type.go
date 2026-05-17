@@ -28,7 +28,7 @@ func GitlabConnectorTypes() []GitlabConnectorType {
 	}
 }
 
-func ParseGitlabConnectorType(text stringss.TrimmedString, source string) (Option[GitlabConnectorType], error) {
+func ParseGitlabConnectorType(text stringss.Trimmed, source string) (Option[GitlabConnectorType], error) {
 	if text == "" {
 		return None[GitlabConnectorType](), nil
 	}

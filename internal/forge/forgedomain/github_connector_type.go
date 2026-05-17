@@ -28,7 +28,7 @@ func GithubConnectorTypes() []GithubConnectorType {
 	}
 }
 
-func ParseGithubConnectorType(text stringss.TrimmedString, source string) (Option[GithubConnectorType], error) {
+func ParseGithubConnectorType(text stringss.Trimmed, source string) (Option[GithubConnectorType], error) {
 	if text == "" {
 		return None[GithubConnectorType](), nil
 	}

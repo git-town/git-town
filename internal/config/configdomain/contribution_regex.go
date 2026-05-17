@@ -13,7 +13,7 @@ type ContributionRegex struct {
 	VerifiedRegex
 }
 
-func ParseContributionRegex(value stringss.TrimmedString, source string) (Option[ContributionRegex], error) {
+func ParseContributionRegex(value stringss.Trimmed, source string) (Option[ContributionRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[ContributionRegex](), fmt.Errorf(messages.CannotParse, source, err)

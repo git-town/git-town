@@ -112,7 +112,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	previousBranch := args.repo.Git.PreviouslyCheckedOutBranch(args.repo.Backend)
 	var branchToShip gitdomain.LocalBranchName
 	if len(args.args) > 0 {
-		branchToShip = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args.args[0]))
+		branchToShip = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args.args[0]))
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToShip = activeBranch
 	} else {

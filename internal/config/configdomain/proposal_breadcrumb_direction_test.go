@@ -12,7 +12,7 @@ import (
 func TestParseProposalBreadcrumbDirection(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		give stringss.TrimmedString
+		give stringss.Trimmed
 		want Option[configdomain.ProposalBreadcrumbDirection]
 		err  bool
 	}{

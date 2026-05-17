@@ -5,13 +5,13 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type BitbucketUsername stringss.TrimmedString
+type BitbucketUsername stringss.Trimmed
 
 func (self BitbucketUsername) String() string {
 	return string(self)
 }
 
-func ParseBitbucketUsername(value stringss.TrimmedString) Option[BitbucketUsername] {
+func ParseBitbucketUsername(value stringss.Trimmed) Option[BitbucketUsername] {
 	if value == "" {
 		return None[BitbucketUsername]()
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
-func TextField(args TextFieldArgs) (stringss.TrimmedString, dialogdomain.Exit, error) {
+func TextField(args TextFieldArgs) (stringss.Trimmed, dialogdomain.Exit, error) {
 	if err := args.Interactive.Check(); err != nil {
 		return "", true, err
 	}
@@ -31,7 +31,7 @@ func TextField(args TextFieldArgs) (stringss.TrimmedString, dialogdomain.Exit, e
 	SendInputs(args.DialogName, args.Inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textFieldModel)
-	return stringss.TrimSpace(result.textInput.Value()), result.status == list.StatusExit, err
+	return stringss.Trim(result.textInput.Value()), result.status == list.StatusExit, err
 }
 
 type TextFieldArgs struct {

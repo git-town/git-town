@@ -25,7 +25,7 @@ const (
 	SyncPerennialStrategyFFOnly = SyncPerennialStrategy(SyncStrategyFFOnly)
 )
 
-func ParseSyncPerennialStrategy(value stringss.TrimmedString, source string) (Option[SyncPerennialStrategy], error) {
+func ParseSyncPerennialStrategy(value stringss.Trimmed, source string) (Option[SyncPerennialStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncPerennialStrategy](), fmt.Errorf(messages.CannotParse, source, err)

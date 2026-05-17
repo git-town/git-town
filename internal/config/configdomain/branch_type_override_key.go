@@ -19,7 +19,7 @@ type BranchTypeOverrideKey struct {
 // Branch provides the name of the child branch encoded in this LineageKey.
 func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
 	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
-	return gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(text))
+	return gitdomain.LocalBranchNameOrPanic(stringss.Trim(text))
 }
 
 func IsBranchTypeOverrideKey(key string) bool {

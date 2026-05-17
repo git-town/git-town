@@ -6,9 +6,9 @@ import (
 )
 
 // Remote represents a Git remote.
-type Remote stringss.TrimmedString
+type Remote stringss.Trimmed
 
-func NewRemote(id stringss.TrimmedString) Option[Remote] {
+func NewRemote(id stringss.Trimmed) Option[Remote] {
 	if len(id) == 0 {
 		return None[Remote]()
 	}

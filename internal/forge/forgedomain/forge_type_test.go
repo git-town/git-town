@@ -14,7 +14,7 @@ func TestParseForgeType(t *testing.T) {
 
 	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]Option[forgedomain.ForgeType]{
+		tests := map[stringss.Trimmed]Option[forgedomain.ForgeType]{
 			"":                     None[forgedomain.ForgeType](),
 			"azuredevops":          Some(forgedomain.ForgeTypeAzuredevops),
 			"AzureDevOps":          Some(forgedomain.ForgeTypeAzuredevops),

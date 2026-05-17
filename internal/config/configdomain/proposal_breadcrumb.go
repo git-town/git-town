@@ -47,7 +47,7 @@ func (self ProposalBreadcrumb) String() string {
 	return string(self)
 }
 
-func ParseProposalBreadcrumb(value stringss.TrimmedString, source string) (Option[ProposalBreadcrumb], error) {
+func ParseProposalBreadcrumb(value stringss.Trimmed, source string) (Option[ProposalBreadcrumb], error) {
 	switch strings.ToLower(value.String()) {
 	case "":
 		return None[ProposalBreadcrumb](), nil

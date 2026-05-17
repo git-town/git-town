@@ -75,7 +75,7 @@ func (self DisplayTypes) String() string {
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
 
-func ParseDisplayTypes(text stringss.TrimmedString, source string) (Option[DisplayTypes], error) {
+func ParseDisplayTypes(text stringss.Trimmed, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
 		return None[DisplayTypes](), nil
 	}
@@ -99,7 +99,7 @@ func ParseDisplayTypes(text stringss.TrimmedString, source string) (Option[Displ
 	}
 	branchTypes := make([]BranchType, len(parts))
 	for p, part := range parts {
-		branchTypeOpt, err := ParseBranchType(stringss.TrimSpace(part), source)
+		branchTypeOpt, err := ParseBranchType(stringss.Trim(part), source)
 		if err != nil {
 			return None[DisplayTypes](), err
 		}

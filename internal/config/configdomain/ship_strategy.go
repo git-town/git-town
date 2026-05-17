@@ -22,7 +22,7 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(text stringss.TrimmedString, source string) (Option[ShipStrategy], error) {
+func ParseShipStrategy(text stringss.Trimmed, source string) (Option[ShipStrategy], error) {
 	if text == "" {
 		return None[ShipStrategy](), nil
 	}

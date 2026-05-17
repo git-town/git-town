@@ -6,13 +6,13 @@ import (
 )
 
 // ForgejoToken is a bearer token to use with the Forgejo API.
-type ForgejoToken stringss.TrimmedString
+type ForgejoToken stringss.Trimmed
 
 func (self ForgejoToken) String() string {
 	return string(self)
 }
 
-func ParseForgejoToken(value stringss.TrimmedString) Option[ForgejoToken] {
+func ParseForgejoToken(value stringss.Trimmed) Option[ForgejoToken] {
 	if value == "" {
 		return None[ForgejoToken]()
 	}

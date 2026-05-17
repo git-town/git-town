@@ -13,18 +13,18 @@ type LocalBranchNames []LocalBranchName
 func NewLocalBranchNames(names ...string) LocalBranchNames {
 	result := make(LocalBranchNames, len(names))
 	for n, name := range names {
-		result[n] = LocalBranchNameOrPanic(stringss.TrimSpace(name))
+		result[n] = LocalBranchNameOrPanic(stringss.Trim(name))
 	}
 	return result
 }
 
 // ParseLocalBranchNames constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
-func ParseLocalBranchNames(names stringss.TrimmedString) LocalBranchNames {
+func ParseLocalBranchNames(names stringss.Trimmed) LocalBranchNames {
 	parts := strings.Split(names.String(), " ")
 	result := make(LocalBranchNames, 0, len(parts))
 	for _, part := range parts {
-		trimmedPart := stringss.TrimSpace(part)
+		trimmedPart := stringss.Trim(part)
 		if len(trimmedPart) > 0 {
 			result = append(result, LocalBranchName(trimmedPart))
 		}

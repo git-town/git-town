@@ -29,7 +29,7 @@ func TestValidatedConfig(t *testing.T) {
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			},
 		}
-		tests := map[stringss.TrimmedString]bool{
+		tests := map[stringss.Trimmed]bool{
 			"feature":     false,
 			"main":        true,
 			"perennial-1": true,

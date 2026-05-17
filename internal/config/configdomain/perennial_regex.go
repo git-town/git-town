@@ -12,7 +12,7 @@ type PerennialRegex struct {
 	VerifiedRegex
 }
 
-func ParsePerennialRegex(value stringss.TrimmedString, source string) (Option[PerennialRegex], error) {
+func ParsePerennialRegex(value stringss.Trimmed, source string) (Option[PerennialRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[PerennialRegex](), fmt.Errorf(messages.CannotParse, source, err)

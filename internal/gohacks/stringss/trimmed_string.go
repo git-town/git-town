@@ -2,13 +2,13 @@ package stringss
 
 import "strings"
 
-// TrimmedString is a string that is guaranteed to have no leading and trailing whitespace.
-type TrimmedString string
+// Trimmed is a string that is guaranteed to have no leading and trailing whitespace.
+type Trimmed string
 
-func (self TrimmedString) String() string {
+func (self Trimmed) String() string {
 	return string(self)
 }
 
-func TrimSpace(text string) TrimmedString {
-	return TrimmedString(strings.TrimSpace(text))
+func Trim(text string) Trimmed {
+	return Trimmed(strings.TrimSpace(text))
 }

@@ -25,7 +25,7 @@ const (
 	SyncFeatureStrategyCompress = SyncFeatureStrategy(SyncStrategyCompress)
 )
 
-func ParseSyncFeatureStrategy(value stringss.TrimmedString, source string) (Option[SyncFeatureStrategy], error) {
+func ParseSyncFeatureStrategy(value stringss.Trimmed, source string) (Option[SyncFeatureStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncFeatureStrategy](), fmt.Errorf(messages.CannotParse, source, err)

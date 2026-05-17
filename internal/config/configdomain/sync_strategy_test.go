@@ -14,7 +14,7 @@ func TestNewSyncStrategy(t *testing.T) {
 
 	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]Option[configdomain.SyncStrategy]{
+		tests := map[stringss.Trimmed]Option[configdomain.SyncStrategy]{
 			"":       None[configdomain.SyncStrategy](),
 			"merge":  Some(configdomain.SyncStrategyMerge),
 			"Merge":  Some(configdomain.SyncStrategyMerge),

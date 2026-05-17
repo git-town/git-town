@@ -189,7 +189,7 @@ Start:
 				newParentOpt = Some(selectedParent)
 			}
 		case 1:
-			selectedParent = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
+			selectedParent = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
 			if !data.branchesSnapshot.Branches.HasLocalBranch(selectedParent) {
 				return fmt.Errorf(messages.BranchDoesntExist, selectedParent)
 			}

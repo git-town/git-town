@@ -5,13 +5,13 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type HostingOriginHostname stringss.TrimmedString
+type HostingOriginHostname stringss.Trimmed
 
 func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func ParseHostingOriginHostname(value stringss.TrimmedString) Option[HostingOriginHostname] {
+func ParseHostingOriginHostname(value stringss.Trimmed) Option[HostingOriginHostname] {
 	if value == "" {
 		return None[HostingOriginHostname]()
 	}

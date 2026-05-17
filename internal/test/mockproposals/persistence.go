@@ -13,7 +13,7 @@ import (
 )
 
 // MockProposalPath is the path to the mock proposals file.
-type MockProposalPath stringss.TrimmedString
+type MockProposalPath stringss.Trimmed
 
 func (self MockProposalPath) String() string {
 	return string(self)

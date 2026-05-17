@@ -8,23 +8,23 @@ import (
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
-type LocalBranchName stringss.TrimmedString
+type LocalBranchName stringss.Trimmed
 
-func LocalBranchNameOrPanic(id stringss.TrimmedString) LocalBranchName {
+func LocalBranchNameOrPanic(id stringss.Trimmed) LocalBranchName {
 	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")
 	}
 	return LocalBranchName(id)
 }
 
-func LocalBranchNameOpt(id stringss.TrimmedString) Option[LocalBranchName] {
+func LocalBranchNameOpt(id stringss.Trimmed) Option[LocalBranchName] {
 	if isValidLocalBranchName(id) {
 		return Some(LocalBranchName(id))
 	}
 	return None[LocalBranchName]()
 }
 
-func isValidLocalBranchName(value stringss.TrimmedString) bool {
+func isValidLocalBranchName(value stringss.Trimmed) bool {
 	return len(value) > 0
 }
 

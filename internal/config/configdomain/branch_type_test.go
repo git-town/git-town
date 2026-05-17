@@ -15,7 +15,7 @@ func TestBranchType(t *testing.T) {
 
 	t.Run("ParseBranchType", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString]Option[configdomain.BranchType]{
+		tests := map[stringss.Trimmed]Option[configdomain.BranchType]{
 			"":                        None[configdomain.BranchType](),
 			messages.DialogResultNone: None[configdomain.BranchType](),
 			"contribution":            Some(configdomain.BranchTypeContributionBranch),

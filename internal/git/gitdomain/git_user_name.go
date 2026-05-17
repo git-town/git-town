@@ -5,13 +5,13 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type GitUserName stringss.TrimmedString
+type GitUserName stringss.Trimmed
 
 func (self GitUserName) String() string {
 	return string(self)
 }
 
-func GitUserNameOptFromString(value stringss.TrimmedString) Option[GitUserName] {
+func GitUserNameOptFromString(value stringss.Trimmed) Option[GitUserName] {
 	if value == "" {
 		return None[GitUserName]()
 	}

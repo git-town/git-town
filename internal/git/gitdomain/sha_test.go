@@ -27,7 +27,7 @@ func TestSHA(t *testing.T) {
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			sha := gitdomain.SHAFromString(stringss.TrimSpace(text))
+			sha := gitdomain.SHAFromString(stringss.Trim(text))
 			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
