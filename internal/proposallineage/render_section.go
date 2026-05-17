@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 type RenderSectionArgs struct {

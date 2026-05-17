@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/proposallineage"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/git-town/git-town/v23/pkg/set"
 	"github.com/shoenig/test/must"
 )
 
@@ -337,7 +336,7 @@ func TestRender(t *testing.T) {
 			Connector:     Some(connector),
 			CurrentBranch: "feature-a",
 			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
-			Excluded:      set.New(configdomain.BranchTypeMainBranch),
+			Excluded:      configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypeMainBranch),
 			Lineage:       lineage,
 			Order:         configdomain.OrderAsc,
 		})
@@ -372,7 +371,7 @@ func TestRender(t *testing.T) {
 			Connector:     Some(connector),
 			CurrentBranch: "feature-a",
 			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
-			Excluded:      set.New(configdomain.BranchTypePrototypeBranch),
+			Excluded:      configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch),
 			Lineage:       lineage,
 			Order:         configdomain.OrderAsc,
 		})
@@ -407,7 +406,7 @@ func TestRender(t *testing.T) {
 			Connector:     Some(connector),
 			CurrentBranch: "feature-a",
 			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
-			Excluded:      set.New(configdomain.BranchTypePrototypeBranch),
+			Excluded:      configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch),
 			Lineage:       lineage,
 			Order:         configdomain.OrderAsc,
 		})
@@ -451,7 +450,7 @@ func TestRender(t *testing.T) {
 			Connector:     Some(connector),
 			CurrentBranch: "feature-a",
 			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
-			Excluded:      set.New(configdomain.BranchTypePrototypeBranch),
+			Excluded:      configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch),
 			Lineage:       lineage,
 			Order:         configdomain.OrderAsc,
 		})

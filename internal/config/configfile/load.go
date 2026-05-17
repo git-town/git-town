@@ -235,6 +235,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumbExclude, err = configdomain.ParseProposalBreadcrumbExcludeList(*data.Propose.BreadcrumbExclude, messages.ConfigFile)
 			ec.Check(err)
 		}
+		if data.Propose.BreadcrumbExcludeBranches != nil {
+			proposalBreadcrumbExcludeBranches, err = configdomain.ParseProposalBreadcrumbExcludeBranchesList(*data.Propose.BreadcrumbExcludeBranches, messages.ConfigFile)
+			ec.Check(err)
+		}
 	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {

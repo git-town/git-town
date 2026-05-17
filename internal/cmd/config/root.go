@@ -4,6 +4,9 @@ package config
 import (
 	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/spf13/cobra"
 
 	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v23/internal/cli/flags"
@@ -14,8 +17,8 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/cliconfig"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/execute"
+	"github.com/git-town/git-town/v23/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/spf13/cobra"
 )
 
 const configDesc = "Display your Git Town configuration"
