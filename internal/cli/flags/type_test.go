@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/cli/flags"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
@@ -13,7 +14,7 @@ func TestBranchTypeFlag(t *testing.T) {
 
 	t.Run("ParseBranchTypes", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string][]configdomain.BranchType{
+		tests := map[stringss.Trimmed][]configdomain.BranchType{
 			"":                      {},
 			"contribution":          {configdomain.BranchTypeContributionBranch},
 			"feature":               {configdomain.BranchTypeFeatureBranch},
@@ -49,7 +50,7 @@ func TestBranchTypeFlag(t *testing.T) {
 
 	t.Run("SplitBranchTypeNames", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string][]string{
+		tests := map[stringss.Trimmed][]stringss.Trimmed{
 			"":                   {},
 			"feature":            {"feature"},
 			"feature,observed":   {"feature", "observed"},

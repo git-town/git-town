@@ -3,6 +3,7 @@ package envconfig
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -15,13 +16,13 @@ type EnvVars struct {
 
 // Get provides the environment variable with the first matching given name.
 // TODO: delete this and use GetOpt everywhere instead. Rename GetOpt to Get.
-func (self EnvVars) Get(name string, alternatives ...string) string {
+func (self EnvVars) Get(name string, alternatives ...string) stringss.Trimmed {
 	if result, has := self.data[name]; has {
-		return result
+		return stringss.Trim(result)
 	}
 	for _, alternative := range alternatives {
 		if result, has := self.data[alternative]; has {
-			return result
+			return stringss.Trim(result)
 		}
 	}
 	return ""

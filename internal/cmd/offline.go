@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/execute"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v23/internal/vm/interpreter/configinterpreter"
@@ -78,7 +79,7 @@ func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig)
 	case 1:
-		err = setOfflineStatus(args[0], repo.Frontend)
+		err = setOfflineStatus(stringss.Trim(args[0]), repo.Frontend)
 		if err != nil {
 			return err
 		}
@@ -101,7 +102,7 @@ func displayOfflineStatus(config config.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.NormalConfig.Offline.IsOffline()))
 }
 
-func setOfflineStatus(text string, runner subshelldomain.Runner) error {
+func setOfflineStatus(text stringss.Trimmed, runner subshelldomain.Runner) error {
 	value, err := gohacks.ParseBool[configdomain.Offline](text, "offline status")
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)

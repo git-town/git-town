@@ -2,10 +2,10 @@ package flags
 
 import (
 	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/spf13/cobra"
 )
 
@@ -24,12 +24,12 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 		if err != nil {
 			return []configdomain.BranchType{}, err
 		}
-		return ParseBranchTypes(value, "--type flag")
+		return ParseBranchTypes(stringss.Trim(value), "--type flag")
 	}
 	return addFlag, readFlag
 }
 
-func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, error) {
+func ParseBranchTypes(text stringss.Trimmed, source string) ([]configdomain.BranchType, error) {
 	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
@@ -44,16 +44,16 @@ func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, er
 	return result, nil
 }
 
-func SplitBranchTypeNames(text string) []string {
-	text = strings.TrimSpace(text)
+func SplitBranchTypeNames(text stringss.Trimmed) []stringss.Trimmed {
 	splitBranchOnce.Do(func() {
 		splitBranchRegex = regexp.MustCompile(`[,\+&\|]`)
 	})
-	splitted := splitBranchRegex.Split(text, -1)
-	result := make([]string, 0, len(splitted))
+	splitted := splitBranchRegex.Split(text.String(), -1)
+	result := make([]stringss.Trimmed, 0, len(splitted))
 	for _, split := range splitted {
-		if len(split) > 0 {
-			result = append(result, split)
+		trimmedSplit := stringss.Trim(split)
+		if len(trimmedSplit) > 0 {
+			result = append(result, trimmedSplit)
 		}
 	}
 	return result

@@ -2,7 +2,6 @@ package gitconfig
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
@@ -16,7 +15,6 @@ func DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchN
 	if err != nil {
 		return None[gitdomain.LocalBranchName]()
 	}
-	name = strings.TrimSpace(name)
 	if name == "" {
 		return None[gitdomain.LocalBranchName]()
 	}

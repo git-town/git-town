@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/state/runstate"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
@@ -119,7 +120,7 @@ func appendCmd() *cobra.Command {
 				Verbose:           verbose,
 			})
 			return executeAppend(executeAppendArgs{
-				arg:           args[0],
+				arg:           stringss.Trim(args[0]),
 				beam:          beam,
 				cliConfig:     cliConfig,
 				commit:        commit,
@@ -146,7 +147,7 @@ func appendCmd() *cobra.Command {
 }
 
 type executeAppendArgs struct {
-	arg           string
+	arg           stringss.Trimmed
 	beam          configdomain.Beam
 	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit

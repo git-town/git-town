@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -54,7 +55,7 @@ func ParseLsFilesUnmergedLine(line string) (Blob, UnmergedStage, string, error) 
 	if !match {
 		return Blob{}, 0, "", fmt.Errorf("cannot read SHA portion from output of \"git ls-files --unmerged\": %q", line)
 	}
-	sha, err := gitdomain.NewSHAErr(shaText)
+	sha, err := gitdomain.NewSHA(stringss.Trimmed(shaText))
 	if err != nil {
 		return Blob{}, 0, "", fmt.Errorf("invalid SHA (%w) in output of \"git ls-files --unmerged\": %q", err, line)
 	}

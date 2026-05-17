@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 type LocalBranchNames []LocalBranchName
@@ -12,19 +13,20 @@ type LocalBranchNames []LocalBranchName
 func NewLocalBranchNames(names ...string) LocalBranchNames {
 	result := make(LocalBranchNames, len(names))
 	for n, name := range names {
-		result[n] = LocalBranchNameOrPanic(name)
+		result[n] = LocalBranchNameOrPanic(stringss.Trim(name))
 	}
 	return result
 }
 
 // ParseLocalBranchNames constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
-func ParseLocalBranchNames(names string) LocalBranchNames {
-	parts := strings.Split(names, " ")
+func ParseLocalBranchNames(names stringss.Trimmed) LocalBranchNames {
+	parts := strings.Split(names.String(), " ")
 	result := make(LocalBranchNames, 0, len(parts))
 	for _, part := range parts {
-		if len(part) > 0 {
-			result = append(result, LocalBranchNameOrPanic(part))
+		trimmedPart := stringss.Trim(part)
+		if len(trimmedPart) > 0 {
+			result = append(result, LocalBranchName(trimmedPart))
 		}
 	}
 	return result

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -17,7 +18,7 @@ func TestParseBool(t *testing.T) {
 		t.Parallel()
 		t.Run("valid inputs", func(t *testing.T) {
 			t.Parallel()
-			tests := map[string]MyBool{
+			tests := map[stringss.Trimmed]MyBool{
 				"y":        true,
 				"Y":        true,
 				"yes":      true,
@@ -46,7 +47,7 @@ func TestParseBool(t *testing.T) {
 
 		t.Run("invalid inputs", func(t *testing.T) {
 			t.Parallel()
-			tests := []string{"", "zonk"}
+			tests := []stringss.Trimmed{"", "zonk"}
 			for _, give := range tests {
 				_, err := gohacks.ParseBool[MyBool](give, "test")
 				must.Error(t, err)
@@ -56,7 +57,7 @@ func TestParseBool(t *testing.T) {
 
 	t.Run("ParseBoolOpt", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[MyBool]{
+		tests := map[stringss.Trimmed]Option[MyBool]{
 			"":         None[MyBool](),
 			"yes":      Some(MyBool(true)),
 			"Yes":      Some(MyBool(true)),
