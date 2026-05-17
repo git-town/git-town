@@ -211,7 +211,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-// TODO: make this a method of SingleSnapshot
 func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed) T) T { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
@@ -221,7 +220,6 @@ func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, par
 	return parseFunc(stringss.Trim(valueStr))
 }
 
-// TODO: make this a method of SingleSnapshot
 func loadErr[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
