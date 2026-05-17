@@ -5,6 +5,7 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/test/helpers"
 )
 
@@ -25,7 +26,7 @@ var counter helpers.AtomicCounter
 func (self *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
-		self.Branch = gitdomain.LocalBranchNameOrPanic(value)
+		self.Branch = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(value))
 	case "LOCATION":
 		self.Locations = NewLocations(value)
 	case "MESSAGE":

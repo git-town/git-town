@@ -1,11 +1,12 @@
 package gitdomain
 
 import (
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // ProposalBody is the body of a proposal
-type ProposalBody string
+type ProposalBody stringss.TrimmedString
 
 // String implements the fmt.Stringer interface.
 func (self ProposalBody) String() string {

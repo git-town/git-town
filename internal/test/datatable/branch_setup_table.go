@@ -4,6 +4,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/test/testgit"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -28,12 +29,12 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 		for c, cell := range row.Cells {
 			switch headers.Cells[c].Value {
 			case "NAME":
-				name = gitdomain.LocalBranchNameOpt(cell.Value)
+				name = gitdomain.LocalBranchNameOpt(stringss.TrimSpace(cell.Value))
 			case "TYPE":
-				branchType = asserts.NoError1(configdomain.ParseBranchType(cell.Value, "cucumber table"))
+				branchType = asserts.NoError1(configdomain.ParseBranchType(stringss.TrimSpace(cell.Value), "cucumber table"))
 			case "PARENT":
 				if len(cell.Value) > 0 {
-					parent = gitdomain.LocalBranchNameOpt(cell.Value)
+					parent = gitdomain.LocalBranchNameOpt(stringss.TrimSpace(cell.Value))
 				}
 			case "LOCATIONS":
 				if cell.Value == "" {
