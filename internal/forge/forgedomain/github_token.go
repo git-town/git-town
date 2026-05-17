@@ -6,7 +6,7 @@ import (
 )
 
 // GithubToken is a bearer token to use with the GitHub API.
-type GithubToken string
+type GithubToken stringss.TrimmedString
 
 func (self GithubToken) String() string {
 	return string(self)

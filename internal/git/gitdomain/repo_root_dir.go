@@ -1,7 +1,9 @@
 package gitdomain
 
+import "github.com/git-town/git-town/v23/internal/gohacks/stringss"
+
 // RepoRootDir represents the root directory of a Git repository.
-type RepoRootDir string
+type RepoRootDir stringss.TrimmedString
 
 func NewRepoRootDir(dir string) RepoRootDir {
 	if dir == "" {

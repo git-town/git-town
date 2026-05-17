@@ -6,7 +6,7 @@ import (
 )
 
 // Remote represents a Git remote.
-type Remote string
+type Remote stringss.TrimmedString
 
 func NewRemote(id stringss.TrimmedString) Option[Remote] {
 	if len(id) == 0 {

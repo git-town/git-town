@@ -9,7 +9,7 @@ import (
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
-type RemoteBranchName string
+type RemoteBranchName stringss.TrimmedString
 
 func RemoteBranchNameOrPanic(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {

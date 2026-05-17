@@ -6,7 +6,7 @@ import (
 )
 
 // GitlabToken is a bearer token to use with the GitLab API.
-type GitlabToken string
+type GitlabToken stringss.TrimmedString
 
 func (self GitlabToken) String() string {
 	return string(self)

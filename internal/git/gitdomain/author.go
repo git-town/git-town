@@ -1,9 +1,12 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v23/pkg/prelude"
+import (
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
+)
 
 // Author represents the author of a commit in the format "name <email>"
-type Author string
+type Author stringss.TrimmedString
 
 // String implements the fmt.Stringer interface.
 func (self Author) String() string {

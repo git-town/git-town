@@ -5,7 +5,7 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type BitbucketAppPassword string
+type BitbucketAppPassword stringss.TrimmedString
 
 func (self BitbucketAppPassword) String() string {
 	return string(self)

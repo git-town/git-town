@@ -6,7 +6,7 @@ import (
 )
 
 // ForgejoToken is a bearer token to use with the Forgejo API.
-type ForgejoToken string
+type ForgejoToken stringss.TrimmedString
 
 func (self ForgejoToken) String() string {
 	return string(self)

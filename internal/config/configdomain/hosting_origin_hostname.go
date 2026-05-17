@@ -5,7 +5,7 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type HostingOriginHostname string
+type HostingOriginHostname stringss.TrimmedString
 
 func (self HostingOriginHostname) String() string {
 	return string(self)

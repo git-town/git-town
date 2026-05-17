@@ -1,7 +1,9 @@
 package gitdomain
 
+import "github.com/git-town/git-town/v23/internal/gohacks/stringss"
+
 // CommitMessageFile is the name of the file from which to read the CommitMessage.
-type CommitMessageFile string
+type CommitMessageFile stringss.TrimmedString
 
 // ShouldReadStdin indicates whether the commit message should be read from STDIN.
 func (self CommitMessageFile) ShouldReadStdin() bool {

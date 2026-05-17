@@ -5,7 +5,7 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-type GitUserEmail string
+type GitUserEmail stringss.TrimmedString
 
 func (self GitUserEmail) String() string {
 	return string(self)
