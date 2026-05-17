@@ -3,7 +3,6 @@ package config
 import (
 	"cmp"
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
@@ -65,18 +64,18 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		value = strings.TrimSpace(value)
-		if value == "" {
+		valueTrimmed := stringss.TrimSpace(value)
+		if valueTrimmed == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		if updateOutdated && child.String() == value {
+		if updateOutdated && child.String() == valueTrimmed.String() {
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 		}
-		parent := gitdomain.LocalBranchNameOrPanic(value)
+		parent := gitdomain.LocalBranchNameOrPanic(valueTrimmed)
 		result = result.Set(child, parent)
 	}
 	return result, nil
