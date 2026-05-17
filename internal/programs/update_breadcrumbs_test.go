@@ -16,12 +16,12 @@ import (
 func TestUpdateBreadcrumbsProgram(t *testing.T) {
 	t.Parallel()
 
-	main := gitdomain.LocalBranchNameOrPanic("main")
-	branchOne := gitdomain.LocalBranchNameOrPanic("branch-1")
-	branchTwo := gitdomain.LocalBranchNameOrPanic("branch-2")
-	branchThree := gitdomain.LocalBranchNameOrPanic("branch-3")
-	otherOne := gitdomain.LocalBranchNameOrPanic("other-1")
-	otherTwo := gitdomain.LocalBranchNameOrPanic("other-2")
+	main := gitdomain.LocalBranchName("main")
+	branchOne := gitdomain.LocalBranchName("branch-1")
+	branchTwo := gitdomain.LocalBranchName("branch-2")
+	branchThree := gitdomain.LocalBranchName("branch-3")
+	otherOne := gitdomain.LocalBranchName("other-1")
+	otherTwo := gitdomain.LocalBranchName("other-2")
 
 	t.Run("updates only the touched stack", func(t *testing.T) {
 		t.Parallel()
