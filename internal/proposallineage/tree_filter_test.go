@@ -20,15 +20,15 @@ func TestFilterTree(t *testing.T) {
 		tree := proposallineage.TreeNode{
 			Branch:        "main",
 			LineageParent: None[gitdomain.LocalBranchName](),
-			Children: proposallineage.Forest{
+			Children: proposallineage.TreeNodes{
 				proposallineage.TreeNode{
 					Branch:        "feature",
 					LineageParent: Some(gitdomain.LocalBranchName("main")),
-					Children: proposallineage.Forest{
+					Children: proposallineage.TreeNodes{
 						proposallineage.TreeNode{
 							Branch:        "prototype",
 							LineageParent: Some(gitdomain.LocalBranchName("feature")),
-							Children:      proposallineage.Forest{},
+							Children:      proposallineage.TreeNodes{},
 						},
 					},
 				},
@@ -41,23 +41,23 @@ func TestFilterTree(t *testing.T) {
 		}
 		excluded := set.New(configdomain.BranchTypePrototypeBranch)
 
-		have := proposallineage.FilterTree(tree, branchTypes, excluded)
+		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 
-		want := proposallineage.Forest{
+		want := proposallineage.TreeNodes{
 			proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
-				Children: proposallineage.Forest{
+				Children: proposallineage.TreeNodes{
 					proposallineage.TreeNode{
 						Branch:        "feature",
 						LineageParent: Some(gitdomain.LocalBranchName("main")),
-						Children:      proposallineage.Forest{},
+						Children:      proposallineage.TreeNodes{},
 					},
 				},
 			},
 		}
 
-		must.Eq(t, want, have)
+		must.Eq(t, treeNodesWithBranchTypes(want, branchTypes), have)
 	})
 
 	t.Run("Exclude middle node", func(t *testing.T) {
@@ -66,19 +66,19 @@ func TestFilterTree(t *testing.T) {
 		tree := proposallineage.TreeNode{
 			Branch:        "main",
 			LineageParent: None[gitdomain.LocalBranchName](),
-			Children: proposallineage.Forest{
+			Children: proposallineage.TreeNodes{
 				proposallineage.TreeNode{
 					Branch:        "feature-a",
 					LineageParent: Some(gitdomain.LocalBranchName("main")),
-					Children: proposallineage.Forest{
+					Children: proposallineage.TreeNodes{
 						proposallineage.TreeNode{
 							Branch:        "prototype",
 							LineageParent: Some(gitdomain.LocalBranchName("feature-a")),
-							Children: proposallineage.Forest{
+							Children: proposallineage.TreeNodes{
 								proposallineage.TreeNode{
 									Branch:        "feature-b",
 									LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-									Children:      proposallineage.Forest{},
+									Children:      proposallineage.TreeNodes{},
 								},
 							},
 						},
@@ -94,21 +94,21 @@ func TestFilterTree(t *testing.T) {
 		}
 		excluded := set.New(configdomain.BranchTypePrototypeBranch)
 
-		have := proposallineage.FilterTree(tree, branchTypes, excluded)
+		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 
-		want := proposallineage.Forest{
+		want := proposallineage.TreeNodes{
 			proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
-				Children: proposallineage.Forest{
+				Children: proposallineage.TreeNodes{
 					proposallineage.TreeNode{
 						Branch:        "feature-a",
 						LineageParent: Some(gitdomain.LocalBranchName("main")),
-						Children: proposallineage.Forest{
+						Children: proposallineage.TreeNodes{
 							proposallineage.TreeNode{
 								Branch:        "feature-b",
 								LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-								Children:      proposallineage.Forest{},
+								Children:      proposallineage.TreeNodes{},
 							},
 						},
 					},
@@ -116,7 +116,7 @@ func TestFilterTree(t *testing.T) {
 			},
 		}
 
-		must.Eq(t, want, have)
+		must.Eq(t, treeNodesWithBranchTypes(want, branchTypes), have)
 	})
 
 	t.Run("Exclude middle node with multiple children", func(t *testing.T) {
@@ -125,20 +125,20 @@ func TestFilterTree(t *testing.T) {
 		tree := proposallineage.TreeNode{
 			Branch:        "main",
 			LineageParent: None[gitdomain.LocalBranchName](),
-			Children: proposallineage.Forest{
+			Children: proposallineage.TreeNodes{
 				proposallineage.TreeNode{
 					Branch:        "prototype",
 					LineageParent: Some(gitdomain.LocalBranchName("main")),
-					Children: proposallineage.Forest{
+					Children: proposallineage.TreeNodes{
 						proposallineage.TreeNode{
 							Branch:        "feature-a",
 							LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-							Children:      proposallineage.Forest{},
+							Children:      proposallineage.TreeNodes{},
 						},
 						proposallineage.TreeNode{
 							Branch:        "feature-b",
 							LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-							Children:      proposallineage.Forest{},
+							Children:      proposallineage.TreeNodes{},
 						},
 					},
 				},
@@ -152,30 +152,30 @@ func TestFilterTree(t *testing.T) {
 		}
 		excluded := set.New(configdomain.BranchTypePrototypeBranch)
 
-		have := proposallineage.FilterTree(tree, branchTypes, excluded)
+		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 		// This assertion explains why we used the "FOREST" terminology.
 		// Filtering can POTENTIALLY lead to multiple stacks / TreeNodes
 		// leading to main branch.
-		want := proposallineage.Forest{
+		want := proposallineage.TreeNodes{
 			proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
-				Children: proposallineage.Forest{
+				Children: proposallineage.TreeNodes{
 					proposallineage.TreeNode{
 						Branch:        "feature-a",
 						LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-						Children:      proposallineage.Forest{},
+						Children:      proposallineage.TreeNodes{},
 					},
 					proposallineage.TreeNode{
 						Branch:        "feature-b",
 						LineageParent: Some(gitdomain.LocalBranchName("prototype")),
-						Children:      proposallineage.Forest{},
+						Children:      proposallineage.TreeNodes{},
 					},
 				},
 			},
 		}
 
-		must.Eq(t, want, have)
+		must.Eq(t, treeNodesWithBranchTypes(want, branchTypes), have)
 	})
 
 	t.Run("Exclude root node", func(t *testing.T) {
@@ -184,15 +184,15 @@ func TestFilterTree(t *testing.T) {
 		tree := proposallineage.TreeNode{
 			Branch:        "main",
 			LineageParent: None[gitdomain.LocalBranchName](),
-			Children: proposallineage.Forest{
+			Children: proposallineage.TreeNodes{
 				proposallineage.TreeNode{
 					Branch:        "feature-a",
 					LineageParent: Some(gitdomain.LocalBranchName("main")),
-					Children: proposallineage.Forest{
+					Children: proposallineage.TreeNodes{
 						proposallineage.TreeNode{
 							Branch:        "feature-b",
 							LineageParent: Some(gitdomain.LocalBranchName("feature-a")),
-							Children:      proposallineage.Forest{},
+							Children:      proposallineage.TreeNodes{},
 						},
 					},
 				},
@@ -205,22 +205,37 @@ func TestFilterTree(t *testing.T) {
 		}
 		excluded := set.New(configdomain.BranchTypeMainBranch)
 
-		have := proposallineage.FilterTree(tree, branchTypes, excluded)
+		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 
-		want := proposallineage.Forest{
+		want := proposallineage.TreeNodes{
 			proposallineage.TreeNode{
 				Branch:        "feature-a",
 				LineageParent: Some(gitdomain.LocalBranchName("main")),
-				Children: proposallineage.Forest{
+				Children: proposallineage.TreeNodes{
 					proposallineage.TreeNode{
 						Branch:        "feature-b",
 						LineageParent: Some(gitdomain.LocalBranchName("feature-a")),
-						Children:      proposallineage.Forest{},
+						Children:      proposallineage.TreeNodes{},
 					},
 				},
 			},
 		}
 
-		must.Eq(t, want, have)
+		must.Eq(t, treeNodesWithBranchTypes(want, branchTypes), have)
 	})
+}
+
+func treeNodesWithBranchTypes(nodes proposallineage.TreeNodes, branchTypes configdomain.BranchesAndTypes) proposallineage.TreeNodes {
+	for index, node := range nodes {
+		nodes[index] = treeWithBranchTypes(node, branchTypes)
+	}
+	return nodes
+}
+
+func treeWithBranchTypes(tree proposallineage.TreeNode, branchTypes configdomain.BranchesAndTypes) proposallineage.TreeNode {
+	tree.BranchType = branchTypes[tree.Branch]
+	for index, child := range tree.Children {
+		tree.Children[index] = treeWithBranchTypes(child, branchTypes)
+	}
+	return tree
 }

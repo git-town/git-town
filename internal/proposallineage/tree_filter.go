@@ -12,28 +12,27 @@ import (
 // so the result is a forest data structure.
 func FilterTree(
 	tree TreeNode,
-	branchTypes configdomain.BranchesAndTypes,
 	excluded set.Set[configdomain.BranchType],
-) Forest {
-	return filterTreeNode(tree, branchTypes, excluded)
+) TreeNodes {
+	return filterTreeNode(tree, excluded)
 }
 
 func filterTreeNode(
 	node TreeNode,
-	branchTypes configdomain.BranchesAndTypes,
 	excluded set.Set[configdomain.BranchType],
-) Forest {
-	filteredChildren := make(Forest, 0, len(node.Children))
+) TreeNodes {
+	filteredChildren := make(TreeNodes, 0, len(node.Children))
 	for _, child := range node.Children {
-		filteredChildren = append(filteredChildren, filterTreeNode(child, branchTypes, excluded)...)
+		filteredChildren = append(filteredChildren, filterTreeNode(child, excluded)...)
 	}
 
-	if branchType, hasBranchType := branchTypes[node.Branch]; hasBranchType && excluded.Contains(branchType) {
+	if excluded.Contains(node.BranchType) {
 		return filteredChildren
 	}
 
-	return Forest{{
+	return TreeNodes{{
 		Branch:        node.Branch,
+		BranchType:    node.BranchType,
 		LineageParent: node.LineageParent,
 		Children:      filteredChildren,
 	}}

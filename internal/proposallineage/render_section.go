@@ -22,15 +22,15 @@ type RenderSectionArgs struct {
 // RenderSection provides the branch lineage for the given branch in Markdown format, ready to be embedded into a proposal body.
 func RenderSection(args RenderSectionArgs) string {
 	// step 1: calculate the lineage tree for the given branch
-	tree := CalculateTree(args.CurrentBranch, args.Lineage, args.Order)
+	tree := CalculateTree(args.CurrentBranch, args.Lineage, args.Order, args.BranchTypes)
 
-	forest := FilterTree(
+	// step 2: filter out the excluded branch types
+	treeNodes := FilterTree(
 		tree,
-		args.BranchTypes,
 		args.Excluded,
 	)
 
-	branchCount := forest.BranchCount()
+	branchCount := treeNodes.BranchCount()
 	if branchCount == 0 {
 		return ""
 	}
@@ -39,9 +39,9 @@ func RenderSection(args RenderSectionArgs) string {
 		return ""
 	}
 
-	// step 2: add proposals to the tree
-	forestWithProposals := AddProposalsToForest(forest, args.Connector)
+	// step 3: add proposals to the tree
+	treesWithProposals := treeNodes.AddProposals(args.Connector)
 
-	// step 3: render the tree[s] into Markdown format
-	return RenderForest(forestWithProposals, args.CurrentBranch, args.Direction, args.Connector)
+	// step 4: render the tree[s] into Markdown format
+	return treesWithProposals.Render(args.CurrentBranch, args.Direction, args.Connector)
 }

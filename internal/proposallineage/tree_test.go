@@ -57,7 +57,7 @@ func TestTreeNode(t *testing.T) {
 				"feature-d": "feature-c",
 				"feature-e": "feature-d",
 			})
-			have := proposallineage.CalculateTree("feature-b", lineage, configdomain.OrderAsc)
+			have := proposallineage.CalculateTree("feature-b", lineage, configdomain.OrderAsc, configdomain.BranchesAndTypes{})
 			want := proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
@@ -107,7 +107,7 @@ func TestTreeNode(t *testing.T) {
 				"feature-b2a": "feature-b2",
 				"feature-b2b": "feature-b2",
 			})
-			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderAsc)
+			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderAsc, configdomain.BranchesAndTypes{})
 			want := proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
@@ -163,7 +163,7 @@ func TestTreeNode(t *testing.T) {
 				"feature-b":  "main",
 				"feature-b1": "feature-b",
 			})
-			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderAsc)
+			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderAsc, configdomain.BranchesAndTypes{})
 			want := proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
@@ -195,7 +195,7 @@ func TestTreeNode(t *testing.T) {
 				"feature-b2a": "feature-b2",
 				"feature-b2b": "feature-b2",
 			})
-			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderDesc)
+			have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderDesc, configdomain.BranchesAndTypes{})
 			want := proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),
@@ -246,7 +246,7 @@ func TestTreeNode(t *testing.T) {
 		t.Run("perennial branch", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
-			have := proposallineage.CalculateTree("main", lineage, configdomain.OrderAsc)
+			have := proposallineage.CalculateTree("main", lineage, configdomain.OrderAsc, configdomain.BranchesAndTypes{})
 			want := proposallineage.TreeNode{
 				Branch:        "main",
 				LineageParent: None[gitdomain.LocalBranchName](),

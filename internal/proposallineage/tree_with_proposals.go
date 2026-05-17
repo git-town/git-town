@@ -8,7 +8,7 @@ import (
 
 type TreeNodeWithProposal struct {
 	Branch        gitdomain.LocalBranchName
-	Children      ForestWithProposals
+	Children      TreeNodesWithProposal
 	LineageParent Option[gitdomain.LocalBranchName]
 	Proposal      Option[forgedomain.Proposal]
 }
@@ -31,7 +31,7 @@ func AddProposalsToTree(tree TreeNode, connector Option[forgedomain.Connector]) 
 
 func addProposalsToTreeHelper(tree TreeNode, connector Option[forgedomain.Connector]) TreeNodeWithProposal {
 	proposal := loadProposal(tree.Branch, tree.LineageParent, connector)
-	children := make(ForestWithProposals, len(tree.Children))
+	children := make(TreeNodesWithProposal, len(tree.Children))
 	for i, child := range tree.Children {
 		children[i] = addProposalsToTreeHelper(child, connector)
 	}

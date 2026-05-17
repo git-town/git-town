@@ -9,11 +9,13 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-func RenderForest(forest ForestWithProposals, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, connector Option[forgedomain.Connector]) string {
+type TreeNodesWithProposal []TreeNodeWithProposal
+
+func (self TreeNodesWithProposal) Render(currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, connector Option[forgedomain.Connector]) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 
-	for _, tree := range forest {
+	for _, tree := range self {
 		AppendTree(&builder, tree, currentBranch, direction, connector)
 	}
 
