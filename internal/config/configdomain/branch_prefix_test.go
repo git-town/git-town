@@ -18,27 +18,27 @@ func TestBranchPrefix(t *testing.T) {
 		t.Run("empty prefix", func(t *testing.T) {
 			t.Parallel()
 			prefix := configdomain.BranchPrefix("")
-			branch := gitdomain.LocalBranchNameOrPanic("feature")
+			branch := gitdomain.LocalBranchName("feature")
 			have := prefix.Apply(branch)
-			want := gitdomain.LocalBranchNameOrPanic("feature")
+			want := gitdomain.LocalBranchName("feature")
 			must.EqOp(t, want, have)
 		})
 
 		t.Run("non-empty prefix", func(t *testing.T) {
 			t.Parallel()
 			prefix := configdomain.BranchPrefix("prefix-")
-			branch := gitdomain.LocalBranchNameOrPanic("feature")
+			branch := gitdomain.LocalBranchName("feature")
 			have := prefix.Apply(branch)
-			want := gitdomain.LocalBranchNameOrPanic("prefix-feature")
+			want := gitdomain.LocalBranchName("prefix-feature")
 			must.EqOp(t, want, have)
 		})
 
 		t.Run("branch already contains the prefix", func(t *testing.T) {
 			t.Parallel()
 			prefix := configdomain.BranchPrefix("prefix")
-			branch := gitdomain.LocalBranchNameOrPanic("prefix-branch")
+			branch := gitdomain.LocalBranchName("prefix-branch")
 			have := prefix.Apply(branch)
-			want := gitdomain.LocalBranchNameOrPanic("prefix-branch")
+			want := gitdomain.LocalBranchName("prefix-branch")
 			must.EqOp(t, want, have)
 		})
 	})

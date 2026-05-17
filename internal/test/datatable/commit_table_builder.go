@@ -120,7 +120,7 @@ func (self *CommitTableBuilder) branches(lineage configdomain.Lineage, order con
 	result := make(gitdomain.LocalBranchNames, 0, len(self.commitsInBranch))
 	hasMain := false
 	for branch := range mapstools.SortedKeys(self.commitsInBranch) {
-		if branch == gitdomain.LocalBranchNameOrPanic("main") {
+		if branch == gitdomain.LocalBranchName("main") {
 			hasMain = true
 		} else {
 			result = append(result, branch)
