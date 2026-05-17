@@ -482,7 +482,7 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusAhead,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[1].SHA),
 						},
 					},
@@ -515,7 +515,7 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[1].SHA}),
 							SyncStatus: gitdomain.SyncStatusBehind,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[0].SHA),
 						},
 					},
@@ -555,7 +555,7 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: localCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusNotInSync,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(originCommits[0].SHA),
 						},
 					},
@@ -581,7 +581,7 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(commits[0].SHA),
 						},
 					},
@@ -610,13 +610,13 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: localCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(localCommits[0].SHA),
 						},
 						gitdomain.BranchInfo{
 							Local:      None[gitdomain.BranchData](),
 							SyncStatus: gitdomain.SyncStatusRemoteOnly,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/branch")),
 							RemoteSHA:  Some(originBranchCommits[0].SHA),
 						},
 					},
@@ -650,7 +650,7 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(initialCommits[0].SHA),
 						},
 					},
@@ -683,13 +683,13 @@ func TestBackendCommands(t *testing.T) {
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: "branch", SHA: branchCommits[0].SHA}),
 							SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/branch")),
 							RemoteSHA:  None[gitdomain.SHA](),
 						},
 						gitdomain.BranchInfo{
 							Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[1].SHA}),
 							SyncStatus: gitdomain.SyncStatusUpToDate,
-							RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+							RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 							RemoteSHA:  Some(initialCommits[1].SHA),
 						},
 					},
@@ -814,19 +814,19 @@ func TestBackendCommands(t *testing.T) {
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: "branch-2", SHA: branch2Commits[0].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
-						RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch-2")),
+						RemoteName: Some(gitdomain.RemoteBranchName("origin/branch-2")),
 						RemoteSHA:  Some(branch2Commits[0].SHA),
 					},
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: initial, SHA: initialCommits[1].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
-						RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+						RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 						RemoteSHA:  Some(initialCommits[1].SHA),
 					},
 					gitdomain.BranchInfo{
 						Local:      None[gitdomain.BranchData](),
 						SyncStatus: gitdomain.SyncStatusRemoteOnly,
-						RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/branch-3")),
+						RemoteName: Some(gitdomain.RemoteBranchName("origin/branch-3")),
 						RemoteSHA:  Some(branch3Commits[0].SHA),
 					},
 				},
@@ -847,7 +847,7 @@ func TestBackendCommands(t *testing.T) {
 					gitdomain.BranchInfo{
 						Local:      Some(gitdomain.BranchData{Name: initial, SHA: commits[0].SHA}),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
-						RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/initial")),
+						RemoteName: Some(gitdomain.RemoteBranchName("origin/initial")),
 						RemoteSHA:  Some(commits[0].SHA),
 					},
 				},
@@ -1204,7 +1204,7 @@ func TestBackendCommands(t *testing.T) {
 			repoDir := t.TempDir()
 			repo := testruntime.Clone(origin.TestRunner, repoDir)
 			branch := gitdomain.LocalBranchName("branch")
-			main := gitdomain.RemoteBranchNameOrPanic("origin/main")
+			main := gitdomain.RemoteBranchName("origin/main")
 			repo.CreateFeatureBranch(branch, main.BranchName())
 			repo.CreateCommit(testgit.Commit{
 				Branch:   branch,
