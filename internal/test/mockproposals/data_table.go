@@ -31,9 +31,9 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 			case "ID":
 				id = Some(asserts.NoError1(strconv.Atoi(field.Value)))
 			case "SOURCE BRANCH":
-				source = Some(gitdomain.LocalBranchNameOrPanic(stringss.Trim(field.Value)))
+				source = Some(gitdomain.LocalBranchNameOrPanic(stringss.Trimmed(field.Value))) // Gherkin already trims the value in cell.Value
 			case "TARGET BRANCH":
-				target = Some(gitdomain.LocalBranchNameOrPanic(stringss.Trim(field.Value)))
+				target = Some(gitdomain.LocalBranchNameOrPanic(stringss.Trimmed(field.Value))) // Gherkin already trims the value in cell.Value
 			case "TITLE":
 				title = Some(gitdomain.ProposalTitle(field.Value))
 			case "BODY":
