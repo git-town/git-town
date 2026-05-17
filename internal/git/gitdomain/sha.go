@@ -50,6 +50,7 @@ func (self SHA) String() string {
 	return string(self)
 }
 
+// TrimmedString provides the content of this SHA as a trimmed string.
 func (self SHA) TrimmedString() stringss.Trimmed {
 	return stringss.Trimmed(self)
 }
