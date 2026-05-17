@@ -9,7 +9,7 @@ import (
 )
 
 // BranchPrefix is a prefix that gets automatically added to branches created by Git Town.
-type BranchPrefix string
+type BranchPrefix stringss.TrimmedString
 
 // Apply provides the given branch name with this prefix applied.
 func (self BranchPrefix) Apply(branch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
