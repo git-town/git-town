@@ -1,13 +1,17 @@
 package gitdomain
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+)
 
 type SHAs []SHA
 
 func NewSHAs(ids ...string) SHAs {
 	result := make(SHAs, len(ids))
 	for i, id := range ids {
-		result[i] = SHAFromString(id)
+		result[i] = SHAFromString(stringss.TrimSpace(id))
 	}
 	return result
 }

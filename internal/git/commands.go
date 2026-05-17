@@ -959,7 +959,7 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	for l, line := range lines {
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
-		branchName := gitdomain.BranchNameOrPanic(strings.TrimPrefix(parts[1], "branchname:"))
+		branchName := gitdomain.BranchNameOrPanic(stringss.TrimSpace(strings.TrimPrefix(parts[1], "branchname:")))
 		sha := gitdomain.SHAFromString(stringss.TrimmedString(strings.TrimPrefix(parts[2], "sha:")))
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/pkg/asserts"
 	"github.com/shoenig/test/must"
 )
@@ -26,7 +27,7 @@ func TestSHA(t *testing.T) {
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			sha := gitdomain.SHAFromString(text)
+			sha := gitdomain.SHAFromString(stringss.TrimSpace(text))
 			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {

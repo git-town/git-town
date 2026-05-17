@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -47,7 +48,7 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	remoteName, branchname, _ := strings.Cut(string(self), "/")
-	return Remote(remoteName), LocalBranchNameOrPanic(branchname)
+	return Remote(remoteName), LocalBranchNameOrPanic(stringss.TrimSpace(branchname))
 }
 
 func (self RemoteBranchName) Remote() Remote {
