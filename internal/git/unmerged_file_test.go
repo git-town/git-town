@@ -42,7 +42,7 @@ func TestUnmergedFile(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			t.Parallel()
-			give := stringss.Trim(`100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file`)
+			give := stringss.Trimmed("100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file")
 			have, err := git.ParseLsTreeOutput(give)
 			must.NoError(t, err)
 			want := git.Blob{
