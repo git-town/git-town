@@ -2,6 +2,7 @@ package flags
 
 import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -23,7 +24,7 @@ func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 		if err != nil {
 			return None[configdomain.DisplayTypes](), err
 		}
-		return configdomain.ParseDisplayTypes(text, "CLI flag "+displayTypesLong)
+		return configdomain.ParseDisplayTypes(stringss.TrimSpace(text), "CLI flag "+displayTypesLong)
 	}
 	return addFlag, readFlag
 }
