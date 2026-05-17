@@ -32,8 +32,8 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 		Active:       pullRequest.State == "open",
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       forgedomain.ProposalNumber(pullRequest.Index),
-		Source:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(pullRequest.Head.Ref)),
-		Target:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(pullRequest.Base.Ref)),
+		Source:       gitdomain.LocalBranchNameOrPanic(stringss.Trimmed(pullRequest.Head.Ref)), // we can assume the Gitea API provides correct strings
+		Target:       gitdomain.LocalBranchNameOrPanic(stringss.Trimmed(pullRequest.Base.Ref)), // we can assume the Gitea API provides correct strings
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
 		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
