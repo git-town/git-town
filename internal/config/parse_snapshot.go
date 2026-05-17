@@ -187,7 +187,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		IgnoreUncommitted:           ignoreUncommitted,
 		Interactive:                 interactive,
 		Lineage:                     lineage,
-		MainBranch:                  gitdomain.LocalBranchNameOpt(snapshot[configdomain.KeyMainBranch]),
+		MainBranch:                  load(snapshot, configdomain.KeyMainBranch, gitdomain.LocalBranchNameOpt),
 		NewBranchType:               newBranchType2,
 		ObservedRegex:               observedRegex,
 		Order:                       order,
