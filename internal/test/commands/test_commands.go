@@ -95,7 +95,7 @@ func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(commitMessage),
-			SHA:     gitdomain.SHAFromString(sha),
+			SHA:     gitdomain.SHAFromString(stringss.TrimSpace(sha)),
 		})
 	}
 	return result
@@ -140,8 +140,8 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		parts := stringss.ZeroDelineated(line).Lines()
 		commit := testgit.Commit{
 			Branch:  branch,
-			SHA:     gitdomain.SHAFromString(parts[0]),
-			Message: gitdomain.CommitMessage(parts[1]),
+			SHA:     gitdomain.SHAFromString(stringss.TrimSpace(parts[0])),
+			Message: gitdomain.CommitMessage(stringss.TrimSpace(parts[1])),
 			Author:  gitdomain.Author(parts[2]),
 		}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
@@ -450,7 +450,7 @@ func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 	branchesInOtherWorktrees := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
-		branch := line[2:]
+		branch := stringss.TrimSpace(line[2:])
 		allBranches = append(allBranches, gitdomain.LocalBranchNameOrPanic(branch))
 		switch marker {
 		case 'H', '-':
@@ -544,7 +544,7 @@ func (self *TestCommands) RenameRemote(oldName, newName string) {
 
 // SHAforBranch provides the SHA that the given branch points to.
 func (self *TestCommands) SHAforBranch(branch gitdomain.LocalBranchName) gitdomain.SHA {
-	output := self.MustQuery("git", "rev-parse", branch.String())
+	output := self.MustQueryTrim("git", "rev-parse", branch.String())
 	return gitdomain.SHAFromString(output)
 }
 
@@ -558,7 +558,7 @@ func (self *TestCommands) SHAsForCommit(message gitdomain.CommitMessage) gitdoma
 	for text := range strings.SplitSeq(output, "\n") {
 		shaText, commitMessage, found := strings.Cut(text, " ")
 		if found && commitMessage == message.String() {
-			sha := gitdomain.SHAFromString(shaText)
+			sha := gitdomain.SHAFromString(stringss.TrimSpace(shaText))
 			shasWithMessage = append(shasWithMessage, sha)
 		}
 	}

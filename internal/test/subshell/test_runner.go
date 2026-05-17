@@ -120,6 +120,10 @@ func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) R
 	return asserts.NoError1(self.QueryWithCode(opts, cmd, args...))
 }
 
+func (self *TestRunner) MustQueryTrim(name string, arguments ...string) stringss.TrimmedString {
+	return stringss.TrimSpace(self.MustQuery(name, arguments...))
+}
+
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
 func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
