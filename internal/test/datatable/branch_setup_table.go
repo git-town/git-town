@@ -29,12 +29,12 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 		for c, cell := range row.Cells {
 			switch headers.Cells[c].Value {
 			case "NAME":
-				name = gitdomain.LocalBranchNameOpt(stringss.Trim(cell.Value))
+				name = gitdomain.LocalBranchNameOpt(stringss.Trimmed(cell.Value)) // Gherkin already trims the value in cells
 			case "TYPE":
-				branchType = asserts.NoError1(configdomain.ParseBranchType(stringss.Trim(cell.Value), "cucumber table"))
+				branchType = asserts.NoError1(configdomain.ParseBranchType(stringss.Trimmed(cell.Value), "cucumber table")) // Gherkin already trims the value in cell.Value
 			case "PARENT":
 				if len(cell.Value) > 0 {
-					parent = gitdomain.LocalBranchNameOpt(stringss.Trim(cell.Value))
+					parent = gitdomain.LocalBranchNameOpt(stringss.Trimmed(cell.Value)) // Gherkin already trims the value in cell.Value
 				}
 			case "LOCATIONS":
 				if cell.Value == "" {
