@@ -4,6 +4,7 @@ import (
 	"cmp"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ func Order() (AddFunc, ReadOrderFlagFunc) {
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Order], error) {
 		text, errFlag := cmd.Flags().GetString(orderLong)
-		order, errParse := configdomain.ParseOrder(text, "--order flag")
+		order, errParse := configdomain.ParseOrder(stringss.TrimSpace(text), "--order flag")
 		return order, cmp.Or(errFlag, errParse)
 	}
 	return addFlag, readFlag

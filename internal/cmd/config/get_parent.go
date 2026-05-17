@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/execute"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -73,7 +74,7 @@ func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error
 			childBranch = currentBranch
 		}
 	} else {
-		childBranch = gitdomain.LocalBranchNameOrPanic(args[0])
+		childBranch = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
 	}
 	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
 	if parent, hasParent := parentOpt.Get(); hasParent {
