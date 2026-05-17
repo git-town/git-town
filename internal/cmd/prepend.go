@@ -23,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/programs"
 	"github.com/git-town/git-town/v23/internal/state/runstate"
@@ -337,7 +338,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prepen
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	targetBranch := gitdomain.LocalBranchNameOrPanic(args.argv[0])
+	targetBranch := gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args.argv[0]))
 	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
 		targetBranch = prefix.Apply(targetBranch)
 	}

@@ -99,7 +99,7 @@ func ParseDisplayTypes(text stringss.TrimmedString, source string) (Option[Displ
 	}
 	branchTypes := make([]BranchType, len(parts))
 	for p, part := range parts {
-		branchTypeOpt, err := ParseBranchType(part, source)
+		branchTypeOpt, err := ParseBranchType(stringss.TrimSpace(part), source)
 		if err != nil {
 			return None[DisplayTypes](), err
 		}

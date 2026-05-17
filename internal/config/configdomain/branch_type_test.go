@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -14,7 +15,7 @@ func TestBranchType(t *testing.T) {
 
 	t.Run("ParseBranchType", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[configdomain.BranchType]{
+		tests := map[stringss.TrimmedString]Option[configdomain.BranchType]{
 			"":                        None[configdomain.BranchType](),
 			messages.DialogResultNone: None[configdomain.BranchType](),
 			"contribution":            Some(configdomain.BranchTypeContributionBranch),

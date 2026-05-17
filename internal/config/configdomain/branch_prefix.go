@@ -16,7 +16,7 @@ func (self BranchPrefix) Apply(branch gitdomain.LocalBranchName) gitdomain.Local
 	if strings.HasPrefix(branch.String(), self.String()) {
 		return branch
 	}
-	return gitdomain.LocalBranchNameOrPanic(self.String() + branch.String())
+	return gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(self.String() + branch.String()))
 }
 
 func (self BranchPrefix) String() string { return string(self) }

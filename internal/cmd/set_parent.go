@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/programs"
 	"github.com/git-town/git-town/v23/internal/state/runstate"
@@ -188,7 +189,7 @@ Start:
 				newParentOpt = Some(selectedParent)
 			}
 		case 1:
-			selectedParent = gitdomain.LocalBranchNameOrPanic(args[0])
+			selectedParent = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
 			if !data.branchesSnapshot.Branches.HasLocalBranch(selectedParent) {
 				return fmt.Errorf(messages.BranchDoesntExist, selectedParent)
 			}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -23,7 +24,7 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		branchesToMark.AddTypeFor(currentBranch, &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
-		branch := gitdomain.LocalBranchNameOrPanic(args[0])
+		branch := gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args[0]))
 		branchesToMark.AddTypeFor(branch, &config)
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindRemoteNameMatchingLocal(branch).Get()
 		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {

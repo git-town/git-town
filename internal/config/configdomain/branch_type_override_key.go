@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -18,7 +19,7 @@ type BranchTypeOverrideKey struct {
 // Branch provides the name of the child branch encoded in this LineageKey.
 func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
 	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
-	return gitdomain.LocalBranchNameOrPanic(text)
+	return gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(text))
 }
 
 func IsBranchTypeOverrideKey(key string) bool {

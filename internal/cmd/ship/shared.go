@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/validate"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -111,7 +112,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	previousBranch := args.repo.Git.PreviouslyCheckedOutBranch(args.repo.Backend)
 	var branchToShip gitdomain.LocalBranchName
 	if len(args.args) > 0 {
-		branchToShip = gitdomain.LocalBranchNameOrPanic(args.args[0])
+		branchToShip = gitdomain.LocalBranchNameOrPanic(stringss.TrimSpace(args.args[0]))
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToShip = activeBranch
 	} else {

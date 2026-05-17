@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -27,7 +28,7 @@ func TestParseShareNewBranches(t *testing.T) {
 
 	t.Run("valid values", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[configdomain.ShareNewBranches]{
+		tests := map[stringss.TrimmedString]Option[configdomain.ShareNewBranches]{
 			"no":      Some(configdomain.ShareNewBranchesNone),
 			"false":   Some(configdomain.ShareNewBranchesNone),
 			"0":       Some(configdomain.ShareNewBranchesNone),
@@ -35,7 +36,7 @@ func TestParseShareNewBranches(t *testing.T) {
 			"propose": Some(configdomain.ShareNewBranchesPropose),
 		}
 		for give, want := range tests {
-			t.Run(give, func(t *testing.T) {
+			t.Run(give.String(), func(t *testing.T) {
 				t.Parallel()
 				have, err := configdomain.ParseShareNewBranches(give, "test source")
 				must.NoError(t, err)
