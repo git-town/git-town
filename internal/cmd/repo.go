@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -93,7 +94,7 @@ func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
-		remoteOpt = gitdomain.NewRemote(Some(args[0]))
+		remoteOpt = gitdomain.NewRemote(stringss.Trim(args[0]))
 	} else {
 		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
 	}

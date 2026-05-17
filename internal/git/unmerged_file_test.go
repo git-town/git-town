@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/git"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -41,7 +42,7 @@ func TestUnmergedFile(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			t.Parallel()
-			give := `100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file`
+			give := stringss.Trimmed("100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file")
 			have, err := git.ParseLsTreeOutput(give)
 			must.NoError(t, err)
 			want := git.Blob{

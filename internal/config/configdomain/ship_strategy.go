@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -21,10 +22,13 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(value string, source string) (Option[ShipStrategy], error) {
-	text := strings.ToLower(strings.TrimSpace(value))
+func ParseShipStrategy(text stringss.Trimmed, source string) (Option[ShipStrategy], error) {
+	if text == "" {
+		return None[ShipStrategy](), nil
+	}
+	lower := strings.ToLower(text.String())
 	for _, shipStrategy := range ShipStrategies() {
-		if shipStrategy.String() == text {
+		if shipStrategy.String() == lower {
 			return Some(shipStrategy), nil
 		}
 	}

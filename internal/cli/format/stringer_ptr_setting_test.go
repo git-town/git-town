@@ -5,15 +5,15 @@ import (
 
 	"github.com/git-town/git-town/v23/internal/cli/format"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 
 func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
-	tests := map[Option[string]]string{
-		Some("my token"): "my token",
-		None[string]():   "(not set)",
+	tests := map[stringss.Trimmed]string{
+		"my token": "my token",
+		"":         "(not set)",
 	}
 	for give, want := range tests {
 		option := forgedomain.ParseGithubToken(give)

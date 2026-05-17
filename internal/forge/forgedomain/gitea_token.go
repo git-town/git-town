@@ -1,21 +1,20 @@
 package forgedomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // GiteaToken is a bearer token to use with the Gitea API.
-type GiteaToken string
+type GiteaToken stringss.Trimmed
 
 func (self GiteaToken) String() string {
 	return string(self)
 }
 
-func ParseGiteaToken(valueOpt Option[string]) Option[GiteaToken] {
-	if value, has := valueOpt.Get(); has {
-		return Some(GiteaToken(strings.TrimSpace(value)))
+func ParseGiteaToken(value stringss.Trimmed) Option[GiteaToken] {
+	if value == "" {
+		return None[GiteaToken]()
 	}
 	return None[GiteaToken]()
 }

@@ -1,17 +1,16 @@
 package gitdomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // Remote represents a Git remote.
-type Remote string
+type Remote stringss.Trimmed
 
-func NewRemote(idOpt Option[string]) Option[Remote] {
-	if id, has := idOpt.Get(); has {
-		return Some(Remote(strings.TrimSpace(id)))
+func NewRemote(id stringss.Trimmed) Option[Remote] {
+	if len(id) == 0 {
+		return None[Remote]()
 	}
 	return None[Remote]()
 }

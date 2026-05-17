@@ -9,10 +9,10 @@ import (
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
-func TextField(args TextFieldArgs) (Option[string], dialogdomain.Exit, error) {
+func TextField(args TextFieldArgs) (stringss.Trimmed, dialogdomain.Exit, error) {
 	if err := args.Interactive.Check(); err != nil {
 		return None[string](), true, err
 	}
@@ -31,7 +31,7 @@ func TextField(args TextFieldArgs) (Option[string], dialogdomain.Exit, error) {
 	SendInputs(args.DialogName, args.Inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textFieldModel)
-	return Some(result.textInput.Value()), result.status == list.StatusExit, err
+	return stringss.Trim(result.textInput.Value()), result.status == list.StatusExit, err
 }
 
 type TextFieldArgs struct {

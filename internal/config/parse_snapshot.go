@@ -3,7 +3,6 @@ package config
 import (
 	"cmp"
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
@@ -11,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v23/pkg/colors"
@@ -32,14 +32,14 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, igno
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		value = strings.TrimSpace(value)
-		if value == "" {
+		trimmedValue := stringss.Trim(value)
+		if trimmedValue.String() == "" {
 			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
+		branchTypeOpt, err := configdomain.ParseBranchType(trimmedValue, key.String())
 		if err != nil {
 			if ignoreUnknown {
 				fmt.Printf("Ignoring unknown branch type override for %q: %s\n", branch, value)
@@ -64,18 +64,18 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		value = strings.TrimSpace(value)
-		if value == "" {
+		valueTrimmed := stringss.Trim(value)
+		if valueTrimmed == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		if updateOutdated && child.String() == value {
+		if updateOutdated && child.String() == valueTrimmed.String() {
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 		}
-		parent := gitdomain.LocalBranchNameOrPanic(value)
+		parent := gitdomain.LocalBranchNameOrPanic(valueTrimmed)
 		result = result.Set(child, parent)
 	}
 	return result, nil
@@ -84,40 +84,40 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
 	browserStr, hasBrowser := snapshot[configdomain.KeyBrowser]
 	// keep-sorted start
-	autoResolve, errAutoResolve := loadErr(snapshot, configdomain.KeyAutoResolve, gohacks.Str2BoolOpt[configdomain.AutoResolve], ignoreUnknown)
-	autoSync, errAutoSync := loadErr(snapshot, configdomain.KeyAutoSync, gohacks.Str2BoolOpt[configdomain.AutoSync], ignoreUnknown)
+	autoResolve, errAutoResolve := loadErr(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
+	autoSync, errAutoSync := loadErr(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := loadErr(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
 	browserExecutable, browserEnabled, errBrowser := browserdomain.ParseBrowserOpt(NewOptionIfExists(browserStr, hasBrowser))
 	contributionRegex, errContributionRegex := loadErr(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
-	detached, errDetached := loadErr(snapshot, configdomain.KeyDetached, gohacks.Str2BoolOpt[configdomain.Detached], ignoreUnknown)
+	detached, errDetached := loadErr(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached], ignoreUnknown)
 	displayTypes, errDisplayTypes := loadErr(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
 	featureRegex, errFeatureRegex := loadErr(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex, ignoreUnknown)
 	forgeType, errForgeType := loadErr(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
 	githubConnectorType, errGithubConnectorType := loadErr(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitlabConnectorType := loadErr(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
-	ignoreUncommitted, errIgnoreUncommitted := loadErr(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.Str2BoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
+	ignoreUncommitted, errIgnoreUncommitted := loadErr(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
 	interactive, errInteractive := loadErr(snapshot, configdomain.KeyInteractive, configdomain.NewInteractiveFromSnapshot, ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchType1, errNewBranchType := loadErr(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	newBranchType2 := configdomain.NewBranchTypeOpt(newBranchType1)
 	observedRegex, errObservedRegex := loadErr(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex, ignoreUnknown)
-	offline, errOffline := loadErr(snapshot, configdomain.KeyOffline, gohacks.Str2BoolOpt[configdomain.Offline], ignoreUnknown)
+	offline, errOffline := loadErr(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
 	order, errOrder := loadErr(snapshot, configdomain.KeyOrder, configdomain.ParseOrder, ignoreUnknown)
 	perennialRegex, errPerennialRegex := loadErr(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
 	proposalBreadcrumb, errProposalBreadcrumb := loadErr(snapshot, configdomain.KeyProposalBreadcrumb, configdomain.ParseProposalBreadcrumb, ignoreUnknown)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := loadErr(snapshot, configdomain.KeyProposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection, ignoreUnknown)
-	pushBranches, errPushBranches := loadErr(snapshot, configdomain.KeyPushBranches, gohacks.Str2BoolOpt[configdomain.PushBranches], ignoreUnknown)
-	pushHook, errPushHook := loadErr(snapshot, configdomain.KeyPushHook, gohacks.Str2BoolOpt[configdomain.PushHook], ignoreUnknown)
+	pushBranches, errPushBranches := loadErr(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
+	pushHook, errPushHook := loadErr(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
 	shareNewBranches, errShareNewBranches := loadErr(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
-	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := loadErr(snapshot, configdomain.KeyShipDeleteTrackingBranch, gohacks.Str2BoolOpt[configdomain.ShipDeleteTrackingBranch], ignoreUnknown)
+	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := loadErr(snapshot, configdomain.KeyShipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch], ignoreUnknown)
 	shipStrategy, errShipStrategy := loadErr(snapshot, configdomain.KeyShipStrategy, configdomain.ParseShipStrategy, ignoreUnknown)
-	stash, errStash := loadErr(snapshot, configdomain.KeyStash, gohacks.Str2BoolOpt[configdomain.Stash], ignoreUnknown)
+	stash, errStash := loadErr(snapshot, configdomain.KeyStash, gohacks.ParseBoolOpt[configdomain.Stash], ignoreUnknown)
 	syncFeatureStrategy, errSyncFeatureStrategy := loadErr(snapshot, configdomain.KeySyncFeatureStrategy, configdomain.ParseSyncFeatureStrategy, ignoreUnknown)
 	syncPerennialStrategy, errSyncPerennialStrategy := loadErr(snapshot, configdomain.KeySyncPerennialStrategy, configdomain.ParseSyncPerennialStrategy, ignoreUnknown)
 	syncPrototypeStrategy, errSyncPrototypeStrategy := loadErr(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy, ignoreUnknown)
-	syncTags, errSyncTags := loadErr(snapshot, configdomain.KeySyncTags, gohacks.Str2BoolOpt[configdomain.SyncTags], ignoreUnknown)
-	syncUpstream, errSyncUpstream := loadErr(snapshot, configdomain.KeySyncUpstream, gohacks.Str2BoolOpt[configdomain.SyncUpstream], ignoreUnknown)
+	syncTags, errSyncTags := loadErr(snapshot, configdomain.KeySyncTags, gohacks.ParseBoolOpt[configdomain.SyncTags], ignoreUnknown)
+	syncUpstream, errSyncUpstream := loadErr(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream], ignoreUnknown)
 	unknownBranchType1, errUnknownBranchType := loadErr(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	unknownBranchType2 := configdomain.UnknownBranchTypeOpt(unknownBranchType1)
 	// keep-sorted end
@@ -179,14 +179,14 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		GithubToken:                 load(snapshot, configdomain.KeyGithubToken, forgedomain.ParseGithubToken),
 		GitlabConnectorType:         gitlabConnectorType,
 		GitlabToken:                 load(snapshot, configdomain.KeyGitlabToken, forgedomain.ParseGitlabToken),
-		GitUserEmail:                gitdomain.ParseGitUserEmail(snapshot[configdomain.KeyGitUserEmail]),
-		GitUserName:                 gitdomain.ParseGitUserName(snapshot[configdomain.KeyGitUserName]),
+		GitUserEmail:                load(snapshot, configdomain.KeyGitUserEmail, gitdomain.ParseGitUserEmail),
+		GitUserName:                 load(snapshot, configdomain.KeyGitUserName, gitdomain.GitUserNameOptFromString),
 		GiteaToken:                  load(snapshot, configdomain.KeyGiteaToken, forgedomain.ParseGiteaToken),
 		HostingOriginHostname:       load(snapshot, configdomain.KeyHostingOriginHostname, configdomain.ParseHostingOriginHostname),
 		IgnoreUncommitted:           ignoreUncommitted,
 		Interactive:                 interactive,
 		Lineage:                     lineage,
-		MainBranch:                  load(snapshot, configdomain.KeyMainBranch, gitdomain.NewLocalBranchNameOption),
+		MainBranch:                  load(snapshot, configdomain.KeyMainBranch, gitdomain.LocalBranchNameOpt),
 		NewBranchType:               newBranchType2,
 		ObservedRegex:               observedRegex,
 		Order:                       order,
@@ -211,18 +211,21 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(Option[string]) T) T { //nolint:ireturn
-	valueStr := snapshot.GetOpt(key)
-	return parseFunc(valueStr)
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed) T) T { //nolint:ireturn
+	if value, has := snapshot[key]; has {
+		return parseFunc(stringss.Trim(value))
+	}
+	var zero T
+	return zero
 }
 
-func loadErr[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
+func loadErr[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
 		var zero T
 		return zero, nil
 	}
-	value, err := parseFunc(valueStr, key.String())
+	value, err := parseFunc(stringss.Trim(valueStr), key.String())
 	if err != nil {
 		var zero T
 		if ignoreUnknown {

@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -74,11 +75,14 @@ func (self DisplayTypes) String() string {
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
 
-func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
+func ParseDisplayTypes(text stringss.Trimmed, source string) (Option[DisplayTypes], error) {
+	if len(text) == 0 {
+		return None[DisplayTypes](), nil
+	}
 	parseDisplayTypesOnce.Do(func() {
 		parseDisplayTypesRegex = regexp.MustCompile(`[ +\-&_]`)
 	})
-	parts := parseDisplayTypesRegex.Split(strings.ToLower(text), -1)
+	parts := parseDisplayTypesRegex.Split(strings.ToLower(text.String()), -1)
 	var quantifier Quantifier
 	switch parts[0] {
 	case QuantifierAll:
@@ -95,7 +99,7 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	}
 	branchTypes := make([]BranchType, len(parts))
 	for p, part := range parts {
-		branchTypeOpt, err := ParseBranchType(part, source)
+		branchTypeOpt, err := ParseBranchType(stringss.Trim(part), source)
 		if err != nil {
 			return None[DisplayTypes](), err
 		}

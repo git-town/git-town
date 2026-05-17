@@ -120,6 +120,10 @@ func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) R
 	return asserts.NoError1(self.QueryWithCode(opts, cmd, args...))
 }
 
+func (self *TestRunner) MustQueryTrim(name string, arguments ...string) stringss.Trimmed {
+	return stringss.Trim(self.MustQuery(name, arguments...))
+}
+
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
 func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
 	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
@@ -157,9 +161,14 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := self.QueryWith(&Options{TTY: true}, name, arguments...)
-	return strings.TrimSpace(output), err
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (stringss.Trimmed, error) {
+	return self.QueryTrimWith(&Options{TTY: true}, name, arguments...)
+}
+
+// QueryWith provides the output of the given command and ensures it exited with code 0.
+func (self *TestRunner) QueryTrimWith(opts *Options, cmd string, args ...string) (stringss.Trimmed, error) {
+	output, err := self.QueryWith(opts, cmd, args...)
+	return stringss.Trim(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.

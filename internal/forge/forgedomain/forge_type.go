@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -26,8 +27,11 @@ const (
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.
-func ParseForgeType(name string, source string) (Option[ForgeType], error) {
-	nameLower := strings.ToLower(name)
+func ParseForgeType(name stringss.Trimmed, source string) (Option[ForgeType], error) {
+	if name == "" {
+		return None[ForgeType](), nil
+	}
+	nameLower := strings.ToLower(name.String())
 	for _, forgeType := range forgeTypes() {
 		if nameLower == forgeType.String() {
 			return Some(forgeType), nil

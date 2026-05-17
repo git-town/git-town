@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -13,12 +14,9 @@ func TestNewSyncStrategy(t *testing.T) {
 
 	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[configdomain.SyncStrategy]{
+		tests := map[stringss.Trimmed]Option[configdomain.SyncStrategy]{
 			"":       None[configdomain.SyncStrategy](),
-			" ":      None[configdomain.SyncStrategy](),
 			"merge":  Some(configdomain.SyncStrategyMerge),
-			"merge ": Some(configdomain.SyncStrategyMerge),
-			" merge": Some(configdomain.SyncStrategyMerge),
 			"Merge":  Some(configdomain.SyncStrategyMerge),
 			"MERGE":  Some(configdomain.SyncStrategyMerge),
 			"rebase": Some(configdomain.SyncStrategyRebase),

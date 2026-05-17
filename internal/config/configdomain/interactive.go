@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/gohacks"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -45,7 +46,7 @@ func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
 	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
 }
 
-func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive], error) {
+func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
 	boolValue, err := gohacks.ParseBool[bool](value, source)
 	if err != nil {
 		return None[Interactive](), err
@@ -56,7 +57,7 @@ func NewInteractiveFromSnapshot(value string, source string) (Option[Interactive
 	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
-func NewInteractiveFromEnv(envTermOpt Option[string], envConfigOpt Option[bool]) Option[Interactive] {
+func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) Option[Interactive] {
 	envConfig, hasEnvConfig := envConfigOpt.Get()
 	if hasEnvConfig {
 		if envConfig {
@@ -64,10 +65,8 @@ func NewInteractiveFromEnv(envTermOpt Option[string], envConfigOpt Option[bool])
 		}
 		return Some(Interactive(messages.InteractivityDisabledViaEnv))
 	}
-	if envTerm, hasEnvTerm := envTermOpt.Get(); hasEnvTerm {
-		if strings.ToLower(envTerm) == "dumb" {
-			return Some(Interactive("only a dumb terminal available"))
-		}
+	if strings.ToLower(envTerm.String()) == "dumb" {
+		return Some(Interactive("only a dumb terminal available"))
 	}
 	return None[Interactive]()
 }

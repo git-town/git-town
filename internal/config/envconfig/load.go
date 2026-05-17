@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 )
 
 const (
@@ -195,6 +195,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	}, err
 }
 
-func load[T any](env EnvVars, varName string, parser func(Option[string], string) (T, error)) (T, error) { //nolint:ireturn
-	return parser(env.GetOpt(varName), varName)
+func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
+	return parser(env.Get(varName), varName)
 }

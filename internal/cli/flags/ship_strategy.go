@@ -2,6 +2,7 @@ package flags
 
 import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,7 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 		if err != nil {
 			return None[configdomain.ShipStrategy](), err
 		}
-		return configdomain.ParseShipStrategyOpt(value, "--strategy CLI flag")
+		return configdomain.ParseShipStrategy(stringss.Trim(value), "--strategy CLI flag")
 	}
 	return addFlag, readFlag
 }

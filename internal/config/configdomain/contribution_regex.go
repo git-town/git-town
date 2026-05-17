@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/messages"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -12,8 +13,8 @@ type ContributionRegex struct {
 	VerifiedRegex
 }
 
-func ParseContributionRegex(value string, source string) (Option[ContributionRegex], error) {
-	verifiedRegexOpt, err := ParseRegex(value)
+func ParseContributionRegex(value stringss.Trimmed, source string) (Option[ContributionRegex], error) {
+	verifiedRegexOpt, err := ParseRegex(value.String())
 	if err != nil {
 		return None[ContributionRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}

@@ -10,7 +10,7 @@ type Runner interface {
 
 type Querier interface {
 	Query(executable string, args ...string) (string, error)
-	QueryTrim(executable string, args ...string) (string, error)
+	QueryTrim(executable string, args ...string) (stringss.Trimmed, error)
 	QueryZ(executable string, args ...string) (stringss.ZeroDelineated, error)
 }
 
