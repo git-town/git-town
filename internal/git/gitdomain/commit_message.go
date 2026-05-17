@@ -1,9 +1,13 @@
 package gitdomain
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+)
 
 // CommitMessage is the entire textual messages of a Git commit.
-type CommitMessage string
+type CommitMessage stringss.TrimmedString
 
 // CommitMessageParts describes the parts of a Git commit message.
 type CommitMessageParts struct {

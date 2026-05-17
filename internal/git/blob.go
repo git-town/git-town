@@ -30,12 +30,11 @@ func EmptyBlob() Blob {
 	return result
 }
 
-func ParseLsTreeOutput(output string) (Blob, error) {
+func ParseLsTreeOutput(output stringss.TrimmedString) (Blob, error) {
 	// Example output:
 	// 100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file
-	output = strings.TrimSpace(output)
 	// skip permissions
-	permission, remainder, match := strings.Cut(output, " ")
+	permission, remainder, match := strings.Cut(output.String(), " ")
 	if !match {
 		return EmptyBlob(), fmt.Errorf("cannot read permissions portion from the output of \"git ls-tree\": %q", output)
 	}
@@ -50,7 +49,7 @@ func ParseLsTreeOutput(output string) (Blob, error) {
 	if !match {
 		return EmptyBlob(), fmt.Errorf("cannot read SHA from the output of \"git ls-tree\": %q", output)
 	}
-	sha, err := gitdomain.SHAErrFromString(shaText)
+	sha, err := gitdomain.SHAErrFromString(stringss.TrimmedString(shaText))
 	if err != nil {
 		return EmptyBlob(), fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
 	}

@@ -2,6 +2,7 @@ package sync
 
 import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v23/internal/vm/opcodes"
 )
 
@@ -15,7 +16,7 @@ func PerennialBranchProgram(branchInfo gitdomain.BranchInfo, args BranchProgramA
 	if localBranch, hasLocalBranch := branchInfo.LocalName().Get(); hasLocalBranch {
 		if localBranch == args.Config.ValidatedConfigData.MainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.ShouldSyncUpstream() {
 			args.Program.Value.Add(&opcodes.FetchUpstream{Branch: args.Config.ValidatedConfigData.MainBranch})
-			args.Program.Value.Add(&opcodes.RebaseBranch{Branch: gitdomain.BranchNameOrPanic("upstream/" + args.Config.ValidatedConfigData.MainBranch.String())})
+			args.Program.Value.Add(&opcodes.RebaseBranch{Branch: gitdomain.BranchNameOrPanic(stringss.TrimSpace("upstream/" + args.Config.ValidatedConfigData.MainBranch.String()))})
 		}
 	}
 }
