@@ -68,7 +68,7 @@ func TestSave(t *testing.T) {
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname(Some("forge")),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.InteractiveEnabled),
-				MainBranch:                  Some(gitdomain.LocalBranchNameOrPanic("main")),
+				MainBranch:                  Some(gitdomain.LocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:               observedRegex,
 				Order:                       Some(configdomain.OrderDesc),

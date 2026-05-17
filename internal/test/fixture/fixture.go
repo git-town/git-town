@@ -103,8 +103,8 @@ func (self *Fixture) AddUpstream() {
 func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	mainBranch := gitdomain.LocalBranchNameOrPanic("main")
-	initialBranch := gitdomain.LocalBranchNameOrPanic("initial")
+	mainBranch := gitdomain.LocalBranchName("main")
+	initialBranch := gitdomain.LocalBranchName("initial")
 	localBranches := asserts.NoError1(self.DevRepo.GetOrPanic().LocalBranches())
 	localBranchesJoined := localBranches.AllBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()

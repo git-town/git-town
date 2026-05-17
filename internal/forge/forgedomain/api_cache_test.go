@@ -233,7 +233,7 @@ func TestAPICache(t *testing.T) {
 		t.Run("empty cache returns unknown", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.APICache{}
-			source := gitdomain.LocalBranchNameOrPanic("feature")
+			source := gitdomain.LocalBranchName("feature")
 			_, knows := cache.LookupSearch(source).Get()
 			must.False(t, knows)
 		})
