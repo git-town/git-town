@@ -1,8 +1,7 @@
 package forgedomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -13,8 +12,7 @@ func (self GitlabToken) String() string {
 	return string(self)
 }
 
-func ParseGitlabToken(value string) Option[GitlabToken] {
-	value = strings.TrimSpace(value)
+func ParseGitlabToken(value stringss.TrimmedString) Option[GitlabToken] {
 	if value == "" {
 		return None[GitlabToken]()
 	}

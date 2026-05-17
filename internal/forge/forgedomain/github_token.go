@@ -1,8 +1,7 @@
 package forgedomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -13,8 +12,7 @@ func (self GithubToken) String() string {
 	return string(self)
 }
 
-func ParseGithubToken(value string) Option[GithubToken] {
-	value = strings.TrimSpace(value)
+func ParseGithubToken(value stringss.TrimmedString) Option[GithubToken] {
 	if value == "" {
 		return None[GithubToken]()
 	}

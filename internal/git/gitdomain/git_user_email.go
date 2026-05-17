@@ -1,8 +1,7 @@
 package gitdomain
 
 import (
-	"strings"
-
+	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
@@ -12,8 +11,7 @@ func (self GitUserEmail) String() string {
 	return string(self)
 }
 
-func ParseGitUserEmail(value string) Option[GitUserEmail] {
-	value = strings.TrimSpace(value)
+func ParseGitUserEmail(value stringss.TrimmedString) Option[GitUserEmail] {
 	if value == "" {
 		return None[GitUserEmail]()
 	}

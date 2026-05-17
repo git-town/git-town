@@ -24,16 +24,16 @@ func BranchType() (AddFunc, ReadTypeFlagFunc) {
 		if err != nil {
 			return []configdomain.BranchType{}, err
 		}
-		return ParseBranchTypes(value, "--type flag")
+		return ParseBranchTypes(stringss.TrimSpace(value), "--type flag")
 	}
 	return addFlag, readFlag
 }
 
-func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, error) {
-	branchTypeNames := SplitBranchTypeNames(stringss.TrimSpace(text))
+func ParseBranchTypes(text stringss.TrimmedString, source string) ([]configdomain.BranchType, error) {
+	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
-		branchTypeOpt, err := configdomain.ParseBranchType(branchTypeName, source)
+		branchTypeOpt, err := configdomain.ParseBranchType(stringss.TrimSpace(branchTypeName), source)
 		if err != nil {
 			return result, err
 		}
