@@ -289,13 +289,13 @@ echo "new line" >> file
 
 	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.AddSecondWorktree(gitdomain.LocalBranchName(stringss.Trimmed(branch)))
+		state.fixture.AddSecondWorktree(gitdomain.LocalBranchName(branch))
 	})
 
 	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		branch := gitdomain.LocalBranchName(branchName)
 		wantOpt := asserts.NoError1(configdomain.ParseBranchType(stringss.Trimmed(branchTypeName), "test"))
 		want := wantOpt.GetOrPanic()
 		have := devRepo.Config.BranchType(branch)
@@ -308,7 +308,7 @@ echo "new line" >> file
 	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message$`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.LocalBranchName(stringss.Trimmed(branchText))
+		branch := gitdomain.LocalBranchName(branchText)
 		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
 		sha := devRepo.CommitSHA(devRepo, gitdomain.CommitTitle(title), branch, parent.BranchName())
 		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
@@ -390,8 +390,8 @@ echo "new line" >> file
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, parent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branchName := gitdomain.LocalBranchName(stringss.Trimmed(branch))
-		parentName := gitdomain.LocalBranchName(stringss.Trimmed(parent))
+		branchName := gitdomain.LocalBranchName(branch)
+		parentName := gitdomain.LocalBranchName(parent)
 		return gitconfig.SetParent(devRepo.TestRunner, branchName, parentName)
 	})
 
@@ -556,7 +556,7 @@ echo "new line" >> file
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.CreateCommit(testgit.Commit{
-			Branch:   gitdomain.LocalBranchName(stringss.Trimmed(branch)), // TODO: cast directly to LocalBranchName
+			Branch:   gitdomain.LocalBranchName(branch),
 			FileName: "new_file",
 			Message:  gitdomain.CommitMessage(message),
 		})
@@ -649,7 +649,7 @@ echo "new line" >> file
 		if !hasExistingBranch {
 			panic("no existing branch")
 		}
-		newBranch := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		newBranch := gitdomain.LocalBranchName(branchName)
 		devRepo.CreateBranch(newBranch, "main")
 		devRepo.CheckoutBranch(newBranch)
 		for _, commit := range testgit.FromGherkinTable(table) {
@@ -1046,12 +1046,12 @@ echo "new line" >> file
 
 	sc.Step(`^origin deletes the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.LocalBranchName(stringss.Trimmed(branch)))
+		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.LocalBranchName(branch))
 	})
 
 	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy$`, func(ctx context.Context, branchName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchToShip := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		branchToShip := gitdomain.LocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		commitMessage := asserts.NoError1(originRepo.Git.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
 		message, hasCommitMessage := commitMessage.Get()
@@ -1069,7 +1069,7 @@ echo "new line" >> file
 
 	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy as "([^"]+)"$`, func(ctx context.Context, branchName, commitMessage string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchToShip := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		branchToShip := gitdomain.LocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch("main")
 		asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
@@ -1201,12 +1201,12 @@ echo "new line" >> file
 
 	sc.Step(`^the coworker is on the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.CoworkerRepo.GetOrPanic().CheckoutBranch(gitdomain.LocalBranchName(stringss.Trimmed(branch)))
+		state.fixture.CoworkerRepo.GetOrPanic().CheckoutBranch(gitdomain.LocalBranchName(branch))
 	})
 
 	sc.Step(`^the coworker pushes a new "([^"]+)" branch with these commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branch := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		branch := gitdomain.LocalBranchName(branchName)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateBranch(branch, "main")
 		coworkerRepo.CheckoutBranch(branch)
@@ -1220,7 +1220,7 @@ echo "new line" >> file
 
 	sc.Step(`^the coworker pushes these commits to the "([^"]+)" branch$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branch := gitdomain.LocalBranchName(stringss.Trimmed(branchName))
+		branch := gitdomain.LocalBranchName(branchName)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CheckoutBranch(branch)
 		for _, commit := range testgit.FromGherkinTable(table) {
@@ -1262,7 +1262,7 @@ echo "new line" >> file
 	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		_ = coworkerRepo.Config.NormalConfig.SetParent(coworkerRepo.TestRunner, gitdomain.LocalBranchName(stringss.Trimmed(childBranch)), gitdomain.LocalBranchName(stringss.Trimmed(parentBranch)))
+		_ = coworkerRepo.Config.NormalConfig.SetParent(coworkerRepo.TestRunner, gitdomain.LocalBranchName(childBranch), gitdomain.LocalBranchName(parentBranch))
 	})
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
@@ -1290,7 +1290,7 @@ echo "new line" >> file
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
-		if !actual.EqualSome(gitdomain.LocalBranchName(stringss.Trimmed(expected))) {
+		if !actual.EqualSome(gitdomain.LocalBranchName(expected)) {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
@@ -1299,7 +1299,7 @@ echo "new line" >> file
 	sc.Step(`^the current branch is "([^"]*)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.LocalBranchName(stringss.Trimmed(name))
+		branch := gitdomain.LocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
 		devRepo.CheckoutBranch(branch)
 		return nil
@@ -1308,8 +1308,8 @@ echo "new line" >> file
 	sc.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(ctx context.Context, currentText, previousText string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		current := gitdomain.LocalBranchName(stringss.Trimmed(currentText))
-		previous := gitdomain.LocalBranchName(stringss.Trimmed(previousText))
+		current := gitdomain.LocalBranchName(currentText)
+		previous := gitdomain.LocalBranchName(previousText)
 		state.initialCurrentBranch = Some(current)
 		devRepo.CheckoutBranch(previous)
 		devRepo.CheckoutBranch(current)
@@ -1323,7 +1323,7 @@ echo "new line" >> file
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		if !actual.EqualSome(gitdomain.LocalBranchName(stringss.Trimmed(expected))) {
+		if !actual.EqualSome(gitdomain.LocalBranchName(expected)) {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
@@ -1442,14 +1442,14 @@ echo "new line" >> file
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.SetMainBranch(gitdomain.LocalBranchName(stringss.Trimmed(name)), repo.TestRunner)
+		return devRepo.Config.SetMainBranch(gitdomain.LocalBranchName(name), repo.TestRunner)
 	})
 
 	sc.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.UnvalidatedConfig.MainBranch
-		if !have.EqualSome(gitdomain.LocalBranchName(stringss.Trimmed(want))) {
+		if !have.EqualSome(gitdomain.LocalBranchName(want)) {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
@@ -1494,7 +1494,7 @@ echo "new line" >> file
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
-		if !have.EqualSome(gitdomain.LocalBranchName(stringss.Trimmed(want))) {
+		if !have.EqualSome(gitdomain.LocalBranchName(want)) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
 		return nil
