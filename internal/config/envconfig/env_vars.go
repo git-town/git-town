@@ -57,6 +57,11 @@ func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 	return None[string]()
 }
 
+func (self EnvVars) Lookup(name string) (string, bool) {
+	result, has := self.data[name]
+	return result, has
+}
+
 func NewEnvVars(entries []string) EnvVars {
 	result := EnvVars{
 		data: map[string]string{},

@@ -4,6 +4,9 @@ package config
 import (
 	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/spf13/cobra"
 
 	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v23/internal/cli/flags"
@@ -14,8 +17,8 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/cliconfig"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/execute"
+	"github.com/git-town/git-town/v23/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/spf13/cobra"
 )
 
 const configDesc = "Display your Git Town configuration"
@@ -124,6 +127,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
 	print.Entry("breadcrumb direction", format.StringsSetting(config.NormalConfig.ProposalBreadcrumbDirection.String()))
+	print.Entry("breadcrumb exclude branches", format.StringsSetting(strings.Join(slice.Stringify(config.NormalConfig.ProposalBreadcrumbExcludeBranches.Values()), ", ")))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))

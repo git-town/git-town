@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/config/envconfig"
 	"github.com/shoenig/test/must"
 )
@@ -43,6 +44,39 @@ func TestLoad(t *testing.T) {
 			must.NoError(t, err)
 			fmt.Println(cfg.GithubToken)
 			must.True(t, cfg.GithubToken.EqualSome("my-token"))
+		})
+	})
+
+	t.Run("breadcrumb exclude branches", func(t *testing.T) {
+		t.Parallel()
+		t.Run("unset", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvVars([]string{})
+			cfg, err := envconfig.Load(env)
+			must.NoError(t, err)
+			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.IsNone())
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvVars([]string{"GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES="})
+			cfg, err := envconfig.Load(env)
+			must.NoError(t, err)
+			want := configdomain.NewProposalBreadcrumbExcludeBranches()
+			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+		})
+		t.Run("set", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvVars([]string{"GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES=prototype, contribution"})
+			cfg, err := envconfig.Load(env)
+			must.NoError(t, err)
+			want := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)
+			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+		})
+		t.Run("invalid", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvVars([]string{"GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES=zonk"})
+			_, err := envconfig.Load(env)
+			must.Error(t, err)
 		})
 	})
 }

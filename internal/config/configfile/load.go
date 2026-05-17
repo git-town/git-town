@@ -49,42 +49,43 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	// TODO: convert to proper variable initialization using None
 	var (
 		// keep-sorted start
-		autoResolve                 Option[configdomain.AutoResolve]
-		autoSync                    Option[configdomain.AutoSync]
-		branchPrefix                Option[configdomain.BranchPrefix]
-		browserEnabled              Option[browserdomain.BrowserEnabled]
-		browserExecutable           Option[browserdomain.BrowserExecutable]
-		contributionRegex           Option[configdomain.ContributionRegex]
-		detached                    Option[configdomain.Detached]
-		devRemote                   Option[gitdomain.Remote]
-		displayTypes                Option[configdomain.DisplayTypes]
-		featureRegex                Option[configdomain.FeatureRegex]
-		forgeType                   Option[forgedomain.ForgeType]
-		githubConnectorType         Option[forgedomain.GithubConnectorType]
-		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
-		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
-		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
-		interactive                 Option[configdomain.Interactive]
-		mainBranch                  Option[gitdomain.LocalBranchName]
-		newBranchType               Option[configdomain.NewBranchType]
-		observedRegex               Option[configdomain.ObservedRegex]
-		order                       Option[configdomain.Order]
-		perennialBranches           gitdomain.LocalBranchNames
-		perennialRegex              Option[configdomain.PerennialRegex]
-		proposalBreadcrumb          Option[configdomain.ProposalBreadcrumb]
-		proposalBreadcrumbDirection Option[configdomain.ProposalBreadcrumbDirection]
-		pushBranches                Option[configdomain.PushBranches]
-		pushHook                    Option[configdomain.PushHook]
-		shareNewBranches            Option[configdomain.ShareNewBranches]
-		shipDeleteTrackingBranch    Option[configdomain.ShipDeleteTrackingBranch]
-		shipStrategy                Option[configdomain.ShipStrategy]
-		stash                       Option[configdomain.Stash]
-		syncFeatureStrategy         Option[configdomain.SyncFeatureStrategy]
-		syncPerennialStrategy       Option[configdomain.SyncPerennialStrategy]
-		syncPrototypeStrategy       Option[configdomain.SyncPrototypeStrategy]
-		syncTags                    Option[configdomain.SyncTags]
-		syncUpstream                Option[configdomain.SyncUpstream]
-		unknownBranchType           Option[configdomain.UnknownBranchType]
+		autoResolve                       Option[configdomain.AutoResolve]
+		autoSync                          Option[configdomain.AutoSync]
+		branchPrefix                      Option[configdomain.BranchPrefix]
+		browserEnabled                    Option[browserdomain.BrowserEnabled]
+		browserExecutable                 Option[browserdomain.BrowserExecutable]
+		contributionRegex                 Option[configdomain.ContributionRegex]
+		detached                          Option[configdomain.Detached]
+		devRemote                         Option[gitdomain.Remote]
+		displayTypes                      Option[configdomain.DisplayTypes]
+		featureRegex                      Option[configdomain.FeatureRegex]
+		forgeType                         Option[forgedomain.ForgeType]
+		githubConnectorType               Option[forgedomain.GithubConnectorType]
+		gitlabConnectorType               Option[forgedomain.GitlabConnectorType]
+		hostingOriginHostname             Option[configdomain.HostingOriginHostname]
+		ignoreUncommitted                 Option[configdomain.IgnoreUncommitted]
+		interactive                       Option[configdomain.Interactive]
+		mainBranch                        Option[gitdomain.LocalBranchName]
+		newBranchType                     Option[configdomain.NewBranchType]
+		observedRegex                     Option[configdomain.ObservedRegex]
+		order                             Option[configdomain.Order]
+		perennialBranches                 gitdomain.LocalBranchNames
+		perennialRegex                    Option[configdomain.PerennialRegex]
+		proposalBreadcrumb                Option[configdomain.ProposalBreadcrumb]
+		proposalBreadcrumbDirection       Option[configdomain.ProposalBreadcrumbDirection]
+		proposalBreadcrumbExcludeBranches Option[configdomain.ProposalBreadcrumbExcludeBranches]
+		pushBranches                      Option[configdomain.PushBranches]
+		pushHook                          Option[configdomain.PushHook]
+		shareNewBranches                  Option[configdomain.ShareNewBranches]
+		shipDeleteTrackingBranch          Option[configdomain.ShipDeleteTrackingBranch]
+		shipStrategy                      Option[configdomain.ShipStrategy]
+		stash                             Option[configdomain.Stash]
+		syncFeatureStrategy               Option[configdomain.SyncFeatureStrategy]
+		syncPerennialStrategy             Option[configdomain.SyncPerennialStrategy]
+		syncPrototypeStrategy             Option[configdomain.SyncPrototypeStrategy]
+		syncTags                          Option[configdomain.SyncTags]
+		syncUpstream                      Option[configdomain.SyncUpstream]
+		unknownBranchType                 Option[configdomain.UnknownBranchType]
 		// keep-sorted end
 	)
 	var err error
@@ -230,6 +231,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(stringss.Trim(*data.Propose.BreadcrumbDirection), messages.ConfigFile)
 			ec.Check(err)
 		}
+		if data.Propose.BreadcrumbExcludeBranches != nil {
+			proposalBreadcrumbExcludeBranches, err = configdomain.ParseProposalBreadcrumbExcludeBranchesList(*data.Propose.BreadcrumbExcludeBranches, messages.ConfigFile)
+			ec.Check(err)
+		}
 	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
@@ -292,55 +297,56 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	return configdomain.PartialConfig{
-		Aliases:                     map[configdomain.AliasableCommand]string{},
-		AutoSync:                    autoSync,
-		BitbucketAppPassword:        None[forgedomain.BitbucketAppPassword](),
-		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
-		BranchPrefix:                branchPrefix,
-		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
-		BrowserExecutable:           browserExecutable,
-		BrowserEnabled:              browserEnabled,
-		ForgejoToken:                None[forgedomain.ForgejoToken](),
-		ContributionRegex:           contributionRegex,
-		Detached:                    detached,
-		DisplayTypes:                displayTypes,
-		DryRun:                      None[configdomain.DryRun](),
-		UnknownBranchType:           unknownBranchType,
-		DevRemote:                   devRemote,
-		FeatureRegex:                featureRegex,
-		ForgeType:                   forgeType,
-		GithubConnectorType:         githubConnectorType,
-		GithubToken:                 None[forgedomain.GithubToken](),
-		GitlabConnectorType:         gitlabConnectorType,
-		GitlabToken:                 None[forgedomain.GitlabToken](),
-		GitUserEmail:                None[gitdomain.GitUserEmail](),
-		GitUserName:                 None[gitdomain.GitUserName](),
-		GiteaToken:                  None[forgedomain.GiteaToken](),
-		HostingOriginHostname:       hostingOriginHostname,
-		Interactive:                 interactive,
-		Lineage:                     configdomain.NewLineage(),
-		MainBranch:                  mainBranch,
-		NewBranchType:               newBranchType,
-		AutoResolve:                 autoResolve,
-		ObservedRegex:               observedRegex,
-		Offline:                     None[configdomain.Offline](),
-		Order:                       order,
-		PerennialBranches:           perennialBranches,
-		PerennialRegex:              perennialRegex,
-		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		PushBranches:                pushBranches,
-		PushHook:                    pushHook,
-		ShareNewBranches:            shareNewBranches,
-		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
-		IgnoreUncommitted:           ignoreUncommitted,
-		ShipStrategy:                shipStrategy,
-		Stash:                       stash,
-		SyncFeatureStrategy:         syncFeatureStrategy,
-		SyncPerennialStrategy:       syncPerennialStrategy,
-		SyncPrototypeStrategy:       syncPrototypeStrategy,
-		SyncTags:                    syncTags,
-		SyncUpstream:                syncUpstream,
-		Verbose:                     None[configdomain.Verbose](),
+		Aliases:                           map[configdomain.AliasableCommand]string{},
+		AutoSync:                          autoSync,
+		BitbucketAppPassword:              None[forgedomain.BitbucketAppPassword](),
+		BitbucketUsername:                 None[forgedomain.BitbucketUsername](),
+		BranchPrefix:                      branchPrefix,
+		BranchTypeOverrides:               configdomain.BranchTypeOverrides{},
+		BrowserExecutable:                 browserExecutable,
+		BrowserEnabled:                    browserEnabled,
+		ForgejoToken:                      None[forgedomain.ForgejoToken](),
+		ContributionRegex:                 contributionRegex,
+		Detached:                          detached,
+		DisplayTypes:                      displayTypes,
+		DryRun:                            None[configdomain.DryRun](),
+		UnknownBranchType:                 unknownBranchType,
+		DevRemote:                         devRemote,
+		FeatureRegex:                      featureRegex,
+		ForgeType:                         forgeType,
+		GithubConnectorType:               githubConnectorType,
+		GithubToken:                       None[forgedomain.GithubToken](),
+		GitlabConnectorType:               gitlabConnectorType,
+		GitlabToken:                       None[forgedomain.GitlabToken](),
+		GitUserEmail:                      None[gitdomain.GitUserEmail](),
+		GitUserName:                       None[gitdomain.GitUserName](),
+		GiteaToken:                        None[forgedomain.GiteaToken](),
+		HostingOriginHostname:             hostingOriginHostname,
+		Interactive:                       interactive,
+		Lineage:                           configdomain.NewLineage(),
+		MainBranch:                        mainBranch,
+		NewBranchType:                     newBranchType,
+		AutoResolve:                       autoResolve,
+		ObservedRegex:                     observedRegex,
+		Offline:                           None[configdomain.Offline](),
+		Order:                             order,
+		PerennialBranches:                 perennialBranches,
+		PerennialRegex:                    perennialRegex,
+		ProposalBreadcrumb:                proposalBreadcrumb,
+		ProposalBreadcrumbDirection:       proposalBreadcrumbDirection,
+		ProposalBreadcrumbExcludeBranches: proposalBreadcrumbExcludeBranches,
+		PushBranches:                      pushBranches,
+		PushHook:                          pushHook,
+		ShareNewBranches:                  shareNewBranches,
+		ShipDeleteTrackingBranch:          shipDeleteTrackingBranch,
+		IgnoreUncommitted:                 ignoreUncommitted,
+		ShipStrategy:                      shipStrategy,
+		Stash:                             stash,
+		SyncFeatureStrategy:               syncFeatureStrategy,
+		SyncPerennialStrategy:             syncPerennialStrategy,
+		SyncPrototypeStrategy:             syncPrototypeStrategy,
+		SyncTags:                          syncTags,
+		SyncUpstream:                      syncUpstream,
+		Verbose:                           None[configdomain.Verbose](),
 	}, ec.Err
 }

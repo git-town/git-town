@@ -48,6 +48,7 @@ Feature: display configuration inside a non-TTY environment
       Propose:
         breadcrumb: none
         breadcrumb direction: down
+        breadcrumb exclude branches: (none)
 
       Ship:
         delete tracking branch: yes

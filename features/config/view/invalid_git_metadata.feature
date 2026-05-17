@@ -13,6 +13,7 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.order" is "zonk"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposal-breadcrumb" is "zonk"
+    And local Git setting "git-town.proposal-breadcrumb-exclude-branches" is "zonk"
     And local Git setting "git-town.push-branches" is "zonk"
     And local Git setting "git-town.push-hook" is "zonk"
     And local Git setting "git-town.share-new-branches" is "zonk"
@@ -38,6 +39,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
       Ignoring invalid value for "git-town.proposal-breadcrumb": "zonk"
+      Ignoring invalid value for "git-town.proposal-breadcrumb-exclude-branches": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
@@ -94,6 +96,7 @@ Feature: display invalid Git metadata
       Propose:
         breadcrumb: none
         breadcrumb direction: down
+        breadcrumb exclude branches: (none)
 
       Ship:
         delete tracking branch: yes

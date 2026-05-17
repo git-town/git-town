@@ -9,59 +9,62 @@ import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (
 	// keep-sorted start
-	Browser                     = "BROWSER"
-	autoResolve                 = "GIT_TOWN_AUTO_RESOLVE"
-	autoSync                    = "GIT_TOWN_AUTO_SYNC"
-	bitbucketAppPassword        = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
-	bitbucketUserName           = "GIT_TOWN_BITBUCKET_USERNAME"
-	branchPrefix                = "GIT_TOWN_BRANCH_PREFIX"
-	contributionRegex           = "GIT_TOWN_CONTRIBUTION_REGEX"
-	detached                    = "GIT_TOWN_DETACHED"
-	devRemote                   = "GIT_TOWN_DEV_REMOTE"
-	displayTypes                = "GIT_TOWN_DISPLAY_TYPES"
-	dryRun                      = "GIT_TOWN_DRY_RUN"
-	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
-	forgeType                   = "GIT_TOWN_FORGE_TYPE"
-	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
-	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
-	gitAuthorName               = "GIT_AUTHOR_NAME"
-	gitCommitterEmail           = "GIT_COMMITTER_EMAIL"
-	gitCommitterName            = "GIT_COMMITTER_NAME"
-	giteaToken                  = "GIT_TOWN_GITEA_TOKEN"
-	githubConnectorType         = "GIT_TOWN_GITHUB_CONNECTOR"
-	githubToken                 = "GIT_TOWN_GITHUB_TOKEN"
-	gitlabConnectorType         = "GIT_TOWN_GITLAB_CONNECTOR"
-	gitlabToken                 = "GIT_TOWN_GITLAB_TOKEN"
-	ignoreUncommitted           = "GIT_TOWN_IGNORE_UNCOMMITTED"
-	interactive                 = "GIT_TOWN_INTERACTIVE"
-	mainBranch                  = "GIT_TOWN_MAIN_BRANCH"
-	newBranchType               = "GIT_TOWN_NEW_BRANCH_TYPE"
-	observedRegex               = "GIT_TOWN_OBSERVED_REGEX"
-	offline                     = "GIT_TOWN_OFFLINE"
-	order                       = "GIT_TOWN_ORDER"
-	originHostname              = "GIT_TOWN_ORIGIN_HOSTNAME"
-	perennialBranches           = "GIT_TOWN_PERENNIAL_BRANCHES"
-	perennialRegex              = "GIT_TOWN_PERENNIAL_REGEX"
-	proposalBreadcrumb          = "GIT_TOWN_PROPOSAL_BREADCRUMB"
-	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
-	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
-	pushHook                    = "GIT_TOWN_PUSH_HOOK"
-	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
-	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
-	shipStrategy                = "GIT_TOWN_SHIP_STRATEGY"
-	stash                       = "GIT_TOWN_STASH"
-	syncFeatureStrategy         = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
-	syncPerennialStrategy       = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
-	syncPrototypeStrategy       = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
-	syncTags                    = "GIT_TOWN_SYNC_TAGS"
-	syncUpstream                = "GIT_TOWN_SYNC_UPSTREAM"
-	term                        = "TERM"
-	unknownBranchType           = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
-	verbose                     = "GIT_TOWN_VERBOSE"
+	Browser                           = "BROWSER"
+	autoResolve                       = "GIT_TOWN_AUTO_RESOLVE"
+	autoSync                          = "GIT_TOWN_AUTO_SYNC"
+	bitbucketAppPassword              = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
+	bitbucketUserName                 = "GIT_TOWN_BITBUCKET_USERNAME"
+	branchPrefix                      = "GIT_TOWN_BRANCH_PREFIX"
+	contributionRegex                 = "GIT_TOWN_CONTRIBUTION_REGEX"
+	detached                          = "GIT_TOWN_DETACHED"
+	devRemote                         = "GIT_TOWN_DEV_REMOTE"
+	displayTypes                      = "GIT_TOWN_DISPLAY_TYPES"
+	dryRun                            = "GIT_TOWN_DRY_RUN"
+	featureRegex                      = "GIT_TOWN_FEATURE_REGEX"
+	forgeType                         = "GIT_TOWN_FORGE_TYPE"
+	forgejoToken                      = "GIT_TOWN_FORGEJO_TOKEN"
+	gitAuthorEmail                    = "GIT_AUTHOR_EMAIL"
+	gitAuthorName                     = "GIT_AUTHOR_NAME"
+	gitCommitterEmail                 = "GIT_COMMITTER_EMAIL"
+	gitCommitterName                  = "GIT_COMMITTER_NAME"
+	giteaToken                        = "GIT_TOWN_GITEA_TOKEN"
+	githubConnectorType               = "GIT_TOWN_GITHUB_CONNECTOR"
+	githubToken                       = "GIT_TOWN_GITHUB_TOKEN"
+	gitlabConnectorType               = "GIT_TOWN_GITLAB_CONNECTOR"
+	gitlabToken                       = "GIT_TOWN_GITLAB_TOKEN"
+	ignoreUncommitted                 = "GIT_TOWN_IGNORE_UNCOMMITTED"
+	interactive                       = "GIT_TOWN_INTERACTIVE"
+	mainBranch                        = "GIT_TOWN_MAIN_BRANCH"
+	newBranchType                     = "GIT_TOWN_NEW_BRANCH_TYPE"
+	observedRegex                     = "GIT_TOWN_OBSERVED_REGEX"
+	offline                           = "GIT_TOWN_OFFLINE"
+	order                             = "GIT_TOWN_ORDER"
+	originHostname                    = "GIT_TOWN_ORIGIN_HOSTNAME"
+	perennialBranches                 = "GIT_TOWN_PERENNIAL_BRANCHES"
+	perennialRegex                    = "GIT_TOWN_PERENNIAL_REGEX"
+	proposalBreadcrumb                = "GIT_TOWN_PROPOSAL_BREADCRUMB"
+	proposalBreadcrumbDirection       = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
+	proposalBreadcrumbExcludeBranches = "GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES"
+	pushBranches                      = "GIT_TOWN_PUSH_BRANCHES"
+	pushHook                          = "GIT_TOWN_PUSH_HOOK"
+	shareNewBranches                  = "GIT_TOWN_SHARE_NEW_BRANCHES"
+	shipDeleteTrackingBranch          = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
+	shipStrategy                      = "GIT_TOWN_SHIP_STRATEGY"
+	stash                             = "GIT_TOWN_STASH"
+	syncFeatureStrategy               = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
+	syncPerennialStrategy             = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
+	syncPrototypeStrategy             = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
+	syncTags                          = "GIT_TOWN_SYNC_TAGS"
+	syncUpstream                      = "GIT_TOWN_SYNC_UPSTREAM"
+	term                              = "TERM"
+	unknownBranchType                 = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
+	verbose                           = "GIT_TOWN_VERBOSE"
 	// keep-sorted end
 )
 
@@ -91,6 +94,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
+	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExcludeBranches := loadIfPresent(env, proposalBreadcrumbExcludeBranches, configdomain.ParseProposalBreadcrumbExcludeBranches)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -127,6 +131,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
+		errProposalBreadcrumbExcludeBranches,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -142,59 +147,68 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errVerbose,
 	)
 	return configdomain.PartialConfig{
-		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars
-		AutoResolve:                 autoResolve,
-		AutoSync:                    autoSync,
-		BitbucketAppPassword:        forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
-		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
-		BranchPrefix:                branchPrefix,
-		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		BrowserEnabled:              browserEnabled,
-		BrowserExecutable:           browserExecutable,
-		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
-		ContributionRegex:           contributionRegex,
-		Detached:                    detached,
-		DevRemote:                   gitdomain.NewRemote(env.Get(devRemote)),
-		DisplayTypes:                displayTypesOpt,
-		DryRun:                      dryRun,
-		FeatureRegex:                featureRegex,
-		ForgeType:                   forgeType,
-		GithubConnectorType:         githubConnectorType,
-		GithubToken:                 forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
-		GitlabConnectorType:         gitlabConnectorType,
-		GitlabToken:                 forgedomain.ParseGitlabToken(env.Get(gitlabToken)),
-		GitUserEmail:                gitUserEmail,
-		GitUserName:                 gitUserName,
-		GiteaToken:                  forgedomain.ParseGiteaToken(env.Get(giteaToken)),
-		HostingOriginHostname:       configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
-		IgnoreUncommitted:           ignoreUncommitted,
-		Interactive:                 interactive2,
-		Lineage:                     configdomain.NewLineage(), // not loaded from env vars
-		MainBranch:                  gitdomain.LocalBranchNameOpt(env.Get(mainBranch)),
-		NewBranchType:               configdomain.NewBranchTypeOpt(newBranchType),
-		ObservedRegex:               observedRegex,
-		Offline:                     offline,
-		Order:                       order,
-		PerennialBranches:           gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
-		PerennialRegex:              perennialRegex,
-		ProposalBreadcrumb:          proposalBreadcrumb,
-		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		PushBranches:                pushBranches,
-		PushHook:                    pushHook,
-		ShareNewBranches:            shareNewBranches,
-		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
-		ShipStrategy:                shipStrategy,
-		Stash:                       stash,
-		SyncFeatureStrategy:         syncFeatureStrategy,
-		SyncPerennialStrategy:       syncPerennialStrategy,
-		SyncPrototypeStrategy:       syncPrototypeStrategy,
-		SyncTags:                    syncTags,
-		SyncUpstream:                syncUpstream,
-		UnknownBranchType:           configdomain.UnknownBranchTypeOpt(unknownBranchType),
-		Verbose:                     verbose,
+		Aliases:                           configdomain.Aliases{}, // aliases aren't loaded from env vars
+		AutoResolve:                       autoResolve,
+		AutoSync:                          autoSync,
+		BitbucketAppPassword:              forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
+		BitbucketUsername:                 forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
+		BranchPrefix:                      branchPrefix,
+		BranchTypeOverrides:               configdomain.BranchTypeOverrides{}, // not loaded from env vars
+		ProposalBreadcrumbExcludeBranches: proposalBreadcrumbExcludeBranches,
+		BrowserEnabled:                    browserEnabled,
+		BrowserExecutable:                 browserExecutable,
+		ForgejoToken:                      forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
+		ContributionRegex:                 contributionRegex,
+		Detached:                          detached,
+		DevRemote:                         gitdomain.NewRemote(env.Get(devRemote)),
+		DisplayTypes:                      displayTypesOpt,
+		DryRun:                            dryRun,
+		FeatureRegex:                      featureRegex,
+		ForgeType:                         forgeType,
+		GithubConnectorType:               githubConnectorType,
+		GithubToken:                       forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
+		GitlabConnectorType:               gitlabConnectorType,
+		GitlabToken:                       forgedomain.ParseGitlabToken(env.Get(gitlabToken)),
+		GitUserEmail:                      gitUserEmail,
+		GitUserName:                       gitUserName,
+		GiteaToken:                        forgedomain.ParseGiteaToken(env.Get(giteaToken)),
+		HostingOriginHostname:             configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
+		IgnoreUncommitted:                 ignoreUncommitted,
+		Interactive:                       interactive2,
+		Lineage:                           configdomain.NewLineage(), // not loaded from env vars
+		MainBranch:                        gitdomain.LocalBranchNameOpt(env.Get(mainBranch)),
+		NewBranchType:                     configdomain.NewBranchTypeOpt(newBranchType),
+		ObservedRegex:                     observedRegex,
+		Offline:                           offline,
+		Order:                             order,
+		PerennialBranches:                 gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
+		PerennialRegex:                    perennialRegex,
+		ProposalBreadcrumb:                proposalBreadcrumb,
+		ProposalBreadcrumbDirection:       proposalBreadcrumbDirection,
+		PushBranches:                      pushBranches,
+		PushHook:                          pushHook,
+		ShareNewBranches:                  shareNewBranches,
+		ShipDeleteTrackingBranch:          shipDeleteTrackingBranch,
+		ShipStrategy:                      shipStrategy,
+		Stash:                             stash,
+		SyncFeatureStrategy:               syncFeatureStrategy,
+		SyncPerennialStrategy:             syncPerennialStrategy,
+		SyncPrototypeStrategy:             syncPrototypeStrategy,
+		SyncTags:                          syncTags,
+		SyncUpstream:                      syncUpstream,
+		UnknownBranchType:                 configdomain.UnknownBranchTypeOpt(unknownBranchType),
+		Verbose:                           verbose,
 	}, err
 }
 
 func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
 	return parser(env.Get(varName), varName)
+}
+
+func loadIfPresent[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (Option[T], error)) (Option[T], error) {
+	value, hasValue := env.Lookup(varName)
+	if !hasValue {
+		return None[T](), nil
+	}
+	return parser(stringss.Trim(value), varName)
 }

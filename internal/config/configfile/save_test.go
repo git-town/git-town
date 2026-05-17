@@ -76,18 +76,22 @@ func TestSave(t *testing.T) {
 				PerennialRegex:              perennialRegex,
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbBranches),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
-				PushBranches:                Some(configdomain.PushBranches(true)),
-				PushHook:                    Some(configdomain.PushHook(true)),
-				ShareNewBranches:            Some(configdomain.ShareNewBranchesPropose),
-				ShipDeleteTrackingBranch:    Some(configdomain.ShipDeleteTrackingBranch(true)),
-				ShipStrategy:                Some(configdomain.ShipStrategyAPI),
-				Stash:                       Some(configdomain.Stash(true)),
-				SyncFeatureStrategy:         Some(configdomain.SyncFeatureStrategyMerge),
-				SyncPerennialStrategy:       Some(configdomain.SyncPerennialStrategyRebase),
-				SyncPrototypeStrategy:       Some(configdomain.SyncPrototypeStrategyCompress),
-				SyncTags:                    Some(configdomain.SyncTags(true)),
-				SyncUpstream:                Some(configdomain.SyncUpstream(true)),
-				UnknownBranchType:           Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
+				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExcludeBranches(
+					configdomain.BranchTypePrototypeBranch,
+					configdomain.BranchTypeContributionBranch,
+				)),
+				PushBranches:             Some(configdomain.PushBranches(true)),
+				PushHook:                 Some(configdomain.PushHook(true)),
+				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),
+				ShipDeleteTrackingBranch: Some(configdomain.ShipDeleteTrackingBranch(true)),
+				ShipStrategy:             Some(configdomain.ShipStrategyAPI),
+				Stash:                    Some(configdomain.Stash(true)),
+				SyncFeatureStrategy:      Some(configdomain.SyncFeatureStrategyMerge),
+				SyncPerennialStrategy:    Some(configdomain.SyncPerennialStrategyRebase),
+				SyncPrototypeStrategy:    Some(configdomain.SyncPrototypeStrategyCompress),
+				SyncTags:                 Some(configdomain.SyncTags(true)),
+				SyncUpstream:             Some(configdomain.SyncUpstream(true)),
+				UnknownBranchType:        Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
 			})
 			want := `
 #:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json
@@ -124,6 +128,7 @@ origin-hostname = "forge"
 [propose]
 breadcrumb = "branches"
 breadcrumb-direction = "up"
+breadcrumb-exclude-branches = ["contribution", "prototype"]
 
 [ship]
 delete-tracking-branch = true

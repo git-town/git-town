@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 type RenderSectionArgs struct {
@@ -14,7 +13,7 @@ type RenderSectionArgs struct {
 	Connector     Option[forgedomain.Connector]
 	CurrentBranch gitdomain.LocalBranchName
 	Direction     configdomain.ProposalBreadcrumbDirection
-	Excluded      set.Set[configdomain.BranchType]
+	Excluded      configdomain.ProposalBreadcrumbExcludeBranches
 	Lineage       configdomain.Lineage
 	Order         configdomain.Order
 }

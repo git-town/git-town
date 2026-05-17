@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
@@ -190,6 +191,7 @@ Start:
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchInfosLastRun  Option[gitdomain.BranchInfos]
+	branchesAndTypes    configdomain.BranchesAndTypes
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
@@ -343,6 +345,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
+		branchesAndTypes:    branchesAndTypes,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
@@ -400,13 +403,14 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 		proposalBody := data.proposalBody
 		if updateBreadcrumb {
+			branchTypes := branchTypesForProposalRendering(data.branchesAndTypes, branchToPropose)
 			lineageSection := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
-				BranchTypes:   make(configdomain.BranchesAndTypes),
+				BranchTypes:   branchTypes,
 				Breadcrumb:    data.config.NormalConfig.ProposalBreadcrumb,
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
-				Excluded:      set.New[configdomain.BranchType](),
+				Excluded:      data.config.NormalConfig.ProposalBreadcrumbExcludeBranches,
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})
@@ -431,6 +435,36 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return optimizer.Optimize(prog.Immutable())
+}
+
+// branchTypesForProposalRendering provides the branch types to use for the
+// proposal breadcrumb.
+//
+// git town propose turns prototype and parked branches into normal feature
+// branches by queueing BranchTypeOverrideRemove. That opcode removes the local
+// Git config entry that manually marks the branch as prototype or parked.
+//
+// The proposal body is rendered before the queued opcodes run. Without this
+// helper, the breadcrumb renderer would still see the old branch type from the
+// snapshot. If the user excludes prototype or parked branches from breadcrumbs,
+// Git Town would hide the branch that is currently being proposed.
+//
+// This helper copies the snapshot and changes only the branch being proposed to
+// its future type for rendering. It does not change the real config or the
+// branch type used by the rest of the propose program.
+func branchTypesForProposalRendering(branchesAndTypes configdomain.BranchesAndTypes, branchToPropose branchToProposeData) configdomain.BranchesAndTypes {
+	result := make(configdomain.BranchesAndTypes, len(branchesAndTypes))
+	maps.Copy(result, branchesAndTypes)
+	switch branchToPropose.branchType {
+	case configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+		result[branchToPropose.name] = configdomain.BranchTypeFeatureBranch
+	case configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypePerennialBranch:
+	}
+	return result
 }
 
 func validateBranchTypeToPropose(branchType configdomain.BranchType) error {

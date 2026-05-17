@@ -1,13 +1,11 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/proposallineage"
 	"github.com/git-town/git-town/v23/internal/vm/shared"
-	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 type ProposalUpdateBreadcrumb struct {
@@ -37,13 +35,14 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 	}
 	for _, proposal := range proposals {
 		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
+		branchTypes := args.Config.Value.BranchesAndTypes(args.BranchInfos.LocalBranches().NamesLocalBranches())
 		lineageSection := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
-			BranchTypes:   make(configdomain.BranchesAndTypes),
+			BranchTypes:   branchTypes,
 			Breadcrumb:    args.Config.Value.NormalConfig.ProposalBreadcrumb,
 			Connector:     args.Connector,
 			CurrentBranch: self.Branch,
 			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
-			Excluded:      set.New[configdomain.BranchType](),
+			Excluded:      args.Config.Value.NormalConfig.ProposalBreadcrumbExcludeBranches,
 			Lineage:       args.Config.Value.NormalConfig.Lineage,
 			Order:         args.Config.Value.NormalConfig.Order,
 		})

@@ -260,6 +260,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalBreadcrumb                      = "Proposals display breadcrumb: %s\n"
 	ProposalBreadcrumbDirection             = "Proposals breadcrumb direction: %s\n"
 	ProposalBreadcrumbDirectionInvalid      = "invalid value for proposal-breadcrumb-direction in %s: %q, expected \"down\" or \"up\""
+	ProposalBreadcrumbExcludeBranches       = "Proposals breadcrumb excludes branch types: %s\n"
 	ProposalBreadcrumbInvalid               = "invalid value for proposal breadcrumb in %s: %q. Valid values are: none, stacks, branches"
 	ProposalFindProblem                     = "cannot find proposal: %s"
 	ProposalLineageUnsupportedForBranchType = "Proposal stack lineage unsupported for branch type %s"
