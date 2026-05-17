@@ -50,7 +50,7 @@ func TestBranchTypeFlag(t *testing.T) {
 
 	t.Run("SplitBranchTypeNames", func(t *testing.T) {
 		t.Parallel()
-		tests := map[stringss.TrimmedString][]string{
+		tests := map[stringss.TrimmedString][]stringss.TrimmedString{
 			"":                   {},
 			"feature":            {"feature"},
 			"feature,observed":   {"feature", "observed"},

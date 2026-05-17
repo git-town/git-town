@@ -33,7 +33,7 @@ func ParseBranchTypes(text stringss.TrimmedString, source string) ([]configdomai
 	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
-		branchTypeOpt, err := configdomain.ParseBranchType(stringss.TrimSpace(branchTypeName), source)
+		branchTypeOpt, err := configdomain.ParseBranchType(branchTypeName, source)
 		if err != nil {
 			return result, err
 		}
@@ -44,15 +44,16 @@ func ParseBranchTypes(text stringss.TrimmedString, source string) ([]configdomai
 	return result, nil
 }
 
-func SplitBranchTypeNames(text stringss.TrimmedString) []string {
+func SplitBranchTypeNames(text stringss.TrimmedString) []stringss.TrimmedString {
 	splitBranchOnce.Do(func() {
 		splitBranchRegex = regexp.MustCompile(`[,\+&\|]`)
 	})
 	splitted := splitBranchRegex.Split(text.String(), -1)
-	result := make([]string, 0, len(splitted))
+	result := make([]stringss.TrimmedString, 0, len(splitted))
 	for _, split := range splitted {
-		if len(split) > 0 {
-			result = append(result, split)
+		trimmedSplit := stringss.TrimSpace(split)
+		if len(trimmedSplit) > 0 {
+			result = append(result, trimmedSplit)
 		}
 	}
 	return result
