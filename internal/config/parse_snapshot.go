@@ -212,8 +212,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 }
 
 func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(stringss.Trimmed) T) T { //nolint:ireturn
-	if valueStr, has := snapshot[key]; has {
-		return parseFunc(stringss.Trim(valueStr))
+	if value, has := snapshot[key]; has {
+		return parseFunc(stringss.Trim(value))
 	}
 	var zero T
 	return zero
