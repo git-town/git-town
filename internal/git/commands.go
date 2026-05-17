@@ -333,7 +333,7 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(message),
-			SHA:     gitdomain.SHAFromString(stringss.Trim(sha)),
+			SHA:     gitdomain.NewSHAOrPanic(stringss.Trim(sha)),
 		})
 	}
 	slices.Reverse(result)
@@ -357,7 +357,7 @@ func (self *Commands) CommitsInPerennialBranch(querier subshelldomain.Querier) (
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(stringss.Trim(message)),
-			SHA:     gitdomain.SHAFromString(stringss.Trim(sha)),
+			SHA:     gitdomain.NewSHAOrPanic(stringss.Trim(sha)),
 		})
 	}
 	return result, nil
@@ -834,12 +834,12 @@ func (self *Commands) RootDirectory(querier subshelldomain.Querier) Option[gitdo
 
 func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", name.String())
-	return gitdomain.SHAFromString(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, name)
+	return gitdomain.NewSHAOrPanic(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, name)
 }
 
 func (self *Commands) ShortenSHA(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--short", sha.String())
-	return gitdomain.SHAFromString(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, sha)
+	return gitdomain.NewSHAOrPanic(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, sha)
 }
 
 func (self *Commands) SquashMerge(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
@@ -960,7 +960,7 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
 		branchName := gitdomain.BranchNameOrPanic(stringss.Trim(strings.TrimPrefix(parts[1], "branchname:")))
-		sha := gitdomain.SHAFromString(stringss.Trimmed(strings.TrimPrefix(parts[2], "sha:")))
+		sha := gitdomain.NewSHAOrPanic(stringss.Trimmed(strings.TrimPrefix(parts[2], "sha:")))
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))

@@ -11,13 +11,13 @@ import (
 // This helps avoid stringly-typed code.
 type SHA stringss.Trimmed
 
-// SHAFromString creates a new SHA instance with the given value.
+// NewSHAOrPanic creates a new SHA instance with the given value.
 // The value is verified for correctness.
-func SHAFromString(id stringss.Trimmed) SHA {
-	return asserts.NoError1(SHAErrFromString(id))
+func NewSHAOrPanic(id stringss.Trimmed) SHA {
+	return asserts.NoError1(NewSHA(id))
 }
 
-func SHAErrFromString(id stringss.Trimmed) (SHA, error) {
+func NewSHA(id stringss.Trimmed) (SHA, error) {
 	if !validateSHA(id) {
 		return SHA(""), fmt.Errorf("%q is not a valid Git SHA", id)
 	}
@@ -58,5 +58,5 @@ func (self SHA) TrimmedString() stringss.Trimmed {
 // This is only for test code.
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {
-	return SHAFromString(stringss.Trimmed(self.String()[:newLen]))
+	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
 }

@@ -11,7 +11,7 @@ type SHAs []SHA
 func NewSHAs(ids ...string) SHAs {
 	result := make(SHAs, len(ids))
 	for i, id := range ids {
-		result[i] = SHAFromString(stringss.Trim(id))
+		result[i] = NewSHAOrPanic(stringss.Trim(id))
 	}
 	return result
 }
