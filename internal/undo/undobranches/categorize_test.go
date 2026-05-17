@@ -22,13 +22,13 @@ func TestCategorize(t *testing.T) {
 				Before: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "perennial-1", SHA: "111111"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+					RemoteSHA:  Some(gitdomain.SHA("222222")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 				After: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "perennial-1", SHA: "333333"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
+					RemoteSHA:  Some(gitdomain.SHA("444444")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
@@ -36,13 +36,13 @@ func TestCategorize(t *testing.T) {
 				Before: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "feature-1", SHA: "555555"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
+					RemoteSHA:  Some(gitdomain.SHA("666666")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 				After: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "feature-1", SHA: "777777"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("888888")),
+					RemoteSHA:  Some(gitdomain.SHA("888888")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
@@ -62,13 +62,13 @@ func TestCategorize(t *testing.T) {
 				Before: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "perennial-1", SHA: "111111"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+					RemoteSHA:  Some(gitdomain.SHA("222222")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 				After: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "perennial-1", SHA: "333333"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
+					RemoteSHA:  Some(gitdomain.SHA("444444")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
@@ -79,13 +79,13 @@ func TestCategorize(t *testing.T) {
 				Before: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "feature-1", SHA: "555555"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
+					RemoteSHA:  Some(gitdomain.SHA("666666")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 				After: gitdomain.BranchInfo{
 					Local:      Some(gitdomain.BranchData{Name: "feature-1", SHA: "777777"}),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("888888")),
+					RemoteSHA:  Some(gitdomain.SHA("888888")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
