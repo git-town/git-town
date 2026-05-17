@@ -271,7 +271,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreateBranchOfType", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		runtime.CreateBranchOfType("observed-1", Some(gitdomain.LocalBranchNameOrPanic("main")), configdomain.BranchTypeObservedBranch)
+		runtime.CreateBranchOfType("observed-1", Some(gitdomain.LocalBranchName("main")), configdomain.BranchTypeObservedBranch)
 		runtime.Config.Reload(runtime.TestRunner)
 		parent := runtime.Config.NormalConfig.Lineage.Parent("observed-1")
 		must.EqOp(t, "main", parent.GetOrPanic())
@@ -379,7 +379,7 @@ func TestTestCommands(t *testing.T) {
 		devRepo := fixture.DevRepo.GetOrPanic()
 		branchSetup := datatable.BranchSetup{
 			Name:       "feature-1",
-			Parent:     Some(gitdomain.LocalBranchNameOrPanic("main")),
+			Parent:     Some(gitdomain.LocalBranchName("main")),
 			BranchType: Some(configdomain.BranchTypeFeatureBranch),
 			Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 		}
@@ -682,7 +682,7 @@ main
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		initial := gitdomain.LocalBranchNameOrPanic("initial")
+		initial := gitdomain.LocalBranchName("initial")
 		runner.CreateBranch("b1", initial.BranchName())
 		runner.CreateBranch("b2", initial.BranchName())
 		origin.CreateBranch("b3", initial.BranchName())

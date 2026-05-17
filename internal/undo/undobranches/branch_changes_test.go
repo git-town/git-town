@@ -1008,8 +1008,8 @@ func TestChanges(t *testing.T) {
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalRenamed: []undobranches.LocalBranchRename{
 				{
-					Before: gitdomain.LocalBranchNameOrPanic("old"),
-					After:  gitdomain.LocalBranchNameOrPanic("new"),
+					Before: gitdomain.LocalBranchName("old"),
+					After:  gitdomain.LocalBranchName("new"),
 				},
 			},
 			LocalChanged:          undobranches.LocalBranchChange{},

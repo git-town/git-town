@@ -14,7 +14,7 @@ func TestTypeName(t *testing.T) {
 	tests := map[any]string{
 		"hello":                                 "string",
 		123:                                     "int",
-		gitdomain.LocalBranchNameOrPanic("foo"): "LocalBranchName", // instance of a struct
+		gitdomain.LocalBranchName("foo"): "LocalBranchName", // instance of a struct
 		&sha:                                    "SHA",             // pointer variable
 		nil:                                     "nil",
 	}

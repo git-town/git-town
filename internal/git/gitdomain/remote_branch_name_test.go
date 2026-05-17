@@ -17,13 +17,13 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Run("branch is at the origin remote", func(t *testing.T) {
 			t.Parallel()
 			branch := gitdomain.RemoteBranchNameOrPanic("origin/branch")
-			want := gitdomain.LocalBranchNameOrPanic("branch")
+			want := gitdomain.LocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
 			branch := gitdomain.RemoteBranchNameOrPanic("upstream/branch")
-			want := gitdomain.LocalBranchNameOrPanic("branch")
+			want := gitdomain.LocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 	})

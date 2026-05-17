@@ -296,7 +296,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is indeed a local branch", func(t *testing.T) {
 			t.Parallel()
-			branchName := gitdomain.LocalBranchNameOrPanic("foo")
+			branchName := gitdomain.LocalBranchName("foo")
 			branchInfo := gitdomain.BranchInfo{
 				Local:      Some(gitdomain.BranchData{Name: branchName, SHA: "111111"}),
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -309,7 +309,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has a tracking branch", func(t *testing.T) {
 			t.Parallel()
-			branchName := gitdomain.LocalBranchNameOrPanic("foo")
+			branchName := gitdomain.LocalBranchName("foo")
 			branchInfo := gitdomain.BranchInfo{
 				Local:      Some(gitdomain.BranchData{Name: branchName, SHA: "111111"}),
 				RemoteName: Some(gitdomain.RemoteBranchNameOrPanic("origin/foo")),
@@ -338,7 +338,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			branch1 := gitdomain.LocalBranchNameOrPanic("branch-1")
+			branch1 := gitdomain.LocalBranchName("branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			give := gitdomain.BranchInfo{
 				Local:      Some(gitdomain.BranchData{Name: branch1, SHA: sha1}),
