@@ -196,5 +196,10 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 }
 
 func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
-	return parser(env.Get(varName), varName)
+	if value, has := env.GetOpt(varName).Get(); has {
+		trimmedValue := stringss.Trim(value)
+		return parser(trimmedValue, varName)
+	}
+	var zero T
+	return zero, nil
 }
