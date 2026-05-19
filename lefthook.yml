@@ -4,4 +4,3 @@ pre-commit:
   parallel: true
   jobs:
     - run: make fix
-      glob: "*"
