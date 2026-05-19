@@ -216,7 +216,7 @@ lint-tests-sorted:
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
 
-setup-githooks: ${RTA}
+setup-githooks: ${RTA}  ## installs a Git pre-commit hook that auto-formats code
 	@$(LEFTHOOK) install
 
 stats: ${RTA}  # shows code statistics
