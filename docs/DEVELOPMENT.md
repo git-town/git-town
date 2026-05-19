@@ -37,6 +37,11 @@ This monorepo contains a number of codebases:
 7. To auto-format changes when committing,
    run <code type="make/command" dir="..">make setup-githooks</code>.
 
+
+
+
+
+
 ## Dependencies
 
 Add an external Go dependency:
