@@ -1,5 +1,7 @@
 # See https://lefthook.dev/configuration for details.
 
+colors: false
+
 pre-commit:
   parallel: true
   jobs:
