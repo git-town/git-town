@@ -4,6 +4,5 @@ colors: false
 output: false
 
 pre-commit:
-  parallel: true
   jobs:
     - run: make fix
