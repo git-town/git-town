@@ -1,4 +1,4 @@
-RTA_VERSION = 0.33.0  # run-that-app version to use
+RTA_VERSION = 0.36.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -18,6 +18,7 @@ GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
+LEFTHOOK     = $(RTA) lefthook
 NPM          = $(RTA) npm
 NPX          = $(RTA) npx
 NODE         = $(RTA) node
@@ -214,6 +215,9 @@ lint-tests-sorted:
 
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
+
+setup-githooks: ${RTA}
+	@$(LEFTHOOK) install
 
 stats: ${RTA}  # shows code statistics
 	@find . -type f \
