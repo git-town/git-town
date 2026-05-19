@@ -1,6 +1,5 @@
 # See https://lefthook.dev/configuration for details.
 
-colors: false
 output: false
 
 pre-commit:
