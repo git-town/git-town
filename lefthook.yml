@@ -1,7 +1,7 @@
 # See https://lefthook.dev/configuration for details.
 
 colors: false
-no_tty: true
+output: false
 
 pre-commit:
   parallel: true
