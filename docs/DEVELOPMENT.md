@@ -30,12 +30,12 @@ This monorepo contains a number of codebases:
    add `~/go/bin`
    (or wherever `go install` puts executables on your machine)
    to your $PATH environment variable.
-4. To auto-format changes when committing,
-   run <code type="make/command" dir="..">make setup-githooks</code>.
-5. run all CI tests locally: <code type="make/command" dir="..">make test</code>
-6. faster smoke test during development: `make test-go`
-7. install Git Town locally into `~/go/bin`:
+4. run all CI tests locally: <code type="make/command" dir="..">make test</code>
+5. faster smoke test during development: `make test-go`
+6. install Git Town locally into `~/go/bin`:
    <code type="make/command" dir="..">make install</code>
+7. To auto-format changes when committing,
+   run <code type="make/command" dir="..">make setup-githooks</code>.
 
 ## Dependencies
 
