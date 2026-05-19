@@ -26,8 +26,10 @@ This monorepo contains a number of codebases:
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. Add `~/go/bin` (or wherever `go install` puts executables on your machine) to
-   your $PATH environment variable
+3. If you want to use the Git Town executable compiled from source,
+   add `~/go/bin`
+   (or wherever `go install` puts executables on your machine)
+   to your $PATH environment variable.
 4. run all CI tests locally: <code type="make/command" dir="..">make test</code>
 5. faster smoke test during development: `make test-go`
 6. install Git Town locally into `~/go/bin`:
