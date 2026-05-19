@@ -400,7 +400,14 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
 		proposalBody := data.proposalBody
 		if updateBreadcrumb {
-			lineageSection := proposallineage.RenderSection(data.config.NormalConfig.Lineage, branchToPropose.name, data.config.NormalConfig.Order, data.config.NormalConfig.ProposalBreadcrumb, data.config.NormalConfig.ProposalBreadcrumbDirection, data.connector)
+			lineageSection := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+				Breadcrumb:    data.config.NormalConfig.ProposalBreadcrumb,
+				Connector:     data.connector,
+				CurrentBranch: branchToPropose.name,
+				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
+				Lineage:       data.config.NormalConfig.Lineage,
+				Order:         data.config.NormalConfig.Order,
+			})
 			if len(lineageSection) > 0 {
 				proposalBody = Some(proposallineage.UpdateProposalBody(proposalBody.GetOrZero(), lineageSection))
 			}
