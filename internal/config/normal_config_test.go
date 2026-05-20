@@ -27,12 +27,12 @@ func TestNormalConfig(t *testing.T) {
 	t.Run("NewNormalConfigFromPartial uses explicit empty breadcrumb exclusions", func(t *testing.T) {
 		t.Parallel()
 		defaults := config.DefaultNormalConfig()
-		defaults.ProposalBreadcrumbExcludeBranches = configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch)
+		defaults.ProposalBreadcrumbExcludeBranches = configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch)
 		partial := configdomain.PartialConfig{
-			ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExcludeBranches()),
+			ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExclude()),
 		}
 		have := config.NewNormalConfigFromPartial(partial, defaults)
-		want := configdomain.NewProposalBreadcrumbExcludeBranches()
+		want := configdomain.NewProposalBreadcrumbExclude()
 		must.Eq(t, want, have.ProposalBreadcrumbExcludeBranches)
 	})
 }

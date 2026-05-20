@@ -37,7 +37,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_ORDER                                | desc                    |
       | GIT_TOWN_PROPOSAL_BREADCRUMB                  | stacks                  |
       | GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION        | up                      |
-      | GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES | prototype contribution  |
+      | GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE | prototype contribution  |
       | GIT_TOWN_ORIGIN_HOSTNAME                      | codeforge               |
       | GIT_TOWN_OFFLINE                              | 1                       |
       | GIT_TOWN_PERENNIAL_BRANCHES                   | qa staging              |

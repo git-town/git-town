@@ -31,18 +31,18 @@ func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testin
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
 		snapshot := configdomain.SingleSnapshot{
-			configdomain.KeyProposalBreadcrumbExcludeBranches: "",
+			configdomain.KeyProposalBreadcrumbExclude: "",
 		}
 		have, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.NoError(t, err)
-		want := configdomain.NewProposalBreadcrumbExcludeBranches()
+		want := configdomain.NewProposalBreadcrumbExclude()
 		must.True(t, have.ProposalBreadcrumbExcludeBranches.EqualSome(want))
 	})
 
 	t.Run("invalid", func(t *testing.T) {
 		t.Parallel()
 		snapshot := configdomain.SingleSnapshot{
-			configdomain.KeyProposalBreadcrumbExcludeBranches: "zonk",
+			configdomain.KeyProposalBreadcrumbExclude: "zonk",
 		}
 		_, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.Error(t, err)
@@ -51,11 +51,11 @@ func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testin
 	t.Run("set", func(t *testing.T) {
 		t.Parallel()
 		snapshot := configdomain.SingleSnapshot{
-			configdomain.KeyProposalBreadcrumbExcludeBranches: "prototype contribution",
+			configdomain.KeyProposalBreadcrumbExclude: "prototype contribution",
 		}
 		have, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.NoError(t, err)
-		want := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)
+		want := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)
 		must.True(t, have.ProposalBreadcrumbExcludeBranches.EqualSome(want))
 	})
 }

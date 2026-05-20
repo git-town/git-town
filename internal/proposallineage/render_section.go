@@ -13,7 +13,7 @@ type RenderSectionArgs struct {
 	Connector     Option[forgedomain.Connector]
 	CurrentBranch gitdomain.LocalBranchName
 	Direction     configdomain.ProposalBreadcrumbDirection
-	Excluded      configdomain.ProposalBreadcrumbExcludeBranches
+	Excluded      configdomain.ProposalBreadcrumbExclude
 	Lineage       configdomain.Lineage
 	Order         configdomain.Order
 }

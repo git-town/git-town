@@ -66,7 +66,7 @@ type NormalConfig struct {
 	PerennialRegex                    Option[configdomain.PerennialRegex]
 	ProposalBreadcrumb                configdomain.ProposalBreadcrumb
 	ProposalBreadcrumbDirection       configdomain.ProposalBreadcrumbDirection
-	ProposalBreadcrumbExcludeBranches configdomain.ProposalBreadcrumbExcludeBranches
+	ProposalBreadcrumbExcludeBranches configdomain.ProposalBreadcrumbExclude
 	PushBranches                      configdomain.PushBranches
 	PushHook                          configdomain.PushHook
 	ShareNewBranches                  configdomain.ShareNewBranches
@@ -298,7 +298,7 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialRegex:                    None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:                configdomain.ProposalBreadcrumbNone,
 		ProposalBreadcrumbDirection:       configdomain.ProposalBreadcrumbDirectionDown,
-		ProposalBreadcrumbExcludeBranches: configdomain.NewProposalBreadcrumbExcludeBranches(),
+		ProposalBreadcrumbExcludeBranches: configdomain.NewProposalBreadcrumbExclude(),
 		PushBranches:                      true,
 		PushHook:                          true,
 		ShareNewBranches:                  configdomain.ShareNewBranchesNone,

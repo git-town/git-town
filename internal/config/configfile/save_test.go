@@ -76,7 +76,7 @@ func TestSave(t *testing.T) {
 				PerennialRegex:              perennialRegex,
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbBranches),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
-				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExcludeBranches(
+				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExclude(
 					configdomain.BranchTypePrototypeBranch,
 					configdomain.BranchTypeContributionBranch,
 				)),
@@ -128,7 +128,7 @@ origin-hostname = "forge"
 [propose]
 breadcrumb = "branches"
 breadcrumb-direction = "up"
-breadcrumb-exclude-branches = ["contribution", "prototype"]
+breadcrumb-exclude = ["contribution", "prototype"]
 
 [ship]
 delete-tracking-branch = true

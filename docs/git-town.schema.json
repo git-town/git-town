@@ -149,7 +149,7 @@
         "breadcrumb-direction": {
           "type": "string"
         },
-        "breadcrumb-exclude-branches": {
+        "breadcrumb-exclude": {
           "items": {
             "type": "string"
           },

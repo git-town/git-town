@@ -54,7 +54,7 @@ type PartialConfig struct {
 	PerennialRegex                    Option[PerennialRegex]
 	ProposalBreadcrumb                Option[ProposalBreadcrumb]
 	ProposalBreadcrumbDirection       Option[ProposalBreadcrumbDirection]
-	ProposalBreadcrumbExcludeBranches Option[ProposalBreadcrumbExcludeBranches]
+	ProposalBreadcrumbExcludeBranches Option[ProposalBreadcrumbExclude]
 	PushBranches                      Option[PushBranches]
 	PushHook                          Option[PushHook]
 	ShareNewBranches                  Option[ShareNewBranches]

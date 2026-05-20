@@ -32,7 +32,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.proposal-breadcrumb" is "stacks"
-    And Git setting "git-town.proposal-breadcrumb-exclude-branches" is "parked"
+    And Git setting "git-town.proposal-breadcrumb-exclude" is "parked"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -69,7 +69,7 @@ Feature: show the configuration
 
       [propose]
       breadcrumb = "stacks"
-      breadcrumb-exclude-branches = [ "prototype", "contribution" ]
+      breadcrumb-exclude = [ "prototype", "contribution" ]
 
       [ship]
       delete-tracking-branch = true

@@ -38,7 +38,7 @@ func TestFilterTree(t *testing.T) {
 			"feature":   configdomain.BranchTypeFeatureBranch,
 			"prototype": configdomain.BranchTypePrototypeBranch,
 		}
-		excluded := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch)
+		excluded := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch)
 
 		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 
@@ -91,7 +91,7 @@ func TestFilterTree(t *testing.T) {
 			"feature-b": configdomain.BranchTypeFeatureBranch,
 			"prototype": configdomain.BranchTypePrototypeBranch,
 		}
-		excluded := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch)
+		excluded := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch)
 
 		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 
@@ -149,7 +149,7 @@ func TestFilterTree(t *testing.T) {
 			"feature-b": configdomain.BranchTypeFeatureBranch,
 			"prototype": configdomain.BranchTypePrototypeBranch,
 		}
-		excluded := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch)
+		excluded := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch)
 
 		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 		// This assertion explains why we used the "FOREST" terminology.
@@ -202,7 +202,7 @@ func TestFilterTree(t *testing.T) {
 			"feature-a": configdomain.BranchTypeFeatureBranch,
 			"feature-b": configdomain.BranchTypeFeatureBranch,
 		}
-		excluded := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypeMainBranch)
+		excluded := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypeMainBranch)
 
 		have := proposallineage.FilterTree(treeWithBranchTypes(tree, branchTypes), excluded)
 

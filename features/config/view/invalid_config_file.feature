@@ -17,7 +17,7 @@ Feature: print nice error message for invalid config file
     And the configuration file:
       """
       [propose]
-      breadcrumb-exclude-branches = [ "zonk" ]
+      breadcrumb-exclude = [ "zonk" ]
       """
     When I run "git-town config"
     Then Git Town prints the error:

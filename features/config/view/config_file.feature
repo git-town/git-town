@@ -42,7 +42,7 @@ Feature: display information from config file
 
       [propose]
       breadcrumb = "stacks"
-      breadcrumb-exclude-branches = [ "prototype", "contribution" ]
+      breadcrumb-exclude = [ "prototype", "contribution" ]
 
       [ship]
       delete-tracking-branch = true

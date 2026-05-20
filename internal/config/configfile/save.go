@@ -18,7 +18,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderBranchTypes(branchTypes configdomain.ProposalBreadcrumbExcludeBranches) string {
+func RenderBranchTypes(branchTypes configdomain.ProposalBreadcrumbExclude) string {
 	values := branchTypes.Values()
 	if len(values) == 0 {
 		return "[]"
@@ -171,7 +171,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 			result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
 		}
 		if hasProposalBreadcrumbExcludeBranches {
-			result.WriteString(fmt.Sprintf("breadcrumb-exclude-branches = %s\n", RenderBranchTypes(proposalBreadcrumbExcludeBranches)))
+			result.WriteString(fmt.Sprintf("breadcrumb-exclude = %s\n", RenderBranchTypes(proposalBreadcrumbExcludeBranches)))
 		}
 	}
 

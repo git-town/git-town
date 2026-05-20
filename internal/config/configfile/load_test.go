@@ -59,7 +59,7 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
-breadcrumb-exclude-branches = ["contribution", "prototype"]
+breadcrumb-exclude = ["contribution", "prototype"]
 
 [ship]
 delete-tracking-branch = false
@@ -187,7 +187,7 @@ upstream = true
 				PerennialRegex:                    asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalBreadcrumb:                Some(configdomain.ProposalBreadcrumbStacks),
 				ProposalBreadcrumbDirection:       Some(configdomain.ProposalBreadcrumbDirectionUp),
-				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)),
+				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)),
 				PushBranches:                      None[configdomain.PushBranches](),
 				PushHook:                          Some(configdomain.PushHook(true)),
 				ShareNewBranches:                  Some(configdomain.ShareNewBranchesPush),

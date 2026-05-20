@@ -29,7 +29,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.proposal-breadcrumb" is "stacks"
-    And Git setting "git-town.proposal-breadcrumb-exclude-branches" is "prototype contribution"
+    And Git setting "git-town.proposal-breadcrumb-exclude" is "prototype contribution"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"

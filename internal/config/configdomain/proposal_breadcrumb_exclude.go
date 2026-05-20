@@ -9,31 +9,31 @@ import (
 	"github.com/git-town/git-town/v23/pkg/set"
 )
 
-// ProposalBreadcrumbExcludeBranches lists the branch types to hide from proposal breadcrumbs.
-type ProposalBreadcrumbExcludeBranches struct {
+// ProposalBreadcrumbExclude lists the branch types to hide from proposal breadcrumbs.
+type ProposalBreadcrumbExclude struct {
 	set.Set[BranchType]
 }
 
-func (self ProposalBreadcrumbExcludeBranches) String() string {
+func (self ProposalBreadcrumbExclude) String() string {
 	if len(self.Set) == 0 {
 		return "(none)"
 	}
 	return strings.Join(slice.Stringify(self.Values()), ", ")
 }
 
-func NewProposalBreadcrumbExcludeBranches(branchTypes ...BranchType) ProposalBreadcrumbExcludeBranches {
-	return ProposalBreadcrumbExcludeBranches{
+func NewProposalBreadcrumbExclude(branchTypes ...BranchType) ProposalBreadcrumbExclude {
+	return ProposalBreadcrumbExclude{
 		set.New(branchTypes...),
 	}
 }
 
-func ParseProposalBreadcrumbExcludeBranches(text stringss.Trimmed, source string) (Option[ProposalBreadcrumbExcludeBranches], error) {
+func ParseProposalBreadcrumbExclude(text stringss.Trimmed, source string) (Option[ProposalBreadcrumbExclude], error) {
 	parts := strings.Fields(text.String())
-	return ParseProposalBreadcrumbExcludeBranchesList(parts, source)
+	return ParseProposalBreadcrumbExcludeList(parts, source)
 }
 
-func ParseProposalBreadcrumbExcludeBranchesList(texts []string, source string) (Option[ProposalBreadcrumbExcludeBranches], error) {
-	result := NewProposalBreadcrumbExcludeBranches()
+func ParseProposalBreadcrumbExcludeList(texts []string, source string) (Option[ProposalBreadcrumbExclude], error) {
+	result := NewProposalBreadcrumbExclude()
 	for _, text := range texts {
 		branchTypeText := stringss.Trim(text)
 		if branchTypeText == "" {
@@ -41,7 +41,7 @@ func ParseProposalBreadcrumbExcludeBranchesList(texts []string, source string) (
 		}
 		branchType, err := ParseBranchType(branchTypeText, source)
 		if err != nil {
-			return None[ProposalBreadcrumbExcludeBranches](), err
+			return None[ProposalBreadcrumbExclude](), err
 		}
 		if branchTypeValue, hasBranchType := branchType.Get(); hasBranchType {
 			result.Add(branchTypeValue)
