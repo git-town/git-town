@@ -55,7 +55,6 @@ const (
 	BranchPrefixPrompt              = "Branch prefix: "
 	BranchPrefixResult              = "Branch prefix: %s\n"
 	BranchTypeCannotDetermine       = "cannot determine type of branch %s"
-	BreadcrumbExcludeBranches       = "Proposals breadcrumb exclude branches: %s\n"
 	BrowserOpen                     = "Please open in a browser: %s\n"
 
 	CacheUnitialized                   = "using a cached value before initialization"

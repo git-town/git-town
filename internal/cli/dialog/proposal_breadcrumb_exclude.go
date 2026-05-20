@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	proposalBreadcrumbExcludeBranchesTitle = `Proposal Breadcrumb Exclude Branches`
-	proposalBreadcrumbExcludeBranchesHelp  = `
+	proposalBreadcrumbExcludeTitle = `Proposal Breadcrumb Exclude Branches`
+	proposalBreadcrumbExcludeHelp  = `
 	Which branch types should proposal breadcrumbs exclude?
 
 	See https://www.git-town.com/preferences/breadcrumb-exclude-branches.html for details.
@@ -25,8 +25,8 @@ func ProposalBreadcrumbExclude(args Args[configdomain.ProposalBreadcrumbExclude]
 	selection, exit, err := dialogcomponents.CheckList(
 		entries,
 		proposalBreadcrumbExcludeBranchDefaultSelections(entries, args.Local.Or(args.Global)),
-		proposalBreadcrumbExcludeBranchesTitle,
-		proposalBreadcrumbExcludeBranchesHelp,
+		proposalBreadcrumbExcludeTitle,
+		proposalBreadcrumbExcludeHelp,
 		args.Inputs,
 		args.Interactive,
 		"proposal-breadcrumb-exclude",
