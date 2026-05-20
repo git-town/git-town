@@ -93,7 +93,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
-	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExclude := loadIfPresent(env, proposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude)
+	proposalBreadcrumbExclude, errProposalBreadcrumbExclude := loadIfPresent(env, proposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -153,7 +153,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		ProposalBreadcrumbExclude:   proposalBreadcrumbExcludeBranches,
+		ProposalBreadcrumbExclude:   proposalBreadcrumbExclude,
 		BrowserEnabled:              browserEnabled,
 		BrowserExecutable:           browserExecutable,
 		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),

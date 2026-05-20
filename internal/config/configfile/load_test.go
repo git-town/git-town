@@ -113,7 +113,7 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:                new("stacks"),
 					BreadcrumbDirection:       new("up"),
-					BreadcrumbExcludeBranches: &[]string{"contribution", "prototype"},
+					BreadcrumbExclude: &[]string{"contribution", "prototype"},
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),

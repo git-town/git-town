@@ -73,7 +73,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialRegex                    Option[configdomain.PerennialRegex]
 		proposalBreadcrumb                Option[configdomain.ProposalBreadcrumb]
 		proposalBreadcrumbDirection       Option[configdomain.ProposalBreadcrumbDirection]
-		proposalBreadcrumbExcludeBranches Option[configdomain.ProposalBreadcrumbExclude]
+		proposalBreadcrumbExclude Option[configdomain.ProposalBreadcrumbExclude]
 		pushBranches                      Option[configdomain.PushBranches]
 		pushHook                          Option[configdomain.PushHook]
 		shareNewBranches                  Option[configdomain.ShareNewBranches]
@@ -231,8 +231,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			proposalBreadcrumbDirection, err = configdomain.ParseProposalBreadcrumbDirection(stringss.Trim(*data.Propose.BreadcrumbDirection), messages.ConfigFile)
 			ec.Check(err)
 		}
-		if data.Propose.BreadcrumbExcludeBranches != nil {
-			proposalBreadcrumbExcludeBranches, err = configdomain.ParseProposalBreadcrumbExcludeList(*data.Propose.BreadcrumbExcludeBranches, messages.ConfigFile)
+		if data.Propose.BreadcrumbExclude != nil {
+			proposalBreadcrumbExclude, err = configdomain.ParseProposalBreadcrumbExcludeList(*data.Propose.BreadcrumbExclude, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
@@ -334,7 +334,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposalBreadcrumbExclude:   proposalBreadcrumbExcludeBranches,
+		ProposalBreadcrumbExclude:   proposalBreadcrumbExclude,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
