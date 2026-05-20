@@ -29,7 +29,7 @@ func ProposalBreadcrumbExclude(args Args[configdomain.ProposalBreadcrumbExclude]
 		proposalBreadcrumbExcludeBranchesHelp,
 		args.Inputs,
 		args.Interactive,
-		"proposal-breadcrumb-exclude-branches",
+		"proposal-breadcrumb-exclude",
 	)
 	result := Some(configdomain.NewProposalBreadcrumbExclude(selection...))
 	if args.Global.Equal(result) {

@@ -1,4 +1,4 @@
-# Proposal-breadcrumb-exclude-branches
+# Proposal-breadcrumb-exclude
 
 Controls which branch types Git Town omits from proposal breadcrumbs.
 
@@ -25,7 +25,7 @@ breadcrumb-exclude-branches = ["contribution", "prototype"]
 To configure this in Git, run this command:
 
 ```wrap
-git config [--global] git-town.proposal-breadcrumb-exclude-branches "contribution, prototype"
+git config [--global] git-town.proposal-breadcrumb-exclude "contribution, prototype"
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
@@ -35,4 +35,8 @@ Without it, the setting applies only to the current repository.
 ## environment variable
 
 You can also configure this via the environment variable
-`GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES`.
+`GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE`
+
+```sh
+export GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE="contribution prototype"
+```

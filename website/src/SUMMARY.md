@@ -92,7 +92,7 @@
     - [GitLab token](preferences/gitlab-token.md)
   - [Propose]() <!-- rumdl-disable-line MD042 -->
     - [Proposal breadcrumb](preferences/proposal-breadcrumb.md)
-    - [Proposal breadcrumb exclude branches](preferences/proposal-breadcrumb-exclude-branches.md)
+    - [Proposal breadcrumb exclude branches](preferences/proposal-breadcrumb-exclude.md)
     - [Proposal breadcrumb direction](preferences/proposal-breadcrumb-direction.md)
   - [Ship]() <!-- rumdl-disable-line MD042 -->
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
