@@ -2,10 +2,12 @@ package gitconfig
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v23/internal/gohacks/slice"
 	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
@@ -146,6 +148,10 @@ func RemoveProposalBreadcrumb(runner subshelldomain.Runner) error {
 
 func RemoveProposalBreadcrumbDirection(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumbDirection)
+}
+
+func RemoveProposalBreadcrumbExclude(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalBreadcrumbExclude)
 }
 
 func RemovePushBranches(runner subshelldomain.Runner) error {
@@ -319,6 +325,10 @@ func SetProposalBreadcrumb(runner subshelldomain.Runner, value configdomain.Prop
 
 func SetProposalBreadcrumbDirection(runner subshelldomain.Runner, value configdomain.ProposalBreadcrumbDirection, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumbDirection, value.String())
+}
+
+func SetProposalBreadcrumbExclude(runner subshelldomain.Runner, value configdomain.ProposalBreadcrumbExclude, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyProposalBreadcrumbExclude, strings.Join(slice.Stringify(value.Values()), ", "))
 }
 
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {

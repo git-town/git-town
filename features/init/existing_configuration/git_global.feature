@@ -68,8 +68,10 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | order                         | enter       |
       | proposal breadcrumb           | enter       |
       | proposal breadcrumb direction | enter       |
+      | proposal-breadcrumb-exclude   | enter       |
       | interactive                   | enter       |
       | config storage                | enter       |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config git-town.perennial-branches branch-1 |
+      | COMMAND                                            |
+      | git config git-town.perennial-branches branch-1    |
+      | git config git-town.proposal-breadcrumb-exclude "" |

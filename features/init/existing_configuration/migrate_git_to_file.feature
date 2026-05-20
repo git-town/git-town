@@ -68,6 +68,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | order                         | enter      |
       | proposal breadcrumb           | enter      |
       | proposal breadcrumb direction | enter      |
+      | proposal-breadcrumb-exclude   | enter      |
       | interactive                   | enter      |
       | config storage                | down enter |
 
@@ -161,6 +162,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       [propose]
       breadcrumb = "stacks"
       breadcrumb-direction = "up"
+      breadcrumb-exclude-branches = []
 
       [ship]
       delete-tracking-branch = false

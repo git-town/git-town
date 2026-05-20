@@ -55,6 +55,7 @@ Feature: change existing information in Git metadata
       | order                         | up enter               |
       | proposal breadcrumb           | down enter             |
       | proposal breadcrumb direction | down enter             |
+      | proposal-breadcrumb-exclude   | enter                  |
       | interactive                   | down enter             |
       | config storage                | enter                  |
 
@@ -97,6 +98,7 @@ Feature: change existing information in Git metadata
       | git config git-town.perennial-regex per                  |
       | git config git-town.proposal-breadcrumb stacks           |
       | git config git-town.proposal-breadcrumb-direction up     |
+      | git config git-town.proposal-breadcrumb-exclude ""       |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
@@ -141,6 +143,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.perennial-regex" is now "per"
     And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
     And local Git setting "git-town.proposal-breadcrumb-direction" is now "up"
+    And local Git setting "git-town.proposal-breadcrumb-exclude" is now ""
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "push"

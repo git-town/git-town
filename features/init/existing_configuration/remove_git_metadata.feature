@@ -89,6 +89,7 @@ Feature: remove existing configuration in Git metadata
       | order                         | up enter                                                                    |                     |
       | proposal breadcrumb           | down enter                                                                  |                     |
       | proposal breadcrumb direction | down enter                                                                  |                     |
+      | proposal-breadcrumb-exclude   | enter                                                                       |                     |
       | interactive                   | up enter                                                                    |                     |
       | config storage                | enter                                                                       | git metadata        |
 
@@ -129,6 +130,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.perennial-regex            |
       | git config git-town.proposal-breadcrumb stacks         |
       | git config git-town.proposal-breadcrumb-direction down |
+      | git config git-town.proposal-breadcrumb-exclude ""     |
       | git config git-town.push-branches true                 |
       | git config git-town.push-hook true                     |
       | git config git-town.share-new-branches no              |
@@ -174,6 +176,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposal-breadcrumb" is now "stacks"
     And local Git setting "git-town.proposal-breadcrumb-direction" is now "down"
+    And local Git setting "git-town.proposal-breadcrumb-exclude" is now ""
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"

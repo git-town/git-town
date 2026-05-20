@@ -93,6 +93,7 @@
   - [Propose]() <!-- rumdl-disable-line MD042 -->
     - [Proposal breadcrumb](preferences/proposal-breadcrumb.md)
     - [Proposal breadcrumb direction](preferences/proposal-breadcrumb-direction.md)
+    - [Proposal breadcrumb exclude](preferences/proposal-breadcrumb-exclude.md)
   - [Ship]() <!-- rumdl-disable-line MD042 -->
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
