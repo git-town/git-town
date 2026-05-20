@@ -54,7 +54,7 @@ func TestLoad(t *testing.T) {
 			env := envconfig.NewEnvVars([]string{})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
-			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.IsNone())
+			must.True(t, cfg.ProposalBreadcrumbExclude.IsNone())
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
@@ -62,7 +62,7 @@ func TestLoad(t *testing.T) {
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			want := configdomain.NewProposalBreadcrumbExclude()
-			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+			must.True(t, cfg.ProposalBreadcrumbExclude.EqualSome(want))
 		})
 		t.Run("set", func(t *testing.T) {
 			t.Parallel()
@@ -70,7 +70,7 @@ func TestLoad(t *testing.T) {
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			want := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)
-			must.True(t, cfg.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+			must.True(t, cfg.ProposalBreadcrumbExclude.EqualSome(want))
 		})
 		t.Run("invalid", func(t *testing.T) {
 			t.Parallel()

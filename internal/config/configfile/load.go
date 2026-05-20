@@ -334,7 +334,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialRegex:                    perennialRegex,
 		ProposalBreadcrumb:                proposalBreadcrumb,
 		ProposalBreadcrumbDirection:       proposalBreadcrumbDirection,
-		ProposalBreadcrumbExcludeBranches: proposalBreadcrumbExcludeBranches,
+		ProposalBreadcrumbExclude: proposalBreadcrumbExcludeBranches,
 		PushBranches:                      pushBranches,
 		PushHook:                          pushHook,
 		ShareNewBranches:                  shareNewBranches,

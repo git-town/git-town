@@ -25,7 +25,7 @@ func TestNewBranchTypeOverridesFromSnapshot(t *testing.T) {
 	must.Eq(t, want, have)
 }
 
-func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testing.T) {
+func TestNewPartialConfigFromSnapshotProposalBreadcrumbExclude(t *testing.T) {
 	t.Parallel()
 
 	t.Run("empty", func(t *testing.T) {
@@ -36,7 +36,7 @@ func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testin
 		have, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.NoError(t, err)
 		want := configdomain.NewProposalBreadcrumbExclude()
-		must.True(t, have.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+		must.True(t, have.ProposalBreadcrumbExclude.EqualSome(want))
 	})
 
 	t.Run("invalid", func(t *testing.T) {
@@ -56,6 +56,6 @@ func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testin
 		have, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.NoError(t, err)
 		want := configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)
-		must.True(t, have.ProposalBreadcrumbExcludeBranches.EqualSome(want))
+		must.True(t, have.ProposalBreadcrumbExclude.EqualSome(want))
 	})
 }

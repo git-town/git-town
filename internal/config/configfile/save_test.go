@@ -76,7 +76,7 @@ func TestSave(t *testing.T) {
 				PerennialRegex:              perennialRegex,
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbBranches),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
-				ProposalBreadcrumbExcludeBranches: Some(configdomain.NewProposalBreadcrumbExclude(
+				ProposalBreadcrumbExclude: Some(configdomain.NewProposalBreadcrumbExclude(
 					configdomain.BranchTypePrototypeBranch,
 					configdomain.BranchTypeContributionBranch,
 				)),

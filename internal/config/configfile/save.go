@@ -161,8 +161,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	proposalBreadcrumb, hasProposalBreadcrumb := data.ProposalBreadcrumb.Get()
 	proposalBreadcrumbDirection, hasProposalBreadcrumbDirection := data.ProposalBreadcrumbDirection.Get()
-	proposalBreadcrumbExcludeBranches, hasProposalBreadcrumbExcludeBranches := data.ProposalBreadcrumbExcludeBranches.Get()
-	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection || hasProposalBreadcrumbExcludeBranches {
+	proposalBreadcrumbExcludeBranches, hasProposalBreadcrumbExclude := data.ProposalBreadcrumbExclude.Get()
+	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection || hasProposalBreadcrumbExclude {
 		result.WriteString("\n[propose]\n")
 		if hasProposalBreadcrumb {
 			result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
@@ -170,7 +170,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasProposalBreadcrumbDirection {
 			result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
 		}
-		if hasProposalBreadcrumbExcludeBranches {
+		if hasProposalBreadcrumbExclude {
 			result.WriteString(fmt.Sprintf("breadcrumb-exclude = %s\n", RenderBranchTypes(proposalBreadcrumbExcludeBranches)))
 		}
 	}

@@ -62,7 +62,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PerennialRegex:                    None[configdomain.PerennialRegex](),
 		ProposalBreadcrumb:                None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection:       None[configdomain.ProposalBreadcrumbDirection](),
-		ProposalBreadcrumbExcludeBranches: None[configdomain.ProposalBreadcrumbExclude](),
+		ProposalBreadcrumbExclude: None[configdomain.ProposalBreadcrumbExclude](),
 		PushHook:                          None[configdomain.PushHook](),
 		ShareNewBranches:                  None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:          None[configdomain.ShipDeleteTrackingBranch](),

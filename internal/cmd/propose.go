@@ -410,7 +410,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
-				Excluded:      data.config.NormalConfig.ProposalBreadcrumbExcludeBranches,
+				Excluded:      data.config.NormalConfig.ProposalBreadcrumbExclude,
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})

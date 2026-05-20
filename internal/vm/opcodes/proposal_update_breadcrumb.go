@@ -42,7 +42,7 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 			Connector:     args.Connector,
 			CurrentBranch: self.Branch,
 			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
-			Excluded:      args.Config.Value.NormalConfig.ProposalBreadcrumbExcludeBranches,
+			Excluded:      args.Config.Value.NormalConfig.ProposalBreadcrumbExclude,
 			Lineage:       args.Config.Value.NormalConfig.Lineage,
 			Order:         args.Config.Value.NormalConfig.Order,
 		})
