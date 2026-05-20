@@ -9,8 +9,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-
-	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (
@@ -94,7 +92,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
-	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExcludeBranches := loadIfPresent(env, proposalBreadcrumbExcludeBranches, configdomain.ParseProposalBreadcrumbExcludeBranches)
+	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExcludeBranches := load(env, proposalBreadcrumbExcludeBranches, configdomain.ParseProposalBreadcrumbExcludeBranches)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -203,12 +201,4 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 
 func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
 	return parser(env.Get(varName), varName)
-}
-
-func loadIfPresent[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (Option[T], error)) (Option[T], error) {
-	value, hasValue := env.Lookup(varName)
-	if !hasValue {
-		return None[T](), nil
-	}
-	return parser(stringss.Trim(value), varName)
 }
