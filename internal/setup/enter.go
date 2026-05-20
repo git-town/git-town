@@ -173,7 +173,7 @@ EnterForgeData:
 	perennialRegex := None[configdomain.PerennialRegex]()
 	proposalBreadcrumb := None[configdomain.ProposalBreadcrumb]()
 	proposalBreadcrumbDirection := None[configdomain.ProposalBreadcrumbDirection]()
-	proposalBreadcrumbExcludeBranches := None[configdomain.ProposalBreadcrumbExcludeBranches]()
+	proposalBreadcrumbExclude := None[configdomain.ProposalBreadcrumbExclude]()
 	pushBranches := None[configdomain.PushBranches]()
 	pushHook := None[configdomain.PushHook]()
 	shareNewBranches := None[configdomain.ShareNewBranches]()
@@ -284,7 +284,7 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
-		proposalBreadcrumbExcludeBranches, exit, err = enterProposalBreadcrumbExcludeBranches(data, proposalBreadcrumb)
+		proposalBreadcrumbExclude, exit, err = enterProposalBreadcrumbExclude(data, proposalBreadcrumb)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -335,7 +335,7 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		ProposalBreadcrumbExclude:   None[configdomain.ProposalBreadcrumbExclude](), // the setup assistant doesn't ask for this
+		ProposalBreadcrumbExclude:   proposalBreadcrumbExclude,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
@@ -680,21 +680,21 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 	})
 }
 
-func enterProposalBreadcrumbExcludeBranches(data Data, enteredProposalBreadcrumb Option[configdomain.ProposalBreadcrumb]) (Option[configdomain.ProposalBreadcrumbExcludeBranches], dialogdomain.Exit, error) {
-	if data.Config.File.ProposalBreadcrumbExcludeBranches.IsSome() {
-		return None[configdomain.ProposalBreadcrumbExcludeBranches](), false, nil
+func enterProposalBreadcrumbExclude(data Data, enteredProposalBreadcrumb Option[configdomain.ProposalBreadcrumb]) (Option[configdomain.ProposalBreadcrumbExclude], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalBreadcrumbExclude.IsSome() {
+		return None[configdomain.ProposalBreadcrumbExclude](), false, nil
 	}
 	effectiveProposalBreadcrumb := enteredProposalBreadcrumb.GetOr(data.Config.NormalConfig.ProposalBreadcrumb)
 	switch effectiveProposalBreadcrumb {
 	case configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbStacks:
 	case configdomain.ProposalBreadcrumbNone:
-		return None[configdomain.ProposalBreadcrumbExcludeBranches](), false, nil
+		return None[configdomain.ProposalBreadcrumbExclude](), false, nil
 	}
-	return dialog.ProposalBreadcrumbExcludeBranches(dialog.Args[configdomain.ProposalBreadcrumbExcludeBranches]{
-		Global:      data.Config.GitGlobal.ProposalBreadcrumbExcludeBranches,
+	return dialog.ProposalBreadcrumbExclude(dialog.Args[configdomain.ProposalBreadcrumbExclude]{
+		Global:      data.Config.GitGlobal.ProposalBreadcrumbExclude,
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
-		Local:       data.Config.GitLocal.ProposalBreadcrumbExcludeBranches,
+		Local:       data.Config.GitLocal.ProposalBreadcrumbExclude,
 	})
 }
 

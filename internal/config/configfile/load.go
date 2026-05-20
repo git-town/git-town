@@ -236,7 +236,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Propose.BreadcrumbExcludeBranches != nil {
-			proposalBreadcrumbExcludeBranches, err = configdomain.ParseProposalBreadcrumbExcludeBranchesList(*data.Propose.BreadcrumbExcludeBranches, messages.ConfigFile)
+			proposalBreadcrumbExcludeBranches, err = configdomain.ParseProposalBreadcrumbExcludeList(*data.Propose.BreadcrumbExcludeBranches, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}

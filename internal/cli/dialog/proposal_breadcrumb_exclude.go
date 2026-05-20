@@ -20,7 +20,7 @@ const (
 	`
 )
 
-func ProposalBreadcrumbExcludeBranches(args Args[configdomain.ProposalBreadcrumbExcludeBranches]) (Option[configdomain.ProposalBreadcrumbExcludeBranches], dialogdomain.Exit, error) {
+func ProposalBreadcrumbExclude(args Args[configdomain.ProposalBreadcrumbExclude]) (Option[configdomain.ProposalBreadcrumbExclude], dialogdomain.Exit, error) {
 	entries := list.NewEntries(configdomain.AllBranchTypes()...)
 	selection, exit, err := dialogcomponents.CheckList(
 		entries,
@@ -31,16 +31,16 @@ func ProposalBreadcrumbExcludeBranches(args Args[configdomain.ProposalBreadcrumb
 		args.Interactive,
 		"proposal-breadcrumb-exclude-branches",
 	)
-	result := Some(configdomain.NewProposalBreadcrumbExcludeBranches(selection...))
+	result := Some(configdomain.NewProposalBreadcrumbExclude(selection...))
 	if args.Global.Equal(result) {
-		result = None[configdomain.ProposalBreadcrumbExcludeBranches]()
+		result = None[configdomain.ProposalBreadcrumbExclude]()
 	}
 
-	fmt.Printf(messages.ProposalBreadcrumbExcludeBranches, formatProposalBreadcrumbExcludeBranches(result, args.Global.IsSome(), exit))
+	fmt.Printf(messages.ProposalBreadcrumbExclude, formatProposalBreadcrumbExclude(result, args.Global.IsSome(), exit))
 	return result, exit, err
 }
 
-func proposalBreadcrumbExcludeBranchDefaultSelections(entries list.Entries[configdomain.BranchType], value Option[configdomain.ProposalBreadcrumbExcludeBranches]) []int {
+func proposalBreadcrumbExcludeBranchDefaultSelections(entries list.Entries[configdomain.BranchType], value Option[configdomain.ProposalBreadcrumbExclude]) []int {
 	excludedBranches, hasExcludedBranches := value.Get()
 	if !hasExcludedBranches {
 		return []int{}
@@ -54,9 +54,9 @@ func proposalBreadcrumbExcludeBranchDefaultSelections(entries list.Entries[confi
 	return result
 }
 
-func formatProposalBreadcrumbExcludeBranches(selection Option[configdomain.ProposalBreadcrumbExcludeBranches], hasGlobal bool, exit dialogdomain.Exit) string {
+func formatProposalBreadcrumbExclude(selection Option[configdomain.ProposalBreadcrumbExclude], hasGlobal bool, exit dialogdomain.Exit) string {
 	if value, hasValue := selection.Get(); hasValue {
 		return dialogcomponents.FormattedOption(Some(value), hasGlobal, exit)
 	}
-	return dialogcomponents.FormattedOption(None[configdomain.ProposalBreadcrumbExcludeBranches](), hasGlobal, exit)
+	return dialogcomponents.FormattedOption(None[configdomain.ProposalBreadcrumbExclude](), hasGlobal, exit)
 }

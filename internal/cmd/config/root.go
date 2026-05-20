@@ -4,7 +4,6 @@ package config
 import (
 	"cmp"
 	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -17,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/cliconfig"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/execute"
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
