@@ -28,7 +28,7 @@ func NewProposalBreadcrumbExcludeBranches(branchTypes ...BranchType) ProposalBre
 }
 
 func ParseProposalBreadcrumbExcludeBranches(text stringss.Trimmed, source string) (Option[ProposalBreadcrumbExcludeBranches], error) {
-	parts := strings.Split(text.String(), ",")
+	parts := strings.Fields(text.String())
 	return ParseProposalBreadcrumbExcludeBranchesList(parts, source)
 }
 

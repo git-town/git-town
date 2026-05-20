@@ -66,7 +66,7 @@ func TestLoad(t *testing.T) {
 		})
 		t.Run("set", func(t *testing.T) {
 			t.Parallel()
-			env := envconfig.NewEnvVars([]string{"GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES=prototype, contribution"})
+			env := envconfig.NewEnvVars([]string{"GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE_BRANCHES=prototype contribution"})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			want := configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)

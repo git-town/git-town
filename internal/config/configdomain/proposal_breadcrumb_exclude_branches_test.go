@@ -22,24 +22,24 @@ func TestParseBreadcrumbExcludeBranches(t *testing.T) {
 			err:  false,
 		},
 		{
-			give: "prototype,contribution",
+			give: "prototype contribution",
 			want: Some(configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)),
 			err:  false,
 		},
 		{
-			give: " prototype, contribution ",
+			give: " prototype contribution ",
 			want: Some(configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)),
 			err:  false,
 		},
 		{
-			give: "prototype,prototype",
-			want: Some(configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePrototypeBranch)),
-			err:  false,
-		},
-		{
-			give: "p,c",
+			give: "p c",
 			want: Some(configdomain.NewProposalBreadcrumbExcludeBranches(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeContributionBranch)),
 			err:  false,
+		},
+		{
+			give: "prototype, contribution",
+			want: None[configdomain.ProposalBreadcrumbExcludeBranches](),
+			err:  true,
 		},
 		{
 			give: "zonk",

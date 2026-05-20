@@ -51,7 +51,7 @@ func TestNewPartialConfigFromSnapshotProposalBreadcrumbExcludeBranches(t *testin
 	t.Run("set", func(t *testing.T) {
 		t.Parallel()
 		snapshot := configdomain.SingleSnapshot{
-			configdomain.KeyProposalBreadcrumbExcludeBranches: "prototype, contribution",
+			configdomain.KeyProposalBreadcrumbExcludeBranches: "prototype contribution",
 		}
 		have, err := config.NewPartialConfigFromSnapshot(snapshot, false, false, nil)
 		must.NoError(t, err)
