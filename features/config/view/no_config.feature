@@ -57,6 +57,7 @@ Feature: no configuration data
       Propose:
         breadcrumb: none
         breadcrumb direction: down
+        breadcrumb exclude branches: (none)
 
       Ship:
         delete tracking branch: yes

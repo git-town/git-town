@@ -2,7 +2,6 @@ package proposallineage
 
 import (
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/pkg/set"
 )
 
 // FilterTree removes branches whose type is excluded.
@@ -12,14 +11,14 @@ import (
 // so the result is a forest data structure.
 func FilterTree(
 	tree TreeNode,
-	excluded set.Set[configdomain.BranchType],
+	excluded configdomain.ProposalBreadcrumbExclude,
 ) TreeNodes {
 	return filterTreeNode(tree, excluded)
 }
 
 func filterTreeNode(
 	node TreeNode,
-	excluded set.Set[configdomain.BranchType],
+	excluded configdomain.ProposalBreadcrumbExclude,
 ) TreeNodes {
 	filteredChildren := make(TreeNodes, 0, len(node.Children))
 	for _, child := range node.Children {

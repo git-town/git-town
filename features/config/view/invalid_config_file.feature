@@ -11,3 +11,16 @@ Feature: print nice error message for invalid config file
       """
       the configuration file git-town.toml does not contain TOML-formatted content
       """
+
+  Scenario: Config file with invalid breadcrumb exclusion
+    Given a Git repo with origin
+    And the configuration file:
+      """
+      [propose]
+      breadcrumb-exclude = [ "zonk" ]
+      """
+    When I run "git-town config"
+    Then Git Town prints the error:
+      """
+      unknown branch type defined in config file: "zonk"
+      """

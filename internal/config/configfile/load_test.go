@@ -59,6 +59,7 @@ origin-hostname = "github.com"
 [propose]
 breadcrumb = "stacks"
 breadcrumb-direction = "up"
+breadcrumb-exclude = ["contribution", "prototype"]
 
 [ship]
 delete-tracking-branch = false
@@ -112,6 +113,7 @@ upstream = true
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
+					BreadcrumbExclude:   &[]string{"contribution", "prototype"},
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
@@ -176,7 +178,7 @@ upstream = true
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
 				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),
-				MainBranch:                  Some(gitdomain.LocalBranchName("main")),
+				MainBranch:                  gitdomain.LocalBranchNameOpt("main"),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:               asserts.NoError1(configdomain.ParseObservedRegex("^dependabot\\/", "test")),
 				Offline:                     None[configdomain.Offline](),
@@ -185,6 +187,7 @@ upstream = true
 				PerennialRegex:              asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalBreadcrumb:          Some(configdomain.ProposalBreadcrumbStacks),
 				ProposalBreadcrumbDirection: Some(configdomain.ProposalBreadcrumbDirectionUp),
+				ProposalBreadcrumbExclude:   Some(configdomain.NewProposalBreadcrumbExclude(configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeContributionBranch)),
 				PushBranches:                None[configdomain.PushBranches](),
 				PushHook:                    Some(configdomain.PushHook(true)),
 				ShareNewBranches:            Some(configdomain.ShareNewBranchesPush),

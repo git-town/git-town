@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (
@@ -48,6 +49,7 @@ const (
 	perennialRegex              = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalBreadcrumb          = "GIT_TOWN_PROPOSAL_BREADCRUMB"
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
+	proposalBreadcrumbExclude   = "GIT_TOWN_PROPOSAL_BREADCRUMB_EXCLUDE"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
@@ -91,6 +93,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
+	proposalBreadcrumbExclude, errProposalBreadcrumbExclude := loadIfPresent(env, proposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -127,6 +130,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
+		errProposalBreadcrumbExclude,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -149,6 +153,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars
+		ProposalBreadcrumbExclude:   proposalBreadcrumbExclude,
 		BrowserEnabled:              browserEnabled,
 		BrowserExecutable:           browserExecutable,
 		ForgejoToken:                forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
@@ -197,4 +202,13 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 
 func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
 	return parser(env.Get(varName), varName)
+}
+
+func loadIfPresent[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (Option[T], error)) (Option[T], error) {
+	fromEnv := env.GetOpt(varName)
+	value, hasValue := fromEnv.Get()
+	if !hasValue {
+		return None[T](), nil
+	}
+	return parser(stringss.Trim(value), varName)
 }

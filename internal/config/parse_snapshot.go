@@ -107,6 +107,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	perennialRegex, errPerennialRegex := loadErr(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
 	proposalBreadcrumb, errProposalBreadcrumb := loadErr(snapshot, configdomain.KeyProposalBreadcrumb, configdomain.ParseProposalBreadcrumb, ignoreUnknown)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := loadErr(snapshot, configdomain.KeyProposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection, ignoreUnknown)
+	proposalBreadcrumbExclude, errProposalBreadcrumbExclude := loadErr(snapshot, configdomain.KeyProposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude, ignoreUnknown)
 	pushBranches, errPushBranches := loadErr(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
 	pushHook, errPushHook := loadErr(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
 	shareNewBranches, errShareNewBranches := loadErr(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
@@ -144,6 +145,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
+		errProposalBreadcrumbExclude,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -195,6 +197,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
+		ProposalBreadcrumbExclude:   proposalBreadcrumbExclude,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

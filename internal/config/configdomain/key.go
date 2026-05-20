@@ -110,6 +110,7 @@ const (
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyProposalBreadcrumb                  = Key("git-town.proposal-breadcrumb")
 	KeyProposalBreadcrumbDirection         = Key("git-town.proposal-breadcrumb-direction")
+	KeyProposalBreadcrumbExclude           = Key("git-town.proposal-breadcrumb-exclude")
 	KeyPushBranches                        = Key("git-town.push-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
 	KeyShareNewBranches                    = Key("git-town.share-new-branches")
@@ -182,6 +183,7 @@ var keys = []Key{
 	KeyPerennialRegex,
 	KeyProposalBreadcrumb,
 	KeyProposalBreadcrumbDirection,
+	KeyProposalBreadcrumbExclude,
 	KeyPushBranches,
 	KeyPushHook,
 	KeyShareNewBranches,

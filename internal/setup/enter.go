@@ -330,6 +330,7 @@ EnterForgeData:
 		PerennialRegex:              perennialRegex,
 		ProposalBreadcrumb:          proposalBreadcrumb,
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
+		ProposalBreadcrumbExclude:   None[configdomain.ProposalBreadcrumbExclude](), // the setup assistant doesn't ask for this
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,

@@ -124,6 +124,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
 	print.Entry("breadcrumb direction", format.StringsSetting(config.NormalConfig.ProposalBreadcrumbDirection.String()))
+	print.Entry("breadcrumb exclude branches", format.StringsSetting(config.NormalConfig.ProposalBreadcrumbExclude.String()))
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))

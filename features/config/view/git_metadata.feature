@@ -29,6 +29,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.proposal-breadcrumb" is "stacks"
+    And Git setting "git-town.proposal-breadcrumb-exclude" is "prototype contribution"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.stash" is "false"
     And Git setting "git-town.unknown-branch-type" is "observed"
@@ -78,6 +79,7 @@ Feature: display configuration from Git metadata
       Propose:
         breadcrumb: stacks
         breadcrumb direction: down
+        breadcrumb exclude branches: contribution, prototype
 
       Ship:
         delete tracking branch: yes
@@ -152,6 +154,7 @@ Feature: display configuration from Git metadata
       Propose:
         breadcrumb: none
         breadcrumb direction: down
+        breadcrumb exclude branches: (none)
 
       Ship:
         delete tracking branch: yes

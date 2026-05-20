@@ -18,6 +18,18 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
+func RenderBranchTypes(branchTypes configdomain.ProposalBreadcrumbExclude) string {
+	values := branchTypes.Values()
+	if len(values) == 0 {
+		return "[]"
+	}
+	parts := make([]string, len(values))
+	for index, branchType := range values {
+		parts[index] = branchType.String()
+	}
+	return fmt.Sprintf(`["%s"]`, strings.Join(parts, `", "`))
+}
+
 func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("#:schema https://raw.githubusercontent.com/git-town/git-town/refs/heads/main/docs/git-town.schema.json\n\n")
@@ -149,13 +161,17 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	proposalBreadcrumb, hasProposalBreadcrumb := data.ProposalBreadcrumb.Get()
 	proposalBreadcrumbDirection, hasProposalBreadcrumbDirection := data.ProposalBreadcrumbDirection.Get()
-	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection {
+	proposalBreadcrumbExclude, hasProposalBreadcrumbExclude := data.ProposalBreadcrumbExclude.Get()
+	if hasProposalBreadcrumb || hasProposalBreadcrumbDirection || hasProposalBreadcrumbExclude {
 		result.WriteString("\n[propose]\n")
 		if hasProposalBreadcrumb {
 			result.WriteString(fmt.Sprintf("breadcrumb = %q\n", proposalBreadcrumb))
 		}
 		if hasProposalBreadcrumbDirection {
 			result.WriteString(fmt.Sprintf("breadcrumb-direction = %q\n", proposalBreadcrumbDirection))
+		}
+		if hasProposalBreadcrumbExclude {
+			result.WriteString(fmt.Sprintf("breadcrumb-exclude = %s\n", RenderBranchTypes(proposalBreadcrumbExclude)))
 		}
 	}
 

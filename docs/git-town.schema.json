@@ -149,6 +149,12 @@
         "breadcrumb-direction": {
           "type": "string"
         },
+        "breadcrumb-exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "lineage": {
           "type": "string"
         }

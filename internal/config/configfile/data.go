@@ -59,9 +59,10 @@ func (self Hosting) IsEmpty() bool {
 }
 
 type Propose struct {
-	Breadcrumb          *string `toml:"breadcrumb"`
-	BreadcrumbDirection *string `toml:"breadcrumb-direction"`
-	Lineage             *string `toml:"lineage"`
+	Breadcrumb          *string   `toml:"breadcrumb"`
+	BreadcrumbDirection *string   `toml:"breadcrumb-direction"`
+	BreadcrumbExclude   *[]string `toml:"breadcrumb-exclude"`
+	Lineage             *string   `toml:"lineage"`
 }
 
 type Ship struct {
