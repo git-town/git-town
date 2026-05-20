@@ -918,7 +918,9 @@ type branchesQueryResult struct {
 	Symref         bool
 	Track          string
 	UpstreamOption Option[gitdomain.RemoteBranchName] // the tracking branch name
-	Worktree       bool
+	// Worktree is true if this branch is checked out in a non-bare worktree other than the current one.
+	// It is false for branches that are only "associated" with a bare worktree via HEAD.
+	Worktree bool
 }
 
 type branchesQueryResults []branchesQueryResult
@@ -933,21 +935,22 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	// `:short` returns a "non-ambiguous" name. This means that if a branch and a
 	// tag have the same name, it will return something like "heads/branch-name"
 	// instead of "branch-name". We just want the branch name.
+	// Fields are separated by NUL bytes (%00) so that values containing spaces
+	// (e.g. track "ahead 2, behind 3") and values containing paths (worktreepath)
+	// can all be parsed unambiguously with a simple SplitN.
 	forEachRefFormats := []string{
-		"refname:%(refname)",                                  // full ref name
-		"branchname:%(refname:lstrip=2)",                      // branch name
-		"sha:%(objectname)",                                   // SHA of the commit the ref points to
-		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",             // is the branch checked out in the current worktree? Y/N
-		"worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end)", // is the branch checked out in any worktree? Y/N
-		"symref:%(if)%(symref)%(then)Y%(else)N%(end)",         // is the branch a symbolic ref? Y/N
-		"upstream:%(upstream:lstrip=2)",                       // the tracking branch name
-		// Leave `track` in the last position because it is the only one that contains spaces.
-		// Then we can use SplitN to split the output correctly.
-		"track:%(upstream:track,nobracket)", // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
+		"refname:%(refname)",                      // full ref name
+		"branchname:%(refname:lstrip=2)",          // branch name
+		"sha:%(objectname)",                       // SHA of the commit the ref points to
+		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)", // is the branch checked out in the current worktree? Y/N
+		"worktreepath:%(worktreepath)",            // path of the worktree this branch is checked out in (empty if none)
+		"symref:%(if)%(symref)%(then)Y%(else)N%(end)", // is the branch a symbolic ref? Y/N
+		"upstream:%(upstream:lstrip=2)",               // the tracking branch name
+		"track:%(upstream:track,nobracket)",           // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
 	}
 	output, err := querier.QueryTrim(
 		"git", "for-each-ref",
-		"--format="+strings.Join(forEachRefFormats, " "),
+		"--format="+strings.Join(forEachRefFormats, "%00"),
 		"--sort=refname",
 		"refs/heads/", "refs/remotes/", // local branches, remote branches
 	)
@@ -957,12 +960,15 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	lines := stringslice.Lines(output.String())
 	result := make(branchesQueryResults, len(lines))
 	for l, line := range lines {
-		parts := strings.SplitN(line, " ", len(forEachRefFormats))
+		parts := strings.SplitN(line, "\x00", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
 		branchName := gitdomain.BranchNameOrPanic(stringss.Trim(strings.TrimPrefix(parts[1], "branchname:")))
 		sha := gitdomain.NewSHAOrPanic(stringss.Trim(strings.TrimPrefix(parts[2], "sha:")))
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
-		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
+		wtPath := strings.TrimPrefix(parts[4], "worktreepath:")
+		// A branch is considered "in another worktree" only when checked out in a non-bare worktree.
+		// Bare repos have no working tree, so their HEAD branch is not truly locked.
+		worktree := wtPath != "" && !isBareWorktreePath(wtPath)
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
 		upstreamOption := gitdomain.RemoteBranchNameOpt(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
 		track := strings.TrimPrefix(parts[7], "track:")
@@ -978,6 +984,17 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 		}
 	}
 	return result, nil
+}
+
+// isBareWorktreePath reports whether the given worktree path is a bare repository.
+// Non-bare linked worktrees always contain a .git file; bare repos do not.
+// Conventionally bare repos are named with a ".git" suffix, checked first as a fast path.
+func isBareWorktreePath(path string) bool {
+	if strings.HasSuffix(path, ".git") {
+		return true
+	}
+	_, err := os.Stat(filepath.Join(path, ".git"))
+	return os.IsNotExist(err)
 }
 
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
