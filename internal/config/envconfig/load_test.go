@@ -47,7 +47,7 @@ func TestLoad(t *testing.T) {
 		})
 	})
 
-	t.Run("breadcrumb exclude branches", func(t *testing.T) {
+	t.Run("breadcrumb exclude", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unset", func(t *testing.T) {
 			t.Parallel()

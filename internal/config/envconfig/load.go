@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 const (
@@ -92,7 +93,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalBreadcrumb, errProposalBreadcrumb := load(env, proposalBreadcrumb, configdomain.ParseProposalBreadcrumb)
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
-	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExcludeBranches := load(env, proposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude)
+	proposalBreadcrumbExcludeBranches, errProposalBreadcrumbExclude := loadIfPresent(env, proposalBreadcrumbExclude, configdomain.ParseProposalBreadcrumbExclude)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -129,7 +130,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalBreadcrumb,
 		errProposalBreadcrumbDirection,
-		errProposalBreadcrumbExcludeBranches,
+		errProposalBreadcrumbExclude,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -201,4 +202,13 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 
 func load[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (T, error)) (T, error) { //nolint:ireturn
 	return parser(env.Get(varName), varName)
+}
+
+func loadIfPresent[T any](env EnvVars, varName string, parser func(stringss.Trimmed, string) (Option[T], error)) (Option[T], error) {
+	fromEnv := env.GetOpt(varName)
+	value, hasValue := fromEnv.Get()
+	if !hasValue {
+		return None[T](), nil
+	}
+	return parser(stringss.Trim(value), varName)
 }
