@@ -111,9 +111,9 @@ upstream = true
 					Platform:        nil,
 				},
 				Propose: &configfile.Propose{
-					Breadcrumb:                new("stacks"),
-					BreadcrumbDirection:       new("up"),
-					BreadcrumbExclude: &[]string{"contribution", "prototype"},
+					Breadcrumb:          new("stacks"),
+					BreadcrumbDirection: new("up"),
+					BreadcrumbExclude:   &[]string{"contribution", "prototype"},
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
