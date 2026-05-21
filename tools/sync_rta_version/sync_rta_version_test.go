@@ -18,14 +18,14 @@ func TestReadCanonicalRTAVersionLine(t *testing.T) {
 		mainMakefilePath := filepath.Join(tempDir, "Makefile")
 		makefileContents := `
 # header
-RTA_VERSION = 1.2.3  # run-that-app version to use
+RTA_VERSION = 1.2.3  # first declaration
 OTHER = ok
-RTA_VERSION = should not matter
+RTA_VERSION = 4.5.6  # second declaration
 `[1:]
 		asserts.NoError(os.WriteFile(mainMakefilePath, []byte(makefileContents), 0o600))
 		line, hasLine := readCanonicalRTAVersionLine(mainMakefilePath).Get()
 		must.True(t, hasLine)
-		must.EqOp(t, "RTA_VERSION = 1.2.3  # run-that-app version to use", line)
+		must.EqOp(t, "RTA_VERSION = 1.2.3  # first declaration", line)
 	})
 }
 
