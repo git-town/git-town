@@ -22,6 +22,9 @@ func main() {
 		if walkErr != nil {
 			return walkErr
 		}
+		if entry.Name() == "vendor" || strings.HasPrefix(entry.Name(), ".git") || entry.Name() == "node_modules" {
+			return filepath.SkipDir
+		}
 		if entry.IsDir() || entry.Name() != "Makefile" || path == "Makefile" {
 			return nil
 		}
