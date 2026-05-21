@@ -20,7 +20,6 @@ func TestReadCanonicalRTAVersionLine(t *testing.T) {
 RTA_VERSION = 1.2.3  # run-that-app version to use
 OTHER = ok
 RTA_VERSION = should not matter
-
 `[1:]
 		asserts.NoError(os.WriteFile(mainMakefilePath, []byte(makefileContents), 0o600))
 		line, hasLine := readCanonicalRTAVersionLine(mainMakefilePath).Get()
