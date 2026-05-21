@@ -1,0 +1,10 @@
+# See https://lefthook.dev/configuration for details.
+
+lefthook: tools/rta lefthook
+colors: false
+output: false
+
+pre-commit:
+  jobs:
+    - run: make fix
+      stage_fixed: true

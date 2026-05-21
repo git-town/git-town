@@ -7,18 +7,27 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-// RenderSection provides the branch lineage for the given branch in Markdown format, ready to be embedded into a proposal body.
-func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBranchName, order configdomain.Order, breadcrumb configdomain.ProposalBreadcrumb, direction configdomain.ProposalBreadcrumbDirection, connector Option[forgedomain.Connector]) string {
-	// step 1: calculate the lineage tree for the given branch
-	tree := CalculateTree(currentBranch, lineage, order)
+type RenderSectionArgs struct {
+	Breadcrumb    configdomain.ProposalBreadcrumb
+	Connector     Option[forgedomain.Connector]
+	CurrentBranch gitdomain.LocalBranchName
+	Direction     configdomain.ProposalBreadcrumbDirection
+	Lineage       configdomain.Lineage
+	Order         configdomain.Order
+}
 
-	if !breadcrumb.DisplayBreadcrumb(tree.BranchCount()) {
+// RenderSection provides the branch lineage for the given branch in Markdown format, ready to be embedded into a proposal body.
+func RenderSection(args RenderSectionArgs) string {
+	// step 1: calculate the lineage tree for the given branch
+	tree := CalculateTree(args.CurrentBranch, args.Lineage, args.Order)
+
+	if !args.Breadcrumb.DisplayBreadcrumb(tree.BranchCount()) {
 		return ""
 	}
 
 	// step 2: add proposals to the tree
-	treeWithProposals := AddProposalsToTree(tree, connector)
+	treeWithProposals := AddProposalsToTree(tree, args.Connector)
 
 	// step 3: render the tree into Markdown format
-	return RenderTree(treeWithProposals, currentBranch, direction, connector)
+	return RenderTree(treeWithProposals, args.CurrentBranch, args.Direction, args.Connector)
 }
