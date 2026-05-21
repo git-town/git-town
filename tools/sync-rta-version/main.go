@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -8,7 +9,11 @@ import (
 )
 
 func main() {
-	canonicalLine := asserts.NoError1(readCanonicalRTAVersionLine("Makefile"))
+	canonicalLine, hasRTAVersion := readCanonicalRTAVersionLine("Makefile").Get()
+	if !hasRTAVersion {
+		fmt.Println("No RTA_VERSION assignment found in Makefile")
+		return
+	}
 	walkErr := filepath.WalkDir(".", func(path string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
