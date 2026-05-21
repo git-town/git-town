@@ -16,7 +16,7 @@ func main() {
 		fmt.Println("No RTA_VERSION declaration found in Makefile")
 		return
 	}
-	walkErr := filepath.WalkDir(".", func(path string, entry os.DirEntry, walkErr error) error {
+	asserts.NoError(filepath.WalkDir(".", func(path string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
@@ -30,8 +30,7 @@ func main() {
 			return nil
 		}
 		return os.WriteFile(path, []byte(newContent), info.Mode())
-	})
-	asserts.NoError(walkErr)
+	}))
 }
 
 // readCanonicalRTAVersionLine returns the first line in the given Makefile that
