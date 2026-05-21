@@ -1,4 +1,4 @@
-RTA_VERSION = 0.33.0  # run-that-app version to use
+RTA_VERSION = 0.36.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -18,6 +18,7 @@ GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
+LEFTHOOK     = $(RTA) lefthook
 NPM          = $(RTA) npm
 NPX          = $(RTA) npx
 NODE         = $(RTA) node
@@ -215,6 +216,9 @@ lint-tests-sorted:
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
 
+setup-githooks: ${RTA}  ## installs a Git pre-commit hook that auto-formats code
+	@$(LEFTHOOK) install
+
 stats: ${RTA}  # shows code statistics
 	@find . -type f \
 		| grep -v './node_modules' \
@@ -319,6 +323,7 @@ deadcode: ${RTA}
 ${RTA}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
+	@ln -s rta@${RTA_VERSION} tools/rta
 
 node_modules: package-lock.json ${RTA}
 	@echo "Installing Node based tools"
