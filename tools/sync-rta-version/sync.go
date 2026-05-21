@@ -12,7 +12,7 @@ import (
 // starts with "RTA_VERSION =".
 func readCanonicalRTAVersionLine(path string) Option[string] {
 	content := asserts.NoError1(os.ReadFile(path))
-	for _, line := range strings.Split(string(content), "\n") {
+	for line := range strings.SplitSeq(string(content), "\n") {
 		if strings.HasPrefix(line, "RTA_VERSION =") {
 			return Some(line)
 		}
