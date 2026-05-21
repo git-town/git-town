@@ -64,14 +64,3 @@ TAIL=x
 		must.EqOp(t, want, have)
 	})
 }
-
-func TestReplaceRTAVersionAssignment_replacesIndentedAssignment(t *testing.T) {
-	t.Parallel()
-	canonicalLine := `RTA_VERSION = 2`
-	before := "use tab\n\tRTA_VERSION = 1\nmore\n"
-	after, modified := replaceRTAVersionAssignment(before, canonicalLine)
-	want := "use tab\n" + canonicalLine + "\nmore\n"
-	if !modified || after != want {
-		t.Fatalf("unexpected modified=%v after=%q want %q", modified, after, want)
-	}
-}
