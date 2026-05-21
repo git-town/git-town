@@ -10,6 +10,8 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
+const RTA_VERSION_DECLARATION = "RTA_VERSION = "
+
 func main() {
 	canonicalLine, hasRTAVersion := readCanonicalRTAVersionLine("Makefile").Get()
 	if !hasRTAVersion {
@@ -38,7 +40,7 @@ func main() {
 func readCanonicalRTAVersionLine(path string) Option[string] {
 	content := asserts.NoError1(os.ReadFile(path))
 	for line := range strings.SplitSeq(string(content), "\n") {
-		if strings.HasPrefix(line, "RTA_VERSION =") {
+		if strings.HasPrefix(line, RTA_VERSION_DECLARATION) {
 			return Some(line)
 		}
 	}
@@ -56,7 +58,7 @@ func replaceRTAVersionAssignment(content string, canonicalLine string) (string, 
 		hasCR := strings.HasSuffix(line, "\r")
 		bare := strings.TrimSuffix(line, "\r")
 		bare = strings.TrimLeft(bare, " \t")
-		if !strings.HasPrefix(bare, "RTA_VERSION =") {
+		if !strings.HasPrefix(bare, RTA_VERSION_DECLARATION) {
 			continue
 		}
 		if bare == canonicalLine {
