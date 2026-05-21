@@ -1,17 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/git-town/git-town/v23/pkg/asserts"
 )
 
 func main() {
-	canonicalLine, err := readCanonicalRTAVersionLine("Makefile")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
+	canonicalLine := asserts.NoError1(readCanonicalRTAVersionLine("Makefile"))
 	walkErr := filepath.WalkDir(".", func(path string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -19,22 +16,13 @@ func main() {
 		if entry.IsDir() || entry.Name() != "Makefile" || path == "Makefile" {
 			return nil
 		}
-		info, statErr := entry.Info()
-		if statErr != nil {
-			return statErr
-		}
-		rawContent, readErr := os.ReadFile(path)
-		if readErr != nil {
-			return readErr
-		}
+		info := asserts.NoError1(entry.Info())
+		rawContent := asserts.NoError1(os.ReadFile(path))
 		newContent, modified := replaceRTAVersionAssignment(string(rawContent), canonicalLine)
 		if !modified {
 			return nil
 		}
 		return os.WriteFile(path, []byte(newContent), info.Mode())
 	})
-	if walkErr != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", walkErr)
-		os.Exit(1)
-	}
+	asserts.NoError(walkErr)
 }

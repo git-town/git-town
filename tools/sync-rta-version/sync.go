@@ -1,25 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
+
+	"github.com/git-town/git-town/v23/pkg/asserts"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 // readCanonicalRTAVersionLine returns the first line in the given Makefile that
 // starts with "RTA_VERSION =".
-func readCanonicalRTAVersionLine(path string) (string, error) {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
+func readCanonicalRTAVersionLine(path string) Option[string] {
+	content := asserts.NoError1(os.ReadFile(path))
 	for _, line := range strings.Split(string(content), "\n") {
-		trimmed := strings.TrimSuffix(line, "\r")
-		if strings.HasPrefix(trimmed, "RTA_VERSION =") {
-			return trimmed, nil
+		if strings.HasPrefix(line, "RTA_VERSION =") {
+			return Some(line)
 		}
 	}
-	return "", fmt.Errorf("no RTA_VERSION assignment found in %s", path)
+	return None[string]()
 }
 
 // replaceRTAVersionAssignment replaces the first line in content that starts with
