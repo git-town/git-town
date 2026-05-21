@@ -12,7 +12,7 @@ import (
 func TestReadCanonicalRTAVersionLine(t *testing.T) {
 	t.Parallel()
 
-	t.Run("return first declaration", func(t *testing.T) {
+	t.Run("returns first declaration", func(t *testing.T) {
 		tempDir := t.TempDir()
 		mainMakefilePath := filepath.Join(tempDir, "Makefile")
 		makefileContents := `
