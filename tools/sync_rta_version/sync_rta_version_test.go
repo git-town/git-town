@@ -28,13 +28,21 @@ RTA_VERSION = should not matter
 
 func TestReplaceRTAVersionAssignment_replacesLfAndPreservesTrailingNewline(t *testing.T) {
 	t.Parallel()
-	canonicalLine := `RTA_VERSION = 9.9.9  # run-that-app version to use`
-	before := "HEADER = ok\nRTA_VERSION = 0.nope  # run-that-app version to use\nTAIL=x\n"
-	after, modified := replaceRTAVersionAssignment(before, canonicalLine)
-	want := "HEADER = ok\n" + canonicalLine + "\nTAIL=x\n"
-	if !modified || after != want {
-		t.Fatalf("unexpected result modified=%v after=%q", modified, after)
-	}
+	give := `
+HEADER = ok
+RTA_VERSION = 9.9.9  # run-that-app version to use
+TAIL=x
+
+`[1:]
+	have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3  # run-that-app version to use")
+	want := `
+HEADER = ok
+RTA_VERSION = 1.2.3  # run-that-app version to use
+TAIL=x
+
+`[1:]
+	must.True(t, modified)
+	must.EqOp(t, want, have)
 }
 
 func TestReplaceRTAVersionAssignment_rewritesCrlf(t *testing.T) {
