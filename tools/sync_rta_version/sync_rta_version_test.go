@@ -32,12 +32,13 @@ func TestReplaceRTAVersionAssignment(t *testing.T) {
 	t.Parallel()
 
 	t.Run("replace declaration", func(t *testing.T) {
+		t.Parallel()
 		give := `
 HEADER = ok
 RTA_VERSION = 9.9.9
 TAIL=x
 `[1:]
-		have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3")
+		have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3").Get()
 		want := `
 HEADER = ok
 RTA_VERSION = 1.2.3
@@ -48,18 +49,13 @@ TAIL=x
 	})
 
 	t.Run("unchanged", func(t *testing.T) {
+		t.Parallel()
 		give := `
 HEADER = ok
 RTA_VERSION = 1.2.3
 TAIL=x
 `[1:]
-		have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3")
-		want := `
-HEADER = ok
-RTA_VERSION = 1.2.3
-TAIL=x
-`[1:]
-		must.False(t, modified)
-		must.EqOp(t, want, have)
+		have := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3")
+		must.False(t, have.IsSome())
 	})
 }

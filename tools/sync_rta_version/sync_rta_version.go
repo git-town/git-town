@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-const RTA_VERSION_DECLARATION = "RTA_VERSION = "
+const RTAVersionDeclaration = "RTA_VERSION = "
 
 func main() {
 	canonicalLine, hasRTAVersion := readCanonicalRTAVersionLine("Makefile").Get()
@@ -27,7 +27,7 @@ func main() {
 		}
 		info := asserts.NoError1(entry.Info())
 		rawContent := asserts.NoError1(os.ReadFile(path))
-		newContent, modified := replaceRTAVersionAssignment(string(rawContent), canonicalLine)
+		newContent, modified := replaceRTAVersionAssignment(string(rawContent), canonicalLine).Get()
 		if !modified {
 			return nil
 		}
@@ -40,22 +40,20 @@ func main() {
 func readCanonicalRTAVersionLine(path string) Option[string] {
 	content := asserts.NoError1(os.ReadFile(path))
 	for line := range strings.SplitSeq(string(content), "\n") {
-		if strings.HasPrefix(line, RTA_VERSION_DECLARATION) {
+		if strings.HasPrefix(line, RTAVersionDeclaration) {
 			return Some(line)
 		}
 	}
 	return None[string]()
 }
 
-// replaceRTAVersionAssignment replaces the first line in content that starts with
-// optional whitespace followed by "RTA_VERSION =" with canonicalLine.
-// It preserves the original line endings (LF or CRLF).
-// Returns the updated content and whether any replacement was made.
-func replaceRTAVersionAssignment(content string, canonicalLine string) (string, bool) {
+// replaceRTAVersionAssignment provides the given content with the
+// RTA_VERSION assignment replaced with the given canonical line.
+func replaceRTAVersionAssignment(content string, canonicalLine string) Option[string] {
 	lines := strings.Split(content, "\n")
 	modified := false
 	for lineIndex, line := range lines {
-		if !strings.HasPrefix(line, RTA_VERSION_DECLARATION) {
+		if !strings.HasPrefix(line, RTAVersionDeclaration) {
 			continue
 		}
 		if line == canonicalLine {
@@ -64,5 +62,8 @@ func replaceRTAVersionAssignment(content string, canonicalLine string) (string, 
 		lines[lineIndex] = canonicalLine
 		modified = true
 	}
-	return strings.Join(lines, "\n"), modified
+	if !modified {
+		return None[string]()
+	}
+	return Some(strings.Join(lines, "\n"))
 }
