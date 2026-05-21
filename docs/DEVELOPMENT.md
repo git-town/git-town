@@ -34,6 +34,8 @@ This monorepo contains a number of codebases:
 5. faster smoke test during development: `make test-go`
 6. install Git Town locally into `~/go/bin`:
    <code type="make/command" dir="..">make install</code>
+7. To auto-format changes when committing,
+   run <code type="make/command" dir="..">make setup-githooks</code>.
 
 ## Dependencies
 
