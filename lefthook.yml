@@ -7,3 +7,4 @@ output: false
 pre-commit:
   jobs:
     - run: make fix
+      stage_fixed: true
