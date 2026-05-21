@@ -30,14 +30,14 @@ func TestReplaceRTAVersionAssignment_replacesLfAndPreservesTrailingNewline(t *te
 	t.Parallel()
 	give := `
 HEADER = ok
-RTA_VERSION = 9.9.9  # run-that-app version to use
+RTA_VERSION = 9.9.9
 TAIL=x
 
 `[1:]
-	have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3  # run-that-app version to use")
+	have, modified := replaceRTAVersionAssignment(give, "RTA_VERSION = 1.2.3")
 	want := `
 HEADER = ok
-RTA_VERSION = 1.2.3  # run-that-app version to use
+RTA_VERSION = 1.2.3
 TAIL=x
 
 `[1:]
