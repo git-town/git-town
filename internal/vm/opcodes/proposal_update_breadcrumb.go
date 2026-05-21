@@ -35,7 +35,14 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 	}
 	for _, proposal := range proposals {
 		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
-		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Config.Value.NormalConfig.ProposalBreadcrumb, args.Config.Value.NormalConfig.ProposalBreadcrumbDirection, args.Connector)
+		lineageSection := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+			Breadcrumb:    args.Config.Value.NormalConfig.ProposalBreadcrumb,
+			Connector:     args.Connector,
+			CurrentBranch: self.Branch,
+			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
+			Lineage:       args.Config.Value.NormalConfig.Lineage,
+			Order:         args.Config.Value.NormalConfig.Order,
+		})
 		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
 		if updatedProposalBody == oldProposalBody {
 			continue

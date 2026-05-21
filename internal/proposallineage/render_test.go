@@ -87,7 +87,14 @@ func TestRender(t *testing.T) {
 			"feature-b2": "feature-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
+		have := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+			Breadcrumb:    configdomain.ProposalBreadcrumbBranches,
+			Connector:     Some(connector),
+			CurrentBranch: "feature-a",
+			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
+			Lineage:       lineage,
+			Order:         configdomain.OrderAsc,
+		})
 		want := `
 
 -------------------------
@@ -109,7 +116,14 @@ func TestRender(t *testing.T) {
 			"feature-c": "feature-b",
 		})
 		var connector forgedomain.Connector = &failingFinder{}
-		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbBranches, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
+		have := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+			Breadcrumb:    configdomain.ProposalBreadcrumbBranches,
+			Connector:     Some(connector),
+			CurrentBranch: "feature-a",
+			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
+			Lineage:       lineage,
+			Order:         configdomain.OrderAsc,
+		})
 		want := `
 
 -------------------------
@@ -129,7 +143,14 @@ func TestRender(t *testing.T) {
 			"feature-c":     "no-proposal-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, configdomain.ProposalBreadcrumbStacks, configdomain.ProposalBreadcrumbDirectionDown, Some(connector))
+		have := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+			Breadcrumb:    configdomain.ProposalBreadcrumbStacks,
+			Connector:     Some(connector),
+			CurrentBranch: "no-proposal-a",
+			Direction:     configdomain.ProposalBreadcrumbDirectionDown,
+			Lineage:       lineage,
+			Order:         configdomain.OrderAsc,
+		})
 		want := `
 
 -------------------------
