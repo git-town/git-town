@@ -55,20 +55,13 @@ func replaceRTAVersionAssignment(content string, canonicalLine string) (string, 
 	lines := strings.Split(content, "\n")
 	modified := false
 	for lineIndex, line := range lines {
-		hasCR := strings.HasSuffix(line, "\r")
-		bare := strings.TrimSuffix(line, "\r")
-		bare = strings.TrimLeft(bare, " \t")
-		if !strings.HasPrefix(bare, RTA_VERSION_DECLARATION) {
+		if !strings.HasPrefix(line, RTA_VERSION_DECLARATION) {
 			continue
 		}
-		if bare == canonicalLine {
+		if line == canonicalLine {
 			continue
 		}
-		if hasCR {
-			lines[lineIndex] = canonicalLine + "\r"
-		} else {
-			lines[lineIndex] = canonicalLine
-		}
+		lines[lineIndex] = canonicalLine
 		modified = true
 	}
 	return strings.Join(lines, "\n"), modified
