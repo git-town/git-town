@@ -13,7 +13,7 @@ import (
 func main() {
 	canonicalLine, hasRTAVersion := readCanonicalRTAVersionLine("Makefile").Get()
 	if !hasRTAVersion {
-		fmt.Println("No RTA_VERSION assignment found in Makefile")
+		fmt.Println("No RTA_VERSION declaration found in Makefile")
 		return
 	}
 	walkErr := filepath.WalkDir(".", func(path string, entry os.DirEntry, walkErr error) error {
