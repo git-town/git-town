@@ -3,32 +3,27 @@ package main
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
+
+	"github.com/git-town/git-town/v23/pkg/asserts"
+	"github.com/shoenig/test/must"
 )
 
 func TestReadCanonicalRTAVersionLine_readsFirstMatchingLine(t *testing.T) {
 	t.Parallel()
-	canonicalWant := `RTA_VERSION = 1.2.3  # run-that-app version to use`
 	tempDir := t.TempDir()
 	mainMakefilePath := filepath.Join(tempDir, "Makefile")
-	makefileContents := strings.Join([]string{
-		"# header",
-		canonicalWant,
-		"OTHER = ok",
-		"RTA_VERSION = should not matter",
-	}, "\n") + "\n"
-	writeErr := os.WriteFile(mainMakefilePath, []byte(makefileContents), 0o600)
-	if writeErr != nil {
-		t.Fatalf("write makefile: %v", writeErr)
-	}
+	makefileContents := `
+# header
+RTA_VERSION = 1.2.3  # run-that-app version to use
+OTHER = ok
+RTA_VERSION = should not matter
+
+`[1:]
+	asserts.NoError(os.WriteFile(mainMakefilePath, []byte(makefileContents), 0o600))
 	line, hasLine := readCanonicalRTAVersionLine(mainMakefilePath).Get()
-	if !hasLine {
-		t.Fatalf("read: no line found")
-	}
-	if line != canonicalWant {
-		t.Fatalf("got %q want %q", line, canonicalWant)
-	}
+	must.True(t, hasLine)
+	must.EqOp(t, "RTA_VERSION = 1.2.3  # run-that-app version to use", line)
 }
 
 func TestReplaceRTAVersionAssignment_replacesLfAndPreservesTrailingNewline(t *testing.T) {
