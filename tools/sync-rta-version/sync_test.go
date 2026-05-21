@@ -22,9 +22,9 @@ func TestReadCanonicalRTAVersionLine_readsFirstMatchingLine(t *testing.T) {
 	if writeErr != nil {
 		t.Fatalf("write makefile: %v", writeErr)
 	}
-	line, parseErr := readCanonicalRTAVersionLine(mainMakefilePath)
-	if parseErr != nil {
-		t.Fatalf("read: %v", parseErr)
+	line, hasLine := readCanonicalRTAVersionLine(mainMakefilePath).Get()
+	if !hasLine {
+		t.Fatalf("read: no line found")
 	}
 	if line != canonicalWant {
 		t.Fatalf("got %q want %q", line, canonicalWant)
