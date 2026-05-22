@@ -3,15 +3,23 @@ Feature: ship a parent branch using the fast-forward strategy
   Background:
     Given a Git repo with origin
     And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME     | FILE CONTENT      |
+      | feature-1 | local, origin | feature-1 commit | feature-1.txt | feature-1 content |
+    And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
-      | feature-1 | feature | main      | local, origin |
       | feature-2 | feature | feature-1 | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME     | FILE CONTENT      |
+      | feature-2 | local, origin | feature-2 commit | feature-2.txt | feature-2 content |
+    And the branches
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-3 | feature | feature-2 | local, origin |
     And the commits
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | feature-1 | local, origin | feature-1 commit |
-      | feature-2 | local, origin | feature-2 commit |
-      | feature-3 | local, origin | feature-3 commit |
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME     | FILE CONTENT      |
+      | feature-3 | local, origin | feature-3 commit | feature-3.txt | feature-3 content |
     And Git setting "git-town.ship-strategy" is "fast-forward"
     And the current branch is "feature-1"
     When I run "git-town ship"
@@ -54,3 +62,53 @@ Feature: ship a parent branch using the fast-forward strategy
       | main      | local, origin | feature-1 commit |
       | feature-2 | local, origin | feature-2 commit |
       | feature-3 | local, origin | feature-3 commit |
+
+  Scenario: ship the second branch
+    Given the current branch is "feature-2"
+    When I run "git-town ship"
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                       |
+      | feature-2 | git fetch --prune --tags      |
+      |           | git checkout main             |
+      | main      | git merge --ff-only feature-2 |
+      |           | git push                      |
+      |           | git push origin :feature-2    |
+      |           | git branch -D feature-2       |
+    And Git Town prints:
+      """
+      branch feature-3 is now a child of main
+      """
+    And this lineage exists now
+      """
+      main
+        feature-3
+      """
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | main      | local, origin | feature-1 commit |
+      |           |               | feature-2 commit |
+      | feature-3 | local, origin | feature-3 commit |
+
+  Scenario: ship all remaining branches
+    Given the current branch is "feature-2"
+    And the current branch is "feature-3"
+    And I run "git-town ship"
+    When I run "git-town ship"
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                       |
+      | feature-3 | git fetch --prune --tags      |
+      |           | git checkout main             |
+      | main      | git merge --ff-only feature-3 |
+      |           | git push                      |
+      |           | git push origin :feature-3    |
+      |           | git branch -D feature-3       |
+    And Git Town prints:
+      """
+      deleted branch feature-3
+      """
+    And no lineage exists now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE          |
+      | main   | local, origin | feature-1 commit |
+      |        |               | feature-2 commit |
+      |        |               | feature-3 commit |
