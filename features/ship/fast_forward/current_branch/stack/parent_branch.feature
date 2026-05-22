@@ -1,3 +1,4 @@
+@this
 Feature: ship a parent branch using the fast-forward strategy
 
   Background:
