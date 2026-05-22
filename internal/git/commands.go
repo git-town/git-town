@@ -939,11 +939,11 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	// (e.g. track "ahead 2, behind 3") and values containing paths (worktreepath)
 	// can all be parsed unambiguously with a simple SplitN.
 	forEachRefFormats := []string{
-		"refname:%(refname)",                      // full ref name
-		"branchname:%(refname:lstrip=2)",          // branch name
-		"sha:%(objectname)",                       // SHA of the commit the ref points to
-		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)", // is the branch checked out in the current worktree? Y/N
-		"worktreepath:%(worktreepath)",            // path of the worktree this branch is checked out in (empty if none)
+		"refname:%(refname)",                          // full ref name
+		"branchname:%(refname:lstrip=2)",              // branch name
+		"sha:%(objectname)",                           // SHA of the commit the ref points to
+		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",     // is the branch checked out in the current worktree? Y/N
+		"worktreepath:%(worktreepath)",                // path of the worktree this branch is checked out in (empty if none)
 		"symref:%(if)%(symref)%(then)Y%(else)N%(end)", // is the branch a symbolic ref? Y/N
 		"upstream:%(upstream:lstrip=2)",               // the tracking branch name
 		"track:%(upstream:track,nobracket)",           // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
