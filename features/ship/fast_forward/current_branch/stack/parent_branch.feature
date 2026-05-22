@@ -92,8 +92,8 @@ Feature: ship a parent branch using the fast-forward strategy
 
   Scenario: ship all remaining branches
     Given the current branch is "feature-2"
-    And the current branch is "feature-3"
     And I run "git-town ship"
+    And the current branch is "feature-3"
     When I run "git-town ship"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
