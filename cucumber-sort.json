@@ -119,6 +119,7 @@
     "^the current branch is \".*$",
     "^I add an unrelated stash entry with file \".*\"$",
     "^branch \".*\" is active in another worktree$",
+    "^branch \".*\" is active in a linked worktree of a bare clone$",
     "^tool .* is ",
     "^no tool to open browsers is installed$",
     "^the configuration file:$",
@@ -170,5 +171,6 @@
     "^the initial tags exist now$",
     "^the initial proposals exist now$",
     "^the proposals are now$"
-  ]
+  ],
+  "unknown-steps": []
 }
