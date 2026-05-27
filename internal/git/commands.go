@@ -968,7 +968,7 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 		wtPath := strings.TrimPrefix(parts[4], "worktreepath:")
 		// A branch is considered "in another worktree" only when checked out in a non-bare worktree.
 		// Bare repos have no working tree, so their HEAD branch is not truly locked.
-		worktree := wtPath != "" && !isBareWorktreePath(wtPath)
+		worktree := wtPath != "" && !isBareWorktree(wtPath)
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
 		upstreamOption := gitdomain.RemoteBranchNameOpt(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
 		track := strings.TrimPrefix(parts[7], "track:")
@@ -986,13 +986,9 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	return result, nil
 }
 
-// isBareWorktreePath reports whether the given worktree path is a bare repository.
-// Non-bare linked worktrees always contain a .git file; bare repos do not.
-// Conventionally bare repos are named with a ".git" suffix, checked first as a fast path.
-func isBareWorktreePath(path string) bool {
-	if strings.HasSuffix(path, ".git") {
-		return true
-	}
+// isBareWorktree reports whether the given worktree path is a bare repository.
+func isBareWorktree(path string) bool {
+	// Non-bare worktrees always contain either a file or folder .git; bare worktrees do not.
 	_, err := os.Stat(filepath.Join(path, ".git"))
 	return os.IsNotExist(err)
 }

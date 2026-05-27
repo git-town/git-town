@@ -419,9 +419,9 @@ func TestBackendCommands(t *testing.T) {
 			origin.MustRun("git", "-C", bareDir, "worktree", "add", "-b", "feature", worktreeDir)
 			linked := testruntime.New(worktreeDir, origin.HomeDir, origin.BinDir)
 			available := asserts.NoError1(linked.Git.BranchesAvailableInCurrentWorktree(linked))
-			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
-				gitdomain.LocalBranchName("initial"), // bare HEAD — must be available
+			must.Eq(t, gitdomain.LocalBranchNames{
 				gitdomain.LocalBranchName("feature"), // current branch in linked worktree
+				gitdomain.LocalBranchName("initial"), // bare HEAD — must be available
 			}, available)
 		})
 	})
