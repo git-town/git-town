@@ -119,7 +119,7 @@
     "^the current branch is \".*$",
     "^I add an unrelated stash entry with file \".*\"$",
     "^branch \".*\" is active in another worktree$",
-    "^branch \".*\" is active in a linked worktree of a bare clone$",
+    "^branch \".*\" is in a worktree whose parent repo is bare$",
     "^tool .* is ",
     "^no tool to open browsers is installed$",
     "^the configuration file:$",

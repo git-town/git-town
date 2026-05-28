@@ -292,7 +292,7 @@ echo "new line" >> file
 		state.fixture.AddSecondWorktree(gitdomain.LocalBranchName(branch))
 	})
 
-	sc.Step(`^branch "([^"]+)" is active in a linked worktree of a bare clone$`, func(ctx context.Context, branch string) {
+	sc.Step(`^branch "([^"]+)" is in a worktree whose parent repo is bare$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddBareRepoLinkedWorktree(gitdomain.LocalBranchName(branch))
 	})
