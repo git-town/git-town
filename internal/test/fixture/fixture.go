@@ -51,36 +51,6 @@ type Fixture struct {
 	UpstreamRepo OptionalMutable[commands.TestCommands]
 }
 
-// AddCoworkerRepo adds a coworker repository.
-func (self *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = MutableSome(&coworkerRepo)
-	initializeWorkspace(&coworkerRepo)
-	coworkerRepo.Verbose = self.DevRepo.GetOrPanic().Verbose
-}
-
-func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
-	workTreePath := filepath.Join(self.Dir, "development_worktree")
-	devRepo := self.DevRepo.GetOrPanic()
-	devRepo.AddWorktree(workTreePath, branch)
-	runner := subshell.TestRunner{
-		BinDir:     devRepo.BinDir,
-		HomeDir:    devRepo.HomeDir,
-		Verbose:    devRepo.Verbose,
-		WorkingDir: workTreePath,
-	}
-	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
-		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
-	}
-	self.SecondWorktree = MutableSome(&commands.TestCommands{
-		TestRunner: &runner,
-		Git:        &gitCommands,
-		Config:     devRepo.Config,
-		SnapShots:  devRepo.SnapShots,
-	})
-}
-
 // AddBareRepoLinkedWorktree creates a bare clone of the origin repo, sets its HEAD to
 // "main", then adds a linked worktree from that bare clone checking out the given branch.
 // The result is stored in SecondWorktree so the standard "I run X in the other worktree"
@@ -114,6 +84,36 @@ func (self *Fixture) AddBareRepoLinkedWorktree(branch gitdomain.LocalBranchName)
 		HomeDir:    devRepo.HomeDir,
 		Verbose:    devRepo.Verbose,
 		WorkingDir: worktreeDir,
+	}
+	gitCommands := git.Commands{
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
+	}
+	self.SecondWorktree = MutableSome(&commands.TestCommands{
+		TestRunner: &runner,
+		Git:        &gitCommands,
+		Config:     devRepo.Config,
+		SnapShots:  devRepo.SnapShots,
+	})
+}
+
+// AddCoworkerRepo adds a coworker repository.
+func (self *Fixture) AddCoworkerRepo() {
+	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
+	self.CoworkerRepo = MutableSome(&coworkerRepo)
+	initializeWorkspace(&coworkerRepo)
+	coworkerRepo.Verbose = self.DevRepo.GetOrPanic().Verbose
+}
+
+func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
+	workTreePath := filepath.Join(self.Dir, "development_worktree")
+	devRepo := self.DevRepo.GetOrPanic()
+	devRepo.AddWorktree(workTreePath, branch)
+	runner := subshell.TestRunner{
+		BinDir:     devRepo.BinDir,
+		HomeDir:    devRepo.HomeDir,
+		Verbose:    devRepo.Verbose,
+		WorkingDir: workTreePath,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
