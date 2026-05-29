@@ -405,6 +405,25 @@ func TestBackendCommands(t *testing.T) {
 				gitdomain.LocalBranchName("initial"),
 			}, available)
 		})
+
+		t.Run("includes branch that is HEAD of a bare worktree", func(t *testing.T) {
+			t.Parallel()
+			// Create a bare clone; its HEAD points to "initial".
+			// Add a linked worktree for a new branch.
+			// From the linked worktree, "initial" must still appear as available
+			// because it is only associated with a bare repo, not truly checked out.
+			origin := testruntime.Create(t)
+			bareDir := t.TempDir()
+			origin.MustRun("git", "clone", "--bare", origin.WorkingDir, bareDir)
+			worktreeDir := t.TempDir()
+			origin.MustRun("git", "-C", bareDir, "worktree", "add", "-b", "feature", worktreeDir)
+			linked := testruntime.New(worktreeDir, origin.HomeDir, origin.BinDir)
+			available := asserts.NoError1(linked.Git.BranchesAvailableInCurrentWorktree(linked))
+			must.Eq(t, gitdomain.LocalBranchNames{
+				gitdomain.LocalBranchName("feature"), // current branch in linked worktree
+				gitdomain.LocalBranchName("initial"), // bare HEAD — must be available
+			}, available)
+		})
 	})
 
 	t.Run("BranchesSnapshot", func(t *testing.T) {
@@ -724,6 +743,27 @@ func TestBackendCommands(t *testing.T) {
 				}
 				have := asserts.NoError1(runtime.Git.BranchesSnapshot(runtime))
 				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is HEAD of a bare worktree", func(t *testing.T) {
+				t.Parallel()
+				// When working in a linked worktree from a bare repo, the branch that
+				// the bare repo's HEAD points to must NOT get SyncStatusOtherWorktree.
+				origin := testruntime.Create(t)
+				bareDir := t.TempDir()
+				origin.MustRun("git", "clone", "--bare", origin.WorkingDir, bareDir)
+				worktreeDir := t.TempDir()
+				origin.MustRun("git", "-C", bareDir, "worktree", "add", "-b", "feature", worktreeDir)
+				linked := testruntime.New(worktreeDir, origin.HomeDir, origin.BinDir)
+				snapshot := asserts.NoError1(linked.Git.BranchesSnapshot(linked))
+				for _, branchInfo := range snapshot.Branches {
+					localData, hasLocal := branchInfo.Local.Get()
+					if hasLocal && localData.Name == initial {
+						must.NotEq(t, gitdomain.SyncStatusOtherWorktree, branchInfo.SyncStatus)
+						return
+					}
+				}
+				t.Fatal("branch 'initial' not found in snapshot")
 			})
 
 			t.Run("in the middle of a rebase", func(t *testing.T) {
