@@ -1,14 +1,5 @@
 Feature: sync from a worktree whose parent repo is bare
 
-  Some developers work directly in a linked worktree created from a bare repo
-  (e.g. git clone --bare + git worktree add). In that setup the bare repo is
-  the "main" worktree, and the developer's working directory is the linked
-  worktree — referred to below as "the other worktree".
-
-  Because the bare repo's HEAD branch (main) has a worktreepath in
-  git for-each-ref output, git-town must recognize that path as a bare repo and
-  treat main as available for sync rather than locked in another worktree.
-
   Background:
     Given a Git repo with origin
     And the branches
