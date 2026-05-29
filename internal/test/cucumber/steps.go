@@ -292,6 +292,11 @@ echo "new line" >> file
 		state.fixture.AddSecondWorktree(gitdomain.LocalBranchName(branch))
 	})
 
+	sc.Step(`^branch "([^"]+)" is in a worktree whose parent repo is bare$`, func(ctx context.Context, branch string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.AddBareRepoLinkedWorktree(gitdomain.LocalBranchName(branch))
+	})
+
 	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
