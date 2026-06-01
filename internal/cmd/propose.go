@@ -401,10 +401,12 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		proposalBody := data.proposalBody
 		if updateBreadcrumb {
 			lineageSection := proposallineage.RenderSection(proposallineage.RenderSectionArgs{
+				BranchTypes:   make(configdomain.BranchesAndTypes),
 				Breadcrumb:    data.config.NormalConfig.ProposalBreadcrumb,
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
+				Excluded:      set.New[configdomain.BranchType](),
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})
