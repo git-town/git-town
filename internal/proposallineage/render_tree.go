@@ -1,6 +1,7 @@
 package proposallineage
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
@@ -9,15 +10,33 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-const spacesPerIndent = 2
+const (
+	// spacesPerIndentDefault is the nested-list indentation for forges whose
+	// Markdown follows CommonMark/GFM (GitHub, GitLab, Gitea, Forgejo), which
+	// nest a list level at 2 spaces.
+	spacesPerIndentDefault = 2
+	// spacesPerIndentBitbucket is the nested-list indentation for Bitbucket Cloud,
+	// whose Python-Markdown renderer needs 4 spaces to nest a list level. With 2
+	// spaces it collapses every two stack levels into one (github.com/Python-Markdown/markdown/issues/451).
+	spacesPerIndentBitbucket = 4
+)
 
 func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, connector Option[forgedomain.Connector]) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 
+	// Bitbucket Cloud renders Markdown with Python-Markdown, a stricter dialect
+	// than the CommonMark/GFM the other forges use.
+	bitbucketCloud := targetsBitbucketCloud(tree)
+
+	spacesPerIndent := spacesPerIndentDefault
+	if bitbucketCloud {
+		spacesPerIndent = spacesPerIndentBitbucket
+	}
+
 	switch direction {
 	case configdomain.ProposalBreadcrumbDirectionDown:
-		renderNodeDown(&builder, tree, currentBranch, 0, false, connector)
+		renderNodeDown(&builder, tree, currentBranch, 0, false, connector, spacesPerIndent)
 	case configdomain.ProposalBreadcrumbDirectionUp:
 		renderNodeUp(&builder, tree, currentBranch, connector)
 	}
@@ -26,7 +45,18 @@ func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchNa
 	return builder.String()
 }
 
-func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool, connector Option[forgedomain.Connector]) {
+// targetsBitbucketCloud reports whether the proposals in the given lineage tree
+// live on Bitbucket Cloud, whose Markdown renderer (Python-Markdown) needs
+// Bitbucket-specific formatting. It returns false when no proposal is present,
+// leaving output for every other forge unchanged.
+func targetsBitbucketCloud(node TreeNodeWithProposal) bool {
+	if proposal, has := node.Proposal.Get(); has {
+		return proposal.ForgeType == forgedomain.ForgeTypeBitbucket
+	}
+	return slices.ContainsFunc(node.Children, targetsBitbucketCloud)
+}
+
+func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool, connector Option[forgedomain.Connector], spacesPerIndent int) {
 	if node.BranchOrAncestorHasProposal() || !foundCurrent {
 		indent := depth * spacesPerIndent
 		builder.WriteString(strings.Repeat(" ", indent))
@@ -54,7 +84,7 @@ func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, current
 		builder.WriteString("\n")
 	}
 	for _, child := range node.Children {
-		renderNodeDown(builder, child, currentBranch, depth+1, foundCurrent, connector)
+		renderNodeDown(builder, child, currentBranch, depth+1, foundCurrent, connector, spacesPerIndent)
 	}
 }
 
