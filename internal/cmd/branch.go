@@ -125,6 +125,7 @@ func determineBranchData(repo execute.OpenRepoResult) (branchData, configdomain.
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
+		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

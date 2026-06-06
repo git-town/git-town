@@ -30,14 +30,15 @@ func autoUndo(opcode shared.AutoUndoable, runErr error, args ExecuteArgs) error 
 		return err
 	}
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
-		Backend:       args.Backend,
-		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
-		Config:        args.Config,
-		Connector:     args.Connector,
-		FinalMessages: args.FinalMessages,
-		Frontend:      args.Frontend,
-		Git:           args.Git,
-		Prog:          undoProgram,
+		Backend:           args.Backend,
+		BranchInfos:       args.RunState.BeginBranchesSnapshot.Branches,
+		Config:            args.Config,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		Prog:              undoProgram,
 	})
 	return opcode.AutomaticUndoError()
 }

@@ -136,6 +136,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -161,6 +162,7 @@ type commitData struct {
 	commitMessage            Option[gitdomain.CommitMessage]
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
@@ -187,7 +189,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		return emptyCommitData, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -213,6 +215,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -294,6 +297,7 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		commitMessage:            commitMessage,
 		config:                   validatedConfig,
 		connector:                connector,
+		detectedForgeType:        detectedForgeType,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,
