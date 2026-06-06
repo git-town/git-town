@@ -219,6 +219,7 @@ Start:
 		Config:                  sharedData.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               sharedData.connector,
+		DetectedForgeType:       sharedData.detectedForgeType,
 		DryRun:                  sharedData.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,

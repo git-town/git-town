@@ -12,6 +12,7 @@ type RenderSectionArgs struct {
 	Connector     Option[forgedomain.Connector]
 	CurrentBranch gitdomain.LocalBranchName
 	Direction     configdomain.ProposalBreadcrumbDirection
+	ForgeType     Option[forgedomain.DetectedForgeType]
 	Lineage       configdomain.Lineage
 	Order         configdomain.Order
 }
@@ -29,5 +30,5 @@ func RenderSection(args RenderSectionArgs) string {
 	treeWithProposals := AddProposalsToTree(tree, args.Connector)
 
 	// step 3: render the tree into Markdown format
-	return RenderTree(treeWithProposals, args.CurrentBranch, args.Direction, args.Connector)
+	return RenderTree(treeWithProposals, args.CurrentBranch, args.Direction, args.ForgeType, args.Connector)
 }
