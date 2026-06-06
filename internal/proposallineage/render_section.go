@@ -30,5 +30,5 @@ func RenderSection(args RenderSectionArgs) string {
 	treeWithProposals := AddProposalsToTree(tree, args.Connector)
 
 	// step 3: render the tree into Markdown format
-	return RenderTree(treeWithProposals, args.CurrentBranch, args.Direction, args.ForgeType, args.Connector)
+	return AppendTree(treeWithProposals, args.CurrentBranch, args.Direction, args.ForgeType, args.Connector)
 }

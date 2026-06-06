@@ -20,8 +20,7 @@ const (
 	spacesPerIndentBitbucket = 4
 )
 
-func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, forgeType Option[forgedomain.DetectedForgeType], connector Option[forgedomain.Connector]) string {
-	var builder strings.Builder
+func AppendTree(builder *strings.Builder, tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, forgeType Option[forgedomain.DetectedForgeType], connector Option[forgedomain.Connector]) string {
 	builder.WriteString("\n-------------------------\n")
 
 	spacesPerIndent := spacesPerIndentDefault
@@ -31,9 +30,9 @@ func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchNa
 
 	switch direction {
 	case configdomain.ProposalBreadcrumbDirectionDown:
-		renderNodeDown(&builder, tree, currentBranch, 0, false, connector, spacesPerIndent)
+		renderNodeDown(builder, tree, currentBranch, 0, false, connector, spacesPerIndent)
 	case configdomain.ProposalBreadcrumbDirectionUp:
-		renderNodeUp(&builder, tree, currentBranch, connector)
+		renderNodeUp(builder, tree, currentBranch, connector)
 	}
 
 	// Bitbucket Cloud's Python-Markdown escapes raw HTML, so a <sup> footer renders
