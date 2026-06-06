@@ -12,6 +12,7 @@ import (
 // ForgeType defines legal values for the "git-town.forge-type" config setting.
 type ForgeType string
 
+// Detected converts this value into a DetectedForgeType.
 func (self ForgeType) Detected() DetectedForgeType {
 	return DetectedForgeType(self)
 }
