@@ -21,11 +21,10 @@ const (
 )
 
 func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, forgeTypeOpt Option[forgedomain.ForgeType], connector Option[forgedomain.Connector]) string {
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 
+	forgeType, hasForgeType := forgeTypeOpt.Get()
 	spacesPerIndent := spacesPerIndentDefault
 	if hasForgeType && forgeType == forgedomain.ForgeTypeBitbucket {
 		spacesPerIndent = spacesPerIndentBitbucket
