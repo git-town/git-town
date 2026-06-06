@@ -145,7 +145,7 @@ EnterForgeData:
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
 		data:                 data,
-		determinedForgeType:  actualForgeTypeOpt,
+		detectedForgeType:    actualForgeTypeOpt,
 		existingConfig:       data.Config.NormalConfig,
 		forgejoToken:         forgejoToken,
 		giteaToken:           giteaToken,
@@ -842,7 +842,7 @@ type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	data                 Data
-	determinedForgeType  Option[forgedomain.DetectedForgeType]
+	detectedForgeType    Option[forgedomain.DetectedForgeType]
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -868,7 +868,7 @@ func existsAndChanged[T any](input, existing Option[T]) bool {
 }
 
 func shouldAskForScope(args enterTokenScopeArgs) bool {
-	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
+	if forgeType, hasForgeType := args.detectedForgeType.Get(); hasForgeType {
 		switch forgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			return false
@@ -957,7 +957,7 @@ type testForgeAuthArgs struct {
 }
 
 func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
-	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
+	if forgeType, hasForgeType := args.detectedForgeType.Get(); hasForgeType {
 		switch forgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			return configdomain.ConfigScopeLocal, false, nil
