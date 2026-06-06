@@ -27,11 +27,11 @@ flavor = "gfm"
 # text-wrap
 [MD013]
 line-length = 80
-reflow = true # Enable automatic text reflow/wrapping
+reflow = true                        # Enable automatic text reflow/wrapping
 reflow-mode = "semantic-line-breaks" # Reflow mode: "default", "normalize", "sentence-per-line", or "semantic-line-breaks" (default: "default")
-length-mode = "visual" # How to count line length: "visual", "chars", or "bytes" (default: "visual")
-code-blocks = false # Exclude code blocks from line length check
-tables = false # Exclude tables from line length check
+length-mode = "visual"               # How to count line length: "visual", "chars", or "bytes" (default: "visual")
+code-blocks = false                  # Exclude code blocks from line length check
+tables = false                       # Exclude tables from line length check
 # headings = true  # Include headings in line length check
 
 # Proper names that should be capitalized correctly

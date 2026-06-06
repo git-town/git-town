@@ -90,6 +90,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	$(RUMDL) fmt
 	$(DPRINT) fmt
 	$(DPRINT) fmt --config dprint-changelog.json
+	$(TAPLO) format
 	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
 	make --no-print-directory ghokin
 	tools/generate_opcodes_all.sh
