@@ -8,10 +8,8 @@ import (
 	"github.com/git-town/git-town/v23/internal/cli/dialog"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v23/internal/cli/print"
 	"github.com/git-town/git-town/v23/internal/config"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
@@ -49,31 +47,6 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 	}
 	if exit {
 		return configdomain.ProgramFlowExit, errors.New("user aborted")
-	}
-	// Create the connector now if the Git Town command hasn't provided one yet.
-	if args.Connector.IsNone() {
-		normalConfig := args.UnvalidatedConfig.NormalConfig
-		args.Connector, _, err = forge.NewConnector(forge.NewConnectorArgs{
-			Backend:              args.Backend,
-			BitbucketAppPassword: normalConfig.BitbucketAppPassword,
-			BitbucketUsername:    normalConfig.BitbucketUsername,
-			BrowserEnabled:       normalConfig.BrowserEnabled,
-			BrowserExecutable:    normalConfig.BrowserExecutable,
-			ConfigDir:            args.ConfigDir,
-			ForgeType:            normalConfig.ForgeType,
-			ForgejoToken:         normalConfig.ForgejoToken,
-			Frontend:             args.Frontend,
-			GiteaToken:           normalConfig.GiteaToken,
-			GithubConnectorType:  normalConfig.GithubConnectorType,
-			GithubToken:          normalConfig.GithubToken,
-			GitlabConnectorType:  normalConfig.GitlabConnectorType,
-			GitlabToken:          normalConfig.GitlabToken,
-			Log:                  print.Logger{},
-			RemoteURL:            normalConfig.DevURL(args.Backend),
-		})
-		if err != nil {
-			return configdomain.ProgramFlowExit, err
-		}
 	}
 	switch response {
 	case dialog.ResponseBoth:
