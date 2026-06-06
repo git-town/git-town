@@ -16,6 +16,7 @@ type RunArgs struct {
 	BranchInfos                     gitdomain.BranchInfos
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
+	DetectedForgeType               Option[forgedomain.DetectedForgeType]
 	FinalMessages                   stringslice.Collector
 	Frontend                        subshelldomain.Runner
 	Git                             git.Commands

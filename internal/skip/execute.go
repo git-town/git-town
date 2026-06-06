@@ -24,20 +24,21 @@ import (
 )
 
 type ExecuteArgs struct {
-	Backend         subshelldomain.RunnerQuerier
-	CommandsCounter Mutable[gohacks.Counter]
-	Config          config.ValidatedConfig
-	ConfigDir       configdomain.RepoConfigDir
-	Connector       Option[forgedomain.Connector]
-	DryRun          configdomain.DryRun
-	FinalMessages   stringslice.Collector
-	Frontend        subshelldomain.Runner
-	Git             git.Commands
-	HasOpenChanges  bool
-	InitialBranch   gitdomain.LocalBranchName
-	Inputs          dialogcomponents.Inputs
-	Park            configdomain.Park
-	RunState        runstate.RunState
+	Backend           subshelldomain.RunnerQuerier
+	CommandsCounter   Mutable[gohacks.Counter]
+	Config            config.ValidatedConfig
+	ConfigDir         configdomain.RepoConfigDir
+	Connector         Option[forgedomain.Connector]
+	DetectedForgeType Option[forgedomain.DetectedForgeType]
+	DryRun            configdomain.DryRun
+	FinalMessages     stringslice.Collector
+	Frontend          subshelldomain.Runner
+	Git               git.Commands
+	HasOpenChanges    bool
+	InitialBranch     gitdomain.LocalBranchName
+	Inputs            dialogcomponents.Inputs
+	Park              configdomain.Park
+	RunState          runstate.RunState
 }
 
 // executes the "skip" command at the given runstate
@@ -50,14 +51,15 @@ func Execute(args ExecuteArgs) error {
 		})
 	}
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
-		Backend:       args.Backend,
-		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
-		Config:        args.Config,
-		Connector:     args.Connector,
-		FinalMessages: args.FinalMessages,
-		Frontend:      args.Frontend,
-		Git:           args.Git,
-		Prog:          skipProgram,
+		Backend:           args.Backend,
+		BranchInfos:       args.RunState.BeginBranchesSnapshot.Branches,
+		Config:            args.Config,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		Prog:              skipProgram,
 	})
 	args.RunState.AbortProgram = program.Program{}
 	if err := revertChangesToCurrentBranch(args); err != nil {
@@ -70,6 +72,7 @@ func Execute(args ExecuteArgs) error {
 		Config:                  args.Config,
 		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
+		DetectedForgeType:       args.DetectedForgeType,
 		DryRun:                  args.DryRun,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
@@ -126,14 +129,15 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
-		Backend:       args.Backend,
-		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
-		Config:        args.Config,
-		Connector:     args.Connector,
-		FinalMessages: args.FinalMessages,
-		Frontend:      args.Frontend,
-		Git:           args.Git,
-		Prog:          undoCurrentBranchProgram,
+		Backend:           args.Backend,
+		BranchInfos:       args.RunState.BeginBranchesSnapshot.Branches,
+		Config:            args.Config,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		Prog:              undoCurrentBranchProgram,
 	})
 	return nil
 }

@@ -156,6 +156,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -179,6 +180,7 @@ type deleteData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
@@ -197,7 +199,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -223,6 +225,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -318,6 +321,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
+		detectedForgeType:        detectedForgeType,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,

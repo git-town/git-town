@@ -26,6 +26,7 @@ type ExecuteArgs struct {
 	Config                  config.ValidatedConfig
 	ConfigDir               configdomain.RepoConfigDir
 	Connector               Option[forgedomain.Connector]
+	DetectedForgeType       Option[forgedomain.DetectedForgeType]
 	DryRun                  configdomain.DryRun
 	FinalMessages           stringslice.Collector
 	Frontend                subshelldomain.Runner
@@ -77,6 +78,7 @@ func Execute(args ExecuteArgs) error {
 			BranchInfos:                     args.InitialBranchesSnapshot.Branches,
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
+			DetectedForgeType:               args.DetectedForgeType,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,

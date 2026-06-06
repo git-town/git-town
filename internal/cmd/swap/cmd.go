@@ -155,6 +155,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -180,6 +181,7 @@ type swapData struct {
 	currentBranchName     gitdomain.LocalBranchName
 	currentBranchProposal Option[forgedomain.Proposal]
 	currentBranchType     configdomain.BranchType
+	detectedForgeType     Option[forgedomain.DetectedForgeType]
 	grandParentBranch     gitdomain.LocalBranchName
 	hasOpenChanges        bool
 	initialBranch         gitdomain.LocalBranchName
@@ -207,7 +209,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -233,6 +235,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -374,6 +377,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		currentBranchName:     currentBranch,
 		currentBranchProposal: currentbranchProposal,
 		currentBranchType:     currentBranchType,
+		detectedForgeType:     detectedForgeType,
 		grandParentBranch:     grandParentBranch,
 		hasOpenChanges:        repoStatus.OpenChanges,
 		initialBranch:         initialBranch,
