@@ -106,7 +106,6 @@ type UnfinishedStateArgs struct {
 	Git               git.Commands
 	HasOpenChanges    bool
 	Inputs            dialogcomponents.Inputs
-	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RunState          Option[runstate.RunState]
 	UnvalidatedConfig config.UnvalidatedConfig
