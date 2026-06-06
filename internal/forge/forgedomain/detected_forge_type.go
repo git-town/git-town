@@ -11,10 +11,13 @@ type DetectedForgeType ForgeType
 func (self DetectedForgeType) ForgeType() ForgeType { return ForgeType(self) }
 
 func IsBitbucket(forgeTypeOpt Option[DetectedForgeType]) bool {
-	detectedForgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return false
+	if detectedForgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch detectedForgeType.ForgeType() {
+		case ForgeTypeBitbucket, ForgeTypeBitbucketDatacenter:
+			return true
+		case ForgeTypeAzuredevops, ForgeTypeForgejo, ForgeTypeGitea, ForgeTypeGithub, ForgeTypeGitlab:
+			return false
+		}
 	}
-	forgeType := detectedForgeType.ForgeType()
-	return forgeType == ForgeTypeBitbucket || forgeType == ForgeTypeBitbucketDatacenter
+	return false
 }
