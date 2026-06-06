@@ -27,6 +27,7 @@ type sharedShipData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
@@ -53,7 +54,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := args.repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -196,6 +197,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
+		detectedForgeType:        detectedForgeType,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,

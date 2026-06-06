@@ -130,6 +130,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -150,6 +151,7 @@ type renameData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
@@ -171,7 +173,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -305,6 +307,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
+		detectedForgeType:        detectedForgeType,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,

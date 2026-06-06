@@ -217,6 +217,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -243,6 +244,7 @@ type prependData struct {
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
+	detectedForgeType   Option[forgedomain.DetectedForgeType]
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -274,7 +276,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prepen
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -423,6 +425,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prepen
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
+		detectedForgeType:   detectedForgeType,
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,

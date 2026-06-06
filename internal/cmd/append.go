@@ -208,6 +208,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -234,6 +235,7 @@ type appendFeatureData struct {
 	commitsToBeam             gitdomain.Commits
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
+	detectedForgeType         Option[forgedomain.DetectedForgeType]
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	initialBranchInfo         *gitdomain.BranchInfo
@@ -261,7 +263,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -400,6 +402,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
+		detectedForgeType:         detectedForgeType,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

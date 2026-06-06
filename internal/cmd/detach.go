@@ -158,6 +158,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -183,6 +184,7 @@ type detachData struct {
 	children               []detachChildBranch
 	config                 config.ValidatedConfig
 	connector              Option[forgedomain.Connector]
+	detectedForgeType      Option[forgedomain.DetectedForgeType]
 	descendents            []detachChildBranch
 	hasOpenChanges         bool
 	initialBranch          gitdomain.LocalBranchName
@@ -207,7 +209,7 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -369,6 +371,7 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 		config:                 validatedConfig,
 		connector:              connector,
 		descendents:            descendents,
+		detectedForgeType:      detectedForgeType,
 		hasOpenChanges:         repoStatus.OpenChanges,
 		initialBranch:          initialBranch,
 		inputs:                 inputs,

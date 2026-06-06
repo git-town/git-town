@@ -172,6 +172,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,

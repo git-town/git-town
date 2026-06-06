@@ -220,6 +220,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -241,6 +242,7 @@ type setParentData struct {
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	defaultChoice      gitdomain.LocalBranchName
+	detectedForgeType  Option[forgedomain.DetectedForgeType]
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	inputs             dialogcomponents.Inputs
@@ -256,7 +258,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -353,6 +355,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		config:             validatedConfig,
 		connector:          connector,
 		defaultChoice:      defaultChoice,
+		detectedForgeType:  detectedForgeType,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		inputs:             inputs,
