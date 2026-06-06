@@ -53,7 +53,8 @@ EnterForgeData:
 		return emptyResult, exit, false, err
 	}
 	devURL := data.Config.NormalConfig.DevURL(data.Backend)
-	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
+	actualForgeTypeOpt := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
+	actualForgeType, hasActualForgeType := actualForgeTypeOpt.Get()
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	forgejoToken := None[forgedomain.ForgejoToken]()
@@ -62,8 +63,8 @@ EnterForgeData:
 	githubToken := None[forgedomain.GithubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitlabConnectorType]()
 	gitlabToken := None[forgedomain.GitlabToken]()
-	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
-		switch forgeType {
+	if hasActualForgeType {
+		switch actualForgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			// the Azure DevOps connector doesn't have connectivity to the API implemented for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -123,7 +124,7 @@ EnterForgeData:
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
 		configDir:            configDir,
 		devURL:               devURL,
-		forgeTypeOpt:         actualForgeType,
+		forgeTypeOpt:         actualForgeTypeOpt,
 		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
 		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GithubConnectorType),
@@ -144,7 +145,7 @@ EnterForgeData:
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
 		data:                 data,
-		determinedForgeType:  actualForgeType,
+		detectedForgeType:    actualForgeTypeOpt,
 		existingConfig:       data.Config.NormalConfig,
 		forgejoToken:         forgejoToken,
 		giteaToken:           giteaToken,
@@ -347,16 +348,16 @@ EnterForgeData:
 	validatedData := configdomain.ValidatedConfigData{
 		MainBranch: mainBranchResult.ActualMainBranch,
 	}
-	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, enterAll, nil
+	return UserInput{normalData, actualForgeTypeOpt, tokenScope, configStorage, validatedData}, false, enterAll, nil
 }
 
 // data entered by the user in the setup assistant
 type UserInput struct {
-	Data                configdomain.PartialConfig
-	DeterminedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
-	Scope               configdomain.ConfigScope
-	StorageLocation     dialog.ConfigStorageOption
-	ValidatedConfig     configdomain.ValidatedConfigData
+	Data              configdomain.PartialConfig
+	DetectedForgeType Option[forgedomain.DetectedForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
+	Scope             configdomain.ConfigScope
+	StorageLocation   dialog.ConfigStorageOption
+	ValidatedConfig   configdomain.ValidatedConfigData
 }
 
 func determineExistingScope[T ~string](configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValueOpt Option[T]) configdomain.ConfigScope {
@@ -369,14 +370,14 @@ func determineExistingScope[T ~string](configSnapshot configdomain.BeginConfigSn
 	return configdomain.ConfigScopeLocal
 }
 
-func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
-	if userChoice.IsSome() {
-		return userChoice
+func determineForgeType(userChoiceOpt Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.DetectedForgeType] {
+	if userChoice, hasUserChoice := userChoiceOpt.Get(); hasUserChoice {
+		return Some(userChoice.Detected())
 	}
 	if devURL, hasDevURL := devURL.Get(); hasDevURL {
-		return forge.Detect(devURL, userChoice)
+		return forge.Detect(devURL, userChoiceOpt)
 	}
-	return None[forgedomain.ForgeType]()
+	return None[forgedomain.DetectedForgeType]()
 }
 
 func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit, error) {
@@ -841,7 +842,7 @@ type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	data                 Data
-	determinedForgeType  Option[forgedomain.ForgeType]
+	detectedForgeType    Option[forgedomain.DetectedForgeType]
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -867,8 +868,8 @@ func existsAndChanged[T any](input, existing Option[T]) bool {
 }
 
 func shouldAskForScope(args enterTokenScopeArgs) bool {
-	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
-		switch forgeType {
+	if forgeType, hasForgeType := args.detectedForgeType.Get(); hasForgeType {
+		switch forgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			return false
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -887,18 +888,23 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 	return false
 }
 
+// TODO: remove the exit return value, it is redundant with the ProgramFlow return value
 func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return configdomain.ProgramFlowContinue, false, nil
 	}
-	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+	detectedForgeType, hasDetectedForgeType := args.forgeTypeOpt.Get()
+	if !hasDetectedForgeType {
+		return configdomain.ProgramFlowContinue, false, nil
+	}
+	connectorOpt, _, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
 		BrowserEnabled:       false,
 		BrowserExecutable:    None[browserdomain.BrowserExecutable](),
 		ConfigDir:            args.configDir,
-		ForgeType:            args.forgeTypeOpt,
+		ForgeType:            Some(detectedForgeType.ForgeType()),
 		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
 		GiteaToken:           args.giteaToken,
@@ -938,7 +944,7 @@ type testForgeAuthArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	configDir            configdomain.RepoConfigDir
 	devURL               Option[giturl.Parts]
-	forgeTypeOpt         Option[forgedomain.ForgeType]
+	forgeTypeOpt         Option[forgedomain.DetectedForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubConnectorType  Option[forgedomain.GithubConnectorType]
@@ -951,8 +957,8 @@ type testForgeAuthArgs struct {
 }
 
 func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
-	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
-		switch forgeType {
+	if forgeType, hasForgeType := args.detectedForgeType.Get(); hasForgeType {
+		switch forgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:

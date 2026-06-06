@@ -192,6 +192,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -222,7 +223,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -258,6 +259,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -412,6 +414,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
+		detectedForgeType:         detectedForgeType,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

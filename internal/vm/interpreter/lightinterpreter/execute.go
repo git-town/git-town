@@ -33,6 +33,7 @@ func Execute(args ExecuteArgs) {
 			BranchInfos:                     args.BranchInfos,
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
+			DetectedForgeType:               args.DetectedForgeType,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
@@ -48,12 +49,13 @@ func Execute(args ExecuteArgs) {
 }
 
 type ExecuteArgs struct {
-	Backend       subshelldomain.RunnerQuerier
-	BranchInfos   gitdomain.BranchInfos
-	Config        config.ValidatedConfig
-	Connector     Option[forgedomain.Connector]
-	FinalMessages stringslice.Collector
-	Frontend      subshelldomain.Runner
-	Git           git.Commands
-	Prog          program.Program
+	Backend           subshelldomain.RunnerQuerier
+	BranchInfos       gitdomain.BranchInfos
+	Config            config.ValidatedConfig
+	Connector         Option[forgedomain.Connector]
+	DetectedForgeType Option[forgedomain.DetectedForgeType]
+	FinalMessages     stringslice.Collector
+	Frontend          subshelldomain.Runner
+	Git               git.Commands
+	Prog              program.Program
 }

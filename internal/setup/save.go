@@ -20,8 +20,8 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
 	)
-	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
-		switch forgeType {
+	if forgeType, hasForgeType := userInput.DetectedForgeType.Get(); hasForgeType {
+		switch forgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
 			// no API token for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
