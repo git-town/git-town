@@ -172,6 +172,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -195,6 +196,7 @@ type proposeData struct {
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
+	detectedForgeType   Option[forgedomain.DetectedForgeType]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
@@ -232,7 +234,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+	connectorOpt, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -258,6 +260,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connectorOpt,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -348,6 +351,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
+		detectedForgeType:   detectedForgeType,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
@@ -405,6 +409,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
+				ForgeType:     data.detectedForgeType,
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})

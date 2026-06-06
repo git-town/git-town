@@ -20,17 +20,18 @@ import (
 )
 
 type ExecuteArgs struct {
-	Backend          subshelldomain.RunnerQuerier
-	CommandsCounter  Mutable[gohacks.Counter]
-	Config           config.ValidatedConfig
-	ConfigDir        configdomain.RepoConfigDir
-	Connector        Option[forgedomain.Connector]
-	FinalMessages    stringslice.Collector
-	Frontend         subshelldomain.Runner
-	Git              git.Commands
-	HasOpenChanges   bool
-	InitialStashSize gitdomain.StashSize
-	RunState         runstate.RunState
+	Backend           subshelldomain.RunnerQuerier
+	CommandsCounter   Mutable[gohacks.Counter]
+	Config            config.ValidatedConfig
+	ConfigDir         configdomain.RepoConfigDir
+	Connector         Option[forgedomain.Connector]
+	DetectedForgeType Option[forgedomain.DetectedForgeType]
+	FinalMessages     stringslice.Collector
+	Frontend          subshelldomain.Runner
+	Git               git.Commands
+	HasOpenChanges    bool
+	InitialStashSize  gitdomain.StashSize
+	RunState          runstate.RunState
 }
 
 // undoes the persisted runstate
@@ -49,14 +50,15 @@ func Execute(args ExecuteArgs) error {
 		RunState:       args.RunState,
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
-		Backend:       args.Backend,
-		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
-		Config:        args.Config,
-		Connector:     args.Connector,
-		FinalMessages: args.FinalMessages,
-		Frontend:      args.Frontend,
-		Git:           args.Git,
-		Prog:          program,
+		Backend:           args.Backend,
+		BranchInfos:       args.RunState.BeginBranchesSnapshot.Branches,
+		Config:            args.Config,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		Prog:              program,
 	})
 	runstatePath := runstate.NewRunstatePath(args.ConfigDir)
 	err := os.Remove(runstatePath.String())

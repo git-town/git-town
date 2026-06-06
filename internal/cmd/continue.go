@@ -98,6 +98,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -121,7 +122,7 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -147,6 +148,7 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -209,24 +211,26 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		}
 	}
 	return continueData{
-		branchesSnapshot: branchesSnapshot,
-		config:           validatedConfig,
-		connector:        connector,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		inputs:           inputs,
-		stashSize:        stashSize,
+		branchesSnapshot:  branchesSnapshot,
+		config:            validatedConfig,
+		connector:         connector,
+		detectedForgeType: detectedForgeType,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     initialBranch,
+		inputs:            inputs,
+		stashSize:         stashSize,
 	}, configdomain.ProgramFlowContinue, err
 }
 
 type continueData struct {
-	branchesSnapshot gitdomain.BranchesSnapshot
-	config           config.ValidatedConfig
-	connector        Option[forgedomain.Connector]
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	inputs           dialogcomponents.Inputs
-	stashSize        gitdomain.StashSize
+	branchesSnapshot  gitdomain.BranchesSnapshot
+	config            config.ValidatedConfig
+	connector         Option[forgedomain.Connector]
+	detectedForgeType Option[forgedomain.DetectedForgeType]
+	hasOpenChanges    bool
+	initialBranch     gitdomain.LocalBranchName
+	inputs            dialogcomponents.Inputs
+	stashSize         gitdomain.StashSize
 }
 
 func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {

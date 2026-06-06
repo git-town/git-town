@@ -40,6 +40,7 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 			Connector:     args.Connector,
 			CurrentBranch: self.Branch,
 			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
+			ForgeType:     args.DetectedForgeType,
 			Lineage:       args.Config.Value.NormalConfig.Lineage,
 			Order:         args.Config.Value.NormalConfig.Order,
 		})

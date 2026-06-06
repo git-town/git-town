@@ -212,6 +212,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
+		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -127,6 +127,7 @@ func LoadData(repo execute.OpenRepoResult) (setup.Data, configdomain.ProgramFlow
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
+		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

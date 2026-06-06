@@ -155,6 +155,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -176,6 +177,7 @@ type mergeData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	initialBranchInfo        gitdomain.BranchInfo
@@ -199,7 +201,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -225,6 +227,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -320,6 +323,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
+		detectedForgeType:        detectedForgeType,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		initialBranchInfo:        *initialBranchInfo,

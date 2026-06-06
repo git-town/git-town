@@ -103,7 +103,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, er
 		return repoData{connector: nil}, nil
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+	connectorOpt, _, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
