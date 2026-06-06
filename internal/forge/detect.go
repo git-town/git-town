@@ -15,7 +15,7 @@ import (
 
 func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) Option[forgedomain.DetectedForgeType] {
 	if override, hasOverride := userOverride.Get(); hasOverride {
-		return Some(forgedomain.DetectedForgeType(override))
+		return Some(override.Detected())
 	}
 	detectors := []detector{
 		{forgedomain.ForgeTypeAzuredevops, azuredevops.Detect},
