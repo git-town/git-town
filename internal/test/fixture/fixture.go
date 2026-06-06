@@ -51,6 +51,52 @@ type Fixture struct {
 	UpstreamRepo OptionalMutable[commands.TestCommands]
 }
 
+// AddBareRepoLinkedWorktree creates a bare clone of the origin repo, sets its HEAD to
+// "main", then adds a linked worktree from that bare clone checking out the given branch.
+// The result is stored in SecondWorktree so the standard "I run X in the other worktree"
+// steps work. This replicates the setup where a developer's working directory is a linked
+// worktree of a bare repo, which means "main" shows a worktreepath in git for-each-ref.
+func (self *Fixture) AddBareRepoLinkedWorktree(branch gitdomain.LocalBranchName) {
+	devRepo := self.DevRepo.GetOrPanic()
+	originRepo := self.OriginRepo.GetOrPanic()
+	bareDir := filepath.Join(self.Dir, "bare_origin")
+	devRepo.MustRun("git", "clone", "--bare", originRepo.WorkingDir, bareDir)
+	// Point the bare repo's HEAD to main so that main appears with a worktreepath
+	// in git for-each-ref output from linked worktrees.
+	devRepo.MustRun("git", "-C", bareDir, "symbolic-ref", "HEAD", "refs/heads/main")
+	worktreeDir := filepath.Join(self.Dir, "bare_linked_worktree")
+	// git clone --bare does not set up remote-tracking refs (refs/remotes/origin/*)
+	// or branch tracking by default. Add the standard fetch refspec, fetch once
+	// to populate refs/remotes/origin/*, and configure branch tracking so that
+	// git-town sees the linked worktree as a normal clone.
+	devRepo.MustRun("git", "-C", bareDir, "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*")
+	devRepo.MustRun("git", "-C", bareDir, "fetch", "origin")
+	devRepo.MustRun("git", "-C", bareDir, "config", "branch.main.remote", "origin")
+	devRepo.MustRun("git", "-C", bareDir, "config", "branch.main.merge", "refs/heads/main")
+	devRepo.MustRun("git", "-C", bareDir, "config", "branch."+branch.String()+".remote", "origin")
+	devRepo.MustRun("git", "-C", bareDir, "config", "branch."+branch.String()+".merge", "refs/heads/"+branch.String())
+	devRepo.MustRun("git", "-C", bareDir, "worktree", "add", worktreeDir, branch.String())
+	// Configure git-town in the bare clone so that the linked worktree inherits it.
+	devRepo.MustRun("git", "-C", bareDir, "config", "git-town.main-branch", "main")
+	devRepo.MustRun("git", "-C", bareDir, "config", "git-town-branch."+branch.String()+".parent", "main")
+	runner := subshell.TestRunner{
+		BinDir:     devRepo.BinDir,
+		HomeDir:    devRepo.HomeDir,
+		Verbose:    devRepo.Verbose,
+		WorkingDir: worktreeDir,
+	}
+	gitCommands := git.Commands{
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
+	}
+	self.SecondWorktree = MutableSome(&commands.TestCommands{
+		TestRunner: &runner,
+		Git:        &gitCommands,
+		Config:     devRepo.Config,
+		SnapShots:  devRepo.SnapShots,
+	})
+}
+
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())

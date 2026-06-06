@@ -8,10 +8,8 @@ import (
 	"github.com/git-town/git-town/v23/internal/cli/dialog"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v23/internal/cli/print"
 	"github.com/git-town/git-town/v23/internal/config"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
@@ -50,31 +48,6 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 	if exit {
 		return configdomain.ProgramFlowExit, errors.New("user aborted")
 	}
-	// Create the connector now if the Git Town command hasn't provided one yet.
-	if args.Connector.IsNone() {
-		normalConfig := args.UnvalidatedConfig.NormalConfig
-		args.Connector, err = forge.NewConnector(forge.NewConnectorArgs{
-			Backend:              args.Backend,
-			BitbucketAppPassword: normalConfig.BitbucketAppPassword,
-			BitbucketUsername:    normalConfig.BitbucketUsername,
-			BrowserEnabled:       normalConfig.BrowserEnabled,
-			BrowserExecutable:    normalConfig.BrowserExecutable,
-			ConfigDir:            args.ConfigDir,
-			ForgeType:            normalConfig.ForgeType,
-			ForgejoToken:         normalConfig.ForgejoToken,
-			Frontend:             args.Frontend,
-			GiteaToken:           normalConfig.GiteaToken,
-			GithubConnectorType:  normalConfig.GithubConnectorType,
-			GithubToken:          normalConfig.GithubToken,
-			GitlabConnectorType:  normalConfig.GitlabConnectorType,
-			GitlabToken:          normalConfig.GitlabToken,
-			Log:                  print.Logger{},
-			RemoteURL:            normalConfig.DevURL(args.Backend),
-		})
-		if err != nil {
-			return configdomain.ProgramFlowExit, err
-		}
-	}
 	switch response {
 	case dialog.ResponseBoth:
 		_, err := continueRunstate(runState, args)
@@ -99,13 +72,13 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigDir         configdomain.RepoConfigDir
 	Connector         Option[forgedomain.Connector]
+	DetectedForgeType Option[forgedomain.DetectedForgeType]
 	DryRun            configdomain.DryRun
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands
 	HasOpenChanges    bool
 	Inputs            dialogcomponents.Inputs
-	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RunState          Option[runstate.RunState]
 	UnvalidatedConfig config.UnvalidatedConfig
@@ -130,6 +103,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		Config:                  validatedConfig,
 		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
+		DetectedForgeType:       args.DetectedForgeType,
 		DryRun:                  runState.DryRun,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
@@ -211,20 +185,21 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		return configdomain.ProgramFlowExit, err
 	}
 	return configdomain.ProgramFlowExit, skip.Execute(skip.ExecuteArgs{
-		Backend:         args.Backend,
-		CommandsCounter: args.CommandsCounter,
-		Config:          validatedConfig,
-		ConfigDir:       args.ConfigDir,
-		Connector:       args.Connector,
-		DryRun:          args.DryRun,
-		FinalMessages:   args.FinalMessages,
-		Frontend:        args.Frontend,
-		Git:             args.Git,
-		HasOpenChanges:  args.HasOpenChanges,
-		InitialBranch:   currentBranch,
-		Inputs:          args.Inputs,
-		Park:            false,
-		RunState:        runState,
+		Backend:           args.Backend,
+		CommandsCounter:   args.CommandsCounter,
+		Config:            validatedConfig,
+		ConfigDir:         args.ConfigDir,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		DryRun:            args.DryRun,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		HasOpenChanges:    args.HasOpenChanges,
+		InitialBranch:     currentBranch,
+		Inputs:            args.Inputs,
+		Park:              false,
+		RunState:          runState,
 	})
 }
 
@@ -239,17 +214,18 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		return configdomain.ProgramFlowExit, err
 	}
 	return configdomain.ProgramFlowExit, undo.Execute(undo.ExecuteArgs{
-		Backend:          args.Backend,
-		CommandsCounter:  args.CommandsCounter,
-		Config:           validatedConfig,
-		ConfigDir:        args.ConfigDir,
-		Connector:        args.Connector,
-		FinalMessages:    args.FinalMessages,
-		Frontend:         args.Frontend,
-		Git:              args.Git,
-		HasOpenChanges:   args.HasOpenChanges,
-		InitialStashSize: runState.BeginStashSize,
-		RunState:         runState,
+		Backend:           args.Backend,
+		CommandsCounter:   args.CommandsCounter,
+		Config:            validatedConfig,
+		ConfigDir:         args.ConfigDir,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		HasOpenChanges:    args.HasOpenChanges,
+		InitialStashSize:  runState.BeginStashSize,
+		RunState:          runState,
 	})
 }
 
