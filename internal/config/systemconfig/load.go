@@ -36,7 +36,7 @@ func Load() configdomain.PartialConfig {
 		DisplayTypes:                None[configdomain.DisplayTypes](),
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                None[configdomain.FeatureRegex](),
-		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgeType:                   None[forgedomain.ConfiguredForgeType](),
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),

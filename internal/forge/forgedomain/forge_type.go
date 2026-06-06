@@ -9,27 +9,27 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-// ForgeType defines legal values for the "git-town.forge-type" config setting.
-type ForgeType string
+// ConfiguredForgeType defines legal values for the "git-town.forge-type" config setting.
+type ConfiguredForgeType string
 
-func (self ForgeType) String() string { return string(self) }
+func (self ConfiguredForgeType) String() string { return string(self) }
 
 const (
 	// keep-sorted start
-	ForgeTypeAzuredevops         ForgeType = "azuredevops"
-	ForgeTypeBitbucket           ForgeType = "bitbucket"
-	ForgeTypeBitbucketDatacenter ForgeType = "bitbucket-datacenter"
-	ForgeTypeForgejo             ForgeType = "forgejo"
-	ForgeTypeGitea               ForgeType = "gitea"
-	ForgeTypeGithub              ForgeType = "github"
-	ForgeTypeGitlab              ForgeType = "gitlab"
+	ForgeTypeAzuredevops         ConfiguredForgeType = "azuredevops"
+	ForgeTypeBitbucket           ConfiguredForgeType = "bitbucket"
+	ForgeTypeBitbucketDatacenter ConfiguredForgeType = "bitbucket-datacenter"
+	ForgeTypeForgejo             ConfiguredForgeType = "forgejo"
+	ForgeTypeGitea               ConfiguredForgeType = "gitea"
+	ForgeTypeGithub              ConfiguredForgeType = "github"
+	ForgeTypeGitlab              ConfiguredForgeType = "gitlab"
 	// keep-sorted end
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.
-func ParseForgeType(name stringss.Trimmed, source string) (Option[ForgeType], error) {
+func ParseForgeType(name stringss.Trimmed, source string) (Option[ConfiguredForgeType], error) {
 	if name == "" {
-		return None[ForgeType](), nil
+		return None[ConfiguredForgeType](), nil
 	}
 	nameLower := strings.ToLower(name.String())
 	for _, forgeType := range forgeTypes() {
@@ -37,12 +37,12 @@ func ParseForgeType(name stringss.Trimmed, source string) (Option[ForgeType], er
 			return Some(forgeType), nil
 		}
 	}
-	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, source, name)
+	return None[ConfiguredForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, source, name)
 }
 
 // forgeTypes provides all legal values for ForgeType
-func forgeTypes() []ForgeType {
-	return []ForgeType{
+func forgeTypes() []ConfiguredForgeType {
+	return []ConfiguredForgeType{
 		// keep-sorted start
 		ForgeTypeAzuredevops,
 		ForgeTypeBitbucket,
@@ -55,4 +55,4 @@ func forgeTypes() []ForgeType {
 	}
 }
 
-type DetectedForgeType ForgeType
+type DetectedForgeType ConfiguredForgeType

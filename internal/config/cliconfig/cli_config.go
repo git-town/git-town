@@ -42,7 +42,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		DisplayTypes:                args.DisplayTypes,
 		DryRun:                      args.DryRun,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
-		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgeType:                   None[forgedomain.ConfiguredForgeType](),
 		GithubConnectorType:         None[forgedomain.GithubConnectorType](),
 		GithubToken:                 None[forgedomain.GithubToken](),
 		GitlabConnectorType:         None[forgedomain.GitlabConnectorType](),

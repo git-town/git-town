@@ -20,7 +20,7 @@ const (
 	spacesPerIndentBitbucket = 4
 )
 
-func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, forgeType Option[forgedomain.ForgeType], connector Option[forgedomain.Connector]) string {
+func RenderTree(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, direction configdomain.ProposalBreadcrumbDirection, forgeType Option[forgedomain.ConfiguredForgeType], connector Option[forgedomain.Connector]) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 

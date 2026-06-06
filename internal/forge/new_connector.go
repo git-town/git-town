@@ -24,7 +24,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 	remoteURL, hasRemoteURL := args.RemoteURL.Get()
 	forgeType, hasForgeType := Detect(remoteURL, args.ForgeType).Get()
 	if !hasRemoteURL || !hasForgeType {
-		return None[forgedomain.Connector](), None[forgedomain.ForgeType](), nil
+		return None[forgedomain.Connector](), None[forgedomain.ConfiguredForgeType](), nil
 	}
 	var connector forgedomain.Connector
 	var err error
@@ -132,7 +132,7 @@ type NewConnectorArgs struct {
 	BrowserEnabled       browserdomain.BrowserEnabled
 	BrowserExecutable    Option[browserdomain.BrowserExecutable]
 	ConfigDir            configdomain.RepoConfigDir
-	ForgeType            Option[forgedomain.ForgeType]
+	ForgeType            Option[forgedomain.ConfiguredForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
 	GiteaToken           Option[forgedomain.GiteaToken]

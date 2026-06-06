@@ -75,7 +75,7 @@ func TestEntries(t *testing.T) {
 		t.Parallel()
 		t.Run("works with comparable types", func(t *testing.T) {
 			t.Parallel()
-			entries := list.Entries[forgedomain.ForgeType]{
+			entries := list.Entries[forgedomain.ConfiguredForgeType]{
 				{
 					Data: forgedomain.ForgeTypeGithub,
 					Text: "GitHub",
@@ -91,9 +91,9 @@ func TestEntries(t *testing.T) {
 		})
 		t.Run("works with options", func(t *testing.T) {
 			t.Parallel()
-			entries := list.Entries[Option[forgedomain.ForgeType]]{
+			entries := list.Entries[Option[forgedomain.ConfiguredForgeType]]{
 				{
-					Data: None[forgedomain.ForgeType](),
+					Data: None[forgedomain.ConfiguredForgeType](),
 					Text: "auto-detect",
 				},
 				{
@@ -115,9 +115,9 @@ func TestEntries(t *testing.T) {
 		t.Parallel()
 		t.Run("works with options", func(t *testing.T) {
 			t.Parallel()
-			entries := list.Entries[Option[forgedomain.ForgeType]]{
+			entries := list.Entries[Option[forgedomain.ConfiguredForgeType]]{
 				{
-					Data: None[forgedomain.ForgeType](),
+					Data: None[forgedomain.ConfiguredForgeType](),
 					Text: "auto-detect",
 				},
 				{
@@ -129,7 +129,7 @@ func TestEntries(t *testing.T) {
 					Text: "GitLab",
 				},
 			}
-			have := entries.IndexOfFunc(Some(forgedomain.ForgeTypeGithub), func(a, b Option[forgedomain.ForgeType]) bool {
+			have := entries.IndexOfFunc(Some(forgedomain.ForgeTypeGithub), func(a, b Option[forgedomain.ConfiguredForgeType]) bool {
 				return a.Equal(b)
 			})
 			want := 1

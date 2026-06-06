@@ -32,7 +32,7 @@ type PartialConfig struct {
 	DisplayTypes                Option[DisplayTypes]
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
-	ForgeType                   Option[forgedomain.ForgeType]
+	ForgeType                   Option[forgedomain.ConfiguredForgeType]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]

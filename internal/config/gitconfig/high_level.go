@@ -241,7 +241,7 @@ func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureReg
 	return SetConfigValue(runner, scope, configdomain.KeyFeatureRegex, regex.String())
 }
 
-func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType, scope configdomain.ConfigScope) error {
+func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ConfiguredForgeType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyForgeType, forgeType.String())
 }
 

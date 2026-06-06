@@ -59,7 +59,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		devRemote                   Option[gitdomain.Remote]
 		displayTypes                Option[configdomain.DisplayTypes]
 		featureRegex                Option[configdomain.FeatureRegex]
-		forgeType                   Option[forgedomain.ForgeType]
+		forgeType                   Option[forgedomain.ConfiguredForgeType]
 		githubConnectorType         Option[forgedomain.GithubConnectorType]
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]

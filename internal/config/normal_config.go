@@ -45,7 +45,7 @@ type NormalConfig struct {
 	DisplayTypes                configdomain.DisplayTypes
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
-	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
+	ForgeType                   Option[forgedomain.ConfiguredForgeType] // None = auto-detect
 	ForgejoToken                Option[forgedomain.ForgejoToken]
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]
@@ -275,7 +275,7 @@ func DefaultNormalConfig() NormalConfig {
 		},
 		DryRun:                      false,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
-		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgeType:                   None[forgedomain.ConfiguredForgeType](),
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),

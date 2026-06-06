@@ -353,7 +353,7 @@ EnterForgeData:
 // data entered by the user in the setup assistant
 type UserInput struct {
 	Data                configdomain.PartialConfig
-	DeterminedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
+	DeterminedForgeType Option[forgedomain.ConfiguredForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	Scope               configdomain.ConfigScope
 	StorageLocation     dialog.ConfigStorageOption
 	ValidatedConfig     configdomain.ValidatedConfigData
@@ -369,14 +369,14 @@ func determineExistingScope[T ~string](configSnapshot configdomain.BeginConfigSn
 	return configdomain.ConfigScopeLocal
 }
 
-func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
+func determineForgeType(userChoice Option[forgedomain.ConfiguredForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ConfiguredForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
 	if devURL, hasDevURL := devURL.Get(); hasDevURL {
 		return forge.Detect(devURL, userChoice)
 	}
-	return None[forgedomain.ForgeType]()
+	return None[forgedomain.ConfiguredForgeType]()
 }
 
 func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit, error) {
@@ -475,11 +475,11 @@ func enterFeatureRegex(data Data) (Option[configdomain.FeatureRegex], dialogdoma
 	})
 }
 
-func enterForgeType(data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+func enterForgeType(data Data) (Option[forgedomain.ConfiguredForgeType], dialogdomain.Exit, error) {
 	if data.Config.File.ForgeType.IsSome() {
-		return None[forgedomain.ForgeType](), false, nil
+		return None[forgedomain.ConfiguredForgeType](), false, nil
 	}
-	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
+	return dialog.ForgeType(dialog.Args[forgedomain.ConfiguredForgeType]{
 		Global:      data.Config.GitGlobal.ForgeType,
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
@@ -841,7 +841,7 @@ type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	data                 Data
-	determinedForgeType  Option[forgedomain.ForgeType]
+	determinedForgeType  Option[forgedomain.ConfiguredForgeType]
 	existingConfig       config.NormalConfig
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
@@ -938,7 +938,7 @@ type testForgeAuthArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	configDir            configdomain.RepoConfigDir
 	devURL               Option[giturl.Parts]
-	forgeTypeOpt         Option[forgedomain.ForgeType]
+	forgeTypeOpt         Option[forgedomain.ConfiguredForgeType]
 	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubConnectorType  Option[forgedomain.GithubConnectorType]

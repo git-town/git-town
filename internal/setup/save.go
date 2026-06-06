@@ -448,7 +448,7 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 	return nil
 }
 
-func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) error {
+func saveForgeType(valueToWriteToGit Option[forgedomain.ConfiguredForgeType], valueAlreadyInGit Option[forgedomain.ConfiguredForgeType], frontend subshelldomain.Runner) error {
 	oldValue, oldHas := valueAlreadyInGit.Get()
 	newValue, newHas := valueToWriteToGit.Get()
 	if !oldHas && !newHas {
