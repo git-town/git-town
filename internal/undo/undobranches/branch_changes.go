@@ -196,11 +196,16 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
-		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			result.Add(&opcodes.BranchTrackingDelete{
-				Branch: addedRemoteBranch,
-			})
+		if addedRemoteBranch.Remote() == gitdomain.RemoteUpstream {
+			continue
 		}
+		if addedRemoteBranch.LocalBranchName() == args.Config.ValidatedConfigData.MainBranch {
+			// never delete the remote main branch
+			continue
+		}
+		result.Add(&opcodes.BranchTrackingDelete{
+			Branch: addedRemoteBranch,
+		})
 	}
 
 	// This must be a CheckoutIfExists opcode because this branch might not exist
