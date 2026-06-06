@@ -12,7 +12,7 @@ type RenderSectionArgs struct {
 	Connector     Option[forgedomain.Connector]
 	CurrentBranch gitdomain.LocalBranchName
 	Direction     configdomain.ProposalBreadcrumbDirection
-	ForgeType     Option[forgedomain.DetectedForgeType] // the actually determined forge type, not the one that the user configured
+	ForgeType     Option[forgedomain.DetectedForgeType]
 	Lineage       configdomain.Lineage
 	Order         configdomain.Order
 }
