@@ -6,11 +6,12 @@ import (
 	"github.com/git-town/git-town/v23/internal/messages"
 	"github.com/git-town/git-town/v23/internal/proposallineage"
 	"github.com/git-town/git-town/v23/internal/vm/shared"
+	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
 type ProposalUpdateBreadcrumb struct {
 	Branch    gitdomain.LocalBranchName
-	ForgeType forgedomain.DetectedForgeType
+	ForgeType Option[forgedomain.DetectedForgeType]
 }
 
 func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
@@ -41,7 +42,7 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 			Connector:     args.Connector,
 			CurrentBranch: self.Branch,
 			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
-			ForgeType:     self.DeterminedForgeType,
+			ForgeType:     self.ForgeType,
 			Lineage:       args.Config.Value.NormalConfig.Lineage,
 			Order:         args.Config.Value.NormalConfig.Order,
 		})

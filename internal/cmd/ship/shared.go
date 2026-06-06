@@ -53,7 +53,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := args.repo.UnvalidatedConfig.NormalConfig
-	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,

@@ -53,7 +53,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 	// Create the connector now if the Git Town command hasn't provided one yet.
 	if args.Connector.IsNone() {
 		normalConfig := args.UnvalidatedConfig.NormalConfig
-		args.Connector, err = forge.NewConnector(forge.NewConnectorArgs{
+		args.Connector, _, err = forge.NewConnector(forge.NewConnectorArgs{
 			Backend:              args.Backend,
 			BitbucketAppPassword: normalConfig.BitbucketAppPassword,
 			BitbucketUsername:    normalConfig.BitbucketUsername,

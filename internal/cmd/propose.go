@@ -195,6 +195,7 @@ type proposeData struct {
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
+	detectedForgeType   Option[forgedomain.DetectedForgeType]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
@@ -232,7 +233,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, actualForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
+	connectorOpt, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -348,6 +349,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
+		detectedForgeType:   detectedForgeType,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
@@ -405,7 +407,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
-				ForgeType:     actualForgeType,
+				ForgeType:     data.detectedForgeType,
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})
