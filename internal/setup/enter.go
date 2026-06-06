@@ -54,6 +54,7 @@ EnterForgeData:
 	}
 	devURL := data.Config.NormalConfig.DevURL(data.Backend)
 	actualForgeTypeOpt := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
+	actualForgeType, hasActualForgeType := actualForgeTypeOpt.Get()
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	forgejoToken := None[forgedomain.ForgejoToken]()
@@ -62,7 +63,6 @@ EnterForgeData:
 	githubToken := None[forgedomain.GithubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitlabConnectorType]()
 	gitlabToken := None[forgedomain.GitlabToken]()
-	actualForgeType, hasActualForgeType := actualForgeTypeOpt.Get()
 	if hasActualForgeType {
 		switch actualForgeType.ForgeType() {
 		case forgedomain.ForgeTypeAzuredevops:
