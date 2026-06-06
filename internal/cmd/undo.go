@@ -100,23 +100,25 @@ Start:
 		return nil
 	}
 	return undo.Execute(undo.ExecuteArgs{
-		Backend:          repo.Backend,
-		CommandsCounter:  repo.CommandsCounter,
-		Config:           data.config,
-		ConfigDir:        repo.ConfigDir,
-		Connector:        data.connector,
-		FinalMessages:    repo.FinalMessages,
-		Frontend:         repo.Frontend,
-		Git:              repo.Git,
-		HasOpenChanges:   data.hasOpenChanges,
-		InitialStashSize: data.stashSize,
-		RunState:         runState,
+		Backend:           repo.Backend,
+		CommandsCounter:   repo.CommandsCounter,
+		Config:            data.config,
+		ConfigDir:         repo.ConfigDir,
+		Connector:         data.connector,
+		DetectedForgeType: data.detectedForgeType,
+		FinalMessages:     repo.FinalMessages,
+		Frontend:          repo.Frontend,
+		Git:               repo.Git,
+		HasOpenChanges:    data.hasOpenChanges,
+		InitialStashSize:  data.stashSize,
+		RunState:          runState,
 	})
 }
 
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[forgedomain.Connector]
+	detectedForgeType       Option[forgedomain.DetectedForgeType]
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	inputs                  dialogcomponents.Inputs
@@ -132,7 +134,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -207,6 +209,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 	return undoData{
 		config:                  validatedConfig,
 		connector:               connector,
+		detectedForgeType:       detectedForgeType,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: branchesSnapshot,
 		inputs:                  inputs,

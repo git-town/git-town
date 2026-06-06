@@ -184,8 +184,8 @@ type detachData struct {
 	children               []detachChildBranch
 	config                 config.ValidatedConfig
 	connector              Option[forgedomain.Connector]
-	detectedForgeType      Option[forgedomain.DetectedForgeType]
 	descendents            []detachChildBranch
+	detectedForgeType      Option[forgedomain.DetectedForgeType]
 	hasOpenChanges         bool
 	initialBranch          gitdomain.LocalBranchName
 	inputs                 dialogcomponents.Inputs

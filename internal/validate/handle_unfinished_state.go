@@ -99,6 +99,7 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigDir         configdomain.RepoConfigDir
 	Connector         Option[forgedomain.Connector]
+	DetectedForgeType Option[forgedomain.DetectedForgeType]
 	DryRun            configdomain.DryRun
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
@@ -130,6 +131,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (con
 		Config:                  validatedConfig,
 		ConfigDir:               args.ConfigDir,
 		Connector:               args.Connector,
+		DetectedForgeType:       args.DetectedForgeType,
 		DryRun:                  runState.DryRun,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,

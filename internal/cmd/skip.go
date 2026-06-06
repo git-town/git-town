@@ -97,20 +97,21 @@ Start:
 		return err
 	}
 	return skip.Execute(skip.ExecuteArgs{
-		Backend:         repo.Backend,
-		CommandsCounter: repo.CommandsCounter,
-		Config:          data.config,
-		ConfigDir:       repo.ConfigDir,
-		Connector:       data.connector,
-		DryRun:          data.config.NormalConfig.DryRun,
-		FinalMessages:   repo.FinalMessages,
-		Frontend:        repo.Frontend,
-		Git:             repo.Git,
-		HasOpenChanges:  data.hasOpenChanges,
-		InitialBranch:   data.activeBranch,
-		Inputs:          data.inputs,
-		Park:            park,
-		RunState:        data.runState,
+		Backend:           repo.Backend,
+		CommandsCounter:   repo.CommandsCounter,
+		Config:            data.config,
+		ConfigDir:         repo.ConfigDir,
+		Connector:         data.connector,
+		DetectedForgeType: data.detectedForgeType,
+		DryRun:            data.config.NormalConfig.DryRun,
+		FinalMessages:     repo.FinalMessages,
+		Frontend:          repo.Frontend,
+		Git:               repo.Git,
+		HasOpenChanges:    data.hasOpenChanges,
+		InitialBranch:     data.activeBranch,
+		Inputs:            data.inputs,
+		Park:              park,
+		RunState:          data.runState,
 	})
 }
 
@@ -122,7 +123,7 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -213,24 +214,26 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SkipNothingToDo)
 	}
 	return skipData{
-		activeBranch:   activeBranch,
-		config:         validatedConfig,
-		connector:      connector,
-		hasOpenChanges: repoStatus.OpenChanges,
-		inputs:         inputs,
-		park:           park,
-		runState:       runState,
+		activeBranch:      activeBranch,
+		config:            validatedConfig,
+		connector:         connector,
+		detectedForgeType: detectedForgeType,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		inputs:            inputs,
+		park:              park,
+		runState:          runState,
 	}, configdomain.ProgramFlowContinue, nil
 }
 
 type skipData struct {
-	activeBranch   gitdomain.LocalBranchName
-	config         config.ValidatedConfig
-	connector      Option[forgedomain.Connector]
-	hasOpenChanges bool
-	inputs         dialogcomponents.Inputs
-	park           configdomain.Park
-	runState       runstate.RunState
+	activeBranch      gitdomain.LocalBranchName
+	config            config.ValidatedConfig
+	connector         Option[forgedomain.Connector]
+	detectedForgeType Option[forgedomain.DetectedForgeType]
+	hasOpenChanges    bool
+	inputs            dialogcomponents.Inputs
+	park              configdomain.Park
+	runState          runstate.RunState
 }
 
 func validateSkipData(data skipData, repo execute.OpenRepoResult) error {

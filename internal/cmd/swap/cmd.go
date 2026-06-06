@@ -155,6 +155,7 @@ Start:
 		Config:                  data.config,
 		ConfigDir:               repo.ConfigDir,
 		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
 		DryRun:                  data.config.NormalConfig.DryRun,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -176,6 +177,7 @@ type swapData struct {
 	children              []swapBranch
 	config                config.ValidatedConfig
 	connector             Option[forgedomain.Connector]
+	detectedForgeType     Option[forgedomain.DetectedForgeType]
 	currentBranchInfo     gitdomain.BranchInfo
 	currentBranchName     gitdomain.LocalBranchName
 	currentBranchProposal Option[forgedomain.Proposal]
@@ -207,7 +209,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, _, err := forge.NewConnector(forge.NewConnectorArgs{
+	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -374,6 +376,7 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		currentBranchName:     currentBranch,
 		currentBranchProposal: currentbranchProposal,
 		currentBranchType:     currentBranchType,
+		detectedForgeType:     detectedForgeType,
 		grandParentBranch:     grandParentBranch,
 		hasOpenChanges:        repoStatus.OpenChanges,
 		initialBranch:         initialBranch,
