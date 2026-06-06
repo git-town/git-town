@@ -28,7 +28,7 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 	}
 	for _, detector := range detectors {
 		if detector.implementation(remoteURL) {
-			return Some(forgedomain.DetectedForgeType(detector.forgeType))
+			return Some(detector.forgeType.Detected())
 		}
 	}
 	return None[forgedomain.DetectedForgeType]()
