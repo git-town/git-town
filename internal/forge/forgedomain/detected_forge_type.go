@@ -5,4 +5,5 @@ package forgedomain
 // or if that is "auto", the automatically detected forge type.
 type DetectedForgeType ForgeType
 
+// ForgeType converts this value into a ForgeType.
 func (self DetectedForgeType) ForgeType() ForgeType { return ForgeType(self) }
