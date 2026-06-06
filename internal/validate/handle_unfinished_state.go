@@ -213,20 +213,21 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		return configdomain.ProgramFlowExit, err
 	}
 	return configdomain.ProgramFlowExit, skip.Execute(skip.ExecuteArgs{
-		Backend:         args.Backend,
-		CommandsCounter: args.CommandsCounter,
-		Config:          validatedConfig,
-		ConfigDir:       args.ConfigDir,
-		Connector:       args.Connector,
-		DryRun:          args.DryRun,
-		FinalMessages:   args.FinalMessages,
-		Frontend:        args.Frontend,
-		Git:             args.Git,
-		HasOpenChanges:  args.HasOpenChanges,
-		InitialBranch:   currentBranch,
-		Inputs:          args.Inputs,
-		Park:            false,
-		RunState:        runState,
+		Backend:           args.Backend,
+		CommandsCounter:   args.CommandsCounter,
+		Config:            validatedConfig,
+		ConfigDir:         args.ConfigDir,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		DryRun:            args.DryRun,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		HasOpenChanges:    args.HasOpenChanges,
+		InitialBranch:     currentBranch,
+		Inputs:            args.Inputs,
+		Park:              false,
+		RunState:          runState,
 	})
 }
 
@@ -241,17 +242,18 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		return configdomain.ProgramFlowExit, err
 	}
 	return configdomain.ProgramFlowExit, undo.Execute(undo.ExecuteArgs{
-		Backend:          args.Backend,
-		CommandsCounter:  args.CommandsCounter,
-		Config:           validatedConfig,
-		ConfigDir:        args.ConfigDir,
-		Connector:        args.Connector,
-		FinalMessages:    args.FinalMessages,
-		Frontend:         args.Frontend,
-		Git:              args.Git,
-		HasOpenChanges:   args.HasOpenChanges,
-		InitialStashSize: runState.BeginStashSize,
-		RunState:         runState,
+		Backend:           args.Backend,
+		CommandsCounter:   args.CommandsCounter,
+		Config:            validatedConfig,
+		ConfigDir:         args.ConfigDir,
+		Connector:         args.Connector,
+		DetectedForgeType: args.DetectedForgeType,
+		FinalMessages:     args.FinalMessages,
+		Frontend:          args.Frontend,
+		Git:               args.Git,
+		HasOpenChanges:    args.HasOpenChanges,
+		InitialStashSize:  runState.BeginStashSize,
+		RunState:          runState,
 	})
 }
 

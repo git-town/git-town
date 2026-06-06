@@ -35,6 +35,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			CommandsCounter:   args.Repo.CommandsCounter,
 			ConfigDir:         args.Repo.ConfigDir,
 			Connector:         args.Connector,
+			DetectedForgeType: args.DetectedForgeType,
 			DryRun:            args.UnvalidatedConfig.NormalConfig.DryRun,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
@@ -85,6 +86,7 @@ type LoadRepoSnapshotArgs struct {
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        configdomain.BeginConfigSnapshot
 	Connector             Option[forgedomain.Connector]
+	DetectedForgeType     Option[forgedomain.DetectedForgeType]
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              subshelldomain.Runner
