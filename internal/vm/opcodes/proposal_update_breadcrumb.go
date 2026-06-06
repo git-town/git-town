@@ -9,7 +9,8 @@ import (
 )
 
 type ProposalUpdateBreadcrumb struct {
-	Branch gitdomain.LocalBranchName
+	Branch    gitdomain.LocalBranchName
+	ForgeType forgedomain.DetectedForgeType
 }
 
 func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
@@ -40,7 +41,7 @@ func (self *ProposalUpdateBreadcrumb) Run(args shared.RunArgs) error {
 			Connector:     args.Connector,
 			CurrentBranch: self.Branch,
 			Direction:     args.Config.Value.NormalConfig.ProposalBreadcrumbDirection,
-			ForgeType:     args.Config.Value.NormalConfig.ForgeType,
+			ForgeType:     self.DeterminedForgeType,
 			Lineage:       args.Config.Value.NormalConfig.Lineage,
 			Order:         args.Config.Value.NormalConfig.Order,
 		})

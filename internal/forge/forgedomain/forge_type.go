@@ -54,3 +54,5 @@ func forgeTypes() []ForgeType {
 		// keep-sorted end
 	}
 }
+
+type DetectedForgeType ForgeType

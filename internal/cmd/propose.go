@@ -232,7 +232,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+	connectorOpt, actualForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
@@ -405,7 +405,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 				Connector:     data.connector,
 				CurrentBranch: branchToPropose.name,
 				Direction:     data.config.NormalConfig.ProposalBreadcrumbDirection,
-				ForgeType:     data.config.NormalConfig.ForgeType,
+				ForgeType:     actualForgeType,
 				Lineage:       data.config.NormalConfig.Lineage,
 				Order:         data.config.NormalConfig.Order,
 			})

@@ -891,7 +891,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return configdomain.ProgramFlowContinue, false, nil
 	}
-	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+	connectorOpt, _, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
