@@ -11,7 +11,7 @@ import (
 // Proposal is a wrapper type that makes the Proposal interface serializable to and from JSON.
 type Proposal struct {
 	Data      ProposalInterface
-	ForgeType ConfiguredForgeType
+	ForgeType ForgeType
 }
 
 func (self Proposal) MarshalJSON() ([]byte, error) {

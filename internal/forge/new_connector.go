@@ -22,13 +22,13 @@ import (
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[forgedomain.DetectedForgeType], error) {
 	remoteURL, hasRemoteURL := args.RemoteURL.Get()
-	forgeType, hasForgeType := Detect(remoteURL, args.ForgeType).Get()
+	detectedForgeType, hasForgeType := Detect(remoteURL, args.ForgeType).Get()
 	if !hasRemoteURL || !hasForgeType {
-		return None[forgedomain.Connector](), None[forgedomain.ConfiguredForgeType](), nil
+		return None[forgedomain.Connector](), None[forgedomain.DetectedForgeType](), nil
 	}
 	var connector forgedomain.Connector
 	var err error
-	switch forgeType {
+	switch detectedForgeType.ForgeType() {
 	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.WebConnector{
 			HostedRepoInfo: forgedomain.HostedRepoInfo{
@@ -122,7 +122,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 			}
 		}
 	}
-	return NewOption(connector), Some(forgeType), err
+	return NewOption(connector), Some(detectedForgeType), err
 }
 
 type NewConnectorArgs struct {
@@ -132,7 +132,7 @@ type NewConnectorArgs struct {
 	BrowserEnabled       browserdomain.BrowserEnabled
 	BrowserExecutable    Option[browserdomain.BrowserExecutable]
 	ConfigDir            configdomain.RepoConfigDir
-	ForgeType            Option[forgedomain.ConfiguredForgeType]
+	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner
 	GiteaToken           Option[forgedomain.GiteaToken]

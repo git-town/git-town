@@ -20,7 +20,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
 	)
-	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
+	if forgeType, hasForgeType := userInput.DetectedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeAzuredevops:
 			// no API token for now
@@ -448,7 +448,7 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 	return nil
 }
 
-func saveForgeType(valueToWriteToGit Option[forgedomain.ConfiguredForgeType], valueAlreadyInGit Option[forgedomain.ConfiguredForgeType], frontend subshelldomain.Runner) error {
+func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) error {
 	oldValue, oldHas := valueAlreadyInGit.Get()
 	newValue, newHas := valueToWriteToGit.Get()
 	if !oldHas && !newHas {

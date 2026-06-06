@@ -24,17 +24,17 @@ is hosted at a custom URL.
 `
 )
 
-func ForgeType(args Args[forgedomain.ConfiguredForgeType]) (Option[forgedomain.ConfiguredForgeType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.ConfiguredForgeType]]{}
+func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.ForgeType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[forgedomain.ConfiguredForgeType]]{
-			Data: None[forgedomain.ConfiguredForgeType](),
+		entries = append(entries, list.Entry[Option[forgedomain.ForgeType]]{
+			Data: None[forgedomain.ForgeType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[forgedomain.ConfiguredForgeType]]{
+	entries = append(entries, list.Entries[Option[forgedomain.ForgeType]]{
 		{
-			Data: None[forgedomain.ConfiguredForgeType](),
+			Data: None[forgedomain.ForgeType](),
 			Text: messages.AutoDetect,
 		},
 		{
@@ -66,7 +66,7 @@ func ForgeType(args Args[forgedomain.ConfiguredForgeType]) (Option[forgedomain.C
 			Text: "GitLab",
 		},
 	}...)
-	cursor := entries.IndexOfFunc(args.Local, func(optA, optB Option[forgedomain.ConfiguredForgeType]) bool {
+	cursor := entries.IndexOfFunc(args.Local, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
 	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, args.Inputs, args.Interactive, "forge-type")
