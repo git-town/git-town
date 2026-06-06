@@ -8,6 +8,10 @@
 - Git Town now contains an additional safety guard that prevents deleting the main branch at the remote ([#6220](https://github.com/git-town/git-town/issues/6220)).
 - Git Town now correctly handles worktrees that exist as bare repos ([#6220](https://github.com/git-town/git-town/pull/6212)).
 
+#### Contributors
+
+Major props to @OrHayat, @bendrucker, @benmosher, @kevgo, @txgruppi, @yaadata for contributing bug fixes and feedback to 31 shipped pull requests and 3 resolved issues!
+
 ## 23.0.1 (2026-05-11)
 
 Re-releasing v23.0.0 that partially failed to propagate to all distribution channels.
