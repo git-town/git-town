@@ -177,11 +177,11 @@ type swapData struct {
 	children              []swapBranch
 	config                config.ValidatedConfig
 	connector             Option[forgedomain.Connector]
-	detectedForgeType     Option[forgedomain.DetectedForgeType]
 	currentBranchInfo     gitdomain.BranchInfo
 	currentBranchName     gitdomain.LocalBranchName
 	currentBranchProposal Option[forgedomain.Proposal]
 	currentBranchType     configdomain.BranchType
+	detectedForgeType     Option[forgedomain.DetectedForgeType]
 	grandParentBranch     gitdomain.LocalBranchName
 	hasOpenChanges        bool
 	initialBranch         gitdomain.LocalBranchName
