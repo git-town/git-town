@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 23.0.2 (2026-06-06)
+
+#### Bug Fixes
+
+- Breadcrumbs for Bitbucket-based forges now render correctly ([#6228](https://github.com/git-town/git-town/issues/6228)).
+- Git Town now contains an additional safety guard that prevents deleting the main branch at the remote ([#6220](https://github.com/git-town/git-town/issues/6220)).
+- Git Town now correctly handles worktrees that exist as bare repos ([#6220](https://github.com/git-town/git-town/pull/6212)).
+
 ## 23.0.1 (2026-05-11)
 
 Re-releasing v23.0.0 that partially failed to propagate to all distribution channels.
