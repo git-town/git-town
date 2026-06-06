@@ -284,6 +284,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configd
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

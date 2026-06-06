@@ -148,6 +148,7 @@ func determineContinueData(repo execute.OpenRepoResult) (continueData, configdom
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

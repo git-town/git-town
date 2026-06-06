@@ -259,6 +259,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

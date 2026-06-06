@@ -260,6 +260,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (propos
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connectorOpt,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

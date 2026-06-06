@@ -299,6 +299,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
 		Fetch:                 shouldFetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
