@@ -13,9 +13,9 @@ import (
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 )
 
-func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) Option[forgedomain.ForgeType] {
-	if userOverride.IsSome() {
-		return userOverride
+func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) Option[forgedomain.DetectedForgeType] {
+	if override, hasOverride := userOverride.Get(); hasOverride {
+		return Some(override.Detected())
 	}
 	detectors := []detector{
 		{forgedomain.ForgeTypeAzuredevops, azuredevops.Detect},
@@ -28,10 +28,10 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 	}
 	for _, detector := range detectors {
 		if detector.implementation(remoteURL) {
-			return Some(detector.forgeType)
+			return Some(detector.forgeType.Detected())
 		}
 	}
-	return None[forgedomain.ForgeType]()
+	return None[forgedomain.DetectedForgeType]()
 }
 
 type detector struct {

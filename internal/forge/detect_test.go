@@ -18,7 +18,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeAzuredevops)
+		want := Some(forgedomain.ForgeTypeAzuredevops.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -27,7 +27,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeBitbucket)
+		want := Some(forgedomain.ForgeTypeBitbucket.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -36,7 +36,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@github.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeGithub)
+		want := Some(forgedomain.ForgeTypeGithub.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -45,7 +45,7 @@ func TestDetect(t *testing.T) {
 		url, err := giturl.Parse("username@gitlab.com:git-town/docs.git").Get()
 		must.True(t, err)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeGitlab)
+		want := Some(forgedomain.ForgeTypeGitlab.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -54,7 +54,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@gitea.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, None[forgedomain.ForgeType]())
-		want := Some(forgedomain.ForgeTypeGitea)
+		want := Some(forgedomain.ForgeTypeGitea.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -63,7 +63,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, Some(forgedomain.ForgeTypeBitbucket))
-		want := Some(forgedomain.ForgeTypeBitbucket)
+		want := Some(forgedomain.ForgeTypeBitbucket.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -72,7 +72,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, Some(forgedomain.ForgeTypeBitbucketDatacenter))
-		want := Some(forgedomain.ForgeTypeBitbucketDatacenter)
+		want := Some(forgedomain.ForgeTypeBitbucketDatacenter.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -81,7 +81,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, Some(forgedomain.ForgeTypeGithub))
-		want := Some(forgedomain.ForgeTypeGithub)
+		want := Some(forgedomain.ForgeTypeGithub.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -90,7 +90,7 @@ func TestDetect(t *testing.T) {
 		url, err := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, err)
 		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitlab))
-		want := Some(forgedomain.ForgeTypeGitlab)
+		want := Some(forgedomain.ForgeTypeGitlab.Detected())
 		must.Eq(t, want, have)
 	})
 
@@ -99,7 +99,7 @@ func TestDetect(t *testing.T) {
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
 		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitea))
-		want := Some(forgedomain.ForgeTypeGitea)
+		want := Some(forgedomain.ForgeTypeGitea.Detected())
 		must.Eq(t, want, have)
 	})
 }
