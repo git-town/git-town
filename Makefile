@@ -18,6 +18,7 @@ GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
+KEEPSORTED   = $(RTA) keep-sorted
 LEFTHOOK     = $(RTA) lefthook
 NPM          = $(RTA) npm
 NPX          = $(RTA) npx
@@ -179,7 +180,7 @@ fix-optioncompare-in-tests:
 
 keep-sorted: ${RTA}
 	@$(RTA) --install ripgrep
-	@$(RTA) keep-sorted $(shell $(RTA) ripgrep -l --hidden 'keep-sorted end' ./ --glob '!{.git,Makefile}')
+	@$(KEEPSORTED) $(shell $(RTA) ripgrep -l --hidden 'keep-sorted end' ./ --glob '!{.git,Makefile}')
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
