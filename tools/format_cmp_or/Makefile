@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-RTA_VERSION = 0.36.0  # run-that-app version to use
+RTA_VERSION = 0.37.0  # run-that-app version to use
 RTA = ../rta@$(RTA_VERSION)
 
 fix:  # runs all linters and auto-fixes
