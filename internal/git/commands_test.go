@@ -1,6 +1,8 @@
 package git_test
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
@@ -908,6 +910,35 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch(initial)
 		currentBranch = asserts.NoError1(runtime.Git.CurrentBranch(runtime.TestRunner)).GetOrPanic()
 		must.EqOp(t, initial, currentBranch)
+	})
+
+	t.Run("CommentOutSquashCommitMessage", func(t *testing.T) {
+		t.Parallel()
+		t.Run("comments out the squash message in a normal repo", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			gitDir := runtime.MustQueryTrim("git", "rev-parse", "--absolute-git-dir").String()
+			squashMessageFile := filepath.Join(gitDir, "SQUASH_MSG")
+			asserts.NoError(os.WriteFile(squashMessageFile, []byte("line 1\nline 2\n"), 0o600))
+			asserts.NoError(runtime.Git.CommentOutSquashCommitMessage(runtime, None[string]()))
+			have := string(asserts.NoError1(os.ReadFile(squashMessageFile)))
+			must.EqOp(t, "# line 1\n# line 2\n# ", have)
+		})
+		t.Run("resolves SQUASH_MSG relative to the per-worktree git dir in a linked worktree", func(t *testing.T) {
+			t.Parallel()
+			// In a linked worktree, ".git" is a file pointing at the real git dir,
+			// so the literal path ".git/SQUASH_MSG" would fail with "not a directory".
+			origin := testruntime.Create(t)
+			worktreeDir := t.TempDir()
+			origin.MustRun("git", "worktree", "add", "-b", "feature", worktreeDir)
+			linked := testruntime.New(worktreeDir, origin.HomeDir, origin.BinDir)
+			gitDir := linked.MustQueryTrim("git", "rev-parse", "--absolute-git-dir").String()
+			squashMessageFile := filepath.Join(gitDir, "SQUASH_MSG")
+			asserts.NoError(os.WriteFile(squashMessageFile, []byte("body\n"), 0o600))
+			asserts.NoError(linked.Git.CommentOutSquashCommitMessage(linked, Some("prefix")))
+			have := string(asserts.NoError1(os.ReadFile(squashMessageFile)))
+			must.EqOp(t, "# prefix\n# body\n# ", have)
+		})
 	})
 
 	t.Run("CommitsInBranch", func(t *testing.T) {
