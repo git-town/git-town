@@ -12,7 +12,7 @@ import (
 type CommitMessageCommentOut struct{}
 
 func (self *CommitMessageCommentOut) Run(args shared.RunArgs) error {
-	if err := args.Git.CommentOutSquashCommitMessage(None[string]()); err != nil {
+	if err := args.Git.CommentOutSquashCommitMessage(args.Backend, None[string]()); err != nil {
 		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	return nil
