@@ -257,8 +257,12 @@ func (self *Commands) CherryPickContinue(runner subshelldomain.Runner) error {
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // If the given prefix has content, adds it together with a newline.
-func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error {
-	squashMessageFile := ".git/SQUASH_MSG"
+func (self *Commands) CommentOutSquashCommitMessage(querier subshelldomain.Querier, prefix Option[string]) error {
+	gitDir, err := self.gitDirectory(querier)
+	if err != nil {
+		return err
+	}
+	squashMessageFile := filepath.Join(gitDir.String(), "SQUASH_MSG")
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCannotReadFile, squashMessageFile, err)
