@@ -34,6 +34,7 @@ Feature: display all executed Git commands
       |         | backend  | git diff --shortstat main feature --                                                                                                                                                                                                                                                                                                  |
       |         | frontend | git checkout main                                                                                                                                                                                                                                                                                                                     |
       | main    | frontend | git merge --squash --ff feature                                                                                                                                                                                                                                                                                                       |
+      |         | backend  | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                      |
       |         | frontend | git commit -m done                                                                                                                                                                                                                                                                                                                    |
       |         | backend  | git rev-parse main                                                                                                                                                                                                                                                                                                                    |
       |         | backend  | git rev-parse --verify -q refs/heads/main                                                                                                                                                                                                                                                                                             |
@@ -49,7 +50,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                                                                                                                                                                                                                                                                                        |
     And Git Town prints:
       """
-      Ran 32 shell commands.
+      Ran 33 shell commands.
       """
 
   Scenario: undo
