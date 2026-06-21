@@ -1,5 +1,6 @@
 archives:
-  - files:
+  - builds_info:
+      mode: 0755
     format_overrides:
       - goos: windows
         format: zip
