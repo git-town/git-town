@@ -46,6 +46,7 @@ func All() []shared.Opcode {
 		&CherryPickContinue{},
 		&CherryPick{},
 		&CommitAutoUndo{},
+		&CommitIfNeeded{},
 		&CommitMessageCommentOut{},
 		&CommitRemove{},
 		&CommitRevertIfNeeded{},
