@@ -23,11 +23,9 @@ Feature: recover from broken precommit hooks
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    # And inspect the repo
     And Git Town prints the error:
       """
-      [feature] git commit --no-edit
-      xxx
+      Error: exit status 1
       """
     And I run "git commit -m manual --no-verify"
     And I run "git-town continue"
