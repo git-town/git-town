@@ -1495,6 +1495,12 @@ echo "new line" >> file
 		return nil
 	})
 
+	sc.Step(`^the pre-commit hook always fails$`, func(ctx context.Context, want string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.SetFailingPrecommitHook()
+	})
+
 	sc.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

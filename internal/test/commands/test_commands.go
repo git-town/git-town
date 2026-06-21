@@ -569,6 +569,17 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 	self.MustRun("git", "config", "init.defaultbranch", value.String())
 }
 
+// Installs a pre-commit hook that always fails.
+func (self *TestCommands) SetFailingPrecommitHook() {
+	// create file ".git/hooks/pre-commit"
+	content := `
+#!/bin/sh
+
+exit 1
+`[1:]
+	asserts.NoError(os.WriteFile(".git/hooks/pre-commit", []byte(content), 0o744))
+}
+
 // StageFiles adds the file with the given name to the Git index.
 func (self *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)
