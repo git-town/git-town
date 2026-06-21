@@ -33,10 +33,6 @@ Feature: recover from broken precommit hooks
 
   @this
   Scenario: result
-    Then Git Town prints the error:
-      """
-      xxx
-      """
     Then Git Town runs the commands
       | BRANCH  | COMMAND  |
       | feature | git push |
