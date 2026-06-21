@@ -27,6 +27,7 @@ Feature: recover from broken precommit hooks
     And Git Town prints the error:
       """
       [feature] git commit --no-edit
+      xxx
       """
     And I run "git commit -m manual --no-verify"
     And I run "git-town continue"
