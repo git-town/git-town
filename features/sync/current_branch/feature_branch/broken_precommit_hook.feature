@@ -10,7 +10,7 @@ Feature: recover from broken precommit hooks
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "feature"
-    And the pre-commit hook always fails
+    And a pre-commit hook that always fails
     And I run "git-town sync"
     And Git Town runs the commands
       | BRANCH  | COMMAND                                 |
