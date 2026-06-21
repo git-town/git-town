@@ -21,8 +21,8 @@ type Abortable interface {
 	Abort() []Opcode
 }
 
-// Continuable marks an opcode that can provide custom steps
-// to safely continue after a failed Git command.
+// Continuable marks an opcode that can provide the opcodes
+// to run when continuing after a failed Git command.
 // By default, opcodes retry by running their Run method again.
 type Continuable interface {
 	Continue() []Opcode
