@@ -1,5 +1,16 @@
 # Git Town Changelog
 
+## 23.0.3 (2026-06-21)
+
+#### Bug Fixes
+
+- `git town continue` now works with faulty Git pre-commit hooks ([#6242](https://github.com/git-town/git-town/issues/6242)).
+- `git town ship` now works from a Git worktree ([#6237](https://github.com/git-town/git-town/issues/6237)).
+
+#### Contributors
+
+Big thanks to @Indemnity83, @OrHayat, @kevgo, @yaadata for contributing code, bug fixes, and ideas to 15 shipped pull requests 3 resolved issues!
+
 ## 23.0.2 (2026-06-06)
 
 #### Bug Fixes

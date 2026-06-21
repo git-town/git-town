@@ -3,7 +3,7 @@ set -e
 
 # This script installs the Git Town executable in the user's HOME directory.
 
-VERSION=23.0.2             # the version of Git Town to install
+VERSION=23.0.3             # the version of Git Town to install
 DEST=$HOME/.local/bin      # the folder into which to install the Git Town executable
 TMP_DIR=.git-town-download # temporary folder to use
 
