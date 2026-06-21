@@ -9,7 +9,7 @@
 
 #### Contributors
 
-Big thanks to @Indemnity83, @OrHayat, @kevgo, @yaadata for contributing code, bug fixes, and ideas to 15 shipped pull requests 3 resolved issues
+Big thanks to @Indemnity83, @OrHayat, @kevgo, @yaadata for contributing code, bug fixes, and ideas to 15 shipped pull requests 3 resolved issues!
 
 ## 23.0.2 (2026-06-06)
 
