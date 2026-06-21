@@ -22,7 +22,6 @@ Feature: recover from broken precommit hooks
       """
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
-    # And inspect the repo
     And I run "git-town continue"
     And Git Town prints the error:
       """
