@@ -573,7 +573,6 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 func (self *TestCommands) SetFailingPrecommitHook() {
 	content := `
 #!/bin/sh
-
 exit 1
 `[1:]
 	dirPath := filepath.Join(self.WorkingDir, ".git", "hooks")
