@@ -44,7 +44,5 @@ Feature: recover from broken precommit hooks
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
     And no merge is now in progress
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
+    And the initial branches and lineage exist now
     And the initial commits exist now
