@@ -17,6 +17,14 @@ type Commit struct {
 	Message                        Option[gitdomain.CommitMessage]
 }
 
+func (self *Commit) Continue() []shared.Opcode {
+	return []shared.Opcode{CommitIfNeeded{
+		AuthorOverride:                 self.AuthorOverride,
+		FallbackToDefaultCommitMessage: self.FallbackToDefaultCommitMessage,
+		Message:                        self.Message,
+	}}
+}
+
 func (self *Commit) Run(args shared.RunArgs) error {
 	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride, configdomain.CommitHookEnabled)
 }

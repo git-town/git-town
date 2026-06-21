@@ -569,6 +569,18 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 	self.MustRun("git", "config", "init.defaultbranch", value.String())
 }
 
+// Installs a pre-commit hook that always fails.
+func (self *TestCommands) SetFailingPrecommitHook() {
+	content := `
+#!/bin/sh
+exit 1
+`[1:]
+	dirPath := filepath.Join(self.WorkingDir, ".git", "hooks")
+	asserts.NoError(os.MkdirAll(dirPath, 0o744))
+	filePath := filepath.Join(dirPath, "pre-commit")
+	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o744)) //nolint:gosec // Git hooks need to be executable
+}
+
 // StageFiles adds the file with the given name to the Git index.
 func (self *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)
@@ -591,7 +603,7 @@ func (self *TestCommands) UnstashOpenFiles() error {
 	return self.Run("git", "stash", "pop")
 }
 
-// HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
+// VerifyNoGitTownConfiguration indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	output, _ := self.Query("git", "config", "--get-regex", "git-town")
 	if len(output) > 0 {
