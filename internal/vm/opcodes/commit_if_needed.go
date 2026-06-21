@@ -1,7 +1,6 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/vm/shared"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
@@ -23,5 +22,10 @@ func (self *CommitIfNeeded) Run(args shared.RunArgs) error {
 	if !repoStatus.NeedsToCommit() {
 		return nil
 	}
-	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride, configdomain.CommitHookEnabled)
+	args.PrependOpcodes(&Commit{
+		AuthorOverride:                 self.AuthorOverride,
+		FallbackToDefaultCommitMessage: self.FallbackToDefaultCommitMessage,
+		Message:                        self.Message,
+	})
+	return nil
 }
