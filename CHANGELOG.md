@@ -2,7 +2,7 @@
 
 ## 23.0.3 (2026-06-21)
 
-#### Bug fixes
+#### Bug Fixes
 
 - `git town continue` now works with faulty Git pre-commit hooks ([#6242](https://github.com/git-town/git-town/issues/6242)).
 - `git town ship` now works from a Git worktree ([#6237](https://github.com/git-town/git-town/issues/6237)).
