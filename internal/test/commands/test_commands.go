@@ -604,7 +604,7 @@ func (self *TestCommands) UnstashOpenFiles() error {
 	return self.Run("git", "stash", "pop")
 }
 
-// HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
+// VerifyNoGitTownConfiguration indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	output, _ := self.Query("git", "config", "--get-regex", "git-town")
 	if len(output) > 0 {

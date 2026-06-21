@@ -22,16 +22,21 @@ Feature: recover from broken precommit hooks
       """
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
+    # And inspect the repo
     And I run "git-town continue"
     And Git Town prints the error:
       """
       Error: exit status 1
       """
-    And I run "git commit -m manual --no-verify"
+    # And I run "git commit -m manual --no-verify"
     And I run "git-town continue"
 
   @this
   Scenario: result
+    Then Git Town prints the error:
+      """
+      xxx
+      """
     Then Git Town runs the commands
       | BRANCH  | COMMAND  |
       | feature | git push |
