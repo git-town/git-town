@@ -19,7 +19,10 @@ func (self *CommitIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !repoStatus.NeedsToCommit() {
+	hasOpenFiles := repoStatus.NeedsToCommit()
+	mergeInProgress := args.Git.HasMergeInProgress(args.Backend)
+	needsToCommit := hasOpenFiles || mergeInProgress
+	if !needsToCommit {
 		return nil
 	}
 	args.PrependOpcodes(&Commit{

@@ -576,9 +576,9 @@ func (self *TestCommands) SetFailingPrecommitHook() {
 exit 1
 `[1:]
 	dirPath := filepath.Join(self.WorkingDir, ".git", "hooks")
-	os.MkdirAll(dirPath, 0o744)
+	asserts.NoError(os.MkdirAll(dirPath, 0o744))
 	filePath := filepath.Join(dirPath, "pre-commit")
-	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o744))
+	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o744)) //nolint:gosec // Git hooks need to be executable
 }
 
 // StageFiles adds the file with the given name to the Git index.
