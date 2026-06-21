@@ -28,7 +28,7 @@ Feature: recover from broken precommit hooks
       """
       Error: exit status 1
       """
-    # And I run "git commit -m manual --no-verify"
+    And I run "git commit -m manual --no-verify"
     And I run "git-town continue"
 
   @this
