@@ -571,13 +571,15 @@ func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 
 // Installs a pre-commit hook that always fails.
 func (self *TestCommands) SetFailingPrecommitHook() {
-	// create file ".git/hooks/pre-commit"
 	content := `
 #!/bin/sh
 
 exit 1
 `[1:]
-	asserts.NoError(os.WriteFile(".git/hooks/pre-commit", []byte(content), 0o744))
+	dirPath := filepath.Join(self.WorkingDir, ".git", "pre-commit")
+	os.MkdirAll(dirPath, 0o744)
+	filePath := filepath.Join(dirPath, "pre-commit")
+	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o744))
 }
 
 // StageFiles adds the file with the given name to the Git index.

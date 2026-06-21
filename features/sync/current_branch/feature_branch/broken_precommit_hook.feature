@@ -23,9 +23,10 @@ Feature: recover from broken precommit hooks
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
+    # And inspect the repo
     And Git Town prints the error:
       """
-      xxx
+      [feature] git commit --no-edit
       """
     And I run "git commit -m manual --no-verify"
     And I run "git-town continue"
