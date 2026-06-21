@@ -266,6 +266,12 @@ echo "new line" >> file
 		state.fixture.AddUpstream()
 	})
 
+	sc.Step(`^a pre-commit hook that always fails$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.SetFailingPrecommitHook()
+	})
+
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
