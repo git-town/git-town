@@ -1495,7 +1495,7 @@ echo "new line" >> file
 		return nil
 	})
 
-	sc.Step(`^the pre-commit hook always fails$`, func(ctx context.Context, want string) {
+	sc.Step(`^the pre-commit hook always fails$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.SetFailingPrecommitHook()
