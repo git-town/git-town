@@ -576,7 +576,7 @@ func (self *TestCommands) SetFailingPrecommitHook() {
 
 exit 1
 `[1:]
-	dirPath := filepath.Join(self.WorkingDir, ".git", "pre-commit")
+	dirPath := filepath.Join(self.WorkingDir, ".git", "hooks")
 	os.MkdirAll(dirPath, 0o744)
 	filePath := filepath.Join(dirPath, "pre-commit")
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o744))
