@@ -97,17 +97,17 @@ func (self *RunState) String() string {
 	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
 	result.WriteString(self.Command)
-	result.WriteString("\n  AbortProgram: ")
+	result.WriteString("\n\n  AbortProgram: ")
 	result.WriteString(self.AbortProgram.StringIndented("    "))
-	result.WriteString("  RunProgram: ")
+	result.WriteString("\n  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
 	if unfinishedDetails, hasUnfinishedDetails := self.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		result.WriteString("  UnfinishedDetails: ")
+		result.WriteString("\n  UnfinishedDetails: ")
 		result.WriteString(unfinishedDetails.String())
 	}
-	result.WriteString("  Touched branches: ")
+	result.WriteString("\n  Touched branches: ")
 	result.WriteString(self.TouchedBranches.Join(", "))
-	result.WriteString("\n  Before snapshot: \n")
+	result.WriteString("\n\n  Before snapshot: \n")
 	writeBranchInfos(&result, self.BeginBranchesSnapshot.Branches)
 	result.WriteString("\n  After snapshot: \n")
 	if endSnapshot, has := self.EndBranchesSnapshot.Get(); has {
