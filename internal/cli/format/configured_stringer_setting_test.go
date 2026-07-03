@@ -1,27 +1,28 @@
-package config
+package format_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v23/internal/cli/format"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v23/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
-func TestFormatGithubToken(t *testing.T) {
+func TestConfiguredStringerSetting(t *testing.T) {
 	t.Parallel()
 
 	t.Run("not set", func(t *testing.T) {
 		t.Parallel()
 		give := None[forgedomain.GithubToken]()
-		have := formatGithubToken(give)
+		have := format.ConfiguredStringerSetting(give)
 		must.EqOp(t, "(not set)", have)
 	})
 
 	t.Run("set", func(t *testing.T) {
 		t.Parallel()
 		give := Some(forgedomain.GithubToken("github-token"))
-		have := formatGithubToken(give)
+		have := format.ConfiguredStringerSetting(give)
 		must.EqOp(t, "(configured)", have)
 	})
 }
