@@ -91,7 +91,7 @@ Feature: display configuration defined in environment variables
         Forgejo token: forgejo-token
         Gitea token: gitea-token
         GitHub connector: gh
-        GitHub token: github-token
+        GitHub token: (configured)
         GitLab connector: glab
         GitLab token: gitlab-token
 

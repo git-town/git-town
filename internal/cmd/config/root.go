@@ -117,7 +117,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("Forgejo token", formatToken(config.NormalConfig.ForgejoToken, redact))
 	print.Entry("Gitea token", formatToken(config.NormalConfig.GiteaToken, redact))
 	print.Entry("GitHub connector", format.OptionalStringerSetting(config.NormalConfig.GithubConnectorType))
-	print.Entry("GitHub token", formatToken(config.NormalConfig.GithubToken, redact))
+	print.Entry("GitHub token", formatGithubToken(config.NormalConfig.GithubToken))
 	print.Entry("GitLab connector", format.OptionalStringerSetting(config.NormalConfig.GitlabConnectorType))
 	print.Entry("GitLab token", formatToken(config.NormalConfig.GitlabToken, redact))
 	fmt.Println()
@@ -150,6 +150,13 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 // formatToken returns a formatted token value. If redact is true and the token is set, it returns "(configured)".
 func formatToken[T fmt.Stringer](token Option[T], redact configdomain.Redact) string {
 	if redact.ShouldRedact() && token.IsSome() {
+		return "(configured)"
+	}
+	return format.OptionalStringerSetting(token)
+}
+
+func formatGithubToken[T fmt.Stringer](token Option[T]) string {
+	if token.IsSome() {
 		return "(configured)"
 	}
 	return format.OptionalStringerSetting(token)
