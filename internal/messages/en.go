@@ -329,6 +329,7 @@ and will be removed in future versions of Git Town.`
 	ShipBranchIsInOtherWorktree           = "branch %s is checked out in another worktree, please ship from there"
 	ShipBranchNothingToDo                 = "the branch %s has no shippable changes"
 	ShipBranchOtherWorktree               = "branch %s is active in another worktree"
+	ShipParentBranchOtherWorktree         = "can't ship into %s because it is checked out in another worktree"
 	ShipChildBranch                       = "shipping this branch would ship %s as well,\nplease ship %s first"
 	ShipDeletesTrackingBranches           = "Ship deletes tracking branches: %s\n"
 	ShipExitMergeError                    = "aborted because merge exited with error"
