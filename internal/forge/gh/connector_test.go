@@ -17,21 +17,6 @@ import (
 func TestConnectorCreateProposal(t *testing.T) {
 	t.Parallel()
 
-	t.Run("autofills missing title and body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-
-		err := connector.CreateProposal(args)
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--fill"},
-			{"gh", "pr", "view"},
-		}, frontend.calls)
-	})
-
 	t.Run("autofills missing body", func(t *testing.T) {
 		t.Parallel()
 		frontend := &recordingRunner{}
@@ -60,6 +45,21 @@ func TestConnectorCreateProposal(t *testing.T) {
 		must.NoError(t, err)
 		must.Eq(t, [][]string{
 			{"gh", "pr", "create", "--head=feature", "--base=main", "--body=my body", "--fill"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("autofills missing title and body", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+
+		err := connector.CreateProposal(args)
+
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--fill"},
 			{"gh", "pr", "view"},
 		}, frontend.calls)
 	})
@@ -156,15 +156,15 @@ func newTestConnector(frontend *recordingRunner) gh.Connector {
 
 type proposalQuerier struct{}
 
-func (self proposalQuerier) Query(executable string, args ...string) (string, error) {
+func (self proposalQuerier) Query(_ string, _ ...string) (string, error) {
 	return `[{"baseRefName":"main","body":"body","headRefName":"feature","mergeable":"MERGEABLE","number":123,"title":"title","url":"https://github.com/git-town/git-town/pull/123"}]`, nil
 }
 
-func (self proposalQuerier) QueryTrim(executable string, args ...string) (stringss.Trimmed, error) {
+func (self proposalQuerier) QueryTrim(_ string, _ ...string) (stringss.Trimmed, error) {
 	return stringss.Trimmed(""), nil
 }
 
-func (self proposalQuerier) QueryZ(executable string, args ...string) (stringss.ZeroDelineated, error) {
+func (self proposalQuerier) QueryZ(_ string, _ ...string) (stringss.ZeroDelineated, error) {
 	return stringss.ZeroDelineated(""), nil
 }
 
@@ -178,6 +178,6 @@ func (self *recordingRunner) Run(executable string, args ...string) error {
 	return nil
 }
 
-func (self *recordingRunner) RunWithEnv(env []string, executable string, args ...string) error {
+func (self *recordingRunner) RunWithEnv(_ []string, executable string, args ...string) error {
 	return self.Run(executable, args...)
 }
