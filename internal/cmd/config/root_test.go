@@ -10,12 +10,14 @@ import (
 
 func TestFormatGithubToken(t *testing.T) {
 	t.Parallel()
+
 	t.Run("not set", func(t *testing.T) {
 		t.Parallel()
 		give := None[forgedomain.GithubToken]()
 		have := formatGithubToken(give)
 		must.EqOp(t, "(not set)", have)
 	})
+
 	t.Run("set", func(t *testing.T) {
 		t.Parallel()
 		give := Some(forgedomain.GithubToken("github-token"))
