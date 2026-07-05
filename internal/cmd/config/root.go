@@ -23,7 +23,7 @@ const configDesc = "Display your Git Town configuration"
 func RootCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addRedactFlag, readRedactFlag := flags.Redact()
+	addShowSecretsFlag, readShowSecretsFlag := flags.ShowSecrets()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: cmdhelpers.GroupIDConfig,
@@ -33,8 +33,8 @@ func RootCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			redact, errRedact := readRedactFlag(cmd)
-			if err := cmp.Or(errDisplayTypes, errRedact, errVerbose); err != nil {
+			showSecrets, errShowSecrets := readShowSecretsFlag(cmd)
+			if err := cmp.Or(errDisplayTypes, errShowSecrets, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -52,18 +52,18 @@ func RootCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeDisplayConfig(cliConfig, redact)
+			return executeDisplayConfig(cliConfig, showSecrets)
 		},
 	}
 	addDisplayTypesFlag(&configCmd)
 	addVerboseFlag(&configCmd)
-	addRedactFlag(&configCmd)
+	addShowSecretsFlag(&configCmd)
 	configCmd.AddCommand(getParentCommand())
 	configCmd.AddCommand(removeConfigCommand())
 	return &configCmd
 }
 
-func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact configdomain.Redact) error {
+func executeDisplayConfig(cliConfig configdomain.PartialConfig, showSecrets configdomain.ShowSecrets) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		IgnoreUnknown:    true,
@@ -75,11 +75,11 @@ func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact configdom
 	if err != nil {
 		return err
 	}
-	printConfig(repo.UnvalidatedConfig, redact)
+	printConfig(repo.UnvalidatedConfig, showSecrets)
 	return nil
 }
 
-func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
+func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowSecrets) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
@@ -99,7 +99,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
 	print.Entry("git user name", format.OptionalStringerSetting(config.NormalConfig.GitUserName))
-	print.Entry("git user email", formatToken(config.NormalConfig.GitUserEmail, redact))
+	print.Entry("git user email", formatToken(config.NormalConfig.GitUserEmail, showSecrets))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("branch prefix", format.OptionalStringerSetting(config.NormalConfig.BranchPrefix))
@@ -113,13 +113,13 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
-	print.Entry("Bitbucket app password", formatToken(config.NormalConfig.BitbucketAppPassword, redact))
-	print.Entry("Forgejo token", formatToken(config.NormalConfig.ForgejoToken, redact))
-	print.Entry("Gitea token", formatToken(config.NormalConfig.GiteaToken, redact))
+	print.Entry("Bitbucket app password", formatToken(config.NormalConfig.BitbucketAppPassword, showSecrets))
+	print.Entry("Forgejo token", formatToken(config.NormalConfig.ForgejoToken, showSecrets))
+	print.Entry("Gitea token", formatToken(config.NormalConfig.GiteaToken, showSecrets))
 	print.Entry("GitHub connector", format.OptionalStringerSetting(config.NormalConfig.GithubConnectorType))
-	print.Entry("GitHub token", format.ConfiguredStringerSetting(config.NormalConfig.GithubToken))
+	print.Entry("GitHub token", formatToken(config.NormalConfig.GithubToken, showSecrets))
 	print.Entry("GitLab connector", format.OptionalStringerSetting(config.NormalConfig.GitlabConnectorType))
-	print.Entry("GitLab token", formatToken(config.NormalConfig.GitlabToken, redact))
+	print.Entry("GitLab token", formatToken(config.NormalConfig.GitlabToken, showSecrets))
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
@@ -147,9 +147,9 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	}
 }
 
-// formatToken returns a formatted token value. If redact is true and the token is set, it returns "(configured)".
-func formatToken[T fmt.Stringer](token Option[T], redact configdomain.Redact) string {
-	if redact.ShouldRedact() && token.IsSome() {
+// formatToken returns a formatted token value. Sensitive values are redacted as "(configured)" unless showSecrets is enabled.
+func formatToken[T fmt.Stringer](token Option[T], showSecrets configdomain.ShowSecrets) string {
+	if !showSecrets.ShouldShowSecrets() && token.IsSome() {
 		return "(configured)"
 	}
 	return format.OptionalStringerSetting(token)
