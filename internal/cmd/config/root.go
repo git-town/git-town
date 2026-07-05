@@ -99,7 +99,7 @@ func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowS
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
 	print.Entry("git user name", format.OptionalStringerSetting(config.NormalConfig.GitUserName))
-	print.Entry("git user email", formatSecret(config.NormalConfig.GitUserEmail, showSecrets))
+	print.Entry("git user email", format.Secret(config.NormalConfig.GitUserEmail, showSecrets))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("branch prefix", format.OptionalStringerSetting(config.NormalConfig.BranchPrefix))
@@ -113,13 +113,13 @@ func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowS
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
-	print.Entry("Bitbucket app password", formatSecret(config.NormalConfig.BitbucketAppPassword, showSecrets))
-	print.Entry("Forgejo token", formatSecret(config.NormalConfig.ForgejoToken, showSecrets))
-	print.Entry("Gitea token", formatSecret(config.NormalConfig.GiteaToken, showSecrets))
+	print.Entry("Bitbucket app password", format.Secret(config.NormalConfig.BitbucketAppPassword, showSecrets))
+	print.Entry("Forgejo token", format.Secret(config.NormalConfig.ForgejoToken, showSecrets))
+	print.Entry("Gitea token", format.Secret(config.NormalConfig.GiteaToken, showSecrets))
 	print.Entry("GitHub connector", format.OptionalStringerSetting(config.NormalConfig.GithubConnectorType))
-	print.Entry("GitHub token", formatSecret(config.NormalConfig.GithubToken, showSecrets))
+	print.Entry("GitHub token", format.Secret(config.NormalConfig.GithubToken, showSecrets))
 	print.Entry("GitLab connector", format.OptionalStringerSetting(config.NormalConfig.GitlabConnectorType))
-	print.Entry("GitLab token", formatSecret(config.NormalConfig.GitlabToken, showSecrets))
+	print.Entry("GitLab token", format.Secret(config.NormalConfig.GitlabToken, showSecrets))
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
@@ -145,12 +145,4 @@ func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowS
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage, config.NormalConfig.Order))
 	}
-}
-
-// formatSecret returns a printable version of the given secret value. Configured secrets are redacted as "(configured)" unless showSecrets is enabled.
-func formatSecret[T fmt.Stringer](secret Option[T], showSecrets configdomain.ShowSecrets) string {
-	if !showSecrets.ShouldShowSecrets() && secret.IsSome() {
-		return "(configured)"
-	}
-	return format.OptionalStringerSetting(secret)
 }
