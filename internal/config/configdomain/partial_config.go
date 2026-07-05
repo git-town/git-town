@@ -58,6 +58,7 @@ type PartialConfig struct {
 	PushHook                    Option[PushHook]
 	ShareNewBranches            Option[ShareNewBranches]
 	ShipDeleteTrackingBranch    Option[ShipDeleteTrackingBranch]
+	ShipEnterMessage            Option[ShipEnterMessage]
 	ShipStrategy                Option[ShipStrategy]
 	Stash                       Option[Stash]
 	SyncFeatureStrategy         Option[SyncFeatureStrategy]
@@ -121,6 +122,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PushHook:                    other.PushHook.Or(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch:    other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
+		ShipEnterMessage:            other.ShipEnterMessage.Or(self.ShipEnterMessage),
 		ShipStrategy:                other.ShipStrategy.Or(self.ShipStrategy),
 		Stash:                       other.Stash.Or(self.Stash),
 		SyncFeatureStrategy:         other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),

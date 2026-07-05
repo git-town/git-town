@@ -161,6 +161,9 @@
         "delete-tracking-branch": {
           "type": "boolean"
         },
+        "enter-message": {
+          "type": "boolean"
+        },
         "ignore-uncommitted": {
           "type": "boolean"
         },

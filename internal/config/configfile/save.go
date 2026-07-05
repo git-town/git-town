@@ -160,12 +160,16 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	}
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
+	enterMessage, hasEnterMessage := data.ShipEnterMessage.Get()
 	ignoreUncommitted, hasIgnoreUncommitted := data.IgnoreUncommitted.Get()
 	shipStrategy, hasShipStrategy := data.ShipStrategy.Get()
-	if cmp.Or(hasDeleteTrackingBranch, hasIgnoreUncommitted, hasShipStrategy) {
+	if cmp.Or(hasDeleteTrackingBranch, hasEnterMessage, hasIgnoreUncommitted, hasShipStrategy) {
 		result.WriteString("\n[ship]\n")
 		if hasDeleteTrackingBranch {
 			result.WriteString(fmt.Sprintf("delete-tracking-branch = %t\n", deleteTrackingBranch))
+		}
+		if hasEnterMessage {
+			result.WriteString(fmt.Sprintf("enter-message = %t\n", enterMessage))
 		}
 		if hasIgnoreUncommitted {
 			result.WriteString(fmt.Sprintf("ignore-uncommitted = %t\n", ignoreUncommitted))

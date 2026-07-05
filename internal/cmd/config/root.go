@@ -127,6 +127,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
+	print.Entry("enter message", format.Bool(config.NormalConfig.ShipEnterMessage.ShouldEnterMessage()))
 	print.Entry("ignore uncommitted changes", format.Bool(config.NormalConfig.IgnoreUncommitted.AllowUncommitted()))
 	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
