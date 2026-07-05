@@ -33,8 +33,9 @@ Display help for this command.
 
 #### `--show-secrets`
 
-By default Git Town redacts sensitive information like tokens from the output as
-`(configured)`. Set this flag to display those values unredacted.
+By default Git Town redacts sensitive information like tokens from the output
+as `(configured)`.
+Set this flag to display those values unredacted.
 
 #### `-v`<br>`--verbose`
 
