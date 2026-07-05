@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/messages"
@@ -15,6 +16,7 @@ import (
 type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
+	EnterMessage              configdomain.ShipEnterMessage
 	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
 	mergeError                error
@@ -35,9 +37,9 @@ func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 }
 
 func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
-	commitMessage, hasCommitMessage := self.CommitMessage.Get()
 	proposalData := self.Proposal.Data.Data()
-	if !hasCommitMessage {
+	commitMessage := self.CommitMessage
+	if commitMessage.IsNone() && self.EnterMessage.ShouldEnterMessage() {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		self.enteredEmptyCommitMessage = true
@@ -50,8 +52,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err := args.Git.CommitStart(args.Frontend); err != nil {
 			return err
 		}
-		var err error
-		commitMessage, err = args.Git.CommitMessage(args.Backend, "HEAD")
+		enteredMessage, err := args.Git.CommitMessage(args.Backend, "HEAD")
 		if err != nil {
 			return err
 		}
@@ -59,6 +60,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 			return err
 		}
 		self.enteredEmptyCommitMessage = false
+		commitMessage = Some(enteredMessage)
 	}
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
@@ -68,7 +70,8 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canMergeProposals {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, Some(commitMessage))
+	// When no commit message is given, the forge determines the squash commit message.
+	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, commitMessage)
 	return self.mergeError
 }
 
