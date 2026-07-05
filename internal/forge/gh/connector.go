@@ -48,11 +48,16 @@ func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"pr", "create", "--head=" + data.Branch.String(), "--base=" + data.ParentBranch.String()}
-	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+	title, hasTitle := data.ProposalTitle.Get()
+	body, hasBody := data.ProposalBody.Get()
+	if hasTitle {
 		args = append(args, "--title="+title.String())
 	}
-	if body, hasBody := data.ProposalBody.Get(); hasBody {
+	if hasBody {
 		args = append(args, "--body="+body.String())
+	}
+	if !hasTitle || !hasBody {
+		args = append(args, "--fill")
 	}
 	if err := self.Frontend.Run("gh", args...); err != nil {
 		return err
