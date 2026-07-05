@@ -51,6 +51,7 @@ Feature: display configuration inside a non-TTY environment
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 

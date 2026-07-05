@@ -14,7 +14,7 @@ and uses that message when merging the proposal via the API.
 You can also enter the message
 for a single ship with the
 [--enter-message](../commands/ship.md#--enter-message) flag, or provide it
-directly with [--message](../commands/ship.md#-m-textmessage-text).
+directly with [--message](../commands/ship.md#-m-text--message-text).
 
 ## config file
 

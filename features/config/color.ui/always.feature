@@ -82,6 +82,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: squash-merge
 
@@ -187,6 +188,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 
@@ -317,6 +319,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: no
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: squash-merge
 
@@ -391,6 +394,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 
@@ -471,6 +475,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 
