@@ -113,11 +113,17 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	commitMessageParts := message.Parts()
+	// When no commit message is given, Forgejo determines the squash commit message.
+	var commitTitle, commitBody string
+	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
+		commitMessageParts := commitMessage.Parts()
+		commitTitle = commitMessageParts.Title.String()
+		commitBody = commitMessageParts.Body
+	}
 	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	client, err := self.getClient()
 	if err != nil {
@@ -125,8 +131,8 @@ func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber,
 	}
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), forgejo.MergePullRequestOption{
 		Style:   forgejo.MergeStyleSquash,
-		Title:   commitMessageParts.Title.String(),
-		Message: commitMessageParts.Body,
+		Title:   commitTitle,
+		Message: commitBody,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

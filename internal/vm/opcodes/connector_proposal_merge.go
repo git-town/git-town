@@ -68,7 +68,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canMergeProposals {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, commitMessage)
+	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, Some(commitMessage))
 	return self.mergeError
 }
 

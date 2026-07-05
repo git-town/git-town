@@ -144,8 +144,13 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
-func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
+func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+	args := []string{"pr", "merge", "--squash"}
+	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
+		args = append(args, "--body="+commitMessage.String())
+	}
+	args = append(args, number.String())
+	return self.Frontend.Run("gh", args...)
 }
 
 // ============================================================================
