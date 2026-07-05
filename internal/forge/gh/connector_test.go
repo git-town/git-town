@@ -23,6 +23,7 @@ func TestConnectorCreateProposal(t *testing.T) {
 		connector := newTestConnector(frontend)
 		args := createProposalArgs()
 		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = None[gitdomain.ProposalBody]()
 
 		err := connector.CreateProposal(args)
 
@@ -38,6 +39,7 @@ func TestConnectorCreateProposal(t *testing.T) {
 		frontend := &recordingRunner{}
 		connector := newTestConnector(frontend)
 		args := createProposalArgs()
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
 		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
 
 		err := connector.CreateProposal(args)
@@ -54,6 +56,8 @@ func TestConnectorCreateProposal(t *testing.T) {
 		frontend := &recordingRunner{}
 		connector := newTestConnector(frontend)
 		args := createProposalArgs()
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
+		args.ProposalBody = None[gitdomain.ProposalBody]()
 
 		err := connector.CreateProposal(args)
 
