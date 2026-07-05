@@ -186,6 +186,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	if !hasTargetBranch {
 		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
+	if targetBranch.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipParentBranchOtherWorktree, targetBranchName)
+	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip, validatedConfig.NormalConfig.Order)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
