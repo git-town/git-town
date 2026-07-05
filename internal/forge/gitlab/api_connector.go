@@ -110,7 +110,8 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	// When no commit message is given, GitLab determines the squash commit message.
 	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
 		// the GitLab API wants the full commit message in the body
-		options.SquashCommitMessage = new(commitMessage.String())
+		squashCommitMessage := commitMessage.String()
+		options.SquashCommitMessage = &squashCommitMessage
 	}
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), options)
 	self.log.Finished(err)
