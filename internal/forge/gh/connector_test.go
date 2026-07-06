@@ -86,6 +86,36 @@ func TestConnectorCreateProposal(t *testing.T) {
 	})
 }
 
+func TestConnectorSquashMergeProposal(t *testing.T) {
+	t.Parallel()
+
+	t.Run("single-line message has an empty body", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+
+		err := connector.SquashMergeProposal(123, "my title")
+
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=", "123"},
+		}, frontend.calls)
+	})
+
+	t.Run("uses the first line as the commit subject and the rest as the body", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+
+		err := connector.SquashMergeProposal(123, "my title\n\nmy body")
+
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=my body", "123"},
+		}, frontend.calls)
+	})
+}
+
 func TestParsePermissionsOutput(t *testing.T) {
 	t.Parallel()
 

@@ -150,7 +150,12 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
+	// Split the supplied message the way Git does: the first line becomes the
+	// commit subject and the rest becomes the body. Passing only "--body" here
+	// would leave the proposal title as the squash-commit subject, which is
+	// inconsistent with all other connectors (see #6254).
+	messageParts := message.Parts()
+	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--subject="+messageParts.Title.String(), "--body="+messageParts.Body, number.String())
 }
 
 // ============================================================================
