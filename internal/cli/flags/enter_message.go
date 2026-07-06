@@ -11,7 +11,7 @@ const enterMessageLong = "enter-message"
 // type-safe access to the CLI arguments of type configdomain.ShipEnterMessage
 func EnterMessage() (AddFunc, ReadEnterMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().Bool(enterMessageLong, false, "enter the commit message to use when merging the proposal")
+		cmd.Flags().Bool(enterMessageLong, false, "manually enter the commit message")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.ShipEnterMessage], error) {
 		return readBoolOptFlag[configdomain.ShipEnterMessage](cmd.Flags(), enterMessageLong)

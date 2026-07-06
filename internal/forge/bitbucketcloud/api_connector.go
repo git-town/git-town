@@ -167,10 +167,7 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 		ID:       number.String(),
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
-	}
-	// When no commit message is given, Bitbucket determines the squash commit message.
-	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
-		options.Message = commitMessage.String()
+		Message:  message.GetOrZero().String(),
 	}
 	_, err := self.client.Value.Repositories.PullRequests.Merge(options)
 	self.log.Finished(err)
