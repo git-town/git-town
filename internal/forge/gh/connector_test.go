@@ -17,13 +17,22 @@ import (
 func TestConnectorSquashMergeProposal(t *testing.T) {
 	t.Parallel()
 
-	t.Run("with a commit message sends it as the body", func(t *testing.T) {
+	t.Run("multi-line message uses the first line as the subject and the rest as the body", func(t *testing.T) {
 		t.Parallel()
 		runner := &recordingRunner{}
 		connector := gh.Connector{Frontend: runner}
-		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), Some(gitdomain.CommitMessage("my message")))
+		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), Some(gitdomain.CommitMessage("my title\n\nmy body")))
 		must.NoError(t, err)
-		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--body=my message", "1"}}, runner.calls)
+		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=my body", "1"}}, runner.calls)
+	})
+
+	t.Run("single-line message sends it as the commit subject", func(t *testing.T) {
+		t.Parallel()
+		runner := &recordingRunner{}
+		connector := gh.Connector{Frontend: runner}
+		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), Some(gitdomain.CommitMessage("my title")))
+		must.NoError(t, err)
+		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--subject=my title", "1"}}, runner.calls)
 	})
 
 	t.Run("without a commit message lets the forge choose it", func(t *testing.T) {
@@ -104,36 +113,6 @@ func TestConnectorCreateProposal(t *testing.T) {
 		must.Eq(t, [][]string{
 			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
 			{"gh", "pr", "view"},
-		}, frontend.calls)
-	})
-}
-
-func TestConnectorSquashMergeProposal(t *testing.T) {
-	t.Parallel()
-
-	t.Run("single-line message has an empty body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-
-		err := connector.SquashMergeProposal(123, "my title")
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=", "123"},
-		}, frontend.calls)
-	})
-
-	t.Run("uses the first line as the commit subject and the rest as the body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-
-		err := connector.SquashMergeProposal(123, "my title\n\nmy body")
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=my body", "123"},
 		}, frontend.calls)
 	})
 }

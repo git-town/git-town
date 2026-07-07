@@ -152,16 +152,14 @@ var _ forgedomain.ProposalMerger = ghConnector // type-check
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	args := []string{"pr", "merge", "--squash"}
 
-	messageParts := gitdomain.CommitMessageParts{}
 	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
-		messageParts = commitMessage.Parts()
-	}
-
-	if messageParts.Title.String() != "" {
-		args = append(args, "--subject="+messageParts.Title.String())
-	}
-	if messageParts.Body != "" {
-		args = append(args, "--body="+messageParts.Body)
+		messageParts := commitMessage.Parts()
+		if messageParts.Title.String() != "" {
+			args = append(args, "--subject="+messageParts.Title.String())
+		}
+		if messageParts.Body != "" {
+			args = append(args, "--body="+messageParts.Body)
+		}
 	}
 
 	args = append(args, number.String())
