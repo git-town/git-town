@@ -111,6 +111,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	pushHook, errPushHook := loadErr(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
 	shareNewBranches, errShareNewBranches := loadErr(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := loadErr(snapshot, configdomain.KeyShipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch], ignoreUnknown)
+	shipEnterMessage, errShipEnterMessage := loadErr(snapshot, configdomain.KeyShipEnterMessage, gohacks.ParseBoolOpt[configdomain.ShipEnterMessage], ignoreUnknown)
 	shipStrategy, errShipStrategy := loadErr(snapshot, configdomain.KeyShipStrategy, configdomain.ParseShipStrategy, ignoreUnknown)
 	stash, errStash := loadErr(snapshot, configdomain.KeyStash, gohacks.ParseBoolOpt[configdomain.Stash], ignoreUnknown)
 	syncFeatureStrategy, errSyncFeatureStrategy := loadErr(snapshot, configdomain.KeySyncFeatureStrategy, configdomain.ParseSyncFeatureStrategy, ignoreUnknown)
@@ -148,6 +149,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
+		errShipEnterMessage,
 		errShipStrategy,
 		errStash,
 		errSyncFeatureStrategy,
@@ -199,6 +201,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
+		ShipEnterMessage:            shipEnterMessage,
 		ShipStrategy:                shipStrategy,
 		Stash:                       stash,
 		SyncFeatureStrategy:         syncFeatureStrategy,

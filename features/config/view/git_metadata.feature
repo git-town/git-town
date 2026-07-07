@@ -81,6 +81,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 
@@ -155,6 +156,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 

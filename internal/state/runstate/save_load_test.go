@@ -445,6 +445,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
+        "EnterMessage": false,
         "Proposal": {
           "data": {
             "Active": true,

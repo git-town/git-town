@@ -101,6 +101,7 @@ Feature: display configuration defined in environment variables
 
       Ship:
         delete tracking branch: no
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: fast-forward
 

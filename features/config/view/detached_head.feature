@@ -81,6 +81,7 @@ Feature: display configuration from Git metadata in detached head state
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 
