@@ -108,6 +108,7 @@ Feature: display information from config file
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 

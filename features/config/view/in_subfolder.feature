@@ -58,6 +58,7 @@ Feature: show the configuration from a subfolder
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 

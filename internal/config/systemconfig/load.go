@@ -61,6 +61,7 @@ func Load() configdomain.PartialConfig {
 		PushHook:                    None[configdomain.PushHook](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
+		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),
 		ShipStrategy:                None[configdomain.ShipStrategy](),
 		Stash:                       None[configdomain.Stash](),
 		SyncFeatureStrategy:         None[configdomain.SyncFeatureStrategy](),

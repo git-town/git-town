@@ -97,6 +97,7 @@ Feature: display invalid Git metadata
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 

@@ -66,6 +66,7 @@ type Propose struct {
 
 type Ship struct {
 	DeleteTrackingBranch *bool   `toml:"delete-tracking-branch"`
+	EnterMessage         *bool   `toml:"enter-message"`
 	IgnoreUncommitted    *bool   `toml:"ignore-uncommitted"`
 	Strategy             *string `toml:"strategy"`
 }

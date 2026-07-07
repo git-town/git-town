@@ -42,6 +42,7 @@ type sharedShipData struct {
 
 type determineSharedShipDataArgs struct {
 	args                 []string
+	enterMessageOverride Option[configdomain.ShipEnterMessage]
 	repo                 execute.OpenRepoResult
 	shipStrategyOverride Option[configdomain.ShipStrategy]
 }
@@ -159,6 +160,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	}
 	if shipStrategyOverride, hasShipStrategyOverride := args.shipStrategyOverride.Get(); hasShipStrategyOverride {
 		validatedConfig.NormalConfig.ShipStrategy = shipStrategyOverride
+	}
+	if enterMessageOverride, hasEnterMessageOverride := args.enterMessageOverride.Get(); hasEnterMessageOverride {
+		validatedConfig.NormalConfig.ShipEnterMessage = enterMessageOverride
 	}
 	switch validatedConfig.BranchType(branchToShip) {
 	case configdomain.BranchTypeContributionBranch:

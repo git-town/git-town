@@ -335,6 +335,7 @@ EnterForgeData:
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
+		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),
 		ShipStrategy:                shipStrategy,
 		Stash:                       stash,
 		SyncFeatureStrategy:         syncFeatureStrategy,

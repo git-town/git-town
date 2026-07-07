@@ -50,6 +50,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addEnterMessageFlag, readEnterMessageFlag := flags.EnterMessage()
 	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.IgnoreUncommitted()
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
@@ -64,6 +65,7 @@ func Cmd() *cobra.Command {
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			enterMessage, errEnterMessage := readEnterMessageFlag(cmd)
 			ignoreUncommitted, errIgnoreUncommitted := readIgnoreUncommittedFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
@@ -71,7 +73,7 @@ func Cmd() *cobra.Command {
 			shipStrategy, errShipStrategy := readShipStrategyFlag(cmd)
 			toParent, errToParent := readToParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errIgnoreUncommitted, errInteractive, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errEnterMessage, errIgnoreUncommitted, errInteractive, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -92,6 +94,7 @@ func Cmd() *cobra.Command {
 			return executeShip(executeShipArgs{
 				args:         args,
 				cliConfig:    cliConfig,
+				enterMessage: enterMessage,
 				message:      message,
 				messageFile:  messageFile,
 				shipStrategy: shipStrategy,
@@ -101,6 +104,7 @@ func Cmd() *cobra.Command {
 	}
 	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addEnterMessageFlag(&cmd)
 	addIgnoreUncommittedFlag(&cmd)
 	addInteractiveFlag(&cmd)
 	addMessageFlag(&cmd)
@@ -113,6 +117,7 @@ func Cmd() *cobra.Command {
 type executeShipArgs struct {
 	args         []string
 	cliConfig    configdomain.PartialConfig
+	enterMessage Option[configdomain.ShipEnterMessage]
 	message      Option[gitdomain.CommitMessage]
 	messageFile  Option[gitdomain.CommitMessageFile]
 	shipStrategy Option[configdomain.ShipStrategy]
@@ -134,6 +139,7 @@ Start:
 	}
 	sharedData, flow, err := determineSharedShipData(determineSharedShipDataArgs{
 		args:                 args.args,
+		enterMessageOverride: args.enterMessage,
 		repo:                 repo,
 		shipStrategyOverride: args.shipStrategy,
 	})

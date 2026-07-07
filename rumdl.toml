@@ -156,6 +156,7 @@ ignore-words = [
   "rebase",
   "share-new-branches",
   "ship-delete-tracking-branch",
+  "ship-enter-message",
   "ship-strategy",
   "squash-merge",
   "stash",

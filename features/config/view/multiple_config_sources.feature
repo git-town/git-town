@@ -132,6 +132,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: no
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: squash-merge
 
