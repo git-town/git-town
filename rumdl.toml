@@ -116,7 +116,7 @@ ignore-words = [
   "always-merge",
   "api",
   "auto-sync",
-  "bitbucket-app-password",
+  "bitbucket-api-token",
   "bitbucket-username",
   "branch-prefix",
   "browser",

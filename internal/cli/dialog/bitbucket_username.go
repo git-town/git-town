@@ -17,6 +17,9 @@ Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this,
 please enter your Bitbucket username.
+When authenticating with a Bitbucket Cloud
+API token, this is the email address
+of your Atlassian account.
 
 If you leave this empty,
 Git Town will not use the Bitbucket API.

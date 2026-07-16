@@ -104,22 +104,22 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, er
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connectorOpt, _, err := forge.NewConnector(forge.NewConnectorArgs{
-		Backend:              repo.Backend,
-		BitbucketAppPassword: config.BitbucketAppPassword,
-		BitbucketUsername:    config.BitbucketUsername,
-		BrowserEnabled:       config.BrowserEnabled,
-		BrowserExecutable:    config.BrowserExecutable,
-		ConfigDir:            repo.ConfigDir,
-		ForgeType:            config.ForgeType,
-		ForgejoToken:         config.ForgejoToken,
-		Frontend:             repo.Frontend,
-		GiteaToken:           config.GiteaToken,
-		GithubConnectorType:  config.GithubConnectorType,
-		GithubToken:          config.GithubToken,
-		GitlabConnectorType:  config.GitlabConnectorType,
-		GitlabToken:          config.GitlabToken,
-		Log:                  print.Logger{},
-		RemoteURL:            config.RemoteURL(repo.Backend, remote),
+		Backend:             repo.Backend,
+		BitbucketAPIToken:   config.BitbucketAPIToken,
+		BitbucketUsername:   config.BitbucketUsername,
+		BrowserEnabled:      config.BrowserEnabled,
+		BrowserExecutable:   config.BrowserExecutable,
+		ConfigDir:           repo.ConfigDir,
+		ForgeType:           config.ForgeType,
+		ForgejoToken:        config.ForgejoToken,
+		Frontend:            repo.Frontend,
+		GiteaToken:          config.GiteaToken,
+		GithubConnectorType: config.GithubConnectorType,
+		GithubToken:         config.GithubToken,
+		GitlabConnectorType: config.GitlabConnectorType,
+		GitlabToken:         config.GitlabToken,
+		Log:                 print.Logger{},
+		RemoteURL:           config.RemoteURL(repo.Backend, remote),
 	})
 	if err != nil {
 		return repoData{}, err

@@ -29,7 +29,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 				saveBitbucketUsername(userInput.Data.BitbucketUsername, unvalidatedConfig.GitLocal.BitbucketUsername, userInput.Scope, frontend),
 			)
 			fc.Check(
-				saveBitbucketAppPassword(userInput.Data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.Scope, frontend),
+				saveBitbucketAPIToken(userInput.Data.BitbucketAPIToken, unvalidatedConfig.GitLocal.BitbucketAPIToken, userInput.Scope, frontend),
 			)
 		case forgedomain.ForgeTypeForgejo:
 			fc.Check(
@@ -374,14 +374,14 @@ func saveAutoSync(valueToWriteToGit Option[configdomain.AutoSync], valueAlreadyI
 	return nil
 }
 
-func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppPassword], valueAlreadyInGit Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {
+func saveBitbucketAPIToken(valueToWriteToGit Option[forgedomain.BitbucketAPIToken], valueAlreadyInGit Option[forgedomain.BitbucketAPIToken], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetBitbucketAppPassword(runner, value, scope)
+		return gitconfig.SetBitbucketAPIToken(runner, value, scope)
 	}
-	return gitconfig.RemoveBitbucketAppPassword(runner)
+	return gitconfig.RemoveBitbucketAPIToken(runner)
 }
 
 func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsername], valueAlreadyInGit Option[forgedomain.BitbucketUsername], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {

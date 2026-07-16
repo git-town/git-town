@@ -33,7 +33,7 @@ type NormalConfig struct {
 	Aliases                     configdomain.Aliases
 	AutoResolve                 configdomain.AutoResolve
 	AutoSync                    configdomain.AutoSync
-	BitbucketAppPassword        Option[forgedomain.BitbucketAppPassword]
+	BitbucketAPIToken           Option[forgedomain.BitbucketAPIToken]
 	BitbucketUsername           Option[forgedomain.BitbucketUsername]
 	BranchPrefix                Option[configdomain.BranchPrefix]
 	BranchTypeOverrides         configdomain.BranchTypeOverrides
@@ -106,7 +106,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		Aliases:                     other.Aliases,
 		AutoResolve:                 other.AutoResolve.GetOr(self.AutoResolve),
 		AutoSync:                    other.AutoSync.GetOr(self.AutoSync),
-		BitbucketAppPassword:        other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
+		BitbucketAPIToken:           other.BitbucketAPIToken.Or(self.BitbucketAPIToken),
 		BitbucketUsername:           other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:                other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:         other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
@@ -259,18 +259,18 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 
 func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
-		Aliases:              configdomain.Aliases{},
-		AutoResolve:          true,
-		AutoSync:             true,
-		BitbucketAppPassword: None[forgedomain.BitbucketAppPassword](),
-		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
-		BranchPrefix:         None[configdomain.BranchPrefix](),
-		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-		BrowserEnabled:       true,
-		BrowserExecutable:    None[browserdomain.BrowserExecutable](),
-		ContributionRegex:    None[configdomain.ContributionRegex](),
-		Detached:             false,
-		DevRemote:            gitdomain.RemoteOrigin,
+		Aliases:             configdomain.Aliases{},
+		AutoResolve:         true,
+		AutoSync:            true,
+		BitbucketAPIToken:   None[forgedomain.BitbucketAPIToken](),
+		BitbucketUsername:   None[forgedomain.BitbucketUsername](),
+		BranchPrefix:        None[configdomain.BranchPrefix](),
+		BranchTypeOverrides: configdomain.BranchTypeOverrides{},
+		BrowserEnabled:      true,
+		BrowserExecutable:   None[browserdomain.BrowserExecutable](),
+		ContributionRegex:   None[configdomain.ContributionRegex](),
+		Detached:            false,
+		DevRemote:           gitdomain.RemoteOrigin,
 		DisplayTypes: configdomain.DisplayTypes{
 			Quantifier:  configdomain.QuantifierNo,
 			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
@@ -322,7 +322,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		Aliases:                     partial.Aliases,
 		AutoResolve:                 partial.AutoResolve.GetOr(defaults.AutoResolve),
 		AutoSync:                    partial.AutoSync.GetOr(defaults.AutoSync),
-		BitbucketAppPassword:        partial.BitbucketAppPassword,
+		BitbucketAPIToken:           partial.BitbucketAPIToken,
 		BitbucketUsername:           partial.BitbucketUsername,
 		BranchPrefix:                partial.BranchPrefix,
 		BranchTypeOverrides:         partial.BranchTypeOverrides,

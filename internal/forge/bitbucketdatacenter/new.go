@@ -38,11 +38,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			log:           args.Log,
 		}
 	}
-	if args.UserName.IsSome() && args.AppPassword.IsSome() {
+	if args.UserName.IsSome() && args.APIToken.IsSome() {
 		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			log:          args.Log,
-			token:        args.AppPassword.GetOrZero().String(),
+			token:        args.APIToken.GetOrZero().String(),
 			username:     args.UserName.GetOrZero().String(),
 		}
 		return &CachedAPIConnector{
@@ -54,7 +54,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 }
 
 type NewConnectorArgs struct {
-	AppPassword       Option[forgedomain.BitbucketAppPassword]
+	APIToken          Option[forgedomain.BitbucketAPIToken]
 	BrowserEnabled    browserdomain.BrowserEnabled
 	BrowserExecutable Option[browserdomain.BrowserExecutable]
 	ConfigDir         configdomain.RepoConfigDir

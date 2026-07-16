@@ -104,7 +104,7 @@ If you have configured the API tokens
 for [GitHub](../preferences/github-token.md),
 [GitLab](../preferences/gitlab-token.md),
 [Gitea](../preferences/gitea-token.md),
-[Bitbucket](../preferences/bitbucket-app-password.md),
+[Bitbucket](../preferences/bitbucket-api-token.md),
 or [Forgejo](../preferences/forgejo-token.md)
 and the branch to be shipped has an open proposal,
 this command merges the proposal for the current branch.

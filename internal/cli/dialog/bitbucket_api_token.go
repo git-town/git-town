@@ -11,15 +11,17 @@ import (
 )
 
 const (
-	bitbucketAppPasswordTitle = `Bitbucket App Password`
-	bitbucketAppPasswordHelp  = `
+	bitbucketAPITokenTitle = `Bitbucket API token`
+	bitbucketAPITokenHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this, please enter
-a Bitbucket App Password.
+a Bitbucket API token with scopes.
 This is not your normal account password.
+You can create one at
+https://id.atlassian.com/manage-profile/security/api-tokens.
 More info at
-https://www.git-town.com/preferences/bitbucket-app-password.
+https://www.git-town.com/preferences/bitbucket-api-token.
 
 If you leave this empty,
 Git Town will not use the Bitbucket API.
@@ -27,22 +29,22 @@ Git Town will not use the Bitbucket API.
 `
 )
 
-// BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+// BitbucketAPIToken lets the user enter the Bitbucket API token.
+func BitbucketAPIToken(args Args[forgedomain.BitbucketAPIToken]) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:    "bitbucket-app-password",
+		DialogName:    "bitbucket-api-token",
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          bitbucketAppPasswordHelp,
+		Help:          bitbucketAPITokenHelp,
 		Inputs:        args.Inputs,
 		Interactive:   args.Interactive,
-		Prompt:        messages.BitbucketAppPasswordPrompt,
-		Title:         bitbucketAppPasswordTitle,
+		Prompt:        messages.BitbucketAPITokenPrompt,
+		Title:         bitbucketAPITokenTitle,
 	})
-	newValue := forgedomain.ParseBitbucketAppPassword(input)
+	newValue := forgedomain.ParseBitbucketAPIToken(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
-		newValue = None[forgedomain.BitbucketAppPassword]()
+		newValue = None[forgedomain.BitbucketAPIToken]()
 	}
-	fmt.Printf(messages.BitbucketAppPasswordResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	fmt.Printf(messages.BitbucketAPITokenResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }
