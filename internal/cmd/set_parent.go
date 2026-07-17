@@ -386,6 +386,11 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		connector, hasConnector := data.connector.Get()
 		_, canUpdateProposalTarget := connector.(forgedomain.ProposalTargetUpdater)
 		if hasProposal && hasConnector && canUpdateProposalTarget {
+			// The forge can only retarget the proposal to the new parent if that branch exists at the forge.
+			// Push it first if it doesn't have a tracking branch yet.
+			if newParentInfo, hasNewParentInfo := data.branchesSnapshot.Branches.FindByLocalName(newParent).Get(); hasNewParentInfo && !newParentInfo.HasTrackingBranch() {
+				prog.Add(&opcodes.BranchTrackingCreate{Branch: newParent})
+			}
 			prog.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch: newParent,
 				OldBranch: proposal.Data.Data().Target,

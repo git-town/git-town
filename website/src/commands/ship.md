@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town ship [<branch-name>] [--dry-run] [-h | --help] [--(no)-ignore-uncommitted] [--(non)-interactive] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
+git town ship [<branch-name>] [--dry-run] [--enter-message] [-h | --help] [--(no)-ignore-uncommitted] [--(non)-interactive] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 _Notice: Most people don't need to use this command._
@@ -39,6 +39,15 @@ When called with a positional argument, it ships the branch with the given name.
 
 Use the `--dry-run` flag to test-drive this command.
 It prints the Git commands that would be run but doesn't execute them.
+
+#### `--enter-message`
+
+When shipping via the [api ship-strategy](../preferences/ship-strategy.md),
+`git town ship` merges the proposal using the commit message
+that your forge generates.
+Use this flag to enter the squash commit message yourself instead,
+overriding the [ship-enter-message](../preferences/ship-enter-message.md)
+setting for this call.
 
 #### `-h`<br>`--help`
 
@@ -99,6 +108,11 @@ for [GitHub](../preferences/github-token.md),
 or [Forgejo](../preferences/forgejo-token.md)
 and the branch to be shipped has an open proposal,
 this command merges the proposal for the current branch.
+By default it merges using the commit message that your forge generates.
+To enter the squash commit message yourself,
+use the `--enter-message` flag
+or enable the [ship-enter-message](../preferences/ship-enter-message.md)
+setting.
 
 If your forge automatically deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),

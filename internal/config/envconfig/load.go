@@ -52,6 +52,7 @@ const (
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
+	shipEnterMessage            = "GIT_TOWN_SHIP_ENTER_MESSAGE"
 	shipStrategy                = "GIT_TOWN_SHIP_STRATEGY"
 	stash                       = "GIT_TOWN_STASH"
 	syncFeatureStrategy         = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
@@ -131,6 +132,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
+		errShipEnterMessage,
 		errShipStrategy,
 		errStash,
 		errSyncFeatureStrategy,
@@ -183,6 +185,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
+		ShipEnterMessage:            shipEnterMessage,
 		ShipStrategy:                shipStrategy,
 		Stash:                       stash,
 		SyncFeatureStrategy:         syncFeatureStrategy,

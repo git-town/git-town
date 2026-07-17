@@ -23,7 +23,7 @@ Feature: display configuration inside a non-TTY environment
       Configuration:
         offline: no
         git user name: user
-        git user email: email@example.com
+        git user email: (configured)
 
       Create:
         branch prefix: (not set)
@@ -51,6 +51,7 @@ Feature: display configuration inside a non-TTY environment
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 
