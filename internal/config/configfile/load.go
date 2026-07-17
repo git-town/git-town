@@ -77,6 +77,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		pushHook                    Option[configdomain.PushHook]
 		shareNewBranches            Option[configdomain.ShareNewBranches]
 		shipDeleteTrackingBranch    Option[configdomain.ShipDeleteTrackingBranch]
+		shipEnterMessage            Option[configdomain.ShipEnterMessage]
 		shipStrategy                Option[configdomain.ShipStrategy]
 		stash                       Option[configdomain.Stash]
 		syncFeatureStrategy         Option[configdomain.SyncFeatureStrategy]
@@ -235,6 +236,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Ship.DeleteTrackingBranch != nil {
 			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
 		}
+		if data.Ship.EnterMessage != nil {
+			shipEnterMessage = Some(configdomain.ShipEnterMessage(*data.Ship.EnterMessage))
+		}
 		if data.Ship.IgnoreUncommitted != nil {
 			ignoreUncommitted = Some(configdomain.IgnoreUncommitted(*data.Ship.IgnoreUncommitted))
 		}
@@ -333,6 +337,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PushHook:                    pushHook,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
+		ShipEnterMessage:            shipEnterMessage,
 		IgnoreUncommitted:           ignoreUncommitted,
 		ShipStrategy:                shipStrategy,
 		Stash:                       stash,

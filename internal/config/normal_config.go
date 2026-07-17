@@ -70,6 +70,7 @@ type NormalConfig struct {
 	PushHook                    configdomain.PushHook
 	ShareNewBranches            configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch    configdomain.ShipDeleteTrackingBranch
+	ShipEnterMessage            configdomain.ShipEnterMessage
 	ShipStrategy                configdomain.ShipStrategy
 	Stash                       configdomain.Stash
 	SyncFeatureStrategy         configdomain.SyncFeatureStrategy
@@ -142,6 +143,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PushHook:                    other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:            other.ShareNewBranches.GetOr(self.ShareNewBranches),
 		ShipDeleteTrackingBranch:    other.ShipDeleteTrackingBranch.GetOr(self.ShipDeleteTrackingBranch),
+		ShipEnterMessage:            other.ShipEnterMessage.GetOr(self.ShipEnterMessage),
 		ShipStrategy:                other.ShipStrategy.GetOr(self.ShipStrategy),
 		Stash:                       other.Stash.GetOr(self.Stash),
 		SyncFeatureStrategy:         other.SyncFeatureStrategy.GetOr(self.SyncFeatureStrategy),
@@ -300,6 +302,7 @@ func DefaultNormalConfig() NormalConfig {
 		PushHook:                    true,
 		ShareNewBranches:            configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch:    true,
+		ShipEnterMessage:            false,
 		ShipStrategy:                configdomain.ShipStrategyAPI,
 		Stash:                       true,
 		SyncFeatureStrategy:         configdomain.SyncFeatureStrategyMerge,
@@ -356,6 +359,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch:    partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),
+		ShipEnterMessage:            partial.ShipEnterMessage.GetOr(defaults.ShipEnterMessage),
 		ShipStrategy:                partial.ShipStrategy.GetOr(defaults.ShipStrategy),
 		Stash:                       partial.Stash.GetOr(defaults.Stash),
 		SyncFeatureStrategy:         syncFeatureStrategy,

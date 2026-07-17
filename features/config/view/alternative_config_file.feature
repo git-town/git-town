@@ -29,7 +29,7 @@ Feature: show the configuration when using an alternative config file
       Configuration:
         offline: no
         git user name: user
-        git user email: email@example.com
+        git user email: (configured)
 
       Create:
         branch prefix: (not set)
@@ -57,6 +57,7 @@ Feature: show the configuration when using an alternative config file
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: no
         ship strategy: api
 

@@ -113,7 +113,7 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	client, err := self.getClient()
 	if err != nil {
 		return err
@@ -121,7 +121,8 @@ func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	commitMessageParts := message.Parts()
+	// When no commit message is given, Gitea determines the squash commit message.
+	commitMessageParts := message.GetOrZero().Parts()
 	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
