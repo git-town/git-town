@@ -29,7 +29,7 @@ func TestNewConnector(t *testing.T) {
 		connector, detectedForgeType, err := repo.NewConnector(remoteURL)
 		must.NoError(t, err)
 		must.True(t, connector.IsSome())
-		must.Eq(t, Some(forgedomain.ForgeTypeGithub.Detected()), detectedForgeType)
+		must.True(t, detectedForgeType.EqualSome(forgedomain.ForgeTypeGithub.Detected()))
 	})
 
 	t.Run("remote URL at an unknown forge", func(t *testing.T) {
