@@ -53,7 +53,7 @@ Feature: display configuration from Git metadata in detached head state
       Configuration:
         offline: no
         git user name: user
-        git user email: email@example.com
+        git user email: (configured)
 
       Create:
         branch prefix: acme-
@@ -81,6 +81,7 @@ Feature: display configuration from Git metadata in detached head state
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 

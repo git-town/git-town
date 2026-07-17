@@ -95,6 +95,7 @@
     - [Proposal breadcrumb direction](preferences/proposal-breadcrumb-direction.md)
   - [Ship]() <!-- rumdl-disable-line MD042 -->
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
+    - [Enter message](preferences/ship-enter-message.md)
     - [Ignore uncommitted](preferences/ignore-uncommitted.md)
     - [Ship strategy](preferences/ship-strategy.md)
   - [Sync]() <!-- rumdl-disable-line MD042 -->

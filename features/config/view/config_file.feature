@@ -80,7 +80,7 @@ Feature: display information from config file
       Configuration:
         offline: no
         git user name: user
-        git user email: email@example.com
+        git user email: (configured)
 
       Create:
         branch prefix: acme-
@@ -108,6 +108,7 @@ Feature: display information from config file
 
       Ship:
         delete tracking branch: yes
+        enter message: no
         ignore uncommitted changes: yes
         ship strategy: squash-merge
 

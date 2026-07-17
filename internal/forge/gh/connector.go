@@ -48,11 +48,16 @@ func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"pr", "create", "--head=" + data.Branch.String(), "--base=" + data.ParentBranch.String()}
-	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+	title, hasTitle := data.ProposalTitle.Get()
+	body, hasBody := data.ProposalBody.Get()
+	if hasTitle {
 		args = append(args, "--title="+title.String())
 	}
-	if body, hasBody := data.ProposalBody.Get(); hasBody {
+	if hasBody {
 		args = append(args, "--body="+body.String())
+	}
+	if !hasTitle || !hasBody {
+		args = append(args, "--fill")
 	}
 	if err := self.Frontend.Run("gh", args...); err != nil {
 		return err
@@ -144,8 +149,21 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
-func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), number.String())
+func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+	args := []string{"pr", "merge", "--squash"}
+
+	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
+		messageParts := commitMessage.Parts()
+		if messageParts.Title.String() != "" {
+			args = append(args, "--subject="+messageParts.Title.String())
+		}
+		if messageParts.Body != "" {
+			args = append(args, "--body="+messageParts.Body)
+		}
+	}
+
+	args = append(args, number.String())
+	return self.Frontend.Run("gh", args...)
 }
 
 // ============================================================================

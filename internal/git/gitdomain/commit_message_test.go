@@ -33,6 +33,10 @@ func TestCommitMessage(t *testing.T) {
 				Title: "title",
 				Body:  "body1\nbody2\n",
 			},
+			"": {
+				Title: "",
+				Body:  "",
+			},
 		}
 		for give, want := range tests {
 			have := give.Parts()
