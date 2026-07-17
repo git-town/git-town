@@ -113,11 +113,12 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message gitdomain.CommitMessage) error {
+func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	commitMessageParts := message.Parts()
+	// When no commit message is given, Forgejo determines the squash commit message.
+	commitMessageParts := message.GetOrZero().Parts()
 	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	client, err := self.getClient()
 	if err != nil {

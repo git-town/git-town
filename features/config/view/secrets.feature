@@ -1,4 +1,4 @@
-Feature: redact API tokens in config output
+Feature: redact secrets in config output
 
   Background:
     Given a Git repo with origin
@@ -7,9 +7,9 @@ Feature: redact API tokens in config output
     And Git setting "git-town.gitea-token" is "gitea-token"
     And Git setting "git-town.github-token" is "github-token"
     And Git setting "git-town.gitlab-token" is "gitlab-token"
-    When I run "git-town config --redact"
 
-  Scenario: result
+  Scenario: redacts secrets by default
+    When I run "git-town config"
     Then Git Town prints:
       """
       Hosting:
@@ -25,4 +25,25 @@ Feature: redact API tokens in config output
         GitHub token: (configured)
         GitLab connector: (not set)
         GitLab token: (configured)
+      """
+    And Git Town does not print "bitbucket-password"
+    And Git Town does not print "github-token"
+
+  Scenario: shows secrets with the "--show-secrets" flag
+    When I run "git-town config --show-secrets"
+    Then Git Town prints:
+      """
+      Hosting:
+        browser: (not set), enabled
+        development remote: origin
+        forge type: (not set)
+        origin hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: bitbucket-password
+        Forgejo token: forgejo-token
+        Gitea token: gitea-token
+        GitHub connector: (not set)
+        GitHub token: github-token
+        GitLab connector: (not set)
+        GitLab token: gitlab-token
       """

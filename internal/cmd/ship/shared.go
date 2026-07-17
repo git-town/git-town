@@ -42,6 +42,7 @@ type sharedShipData struct {
 
 type determineSharedShipDataArgs struct {
 	args                 []string
+	enterMessageOverride Option[configdomain.ShipEnterMessage]
 	repo                 execute.OpenRepoResult
 	shipStrategyOverride Option[configdomain.ShipStrategy]
 }
@@ -160,6 +161,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	if shipStrategyOverride, hasShipStrategyOverride := args.shipStrategyOverride.Get(); hasShipStrategyOverride {
 		validatedConfig.NormalConfig.ShipStrategy = shipStrategyOverride
 	}
+	if enterMessageOverride, hasEnterMessageOverride := args.enterMessageOverride.Get(); hasEnterMessageOverride {
+		validatedConfig.NormalConfig.ShipEnterMessage = enterMessageOverride
+	}
 	switch validatedConfig.BranchType(branchToShip) {
 	case configdomain.BranchTypeContributionBranch:
 		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContributionBranchCannotShip)
@@ -181,6 +185,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
 		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+	}
+	if targetBranch.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.ShipParentBranchOtherWorktree, targetBranchName)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip, validatedConfig.NormalConfig.Order)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
