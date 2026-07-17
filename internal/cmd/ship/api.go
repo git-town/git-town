@@ -62,6 +62,7 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 		Branch:        branchToShipLocal,
 		Proposal:      apiData.proposal,
 		CommitMessage: commitMessage,
+		EnterMessage:  sharedData.config.NormalConfig.ShipEnterMessage,
 	})
 	if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: apiData.branchToShipRemoteName})

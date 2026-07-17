@@ -335,6 +335,7 @@ and will be removed in future versions of Git Town.`
 	ShipMessageWithFastForward            = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipNoBranchToShip                    = "please provide the branch to ship"
 	ShipOpenChanges                       = "you have uncommitted changes. Did you mean to commit them before shipping?"
+	ShipParentBranchOtherWorktree         = "can't ship into %s because it is checked out in another worktree"
 	ShipRepoHasDetachedHead               = "please check out the branch to ship"
 	ShipStrategy                          = "Ship strategy: %s\n"
 	ShipStrategyMissing                   = "no ship strategy provided"
