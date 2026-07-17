@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	bitbucketAPITokenTitle = `Bitbucket API token`
-	bitbucketAPITokenHelp  = `
+	bitbucketAPITokenTitle     = `Bitbucket API token`
+	bitbucketAPITokenHelpCloud = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this, please enter
@@ -27,14 +27,32 @@ If you leave this empty,
 Git Town will not use the Bitbucket API.
 
 `
+	bitbucketAPITokenHelpDataCenter = `
+Git Town can update pull requests
+and ship branches on Bitbucket for you.
+To enable this, please enter
+an HTTP access token with
+"Project read" and "Repository write"
+permissions.
+This is not your normal account password.
+You can create one in your Bitbucket instance
+under Profile picture > Manage account >
+HTTP access tokens.
+More info at
+https://www.git-town.com/preferences/bitbucket-api-token.
+
+If you leave this empty,
+Git Town will not use the Bitbucket API.
+
+`
 )
 
 // BitbucketAPIToken lets the user enter the Bitbucket API token.
-func BitbucketAPIToken(args Args[forgedomain.BitbucketAPIToken]) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
+func BitbucketAPIToken(forgeType forgedomain.ForgeType, args Args[forgedomain.BitbucketAPIToken]) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "bitbucket-api-token",
 		ExistingValue: args.Local.Or(args.Global).StringOr(""),
-		Help:          bitbucketAPITokenHelp,
+		Help:          BitbucketAPITokenHelp(forgeType),
 		Inputs:        args.Inputs,
 		Interactive:   args.Interactive,
 		Prompt:        messages.BitbucketAPITokenPrompt,
@@ -47,4 +65,13 @@ func BitbucketAPIToken(args Args[forgedomain.BitbucketAPIToken]) (Option[forgedo
 	}
 	fmt.Printf(messages.BitbucketAPITokenResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
+}
+
+// BitbucketAPITokenHelp provides the help text for the Bitbucket API token dialog
+// that matches the given Bitbucket variant.
+func BitbucketAPITokenHelp(forgeType forgedomain.ForgeType) string {
+	if forgeType == forgedomain.ForgeTypeBitbucketDatacenter {
+		return bitbucketAPITokenHelpDataCenter
+	}
+	return bitbucketAPITokenHelpCloud
 }

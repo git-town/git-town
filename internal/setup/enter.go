@@ -68,11 +68,11 @@ EnterForgeData:
 		case forgedomain.ForgeTypeAzuredevops:
 			// the Azure DevOps connector doesn't have connectivity to the API implemented for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			bitbucketUsername, exit, err = enterBitbucketUserName(data)
+			bitbucketUsername, exit, err = enterBitbucketUserName(data, actualForgeType.ForgeType())
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-			bitbucketAPIToken, exit, err = enterBitbucketAPIToken(data)
+			bitbucketAPIToken, exit, err = enterBitbucketAPIToken(data, actualForgeType.ForgeType())
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
@@ -393,11 +393,11 @@ func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit,
 	})
 }
 
-func enterBitbucketAPIToken(data Data) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
+func enterBitbucketAPIToken(data Data, forgeType forgedomain.ForgeType) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
 	if data.Config.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketAPIToken](), false, nil
 	}
-	return dialog.BitbucketAPIToken(dialog.Args[forgedomain.BitbucketAPIToken]{
+	return dialog.BitbucketAPIToken(forgeType, dialog.Args[forgedomain.BitbucketAPIToken]{
 		Global:      data.Config.GitLocal.BitbucketAPIToken,
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
@@ -405,11 +405,11 @@ func enterBitbucketAPIToken(data Data) (Option[forgedomain.BitbucketAPIToken], d
 	})
 }
 
-func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+func enterBitbucketUserName(data Data, forgeType forgedomain.ForgeType) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	if data.Config.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketUsername](), false, nil
 	}
-	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
+	return dialog.BitbucketUsername(forgeType, dialog.Args[forgedomain.BitbucketUsername]{
 		Global:      data.Config.GitLocal.BitbucketUsername,
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
