@@ -41,7 +41,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword:       args.BitbucketAppPassword,
+			APIToken:          args.BitbucketAPIToken,
 			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
@@ -51,7 +51,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 		})
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword:       args.BitbucketAppPassword,
+			APIToken:          args.BitbucketAPIToken,
 			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
 			ConfigDir:         args.ConfigDir,
@@ -126,20 +126,20 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 }
 
 type NewConnectorArgs struct {
-	Backend              subshelldomain.Querier
-	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
-	BitbucketUsername    Option[forgedomain.BitbucketUsername]
-	BrowserEnabled       browserdomain.BrowserEnabled
-	BrowserExecutable    Option[browserdomain.BrowserExecutable]
-	ConfigDir            configdomain.RepoConfigDir
-	ForgeType            Option[forgedomain.ForgeType]
-	ForgejoToken         Option[forgedomain.ForgejoToken]
-	Frontend             subshelldomain.Runner
-	GiteaToken           Option[forgedomain.GiteaToken]
-	GithubConnectorType  Option[forgedomain.GithubConnectorType]
-	GithubToken          Option[forgedomain.GithubToken]
-	GitlabConnectorType  Option[forgedomain.GitlabConnectorType]
-	GitlabToken          Option[forgedomain.GitlabToken]
-	Log                  print.Logger
-	RemoteURL            Option[giturl.Parts]
+	Backend             subshelldomain.Querier
+	BitbucketAPIToken   Option[forgedomain.BitbucketAPIToken]
+	BitbucketUsername   Option[forgedomain.BitbucketUsername]
+	BrowserEnabled      browserdomain.BrowserEnabled
+	BrowserExecutable   Option[browserdomain.BrowserExecutable]
+	ConfigDir           configdomain.RepoConfigDir
+	ForgeType           Option[forgedomain.ForgeType]
+	ForgejoToken        Option[forgedomain.ForgejoToken]
+	Frontend            subshelldomain.Runner
+	GiteaToken          Option[forgedomain.GiteaToken]
+	GithubConnectorType Option[forgedomain.GithubConnectorType]
+	GithubToken         Option[forgedomain.GithubToken]
+	GitlabConnectorType Option[forgedomain.GitlabConnectorType]
+	GitlabToken         Option[forgedomain.GitlabToken]
+	Log                 print.Logger
+	RemoteURL           Option[giturl.Parts]
 }

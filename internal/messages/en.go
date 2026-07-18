@@ -16,8 +16,8 @@ const (
 	AutoDetect                       = "auto-detect"
 	AutoSync                         = "auto-sync: %s\n"
 
-	BitbucketAppPasswordPrompt      = "Bitbucket App Password: "
-	BitbucketAppPasswordResult      = "Bitbucket App Password: %s"
+	BitbucketAPITokenPrompt         = "Bitbucket API token: "
+	BitbucketAPITokenResult         = "Bitbucket API token: %s"
 	BitbucketUsernamePrompt         = "Bitbucket username: "
 	BitbucketUsernameResult         = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally      = "there is already a branch %s"

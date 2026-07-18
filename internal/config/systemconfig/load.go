@@ -23,7 +23,7 @@ func Load() configdomain.PartialConfig {
 		Aliases:                     configdomain.Aliases{},
 		AutoResolve:                 None[configdomain.AutoResolve](),
 		AutoSync:                    None[configdomain.AutoSync](),
-		BitbucketAppPassword:        None[forgedomain.BitbucketAppPassword](),
+		BitbucketAPIToken:           None[forgedomain.BitbucketAPIToken](),
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},

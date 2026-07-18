@@ -82,7 +82,7 @@
     - [Development remote](preferences/dev-remote.md)
     - [Forge Type](preferences/forge-type.md)
     - [Origin hostname](preferences/hosting-origin-hostname.md)
-    - [Bitbucket access token](preferences/bitbucket-app-password.md)
+    - [Bitbucket API token](preferences/bitbucket-api-token.md)
     - [Bitbucket username](preferences/bitbucket-username.md)
     - [Forgejo token](preferences/forgejo-token.md)
     - [Gitea token](preferences/gitea-token.md)
