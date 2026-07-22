@@ -1,12 +1,12 @@
-# git town merge
+# git town combine
 
 <a type="git-town-command" />
 
 ```command-summary
-git town merge [--dry-run] [-h | --help] [--(non)-interactive] [-v | --verbose]
+git town combine [--dry-run] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
-The _merge_ command merges the current branch into the branch ahead of it in the
+The _combine_ command merges the current branch into the branch ahead of it in the
 current stack.
 
 Consider this stack:
@@ -24,7 +24,7 @@ main
 ```
 
 We are on the `branch-3` branch.
-After running `git town merge`, the stack looks like below,
+After running `git town combine`, the stack looks like below,
 and the new `branch-2` branch contains the changes from the old `branch-2`
 and `branch-3` branches.
 
@@ -39,7 +39,7 @@ main
 ```
 
 Both branches must be in sync;
-run [git town sync](sync.md) before running `git town merge`.
+run [git town sync](sync.md) before running `git town combine`.
 All affected branches must be owned by you,
 i.e. not be [contribution](../branch-types.md#contribution-branches),
 [observed](../branch-types.md#observed-branches),

@@ -34,12 +34,12 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 - [append](https://www.git-town.com/commands/append.html) - insert a new branch
   as a child of the current branch
+- [combine](https://www.git-town.com/commands/combine.html) - combine two adjacent
+  branches in a stack into one
 - [detach](https://www.git-town.com/commands/detach.html) - remove a branch from
   a stack
 - [diff-parent](https://www.git-town.com/commands/diff-parent.html) - show the
   changes committed to a feature branch
-- [merge](https://www.git-town.com/commands/merge.html) - merge two adjacent
-  branches in a stack into one
 - [prepend](https://www.git-town.com/commands/prepend.html) - insert a new
   branch between the current branch and its parent
 - [set-parent](https://www.git-town.com/commands/set-parent.html) - update the

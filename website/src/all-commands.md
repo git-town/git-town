@@ -27,7 +27,7 @@ and `git town help <command>` for help with individual commands.
 - [git town down](commands/down.md) - switch to a child of the current branch
 - [git town diff-parent](commands/diff-parent.md) - show the changes committed
   to a branch
-- [git town merge](commands/merge.md) - merges the current branch with its
+- [git town merge](commands/combine.md) - merges the current branch with its
   parent
 - [git town prepend](commands/prepend.md) - create a new feature branch between
   the current branch and its parent
