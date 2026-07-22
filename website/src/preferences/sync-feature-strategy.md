@@ -5,7 +5,7 @@ their parent and tracking branches.
 
 ## options
 
-### Merge
+### merge
 
 When using the "merge" feature sync strategy
 (which is the default),
