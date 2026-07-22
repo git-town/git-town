@@ -142,6 +142,7 @@ ignore-words = [
   "ignore-uncommitted",
   "interactive",
   "main-branch",
+  "merge",
   "new-branch-type",
   "observed-regex",
   "offline",
