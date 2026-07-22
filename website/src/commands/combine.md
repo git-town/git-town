@@ -6,8 +6,8 @@
 git town combine [--dry-run] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
-The _combine_ command merges the current branch into the branch ahead of it in the
-current stack.
+The _combine_ command merges the current branch into the branch ahead of it in
+the current stack.
 
 Consider this stack:
 
