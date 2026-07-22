@@ -19,5 +19,5 @@ Feature: cannot combine a detached head
       | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please check out the branch to merge
+      please check out the branch to combine
       """
