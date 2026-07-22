@@ -15,7 +15,7 @@ Feature: does not combine contribution branches
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge contribution branches
+      cannot combine contribution branches
       """
 
   Scenario: undo

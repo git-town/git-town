@@ -15,7 +15,7 @@ Feature: does not combine observed branches
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge observed branches
+      cannot combine observed branches
       """
 
   Scenario: undo
