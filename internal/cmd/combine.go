@@ -31,9 +31,9 @@ import (
 )
 
 const (
-	mergeCmd  = "merge"
-	mergeDesc = "Combines the current branch with its parent"
-	mergeHelp = `
+	combineCmd  = "combine"
+	combineDesc = "Combines the current branch with its parent"
+	combineHelp = `
 Merges the current branch with its parent branch.
 Both branches must be feature branches.
 
@@ -50,7 +50,7 @@ main
         branch-4
 
 We are on the "branch-3" branch.
-After running "git town merge",
+After running "git town combine",
 the new "branch-3" branch contains the changes
 from the old "branch-2" and "branch-3" branches.
 
@@ -64,16 +64,16 @@ main
 `
 )
 
-func mergeCommand() *cobra.Command {
+func combineCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     mergeCmd,
+		Use:     combineCmd,
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
-		Short:   mergeDesc,
-		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
+		Short:   combineDesc,
+		Long:    cmdhelpers.Long(combineDesc, combineHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
@@ -96,7 +96,7 @@ func mergeCommand() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeMerge(cliConfig)
+			return executeCombine(cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -105,7 +105,7 @@ func mergeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeMerge(cliConfig configdomain.PartialConfig) error {
+func executeCombine(cliConfig configdomain.PartialConfig) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -118,7 +118,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineMergeData(repo)
+	data, flow, err := determineCombineData(repo)
 	if err != nil {
 		return err
 	}
@@ -129,16 +129,16 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	if err = validateMergeData(repo, data); err != nil {
+	if err = validateCombineData(repo, data); err != nil {
 		return err
 	}
-	runProgram := mergeProgram(repo, data)
+	runProgram := combineProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               mergeCmd,
+		Command:               combineCmd,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
@@ -169,7 +169,7 @@ Start:
 	})
 }
 
-type mergeData struct {
+type combineData struct {
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	childBranches            gitdomain.LocalBranchNames
@@ -191,9 +191,9 @@ type mergeData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.ProgramFlow, error) {
+func determineCombineData(repo execute.OpenRepoResult) (combineData, configdomain.ProgramFlow, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult mergeData
+	var emptyResult combineData
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
@@ -230,7 +230,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		return emptyResult, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.MergeDetachedHead)
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CombineDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -263,11 +263,11 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 	}
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
 	if !hasParentBranch {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoParent, initialBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CombineNoParent, initialBranch)
 	}
 	grandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch)
 	if grandParentBranch.IsNone() {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CombineNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
@@ -276,7 +276,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 	}
 	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA().Get()
 	if !hasInitialBranchSHA {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CombineBranchNotLocal, initialBranch)
 	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
@@ -284,7 +284,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 	}
 	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA().Get()
 	if !hasParentBranchSHA {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CombineBranchNotLocal, parentBranch)
 	}
 	initialBranchType := validatedConfig.BranchType(initialBranch)
 	parentBranchType := validatedConfig.BranchType(parentBranch)
@@ -298,7 +298,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 		OldBranchHasTrackingBranch: branchesSnapshot.Branches.FindByLocalName(initialBranch).IsSome(),
 		Order:                      validatedConfig.NormalConfig.Order,
 	})
-	return mergeData{
+	return combineData{
 		branchInfosLastRun:       branchInfosLastRun,
 		branchesSnapshot:         branchesSnapshot,
 		childBranches:            childBranches,
@@ -321,7 +321,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, configdomain.Pr
 	}, configdomain.ProgramFlowContinue, err
 }
 
-func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
+func combineProgram(repo execute.OpenRepoResult, data combineData) program.Program {
 	prog := NewMutable(&program.Program{})
 	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
@@ -381,7 +381,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
+func validateCombineData(repo execute.OpenRepoResult, data combineData) error {
 	if err := verifyBranchType(data.initialBranchType); err != nil {
 		return err
 	}
@@ -399,7 +399,7 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	switch data.initialBranchInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
 	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
-		return fmt.Errorf(messages.MergeNotInSyncWithTracking, data.initialBranch)
+		return fmt.Errorf(messages.CombineNotInSyncWithTracking, data.initialBranch)
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	case gitdomain.SyncStatusRemoteOnly:
@@ -426,7 +426,7 @@ func verifyBranchType(branchType configdomain.BranchType) error {
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypePerennialBranch:
-		return fmt.Errorf(messages.MergeWrongBranchType, branchType)
+		return fmt.Errorf(messages.CombineWrongBranchType, branchType)
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
