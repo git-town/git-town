@@ -59,6 +59,13 @@ const (
 
 	CacheUnitialized                   = "using a cached value before initialization"
 	CannotParse                        = "cannot parse %s: %w"
+	CombineBranchNotLocal              = "cannot combine: branch %s is not local"
+	CombineDetachedHead                = "please check out the branch to combine"
+	CombineNoGrandParent               = "cannot combine branch %s because its parent branch %s has no parent"
+	CombineNoParent                    = "cannot combine branch %s because it has no parent"
+	CombineNotInSyncWithTracking       = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
+	CombineOpenChanges                 = "please commit or remove the open changes first"
+	CombineWrongBranchType             = "cannot combine %s branches"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitDetachedHead                 = "please check out a branch before committing"
 	CommitIntoMainBranch               = "cannot commit into the main branch"
@@ -67,13 +74,6 @@ const (
 	CommitsSelected                    = "%d commits selected"
 	CommitUpNoAncestor                 = "branch %s doesn't have the given ancestor"
 	CommitWrongBranchType              = "cannot commit into branch %s because it is %v %s branch"
-	CombineBranchNotLocal              = "cannot combine: branch %s is not local"
-	CombineDetachedHead                = "please check out the branch to combine"
-	CombineNoGrandParent               = "cannot combine branch %s because its parent branch %s has no parent"
-	CombineNoParent                    = "cannot combine branch %s because it has no parent"
-	CombineNotInSyncWithTracking       = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
-	CombineOpenChanges                 = "please commit or remove the open changes first"
-	CombineWrongBranchType             = "cannot combine %s branches"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	CompressAlreadyOneCommit           = "branch %s has already just one commit"
 	CompressBranchNoParent             = "cannot compress branch %s because it has no parent"
