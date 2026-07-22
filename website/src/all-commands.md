@@ -23,12 +23,12 @@ and `git town help <command>` for help with individual commands.
 ### Stacked changes
 
 - [git town append](commands/append.md) - create a new feature branch as a child
+- [git town combine](commands/combine.md) - combines the current branch with its
+  parent
 - [git town detach](commands/detach.md) - move a branch out of a stack
 - [git town down](commands/down.md) - switch to a child of the current branch
 - [git town diff-parent](commands/diff-parent.md) - show the changes committed
   to a branch
-- [git town merge](commands/combine.md) - merges the current branch with its
-  parent
 - [git town prepend](commands/prepend.md) - create a new feature branch between
   the current branch and its parent
 - [git town set-parent](commands/set-parent.md) - change the parent of a feature
