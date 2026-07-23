@@ -103,7 +103,7 @@ func (self *DataTable) String() string {
 		formatStrings[w] = fmt.Sprintf("| %%-%dv ", width)
 	}
 	// render the self using this format
-	result := strings.Builder{}
+	var result strings.Builder
 	for row := range self.Cells {
 		for col := range self.Cells[row] {
 			result.WriteString(fmt.Sprintf(formatStrings[col], stringss.EscapeNewLines(self.Cells[row][col])))

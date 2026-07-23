@@ -176,7 +176,7 @@ type branchData struct {
 }
 
 func branchLayout(entries dialog.SwitchBranchEntries, data branchData, displayTypes configdomain.DisplayTypes) string {
-	s := strings.Builder{}
+	var s strings.Builder
 	initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
 	for _, entry := range entries {
 		isInitialBranch := entry.Branch == initialBranch

@@ -106,7 +106,7 @@ func (self CheckListModel[S]) View() string {
 	if self.Status != list.StatusActive {
 		return ""
 	}
-	s := strings.Builder{}
+	var s strings.Builder
 	s.WriteRune('\n')
 	s.WriteString(self.Colors.Title.Styled(self.title))
 	s.WriteRune('\n')

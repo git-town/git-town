@@ -108,7 +108,7 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 }
 
 func (self SwitchModel) View() string {
-	s := strings.Builder{}
+	var s strings.Builder
 	if self.Status != list.StatusActive {
 		return ""
 	}

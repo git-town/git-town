@@ -24,7 +24,7 @@ func (self issue) String() string {
 type Issues []issue
 
 func (self Issues) String() string {
-	result := strings.Builder{}
+	var result strings.Builder
 	for _, issue := range self {
 		result.WriteString(issue.String())
 	}

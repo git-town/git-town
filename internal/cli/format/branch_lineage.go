@@ -16,7 +16,7 @@ func BranchLineage(lineage configdomain.Lineage, order configdomain.Order) strin
 	if len(roots) == 0 {
 		return ""
 	}
-	result := strings.Builder{}
+	var result strings.Builder
 	for _, root := range roots {
 		result.WriteString("\n\n")
 		branchTree(branchTreeArgs{

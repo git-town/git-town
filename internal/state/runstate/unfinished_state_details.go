@@ -16,7 +16,7 @@ type UnfinishedRunStateDetails struct {
 }
 
 func (self UnfinishedRunStateDetails) String() string {
-	result := strings.Builder{}
+	var result strings.Builder
 	result.WriteString("UnfinishedRunStateDetails {\n")
 	result.WriteString("  CanSkip: ")
 	result.WriteString(fmt.Sprintf("%t\n", self.CanSkip))

@@ -217,7 +217,7 @@ func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, no
 }
 
 func (self BranchInfos) String() string {
-	result := strings.Builder{}
+	var result strings.Builder
 	result.WriteString("BranchInfos:\n")
 	for _, bi := range self {
 		result.WriteString(bi.String())

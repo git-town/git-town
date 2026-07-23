@@ -79,7 +79,7 @@ func (self textFieldModel) View() string {
 	if self.status != list.StatusActive {
 		return ""
 	}
-	result := strings.Builder{}
+	var result strings.Builder
 	result.WriteRune('\n')
 	result.WriteString(self.colors.Title.Styled(self.title))
 	result.WriteRune('\n')

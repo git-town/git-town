@@ -70,7 +70,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forged
 }
 
 func ToDocString(proposals []forgedomain.ProposalData) string {
-	result := strings.Builder{}
+	var result strings.Builder
 	for proposalIndex, proposal := range proposals {
 		if proposalIndex > 0 {
 			result.WriteString("\n")

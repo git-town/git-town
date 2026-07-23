@@ -89,7 +89,7 @@ func (self *Program) StringIndented(indent string) string {
 	if len(*self) == 0 {
 		return "(empty program)\n"
 	}
-	sb := strings.Builder{}
+	var sb strings.Builder
 	sb.WriteString("Program:\n")
 	for o, opcode := range *self {
 		sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))

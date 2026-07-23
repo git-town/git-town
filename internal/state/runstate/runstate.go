@@ -97,7 +97,7 @@ func (self *RunState) SkipCurrentBranchProgram() {
 }
 
 func (self *RunState) String() string {
-	result := strings.Builder{}
+	var result strings.Builder
 	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
 	result.WriteString(self.Command)
