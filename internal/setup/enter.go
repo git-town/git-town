@@ -963,7 +963,7 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		case forgedomain.ForgeTypeAzuredevops:
 			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketAPIToken, args.data.Config.NormalConfig.BitbucketAPIToken)
 			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.Interactive)
 		case forgedomain.ForgeTypeForgejo:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
