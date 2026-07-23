@@ -1,7 +1,7 @@
 package dialogcolors
 
 import (
-	"github.com/git-town/git-town/v23/pkg/colors"
+	"github.com/git-town/git-town/v24/pkg/colors"
 	"github.com/muesli/termenv"
 )
 

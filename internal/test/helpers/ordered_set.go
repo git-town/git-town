@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v23/pkg/equal"
+	"github.com/git-town/git-town/v24/pkg/equal"
 )
 
 // OrderedSet is a Set that provides its elements in the order they were received.

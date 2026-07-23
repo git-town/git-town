@@ -3,13 +3,13 @@ package bitbucketcloud
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/test/mockproposals"
-	"github.com/git-town/git-town/v23/pkg/colors"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/test/mockproposals"
+	"github.com/git-town/git-town/v24/pkg/colors"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // type checks

@@ -1,16 +1,16 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v23/internal/config"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/git"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v23/internal/state/runstate"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v23/internal/undo/undobranches"
-	"github.com/git-town/git-town/v23/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v23/internal/undo/undostash"
-	"github.com/git-town/git-town/v23/internal/vm/program"
+	"github.com/git-town/git-town/v24/internal/config"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/git"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v24/internal/state/runstate"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v24/internal/undo/undobranches"
+	"github.com/git-town/git-town/v24/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v24/internal/undo/undostash"
+	"github.com/git-town/git-town/v24/internal/vm/program"
 )
 
 // create the program to undo a currently running Git Town command
