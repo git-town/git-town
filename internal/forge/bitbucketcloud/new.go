@@ -18,7 +18,7 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	AppPassword       Option[forgedomain.BitbucketAppPassword]
+	APIToken          Option[forgedomain.BitbucketAPIToken]
 	BrowserEnabled    browserdomain.BrowserEnabled
 	BrowserExecutable Option[browserdomain.BrowserExecutable]
 	ConfigDir         configdomain.RepoConfigDir
@@ -50,11 +50,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 		}
 	}
 	userName, hasUserName := args.UserName.Get()
-	appPassword, hasAppPassword := args.AppPassword.Get()
-	if hasUserName && hasAppPassword {
+	apiToken, hasAPIToken := args.APIToken.Get()
+	if hasUserName && hasAPIToken {
 		apiConnector := APIConnector{
 			WebConnector: webConnector,
-			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
+			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), apiToken.String())),
 			log:          args.Log,
 		}
 		return &CachedAPIConnector{

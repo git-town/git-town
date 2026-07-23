@@ -57,14 +57,16 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 		if !inSyncWithTracking {
-			opcodes = append(opcodes,
+			opcodes = append(
+				opcodes,
 				&MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()},
 			)
 		}
 	}
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
 	if hasCommitMessage && (len(opcodes) > 0 || len(commitsInBranch) > 1) {
-		opcodes = append(opcodes,
+		opcodes = append(
+			opcodes,
 			&BranchCurrentResetToParent{
 				CurrentBranch: self.CurrentBranch,
 			},

@@ -55,7 +55,8 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 			Text: fmt.Sprintf(messages.UnfinishedRunStateSkip, command),
 		})
 	}
-	entries = append(entries,
+	entries = append(
+		entries,
 		list.Entry[Response]{
 			Data: ResponseUndo,
 			Text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command),

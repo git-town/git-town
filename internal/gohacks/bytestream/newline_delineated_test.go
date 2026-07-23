@@ -56,9 +56,9 @@ func TestNewlineDelineated(t *testing.T) {
 		})
 		t.Run("Bitbucket Token", func(t *testing.T) {
 			t.Parallel()
-			give := bytestream.NewlineDelineated([]byte("hello\n\ngit-town.bitbucket-app-password\n1234567890\n\nworld"))
+			give := bytestream.NewlineDelineated([]byte("hello\n\ngit-town.bitbucket-api-token\n1234567890\n\nworld"))
 			have := give.Sanitize()
-			want := bytestream.Sanitized([]byte("hello\n\ngit-town.bitbucket-app-password\n(redacted)\n\nworld"))
+			want := bytestream.Sanitized([]byte("hello\n\ngit-town.bitbucket-api-token\n(redacted)\n\nworld"))
 			must.SliceEqOp(t, want, have)
 		})
 		t.Run("Gitea Token", func(t *testing.T) {

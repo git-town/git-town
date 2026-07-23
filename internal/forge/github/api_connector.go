@@ -139,7 +139,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number.Int(), &github.PullRequest{
 		Base: &github.PullRequestBranch{
-			Ref: &(targetName),
+			Ref: &targetName,
 		},
 	})
 	self.log.Finished(err)

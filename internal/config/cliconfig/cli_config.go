@@ -29,7 +29,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		Aliases:                     configdomain.Aliases{},
 		AutoResolve:                 args.AutoResolve,
 		AutoSync:                    args.AutoSync,
-		BitbucketAppPassword:        None[forgedomain.BitbucketAppPassword](),
+		BitbucketAPIToken:           None[forgedomain.BitbucketAPIToken](),
 		BitbucketUsername:           None[forgedomain.BitbucketUsername](),
 		BranchPrefix:                None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{},
