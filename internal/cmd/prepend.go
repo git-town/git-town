@@ -498,7 +498,8 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
 				ProposalBody:  data.proposalBody,
 				ProposalTitle: data.proposalTitle,
-			})
+			},
+		)
 	}
 	if data.commit {
 		prog.Value.Add(

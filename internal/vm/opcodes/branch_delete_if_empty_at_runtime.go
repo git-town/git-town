@@ -32,7 +32,8 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
 		opcodes = append(opcodes, &BranchTrackingDelete{Branch: trackingBranch})
 	}
-	opcodes = append(opcodes,
+	opcodes = append(
+		opcodes,
 		&BranchLocalDeleteContent{
 			BranchToDelete:     self.Branch,
 			BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,

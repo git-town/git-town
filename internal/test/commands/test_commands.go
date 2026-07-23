@@ -441,7 +441,8 @@ func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 
 			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
 		},
-		"")
+		"",
+	)
 	output, err := self.Query("git", "for-each-ref", "--format="+forEachRefFormat, "refs/heads/")
 	if err != nil {
 		return LocalBranchesResult{}, err
