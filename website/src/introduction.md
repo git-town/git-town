@@ -34,8 +34,8 @@ Git Town is compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
-[trunk-based development](https://trunkbaseddevelopment.com) and even committing
-straight into the main branch.
+[trunk-based development](https://trunkbaseddevelopment.com)
+and even committing straight into the main branch.
 Git Town has special support for mono-repos and stacked changes.
 See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
