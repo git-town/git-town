@@ -15,7 +15,7 @@ These breadcrumbs are kept up to date automatically when you:
 - [prepend](../commands/prepend.md) a branch
 - [detach](../commands/detach.md) a branch
 - [change the parent](../commands/set-parent.md) of a branch
-- [merge](../commands/merge.md) branches
+- [combine](../commands/combine.md) branches
 - [swap](../commands/swap.md) branches
 
 There are two ways to maintain breadcrumbs.

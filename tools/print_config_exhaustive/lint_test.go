@@ -26,13 +26,13 @@ import (
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
 type NormalConfig struct {
 	Aliases                  Aliases
-	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
+	BitbucketAPIToken        Option[forgedomain.BitbucketAPIToken]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
-	ForgejoToken            Option[forgedomain.ForgejoToken]
+	ForgejoToken             Option[forgedomain.ForgejoToken]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
@@ -61,7 +61,7 @@ type NormalConfig struct {
 	have := main.FindDefinedFields(give)
 	want := []string{
 		"Aliases",
-		"BitbucketAppPassword",
+		"BitbucketAPIToken",
 		"BitbucketUsername",
 		"BranchTypeOverrides",
 		"ContributionRegex",

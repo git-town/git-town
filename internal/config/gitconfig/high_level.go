@@ -39,8 +39,8 @@ func RemoveAutoSync(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyAutoSync)
 }
 
-func RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketAppPassword)
+func RemoveBitbucketAPIToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketAPIToken)
 }
 
 func RemoveBitbucketUsername(runner subshelldomain.Runner) error {
@@ -204,8 +204,8 @@ func SetAutoSync(runner subshelldomain.Runner, value configdomain.AutoSync, scop
 	return SetConfigValue(runner, scope, configdomain.KeyAutoSync, value.String())
 }
 
-func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAppPassword, value.String())
+func SetBitbucketAPIToken(runner subshelldomain.Runner, value forgedomain.BitbucketAPIToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAPIToken, value.String())
 }
 
 func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {

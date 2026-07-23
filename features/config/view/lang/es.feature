@@ -59,7 +59,7 @@ Feature: show the configuration in Spanish
         forge type: (not set)
         origin hostname: (not set)
         Bitbucket username: (not set)
-        Bitbucket app password: (not set)
+        Bitbucket API token: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
         GitHub connector: (not set)

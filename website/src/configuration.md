@@ -40,6 +40,6 @@ Git Town supports the following platforms:
   [access token](preferences/gitlab-token.md) for Git Town's built-in GitLab
   support.
 - Bitbucket: requires a [username](preferences/bitbucket-username.md) and
-  [app password](preferences/bitbucket-app-password.md)
+  [API token](preferences/bitbucket-api-token.md)
 - Gitea: requires an [access token](preferences/gitea-token.md)
 - Forgejo: requires an [access token](preferences/forgejo-token.md)
