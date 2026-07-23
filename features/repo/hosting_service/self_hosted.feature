@@ -18,8 +18,8 @@ Feature: self hosted servie
       | bitbucket |
       | github    |
       | gitlab    |
-# uncomment to test (makes online connection)
-# | gitea     |
+  # uncomment to test (makes online connection)
+  # | gitea     |
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
