@@ -5,11 +5,11 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcolors"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcolors"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 )
 
 func TextField(args TextFieldArgs) (stringss.Trimmed, dialogdomain.Exit, error) {

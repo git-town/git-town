@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v23/internal/browser"
-	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/browser"
+	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // type check

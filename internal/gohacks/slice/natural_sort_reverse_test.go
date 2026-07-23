@@ -3,7 +3,7 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
 

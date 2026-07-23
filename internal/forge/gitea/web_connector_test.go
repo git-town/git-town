@@ -3,10 +3,10 @@ package gitea_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/forge/gitea"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/forge/gitea"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

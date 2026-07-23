@@ -3,10 +3,10 @@ package proposallineage_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/proposallineage"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/proposallineage"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

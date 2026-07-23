@@ -1,8 +1,8 @@
 package forgedomain
 
 import (
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // GiteaToken is a bearer token to use with the Gitea API.

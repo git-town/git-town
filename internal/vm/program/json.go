@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/gohacks"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // JSON is used to store an opcode in JSON.

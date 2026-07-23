@@ -3,7 +3,7 @@ package proposallineage
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 )
 
 const (

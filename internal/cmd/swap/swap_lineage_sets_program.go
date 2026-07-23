@@ -1,10 +1,10 @@
 package swap
 
 import (
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	"github.com/git-town/git-town/v23/internal/vm/program"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	"github.com/git-town/git-town/v24/internal/vm/program"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 type swapLineageParentSetsProgramArg struct {

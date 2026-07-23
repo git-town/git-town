@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringslice"
 	"github.com/shoenig/test/must"
 )
 

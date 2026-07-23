@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 )
 
 // WindowSize defines the maximum number of elements to display at one time in the dialog.

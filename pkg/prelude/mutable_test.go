@@ -3,8 +3,8 @@ package prelude_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/gohacks"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

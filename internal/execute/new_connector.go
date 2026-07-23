@@ -1,11 +1,11 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/forge"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/giturl"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/forge"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/giturl"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // NewConnector provides the forge connector for this repo and the given remote URL.

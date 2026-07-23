@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // FileConflict contains information about a file with conflicts, as provided by "git ls-files --unmerged".

@@ -3,8 +3,8 @@ package format
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // Secret provides a printable version of the given secret configuration value.

@@ -1,6 +1,6 @@
 package cache
 
-import . "github.com/git-town/git-town/v23/pkg/prelude"
+import . "github.com/git-town/git-town/v24/pkg/prelude"
 
 // WithPrevious is a cache implementation for arbitrary data structures that keeps track of the current and previous values.
 // The zero value is an empty cache.
