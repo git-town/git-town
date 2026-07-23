@@ -38,7 +38,8 @@ func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) s
 }
 
 func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
-	return fmt.Sprintf("%s/pullrequestcreate?sourceRef=%s&targetRef=%s",
+	return fmt.Sprintf(
+		"%s/pullrequestcreate?sourceRef=%s&targetRef=%s",
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()),
