@@ -8,113 +8,113 @@ import "github.com/git-town/git-town/v23/internal/vm/shared"
 // This is used to iterate all opcode types.
 func All() []shared.Opcode {
 	return []shared.Opcode{
-		&BranchCreateAndCheckoutExistingParent{},
-		&BranchCreate{},
-		&BranchCurrentResetToParent{},
-		&BranchCurrentResetToSHAIfNeeded{},
-		&BranchCurrentResetToSHA{},
-		&BranchCurrentReset{},
-		&BranchDeleteIfEmptyAtRuntime{},
-		&BranchEnsureShippableChanges{},
-		&BranchLocalDeleteContent{},
-		&BranchLocalDelete{},
-		&BranchLocalRename{},
-		&BranchRemoteCreate{},
-		&BranchRemoteSetToSHAIfNeeded{},
-		&BranchRemoteSetToSHA{},
-		&BranchReset{},
-		&BranchTrackingCreateIfLocalExists{},
-		&BranchTrackingCreateIfNeeded{},
-		&BranchTrackingCreate{},
-		&BranchTrackingDelete{},
-		&BranchTypeOverrideRemove{},
-		&BranchTypeOverrideSet{},
-		&BranchWithRemoteGoneDeleteIfEmptyAtRuntime{},
-		&BrowserOpen{},
-		&ChangesDiscard{},
-		&ChangesStage{},
-		&ChangesUnstageAll{},
-		&CheckoutDescendentOrOtherIfNeeded{},
-		&CheckoutDescendentOrOther{},
-		&CheckoutFirstExisting{},
-		&CheckoutHistoryPreserve{},
-		&CheckoutIfExists{},
-		&CheckoutIfNeeded{},
-		&CheckoutUncached{},
-		&Checkout{},
-		&CherryPickAbort{},
-		&CherryPickContinue{},
-		&CherryPick{},
-		&CommitAutoUndo{},
-		&CommitIfNeeded{},
-		&CommitMessageCommentOut{},
-		&CommitRemove{},
-		&CommitRevertIfNeeded{},
-		&CommitRevert{},
-		&CommitWithMessage{},
-		&Commit{},
-		&ConfigRemove{},
-		&ConfigSet{},
-		&ConflictMergePhantomFinalize{},
-		&ConflictMergePhantomResolveAll{},
-		&ConflictResolve{},
-		&ConnectorProposalMerge{},
-		&ExecuteShellCommand{},
-		&ExitToShellIfUncommittedChanges{},
-		&ExitToShell{},
-		&FetchUpstream{},
-		&FileRemove{},
-		&FileStage{},
-		&LineageBranchRemove{},
-		&LineageParentRemove{},
-		&LineageParentSetFirstExisting{},
-		&LineageParentSetIfExists{},
-		&LineageParentSetToGrandParent{},
-		&LineageParentSet{},
-		&MergeAbort{},
-		&MergeAlwaysProgram{},
-		&MergeContinue{},
-		&MergeFastForward{},
-		&MergeIntoCurrentBranch{},
-		&MergeParentResolvePhantomConflicts{},
-		&MergeSquashAutoUndo{},
-		&MergeSquashProgram{},
-		&MessageQueue{},
-		&ProgramEndOfBranch{},
-		&ProposalCreate{},
-		&ProposalUpdateBody{},
-		&ProposalUpdateBreadcrumb{},
-		&ProposalUpdateSource{},
-		&ProposalUpdateTargetToGrandParent{},
-		&ProposalUpdateTarget{},
-		&PullCurrentBranch{},
-		&PushCurrentBranchForceIfNeeded{},
-		&PushCurrentBranchForceIgnoreError{},
-		&PushCurrentBranchForce{},
-		&PushCurrentBranchIfNeeded{},
-		&PushCurrentBranch{},
-		&PushTags{},
-		&RebaseAbort{},
-		&RebaseAncestorLocal{},
-		&RebaseAncestorRemote{},
-		&RebaseAncestorsUntilLocal{},
-		&RebaseBranch{},
-		&RebaseContinueIfNeeded{},
-		&RebaseContinue{},
-		&RebaseOntoRemoveDeleted{},
-		&RebaseOnto{},
-		&RebaseTrackingBranch{},
-		&RegisterUndoablePerennialCommit{},
-		&SnapshotInitialUpdateLocalSHAIfNeeded{},
-		&SnapshotInitialUpdateLocalSHA{},
-		&StashDrop{},
-		&StashOpenChanges{},
-		&StashPopIfExists{},
-		&StashPopIfNeeded{},
-		&StashPop{},
-		&SyncFeatureBranchCompress{},
-		&SyncFeatureBranchMerge{},
-		&SyncFeatureBranchRebase{},
-		&UndoLastCommit{},
-	} //exhaustruct:ignore
+		&BranchCreateAndCheckoutExistingParent{}, //exhaustruct:ignore
+		&BranchCreate{}, //exhaustruct:ignore
+		&BranchCurrentResetToParent{}, //exhaustruct:ignore
+		&BranchCurrentResetToSHAIfNeeded{}, //exhaustruct:ignore
+		&BranchCurrentResetToSHA{}, //exhaustruct:ignore
+		&BranchCurrentReset{}, //exhaustruct:ignore
+		&BranchDeleteIfEmptyAtRuntime{}, //exhaustruct:ignore
+		&BranchEnsureShippableChanges{}, //exhaustruct:ignore
+		&BranchLocalDeleteContent{}, //exhaustruct:ignore
+		&BranchLocalDelete{}, //exhaustruct:ignore
+		&BranchLocalRename{}, //exhaustruct:ignore
+		&BranchRemoteCreate{}, //exhaustruct:ignore
+		&BranchRemoteSetToSHAIfNeeded{}, //exhaustruct:ignore
+		&BranchRemoteSetToSHA{}, //exhaustruct:ignore
+		&BranchReset{}, //exhaustruct:ignore
+		&BranchTrackingCreateIfLocalExists{}, //exhaustruct:ignore
+		&BranchTrackingCreateIfNeeded{}, //exhaustruct:ignore
+		&BranchTrackingCreate{}, //exhaustruct:ignore
+		&BranchTrackingDelete{}, //exhaustruct:ignore
+		&BranchTypeOverrideRemove{}, //exhaustruct:ignore
+		&BranchTypeOverrideSet{}, //exhaustruct:ignore
+		&BranchWithRemoteGoneDeleteIfEmptyAtRuntime{}, //exhaustruct:ignore
+		&BrowserOpen{}, //exhaustruct:ignore
+		&ChangesDiscard{}, //exhaustruct:ignore
+		&ChangesStage{}, //exhaustruct:ignore
+		&ChangesUnstageAll{}, //exhaustruct:ignore
+		&CheckoutDescendentOrOtherIfNeeded{}, //exhaustruct:ignore
+		&CheckoutDescendentOrOther{}, //exhaustruct:ignore
+		&CheckoutFirstExisting{}, //exhaustruct:ignore
+		&CheckoutHistoryPreserve{}, //exhaustruct:ignore
+		&CheckoutIfExists{}, //exhaustruct:ignore
+		&CheckoutIfNeeded{}, //exhaustruct:ignore
+		&CheckoutUncached{}, //exhaustruct:ignore
+		&Checkout{}, //exhaustruct:ignore
+		&CherryPickAbort{}, //exhaustruct:ignore
+		&CherryPickContinue{}, //exhaustruct:ignore
+		&CherryPick{}, //exhaustruct:ignore
+		&CommitAutoUndo{}, //exhaustruct:ignore
+		&CommitIfNeeded{}, //exhaustruct:ignore
+		&CommitMessageCommentOut{}, //exhaustruct:ignore
+		&CommitRemove{}, //exhaustruct:ignore
+		&CommitRevertIfNeeded{}, //exhaustruct:ignore
+		&CommitRevert{}, //exhaustruct:ignore
+		&CommitWithMessage{}, //exhaustruct:ignore
+		&Commit{}, //exhaustruct:ignore
+		&ConfigRemove{}, //exhaustruct:ignore
+		&ConfigSet{}, //exhaustruct:ignore
+		&ConflictMergePhantomFinalize{}, //exhaustruct:ignore
+		&ConflictMergePhantomResolveAll{}, //exhaustruct:ignore
+		&ConflictResolve{}, //exhaustruct:ignore
+		&ConnectorProposalMerge{}, //exhaustruct:ignore
+		&ExecuteShellCommand{}, //exhaustruct:ignore
+		&ExitToShellIfUncommittedChanges{}, //exhaustruct:ignore
+		&ExitToShell{}, //exhaustruct:ignore
+		&FetchUpstream{}, //exhaustruct:ignore
+		&FileRemove{}, //exhaustruct:ignore
+		&FileStage{}, //exhaustruct:ignore
+		&LineageBranchRemove{}, //exhaustruct:ignore
+		&LineageParentRemove{}, //exhaustruct:ignore
+		&LineageParentSetFirstExisting{}, //exhaustruct:ignore
+		&LineageParentSetIfExists{}, //exhaustruct:ignore
+		&LineageParentSetToGrandParent{}, //exhaustruct:ignore
+		&LineageParentSet{}, //exhaustruct:ignore
+		&MergeAbort{}, //exhaustruct:ignore
+		&MergeAlwaysProgram{}, //exhaustruct:ignore
+		&MergeContinue{}, //exhaustruct:ignore
+		&MergeFastForward{}, //exhaustruct:ignore
+		&MergeIntoCurrentBranch{}, //exhaustruct:ignore
+		&MergeParentResolvePhantomConflicts{}, //exhaustruct:ignore
+		&MergeSquashAutoUndo{}, //exhaustruct:ignore
+		&MergeSquashProgram{}, //exhaustruct:ignore
+		&MessageQueue{}, //exhaustruct:ignore
+		&ProgramEndOfBranch{}, //exhaustruct:ignore
+		&ProposalCreate{}, //exhaustruct:ignore
+		&ProposalUpdateBody{}, //exhaustruct:ignore
+		&ProposalUpdateBreadcrumb{}, //exhaustruct:ignore
+		&ProposalUpdateSource{}, //exhaustruct:ignore
+		&ProposalUpdateTargetToGrandParent{}, //exhaustruct:ignore
+		&ProposalUpdateTarget{}, //exhaustruct:ignore
+		&PullCurrentBranch{}, //exhaustruct:ignore
+		&PushCurrentBranchForceIfNeeded{}, //exhaustruct:ignore
+		&PushCurrentBranchForceIgnoreError{}, //exhaustruct:ignore
+		&PushCurrentBranchForce{}, //exhaustruct:ignore
+		&PushCurrentBranchIfNeeded{}, //exhaustruct:ignore
+		&PushCurrentBranch{}, //exhaustruct:ignore
+		&PushTags{}, //exhaustruct:ignore
+		&RebaseAbort{}, //exhaustruct:ignore
+		&RebaseAncestorLocal{}, //exhaustruct:ignore
+		&RebaseAncestorRemote{}, //exhaustruct:ignore
+		&RebaseAncestorsUntilLocal{}, //exhaustruct:ignore
+		&RebaseBranch{}, //exhaustruct:ignore
+		&RebaseContinueIfNeeded{}, //exhaustruct:ignore
+		&RebaseContinue{}, //exhaustruct:ignore
+		&RebaseOntoRemoveDeleted{}, //exhaustruct:ignore
+		&RebaseOnto{}, //exhaustruct:ignore
+		&RebaseTrackingBranch{}, //exhaustruct:ignore
+		&RegisterUndoablePerennialCommit{}, //exhaustruct:ignore
+		&SnapshotInitialUpdateLocalSHAIfNeeded{}, //exhaustruct:ignore
+		&SnapshotInitialUpdateLocalSHA{}, //exhaustruct:ignore
+		&StashDrop{}, //exhaustruct:ignore
+		&StashOpenChanges{}, //exhaustruct:ignore
+		&StashPopIfExists{}, //exhaustruct:ignore
+		&StashPopIfNeeded{}, //exhaustruct:ignore
+		&StashPop{}, //exhaustruct:ignore
+		&SyncFeatureBranchCompress{}, //exhaustruct:ignore
+		&SyncFeatureBranchMerge{}, //exhaustruct:ignore
+		&SyncFeatureBranchRebase{}, //exhaustruct:ignore
+		&UndoLastCommit{}, //exhaustruct:ignore
+	}
 }

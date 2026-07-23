@@ -16,8 +16,8 @@ set -e
 	echo '// This is used to iterate all opcode types.'
 	echo 'func All() []shared.Opcode {'
 	echo '	return []shared.Opcode{'
-	cat internal/vm/opcodes/*.go | grep '^type .* struct' | sed -e 's/type /\t\t\&/' -e 's/ struct.*/{},/' | LC_COLLATE=C sort
-	echo '	} //exhaustruct:ignore'
+	cat internal/vm/opcodes/*.go | grep '^type .* struct' | sed -e 's/type /\t\t\&/' -e 's/ struct.*/{}, \/\/exhaustruct:ignore/' | LC_COLLATE=C sort
+	echo '	}'
 	echo '}'
 ) >internal/vm/opcodes/all.go
 echo "Generated internal/vm/opcodes/all.go"
