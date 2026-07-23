@@ -4,16 +4,16 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/config/gitconfig"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/state/runlog"
-	"github.com/git-town/git-town/v23/internal/state/runstate"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	"github.com/git-town/git-town/v23/internal/vm/program"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/config/gitconfig"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/state/runlog"
+	"github.com/git-town/git-town/v24/internal/state/runstate"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	"github.com/git-town/git-town/v24/internal/vm/program"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // errored is called when the given opcode has resulted in the given error.

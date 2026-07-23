@@ -3,8 +3,8 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 type ExitToShellIfUncommittedChanges struct{}

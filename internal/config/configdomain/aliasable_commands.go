@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v23/pkg/prelude"
+import . "github.com/git-town/git-town/v24/pkg/prelude"
 
 type AliasableCommands []AliasableCommand
 

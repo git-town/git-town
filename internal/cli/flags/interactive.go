@@ -1,9 +1,9 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/messages"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/messages"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

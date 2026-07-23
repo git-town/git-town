@@ -1,12 +1,12 @@
 package setup
 
 import (
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v23/internal/config"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/git"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v24/internal/config"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/git"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
 )
 
 type Data struct {

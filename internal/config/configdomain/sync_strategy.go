@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/messages"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/messages"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // SyncStrategy defines legal values for "sync-*-strategy" configuration settings.

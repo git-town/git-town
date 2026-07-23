@@ -2,11 +2,11 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v23/internal/cmd/config"
-	"github.com/git-town/git-town/v23/internal/cmd/ship"
-	"github.com/git-town/git-town/v23/internal/cmd/status"
-	"github.com/git-town/git-town/v23/internal/cmd/swap"
-	"github.com/git-town/git-town/v23/internal/cmd/sync"
+	"github.com/git-town/git-town/v24/internal/cmd/config"
+	"github.com/git-town/git-town/v24/internal/cmd/ship"
+	"github.com/git-town/git-town/v24/internal/cmd/status"
+	"github.com/git-town/git-town/v24/internal/cmd/swap"
+	"github.com/git-town/git-town/v24/internal/cmd/sync"
 )
 
 // Execute runs the Cobra stack.

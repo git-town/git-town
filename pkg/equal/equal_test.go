@@ -3,7 +3,7 @@ package equal_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/pkg/equal"
+	"github.com/git-town/git-town/v24/pkg/equal"
 	"github.com/shoenig/test/must"
 )
 

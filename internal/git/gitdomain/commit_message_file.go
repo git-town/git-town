@@ -1,6 +1,6 @@
 package gitdomain
 
-import "github.com/git-town/git-town/v23/internal/gohacks/stringss"
+import "github.com/git-town/git-town/v24/internal/gohacks/stringss"
 
 // CommitMessageFile is the name of the file from which to read the CommitMessage.
 type CommitMessageFile stringss.Trimmed
