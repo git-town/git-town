@@ -113,7 +113,7 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 		squashCommitMessage := commitMessage.String()
 		options.SquashCommitMessage = &squashCommitMessage
 	}
-	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int(), options)
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int64(), options)
 	self.log.Finished(err)
 	return err
 }
@@ -127,7 +127,7 @@ var _ forgedomain.ProposalBodyUpdater = apiConnector
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int64(), &gitlab.UpdateMergeRequestOptions{
 		Description: new(updatedDescription.String()),
 	})
 	self.log.Finished(err)
@@ -143,7 +143,7 @@ var _ forgedomain.ProposalTargetUpdater = apiConnector
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int(), &gitlab.UpdateMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number.Int64(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: new(target.String()),
 	})
 	self.log.Finished(err)

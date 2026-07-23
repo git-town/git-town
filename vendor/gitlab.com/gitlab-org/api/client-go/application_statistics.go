@@ -40,29 +40,23 @@ var _ ApplicationStatisticsServiceInterface = (*ApplicationStatisticsService)(ni
 //
 // GitLab API docs: https://docs.gitlab.com/api/statistics/
 type ApplicationStatistics struct {
-	Forks         int `url:"forks" json:"forks"`
-	Issues        int `url:"issues" json:"issues"`
-	MergeRequests int `url:"merge_requests" json:"merge_requests"`
-	Notes         int `url:"notes" json:"notes"`
-	Snippets      int `url:"snippets" json:"snippets"`
-	SSHKeys       int `url:"ssh_keys" json:"ssh_keys"`
-	Milestones    int `url:"milestones" json:"milestones"`
-	Users         int `url:"users" json:"users"`
-	Groups        int `url:"groups" json:"groups"`
-	Projects      int `url:"projects" json:"projects"`
-	ActiveUsers   int `url:"active_users" json:"active_users"`
+	Forks         int64 `url:"forks" json:"forks"`
+	Issues        int64 `url:"issues" json:"issues"`
+	MergeRequests int64 `url:"merge_requests" json:"merge_requests"`
+	Notes         int64 `url:"notes" json:"notes"`
+	Snippets      int64 `url:"snippets" json:"snippets"`
+	SSHKeys       int64 `url:"ssh_keys" json:"ssh_keys"`
+	Milestones    int64 `url:"milestones" json:"milestones"`
+	Users         int64 `url:"users" json:"users"`
+	Groups        int64 `url:"groups" json:"groups"`
+	Projects      int64 `url:"projects" json:"projects"`
+	ActiveUsers   int64 `url:"active_users" json:"active_users"`
 }
 
 func (s *ApplicationStatisticsService) GetApplicationStatistics(options ...RequestOptionFunc) (*ApplicationStatistics, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "application/statistics", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	statistics := new(ApplicationStatistics)
-	resp, err := s.client.Do(req, statistics)
-	if err != nil {
-		return nil, resp, err
-	}
-	return statistics, resp, nil
+	return do[*ApplicationStatistics](s.client,
+		withMethod(http.MethodGet),
+		withPath("application/statistics"),
+		withRequestOpts(options...),
+	)
 }

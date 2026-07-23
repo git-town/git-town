@@ -18,8 +18,21 @@ import "net/http"
 
 type (
 	GroupActivityAnalyticsServiceInterface interface {
+		// GetRecentlyCreatedIssuesCount gets the count of recently created issues for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-issues-for-group
 		GetRecentlyCreatedIssuesCount(opt *GetRecentlyCreatedIssuesCountOptions, options ...RequestOptionFunc) (*IssuesCount, *Response, error)
+		// GetRecentlyCreatedMergeRequestsCount gets the count of recently created merge
+		// requests for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-merge-requests-for-group
 		GetRecentlyCreatedMergeRequestsCount(opt *GetRecentlyCreatedMergeRequestsCountOptions, options ...RequestOptionFunc) (*MergeRequestsCount, *Response, error)
+		// GetRecentlyAddedMembersCount gets the count of recently added members to a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-members-recently-added-to-group
 		GetRecentlyAddedMembersCount(opt *GetRecentlyAddedMembersCountOptions, options ...RequestOptionFunc) (*NewMembersCount, *Response, error)
 	}
 
@@ -39,7 +52,7 @@ var _ GroupActivityAnalyticsServiceInterface = (*GroupActivityAnalyticsService)(
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-issues-for-group
 type IssuesCount struct {
-	IssuesCount int `url:"issues_count" json:"issues_count"`
+	IssuesCount int64 `url:"issues_count" json:"issues_count"`
 }
 
 // GetRecentlyCreatedIssuesCountOptions represents the available
@@ -51,24 +64,13 @@ type GetRecentlyCreatedIssuesCountOptions struct {
 	GroupPath string `url:"group_path" json:"group_path"`
 }
 
-// GetRecentlyCreatedIssuesCount gets the count of recently created issues for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-issues-for-group
 func (s *GroupActivityAnalyticsService) GetRecentlyCreatedIssuesCount(opt *GetRecentlyCreatedIssuesCountOptions, options ...RequestOptionFunc) (*IssuesCount, *Response, error) {
-	u := "analytics/group_activity/issues_count"
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	res := new(IssuesCount)
-	resp, err := s.client.Do(req, res)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return res, resp, nil
+	return do[*IssuesCount](s.client,
+		withMethod(http.MethodGet),
+		withPath("analytics/group_activity/issues_count"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // MergeRequestsCount represents the total count of recently created merge requests
@@ -77,7 +79,7 @@ func (s *GroupActivityAnalyticsService) GetRecentlyCreatedIssuesCount(opt *GetRe
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-merge-requests-for-group
 type MergeRequestsCount struct {
-	MergeRequestsCount int `url:"merge_requests_count" json:"merge_requests_count"`
+	MergeRequestsCount int64 `url:"merge_requests_count" json:"merge_requests_count"`
 }
 
 // GetRecentlyCreatedMergeRequestsCountOptions represents the available
@@ -89,25 +91,13 @@ type GetRecentlyCreatedMergeRequestsCountOptions struct {
 	GroupPath string `url:"group_path" json:"group_path"`
 }
 
-// GetRecentlyCreatedMergeRequestsCount gets the count of recently created merge
-// requests for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-recently-created-merge-requests-for-group
 func (s *GroupActivityAnalyticsService) GetRecentlyCreatedMergeRequestsCount(opt *GetRecentlyCreatedMergeRequestsCountOptions, options ...RequestOptionFunc) (*MergeRequestsCount, *Response, error) {
-	u := "analytics/group_activity/merge_requests_count"
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	res := new(MergeRequestsCount)
-	resp, err := s.client.Do(req, res)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return res, resp, nil
+	return do[*MergeRequestsCount](s.client,
+		withMethod(http.MethodGet),
+		withPath("analytics/group_activity/merge_requests_count"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // NewMembersCount represents the total count of recently added members to a group.
@@ -115,7 +105,7 @@ func (s *GroupActivityAnalyticsService) GetRecentlyCreatedMergeRequestsCount(opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-members-recently-added-to-group
 type NewMembersCount struct {
-	NewMembersCount int `url:"new_members_count" json:"new_members_count"`
+	NewMembersCount int64 `url:"new_members_count" json:"new_members_count"`
 }
 
 // GetRecentlyAddedMembersCountOptions represents the available
@@ -127,22 +117,11 @@ type GetRecentlyAddedMembersCountOptions struct {
 	GroupPath string `url:"group_path" json:"group_path"`
 }
 
-// GetRecentlyAddedMembersCount gets the count of recently added members to a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_activity_analytics/#get-count-of-members-recently-added-to-group
 func (s *GroupActivityAnalyticsService) GetRecentlyAddedMembersCount(opt *GetRecentlyAddedMembersCountOptions, options ...RequestOptionFunc) (*NewMembersCount, *Response, error) {
-	u := "analytics/group_activity/new_members_count"
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	res := new(NewMembersCount)
-	resp, err := s.client.Do(req, res)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return res, resp, nil
+	return do[*NewMembersCount](s.client,
+		withMethod(http.MethodGet),
+		withPath("analytics/group_activity/new_members_count"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

@@ -16,11 +16,7 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-)
+import "net/http"
 
 type (
 	// FeaturesServiceInterface defines all the API methods for the FeaturesService
@@ -69,17 +65,10 @@ func (f Feature) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/features/#list-all-features
 func (s *FeaturesService) ListFeatures(options ...RequestOptionFunc) ([]*Feature, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "features", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var f []*Feature
-	resp, err := s.client.Do(req, &f)
-	if err != nil {
-		return nil, resp, err
-	}
-	return f, resp, nil
+	return do[[]*Feature](s.client,
+		withPath("features"),
+		withRequestOpts(options...),
+	)
 }
 
 // FeatureDefinition represents a Feature Definition.
@@ -106,17 +95,10 @@ func (fd FeatureDefinition) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/features/#list-all-feature-definitions
 func (s *FeaturesService) ListFeatureDefinitions(options ...RequestOptionFunc) ([]*FeatureDefinition, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "features/definitions", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var fd []*FeatureDefinition
-	resp, err := s.client.Do(req, &fd)
-	if err != nil {
-		return nil, resp, err
-	}
-	return fd, resp, nil
+	return do[[]*FeatureDefinition](s.client,
+		withPath("features/definitions"),
+		withRequestOpts(options...),
+	)
 }
 
 // SetFeatureFlagOptions represents the available options for
@@ -141,19 +123,12 @@ type SetFeatureFlagOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/features/#set-or-create-a-feature
 func (s *FeaturesService) SetFeatureFlag(name string, opt *SetFeatureFlagOptions, options ...RequestOptionFunc) (*Feature, *Response, error) {
-	u := fmt.Sprintf("features/%s", url.PathEscape(name))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	f := &Feature{}
-	resp, err := s.client.Do(req, f)
-	if err != nil {
-		return nil, resp, err
-	}
-	return f, resp, nil
+	return do[*Feature](s.client,
+		withMethod(http.MethodPost),
+		withPath("features/%s", name),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteFeatureFlag deletes a feature flag.
@@ -161,12 +136,10 @@ func (s *FeaturesService) SetFeatureFlag(name string, opt *SetFeatureFlagOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/features/#delete-a-feature
 func (s *FeaturesService) DeleteFeatureFlag(name string, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("features/%s", url.PathEscape(name))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("features/%s", name),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

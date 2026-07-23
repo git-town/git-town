@@ -67,18 +67,11 @@ type Appearance struct {
 }
 
 func (s *AppearanceService) GetAppearance(options ...RequestOptionFunc) (*Appearance, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "application/appearance", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	as := new(Appearance)
-	resp, err := s.client.Do(req, as)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return as, resp, nil
+	return do[*Appearance](s.client,
+		withMethod(http.MethodGet),
+		withPath("application/appearance"),
+		withRequestOpts(options...),
+	)
 }
 
 // ChangeAppearanceOptions represents the available ChangeAppearance() options.
@@ -107,16 +100,10 @@ type ChangeAppearanceOptions struct {
 }
 
 func (s *AppearanceService) ChangeAppearance(opt *ChangeAppearanceOptions, options ...RequestOptionFunc) (*Appearance, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodPut, "application/appearance", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	as := new(Appearance)
-	resp, err := s.client.Do(req, as)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return as, resp, nil
+	return do[*Appearance](s.client,
+		withMethod(http.MethodPut),
+		withPath("application/appearance"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

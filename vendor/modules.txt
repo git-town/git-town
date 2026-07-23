@@ -1,14 +1,16 @@
 ## workspace
-# code.gitea.io/sdk/gitea v0.22.1
-## explicit; go 1.23.0
+# code.gitea.io/sdk/gitea v0.25.1
+## explicit; go 1.26
 code.gitea.io/sdk/gitea
 # codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.2.0
 ## explicit; go 1.23.0
 codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2
-# github.com/42wim/httpsig v1.2.3
-## explicit; go 1.23.0
+# github.com/42wim/httpsig v1.2.4
+## explicit; go 1.25.0
 github.com/42wim/httpsig
 # github.com/BurntSushi/toml v1.5.0
+## explicit; go 1.18
+# github.com/BurntSushi/toml v1.6.0
 ## explicit; go 1.18
 github.com/BurntSushi/toml
 github.com/BurntSushi/toml/internal
@@ -31,8 +33,8 @@ github.com/buger/jsonparser
 ## explicit; go 1.23.0
 github.com/carlmjohnson/requests
 github.com/carlmjohnson/requests/internal/minitrue
-# github.com/charmbracelet/bubbles v0.21.0
-## explicit; go 1.23.0
+# github.com/charmbracelet/bubbles v1.0.0
+## explicit; go 1.24.2
 github.com/charmbracelet/bubbles/cursor
 github.com/charmbracelet/bubbles/key
 github.com/charmbracelet/bubbles/runeutil
@@ -40,32 +42,28 @@ github.com/charmbracelet/bubbles/textinput
 # github.com/charmbracelet/bubbletea v1.3.10
 ## explicit; go 1.24.0
 github.com/charmbracelet/bubbletea
-# github.com/charmbracelet/colorprofile v0.3.3
-## explicit; go 1.24.2
+# github.com/charmbracelet/colorprofile v0.4.3
+## explicit; go 1.25.0
 github.com/charmbracelet/colorprofile
 # github.com/charmbracelet/lipgloss v1.1.0
 ## explicit; go 1.18
 github.com/charmbracelet/lipgloss
-# github.com/charmbracelet/x/ansi v0.10.3
+# github.com/charmbracelet/x/ansi v0.11.7
 ## explicit; go 1.24.2
 github.com/charmbracelet/x/ansi
 github.com/charmbracelet/x/ansi/parser
-# github.com/charmbracelet/x/cellbuf v0.0.13
-## explicit; go 1.18
+# github.com/charmbracelet/x/cellbuf v0.0.15
+## explicit; go 1.24.2
 github.com/charmbracelet/x/cellbuf
 # github.com/charmbracelet/x/term v0.2.2
 ## explicit; go 1.24.0
 github.com/charmbracelet/x/term
-# github.com/clipperhouse/displaywidth v0.4.1
+# github.com/clipperhouse/displaywidth v0.11.0
 ## explicit; go 1.18
 github.com/clipperhouse/displaywidth
-# github.com/clipperhouse/stringish v0.1.1
-## explicit; go 1.18
-github.com/clipperhouse/stringish
-# github.com/clipperhouse/uax29/v2 v2.3.0
+# github.com/clipperhouse/uax29/v2 v2.7.0
 ## explicit; go 1.18
 github.com/clipperhouse/uax29/v2/graphemes
-github.com/clipperhouse/uax29/v2/internal/iterators
 # github.com/cucumber/gherkin/go/v26 v26.2.0
 ## explicit; go 1.19
 github.com/cucumber/gherkin/go/v26
@@ -115,8 +113,8 @@ github.com/google/go-cmp/cmp/internal/value
 # github.com/google/go-github/v58 v58.0.0
 ## explicit; go 1.17
 github.com/google/go-github/v58/github
-# github.com/google/go-querystring v1.1.0
-## explicit; go 1.10
+# github.com/google/go-querystring v1.2.0
+## explicit; go 1.13
 github.com/google/go-querystring/query
 # github.com/hashicorp/go-cleanhttp v0.5.2
 ## explicit; go 1.13
@@ -130,7 +128,7 @@ github.com/hashicorp/go-memdb
 # github.com/hashicorp/go-retryablehttp v0.7.8
 ## explicit; go 1.23
 github.com/hashicorp/go-retryablehttp
-# github.com/hashicorp/go-version v1.7.0
+# github.com/hashicorp/go-version v1.9.0
 ## explicit
 github.com/hashicorp/go-version
 # github.com/hashicorp/golang-lru v1.0.2
@@ -151,23 +149,23 @@ github.com/kr/pretty
 # github.com/kr/text v0.2.0
 ## explicit
 github.com/kr/text
-# github.com/ktrysmt/go-bitbucket v0.9.87
-## explicit; go 1.23.0
+# github.com/ktrysmt/go-bitbucket v0.10.0
+## explicit; go 1.25.0
 github.com/ktrysmt/go-bitbucket
-# github.com/lucasb-eyer/go-colorful v1.3.0
+# github.com/lucasb-eyer/go-colorful v1.4.0
 ## explicit; go 1.12
 github.com/lucasb-eyer/go-colorful
 # github.com/mailru/easyjson v0.7.7
 ## explicit; go 1.12
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jwriter
-# github.com/mattn/go-isatty v0.0.20
-## explicit; go 1.15
+# github.com/mattn/go-isatty v0.0.23
+## explicit; go 1.20
 github.com/mattn/go-isatty
 # github.com/mattn/go-localereader v0.0.1
 ## explicit
 github.com/mattn/go-localereader
-# github.com/mattn/go-runewidth v0.0.19
+# github.com/mattn/go-runewidth v0.0.24
 ## explicit; go 1.20
 github.com/mattn/go-runewidth
 # github.com/mitchellh/mapstructure v1.5.0
@@ -193,14 +191,16 @@ github.com/rogpeppe/go-internal/fmtsort
 ## explicit; go 1.13
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shoenig/test v1.12.2
-## explicit; go 1.18
+## explicit; go 1.24
+# github.com/shoenig/test v1.13.2
+## explicit; go 1.24
 github.com/shoenig/test/interfaces
 github.com/shoenig/test/internal/assertions
 github.com/shoenig/test/internal/constraints
 github.com/shoenig/test/internal/util
 github.com/shoenig/test/must
 github.com/shoenig/test/wait
-# github.com/spf13/cobra v1.10.1
+# github.com/spf13/cobra v1.10.2
 ## explicit; go 1.15
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.10
@@ -212,15 +212,17 @@ github.com/wk8/go-ordered-map/v2
 # github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
 ## explicit; go 1.19
 github.com/xo/terminfo
-# gitlab.com/gitlab-org/api/client-go v0.159.0
-## explicit; go 1.23.0
-gitlab.com/gitlab-org/api/client-go
-# golang.org/x/crypto v0.43.0
+# gitlab.com/gitlab-org/api/client-go v1.46.0
 ## explicit; go 1.24.0
+gitlab.com/gitlab-org/api/client-go
+# golang.org/x/crypto v0.54.0
+## explicit; go 1.25.0
 golang.org/x/crypto/blake2b
 golang.org/x/crypto/blake2s
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
+golang.org/x/crypto/cryptobyte
+golang.org/x/crypto/cryptobyte/asn1
 golang.org/x/crypto/curve25519
 golang.org/x/crypto/ed25519
 golang.org/x/crypto/internal/alias
@@ -230,44 +232,45 @@ golang.org/x/crypto/sha3
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546
-## explicit; go 1.24.0
-golang.org/x/exp/constraints
+# golang.org/x/exp v0.0.0-20260718201538-764159d718ef
+## explicit; go 1.25.0
 # golang.org/x/mod v0.28.0
-## explicit; go 1.24.0
-# golang.org/x/mod v0.29.0
-## explicit; go 1.24.0
+## explicit; go 1.25.0
+# golang.org/x/mod v0.38.0
+## explicit; go 1.25.0
 golang.org/x/mod/semver
-# golang.org/x/net v0.46.0
-## explicit; go 1.24.0
+# golang.org/x/net v0.57.0
+## explicit; go 1.25.0
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/publicsuffix
-# golang.org/x/oauth2 v0.32.0
-## explicit; go 1.24.0
+# golang.org/x/oauth2 v0.36.0
+## explicit; go 1.25.0
 golang.org/x/oauth2
 golang.org/x/oauth2/bitbucket
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
 # golang.org/x/sync v0.17.0
-## explicit; go 1.24.0
+## explicit; go 1.25.0
+# golang.org/x/sync v0.22.0
+## explicit; go 1.25.0
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.37.0
-## explicit; go 1.24.0
+# golang.org/x/sys v0.47.0
+## explicit; go 1.25.0
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.30.0
-## explicit; go 1.24.0
+# golang.org/x/text v0.40.0
+## explicit; go 1.25.0
 golang.org/x/text/transform
-# golang.org/x/time v0.14.0
-## explicit; go 1.24.0
+# golang.org/x/time v0.15.0
+## explicit; go 1.25.0
 golang.org/x/time/rate
 # golang.org/x/tools v0.37.0
-## explicit; go 1.24.0
-# golang.org/x/tools v0.38.0
-## explicit; go 1.24.0
+## explicit; go 1.25.0
+# golang.org/x/tools v0.48.0
+## explicit; go 1.25.0
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/checker
 golang.org/x/tools/go/analysis/internal
@@ -276,6 +279,7 @@ golang.org/x/tools/go/analysis/internal/checker
 golang.org/x/tools/go/analysis/passes/inspect
 golang.org/x/tools/go/analysis/singlechecker
 golang.org/x/tools/go/analysis/unitchecker
+golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/ast/edge
 golang.org/x/tools/go/ast/inspector
 golang.org/x/tools/go/gcexportdata
@@ -283,7 +287,8 @@ golang.org/x/tools/go/packages
 golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/go/types/typeutil
 golang.org/x/tools/internal/aliases
-golang.org/x/tools/internal/analysisinternal
+golang.org/x/tools/internal/analysis/driverutil
+golang.org/x/tools/internal/astutil/free
 golang.org/x/tools/internal/diff
 golang.org/x/tools/internal/diff/lcs
 golang.org/x/tools/internal/event
