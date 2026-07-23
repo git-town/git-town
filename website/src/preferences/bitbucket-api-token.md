@@ -14,8 +14,8 @@ It's a special credential that you create so
 that external applications can interact with Bitbucket in your name.
 To create an API token, open the
 [security settings of your Atlassian account](https://id.atlassian.com/manage-profile/security/api-tokens),
-click `Create API token with scopes`, choose `Bitbucket` as the app, and select
-these scopes:
+click `Create API token with scopes`, choose `Bitbucket` as the app,
+and select these scopes:
 
 - `read:user:bitbucket`
 - `read:repository:bitbucket`

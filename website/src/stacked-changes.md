@@ -267,8 +267,8 @@ To minimize phantom conflicts:
    Git remembers how you resolved past conflicts
    and reuses those resolutions automatically.
 
-3. **Ship using [fast-forward
-   merges](https://git-scm.com/docs/git-merge#_fast_forward_merge).**
+3. **Ship using
+   [fast-forward merges](https://git-scm.com/docs/git-merge#_fast_forward_merge).**
    Fast-forwarding keeps commit history between your stack and `main` identical,
    avoiding synthetic differences that cause phantom conflicts.
 

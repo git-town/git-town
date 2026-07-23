@@ -7,11 +7,11 @@ git town ship [<branch-name>] [--dry-run] [--enter-message] [-h | --help] [--(no
 ```
 
 _Notice: Most people don't need to use this command._
-_The recommended way to merge your feature branches is to use the web UI or
-merge queue of your code hosting service, as you would normally do. `git town
-ship` is for edge cases like developing in [offline
-mode](../preferences/offline.md) or when shipping [stacked
-changes](../stacked-changes.md)._
+_The recommended way to merge your feature branches is to use the web UI
+or merge queue of your code hosting service, as you would normally do.
+`git town ship` is for edge cases like developing in
+[offline mode](../preferences/offline.md) or when shipping
+[stacked changes](../stacked-changes.md)._
 
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch.
