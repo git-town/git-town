@@ -19,6 +19,7 @@
 - `git town propose` now works for branches whose parent does not have a tracking branch ([#5937](https://github.com/git-town/git-town/issues/5937)).
 - `git town propose` with the `gh` connector now works in non-interactive shells when no `--title` or `--body` is given ([#6224](https://github.com/git-town/git-town/issues/6224)).
 - `git town ship` fails gracefully when the parent to ship into is checked out in another worktree ([#6223](https://github.com/git-town/git-town/issues/6223)).
+- the `git-town` binary in `release.tar.gz` on GitHub Releases is now executable ([#6241](https://github.com/git-town/git-town/issues/6241)).
 
 ## 23.0.3 (2026-06-21)
 
