@@ -394,7 +394,7 @@ func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit,
 }
 
 func enterBitbucketAPIToken(data Data, forgeType forgedomain.ForgeType) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
-	if data.Config.File.BitbucketUsername.IsSome() {
+	if data.Config.File.BitbucketAPIToken.IsSome() {
 		return None[forgedomain.BitbucketAPIToken](), false, nil
 	}
 	return dialog.BitbucketAPIToken(forgeType, dialog.Args[forgedomain.BitbucketAPIToken]{
@@ -963,7 +963,7 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		case forgedomain.ForgeTypeAzuredevops:
 			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketAPIToken, args.data.Config.NormalConfig.BitbucketAPIToken)
 			return dialog.TokenScope(existingScope, args.inputs, args.data.Config.NormalConfig.Interactive)
 		case forgedomain.ForgeTypeForgejo:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
