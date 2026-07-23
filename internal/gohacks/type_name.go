@@ -8,7 +8,7 @@ func TypeName(myvar any) string {
 		return "nil"
 	}
 	t := reflect.TypeOf(myvar)
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		return t.Elem().Name()
 	}
 	return t.Name()
