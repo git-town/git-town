@@ -9,7 +9,6 @@
   <img src="https://github.com/git-town/git-town/actions/workflows/unit.yml/badge.svg" alt="unit test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/lint.yml/badge.svg" alt="linters and documentation test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/windows.yml/badge.svg" alt="windows tests">
-  <a href="https://goreportcard.com/report/github.com/git-town/git-town"><img src="https://goreportcard.com/badge/github.com/git-town/git-town/v23" alt="Go report card status"></a>
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
@@ -35,12 +34,12 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 - [append](https://www.git-town.com/commands/append.html) - insert a new branch
   as a child of the current branch
+- [combine](https://www.git-town.com/commands/combine.html) - combine two
+  adjacent branches in a stack into one
 - [detach](https://www.git-town.com/commands/detach.html) - remove a branch from
   a stack
 - [diff-parent](https://www.git-town.com/commands/diff-parent.html) - show the
   changes committed to a feature branch
-- [merge](https://www.git-town.com/commands/merge.html) - merge two adjacent
-  branches in a stack into one
 - [prepend](https://www.git-town.com/commands/prepend.html) - insert a new
   branch between the current branch and its parent
 - [set-parent](https://www.git-town.com/commands/set-parent.html) - update the

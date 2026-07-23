@@ -5,7 +5,10 @@ and Bitbucket Data Center in your name,
 for example to update pull requests as branches get created, shipped,
 or deleted.
 To do so, Git Town needs your Bitbucket username
-and a [Bitbucket app password](bitbucket-app-password.md).
+and a [Bitbucket API token](bitbucket-api-token.md).
+
+When authenticating to Bitbucket Cloud with an API token,
+the username is the email address of your Atlassian account.
 
 ## config file
 

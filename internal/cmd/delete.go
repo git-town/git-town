@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v23/internal/cli/flags"
-	"github.com/git-town/git-town/v23/internal/cli/print"
 	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v23/internal/cmd/ship"
 	"github.com/git-town/git-town/v23/internal/cmd/sync"
@@ -17,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v23/internal/config/cliconfig"
 	"github.com/git-town/git-town/v23/internal/config/configdomain"
 	"github.com/git-town/git-town/v23/internal/execute"
-	"github.com/git-town/git-town/v23/internal/forge"
 	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v23/internal/git/gitdomain"
 	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
@@ -199,24 +197,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := forge.NewConnector(forge.NewConnectorArgs{
-		Backend:              repo.Backend,
-		BitbucketAppPassword: config.BitbucketAppPassword,
-		BitbucketUsername:    config.BitbucketUsername,
-		BrowserEnabled:       config.BrowserEnabled,
-		BrowserExecutable:    config.BrowserExecutable,
-		ConfigDir:            repo.ConfigDir,
-		ForgeType:            config.ForgeType,
-		ForgejoToken:         config.ForgejoToken,
-		Frontend:             repo.Frontend,
-		GiteaToken:           config.GiteaToken,
-		GithubConnectorType:  config.GithubConnectorType,
-		GithubToken:          config.GithubToken,
-		GitlabConnectorType:  config.GitlabConnectorType,
-		GitlabToken:          config.GitlabToken,
-		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(repo.Backend),
-	})
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}

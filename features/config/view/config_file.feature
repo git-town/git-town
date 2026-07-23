@@ -94,7 +94,7 @@ Feature: display information from config file
         forge type: github
         origin hostname: github.com
         Bitbucket username: (not set)
-        Bitbucket app password: (not set)
+        Bitbucket API token: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
         GitHub connector: gh

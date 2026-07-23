@@ -37,7 +37,7 @@ main
 
 Moving branches up and down the stack allows you to organize related branches
 together, for example to review and ship them as a series, or to
-[merge](merge.md) them.
+[combine](combine.md) them.
 
 Please ensure that all affected branches are in sync
 and don't contain merge commits before running this command,

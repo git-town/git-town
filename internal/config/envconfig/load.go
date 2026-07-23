@@ -16,7 +16,7 @@ const (
 	Browser                     = "BROWSER"
 	autoResolve                 = "GIT_TOWN_AUTO_RESOLVE"
 	autoSync                    = "GIT_TOWN_AUTO_SYNC"
-	bitbucketAppPassword        = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
+	bitbucketAPIToken           = "GIT_TOWN_BITBUCKET_API_TOKEN"
 	bitbucketUserName           = "GIT_TOWN_BITBUCKET_USERNAME"
 	branchPrefix                = "GIT_TOWN_BRANCH_PREFIX"
 	contributionRegex           = "GIT_TOWN_CONTRIBUTION_REGEX"
@@ -147,7 +147,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		Aliases:                     configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:                 autoResolve,
 		AutoSync:                    autoSync,
-		BitbucketAppPassword:        forgedomain.ParseBitbucketAppPassword(env.GetOpt(bitbucketAppPassword)),
+		BitbucketAPIToken:           forgedomain.ParseBitbucketAPIToken(env.GetOpt(bitbucketAPIToken, "GIT_TOWN_BITBUCKET_APP_PASSWORD")),
 		BitbucketUsername:           forgedomain.ParseBitbucketUsername(env.GetOpt(bitbucketUserName)),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         configdomain.BranchTypeOverrides{}, // not loaded from env vars

@@ -14,7 +14,7 @@ Feature: display configuration defined in environment variables
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                  | false              |
       | GIT_TOWN_AUTO_SYNC                     | false              |
-      | GIT_TOWN_BITBUCKET_APP_PASSWORD        | bitbucket-password |
+      | GIT_TOWN_BITBUCKET_API_TOKEN           | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME            | bitbucket-user     |
       | GIT_TOWN_BRANCH_PREFIX                 | acme-              |
       | BROWSER                                | firefox            |
@@ -87,7 +87,7 @@ Feature: display configuration defined in environment variables
         forge type: gitlab
         origin hostname: codeforge
         Bitbucket username: bitbucket-user
-        Bitbucket app password: (configured)
+        Bitbucket API token: (configured)
         Forgejo token: (configured)
         Gitea token: (configured)
         GitHub connector: gh

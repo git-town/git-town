@@ -7,11 +7,11 @@ git town ship [<branch-name>] [--dry-run] [--enter-message] [-h | --help] [--(no
 ```
 
 _Notice: Most people don't need to use this command._
-_The recommended way to merge your feature branches is to use the web UI or
-merge queue of your code hosting service, as you would normally do. `git town
-ship` is for edge cases like developing in [offline
-mode](../preferences/offline.md) or when shipping [stacked
-changes](../stacked-changes.md)._
+_The recommended way to merge your feature branches is to use the web UI
+or merge queue of your code hosting service, as you would normally do.
+`git town ship` is for edge cases like developing in
+[offline mode](../preferences/offline.md) or when shipping
+[stacked changes](../stacked-changes.md)._
 
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch.
@@ -104,7 +104,7 @@ If you have configured the API tokens
 for [GitHub](../preferences/github-token.md),
 [GitLab](../preferences/gitlab-token.md),
 [Gitea](../preferences/gitea-token.md),
-[Bitbucket](../preferences/bitbucket-app-password.md),
+[Bitbucket](../preferences/bitbucket-api-token.md),
 or [Forgejo](../preferences/forgejo-token.md)
 and the branch to be shipped has an open proposal,
 this command merges the proposal for the current branch.

@@ -146,17 +146,17 @@ upstream = true
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
 			wantConfig := configdomain.PartialConfig{
-				Aliases:              configdomain.Aliases{},
-				AutoResolve:          Some(configdomain.AutoResolve(false)),
-				AutoSync:             None[configdomain.AutoSync](),
-				BitbucketAppPassword: None[forgedomain.BitbucketAppPassword](),
-				BitbucketUsername:    None[forgedomain.BitbucketUsername](),
-				BranchPrefix:         Some(configdomain.BranchPrefix("feature-")),
-				BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
-				BrowserExecutable:    Some(browserdomain.BrowserExecutable("chrome")),
-				ContributionRegex:    asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test")),
-				Detached:             Some(configdomain.Detached(true)),
-				DevRemote:            Some(gitdomain.Remote("origin")),
+				Aliases:             configdomain.Aliases{},
+				AutoResolve:         Some(configdomain.AutoResolve(false)),
+				AutoSync:            None[configdomain.AutoSync](),
+				BitbucketAPIToken:   None[forgedomain.BitbucketAPIToken](),
+				BitbucketUsername:   None[forgedomain.BitbucketUsername](),
+				BranchPrefix:        Some(configdomain.BranchPrefix("feature-")),
+				BranchTypeOverrides: configdomain.BranchTypeOverrides{},
+				BrowserExecutable:   Some(browserdomain.BrowserExecutable("chrome")),
+				ContributionRegex:   asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test")),
+				Detached:            Some(configdomain.Detached(true)),
+				DevRemote:           Some(gitdomain.Remote("origin")),
 				DisplayTypes: Some(configdomain.DisplayTypes{
 					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch},
 					Quantifier:  configdomain.QuantifierNo,
