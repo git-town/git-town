@@ -21,6 +21,10 @@
 - `git town ship` fails gracefully when the parent to ship into is checked out in another worktree ([#6223](https://github.com/git-town/git-town/issues/6223)).
 - the `git-town` binary in `release.tar.gz` on GitHub Releases is now executable ([#6241](https://github.com/git-town/git-town/issues/6241)).
 
+#### Contributors
+
+Huge thanks to @Indemnity83, @finleyjb, @kevgo, @mdwint, @mrmarufpro, @samuelkitazume, @yaadata for contributing code, feedback, and ideas to 15 shipped pull requests and 10 resolved issues!
+
 ## 23.0.3 (2026-06-21)
 
 #### Bug Fixes
