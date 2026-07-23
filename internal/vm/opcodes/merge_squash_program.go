@@ -42,7 +42,8 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	if !args.Config.Value.NormalConfig.DryRun {
 		program = append(program, &CommitMessageCommentOut{})
 	}
-	program = append(program,
+	program = append(
+		program,
 		&CommitAutoUndo{
 			AuthorOverride:                 authorOpt,
 			FallbackToDefaultCommitMessage: false,

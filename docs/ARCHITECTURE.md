@@ -104,8 +104,8 @@ For more context, please refer to
 
 The
 [Go code review comments wiki page](https://go.dev/wiki/CodeReviewComments#receiver-names)
-suggests using short, one or two-letter names for method receivers, rather than
-generic names like `this` or `self`.
+suggests using short, one or two-letter names for method receivers,
+rather than generic names like `this` or `self`.
 After many years of following this guideline in the Git Town codebase,
 we found it to be impractical and cumbersome.
 

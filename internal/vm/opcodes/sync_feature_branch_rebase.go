@@ -23,14 +23,16 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	}
 	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
 	if syncTracking && hasTrackingBranch {
-		program = append(program,
+		program = append(
+			program,
 			&RebaseTrackingBranch{
 				PushBranches: self.PushBranches,
 				RemoteBranch: trackingBranch,
 			},
 		)
 	}
-	program = append(program,
+	program = append(
+		program,
 		&RebaseAncestorsUntilLocal{
 			Branch:          self.Branch,
 			CommitsToRemove: self.ParentSHAPreviousRun,
@@ -38,7 +40,8 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	)
 	// update the tracking branch
 	if syncTracking && self.PushBranches.ShouldPush() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
-		program = append(program,
+		program = append(
+			program,
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,
 				ForceIfIncludes: true,

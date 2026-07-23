@@ -113,7 +113,7 @@ func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowS
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
-	print.Entry("Bitbucket app password", format.Secret(config.NormalConfig.BitbucketAppPassword, showSecrets))
+	print.Entry("Bitbucket API token", format.Secret(config.NormalConfig.BitbucketAPIToken, showSecrets))
 	print.Entry("Forgejo token", format.Secret(config.NormalConfig.ForgejoToken, showSecrets))
 	print.Entry("Gitea token", format.Secret(config.NormalConfig.GiteaToken, showSecrets))
 	print.Entry("GitHub connector", format.OptionalStringerSetting(config.NormalConfig.GithubConnectorType))

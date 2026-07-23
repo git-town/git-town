@@ -1495,8 +1495,8 @@ echo "new line" >> file
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
-		if (actual)[0].String() != name {
-			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
+		if actual[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, actual[0])
 		}
 		return nil
 	})

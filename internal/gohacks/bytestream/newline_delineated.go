@@ -12,7 +12,8 @@ type NewlineDelineated []byte
 func (self NewlineDelineated) Sanitize() Sanitized {
 	lines := bytes.Split(self, []byte("\n"))
 	secretKeys := [][]byte{
-		[]byte(configdomain.KeyBitbucketAppPassword),
+		[]byte(configdomain.KeyBitbucketAPIToken),
+		[]byte(configdomain.KeyDeprecatedBitbucketAppPassword),
 		[]byte(configdomain.KeyDeprecatedCodebergToken),
 		[]byte(configdomain.KeyForgejoToken),
 		[]byte(configdomain.KeyGiteaToken),
