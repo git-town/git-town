@@ -16,7 +16,8 @@ import (
 // The zero value is an empty DataTable.
 type DataTable struct {
 	// table data organized as rows and columns
-	Cells [][]string `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Cells [][]string
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.

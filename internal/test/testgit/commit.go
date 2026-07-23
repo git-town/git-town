@@ -10,13 +10,18 @@ import (
 
 // Commit describes a Git commit.
 type Commit struct {
-	Author      gitdomain.Author `exhaustruct:"optional"`
-	Branch      gitdomain.LocalBranchName
-	FileContent string    `exhaustruct:"optional"`
-	FileName    string    `exhaustruct:"optional"`
-	Locations   Locations `exhaustruct:"optional"`
-	Message     gitdomain.CommitMessage
-	SHA         gitdomain.SHA `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Author gitdomain.Author
+	Branch gitdomain.LocalBranchName
+	//exhaustruct:optional
+	FileContent string
+	//exhaustruct:optional
+	FileName string
+	//exhaustruct:optional
+	Locations Locations
+	Message   gitdomain.CommitMessage
+	//exhaustruct:optional
+	SHA gitdomain.SHA
 }
 
 var counter helpers.AtomicCounter

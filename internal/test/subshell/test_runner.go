@@ -318,17 +318,21 @@ func (self *TestRunner) createBinDir() {
 type Options struct {
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
-	Dir string `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Dir string
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
-	Env []string `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Env []string
 
 	// when set, captures the output and returns it
-	IgnoreOutput bool `exhaustruct:"optional"`
+	//exhaustruct:optional
+	IgnoreOutput bool
 
 	// input to pipe into STDIN
-	Input Option[string] `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Input Option[string]
 
 	// whether to provide a TTY to the subshell
 	TTY bool
