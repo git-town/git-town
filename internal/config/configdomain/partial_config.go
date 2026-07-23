@@ -71,10 +71,11 @@ type PartialConfig struct {
 }
 
 func EmptyPartialConfig() PartialConfig {
+	//exhaustruct:ignore
 	return PartialConfig{
 		Aliases: Aliases{},
 		Lineage: NewLineage(),
-	} //exhaustruct:ignore
+	}
 }
 
 // Merge combines the data of the given PartialConfig with this PartialConfig,
