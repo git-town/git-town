@@ -40,7 +40,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 			BrowserExecutable: args.BrowserExecutable,
 		}
 	case forgedomain.ForgeTypeBitbucket:
-		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+		connector, err = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			APIToken:          args.BitbucketAPIToken,
 			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,

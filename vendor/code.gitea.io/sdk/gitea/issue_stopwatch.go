@@ -6,6 +6,7 @@ package gitea
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 )
 
@@ -20,10 +21,25 @@ type StopWatch struct {
 	RepoName      string    `json:"repo_name"`
 }
 
+// ListStopwatchesOptions options for listing stopwatches
+type ListStopwatchesOptions struct {
+	ListOptions
+}
+
 // GetMyStopwatches list all stopwatches
+//
+// Deprecated: Use ListMyStopwatches instead, which supports pagination.
 func (c *Client) GetMyStopwatches() ([]*StopWatch, *Response, error) {
-	stopwatches := make([]*StopWatch, 0, 1)
-	resp, err := c.getParsedResponse("GET", "/user/stopwatches", nil, nil, &stopwatches)
+	return c.ListMyStopwatches(ListStopwatchesOptions{})
+}
+
+// ListMyStopwatches list all stopwatches with pagination
+func (c *Client) ListMyStopwatches(opt ListStopwatchesOptions) ([]*StopWatch, *Response, error) {
+	link, _ := url.Parse("/user/stopwatches")
+	opt.setDefaults()
+	link.RawQuery = opt.getURLQuery().Encode()
+	stopwatches := make([]*StopWatch, 0, opt.PageSize)
+	resp, err := c.getParsedResponse("GET", link.String(), nil, nil, &stopwatches)
 	return stopwatches, resp, err
 }
 

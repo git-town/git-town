@@ -86,6 +86,23 @@ const (
 	AccessTokenStateInactive AccessTokenState = "inactive"
 )
 
+// AccessTokenSort represents the available sorting options for access tokens.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/group_access_tokens/#list-all-group-access-tokens
+type AccessTokenSort string
+
+const (
+	CreatedAsc   AccessTokenSort = "created_asc"
+	CreatedDesc  AccessTokenSort = "created_desc"
+	ExpiresAsc   AccessTokenSort = "expires_asc"
+	ExpiresDesc  AccessTokenSort = "expires_desc"
+	LastUsedAsc  AccessTokenSort = "last_used_asc"
+	LastUsedDesc AccessTokenSort = "last_used_desc"
+	NameAsc      AccessTokenSort = "name_asc"
+	NameDesc     AccessTokenSort = "name_desc"
+)
+
 // UserIDValue represents a user ID value within GitLab.
 type UserIDValue string
 
@@ -103,7 +120,7 @@ type ApproverIDsValue struct {
 // ApproverIDs is a helper routine that creates a new ApproverIDsValue.
 func ApproverIDs(v any) *ApproverIDsValue {
 	switch v.(type) {
-	case UserIDValue, []int:
+	case UserIDValue, []int64:
 		return &ApproverIDsValue{value: v}
 	default:
 		panic("Unsupported value passed as approver ID")
@@ -115,11 +132,11 @@ func (a *ApproverIDsValue) EncodeValues(key string, v *url.Values) error {
 	switch value := a.value.(type) {
 	case UserIDValue:
 		v.Set(key, string(value))
-	case []int:
+	case []int64:
 		v.Del(key)
 		v.Del(key + "[]")
 		for _, id := range value {
-			v.Add(key+"[]", strconv.Itoa(id))
+			v.Add(key+"[]", strconv.FormatInt(id, 10))
 		}
 	}
 	return nil
@@ -143,7 +160,7 @@ type AssigneeIDValue struct {
 // AssigneeID is a helper routine that creates a new AssigneeIDValue.
 func AssigneeID(v any) *AssigneeIDValue {
 	switch v.(type) {
-	case UserIDValue, int:
+	case UserIDValue, int, int64:
 		return &AssigneeIDValue{value: v}
 	default:
 		panic("Unsupported value passed as assignee ID")
@@ -157,6 +174,8 @@ func (a *AssigneeIDValue) EncodeValues(key string, v *url.Values) error {
 		v.Set(key, string(value))
 	case int:
 		v.Set(key, strconv.Itoa(value))
+	case int64:
+		v.Set(key, strconv.FormatInt(value, 10))
 	}
 	return nil
 }
@@ -179,7 +198,7 @@ type ReviewerIDValue struct {
 // ReviewerID is a helper routine that creates a new ReviewerIDValue.
 func ReviewerID(v any) *ReviewerIDValue {
 	switch v.(type) {
-	case UserIDValue, int:
+	case UserIDValue, int, int64:
 		return &ReviewerIDValue{value: v}
 	default:
 		panic("Unsupported value passed as reviewer ID")
@@ -193,6 +212,8 @@ func (a *ReviewerIDValue) EncodeValues(key string, v *url.Values) error {
 		v.Set(key, string(value))
 	case int:
 		v.Set(key, strconv.Itoa(value))
+	case int64:
+		v.Set(key, strconv.FormatInt(value, 10))
 	}
 	return nil
 }
@@ -477,10 +498,18 @@ func (t *ISOTime) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	isotime, err := time.Parse(`"`+iso8601+`"`, string(data))
-	*t = ISOTime(isotime)
+	// Try parsing as datetime first (ISO 8601 with time)
+	isotime, err := time.Parse(`"`+time.RFC3339+`"`, string(data))
+	if err != nil {
+		// If that fails, try parsing as date-only
+		isotime, err = time.Parse(`"`+iso8601+`"`, string(data))
+		if err != nil {
+			return err
+		}
+	}
 
-	return err
+	*t = ISOTime(isotime)
+	return nil
 }
 
 // EncodeValues implements the query.Encoder interface.
@@ -775,8 +804,8 @@ const (
 
 // TasksCompletionStatus represents tasks of the issue/merge request.
 type TasksCompletionStatus struct {
-	Count          int `json:"count"`
-	CompletedCount int `json:"completed_count"`
+	Count          int64 `json:"count"`
+	CompletedCount int64 `json:"completed_count"`
 }
 
 // TodoAction represents the available actions that can be performed on a todo.
@@ -865,16 +894,10 @@ type BoolValue bool
 // https://github.com/gitlabhq/terraform-provider-gitlab/issues/348
 func (t *BoolValue) UnmarshalJSON(b []byte) error {
 	switch string(b) {
-	case `"1"`:
+	case `"1"`, `"true"`:
 		*t = true
 		return nil
-	case `"0"`:
-		*t = false
-		return nil
-	case `"true"`:
-		*t = true
-		return nil
-	case `"false"`:
+	case `"0"`, `"false"`:
 		*t = false
 		return nil
 	default:
@@ -899,4 +922,22 @@ const (
 	CiPipelineVariablesOwnerRole        CIPipelineVariablesMinimumOverrideRoleValue = "owner"
 	CiPipelineVariablesMaintainerRole   CIPipelineVariablesMinimumOverrideRoleValue = "maintainer"
 	CIPipelineVariablesDeveloperRole    CIPipelineVariablesMinimumOverrideRoleValue = "developer"
+)
+
+// EnabledGitAccessProtocolValue represents a git access protocol value.
+type EnabledGitAccessProtocolValue string
+
+const (
+	EnabledGitAccessProtocolSSH  EnabledGitAccessProtocolValue = "ssh"
+	EnabledGitAccessProtocolHTTP EnabledGitAccessProtocolValue = "http"
+	EnabledGitAccessProtocolAll  EnabledGitAccessProtocolValue = "all"
+)
+
+// DuoAvailabilityValue represents a GitLab Duo availability value.
+type DuoAvailabilityValue string
+
+const (
+	DuoAvailabilityDefaultOn  DuoAvailabilityValue = "default_on"
+	DuoAvailabilityDefaultOff DuoAvailabilityValue = "default_off"
+	DuoAvailabilityNeverOn    DuoAvailabilityValue = "never_on" // Displayed as "Always Off" in the UI
 )

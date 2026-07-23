@@ -1,7 +1,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -41,24 +40,10 @@ type (
 var _ MergeRequestContextCommitsServiceInterface = (*MergeRequestContextCommitsService)(nil)
 
 func (s *MergeRequestContextCommitsService) ListMergeRequestContextCommits(pid any, mergeRequest int64, options ...RequestOptionFunc) ([]*Commit, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/context_commits", PathEscape(project), mergeRequest)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var c []*Commit
-	resp, err := s.client.Do(req, &c)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return c, resp, nil
+	return do[[]*Commit](s.client,
+		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateMergeRequestContextCommitsOptions represents the available
@@ -71,24 +56,12 @@ type CreateMergeRequestContextCommitsOptions struct {
 }
 
 func (s *MergeRequestContextCommitsService) CreateMergeRequestContextCommits(pid any, mergeRequest int64, opt *CreateMergeRequestContextCommitsOptions, options ...RequestOptionFunc) ([]*Commit, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/context_commits", PathEscape(project), mergeRequest)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var c []*Commit
-	resp, err := s.client.Do(req, &c)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return c, resp, nil
+	return do[[]*Commit](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteMergeRequestContextCommitsOptions represents the available
@@ -101,16 +74,11 @@ type DeleteMergeRequestContextCommitsOptions struct {
 }
 
 func (s *MergeRequestContextCommitsService) DeleteMergeRequestContextCommits(pid any, mergeRequest int64, opt *DeleteMergeRequestContextCommitsOptions, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/context_commits", PathEscape(project), mergeRequest)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, opt, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

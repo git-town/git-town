@@ -17,15 +17,25 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	TodosServiceInterface interface {
+		// ListTodos lists all todos created by authenticated user.
+		// When no filter is applied, it returns all pending todos for the current user.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/todos/#get-a-list-of-to-do-items
 		ListTodos(opt *ListTodosOptions, options ...RequestOptionFunc) ([]*Todo, *Response, error)
-		MarkTodoAsDone(id int, options ...RequestOptionFunc) (*Response, error)
+		// MarkTodoAsDone marks a single pending todo given by its ID for the current user as done.
+		//
+		// GitLab API docs: https://docs.gitlab.com/api/todos/#mark-a-to-do-item-as-done
+		MarkTodoAsDone(id int64, options ...RequestOptionFunc) (*Response, error)
+		// MarkAllTodosAsDone marks all pending todos for the current user as done.
+		//
+		// GitLab API docs: https://docs.gitlab.com/api/todos/#mark-all-to-do-items-as-done
 		MarkAllTodosAsDone(options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -44,7 +54,7 @@ var _ TodosServiceInterface = (*TodosService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/todos/
 type Todo struct {
-	ID         int            `json:"id"`
+	ID         int64          `json:"id"`
 	Project    *BasicProject  `json:"project"`
 	Author     *BasicUser     `json:"author"`
 	ActionName TodoAction     `json:"action_name"`
@@ -67,19 +77,19 @@ type TodoTarget struct {
 	Author               *BasicUser             `json:"author"`
 	CreatedAt            *time.Time             `json:"created_at"`
 	Description          string                 `json:"description"`
-	Downvotes            int                    `json:"downvotes"`
+	Downvotes            int64                  `json:"downvotes"`
 	ID                   any                    `json:"id"`
-	IID                  int                    `json:"iid"`
+	IID                  int64                  `json:"iid"`
 	Labels               []string               `json:"labels"`
 	Milestone            *Milestone             `json:"milestone"`
-	ProjectID            int                    `json:"project_id"`
+	ProjectID            int64                  `json:"project_id"`
 	State                string                 `json:"state"`
 	Subscribed           bool                   `json:"subscribed"`
 	TaskCompletionStatus *TasksCompletionStatus `json:"task_completion_status"`
 	Title                string                 `json:"title"`
 	UpdatedAt            *time.Time             `json:"updated_at"`
-	Upvotes              int                    `json:"upvotes"`
-	UserNotesCount       int                    `json:"user_notes_count"`
+	Upvotes              int64                  `json:"upvotes"`
+	UserNotesCount       int64                  `json:"user_notes_count"`
 	WebURL               string                 `json:"web_url"`
 
 	// Only available for type Issue
@@ -87,13 +97,13 @@ type TodoTarget struct {
 	DueDate      string      `json:"due_date"`
 	HasTasks     bool        `json:"has_tasks"`
 	Links        *IssueLinks `json:"_links"`
-	MovedToID    int         `json:"moved_to_id"`
+	MovedToID    int64       `json:"moved_to_id"`
 	TimeStats    *TimeStats  `json:"time_stats"`
-	Weight       int         `json:"weight"`
+	Weight       int64       `json:"weight"`
 
 	// Only available for type MergeRequest
 	MergedAt                  *time.Time   `json:"merged_at"`
-	ApprovalsBeforeMerge      int          `json:"approvals_before_merge"`
+	ApprovalsBeforeMerge      int64        `json:"approvals_before_merge"`
 	ForceRemoveSourceBranch   bool         `json:"force_remove_source_branch"`
 	MergeCommitSHA            string       `json:"merge_commit_sha"`
 	MergeWhenPipelineSucceeds bool         `json:"merge_when_pipeline_succeeds"`
@@ -103,10 +113,10 @@ type TodoTarget struct {
 	SHA                       string       `json:"sha"`
 	ShouldRemoveSourceBranch  bool         `json:"should_remove_source_branch"`
 	SourceBranch              string       `json:"source_branch"`
-	SourceProjectID           int          `json:"source_project_id"`
+	SourceProjectID           int64        `json:"source_project_id"`
 	Squash                    bool         `json:"squash"`
 	TargetBranch              string       `json:"target_branch"`
-	TargetProjectID           int          `json:"target_project_id"`
+	TargetProjectID           int64        `json:"target_project_id"`
 	WorkInProgress            bool         `json:"work_in_progress"`
 
 	// Only available for type DesignManagement::Design
@@ -120,55 +130,35 @@ type TodoTarget struct {
 type ListTodosOptions struct {
 	ListOptions
 	Action    *TodoAction `url:"action,omitempty" json:"action,omitempty"`
-	AuthorID  *int        `url:"author_id,omitempty" json:"author_id,omitempty"`
-	ProjectID *int        `url:"project_id,omitempty" json:"project_id,omitempty"`
-	GroupID   *int        `url:"group_id,omitempty" json:"group_id,omitempty"`
+	AuthorID  *int64      `url:"author_id,omitempty" json:"author_id,omitempty"`
+	ProjectID *int64      `url:"project_id,omitempty" json:"project_id,omitempty"`
+	GroupID   *int64      `url:"group_id,omitempty" json:"group_id,omitempty"`
 	State     *string     `url:"state,omitempty" json:"state,omitempty"`
 	Type      *string     `url:"type,omitempty" json:"type,omitempty"`
 }
 
-// ListTodos lists all todos created by authenticated user.
-// When no filter is applied, it returns all pending todos for the current user.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/todos/#get-a-list-of-to-do-items
 func (s *TodosService) ListTodos(opt *ListTodosOptions, options ...RequestOptionFunc) ([]*Todo, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "todos", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var t []*Todo
-	resp, err := s.client.Do(req, &t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+	return do[[]*Todo](s.client,
+		withPath("todos"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// MarkTodoAsDone marks a single pending todo given by its ID for the current user as done.
-//
-// GitLab API docs: https://docs.gitlab.com/api/todos/#mark-a-to-do-item-as-done
-func (s *TodosService) MarkTodoAsDone(id int, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("todos/%d/mark_as_done", id)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *TodosService) MarkTodoAsDone(id int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodPost),
+		withPath("todos/%d/mark_as_done", id),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
-// MarkAllTodosAsDone marks all pending todos for the current user as done.
-//
-// GitLab API docs: https://docs.gitlab.com/api/todos/#mark-all-to-do-items-as-done
 func (s *TodosService) MarkAllTodosAsDone(options ...RequestOptionFunc) (*Response, error) {
-	req, err := s.client.NewRequest(http.MethodPost, "todos/mark_as_done", nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodPost),
+		withPath("todos/mark_as_done"),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

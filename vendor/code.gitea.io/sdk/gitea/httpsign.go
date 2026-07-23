@@ -139,6 +139,15 @@ func newHTTPSign(config *HTTPSignConfig) (*HTTPSign, error) {
 	}, nil
 }
 
+// SignWithAlgorithm implements ssh.AlgorithmSigner, required by 42wim/httpsig v1.2.4+
+// when signing with RSA keys.
+func (h *HTTPSign) SignWithAlgorithm(rand io.Reader, data []byte, algorithm string) (*ssh.Signature, error) {
+	if as, ok := h.Signer.(ssh.AlgorithmSigner); ok {
+		return as.SignWithAlgorithm(rand, data, algorithm)
+	}
+	return h.Sign(rand, data)
+}
+
 // SignRequest signs a HTTP request
 func (c *Client) SignRequest(r *http.Request) error {
 	var contents []byte

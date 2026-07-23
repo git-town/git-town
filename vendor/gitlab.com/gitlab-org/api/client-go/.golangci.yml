@@ -18,19 +18,23 @@ output:
 linters:
   enable:
     - asciicheck
+    - canonicalheader
     - dogsled
     - dupword
     - errorlint
     - goconst
     - godoclint
     - misspell
+    - modernize
     - nakedret
     - nolintlint
     - revive
+    - sloglint
     - staticcheck
     - testifylint
     - unconvert
     - usestdlibvars
+    - usetesting
     - whitespace
     - tparallel
     - paralleltest
@@ -41,14 +45,31 @@ linters:
       locale: US
       ignore-rules:
         - noteable
+    modernize:
+      disable:
+        - omitzero
     revive:
       enable-all-rules: false
       rules:
+        - name: comment-spacings
         - name: deep-exit
+        - name: error-strings
         - name: get-return
+        - name: identical-switch-branches
+        - name: increment-decrement
+        - name: indent-error-flow
         - name: redundant-import-alias
+        - name: struct-tag
         - name: time-date
+        - name: unnecessary-stmt
+        - name: unused-parameter
+        - name: use-errors-new
         - name: var-naming
+          arguments:
+           - []
+           - []
+           - - skip-package-name-collision-with-go-std: true
+
     staticcheck:
       checks:
         - ST1020
@@ -78,6 +99,10 @@ linters:
       http-method: false
       http-status-code: false
       time-date-month: true
+    usetesting:
+      context-background: true
+      context-todo: true
+      os-temp-dir: true
 
   # List of regexps of issue texts to exclude.
   exclusions:
@@ -95,28 +120,11 @@ linters:
       - source: "// GitLab API docs:"
         linters:
           - staticcheck
-      - text: "var-naming: struct field PipelineId should be PipelineID"
-        path: commits\.go
+      - path: _test\.go$
+        text: unused-parameter
         linters:
           - revive
-      - text: "var-naming: struct field SelectiveSyncNamespaceIds should be SelectiveSyncNamespaceIDs"
-        path: geo_nodes\.go
-        linters:
-          - revive
-      - text: "var-naming: struct field RefsUrl should be RefsURL"
-        path: import\.go
-        linters:
-          - revive
-      - text: "var-naming: struct field BitbucketServerUrl should be BitbucketServerURL"
-        path: import\.go
-        linters:
-          - revive
-      - text: "var-naming: struct field CrlUrl should be CrlURL"
-        path: tags\.go
-        linters:
-          - revive
-      - text: "var-naming: type ServicePingNonSqlMetrics should be ServicePingNonSQLMetrics"
-        path: usage_data\.go
+      - path: ^testing/
         linters:
           - revive
     paths:

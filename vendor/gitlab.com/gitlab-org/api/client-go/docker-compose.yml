@@ -1,0 +1,61 @@
+# Acceptance tests depend on a running GitLab instance.
+# Only one of these services should be run at a time.
+services:
+  gitlab-ee-no-license:
+    image: docker.io/gitlab/gitlab-ee:${GITLAB_CE_VERSION:-latest}
+    platform: linux/amd64
+    shm_size: 256m
+    ports:
+      - 8095:80
+    environment:
+      GITLAB_ROOT_PASSWORD: "FoQ7PaTZqWaftrZ7zvAK"
+      # The token uses the value of GITLAB_TOKEN, which is set in the makefile (unless overridden)
+      GITLAB_TOKEN: $GITLAB_TOKEN
+    labels:
+      client-go/owned: ""
+    volumes:
+      - config-ce:/etc/gitlab
+      - logs-ce:/var/log/gitlab
+      - data-ce:/var/opt/gitlab
+      - ${PWD}/scripts/healthcheck_and_setup.sh:/healthcheck-and-setup.sh:Z
+      - ${PWD}/scripts/gitlab.rb:/etc/gitlab/gitlab.rb:ro
+      - ${PWD}/certs:/etc/gitlab/ssl:ro
+    healthcheck:
+      test: /healthcheck-and-setup.sh
+      interval: 60s
+      timeout: 10m
+
+  gitlab-ee:
+    image: docker.io/gitlab/gitlab-ee:${GITLAB_EE_VERSION:-latest}
+    platform: linux/amd64
+    shm_size: 256m
+    ports:
+      - 8095:80
+    environment:
+      GITLAB_ROOT_PASSWORD: "FoQ7PaTZqWaftrZ7zvAK"
+      # The token uses the value of GITLAB_TOKEN, which is set in the makefile (unless overridden)
+      GITLAB_TOKEN: $GITLAB_TOKEN
+      GITLAB_LICENSE_FILE: /Gitlab-license.txt
+    labels:
+      client-go/owned: ""
+    volumes:
+      - config-ee:/etc/gitlab
+      - logs-ee:/var/log/gitlab
+      - data-ee:/var/opt/gitlab
+      - ${PWD}/scripts/healthcheck_and_setup.sh:/healthcheck-and-setup.sh:Z
+      - ${PWD}/Gitlab-license.txt:/Gitlab-license.txt:Z
+      - ${PWD}/scripts/gitlab.rb:/etc/gitlab/gitlab.rb:ro
+      - ${PWD}/certs:/etc/gitlab/ssl:ro
+    healthcheck:
+      test: /healthcheck-and-setup.sh
+      interval: 60s
+      timeout: 10m
+
+volumes:
+  config-ce:
+  logs-ce:
+  data-ce:
+  config-ee:
+  logs-ee:
+  data-ee:
+

@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -47,7 +46,7 @@ var _ ResourceGroupServiceInterface = (*ResourceGroupService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/
 type ResourceGroup struct {
-	ID          int        `json:"id"`
+	ID          int64      `json:"id"`
 	Key         string     `json:"key"`
 	ProcessMode string     `json:"process_mode"`
 	CreatedAt   *time.Time `json:"created_at"`
@@ -68,24 +67,10 @@ func (rg ResourceGroup) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#get-all-resource-groups-for-a-project
 func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid any, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/resource_groups", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var rgs []*ResourceGroup
-	resp, err := s.client.Do(req, &rgs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rgs, resp, nil
+	return do[[]*ResourceGroup](s.client,
+		withPath("projects/%s/resource_groups", ProjectID{pid}),
+		withRequestOpts(options...),
+	)
 }
 
 // GetASpecificResourceGroup allows you to get a specific
@@ -94,24 +79,10 @@ func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid any, options 
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#get-a-specific-resource-group
 func (s *ResourceGroupService) GetASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/resource_groups/%s", PathEscape(project), key)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	rg := new(ResourceGroup)
-	resp, err := s.client.Do(req, rg)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rg, resp, nil
+	return do[*ResourceGroup](s.client,
+		withPath("projects/%s/resource_groups/%s", ProjectID{pid}, key),
+		withRequestOpts(options...),
+	)
 }
 
 // ListUpcomingJobsForASpecificResourceGroup allows you to get all
@@ -120,24 +91,10 @@ func (s *ResourceGroupService) GetASpecificResourceGroup(pid any, key string, op
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#list-upcoming-jobs-for-a-specific-resource-group
 func (s *ResourceGroupService) ListUpcomingJobsForASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) ([]*Job, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/resource_groups/%s/upcoming_jobs", PathEscape(project), key)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var js []*Job
-	resp, err := s.client.Do(req, &js)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return js, resp, nil
+	return do[[]*Job](s.client,
+		withPath("projects/%s/resource_groups/%s/upcoming_jobs", ProjectID{pid}, key),
+		withRequestOpts(options...),
+	)
 }
 
 // EditAnExistingResourceGroupOptions represents the available
@@ -155,22 +112,10 @@ type EditAnExistingResourceGroupOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#edit-an-existing-resource-group
 func (s *ResourceGroupService) EditAnExistingResourceGroup(pid any, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/resource_groups/%s", PathEscape(project), key)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opts, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	rg := new(ResourceGroup)
-	resp, err := s.client.Do(req, rg)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rg, resp, nil
+	return do[*ResourceGroup](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/resource_groups/%s", ProjectID{pid}, key),
+		withAPIOpts(opts),
+		withRequestOpts(options...),
+	)
 }

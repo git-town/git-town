@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"net/http"
 	"time"
 )
 
@@ -44,10 +43,16 @@ var _ SidekiqServiceInterface = (*SidekiqService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
 type QueueMetrics struct {
-	Queues map[string]struct {
-		Backlog int `json:"backlog"`
-		Latency int `json:"latency"`
-	} `json:"queues"`
+	Queues map[string]QueueMetricsQueue `json:"queues"`
+}
+
+// QueueMetricsQueue represents the GitLab sidekiq queue metrics queue.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
+type QueueMetricsQueue struct {
+	Backlog int64 `json:"backlog"`
+	Latency int64 `json:"latency"`
 }
 
 // GetQueueMetrics lists information about all the registered queues,
@@ -56,18 +61,10 @@ type QueueMetrics struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
 func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMetrics, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/queue_metrics", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	q := new(QueueMetrics)
-	resp, err := s.client.Do(req, q)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return q, resp, nil
+	return do[*QueueMetrics](s.client,
+		withPath("/sidekiq/queue_metrics"),
+		withRequestOpts(options...),
+	)
 }
 
 // ProcessMetrics represents the GitLab sidekiq process metrics.
@@ -75,16 +72,22 @@ func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMe
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
 type ProcessMetrics struct {
-	Processes []struct {
-		Hostname    string     `json:"hostname"`
-		Pid         int        `json:"pid"`
-		Tag         string     `json:"tag"`
-		StartedAt   *time.Time `json:"started_at"`
-		Queues      []string   `json:"queues"`
-		Labels      []string   `json:"labels"`
-		Concurrency int        `json:"concurrency"`
-		Busy        int        `json:"busy"`
-	} `json:"processes"`
+	Processes []ProcessMetricsProcess `json:"processes"`
+}
+
+// ProcessMetricsProcess represents the GitLab sidekiq process metrics process.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
+type ProcessMetricsProcess struct {
+	Hostname    string     `json:"hostname"`
+	Pid         int64      `json:"pid"`
+	Tag         string     `json:"tag"`
+	StartedAt   *time.Time `json:"started_at"`
+	Queues      []string   `json:"queues"`
+	Labels      []string   `json:"labels"`
+	Concurrency int64      `json:"concurrency"`
+	Busy        int64      `json:"busy"`
 }
 
 // GetProcessMetrics lists information about all the Sidekiq workers registered
@@ -93,18 +96,10 @@ type ProcessMetrics struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
 func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*ProcessMetrics, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/process_metrics", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	p := new(ProcessMetrics)
-	resp, err := s.client.Do(req, p)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return p, resp, nil
+	return do[*ProcessMetrics](s.client,
+		withPath("/sidekiq/process_metrics"),
+		withRequestOpts(options...),
+	)
 }
 
 // JobStats represents the GitLab sidekiq job stats.
@@ -112,11 +107,17 @@ func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*Proce
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
 type JobStats struct {
-	Jobs struct {
-		Processed int `json:"processed"`
-		Failed    int `json:"failed"`
-		Enqueued  int `json:"enqueued"`
-	} `json:"jobs"`
+	Jobs JobStatsJobs `json:"jobs"`
+}
+
+// JobStatsJobs represents the GitLab sidekiq job stats jobs.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
+type JobStatsJobs struct {
+	Processed int64 `json:"processed"`
+	Failed    int64 `json:"failed"`
+	Enqueued  int64 `json:"enqueued"`
 }
 
 // GetJobStats list information about the jobs that Sidekiq has performed.
@@ -124,18 +125,10 @@ type JobStats struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
 func (s *SidekiqService) GetJobStats(options ...RequestOptionFunc) (*JobStats, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/job_stats", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	j := new(JobStats)
-	resp, err := s.client.Do(req, j)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return j, resp, nil
+	return do[*JobStats](s.client,
+		withPath("/sidekiq/job_stats"),
+		withRequestOpts(options...),
+	)
 }
 
 // CompoundMetrics represents the GitLab sidekiq compounded stats.
@@ -154,16 +147,8 @@ type CompoundMetrics struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-a-compound-response-of-all-the-previously-mentioned-metrics
 func (s *SidekiqService) GetCompoundMetrics(options ...RequestOptionFunc) (*CompoundMetrics, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/compound_metrics", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	c := new(CompoundMetrics)
-	resp, err := s.client.Do(req, c)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return c, resp, nil
+	return do[*CompoundMetrics](s.client,
+		withPath("/sidekiq/compound_metrics"),
+		withRequestOpts(options...),
+	)
 }

@@ -14,10 +14,10 @@
   "includes": ["**/*.{js,ts,json}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
   "plugins": [
-    "https://plugins.dprint.dev/dockerfile-0.3.3.wasm",
+    "https://plugins.dprint.dev/dockerfile-0.4.1.wasm",
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
-    "https://plugins.dprint.dev/json-0.21.1.wasm",
+    "https://plugins.dprint.dev/json-0.23.0.wasm",
     "https://plugins.dprint.dev/toml-0.7.0.wasm",
-    "https://plugins.dprint.dev/typescript-0.95.15.wasm"
+    "https://plugins.dprint.dev/typescript-0.96.1.wasm"
   ]
 }

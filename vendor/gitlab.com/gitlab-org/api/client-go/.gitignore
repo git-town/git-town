@@ -39,3 +39,5 @@ scripts/commitlint/node_modules
 gl-code-quality-report.json
 
 .mise/
+Gitlab-license.txt
+.vscode/

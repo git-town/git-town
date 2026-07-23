@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -35,8 +34,8 @@ type timeStatsService struct {
 type TimeStats struct {
 	HumanTimeEstimate   string `json:"human_time_estimate"`
 	HumanTotalTimeSpent string `json:"human_total_time_spent"`
-	TimeEstimate        int    `json:"time_estimate"`
-	TotalTimeSpent      int    `json:"total_time_spent"`
+	TimeEstimate        int64  `json:"time_estimate"`
+	TotalTimeSpent      int64  `json:"total_time_spent"`
 }
 
 func (t TimeStats) String() string {
@@ -54,49 +53,24 @@ type SetTimeEstimateOptions struct {
 // setTimeEstimate sets the time estimate for a single project issue.
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#set-a-time-estimate-for-an-issue
-func (s *timeStatsService) setTimeEstimate(pid any, entity string, issue int, opt *SetTimeEstimateOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/%s/%d/time_estimate", PathEscape(project), entity, issue)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(TimeStats)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+func (s *timeStatsService) setTimeEstimate(pid any, entity string, issue int64, opt *SetTimeEstimateOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
+	return do[*TimeStats](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/%s/%d/time_estimate", ProjectID{pid}, entity, issue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // resetTimeEstimate resets the time estimate for a single project issue.
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#reset-the-time-estimate-for-an-issue
-func (s *timeStatsService) resetTimeEstimate(pid any, entity string, issue int, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/%s/%d/reset_time_estimate", PathEscape(project), entity, issue)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(TimeStats)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+func (s *timeStatsService) resetTimeEstimate(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
+	return do[*TimeStats](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/%s/%d/reset_time_estimate", ProjectID{pid}, entity, issue),
+		withRequestOpts(options...),
+	)
 }
 
 // AddSpentTimeOptions represents the available AddSpentTime() options.
@@ -110,71 +84,32 @@ type AddSpentTimeOptions struct {
 // addSpentTime adds spent time for a single project issue.
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#add-spent-time-for-an-issue
-func (s *timeStatsService) addSpentTime(pid any, entity string, issue int, opt *AddSpentTimeOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/%s/%d/add_spent_time", PathEscape(project), entity, issue)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(TimeStats)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+func (s *timeStatsService) addSpentTime(pid any, entity string, issue int64, opt *AddSpentTimeOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
+	return do[*TimeStats](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/%s/%d/add_spent_time", ProjectID{pid}, entity, issue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // resetSpentTime resets the spent time for a single project issue.
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#reset-spent-time-for-an-issue
-func (s *timeStatsService) resetSpentTime(pid any, entity string, issue int, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/%s/%d/reset_spent_time", PathEscape(project), entity, issue)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(TimeStats)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+func (s *timeStatsService) resetSpentTime(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
+	return do[*TimeStats](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/%s/%d/reset_spent_time", ProjectID{pid}, entity, issue),
+		withRequestOpts(options...),
+	)
 }
 
 // getTimeSpent gets the spent time for a single project issue.
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#get-time-tracking-stats
-func (s *timeStatsService) getTimeSpent(pid any, entity string, issue int, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/%s/%d/time_stats", PathEscape(project), entity, issue)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(TimeStats)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+func (s *timeStatsService) getTimeSpent(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
+	return do[*TimeStats](s.client,
+		withPath("projects/%s/%s/%d/time_stats", ProjectID{pid}, entity, issue),
+		withRequestOpts(options...),
+	)
 }

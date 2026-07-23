@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -26,9 +25,9 @@ type (
 	PackagesServiceInterface interface {
 		ListProjectPackages(pid any, opt *ListProjectPackagesOptions, options ...RequestOptionFunc) ([]*Package, *Response, error)
 		ListGroupPackages(gid any, opt *ListGroupPackagesOptions, options ...RequestOptionFunc) ([]*GroupPackage, *Response, error)
-		ListPackageFiles(pid any, pkg int, opt *ListPackageFilesOptions, options ...RequestOptionFunc) ([]*PackageFile, *Response, error)
-		DeleteProjectPackage(pid any, pkg int, options ...RequestOptionFunc) (*Response, error)
-		DeletePackageFile(pid any, pkg, file int, options ...RequestOptionFunc) (*Response, error)
+		ListPackageFiles(pid any, pkg int64, opt *ListPackageFilesOptions, options ...RequestOptionFunc) ([]*PackageFile, *Response, error)
+		DeleteProjectPackage(pid any, pkg int64, options ...RequestOptionFunc) (*Response, error)
+		DeletePackageFile(pid any, pkg, file int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// PackagesService handles communication with the packages related methods
@@ -46,7 +45,7 @@ var _ PackagesServiceInterface = (*PackagesService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/packages/
 type Package struct {
-	ID               int           `json:"id"`
+	ID               int64         `json:"id"`
 	Name             string        `json:"name"`
 	Version          string        `json:"version"`
 	PackageType      string        `json:"package_type"`
@@ -66,7 +65,7 @@ func (s Package) String() string {
 // GitLab API docs: https://docs.gitlab.com/api/packages/
 type GroupPackage struct {
 	Package
-	ProjectID   int    `json:"project_id"`
+	ProjectID   int64  `json:"project_id"`
 	ProjectPath string `json:"project_path"`
 }
 
@@ -86,8 +85,8 @@ func (s PackageLinks) String() string {
 
 // PackageTag holds label information about the package
 type PackageTag struct {
-	ID        int        `json:"id"`
-	PackageID int        `json:"package_id"`
+	ID        int64      `json:"id"`
+	PackageID int64      `json:"package_id"`
 	Name      string     `json:"name"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
@@ -101,11 +100,11 @@ func (s PackageTag) String() string {
 //
 // GitLab API docs: https://docs.gitlab.com/api/packages/
 type PackageFile struct {
-	ID         int         `json:"id"`
-	PackageID  int         `json:"package_id"`
+	ID         int64       `json:"id"`
+	PackageID  int64       `json:"package_id"`
 	CreatedAt  *time.Time  `json:"created_at"`
 	FileName   string      `json:"file_name"`
-	Size       int         `json:"size"`
+	Size       int64       `json:"size"`
 	FileMD5    string      `json:"file_md5"`
 	FileSHA1   string      `json:"file_sha1"`
 	FileSHA256 string      `json:"file_sha256"`
@@ -137,24 +136,11 @@ type ListProjectPackagesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#for-a-project
 func (s *PackagesService) ListProjectPackages(pid any, opt *ListProjectPackagesOptions, options ...RequestOptionFunc) ([]*Package, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/packages", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ps []*Package
-	resp, err := s.client.Do(req, &ps)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ps, resp, nil
+	return do[[]*Package](s.client,
+		withPath("projects/%s/packages", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // ListGroupPackagesOptions represents the available ListGroupPackages()
@@ -178,24 +164,11 @@ type ListGroupPackagesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#for-a-group
 func (s *PackagesService) ListGroupPackages(gid any, opt *ListGroupPackagesOptions, options ...RequestOptionFunc) ([]*GroupPackage, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/packages", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ps []*GroupPackage
-	resp, err := s.client.Do(req, &ps)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ps, resp, nil
+	return do[[]*GroupPackage](s.client,
+		withPath("groups/%s/packages", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // ListPackageFilesOptions represents the available ListPackageFiles()
@@ -203,71 +176,44 @@ func (s *PackagesService) ListGroupPackages(gid any, opt *ListGroupPackagesOptio
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#list-package-files
-type ListPackageFilesOptions ListOptions
+type ListPackageFilesOptions struct {
+	ListOptions
+}
 
 // ListPackageFiles gets a list of files that are within a package
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#list-package-files
-func (s *PackagesService) ListPackageFiles(pid any, pkg int, opt *ListPackageFilesOptions, options ...RequestOptionFunc) ([]*PackageFile, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf(
-		"projects/%s/packages/%d/package_files",
-		PathEscape(project),
-		pkg,
+func (s *PackagesService) ListPackageFiles(pid any, pkg int64, opt *ListPackageFilesOptions, options ...RequestOptionFunc) ([]*PackageFile, *Response, error) {
+	return do[[]*PackageFile](s.client,
+		withPath("projects/%s/packages/%d/package_files", ProjectID{pid}, pkg),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pfs []*PackageFile
-	resp, err := s.client.Do(req, &pfs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pfs, resp, nil
 }
 
 // DeleteProjectPackage deletes a package in a project.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#delete-a-project-package
-func (s *PackagesService) DeleteProjectPackage(pid any, pkg int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/packages/%d", PathEscape(project), pkg)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *PackagesService) DeleteProjectPackage(pid any, pkg int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/packages/%d", ProjectID{pid}, pkg),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
 // DeletePackageFile deletes a file in project package
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#delete-a-package-file
-func (s *PackagesService) DeletePackageFile(pid any, pkg, file int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/packages/%d/package_files/%d", PathEscape(project), pkg, file)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *PackagesService) DeletePackageFile(pid any, pkg, file int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/packages/%d/package_files/%d", ProjectID{pid}, pkg, file),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
