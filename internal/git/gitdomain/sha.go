@@ -3,8 +3,8 @@ package gitdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/pkg/asserts"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/pkg/asserts"
 )
 
 // SHA represents a Git SHA as a dedicated data type.

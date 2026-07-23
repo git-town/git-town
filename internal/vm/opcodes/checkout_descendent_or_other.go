@@ -4,9 +4,9 @@ import (
 	"errors"
 	"slices"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // CheckoutAncestorOrOther checks out the first available ancestor branch of the current branch

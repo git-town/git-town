@@ -3,9 +3,9 @@ package opcodes
 import (
 	"time"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/subshell"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/subshell"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.

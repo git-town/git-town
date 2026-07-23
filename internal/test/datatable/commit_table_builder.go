@@ -1,11 +1,11 @@
 package datatable
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v23/internal/test/helpers"
-	"github.com/git-town/git-town/v23/internal/test/testgit"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v24/internal/test/helpers"
+	"github.com/git-town/git-town/v24/internal/test/testgit"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories

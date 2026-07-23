@@ -17,10 +17,10 @@ func TestDefinitionFields(t *testing.T) {
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/git-town/git-town/v23/pkg/set"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
+	"github.com/git-town/git-town/v24/pkg/set"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
@@ -130,13 +130,13 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/cli/flags"
-	"github.com/git-town/git-town/v23/internal/cli/format"
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v23/internal/config"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/execute"
+	"github.com/git-town/git-town/v24/internal/cli/flags"
+	"github.com/git-town/git-town/v24/internal/cli/format"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v24/internal/config"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/execute"
 	"github.com/spf13/cobra"
 )
 

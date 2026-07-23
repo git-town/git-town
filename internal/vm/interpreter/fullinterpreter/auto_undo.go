@@ -3,11 +3,11 @@ package fullinterpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/undo"
-	"github.com/git-town/git-town/v23/internal/vm/interpreter/lightinterpreter"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/undo"
+	"github.com/git-town/git-town/v24/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // autoUndo performs an automatic undo of the current Git Town command.

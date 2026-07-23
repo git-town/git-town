@@ -1,10 +1,10 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.

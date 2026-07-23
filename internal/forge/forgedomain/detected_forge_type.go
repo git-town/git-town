@@ -1,6 +1,6 @@
 package forgedomain
 
-import . "github.com/git-town/git-town/v23/pkg/prelude"
+import . "github.com/git-town/git-town/v24/pkg/prelude"
 
 // DetectedForgeType is the forge type that actually exists.
 // Its the one the user has configured,

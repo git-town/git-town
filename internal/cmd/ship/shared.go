@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/config"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/execute"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/validate"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/config"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/execute"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/validate"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // data that all ship strategies use

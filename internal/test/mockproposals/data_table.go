@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/test/helpers"
-	"github.com/git-town/git-town/v23/pkg/asserts"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/test/helpers"
+	"github.com/git-town/git-town/v24/pkg/asserts"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) []forgedomain.ProposalData {

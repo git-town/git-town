@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 )
 
 // CheckList lets the user select zero, one, or many of the given entries.

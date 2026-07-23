@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	forgejoSDK "codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
-	"github.com/git-town/git-town/v23/internal/forge/forgejo"
+	"github.com/git-town/git-town/v24/internal/forge/forgejo"
 	"github.com/shoenig/test/must"
 )
 

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/messages"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/messages"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // ProposalUpdateSource updates the source branch of the proposal with the given number at the forge.
