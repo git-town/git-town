@@ -4,7 +4,7 @@
 
 #### BREAKING CHANGES
 
-- The Bitbucket Cloud connector now uses API tokens instead of app passwords, which no longer work with the Bitbucket API. Please set up the new [bitbucket-api-token]() config setting ([#6259](https://github.com/git-town/git-town/pull/6259)).
+- The Bitbucket Cloud connector now uses API tokens instead of app passwords, which no longer work with the Bitbucket API. Please set up the new [bitbucket-api-token](https://www.git-town.com/preferences/bitbucket-api-token.html) config setting ([#6259](https://github.com/git-town/git-town/pull/6259)).
 - `git town ship` with the [api ship strategy](https://www.git-town.com/preferences/ship-strategy.html#api) now merges the proposal using the forge's own commit message (the same message you'd get clicking "merge" in the web UI), instead of opening an editor for you to write one. To get the old behavior, run `git town ship --enter-message` ([#6256](https://github.com/git-town/git-town/pull/6256)).
 - `git town ship -m` now splits the given message the same way that Git's `-m` flag works: the first line becomes the squash-commit subject, the rest becomes the body ([#6258](https://github.com/git-town/git-town/pull/6258)).
 - `git town merge` is renamed to `git town combine` to distinguish it from the `git merge` command ([#6205](https://github.com/git-town/git-town/issues/6205)).
