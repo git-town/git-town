@@ -24,9 +24,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"maps"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"mime/multipart"
 	"net"
 	"net/http"
@@ -50,11 +51,11 @@ const (
 	apiVersionPath = "api/v4/"
 	userAgent      = "go-gitlab"
 
-	headerRateLimit = "RateLimit-Limit"
-	headerRateReset = "RateLimit-Reset"
+	headerRateLimit = "Ratelimit-Limit"
+	headerRateReset = "Ratelimit-Reset"
 
-	AccessTokenHeaderName = "PRIVATE-TOKEN"
-	JobTokenHeaderName    = "JOB-TOKEN"
+	AccessTokenHeaderName = "Private-Token"
+	JobTokenHeaderName    = "Job-Token"
 )
 
 // AuthType represents an authentication type within GitLab.
@@ -72,7 +73,28 @@ const (
 	PrivateToken
 )
 
-var ErrNotFound = errors.New("404 Not Found")
+var (
+	// ErrNotFound is returned for 404 Not Found errors
+	ErrNotFound = errors.New("404 Not Found")
+
+	// errUnauthenticated is an internal sentinel error to indicate that the auth source doesn't use any authentication
+	errUnauthenticated = errors.New("unauthenticated")
+)
+
+// URLValidationError wraps URL parsing errors with helpful context
+type URLValidationError struct {
+	URL  string
+	Err  error
+	Hint string
+}
+
+func (e *URLValidationError) Error() string {
+	msg := fmt.Sprintf("invalid base URL %q: %v", e.URL, e.Err)
+	if e.Hint != "" {
+		msg += fmt.Sprintf(" (hint: %s)", e.Hint)
+	}
+	return msg
+}
 
 // A Client manages communication with the GitLab API.
 type Client struct {
@@ -111,6 +133,9 @@ type Client struct {
 	// which are used to decorate the http.Client#Transport value.
 	interceptors []Interceptor
 
+	// urlWarningLogger is used to print URL validation warnings
+	urlWarningLogger *slog.Logger
+
 	// User agent used when communicating with the GitLab API.
 	UserAgent string
 
@@ -119,10 +144,12 @@ type Client struct {
 
 	// Services used for talking to different parts of the GitLab API.
 	AccessRequests                   AccessRequestsServiceInterface
+	AdminCompliancePolicySettings    AdminCompliancePolicySettingsServiceInterface
 	AlertManagement                  AlertManagementServiceInterface
 	Appearance                       AppearanceServiceInterface
 	Applications                     ApplicationsServiceInterface
 	ApplicationStatistics            ApplicationStatisticsServiceInterface
+	Attestations                     AttestationsServiceInterface
 	AuditEvents                      AuditEventsServiceInterface
 	Avatar                           AvatarRequestsServiceInterface
 	AwardEmoji                       AwardEmojiServiceInterface
@@ -166,6 +193,7 @@ type Client struct {
 	GroupActivityAnalytics           GroupActivityAnalyticsServiceInterface
 	GroupBadges                      GroupBadgesServiceInterface
 	GroupCluster                     GroupClustersServiceInterface
+	GroupCredentials                 GroupCredentialsServiceInterface
 	GroupEpicBoards                  GroupEpicBoardsServiceInterface
 	GroupImportExport                GroupImportExportServiceInterface
 	Integrations                     IntegrationsServiceInterface
@@ -176,6 +204,7 @@ type Client struct {
 	GroupMembers                     GroupMembersServiceInterface
 	GroupMilestones                  GroupMilestonesServiceInterface
 	GroupProtectedEnvironments       GroupProtectedEnvironmentsServiceInterface
+	GroupProtectedBranches           GroupProtectedBranchesServiceInterface
 	GroupRelationsExport             GroupRelationsExportServiceInterface
 	GroupReleases                    GroupReleasesServiceInterface
 	GroupRepositoryStorageMove       GroupRepositoryStorageMoveServiceInterface
@@ -252,6 +281,9 @@ type Client struct {
 	ResourceMilestoneEvents          ResourceMilestoneEventsServiceInterface
 	ResourceStateEvents              ResourceStateEventsServiceInterface
 	ResourceWeightEvents             ResourceWeightEventsServiceInterface
+	RunnerControllers                RunnerControllersServiceInterface
+	RunnerControllerScopes           RunnerControllerScopesServiceInterface
+	RunnerControllerTokens           RunnerControllerTokensServiceInterface
 	Runners                          RunnersServiceInterface
 	Search                           SearchServiceInterface
 	SecureFiles                      SecureFilesServiceInterface
@@ -270,6 +302,7 @@ type Client struct {
 	Validate                         ValidateServiceInterface
 	Version                          VersionServiceInterface
 	Wikis                            WikisServiceInterface
+	WorkItems                        WorkItemsServiceInterface
 }
 
 // Interceptor is used to build a *http.Client request pipeline,
@@ -304,9 +337,9 @@ type ListOptions struct {
 	// For keyset-based paginated result sets, the value must be `"keyset"`
 	Pagination string `url:"pagination,omitempty" json:"pagination,omitempty"`
 	// For offset-based and keyset-based paginated result sets, the number of results to include per page.
-	PerPage int `url:"per_page,omitempty" json:"per_page,omitempty"`
+	PerPage int64 `url:"per_page,omitempty" json:"per_page,omitempty"`
 	// For offset-based paginated result sets, page of results to retrieve.
-	Page int `url:"page,omitempty" json:"page,omitempty"`
+	Page int64 `url:"page,omitempty" json:"page,omitempty"`
 	// For keyset-based paginated result sets, tree record ID at which to fetch the next page.
 	PageToken string `url:"page_token,omitempty" json:"page_token,omitempty"`
 	// For keyset-based paginated result sets, name of the column by which to order
@@ -374,8 +407,9 @@ func NewOAuthClient(token string, options ...ClientOptionFunc) (*Client, error) 
 // NewAuthSourceClient returns a new GitLab API client that uses the AuthSource for authentication.
 func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, error) {
 	c := &Client{
-		UserAgent:  userAgent,
-		authSource: as,
+		UserAgent:        userAgent,
+		authSource:       as,
+		urlWarningLogger: slog.Default(),
 	}
 
 	// Configure the HTTP client.
@@ -432,10 +466,12 @@ func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, e
 
 	// Create all the public services.
 	c.AccessRequests = &AccessRequestsService{client: c}
+	c.AdminCompliancePolicySettings = &AdminCompliancePolicySettingsService{client: c}
 	c.AlertManagement = &AlertManagementService{client: c}
 	c.Appearance = &AppearanceService{client: c}
 	c.Applications = &ApplicationsService{client: c}
 	c.ApplicationStatistics = &ApplicationStatisticsService{client: c}
+	c.Attestations = &AttestationsService{client: c}
 	c.AuditEvents = &AuditEventsService{client: c}
 	c.Avatar = &AvatarRequestsService{client: c}
 	c.AwardEmoji = &AwardEmojiService{client: c}
@@ -479,6 +515,7 @@ func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, e
 	c.GroupActivityAnalytics = &GroupActivityAnalyticsService{client: c}
 	c.GroupBadges = &GroupBadgesService{client: c}
 	c.GroupCluster = &GroupClustersService{client: c}
+	c.GroupCredentials = &GroupCredentialsService{client: c}
 	c.GroupEpicBoards = &GroupEpicBoardsService{client: c}
 	c.GroupImportExport = &GroupImportExportService{client: c}
 	c.Integrations = &IntegrationsService{client: c}
@@ -489,6 +526,7 @@ func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, e
 	c.GroupMembers = &GroupMembersService{client: c}
 	c.GroupMilestones = &GroupMilestonesService{client: c}
 	c.GroupProtectedEnvironments = &GroupProtectedEnvironmentsService{client: c}
+	c.GroupProtectedBranches = &GroupProtectedBranchesService{client: c}
 	c.GroupRelationsExport = &GroupRelationsExportService{client: c}
 	c.GroupReleases = &GroupReleasesService{client: c}
 	c.GroupRepositoryStorageMove = &GroupRepositoryStorageMoveService{client: c}
@@ -565,6 +603,9 @@ func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, e
 	c.ResourceMilestoneEvents = &ResourceMilestoneEventsService{client: c}
 	c.ResourceStateEvents = &ResourceStateEventsService{client: c}
 	c.ResourceWeightEvents = &ResourceWeightEventsService{client: c}
+	c.RunnerControllers = &RunnerControllersService{client: c}
+	c.RunnerControllerScopes = &RunnerControllerScopesService{client: c}
+	c.RunnerControllerTokens = &RunnerControllerTokensService{client: c}
 	c.Runners = &RunnersService{client: c}
 	c.Search = &SearchService{client: c}
 	c.SecureFiles = &SecureFilesService{client: c}
@@ -583,6 +624,7 @@ func NewAuthSourceClient(as AuthSource, options ...ClientOptionFunc) (*Client, e
 	c.Validate = &ValidateService{client: c}
 	c.Version = &VersionService{client: c}
 	c.Wikis = &WikisService{client: c}
+	c.WorkItems = &WorkItemsService{client: c}
 
 	return c, nil
 }
@@ -719,18 +761,15 @@ func (c *Client) retryHTTPBackoff(min, max time.Duration, attemptNum int, resp *
 }
 
 // rateLimitBackoff provides a callback for Client.Backoff which will use the
-// RateLimit-Reset header to determine the time to wait. We add some jitter
+// Ratelimit-Reset header to determine the time to wait. We add some jitter
 // to prevent a thundering herd.
 //
 // min and max are mainly used for bounding the jitter that will be added to
 // the reset time retrieved from the headers. But if the final wait time is
 // less then min, min will be used instead.
 func rateLimitBackoff(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
-	// rnd is used to generate pseudo-random numbers.
-	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-
 	// First create some jitter bounded by the min and max durations.
-	jitter := time.Duration(rnd.Float64() * float64(max-min))
+	jitter := time.Duration(rand.Float64() * float64(max-min))
 
 	if resp != nil {
 		if v := resp.Header.Get(headerRateReset); v != "" {
@@ -741,7 +780,7 @@ func rateLimitBackoff(min, max time.Duration, attemptNum int, resp *http.Respons
 				}
 			}
 		} else {
-			// In case the RateLimit-Reset header is not set, back off an additional
+			// In case the Ratelimit-Reset header is not set, back off an additional
 			// 100% exponentially. With the default milliseconds being set to 100 for
 			// `min`, this makes the 5th retry wait 3.2 seconds (3,200 ms) by default.
 			min = time.Duration(float64(min) * math.Pow(2, float64(attemptNum)))
@@ -788,16 +827,71 @@ func (c *Client) BaseURL() *url.URL {
 	return &u
 }
 
+// validateBaseURL checks for common real-world mistakes and returns them as errors.
+// Returns the parsed URL if validation succeeds.
+func validateBaseURL(baseURL string) (*url.URL, error) {
+	if baseURL == "" {
+		return nil, &URLValidationError{
+			URL:  baseURL,
+			Err:  errors.New("empty URL"),
+			Hint: `provide a valid GitLab instance URL (e.g., "https://gitlab.com")`,
+		}
+	}
+
+	if !strings.Contains(baseURL, "://") {
+		return nil, &URLValidationError{
+			URL:  baseURL,
+			Err:  errors.New("missing scheme"),
+			Hint: fmt.Sprintf(`try "https://%s"`, baseURL),
+		}
+	}
+
+	parsedURL, err := url.Parse(baseURL)
+	if err != nil {
+		return nil, &URLValidationError{
+			URL: baseURL,
+			Err: err,
+			Hint: `possible issues:
+		  - missing hostname
+		  - invalid characters/spaces
+		  - invalid port (must be 1-65535)
+		  - query parameters (?)
+		  - fragments (#)
+		  - invalid URL encoding`,
+		}
+	}
+
+	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
+		return nil, &URLValidationError{
+			URL:  baseURL,
+			Err:  fmt.Errorf("unsupported scheme %q", parsedURL.Scheme),
+			Hint: fmt.Sprintf(`GitLab API requires http or https (try "https://%s")`, parsedURL.Host),
+		}
+	}
+
+	return parsedURL, nil
+}
+
 // setBaseURL sets the base URL for API requests to a custom endpoint.
 func (c *Client) setBaseURL(urlStr string) error {
-	// Make sure the given URL end with a slash
+	// Make sure the given URL ends with a slash
 	if !strings.HasSuffix(urlStr, "/") {
 		urlStr += "/"
 	}
 
-	baseURL, err := url.Parse(urlStr)
+	// Validate and parse
+	baseURL, err := validateBaseURL(urlStr)
 	if err != nil {
-		return err
+		// Log the validation warning
+		c.urlWarningLogger.Warn("URL validation warning", "error", err)
+
+		// Don't return the error - just warn and continue
+		// Try to parse anyway as a fallback
+		baseURL, err = url.Parse(urlStr)
+		if err != nil {
+			// If we really can't parse it, we have to give up
+			return fmt.Errorf("failed to parse base URL: %w", err)
+		}
 	}
 
 	if !strings.HasSuffix(baseURL.Path, apiVersionPath) {
@@ -876,8 +970,12 @@ func (c *Client) NewRequestToURL(method string, u *url.URL, opt any, options []R
 		}
 	}
 
-	// Set the request specific headers.
-	maps.Copy(req.Header, reqHeaders)
+	// Set the request specific headers if they don't yet exist.
+	for k, v := range reqHeaders {
+		if _, ok := req.Header[k]; !ok {
+			req.Header[k] = v
+		}
+	}
 
 	return req, nil
 }
@@ -963,18 +1061,21 @@ type Response struct {
 	*http.Response
 
 	// Fields used for offset-based pagination.
-	TotalItems   int
-	TotalPages   int
-	ItemsPerPage int
-	CurrentPage  int
-	NextPage     int
-	PreviousPage int
+	TotalItems   int64
+	TotalPages   int64
+	ItemsPerPage int64
+	CurrentPage  int64
+	NextPage     int64
+	PreviousPage int64
 
 	// Fields used for keyset-based pagination.
 	PreviousLink string
 	NextLink     string
 	FirstLink    string
 	LastLink     string
+
+	// GraphQL pagination.
+	PageInfo *PageInfo
 }
 
 // newResponse creates a new Response for the provided http.Response.
@@ -1005,28 +1106,28 @@ const (
 // various pagination link values in the Response.
 func (r *Response) populatePageValues() {
 	if totalItems := r.Header.Get(xTotal); totalItems != "" {
-		r.TotalItems, _ = strconv.Atoi(totalItems)
+		r.TotalItems, _ = strconv.ParseInt(totalItems, 10, 64)
 	}
 	if totalPages := r.Header.Get(xTotalPages); totalPages != "" {
-		r.TotalPages, _ = strconv.Atoi(totalPages)
+		r.TotalPages, _ = strconv.ParseInt(totalPages, 10, 64)
 	}
 	if itemsPerPage := r.Header.Get(xPerPage); itemsPerPage != "" {
-		r.ItemsPerPage, _ = strconv.Atoi(itemsPerPage)
+		r.ItemsPerPage, _ = strconv.ParseInt(itemsPerPage, 10, 64)
 	}
 	if currentPage := r.Header.Get(xPage); currentPage != "" {
-		r.CurrentPage, _ = strconv.Atoi(currentPage)
+		r.CurrentPage, _ = strconv.ParseInt(currentPage, 10, 64)
 	}
 	if nextPage := r.Header.Get(xNextPage); nextPage != "" {
-		r.NextPage, _ = strconv.Atoi(nextPage)
+		r.NextPage, _ = strconv.ParseInt(nextPage, 10, 64)
 	}
 	if previousPage := r.Header.Get(xPrevPage); previousPage != "" {
-		r.PreviousPage, _ = strconv.Atoi(previousPage)
+		r.PreviousPage, _ = strconv.ParseInt(previousPage, 10, 64)
 	}
 }
 
 func (r *Response) populateLinkValues() {
 	if link := r.Header.Get("Link"); link != "" {
-		for _, link := range strings.Split(link, ",") {
+		for link := range strings.SplitSeq(link, ",") {
 			parts := strings.Split(link, ";")
 			if len(parts) < 2 {
 				continue
@@ -1069,12 +1170,15 @@ func (c *Client) Do(req *retryablehttp.Request, v any) (*Response, error) {
 	}
 
 	authKey, authValue, err := c.authSource.Header(req.Context())
-	if err != nil {
+	switch err {
+	case nil:
+		if v := req.Header.Values(authKey); len(v) == 0 {
+			req.Header.Set(authKey, authValue)
+		}
+	case errUnauthenticated: //nolint:errorlint
+		// we simply skip using an auth header
+	default: // err != nil
 		return nil, err
-	}
-
-	if v := req.Header.Values(authKey); len(v) == 0 {
-		req.Header.Set(authKey, authValue)
 	}
 
 	client := c.client
@@ -1141,6 +1245,8 @@ func parseID(id any) (string, error) {
 	switch v := id.(type) {
 	case int:
 		return strconv.Itoa(v), nil
+	case int64:
+		return strconv.FormatInt(v, 10), nil
 	case string:
 		return v, nil
 	default:
@@ -1172,9 +1278,8 @@ func (e *ErrorResponse) Error() string {
 
 	if e.Message == "" {
 		return fmt.Sprintf("%s %s: %d", e.Response.Request.Method, url, e.Response.StatusCode)
-	} else {
-		return fmt.Sprintf("%s %s: %d %s", e.Response.Request.Method, url, e.Response.StatusCode, e.Message)
 	}
+	return fmt.Sprintf("%s %s: %d %s", e.Response.Request.Method, url, e.Response.StatusCode, e.Message)
 }
 
 func (e *ErrorResponse) HasStatusCode(statusCode int) bool {
@@ -1358,4 +1463,15 @@ func (as *PasswordCredentialsAuthSource) Init(ctx context.Context, client *Clien
 	}
 
 	return nil
+}
+
+// Unauthenticated is an authentication source for unauthenticated clients
+type Unauthenticated struct{}
+
+func (Unauthenticated) Init(context.Context, *Client) error {
+	return nil
+}
+
+func (u Unauthenticated) Header(context.Context) (string, string, error) {
+	return "", "", errUnauthenticated
 }

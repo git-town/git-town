@@ -196,13 +196,9 @@ func ErrorIs(err error, target error) (s string) {
 	return
 }
 
-func ErrorAs[E error, Target *E](err error, target Target) (s string) {
+func ErrorAs[E error, Target any](err error, target Target) (s string) {
 	if err == nil {
 		s = "expected non-nil error; got nil\n"
-		return
-	}
-	if target == nil {
-		s = "expected non-nil target; got nil\n"
 		return
 	}
 	if !errors.As(err, target) {
@@ -540,7 +536,7 @@ OUTER:
 			}
 		}
 		s = "expected slice to contain missing item via == operator\n"
-		s += bullet("slice is missing %#v\n", item)
+		s += bullet("slice is missing %#v\n", target)
 		return
 	}
 	return
@@ -574,7 +570,7 @@ OUTER:
 			}
 		}
 		s = "expected slice to contain missing item\n"
-		s += bullet("slice is missing %#v\n", item)
+		s += bullet("slice is missing %#v\n", target)
 		return
 	}
 	return
@@ -624,6 +620,40 @@ func NonZero[N interfaces.Number](value N) (s string) {
 	if value == 0 {
 		s = "expected non-zero value\n"
 		s += bullet("value: %v\n", value)
+	}
+	return
+}
+
+func ZeroValue[T any](v T, opts ...cmp.Option) (s string) {
+	var zero T
+	z, ok := any(v).(interface{ IsZero() bool })
+	if ok {
+		if !z.IsZero() {
+			s = "expected zero via IsZero method\n"
+			s += diff(zero, v, opts)
+		}
+		return
+	}
+
+	if !equal(zero, v, opts) {
+		s = "expected zero via cmp.Equal function\n"
+		s += diff(zero, v, opts)
+	}
+	return
+}
+
+func NotZeroValue[T any](v T, opts ...cmp.Option) (s string) {
+	var zero T
+	z, ok := any(v).(interface{ IsZero() bool })
+	if ok {
+		if z.IsZero() {
+			s = "expected non-zero via IsZero method\n"
+		}
+		return
+	}
+
+	if equal(zero, v, opts) {
+		s = "expected non-zero via cmp.Equal function\n"
 	}
 	return
 }

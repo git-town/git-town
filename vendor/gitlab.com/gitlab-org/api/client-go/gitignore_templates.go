@@ -16,12 +16,6 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-)
-
 type (
 	// GitIgnoreTemplatesServiceInterface defines all the API methods for the GitIgnoreTemplatesService
 	GitIgnoreTemplatesServiceInterface interface {
@@ -60,25 +54,20 @@ type GitIgnoreTemplateListItem struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/gitignores/#get-all-gitignore-templates
-type ListTemplatesOptions ListOptions
+type ListTemplatesOptions struct {
+	ListOptions
+}
 
 // ListTemplates get a list of available git ignore templates
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/gitignores/#get-all-gitignore-templates
 func (s *GitIgnoreTemplatesService) ListTemplates(opt *ListTemplatesOptions, options ...RequestOptionFunc) ([]*GitIgnoreTemplateListItem, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "templates/gitignores", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var gs []*GitIgnoreTemplateListItem
-	resp, err := s.client.Do(req, &gs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return gs, resp, nil
+	return do[[]*GitIgnoreTemplateListItem](s.client,
+		withPath("templates/gitignores"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetTemplate get a git ignore template
@@ -86,18 +75,8 @@ func (s *GitIgnoreTemplatesService) ListTemplates(opt *ListTemplatesOptions, opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/gitignores/#get-a-single-gitignore-template
 func (s *GitIgnoreTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*GitIgnoreTemplate, *Response, error) {
-	u := fmt.Sprintf("templates/gitignores/%s", url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(GitIgnoreTemplate)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+	return do[*GitIgnoreTemplate](s.client,
+		withPath("templates/gitignores/%s", key),
+		withRequestOpts(options...),
+	)
 }

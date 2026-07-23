@@ -2,8 +2,6 @@ package gitlab
 
 import (
 	"bytes"
-	"fmt"
-	"net/http"
 	"net/url"
 )
 
@@ -27,11 +25,6 @@ var _ ModelRegistryServiceInterface = (*ModelRegistryService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/model_registry/#download-a-model-package-file
 func (s *ModelRegistryService) DownloadMachineLearningModelPackage(pid, modelVersionID any, path string, filename string, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	// The modelVersionID can be an int or a string like "candidate:5",
 	// so we convert it to a string for the URL.
 	mvid, err := parseID(modelVersionID)
@@ -39,23 +32,19 @@ func (s *ModelRegistryService) DownloadMachineLearningModelPackage(pid, modelVer
 		return nil, nil, err
 	}
 
-	u := fmt.Sprintf("projects/%s/packages/ml_models/%s/files/%s/%s",
-		PathEscape(project),
-		url.PathEscape(mvid),
-		url.PathEscape(path),
-		url.PathEscape(filename),
+	buf, resp, err := do[bytes.Buffer](s.client,
+		withPath("projects/%s/packages/ml_models/%s/files/%s/%s",
+			ProjectID{pid},
+			// the following URI components must not escape `.` which is what withPath does by default
+			// without NoEscape.
+			NoEscape{url.PathEscape(mvid)},
+			NoEscape{url.PathEscape(path)},
+			NoEscape{url.PathEscape(filename)},
+		),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	registryDownload := new(bytes.Buffer)
-	resp, err := s.client.Do(req, registryDownload)
 	if err != nil {
 		return nil, resp, err
 	}
-
-	return bytes.NewReader(registryDownload.Bytes()), resp, err
+	return bytes.NewReader(buf.Bytes()), resp, nil
 }

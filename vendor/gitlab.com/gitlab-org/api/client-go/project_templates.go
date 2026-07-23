@@ -16,14 +16,16 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
-
 type (
 	ProjectTemplatesServiceInterface interface {
+		// ListTemplates gets a list of project templates.
+		//
+		// GitLab API docs: https://docs.gitlab.com/api/project_templates/#get-all-templates-of-a-particular-type
 		ListTemplates(pid any, templateType string, opt *ListProjectTemplatesOptions, options ...RequestOptionFunc) ([]*ProjectTemplate, *Response, error)
+		// GetProjectTemplate gets a single project template.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/project_templates/#get-one-template-of-a-particular-type
 		GetProjectTemplate(pid any, templateType string, templateName string, options ...RequestOptionFunc) (*ProjectTemplate, *Response, error)
 	}
 
@@ -65,55 +67,21 @@ func (s ProjectTemplate) String() string {
 // https://docs.gitlab.com/api/project_templates/#get-all-templates-of-a-particular-type
 type ListProjectTemplatesOptions struct {
 	ListOptions
-	ID   *int    `url:"id,omitempty" json:"id,omitempty"`
+	ID   *int64  `url:"id,omitempty" json:"id,omitempty"`
 	Type *string `url:"type,omitempty" json:"type,omitempty"`
 }
 
-// ListTemplates gets a list of project templates.
-//
-// GitLab API docs: https://docs.gitlab.com/api/project_templates/#get-all-templates-of-a-particular-type
 func (s *ProjectTemplatesService) ListTemplates(pid any, templateType string, opt *ListProjectTemplatesOptions, options ...RequestOptionFunc) ([]*ProjectTemplate, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/templates/%s", PathEscape(project), templateType)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pt []*ProjectTemplate
-	resp, err := s.client.Do(req, &pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+	return do[[]*ProjectTemplate](s.client,
+		withPath("projects/%s/templates/%s", ProjectID{pid}, NoEscape{templateType}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// GetProjectTemplate gets a single project template.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/project_templates/#get-one-template-of-a-particular-type
 func (s *ProjectTemplatesService) GetProjectTemplate(pid any, templateType string, templateName string, options ...RequestOptionFunc) (*ProjectTemplate, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/templates/%s/%s", PathEscape(project), templateType, templateName)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ptd := new(ProjectTemplate)
-	resp, err := s.client.Do(req, ptd)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ptd, resp, nil
+	return do[*ProjectTemplate](s.client,
+		withPath("projects/%s/templates/%s/%s", ProjectID{pid}, NoEscape{templateType}, NoEscape{templateName}),
+		withRequestOpts(options...),
+	)
 }

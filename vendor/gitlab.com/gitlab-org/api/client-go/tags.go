@@ -17,19 +17,40 @@
 package gitlab
 
 import (
-	"fmt"
 	"math/big"
 	"net/http"
-	"net/url"
 	"time"
 )
 
 type (
 	TagsServiceInterface interface {
+		// ListTags gets a list of tags from a project, sorted by name in reverse
+		// alphabetical order.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/tags/#list-project-repository-tags
 		ListTags(pid any, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error)
+		// GetTag a specific repository tag determined by its name. It returns 200 together
+		// with the tag information if the tag exists. It returns 404 if the tag does not exist.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/tags/#get-a-single-repository-tag
 		GetTag(pid any, tag string, options ...RequestOptionFunc) (*Tag, *Response, error)
+		// GetTagSignature a specific repository tag determined by its name. It returns 200 together
+		// with the signature if the tag exists. It returns 404 if the tag does not exist.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/tags/#get-x509-signature-of-a-tag
 		GetTagSignature(pid any, tag string, options ...RequestOptionFunc) (*X509Signature, *Response, error)
+		// CreateTag creates a new tag in the repository that points to the supplied ref.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/tags/#create-a-new-tag
 		CreateTag(pid any, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error)
+		// DeleteTag deletes a tag of a repository with given name.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/tags/#delete-a-tag
 		DeleteTag(pid any, tag string, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -67,7 +88,7 @@ type X509Signature struct {
 }
 
 type X509Certificate struct {
-	ID                   int        `json:"id"`
+	ID                   int64      `json:"id"`
 	Subject              string     `json:"subject"`
 	SubjectKeyIdentifier string     `json:"subject_key_identifier"`
 	Email                string     `json:"email"`
@@ -77,10 +98,10 @@ type X509Certificate struct {
 }
 
 type X509Issuer struct {
-	ID                   int    `json:"id"`
+	ID                   int64  `json:"id"`
 	Subject              string `json:"subject"`
 	SubjectKeyIdentifier string `json:"subject_key_identifier"`
-	CrlUrl               string `json:"crl_url"`
+	CrlURL               string `json:"crl_url"`
 }
 
 // ReleaseNote represents a GitLab version release.
@@ -106,82 +127,26 @@ type ListTagsOptions struct {
 	Sort    *string `url:"sort,omitempty" json:"sort,omitempty"`
 }
 
-// ListTags gets a list of tags from a project, sorted by name in reverse
-// alphabetical order.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/tags/#list-project-repository-tags
 func (s *TagsService) ListTags(pid any, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/tags", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var t []*Tag
-	resp, err := s.client.Do(req, &t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+	return do[[]*Tag](s.client,
+		withPath("projects/%s/repository/tags", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// GetTag a specific repository tag determined by its name. It returns 200 together
-// with the tag information if the tag exists. It returns 404 if the tag does not exist.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/tags/#get-a-single-repository-tag
 func (s *TagsService) GetTag(pid any, tag string, options ...RequestOptionFunc) (*Tag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/tags/%s", PathEscape(project), url.PathEscape(tag))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var t *Tag
-	resp, err := s.client.Do(req, &t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+	return do[*Tag](s.client,
+		withPath("projects/%s/repository/tags/%s", ProjectID{pid}, tag),
+		withRequestOpts(options...),
+	)
 }
 
-// GetTagSignature a specific repository tag determined by its name. It returns 200 together
-// with the signature if the tag exists. It returns 404 if the tag does not exist.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/tags/#get-x509-signature-of-a-tag
 func (s *TagsService) GetTagSignature(pid any, tag string, options ...RequestOptionFunc) (*X509Signature, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/tags/%s/signature", PathEscape(project), url.PathEscape(tag))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var sig *X509Signature
-	resp, err := s.client.Do(req, &sig)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return sig, resp, nil
+	return do[*X509Signature](s.client,
+		withPath("projects/%s/repository/tags/%s/signature", ProjectID{pid}, tag),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateTagOptions represents the available CreateTag() options.
@@ -194,46 +159,20 @@ type CreateTagOptions struct {
 	Message *string `url:"message,omitempty" json:"message,omitempty"`
 }
 
-// CreateTag creates a new tag in the repository that points to the supplied ref.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/tags/#create-a-new-tag
 func (s *TagsService) CreateTag(pid any, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/tags", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	t := new(Tag)
-	resp, err := s.client.Do(req, t)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return t, resp, nil
+	return do[*Tag](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/repository/tags", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// DeleteTag deletes a tag of a repository with given name.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/tags/#delete-a-tag
 func (s *TagsService) DeleteTag(pid any, tag string, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/tags/%s", PathEscape(project), url.PathEscape(tag))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/repository/tags/%s", ProjectID{pid}, tag),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

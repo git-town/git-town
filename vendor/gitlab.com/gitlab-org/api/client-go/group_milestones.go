@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -25,13 +24,13 @@ import (
 type (
 	GroupMilestonesServiceInterface interface {
 		ListGroupMilestones(gid any, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error)
-		GetGroupMilestone(gid any, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
+		GetGroupMilestone(gid any, milestone int64, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
 		CreateGroupMilestone(gid any, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
-		UpdateGroupMilestone(gid any, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
-		DeleteGroupMilestone(pid any, milestone int, options ...RequestOptionFunc) (*Response, error)
-		GetGroupMilestoneIssues(gid any, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
-		GetGroupMilestoneMergeRequests(gid any, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error)
-		GetGroupMilestoneBurndownChartEvents(gid any, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error)
+		UpdateGroupMilestone(gid any, milestone int64, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
+		DeleteGroupMilestone(pid any, milestone int64, options ...RequestOptionFunc) (*Response, error)
+		GetGroupMilestoneIssues(gid any, milestone int64, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
+		GetGroupMilestoneMergeRequests(gid any, milestone int64, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error)
+		GetGroupMilestoneBurndownChartEvents(gid any, milestone int64, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error)
 	}
 
 	// GroupMilestonesService handles communication with the milestone related
@@ -49,9 +48,9 @@ var _ GroupMilestonesServiceInterface = (*GroupMilestonesService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/group_milestones/
 type GroupMilestone struct {
-	ID          int        `json:"id"`
-	IID         int        `json:"iid"`
-	GroupID     int        `json:"group_id"`
+	ID          int64      `json:"id"`
+	IID         int64      `json:"iid"`
+	GroupID     int64      `json:"group_id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	StartDate   *ISOTime   `json:"start_date"`
@@ -73,7 +72,7 @@ func (m GroupMilestone) String() string {
 // https://docs.gitlab.com/api/group_milestones/#list-group-milestones
 type ListGroupMilestonesOptions struct {
 	ListOptions
-	IIDs               *[]int   `url:"iids[],omitempty" json:"iids,omitempty"`
+	IIDs               *[]int64 `url:"iids[],omitempty" json:"iids,omitempty"`
 	State              *string  `url:"state,omitempty" json:"state,omitempty"`
 	Title              *string  `url:"title,omitempty" json:"title,omitempty"`
 	Search             *string  `url:"search,omitempty" json:"search,omitempty"`
@@ -95,49 +94,22 @@ type ListGroupMilestonesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#list-group-milestones
 func (s *GroupMilestonesService) ListGroupMilestones(gid any, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var m []*GroupMilestone
-	resp, err := s.client.Do(req, &m)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return m, resp, nil
+	return do[[]*GroupMilestone](s.client,
+		withPath("groups/%s/milestones", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGroupMilestone gets a single group milestone.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestone(gid any, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d", PathEscape(group), milestone)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	m := new(GroupMilestone)
-	resp, err := s.client.Do(req, m)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return m, resp, nil
+func (s *GroupMilestonesService) GetGroupMilestone(gid any, milestone int64, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
+	return do[*GroupMilestone](s.client,
+		withPath("groups/%s/milestones/%d", GroupID{gid}, milestone),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateGroupMilestoneOptions represents the available CreateGroupMilestone() options.
@@ -156,24 +128,12 @@ type CreateGroupMilestoneOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#create-new-milestone
 func (s *GroupMilestonesService) CreateGroupMilestone(gid any, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	m := new(GroupMilestone)
-	resp, err := s.client.Do(req, m)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return m, resp, nil
+	return do[*GroupMilestone](s.client,
+		withMethod(http.MethodPost),
+		withPath("groups/%s/milestones", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateGroupMilestoneOptions represents the available UpdateGroupMilestone() options.
@@ -192,74 +152,46 @@ type UpdateGroupMilestoneOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#edit-milestone
-func (s *GroupMilestonesService) UpdateGroupMilestone(gid any, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d", PathEscape(group), milestone)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	m := new(GroupMilestone)
-	resp, err := s.client.Do(req, m)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return m, resp, nil
+func (s *GroupMilestonesService) UpdateGroupMilestone(gid any, milestone int64, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
+	return do[*GroupMilestone](s.client,
+		withMethod(http.MethodPut),
+		withPath("groups/%s/milestones/%d", GroupID{gid}, milestone),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteGroupMilestone deletes a specified group milestone.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#delete-group-milestone
-func (s *GroupMilestonesService) DeleteGroupMilestone(pid any, milestone int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d", PathEscape(project), milestone)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-	return s.client.Do(req, nil)
+func (s *GroupMilestonesService) DeleteGroupMilestone(pid any, milestone int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("groups/%s/milestones/%d", GroupID{pid}, milestone),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
 // GetGroupMilestoneIssuesOptions represents the available GetGroupMilestoneIssues() options.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-issues-assigned-to-a-single-milestone
-type GetGroupMilestoneIssuesOptions ListOptions
+type GetGroupMilestoneIssuesOptions struct {
+	ListOptions
+}
 
 // GetGroupMilestoneIssues gets all issues assigned to a single group milestone.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-issues-assigned-to-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid any, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d/issues", PathEscape(group), milestone)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var i []*Issue
-	resp, err := s.client.Do(req, &i)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return i, resp, nil
+func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid any, milestone int64, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
+	return do[[]*Issue](s.client,
+		withPath("groups/%s/milestones/%d/issues", GroupID{gid}, milestone),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGroupMilestoneMergeRequestsOptions represents the available
@@ -267,32 +199,21 @@ func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid any, milestone int,
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-merge-requests-assigned-to-a-single-milestone
-type GetGroupMilestoneMergeRequestsOptions ListOptions
+type GetGroupMilestoneMergeRequestsOptions struct {
+	ListOptions
+}
 
 // GetGroupMilestoneMergeRequests gets all merge requests assigned to a
 // single group milestone.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-merge-requests-assigned-to-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d/merge_requests", PathEscape(group), milestone)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var mr []*BasicMergeRequest
-	resp, err := s.client.Do(req, &mr)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return mr, resp, nil
+func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milestone int64, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
+	return do[[]*BasicMergeRequest](s.client,
+		withPath("groups/%s/milestones/%d/merge_requests", GroupID{gid}, milestone),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // BurndownChartEvent represents a burnout chart event.
@@ -301,7 +222,7 @@ func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milesto
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone
 type BurndownChartEvent struct {
 	CreatedAt *time.Time `json:"created_at"`
-	Weight    *int       `json:"weight"`
+	Weight    *int64     `json:"weight"`
 	Action    *string    `json:"action"`
 }
 
@@ -310,30 +231,19 @@ type BurndownChartEvent struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone
-type GetGroupMilestoneBurndownChartEventsOptions ListOptions
+type GetGroupMilestoneBurndownChartEventsOptions struct {
+	ListOptions
+}
 
 // GetGroupMilestoneBurndownChartEvents gets all merge requests assigned to a
 // single group milestone.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneBurndownChartEvents(gid any, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/milestones/%d/burndown_events", PathEscape(group), milestone)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var be []*BurndownChartEvent
-	resp, err := s.client.Do(req, &be)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return be, resp, nil
+func (s *GroupMilestonesService) GetGroupMilestoneBurndownChartEvents(gid any, milestone int64, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error) {
+	return do[[]*BurndownChartEvent](s.client,
+		withPath("groups/%s/milestones/%d/burndown_events", GroupID{gid}, milestone),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

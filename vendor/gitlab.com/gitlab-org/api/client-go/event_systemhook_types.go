@@ -44,7 +44,7 @@ type ProjectSystemEvent struct {
 	Name                 string `json:"name"`
 	Path                 string `json:"path"`
 	PathWithNamespace    string `json:"path_with_namespace"`
-	ProjectID            int    `json:"project_id"`
+	ProjectID            int64  `json:"project_id"`
 	OwnerName            string `json:"owner_name"`
 	OwnerEmail           string `json:"owner_email"`
 	ProjectVisibility    string `json:"project_visibility"`
@@ -60,7 +60,7 @@ type GroupSystemEvent struct {
 	Name                 string `json:"name"`
 	Path                 string `json:"path"`
 	PathWithNamespace    string `json:"full_path"`
-	GroupID              int    `json:"group_id"`
+	GroupID              int64  `json:"group_id"`
 	OwnerName            string `json:"owner_name"`
 	OwnerEmail           string `json:"owner_email"`
 	ProjectVisibility    string `json:"project_visibility"`
@@ -74,7 +74,7 @@ type GroupSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/
 type KeySystemEvent struct {
 	BaseSystemEvent
-	ID       int    `json:"id"`
+	ID       int64  `json:"id"`
 	Username string `json:"username"`
 	Key      string `json:"key"`
 }
@@ -85,7 +85,7 @@ type KeySystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/
 type UserSystemEvent struct {
 	BaseSystemEvent
-	ID          int    `json:"user_id"`
+	ID          int64  `json:"user_id"`
 	Name        string `json:"name"`
 	Username    string `json:"username"`
 	OldUsername string `json:"old_username,omitempty"`
@@ -99,11 +99,11 @@ type UserSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/
 type UserGroupSystemEvent struct {
 	BaseSystemEvent
-	ID          int    `json:"user_id"`
+	ID          int64  `json:"user_id"`
 	Name        string `json:"user_name"`
 	Username    string `json:"user_username"`
 	Email       string `json:"user_email"`
-	GroupID     int    `json:"group_id"`
+	GroupID     int64  `json:"group_id"`
 	GroupName   string `json:"group_name"`
 	GroupPath   string `json:"group_path"`
 	GroupAccess string `json:"group_access"`
@@ -115,11 +115,11 @@ type UserGroupSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/
 type UserTeamSystemEvent struct {
 	BaseSystemEvent
-	ID                       int    `json:"user_id"`
+	ID                       int64  `json:"user_id"`
 	Name                     string `json:"user_name"`
 	Username                 string `json:"user_username"`
 	Email                    string `json:"user_email"`
-	ProjectID                int    `json:"project_id"`
+	ProjectID                int64  `json:"project_id"`
 	ProjectName              string `json:"project_name"`
 	ProjectPath              string `json:"project_path"`
 	ProjectPathWithNamespace string `json:"project_path_with_namespace"`
@@ -133,41 +133,59 @@ type UserTeamSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/#push-events
 type PushSystemEvent struct {
 	BaseSystemEvent
-	Before       string `json:"before"`
-	After        string `json:"after"`
-	Ref          string `json:"ref"`
-	CheckoutSHA  string `json:"checkout_sha"`
-	UserID       int    `json:"user_id"`
-	UserName     string `json:"user_name"`
-	UserUsername string `json:"user_username"`
-	UserEmail    string `json:"user_email"`
-	UserAvatar   string `json:"user_avatar"`
-	ProjectID    int    `json:"project_id"`
-	Project      struct {
-		Name              string `json:"name"`
-		Description       string `json:"description"`
-		WebURL            string `json:"web_url"`
-		AvatarURL         string `json:"avatar_url"`
-		GitHTTPURL        string `json:"git_http_url"`
-		GitSSHURL         string `json:"git_ssh_url"`
-		Namespace         string `json:"namespace"`
-		VisibilityLevel   int    `json:"visibility_level"`
-		PathWithNamespace string `json:"path_with_namespace"`
-		DefaultBranch     string `json:"default_branch"`
-		Homepage          string `json:"homepage"`
-		URL               string `json:"url"`
-	} `json:"project"`
-	Commits []struct {
-		ID        string    `json:"id"`
-		Message   string    `json:"message"`
-		Timestamp time.Time `json:"timestamp"`
-		URL       string    `json:"url"`
-		Author    struct {
-			Name  string `json:"name"`
-			Email string `json:"email"`
-		} `json:"author"`
-	} `json:"commits"`
-	TotalCommitsCount int `json:"total_commits_count"`
+	Before            string                  `json:"before"`
+	After             string                  `json:"after"`
+	Ref               string                  `json:"ref"`
+	CheckoutSHA       string                  `json:"checkout_sha"`
+	UserID            int64                   `json:"user_id"`
+	UserName          string                  `json:"user_name"`
+	UserUsername      string                  `json:"user_username"`
+	UserEmail         string                  `json:"user_email"`
+	UserAvatar        string                  `json:"user_avatar"`
+	ProjectID         int64                   `json:"project_id"`
+	Project           PushSystemEventProject  `json:"project"`
+	Commits           []PushSystemEventCommit `json:"commits"`
+	TotalCommitsCount int64                   `json:"total_commits_count"`
+}
+
+// PushSystemEventProject represents a push system event's project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#push-events
+type PushSystemEventProject struct {
+	Name              string `json:"name"`
+	Description       string `json:"description"`
+	WebURL            string `json:"web_url"`
+	AvatarURL         string `json:"avatar_url"`
+	GitHTTPURL        string `json:"git_http_url"`
+	GitSSHURL         string `json:"git_ssh_url"`
+	Namespace         string `json:"namespace"`
+	VisibilityLevel   int64  `json:"visibility_level"`
+	PathWithNamespace string `json:"path_with_namespace"`
+	DefaultBranch     string `json:"default_branch"`
+	Homepage          string `json:"homepage"`
+	URL               string `json:"url"`
+}
+
+// PushSystemEventCommit represents a push system event's commit.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#push-events
+type PushSystemEventCommit struct {
+	ID        string                      `json:"id"`
+	Message   string                      `json:"message"`
+	Timestamp time.Time                   `json:"timestamp"`
+	URL       string                      `json:"url"`
+	Author    PushSystemEventCommitAuthor `json:"author"`
+}
+
+// PushSystemEventCommitAuthor represents a push system event's commit author.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#push-events
+type PushSystemEventCommitAuthor struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 // TagPushSystemEvent represents a tag push system event.
@@ -176,41 +194,59 @@ type PushSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/#tag-events
 type TagPushSystemEvent struct {
 	BaseSystemEvent
-	Before       string `json:"before"`
-	After        string `json:"after"`
-	Ref          string `json:"ref"`
-	CheckoutSHA  string `json:"checkout_sha"`
-	UserID       int    `json:"user_id"`
-	UserName     string `json:"user_name"`
-	UserUsername string `json:"user_username"`
-	UserEmail    string `json:"user_email"`
-	UserAvatar   string `json:"user_avatar"`
-	ProjectID    int    `json:"project_id"`
-	Project      struct {
-		Name              string `json:"name"`
-		Description       string `json:"description"`
-		WebURL            string `json:"web_url"`
-		AvatarURL         string `json:"avatar_url"`
-		GitHTTPURL        string `json:"git_http_url"`
-		GitSSHURL         string `json:"git_ssh_url"`
-		Namespace         string `json:"namespace"`
-		VisibilityLevel   int    `json:"visibility_level"`
-		PathWithNamespace string `json:"path_with_namespace"`
-		DefaultBranch     string `json:"default_branch"`
-		Homepage          string `json:"homepage"`
-		URL               string `json:"url"`
-	} `json:"project"`
-	Commits []struct {
-		ID        string    `json:"id"`
-		Message   string    `json:"message"`
-		Timestamp time.Time `json:"timestamp"`
-		URL       string    `json:"url"`
-		Author    struct {
-			Name  string `json:"name"`
-			Email string `json:"email"`
-		} `json:"author"`
-	} `json:"commits"`
-	TotalCommitsCount int `json:"total_commits_count"`
+	Before            string                     `json:"before"`
+	After             string                     `json:"after"`
+	Ref               string                     `json:"ref"`
+	CheckoutSHA       string                     `json:"checkout_sha"`
+	UserID            int64                      `json:"user_id"`
+	UserName          string                     `json:"user_name"`
+	UserUsername      string                     `json:"user_username"`
+	UserEmail         string                     `json:"user_email"`
+	UserAvatar        string                     `json:"user_avatar"`
+	ProjectID         int64                      `json:"project_id"`
+	Project           TagPushSystemEventProject  `json:"project"`
+	Commits           []TagPushSystemEventCommit `json:"commits"`
+	TotalCommitsCount int64                      `json:"total_commits_count"`
+}
+
+// TagPushSystemEventProject represents a tag push system event's project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#tag-events
+type TagPushSystemEventProject struct {
+	Name              string `json:"name"`
+	Description       string `json:"description"`
+	WebURL            string `json:"web_url"`
+	AvatarURL         string `json:"avatar_url"`
+	GitHTTPURL        string `json:"git_http_url"`
+	GitSSHURL         string `json:"git_ssh_url"`
+	Namespace         string `json:"namespace"`
+	VisibilityLevel   int64  `json:"visibility_level"`
+	PathWithNamespace string `json:"path_with_namespace"`
+	DefaultBranch     string `json:"default_branch"`
+	Homepage          string `json:"homepage"`
+	URL               string `json:"url"`
+}
+
+// TagPushSystemEventCommit represents a tag push system event's commit.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#tag-events
+type TagPushSystemEventCommit struct {
+	ID        string                         `json:"id"`
+	Message   string                         `json:"message"`
+	Timestamp time.Time                      `json:"timestamp"`
+	URL       string                         `json:"url"`
+	Author    TagPushSystemEventCommitAuthor `json:"author"`
+}
+
+// TagPushSystemEventCommitAuthor represents a tag push system event's commit author.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#tag-events
+type TagPushSystemEventCommitAuthor struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 // RepositoryUpdateSystemEvent represents a repository updated system event.
@@ -219,31 +255,43 @@ type TagPushSystemEvent struct {
 // https://docs.gitlab.com/administration/system_hooks/#repository-update-events
 type RepositoryUpdateSystemEvent struct {
 	BaseSystemEvent
-	UserID     int    `json:"user_id"`
-	UserName   string `json:"user_name"`
-	UserEmail  string `json:"user_email"`
-	UserAvatar string `json:"user_avatar"`
-	ProjectID  int    `json:"project_id"`
-	Project    struct {
-		ID                int    `json:"id"`
-		Name              string `json:"name"`
-		Description       string `json:"description"`
-		WebURL            string `json:"web_url"`
-		AvatarURL         string `json:"avatar_url"`
-		GitHTTPURL        string `json:"git_http_url"`
-		GitSSHURL         string `json:"git_ssh_url"`
-		Namespace         string `json:"namespace"`
-		VisibilityLevel   int    `json:"visibility_level"`
-		PathWithNamespace string `json:"path_with_namespace"`
-		DefaultBranch     string `json:"default_branch"`
-		CiConfigPath      string `json:"ci_config_path"`
-		Homepage          string `json:"homepage"`
-		URL               string `json:"url"`
-	} `json:"project"`
-	Changes []struct {
-		Before string `json:"before"`
-		After  string `json:"after"`
-		Ref    string `json:"ref"`
-	} `json:"changes"`
-	Refs []string `json:"refs"`
+	UserID     int64                               `json:"user_id"`
+	UserName   string                              `json:"user_name"`
+	UserEmail  string                              `json:"user_email"`
+	UserAvatar string                              `json:"user_avatar"`
+	ProjectID  int64                               `json:"project_id"`
+	Project    RepositoryUpdateSystemEventProject  `json:"project"`
+	Changes    []RepositoryUpdateSystemEventChange `json:"changes"`
+	Refs       []string                            `json:"refs"`
+}
+
+// RepositoryUpdateSystemEventProject represents a repository updated system event's project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#repository-update-events
+type RepositoryUpdateSystemEventProject struct {
+	ID                int64  `json:"id"`
+	Name              string `json:"name"`
+	Description       string `json:"description"`
+	WebURL            string `json:"web_url"`
+	AvatarURL         string `json:"avatar_url"`
+	GitHTTPURL        string `json:"git_http_url"`
+	GitSSHURL         string `json:"git_ssh_url"`
+	Namespace         string `json:"namespace"`
+	VisibilityLevel   int64  `json:"visibility_level"`
+	PathWithNamespace string `json:"path_with_namespace"`
+	DefaultBranch     string `json:"default_branch"`
+	CiConfigPath      string `json:"ci_config_path"`
+	Homepage          string `json:"homepage"`
+	URL               string `json:"url"`
+}
+
+// RepositoryUpdateSystemEventChange represents a repository updated system event's change.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/administration/system_hooks/#repository-update-events
+type RepositoryUpdateSystemEventChange struct {
+	Before string `json:"before"`
+	After  string `json:"after"`
+	Ref    string `json:"ref"`
 }
