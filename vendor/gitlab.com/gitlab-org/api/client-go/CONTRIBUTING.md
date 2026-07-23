@@ -23,7 +23,7 @@ this project only supports what is in the public API docs.
 ### Use community fork to contribute
 
 To contribute to this project we recommend that you use the
-[community fork](https://gitlab.com/gitlab-community/api/client-go).
+[community fork](https://gitlab.com/gitlab-community/gitlab-org/api/client-go).
 Have a look at the
 [community fork README](https://gitlab.com/gitlab-community#gitlab-community-forks)
 to learn more about what it is and why you should prefer it over

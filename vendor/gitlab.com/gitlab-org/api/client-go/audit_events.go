@@ -1,13 +1,17 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	AuditEventsServiceInterface interface {
+		// ListInstanceAuditEvents gets a list of audit events for instance.
+		// Authentication as Administrator is required.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/audit_events/#retrieve-all-instance-audit-events
 		// ListInstanceAuditEvents gets a list of audit events for instance.
 		// Authentication as Administrator is required.
 		//
@@ -20,7 +24,7 @@ type (
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/audit_events/#retrieve-single-instance-audit-event
-		GetInstanceAuditEvent(event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
+		GetInstanceAuditEvent(event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
 
 		// ListGroupAuditEvents gets a list of audit events for the specified group
 		// viewable by the authenticated user.
@@ -32,7 +36,7 @@ type (
 		// GetGroupAuditEvent gets a specific group audit event.
 		//
 		// GitLab API docs: https://docs.gitlab.com/api/audit_events/#retrieve-a-specific-group-audit-event
-		GetGroupAuditEvent(gid any, event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
+		GetGroupAuditEvent(gid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
 
 		// ListProjectAuditEvents gets a list of audit events for the specified project
 		// viewable by the authenticated user.
@@ -43,7 +47,7 @@ type (
 		// GetProjectAuditEvent gets a specific project audit event.
 		//
 		// GitLab API docs: https://docs.gitlab.com/api/audit_events/#retrieve-a-specific-project-audit-event
-		GetProjectAuditEvent(pid any, event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
+		GetProjectAuditEvent(pid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error)
 	}
 
 	// AuditEventsService handles communication with the project/group/instance
@@ -61,9 +65,9 @@ var _ AuditEventsServiceInterface = (*AuditEventsService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/audit_events/
 type AuditEvent struct {
-	ID         int               `json:"id"`
-	AuthorID   int               `json:"author_id"`
-	EntityID   int               `json:"entity_id"`
+	ID         int64             `json:"id"`
+	AuthorID   int64             `json:"author_id"`
+	EntityID   int64             `json:"entity_id"`
 	EntityType string            `json:"entity_type"`
 	EventName  string            `json:"event_name"`
 	Details    AuditEventDetails `json:"details"`
@@ -108,117 +112,52 @@ type ListAuditEventsOptions struct {
 }
 
 func (s *AuditEventsService) ListInstanceAuditEvents(opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "audit_events", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var aes []*AuditEvent
-	resp, err := s.client.Do(req, &aes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return aes, resp, nil
+	return do[[]*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("audit_events"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *AuditEventsService) GetInstanceAuditEvent(event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	u := fmt.Sprintf("audit_events/%d", event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ae := new(AuditEvent)
-	resp, err := s.client.Do(req, ae)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ae, resp, nil
+func (s *AuditEventsService) GetInstanceAuditEvent(event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
+	return do[*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("audit_events/%d", event),
+		withRequestOpts(options...),
+	)
 }
 
 func (s *AuditEventsService) ListGroupAuditEvents(gid any, opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/audit_events", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var aes []*AuditEvent
-	resp, err := s.client.Do(req, &aes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return aes, resp, nil
+	return do[[]*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("groups/%s/audit_events", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *AuditEventsService) GetGroupAuditEvent(gid any, event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/audit_events/%d", PathEscape(group), event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ae := new(AuditEvent)
-	resp, err := s.client.Do(req, ae)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ae, resp, nil
+func (s *AuditEventsService) GetGroupAuditEvent(gid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
+	return do[*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("groups/%s/audit_events/%d", GroupID{gid}, event),
+		withRequestOpts(options...),
+	)
 }
 
 func (s *AuditEventsService) ListProjectAuditEvents(pid any, opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/audit_events", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var aes []*AuditEvent
-	resp, err := s.client.Do(req, &aes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return aes, resp, nil
+	return do[[]*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("projects/%s/audit_events", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *AuditEventsService) GetProjectAuditEvent(pid any, event int, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/audit_events/%d", PathEscape(project), event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ae := new(AuditEvent)
-	resp, err := s.client.Do(req, ae)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ae, resp, nil
+func (s *AuditEventsService) GetProjectAuditEvent(pid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
+	return do[*AuditEvent](s.client,
+		withMethod(http.MethodGet),
+		withPath("projects/%s/audit_events/%d", ProjectID{pid}, event),
+		withRequestOpts(options...),
+	)
 }

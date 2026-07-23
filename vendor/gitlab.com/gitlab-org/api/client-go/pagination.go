@@ -1,12 +1,8 @@
-//go:build go1.23
-// +build go1.23
-
 package gitlab
 
 import (
 	"fmt"
 	"iter"
-	"slices"
 )
 
 type PaginationOptionFunc = RequestOptionFunc
@@ -102,11 +98,11 @@ func Scan[T any](f func(p PaginationOptionFunc) ([]T, *Response, error)) (iter.S
 // Attention: This API is experimental and may be subject to breaking changes to improve the API in the future.
 func Scan2[T any](f func(p PaginationOptionFunc) ([]T, *Response, error)) iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
-		var nextOpt PaginationOptionFunc
+		var page PaginationOptionFunc
 
 	Pagination:
 		for {
-			ts, resp, err := f(nextOpt)
+			ts, resp, err := f(page)
 			if err != nil {
 				var t T
 				yield(t, err)
@@ -122,15 +118,13 @@ func Scan2[T any](f func(p PaginationOptionFunc) ([]T, *Response, error)) iter.S
 			// the f request function was either configured for offset- or keyset-based
 			// pagination. We support both here, by checking if the next link is provided (keyset)
 			// or not. If both are provided, keyset-based pagination takes precedence.
-			switch {
-			case resp.NextLink != "":
-				nextOpt = WithKeysetPaginationParameters(resp.NextLink)
-			case resp.NextPage != 0:
-				nextOpt = WithOffsetPaginationParameters(resp.NextPage)
-			default:
+			next, ok := WithNext(resp)
+			if !ok {
 				// no more pages
 				break Pagination
 			}
+
+			page = next
 		}
 	}
 }
@@ -159,7 +153,7 @@ func Must[T any](it iter.Seq2[T, error]) iter.Seq[T] {
 	}
 }
 
-// ScanAndCollect is a convenience function that collects all results and returns them as slice as well as an error if one happens.
+// ScanAndCollect is a convenience function that collects all results and returns them as a slice as well as an error if one happens.
 //
 //	opts := &ListProjectsOptions{}
 //	projects, err := ScanAndCollect(func(p PaginationOptionFunc) ([]*Project, *Response, error) {
@@ -172,10 +166,38 @@ func Must[T any](it iter.Seq2[T, error]) iter.Seq[T] {
 //
 // Attention: This API is experimental and may be subject to breaking changes to improve the API in the future.
 func ScanAndCollect[T any](f func(p PaginationOptionFunc) ([]T, *Response, error)) ([]T, error) {
-	it, hasErr := Scan(f)
-	allItems := slices.Collect(it)
-	if err := hasErr(); err != nil {
-		return nil, err
+	return ScanAndCollectN(f, -1)
+}
+
+// ScanAndCollectN is a convenience function that collects at most n results and
+// returns them as a slice as well as an error if one happens.
+//
+// This is useful when you need a slice, e.g. for marshaling the data
+// structures, passing the data to a function expecting a slice, or implementing
+// custom sorting logic. If you want to iterate over all items, the iterator
+// returned by [Scan2] is a more memory efficient alternative.
+//
+// n determines the number of items to collect:
+//   - n > 0: at most n items are returned
+//   - n == 0: the result is a nil slice (zero items)
+//   - n < 0: all items  are returned (no limit)
+//
+// Attention: This API is experimental and may be subject to breaking changes to
+// improve the API in the future.
+func ScanAndCollectN[T any](f func(p PaginationOptionFunc) ([]T, *Response, error), n int) ([]T, error) {
+	var items []T
+
+	for item, err := range Scan2(f) {
+		if err != nil {
+			return nil, err
+		}
+
+		if n >= 0 && len(items) >= n {
+			break
+		}
+
+		items = append(items, item)
 	}
-	return allItems, nil
+
+	return items, nil
 }

@@ -15,6 +15,8 @@ type Email struct {
 	Email    string `json:"email"`
 	Verified bool   `json:"verified"`
 	Primary  bool   `json:"primary"`
+	UserID   int64  `json:"user_id,omitempty"`
+	Username string `json:"username,omitempty"`
 }
 
 // ListEmailsOptions options for listing current's user emails

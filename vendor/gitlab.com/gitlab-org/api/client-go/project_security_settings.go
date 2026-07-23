@@ -16,14 +16,22 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	ProjectSecuritySettingsServiceInterface interface {
+		// ListProjectSecuritySettings lists all of a project's security settings.
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/project_security_settings/#list-project-security-settings
 		ListProjectSecuritySettings(pid any, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
+		// UpdateSecretPushProtectionEnabledSetting updates the secret_push_protection_enabled
+		// setting for a project to the provided value.
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/project_security_settings/#update-secret_push_protection_enabled-setting
 		UpdateSecretPushProtectionEnabledSetting(pid any, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
 	}
 
@@ -64,28 +72,11 @@ func (s ProjectSecuritySettings) String() string {
 	return Stringify(s)
 }
 
-// ListProjectSecuritySettings lists all of a project's security settings.
-//
-// GitLab API Docs:
-// https://docs.gitlab.com/api/project_security_settings/#list-project-security-settings
 func (s *ProjectSecuritySettingsService) ListProjectSecuritySettings(pid any, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/security_settings", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-	settings := new(ProjectSecuritySettings)
-	resp, err := s.client.Do(req, &settings)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return settings, resp, err
+	return do[*ProjectSecuritySettings](s.client,
+		withPath("projects/%s/security_settings", ProjectID{pid}),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateProjectSecuritySettingsOptions represent the request options for updating
@@ -97,27 +88,11 @@ type UpdateProjectSecuritySettingsOptions struct {
 	SecretPushProtectionEnabled *bool `url:"secret_push_protection_enabled,omitempty" json:"secret_push_protection_enabled,omitempty"`
 }
 
-// UpdateSecretPushProtectionEnabledSetting updates the secret_push_protection_enabled
-// setting for the all projects in a project to the provided value.
-//
-// GitLab API Docs:
-// https://docs.gitlab.com/api/project_security_settings/#update-secret_push_protection_enabled-setting
 func (s *ProjectSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(pid any, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/security_settings", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-	settings := new(ProjectSecuritySettings)
-	resp, err := s.client.Do(req, &settings)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return settings, resp, err
+	return do[*ProjectSecuritySettings](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/security_settings", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

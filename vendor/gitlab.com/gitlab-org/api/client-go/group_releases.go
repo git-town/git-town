@@ -13,11 +13,6 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
-
 type (
 	GroupReleasesServiceInterface interface {
 		ListGroupReleases(gid any, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error)
@@ -49,21 +44,9 @@ type ListGroupReleasesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_releases.html#list-group-releases
 func (s *GroupReleasesService) ListGroupReleases(gid any, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/releases", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opts, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var releases []*Release
-	resp, err := s.client.Do(req, &releases)
-	if err != nil {
-		return nil, resp, err
-	}
-	return releases, resp, nil
+	return do[[]*Release](s.client,
+		withPath("groups/%s/releases", GroupID{gid}),
+		withAPIOpts(opts),
+		withRequestOpts(options...),
+	)
 }

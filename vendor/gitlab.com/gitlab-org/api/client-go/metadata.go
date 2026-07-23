@@ -16,8 +16,6 @@
 
 package gitlab
 
-import "net/http"
-
 type (
 	MetadataServiceInterface interface {
 		GetMetadata(options ...RequestOptionFunc) (*Metadata, *Response, error)
@@ -38,35 +36,36 @@ var _ MetadataServiceInterface = (*MetadataService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/metadata/
 type Metadata struct {
-	Version  string `json:"version"`
-	Revision string `json:"revision"`
-	KAS      struct {
-		Enabled             bool   `json:"enabled"`
-		ExternalURL         string `json:"externalUrl"`
-		ExternalK8SProxyURL string `json:"externalK8sProxyUrl"`
-		Version             string `json:"version"`
-	} `json:"kas"`
-	Enterprise bool `json:"enterprise"`
+	Version    string      `json:"version"`
+	Revision   string      `json:"revision"`
+	KAS        MetadataKAS `json:"kas"`
+	Enterprise bool        `json:"enterprise"`
 }
 
 func (s Metadata) String() string {
 	return Stringify(s)
 }
 
+// MetadataKAS represents a GitLab instance version metadata KAS.
+//
+// GitLab API docs: https://docs.gitlab.com/api/metadata/
+type MetadataKAS struct {
+	Enabled             bool   `json:"enabled"`
+	ExternalURL         string `json:"externalUrl"`
+	ExternalK8SProxyURL string `json:"externalK8sProxyUrl"`
+	Version             string `json:"version"`
+}
+
+func (k MetadataKAS) String() string {
+	return Stringify(k)
+}
+
 // GetMetadata gets a GitLab server instance meteadata.
 //
 // GitLab API docs: https://docs.gitlab.com/api/metadata/
 func (s *MetadataService) GetMetadata(options ...RequestOptionFunc) (*Metadata, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "metadata", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(Metadata)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*Metadata](s.client,
+		withPath("metadata"),
+		withRequestOpts(options...),
+	)
 }

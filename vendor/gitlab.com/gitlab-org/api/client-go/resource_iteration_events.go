@@ -17,15 +17,13 @@
 package gitlab
 
 import (
-	"fmt"
-	"net/http"
 	"time"
 )
 
 type (
 	ResourceIterationEventsServiceInterface interface {
-		ListIssueIterationEvents(pid any, issue int, opt *ListIterationEventsOptions, options ...RequestOptionFunc) ([]*IterationEvent, *Response, error)
-		GetIssueIterationEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*IterationEvent, *Response, error)
+		ListIssueIterationEvents(pid any, issue int64, opt *ListIterationEventsOptions, options ...RequestOptionFunc) ([]*IterationEvent, *Response, error)
+		GetIssueIterationEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*IterationEvent, *Response, error)
 	}
 
 	// ResourceIterationEventsService handles communication with the event related
@@ -43,11 +41,11 @@ var _ ResourceIterationEventsServiceInterface = (*ResourceIterationEventsService
 //
 // GitLab API docs: https://docs.gitlab.com/api/resource_iteration_events/
 type IterationEvent struct {
-	ID           int        `json:"id"`
+	ID           int64      `json:"id"`
 	User         *BasicUser `json:"user"`
 	CreatedAt    *time.Time `json:"created_at"`
 	ResourceType string     `json:"resource_type"`
-	ResourceID   int        `json:"resource_id"`
+	ResourceID   int64      `json:"resource_id"`
 	Iteration    *Iteration `json:"iteration"`
 	Action       string     `json:"action"`
 }
@@ -56,13 +54,13 @@ type IterationEvent struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/resource_iteration_events/
 type Iteration struct {
-	ID          int        `json:"id"`
-	IID         int        `json:"iid"`
-	Sequence    int        `json:"sequence"`
-	GroupID     int        `json:"group_id"`
+	ID          int64      `json:"id"`
+	IID         int64      `json:"iid"`
+	Sequence    int64      `json:"sequence"`
+	GroupID     int64      `json:"group_id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
-	State       int        `json:"state"`
+	State       int64      `json:"state"`
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
 	DueDate     *ISOTime   `json:"due_date"`
@@ -84,48 +82,21 @@ type ListIterationEventsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_iteration_events/#list-project-issue-iteration-events
-func (s *ResourceIterationEventsService) ListIssueIterationEvents(pid any, issue int, opt *ListIterationEventsOptions, options ...RequestOptionFunc) ([]*IterationEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_iteration_events", PathEscape(project), issue)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ies []*IterationEvent
-	resp, err := s.client.Do(req, &ies)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ies, resp, nil
+func (s *ResourceIterationEventsService) ListIssueIterationEvents(pid any, issue int64, opt *ListIterationEventsOptions, options ...RequestOptionFunc) ([]*IterationEvent, *Response, error) {
+	return do[[]*IterationEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_iteration_events", ProjectID{pid}, issue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetIssueIterationEvent gets a single issue iteration event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_iteration_events/#get-single-issue-iteration-event
-func (s *ResourceIterationEventsService) GetIssueIterationEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*IterationEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_iteration_events/%d", PathEscape(project), issue, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ie := new(IterationEvent)
-	resp, err := s.client.Do(req, ie)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ie, resp, nil
+func (s *ResourceIterationEventsService) GetIssueIterationEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*IterationEvent, *Response, error) {
+	return do[*IterationEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_iteration_events/%d", ProjectID{pid}, issue, event),
+		withRequestOpts(options...),
+	)
 }
