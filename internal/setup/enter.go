@@ -394,7 +394,7 @@ func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit,
 }
 
 func enterBitbucketAPIToken(data Data, forgeType forgedomain.ForgeType) (Option[forgedomain.BitbucketAPIToken], dialogdomain.Exit, error) {
-	if data.Config.File.BitbucketUsername.IsSome() {
+	if data.Config.File.BitbucketAPIToken.IsSome() {
 		return None[forgedomain.BitbucketAPIToken](), false, nil
 	}
 	return dialog.BitbucketAPIToken(forgeType, dialog.Args[forgedomain.BitbucketAPIToken]{
