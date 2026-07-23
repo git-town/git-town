@@ -5,11 +5,11 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
-	"github.com/git-town/git-town/v23/pkg/set"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v24/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
+	"github.com/git-town/git-town/v24/pkg/set"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.

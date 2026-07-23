@@ -1,17 +1,17 @@
 package configinterpreter
 
 import (
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/config/gitconfig"
-	"github.com/git-town/git-town/v23/internal/git"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v23/internal/state/runstate"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v23/internal/vm/program"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/config/gitconfig"
+	"github.com/git-town/git-town/v24/internal/git"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v24/internal/state/runstate"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v24/internal/vm/program"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 type FinishedArgs struct {

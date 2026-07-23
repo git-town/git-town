@@ -1,8 +1,8 @@
 package format
 
 import (
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/messages"
 )
 
 func BranchNames(branches gitdomain.LocalBranchNames) string {

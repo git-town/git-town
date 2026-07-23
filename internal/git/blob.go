@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v23/pkg/colors"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v24/pkg/colors"
 )
 
 // Blob describes the content of a file blob in Git.

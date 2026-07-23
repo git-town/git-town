@@ -3,9 +3,9 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/vm/shared"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // ProposalUpdateTargetToGrandParent updates the target of the proposal with the given number to the parent of the given branch.

@@ -1,8 +1,8 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v23/internal/config"
-	"github.com/git-town/git-town/v23/internal/undo/undodomain"
+	"github.com/git-town/git-town/v24/internal/config"
+	"github.com/git-town/git-town/v24/internal/undo/undodomain"
 )
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config config.ValidatedConfig) Categorized[undodomain.InconsistentChanges] {

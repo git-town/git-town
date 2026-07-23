@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // SendInputs sends the given keystrokes to the given bubbletea program.

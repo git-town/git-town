@@ -3,7 +3,7 @@ package gitdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 )
 
 type SHAs []SHA

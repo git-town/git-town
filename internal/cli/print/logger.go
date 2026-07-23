@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/git-town/git-town/v23/pkg/colors"
+	"github.com/git-town/git-town/v24/pkg/colors"
 )
 
 // The Logger logger logs activities of a particular component on the CLI.

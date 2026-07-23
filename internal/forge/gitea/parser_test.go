@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v23/internal/forge/gitea"
+	"github.com/git-town/git-town/v24/internal/forge/gitea"
 	"github.com/shoenig/test/must"
 )
 

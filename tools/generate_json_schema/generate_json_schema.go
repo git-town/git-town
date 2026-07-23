@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/git-town/git-town/v23/internal/config/configfile"
+	"github.com/git-town/git-town/v24/internal/config/configfile"
 	"github.com/invopop/jsonschema"
 )
 

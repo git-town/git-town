@@ -1,12 +1,12 @@
 package ship
 
 import (
-	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v23/internal/execute"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	"github.com/git-town/git-town/v23/internal/vm/program"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v24/internal/execute"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	"github.com/git-town/git-town/v24/internal/vm/program"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 func shipProgramFastForward(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, squashMergeData shipDataMerge) {
