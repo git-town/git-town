@@ -15,7 +15,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -24,9 +23,9 @@ type (
 	FeatureFlagUserListsServiceInterface interface {
 		ListFeatureFlagUserLists(pid any, opt *ListFeatureFlagUserListsOptions, options ...RequestOptionFunc) ([]*FeatureFlagUserList, *Response, error)
 		CreateFeatureFlagUserList(pid any, opt *CreateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error)
-		GetFeatureFlagUserList(pid any, iid int, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error)
-		UpdateFeatureFlagUserList(pid any, iid int, opt *UpdateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error)
-		DeleteFeatureFlagUserList(pid any, iid int, options ...RequestOptionFunc) (*Response, error)
+		GetFeatureFlagUserList(pid any, iid int64, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error)
+		UpdateFeatureFlagUserList(pid any, iid int64, opt *UpdateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error)
+		DeleteFeatureFlagUserList(pid any, iid int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// FeatureFlagUserListsService handles communication with the feature flag
@@ -46,9 +45,9 @@ var _ FeatureFlagUserListsServiceInterface = (*FeatureFlagUserListsService)(nil)
 type FeatureFlagUserList struct {
 	Name      string     `url:"name" json:"name"`
 	UserXIDs  string     `url:"user_xids" json:"user_xids"`
-	ID        int        `url:"id" json:"id"`
-	IID       int        `url:"iid" json:"iid"`
-	ProjectID int        `url:"project_id" json:"project_id"`
+	ID        int64      `url:"id" json:"id"`
+	IID       int64      `url:"iid" json:"iid"`
+	ProjectID int64      `url:"project_id" json:"project_id"`
 	CreatedAt *time.Time `url:"created_at" json:"created_at"`
 	UpdatedAt *time.Time `url:"updated_at" json:"updated_at"`
 }
@@ -69,24 +68,11 @@ type ListFeatureFlagUserListsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flag_user_lists/#list-all-feature-flag-user-lists-for-a-project
 func (s *FeatureFlagUserListsService) ListFeatureFlagUserLists(pid any, opt *ListFeatureFlagUserListsOptions, options ...RequestOptionFunc) ([]*FeatureFlagUserList, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags_user_lists", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var lists []*FeatureFlagUserList
-	resp, err := s.client.Do(req, &lists)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return lists, resp, nil
+	return do[[]*FeatureFlagUserList](s.client,
+		withPath("projects/%s/feature_flags_user_lists", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateFeatureFlagUserListOptions represents the available
@@ -104,49 +90,23 @@ type CreateFeatureFlagUserListOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flag_user_lists/#create-a-feature-flag-user-list
 func (s *FeatureFlagUserListsService) CreateFeatureFlagUserList(pid any, opt *CreateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags_user_lists", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	list := new(FeatureFlagUserList)
-	resp, err := s.client.Do(req, list)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return list, resp, nil
+	return do[*FeatureFlagUserList](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/feature_flags_user_lists", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetFeatureFlagUserList gets a feature flag user list.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flag_user_lists/#get-a-feature-flag-user-list
-func (s *FeatureFlagUserListsService) GetFeatureFlagUserList(pid any, iid int, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags_user_lists/%d", PathEscape(project), iid)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	list := new(FeatureFlagUserList)
-	resp, err := s.client.Do(req, list)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return list, resp, nil
+func (s *FeatureFlagUserListsService) GetFeatureFlagUserList(pid any, iid int64, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error) {
+	return do[*FeatureFlagUserList](s.client,
+		withPath("projects/%s/feature_flags_user_lists/%d", ProjectID{pid}, iid),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateFeatureFlagUserListOptions represents the available
@@ -163,42 +123,24 @@ type UpdateFeatureFlagUserListOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flag_user_lists/#update-a-feature-flag-user-list
-func (s *FeatureFlagUserListsService) UpdateFeatureFlagUserList(pid any, iid int, opt *UpdateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags_user_lists/%d", PathEscape(project), iid)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	list := new(FeatureFlagUserList)
-	resp, err := s.client.Do(req, list)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return list, resp, nil
+func (s *FeatureFlagUserListsService) UpdateFeatureFlagUserList(pid any, iid int64, opt *UpdateFeatureFlagUserListOptions, options ...RequestOptionFunc) (*FeatureFlagUserList, *Response, error) {
+	return do[*FeatureFlagUserList](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/feature_flags_user_lists/%d", ProjectID{pid}, iid),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteFeatureFlagUserList deletes a feature flag user list.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flag_user_lists/#delete-feature-flag-user-list
-func (s *FeatureFlagUserListsService) DeleteFeatureFlagUserList(pid any, iid int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags_user_lists/%d", PathEscape(project), iid)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *FeatureFlagUserListsService) DeleteFeatureFlagUserList(pid any, iid int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/feature_flags_user_lists/%d", ProjectID{pid}, iid),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

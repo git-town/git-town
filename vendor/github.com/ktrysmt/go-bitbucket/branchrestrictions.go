@@ -64,17 +64,14 @@ func (b *BranchRestrictions) Delete(bo *BranchRestrictionsOptions) (interface{},
 }
 
 type branchRestrictionsBody struct {
-	Kind    string `json:"kind"`
-	Pattern string `json:"pattern"`
-	Links   struct {
-		Self struct {
-			Href string `json:"href"`
-		} `json:"self"`
-	} `json:"links"`
-	Value  interface{}                   `json:"value"`
-	ID     int                           `json:"id"`
-	Users  []branchRestrictionsBodyUser  `json:"users"`
-	Groups []branchRestrictionsBodyGroup `json:"groups"`
+	Type            string                        `json:"type"`
+	Kind            string                        `json:"kind"`
+	BranchMatchKind string                        `json:"branch_match_kind"`
+	BranchType      string                        `json:"branch_type,omitempty"`
+	Pattern         string                        `json:"pattern"`
+	Value           interface{}                   `json:"value,omitempty"`
+	Users           []branchRestrictionsBodyUser  `json:"users"`
+	Groups          []branchRestrictionsBodyGroup `json:"groups"`
 }
 
 type branchRestrictionsBodyGroup struct {
@@ -120,8 +117,8 @@ type branchRestrictionsBodyUser struct {
 }
 
 func (b *BranchRestrictions) buildBranchRestrictionsBody(bo *BranchRestrictionsOptions) (string, error) {
-	var users []branchRestrictionsBodyUser
-	var groups []branchRestrictionsBodyGroup
+	users := make([]branchRestrictionsBodyUser, 0, len(bo.Users))
+	groups := make([]branchRestrictionsBodyGroup, 0, len(bo.Groups))
 	for _, u := range bo.Users {
 		user := branchRestrictionsBodyUser{
 			Username: u,
@@ -135,12 +132,20 @@ func (b *BranchRestrictions) buildBranchRestrictionsBody(bo *BranchRestrictionsO
 		groups = append(groups, group)
 	}
 
+	branchMatchKind := bo.BranchMatchKind
+	if branchMatchKind == "" {
+		branchMatchKind = "glob"
+	}
+
 	body := branchRestrictionsBody{
-		Kind:    bo.Kind,
-		Pattern: bo.Pattern,
-		Users:   users,
-		Groups:  groups,
-		Value:   bo.Value,
+		Type:            "branchrestriction",
+		Kind:            bo.Kind,
+		BranchMatchKind: branchMatchKind,
+		BranchType:      bo.BranchType,
+		Pattern:         bo.Pattern,
+		Users:           users,
+		Groups:          groups,
+		Value:           bo.Value,
 	}
 
 	data, err := json.Marshal(body)

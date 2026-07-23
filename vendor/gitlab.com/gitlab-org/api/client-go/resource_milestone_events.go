@@ -17,17 +17,15 @@
 package gitlab
 
 import (
-	"fmt"
-	"net/http"
 	"time"
 )
 
 type (
 	ResourceMilestoneEventsServiceInterface interface {
-		ListIssueMilestoneEvents(pid any, issue int, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error)
-		GetIssueMilestoneEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error)
-		ListMergeMilestoneEvents(pid any, request int, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error)
-		GetMergeRequestMilestoneEvent(pid any, request int, event int, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error)
+		ListIssueMilestoneEvents(pid any, issue int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error)
+		GetIssueMilestoneEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error)
+		ListMergeMilestoneEvents(pid any, request int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error)
+		GetMergeRequestMilestoneEvent(pid any, request int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error)
 	}
 
 	// ResourceMilestoneEventsService handles communication with the event related
@@ -45,11 +43,11 @@ var _ ResourceMilestoneEventsServiceInterface = (*ResourceMilestoneEventsService
 //
 // GitLab API docs: https://docs.gitlab.com/api/resource_milestone_events/
 type MilestoneEvent struct {
-	ID           int        `json:"id"`
+	ID           int64      `json:"id"`
 	User         *BasicUser `json:"user"`
 	CreatedAt    *time.Time `json:"created_at"`
 	ResourceType string     `json:"resource_type"`
-	ResourceID   int        `json:"resource_id"`
+	ResourceID   int64      `json:"resource_id"`
 	Milestone    *Milestone `json:"milestone"`
 	Action       string     `json:"action"`
 }
@@ -68,50 +66,23 @@ type ListMilestoneEventsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#list-project-issue-milestone-events
-func (s *ResourceMilestoneEventsService) ListIssueMilestoneEvents(pid any, issue int, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_milestone_events", PathEscape(project), issue)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var mes []*MilestoneEvent
-	resp, err := s.client.Do(req, &mes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return mes, resp, nil
+func (s *ResourceMilestoneEventsService) ListIssueMilestoneEvents(pid any, issue int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
+	return do[[]*MilestoneEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_milestone_events", ProjectID{pid}, issue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetIssueMilestoneEvent gets a single issue milestone event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#get-single-issue-milestone-event
-func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_milestone_events/%d", PathEscape(project), issue, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	me := new(MilestoneEvent)
-	resp, err := s.client.Do(req, me)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return me, resp, nil
+func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
+	return do[*MilestoneEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_milestone_events/%d", ProjectID{pid}, issue, event),
+		withRequestOpts(options...),
+	)
 }
 
 // ListMergeMilestoneEvents retrieves resource milestone events for the specified
@@ -119,48 +90,21 @@ func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid any, issue i
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#list-project-merge-request-milestone-events
-func (s *ResourceMilestoneEventsService) ListMergeMilestoneEvents(pid any, request int, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/resource_milestone_events", PathEscape(project), request)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var mes []*MilestoneEvent
-	resp, err := s.client.Do(req, &mes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return mes, resp, nil
+func (s *ResourceMilestoneEventsService) ListMergeMilestoneEvents(pid any, request int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
+	return do[[]*MilestoneEvent](s.client,
+		withPath("projects/%s/merge_requests/%d/resource_milestone_events", ProjectID{pid}, request),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetMergeRequestMilestoneEvent gets a single merge request milestone event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#get-single-merge-request-milestone-event
-func (s *ResourceMilestoneEventsService) GetMergeRequestMilestoneEvent(pid any, request int, event int, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/resource_milestone_events/%d", PathEscape(project), request, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	me := new(MilestoneEvent)
-	resp, err := s.client.Do(req, me)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return me, resp, nil
+func (s *ResourceMilestoneEventsService) GetMergeRequestMilestoneEvent(pid any, request int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
+	return do[*MilestoneEvent](s.client,
+		withPath("projects/%s/merge_requests/%d/resource_milestone_events/%d", ProjectID{pid}, request, event),
+		withRequestOpts(options...),
+	)
 }

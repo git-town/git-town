@@ -31,11 +31,10 @@ type RepositoriesRes struct {
 }
 
 func (r *Repositories) ListForAccount(ro *RepositoriesOptions) (*RepositoriesRes, error) {
-	urlPath := "/repositories"
-	if ro.Owner != "" {
-		urlPath += fmt.Sprintf("/%s", ro.Owner)
+	if ro.Owner == "" {
+		return nil, fmt.Errorf("owner / workspace name not passed in")
 	}
-	urlStr := r.c.requestUrl(urlPath)
+	urlStr := r.c.requestUrl("/repositories/%s", ro.Owner)
 	urlAsUrl, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, err
@@ -55,7 +54,12 @@ func (r *Repositories) ListForAccount(ro *RepositoriesOptions) (*RepositoriesRes
 	if err != nil {
 		return nil, err
 	}
-	return decodeRepositories(repos)
+	res, err := decodeRepositories(repos)
+	if err != nil {
+		return nil, err
+	}
+	r.attachClientToItems(res)
+	return res, nil
 }
 
 // Deprecated: Use ListForAccount instead
@@ -71,7 +75,12 @@ func (r *Repositories) ListProject(ro *RepositoriesOptions) (*RepositoriesRes, e
 	if err != nil {
 		return nil, err
 	}
-	return decodeRepositories(repos)
+	res, err := decodeRepositories(repos)
+	if err != nil {
+		return nil, err
+	}
+	r.attachClientToItems(res)
+	return res, nil
 }
 
 func (r *Repositories) ListPublic() (*RepositoriesRes, error) {
@@ -80,7 +89,21 @@ func (r *Repositories) ListPublic() (*RepositoriesRes, error) {
 	if err != nil {
 		return nil, err
 	}
-	return decodeRepositories(repos)
+	res, err := decodeRepositories(repos)
+	if err != nil {
+		return nil, err
+	}
+	r.attachClientToItems(res)
+	return res, nil
+}
+
+func (r *Repositories) attachClientToItems(res *RepositoriesRes) {
+	if res == nil {
+		return
+	}
+	for i := range res.Items {
+		res.Items[i].attachClient(r.c)
+	}
 }
 
 func decodeRepositories(reposResponse interface{}) (*RepositoriesRes, error) {

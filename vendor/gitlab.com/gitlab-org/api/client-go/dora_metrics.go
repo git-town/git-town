@@ -16,11 +16,6 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
-
 type (
 	// DORAMetricsServiceInterface defines all the API methods for the DORAMetricsService
 	DORAMetricsServiceInterface interface {
@@ -76,43 +71,17 @@ type GetDORAMetricsOptions struct {
 }
 
 func (s *DORAMetricsService) GetProjectDORAMetrics(pid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/dora/metrics", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var metrics []DORAMetric
-	resp, err := s.client.Do(req, &metrics)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return metrics, resp, err
+	return do[[]DORAMetric](s.client,
+		withPath("projects/%s/dora/metrics", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 func (s *DORAMetricsService) GetGroupDORAMetrics(gid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/dora/metrics", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var metrics []DORAMetric
-	resp, err := s.client.Do(req, &metrics)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return metrics, resp, err
+	return do[[]DORAMetric](s.client,
+		withPath("groups/%s/dora/metrics", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

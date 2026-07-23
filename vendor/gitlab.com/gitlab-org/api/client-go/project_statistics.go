@@ -1,10 +1,5 @@
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
-
 type (
 	ProjectStatisticsServiceInterface interface {
 		// Last30DaysStatistics gets the project statistics for the last 30 days.
@@ -42,25 +37,8 @@ type DayStats struct {
 var _ ProjectStatisticsServiceInterface = (*ProjectStatisticsService)(nil)
 
 func (s *ProjectStatisticsService) Last30DaysStatistics(pid any, options ...RequestOptionFunc) (*ProjectStatistics, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	u := fmt.Sprintf("projects/%s/statistics",
-		PathEscape(project),
+	return do[*ProjectStatistics](s.client,
+		withPath("projects/%s/statistics", ProjectID{pid}),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	projectStats := new(ProjectStatistics)
-	resp, err := s.client.Do(req, projectStats)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return projectStats, resp, err
 }

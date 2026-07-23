@@ -10,7 +10,7 @@ reviewable: setup generate fmt lint test ## Run before committing.
 
 fmt: ## Format code
 	@buf format -w
-	@gofumpt -l -w *.go testing/*.go examples/*.go
+	@gofumpt -l -w *.go testing/*.go
 
 lint: ## Run linter
 	@golangci-lint run
@@ -37,3 +37,18 @@ clean: ## Remove generated files
 
 test: ## Run tests
 	go test ./... -race
+
+test-integration: ## Run integration tests
+	go test ./... -race -tags=integration
+
+testacc-up: ## Launch a GitLab instance.
+	GITLAB_TOKEN=$(GITLAB_TOKEN) $(CONTAINER_COMPOSE_ENGINE) up -d $(SERVICE)
+	GITLAB_BASE_URL=$(GITLAB_BASE_URL) GITLAB_TOKEN=$(GITLAB_TOKEN) ./scripts/await_healthy.sh
+
+testacc-down: ## Teardown a GitLab instance.
+	$(CONTAINER_COMPOSE_ENGINE) down --volumes
+
+SERVICE ?= gitlab-ee-no-license
+GITLAB_TOKEN ?= glpat-ACCTEST1234567890123
+GITLAB_BASE_URL ?= http://127.0.0.1:8095/api/v4
+CONTAINER_COMPOSE_ENGINE ?= $(shell docker compose version >/dev/null 2>&1 && echo 'docker compose' || echo 'docker-compose')

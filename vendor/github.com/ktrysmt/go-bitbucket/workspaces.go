@@ -71,7 +71,7 @@ func (t *Permission) GetUserPermissionsByUuid(organization, member string) (*Per
 }
 
 func (t *Workspace) List() (*WorkspaceList, error) {
-	urlStr := t.c.requestUrl("/workspaces")
+	urlStr := t.c.requestUrl("/user/workspaces")
 	response, err := t.c.executePaginated("GET", urlStr, "", nil)
 	if err != nil {
 		return nil, err
@@ -144,8 +144,18 @@ func decodeWorkspaceList(workspaceResponse interface{}) (*WorkspaceList, error) 
 	workspaceMapList := workspaceResponseMap["values"].([]interface{})
 
 	var workspaces []Workspace
-	for _, workspaceMap := range workspaceMapList {
-		workspaceEntry, err := decodeWorkspace(workspaceMap)
+	for _, item := range workspaceMapList {
+		// GET /2.0/user/workspaces returns workspace_access objects;
+		// the workspace is nested under the "workspace" key.
+		itemMap, ok := item.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		nested, ok := itemMap["workspace"].(map[string]interface{})
+		if !ok {
+			continue
+		}
+		workspaceEntry, err := decodeWorkspace(nested)
 		if err != nil {
 			return nil, err
 		}
@@ -211,7 +221,7 @@ func decodeProjects(projectResponse interface{}) (*ProjectsRes, error) {
 	if !ok {
 		pagelen = 0
 	}
-	max_depth, ok := projectsResponseMap["max_width"].(float64)
+	max_depth, ok := projectsResponseMap["max_depth"].(float64)
 	if !ok {
 		max_depth = 0
 	}
@@ -248,23 +258,23 @@ func decodeMembers(membersResponse interface{}) (*WorkspaceMembers, error) {
 		members = append(members, *member)
 	}
 
-	page, ok := responseMap["page"].(int)
+	page, ok := responseMap["page"].(float64)
 	if !ok {
 		page = 0
 	}
-	pagelen, ok := responseMap["pagelen"].(int)
+	pagelen, ok := responseMap["pagelen"].(float64)
 	if !ok {
 		pagelen = 0
 	}
-	size, ok := responseMap["size"].(int)
+	size, ok := responseMap["size"].(float64)
 	if !ok {
 		size = 0
 	}
 
 	workspaceMembers := WorkspaceMembers{
-		Page:    page,
-		Pagelen: pagelen,
-		Size:    size,
+		Page:    int(page),
+		Pagelen: int(pagelen),
+		Size:    int(size),
 		Members: members,
 	}
 	return &workspaceMembers, nil

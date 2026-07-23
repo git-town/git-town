@@ -45,9 +45,8 @@ import (
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/internal"
-	"golang.org/x/tools/go/analysis/internal/analysisflags"
 	"golang.org/x/tools/go/packages"
-	"golang.org/x/tools/internal/analysisinternal"
+	"golang.org/x/tools/internal/analysis/driverutil"
 )
 
 // Options specifies options that control the analysis driver.
@@ -60,7 +59,7 @@ type Options struct {
 	// TODO(adonovan): expose ReadFile so that an Overlay specified
 	// in the [packages.Config] can be communicated via
 	// Pass.ReadFile to each Analyzer.
-	readFile analysisinternal.ReadFileFunc
+	readFile driverutil.ReadFileFunc
 }
 
 // Graph holds the results of a round of analysis, including the graph
@@ -312,9 +311,7 @@ func (act *Action) execOnce() {
 
 	module := &analysis.Module{} // possibly empty (non nil) in go/analysis drivers.
 	if mod := act.Package.Module; mod != nil {
-		module.Path = mod.Path
-		module.Version = mod.Version
-		module.GoVersion = mod.GoVersion
+		module = analysisModuleFromPackagesModule(mod)
 	}
 
 	// Run the analysis.
@@ -333,7 +330,7 @@ func (act *Action) execOnce() {
 		ResultOf: inputs,
 		Report: func(d analysis.Diagnostic) {
 			// Assert that SuggestedFixes are well formed.
-			if err := analysisinternal.ValidateFixes(act.Package.Fset, act.Analyzer, d.SuggestedFixes); err != nil {
+			if err := driverutil.ValidateFixes(act.Package.Fset, act.Analyzer, d.SuggestedFixes); err != nil {
 				panic(err)
 			}
 			act.Diagnostics = append(act.Diagnostics, d)
@@ -349,7 +346,7 @@ func (act *Action) execOnce() {
 	if act.opts.readFile != nil {
 		readFile = act.opts.readFile
 	}
-	pass.ReadFile = analysisinternal.CheckedReadFile(pass, readFile)
+	pass.ReadFile = driverutil.CheckedReadFile(pass, readFile)
 	act.pass = pass
 
 	act.Result, act.Err = func() (any, error) {
@@ -371,7 +368,7 @@ func (act *Action) execOnce() {
 
 		// resolve diagnostic URLs
 		for i := range act.Diagnostics {
-			url, err := analysisflags.ResolveURL(act.Analyzer, act.Diagnostics[i])
+			url, err := driverutil.ResolveURL(act.Analyzer, act.Diagnostics[i])
 			if err != nil {
 				return nil, err
 			}
@@ -490,7 +487,7 @@ func exportedFrom(obj types.Object, pkg *types.Package) bool {
 	switch obj := obj.(type) {
 	case *types.Func:
 		return obj.Exported() && obj.Pkg() == pkg ||
-			obj.Type().(*types.Signature).Recv() != nil
+			obj.Signature().Recv() != nil
 	case *types.Var:
 		if obj.IsField() {
 			return true
@@ -627,4 +624,30 @@ func forEach(roots []*Action, f func(*Action) error) error {
 		return nil
 	}
 	return visitAll(roots)
+}
+
+func analysisModuleFromPackagesModule(mod *packages.Module) *analysis.Module {
+	if mod == nil {
+		return nil
+	}
+
+	var modErr *analysis.ModuleError
+	if mod.Error != nil {
+		modErr = &analysis.ModuleError{
+			Err: mod.Error.Err,
+		}
+	}
+
+	return &analysis.Module{
+		Path:      mod.Path,
+		Version:   mod.Version,
+		Replace:   analysisModuleFromPackagesModule(mod.Replace),
+		Time:      mod.Time,
+		Main:      mod.Main,
+		Indirect:  mod.Indirect,
+		Dir:       mod.Dir,
+		GoMod:     mod.GoMod,
+		GoVersion: mod.GoVersion,
+		Error:     modErr,
+	}
 }
