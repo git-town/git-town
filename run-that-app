@@ -12,12 +12,12 @@ exhaustruct 3.3.1
 ghokin 3.10.0
 gofumpt 0.10.0
 golangci-lint 2.12.2
-goreleaser 2.17.0
+goreleaser 1.26.2
 govulncheck 1.1.4
 ireturn 0.4.1
 keep-sorted 0.9.1
 lefthook 2.1.10
-mdbook 0.5.4
+mdbook 0.4.51
 mdbook-linkcheck 0.7.7
 node 26.5.0
 npm 26.5.0
