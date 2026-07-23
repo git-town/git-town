@@ -9,7 +9,8 @@ package gohacks
 // Use with care and only if it's abundantly clear and obvious that there are no negative side effects.
 // This is an anti-pattern in code to work arount an anti-pattern in the language.
 type ErrorCollector struct {
-	Err error `exhaustruct:"optional"`
+	//exhaustruct:optional
+	Err error
 }
 
 // Check registers the given error and indicates

@@ -18,22 +18,26 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortProgram             program.Program                            `exhaustruct:"optional"` // opcodes to abort the currently pending Git operation
-	BeginBranchesSnapshot    gitdomain.BranchesSnapshot                 // snapshot of the Git branches before the Git Town command that this RunState is for ran
-	BeginConfigSnapshot      configdomain.BeginConfigSnapshot           // snapshot of the Git configuration before the Git Town command that this RunState is for ran
-	BeginStashSize           gitdomain.StashSize                        // size of the Git stash before the Git Town command that this RunState is for ran
-	BranchInfosLastRun       Option[gitdomain.BranchInfos]              // branch infos when the last Git Town command ended
-	Command                  string                                     // name of the Git Town command that this RunState is for
-	DryRun                   configdomain.DryRun                        // whether the Git Town command that this RunState is for operated in dry-run mode
-	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]         // snapshot of the Git branches after the Git Town command that this RunState is for ran
-	EndConfigSnapshot        Option[configdomain.EndConfigSnapshot]     // snapshot of the Git configuration after the Git Town command that this RunState is for ran
-	EndStashSize             Option[gitdomain.StashSize]                // size of the Git stash after the Git Town command that this RunState is for ran
-	FinalUndoProgram         program.Program                            `exhaustruct:"optional"` // additional opcodes to run after this RunState was undone
-	RunProgram               program.Program                            // remaining opcodes of the Git Town command that this RunState is for
-	TouchedBranches          gitdomain.BranchNames                      // the branches that are touched by the Git Town command that this RunState is for
-	UndoAPIProgram           program.Program                            // opcodes to undo changes at external systems
-	UndoablePerennialCommits []gitdomain.SHA                            `exhaustruct:"optional"` // contains the SHAs of commits on perennial branches that can safely be undone
-	UnfinishedDetails        OptionalMutable[UnfinishedRunStateDetails] `exhaustruct:"optional"`
+	//exhaustruct:optional
+	AbortProgram          program.Program                        // opcodes to abort the currently pending Git operation
+	BeginBranchesSnapshot gitdomain.BranchesSnapshot             // snapshot of the Git branches before the Git Town command that this RunState is for ran
+	BeginConfigSnapshot   configdomain.BeginConfigSnapshot       // snapshot of the Git configuration before the Git Town command that this RunState is for ran
+	BeginStashSize        gitdomain.StashSize                    // size of the Git stash before the Git Town command that this RunState is for ran
+	BranchInfosLastRun    Option[gitdomain.BranchInfos]          // branch infos when the last Git Town command ended
+	Command               string                                 // name of the Git Town command that this RunState is for
+	DryRun                configdomain.DryRun                    // whether the Git Town command that this RunState is for operated in dry-run mode
+	EndBranchesSnapshot   Option[gitdomain.BranchesSnapshot]     // snapshot of the Git branches after the Git Town command that this RunState is for ran
+	EndConfigSnapshot     Option[configdomain.EndConfigSnapshot] // snapshot of the Git configuration after the Git Town command that this RunState is for ran
+	EndStashSize          Option[gitdomain.StashSize]            // size of the Git stash after the Git Town command that this RunState is for ran
+	//exhaustruct:optional
+	FinalUndoProgram program.Program       // additional opcodes to run after this RunState was undone
+	RunProgram       program.Program       // remaining opcodes of the Git Town command that this RunState is for
+	TouchedBranches  gitdomain.BranchNames // the branches that are touched by the Git Town command that this RunState is for
+	UndoAPIProgram   program.Program       // opcodes to undo changes at external systems
+	//exhaustruct:optional
+	UndoablePerennialCommits []gitdomain.SHA // contains the SHAs of commits on perennial branches that can safely be undone
+	//exhaustruct:optional
+	UnfinishedDetails OptionalMutable[UnfinishedRunStateDetails]
 }
 
 func EmptyRunState() RunState {
