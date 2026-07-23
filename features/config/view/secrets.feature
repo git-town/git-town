@@ -2,7 +2,7 @@ Feature: redact secrets in config output
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.bitbucket-app-password" is "bitbucket-password"
+    And Git setting "git-town.bitbucket-api-token" is "bitbucket-password"
     And Git setting "git-town.forgejo-token" is "forgejo-token"
     And Git setting "git-town.gitea-token" is "gitea-token"
     And Git setting "git-town.github-token" is "github-token"
@@ -18,7 +18,7 @@ Feature: redact secrets in config output
         forge type: (not set)
         origin hostname: (not set)
         Bitbucket username: (not set)
-        Bitbucket app password: (configured)
+        Bitbucket API token: (configured)
         Forgejo token: (configured)
         Gitea token: (configured)
         GitHub connector: (not set)
@@ -39,7 +39,7 @@ Feature: redact secrets in config output
         forge type: (not set)
         origin hostname: (not set)
         Bitbucket username: (not set)
-        Bitbucket app password: bitbucket-password
+        Bitbucket API token: bitbucket-password
         Forgejo token: forgejo-token
         Gitea token: gitea-token
         GitHub connector: (not set)

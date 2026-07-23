@@ -15,5 +15,8 @@ site-url = "https://www.git-town.com/"
 no-section-label = true
 smart-punctuation = true
 
+[output.html.redirect]
+"/preferences/bitbucket-app-password.html" = "bitbucket-api-token.html"
+
 [output.linkcheck]
 optional = true

@@ -42,7 +42,8 @@ func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	for _, conflictingFile := range conflictingFiles {
 		if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
-			opcodes = append(opcodes,
+			opcodes = append(
+				opcodes,
 				&ConflictResolve{
 					FilePath:   conflictingChange.FilePath,
 					Resolution: gitdomain.ConflictResolutionTheirs,

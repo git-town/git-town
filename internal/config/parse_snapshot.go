@@ -163,7 +163,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		Aliases:                     snapshot.Aliases(),
 		AutoResolve:                 autoResolve,
 		AutoSync:                    autoSync,
-		BitbucketAppPassword:        load(snapshot, configdomain.KeyBitbucketAppPassword, forgedomain.ParseBitbucketAppPassword),
+		BitbucketAPIToken:           load(snapshot, configdomain.KeyBitbucketAPIToken, forgedomain.ParseBitbucketAPIToken),
 		BitbucketUsername:           load(snapshot, configdomain.KeyBitbucketUsername, forgedomain.ParseBitbucketUsername),
 		BranchPrefix:                branchPrefix,
 		BranchTypeOverrides:         branchTypeOverrides,

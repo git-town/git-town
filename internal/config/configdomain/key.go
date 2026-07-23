@@ -57,13 +57,14 @@ const (
 	KeyAliasSync                           = Key("alias.sync")
 	KeyAutoResolve                         = Key("git-town.auto-resolve")
 	KeyAutoSync                            = Key("git-town.auto-sync")
-	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
+	KeyBitbucketAPIToken                   = Key("git-town.bitbucket-api-token")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyBranchPrefix                        = Key("git-town.branch-prefix")
 	KeyBrowser                             = Key("git-town.browser")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
+	KeyDeprecatedBitbucketAppPassword      = Key("git-town.bitbucket-app-password")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
@@ -130,13 +131,14 @@ var keys = []Key{
 	// keep-sorted start
 	KeyAutoResolve,
 	KeyAutoSync,
-	KeyBitbucketAppPassword,
+	KeyBitbucketAPIToken,
 	KeyBitbucketUsername,
 	KeyBranchPrefix,
 	KeyBrowser,
 	KeyContributionRegex,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
+	KeyDeprecatedBitbucketAppPassword,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
@@ -221,6 +223,7 @@ func ParseKey(name string) Option[Key] {
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{
 	// keep-sorted start
+	KeyDeprecatedBitbucketAppPassword:      KeyBitbucketAPIToken,
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,

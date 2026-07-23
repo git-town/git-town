@@ -16,8 +16,8 @@ const (
 	AutoDetect                       = "auto-detect"
 	AutoSync                         = "auto-sync: %s\n"
 
-	BitbucketAppPasswordPrompt      = "Bitbucket App Password: "
-	BitbucketAppPasswordResult      = "Bitbucket App Password: %s"
+	BitbucketAPITokenPrompt         = "Bitbucket API token: "
+	BitbucketAPITokenResult         = "Bitbucket API token: %s"
 	BitbucketUsernamePrompt         = "Bitbucket username: "
 	BitbucketUsernameResult         = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally      = "there is already a branch %s"
@@ -59,6 +59,13 @@ const (
 
 	CacheUnitialized                   = "using a cached value before initialization"
 	CannotParse                        = "cannot parse %s: %w"
+	CombineBranchNotLocal              = "cannot combine: branch %s is not local"
+	CombineDetachedHead                = "please check out the branch to combine"
+	CombineNoGrandParent               = "cannot combine branch %s because its parent branch %s has no parent"
+	CombineNoParent                    = "cannot combine branch %s because it has no parent"
+	CombineNotInSyncWithTracking       = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
+	CombineOpenChanges                 = "please commit or remove the open changes first"
+	CombineWrongBranchType             = "cannot combine %s branches"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitDetachedHead                 = "please check out a branch before committing"
 	CommitIntoMainBranch               = "cannot commit into the main branch"
@@ -209,13 +216,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MainBranchCannotPrototype        = "cannot prototype the main branch"
 	MainBranchCannotShip             = "cannot ship the main branch"
 	MainBranchNotFound               = "cannot find the main branch"
-	MergeBranchNotLocal              = "cannot merge: branch %s is not local"
-	MergeDetachedHead                = "please check out the branch to merge"
-	MergeNoGrandParent               = "cannot merge branch %s because its parent branch %s has no parent"
-	MergeNoParent                    = "cannot merge branch %s because it has no parent"
-	MergeNotInSyncWithTracking       = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
-	MergeOpenChanges                 = "please commit or remove the open changes first"
-	MergeWrongBranchType             = "cannot merge %s branches"
 
 	NewBranchType = "New branch type:"
 
