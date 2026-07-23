@@ -508,7 +508,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			Branch: data.initialBranch,
 		},
 	)
-	for c := len(data.commitsToBeam) - 1; c >= 0; c-- {
+	for c := range slices.Backward(data.commitsToBeam) {
 		commitToBeam := data.commitsToBeam[c]
 		prog.Value.Add(
 			&opcodes.CommitRemove{
