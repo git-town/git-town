@@ -3,8 +3,8 @@ package gitdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/messages"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/messages"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.

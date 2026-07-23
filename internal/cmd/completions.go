@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v24/internal/messages"
 	"github.com/spf13/cobra"
 )
 

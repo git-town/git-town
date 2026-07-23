@@ -3,7 +3,7 @@ package bytestream_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/gohacks/bytestream"
+	"github.com/git-town/git-town/v24/internal/gohacks/bytestream"
 	"github.com/shoenig/test/must"
 )
 

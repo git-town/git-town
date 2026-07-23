@@ -3,9 +3,9 @@ package dialogcomponents_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v23/internal/cli/dialog/dialogcomponents/list"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 

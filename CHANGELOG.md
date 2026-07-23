@@ -1,5 +1,30 @@
 # Git Town Changelog
 
+## 24.0.0 (2026-07-22)
+
+#### BREAKING CHANGES
+
+- The Bitbucket Cloud connector now uses API tokens instead of app passwords, which no longer work with the Bitbucket API. Please set up the new [bitbucket-api-token](https://www.git-town.com/preferences/bitbucket-api-token.html) config setting ([#6259](https://github.com/git-town/git-town/pull/6259)).
+- `git town ship` with the [api ship strategy](https://www.git-town.com/preferences/ship-strategy.html#api) now merges the proposal using the forge's own commit message (the same message you'd get clicking "merge" in the web UI), instead of opening an editor for you to write one. To get the old behavior, run `git town ship --enter-message` ([#6256](https://github.com/git-town/git-town/pull/6256)).
+- `git town ship -m` now splits the given message the same way that Git's `-m` flag works: the first line becomes the squash-commit subject, the rest becomes the body ([#6258](https://github.com/git-town/git-town/pull/6258)).
+- `git town merge` is renamed to `git town combine` to distinguish it from the `git merge` command ([#6205](https://github.com/git-town/git-town/issues/6205)).
+- `git town config` now prints all secrets redacted by default. To print secrets, call it with the `--show-secrets` flag. The `--redact` flag is now obsolete and removed ([#6251](https://github.com/git-town/git-town/pull/6251)).
+
+#### New Features
+
+- `git town status show` now displays a slightly more readable output ([#6243](https://github.com/git-town/git-town/issues/6243)).
+
+#### Bug Fixes
+
+- `git town propose` now works for branches whose parent does not have a tracking branch ([#5937](https://github.com/git-town/git-town/issues/5937)).
+- `git town propose` with the `gh` connector now works in non-interactive shells when no `--title` or `--body` is given ([#6224](https://github.com/git-town/git-town/issues/6224)).
+- `git town ship` fails gracefully when the parent to ship into is checked out in another worktree ([#6223](https://github.com/git-town/git-town/issues/6223)).
+- the `git-town` binary in `release.tar.gz` on GitHub Releases is now executable ([#6241](https://github.com/git-town/git-town/issues/6241)).
+
+#### Contributors
+
+Huge thanks to @Indemnity83, @finleyjb, @kevgo, @mdwint, @mrmarufpro, @samuelkitazume, @yaadata for contributing code, feedback, and ideas to 15 shipped pull requests and 10 resolved issues!
+
 ## 23.0.3 (2026-06-21)
 
 #### Bug Fixes

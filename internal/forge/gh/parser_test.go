@@ -3,9 +3,9 @@ package gh_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/forge/gh"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/forge/gh"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 

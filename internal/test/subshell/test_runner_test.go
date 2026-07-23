@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/test/ostools"
-	"github.com/git-town/git-town/v23/internal/test/subshell"
+	"github.com/git-town/git-town/v24/internal/test/ostools"
+	"github.com/git-town/git-town/v24/internal/test/subshell"
 	"github.com/shoenig/test/must"
 )
 
