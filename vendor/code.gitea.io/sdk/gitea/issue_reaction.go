@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"time"
 )
 
@@ -18,13 +19,28 @@ type Reaction struct {
 	Created  time.Time `json:"created_at"`
 }
 
+// ListIssueReactionsOptions options for listing issue reactions
+type ListIssueReactionsOptions struct {
+	ListOptions
+}
+
 // GetIssueReactions get a list reactions of an issue
+//
+// Deprecated: Use ListIssueReactions instead, which supports pagination.
 func (c *Client) GetIssueReactions(owner, repo string, index int64) ([]*Reaction, *Response, error) {
+	return c.ListIssueReactions(owner, repo, index, ListIssueReactionsOptions{})
+}
+
+// ListIssueReactions get a list of reactions for an issue with pagination
+func (c *Client) ListIssueReactions(owner, repo string, index int64, opt ListIssueReactionsOptions) ([]*Reaction, *Response, error) {
 	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
 		return nil, nil, err
 	}
-	reactions := make([]*Reaction, 0, 10)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/issues/%d/reactions", owner, repo, index), nil, nil, &reactions)
+	link, _ := url.Parse(fmt.Sprintf("/repos/%s/%s/issues/%d/reactions", owner, repo, index))
+	opt.setDefaults()
+	link.RawQuery = opt.getURLQuery().Encode()
+	reactions := make([]*Reaction, 0, opt.PageSize)
+	resp, err := c.getParsedResponse("GET", link.String(), nil, nil, &reactions)
 	return reactions, resp, err
 }
 

@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -49,7 +48,7 @@ var _ GroupProtectedEnvironmentsServiceInterface = (*GroupProtectedEnvironmentsS
 type GroupProtectedEnvironment struct {
 	Name                  string                               `json:"name"`
 	DeployAccessLevels    []*GroupEnvironmentAccessDescription `json:"deploy_access_levels"`
-	RequiredApprovalCount int                                  `json:"required_approval_count"`
+	RequiredApprovalCount int64                                `json:"required_approval_count"`
 	ApprovalRules         []*GroupEnvironmentApprovalRule      `json:"approval_rules"`
 }
 
@@ -59,12 +58,12 @@ type GroupProtectedEnvironment struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/
 type GroupEnvironmentAccessDescription struct {
-	ID                     int              `json:"id"`
+	ID                     int64            `json:"id"`
 	AccessLevel            AccessLevelValue `json:"access_level"`
 	AccessLevelDescription string           `json:"access_level_description"`
-	UserID                 int              `json:"user_id"`
-	GroupID                int              `json:"group_id"`
-	GroupInheritanceType   int              `json:"group_inheritance_type"`
+	UserID                 int64            `json:"user_id"`
+	GroupID                int64            `json:"group_id"`
+	GroupInheritanceType   int64            `json:"group_inheritance_type"`
 }
 
 // GroupEnvironmentApprovalRule represents the approval rules for a group-level
@@ -73,13 +72,13 @@ type GroupEnvironmentAccessDescription struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
 type GroupEnvironmentApprovalRule struct {
-	ID                     int              `json:"id"`
-	UserID                 int              `json:"user_id"`
-	GroupID                int              `json:"group_id"`
+	ID                     int64            `json:"id"`
+	UserID                 int64            `json:"user_id"`
+	GroupID                int64            `json:"group_id"`
 	AccessLevel            AccessLevelValue `json:"access_level"`
 	AccessLevelDescription string           `json:"access_level_description"`
-	RequiredApprovalCount  int              `json:"required_approvals"`
-	GroupInheritanceType   int              `json:"group_inheritance_type"`
+	RequiredApprovalCount  int64            `json:"required_approvals"`
+	GroupInheritanceType   int64            `json:"group_inheritance_type"`
 }
 
 // ListGroupProtectedEnvironmentsOptions represents the available
@@ -87,7 +86,9 @@ type GroupEnvironmentApprovalRule struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#list-group-level-protected-environments
-type ListGroupProtectedEnvironmentsOptions ListOptions
+type ListGroupProtectedEnvironmentsOptions struct {
+	ListOptions
+}
 
 // ListGroupProtectedEnvironments returns a list of protected environments from
 // a group.
@@ -95,24 +96,11 @@ type ListGroupProtectedEnvironmentsOptions ListOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#list-group-level-protected-environments
 func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid any, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/protected_environments", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pes []*GroupProtectedEnvironment
-	resp, err := s.client.Do(req, &pes)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pes, resp, nil
+	return do[[]*GroupProtectedEnvironment](s.client,
+		withPath("groups/%s/protected_environments", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGroupProtectedEnvironment returns a single group-level protected
@@ -121,24 +109,10 @@ func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid a
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#get-a-single-protected-environment
 func (s *GroupProtectedEnvironmentsService) GetGroupProtectedEnvironment(gid any, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/protected_environments/%s", PathEscape(group), environment)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pe := new(GroupProtectedEnvironment)
-	resp, err := s.client.Do(req, pe)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pe, resp, nil
+	return do[*GroupProtectedEnvironment](s.client,
+		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
+		withRequestOpts(options...),
+	)
 }
 
 // ProtectGroupEnvironmentOptions represents the available
@@ -149,7 +123,7 @@ func (s *GroupProtectedEnvironmentsService) GetGroupProtectedEnvironment(gid any
 type ProtectGroupEnvironmentOptions struct {
 	Name                  *string                                 `url:"name,omitempty" json:"name,omitempty"`
 	DeployAccessLevels    *[]*GroupEnvironmentAccessOptions       `url:"deploy_access_levels,omitempty" json:"deploy_access_levels,omitempty"`
-	RequiredApprovalCount *int                                    `url:"required_approval_count,omitempty" json:"required_approval_count,omitempty"`
+	RequiredApprovalCount *int64                                  `url:"required_approval_count,omitempty" json:"required_approval_count,omitempty"`
 	ApprovalRules         *[]*GroupEnvironmentApprovalRuleOptions `url:"approval_rules,omitempty" json:"approval_rules,omitempty"`
 }
 
@@ -160,9 +134,9 @@ type ProtectGroupEnvironmentOptions struct {
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
 type GroupEnvironmentAccessOptions struct {
 	AccessLevel          *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
-	UserID               *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID              *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
-	GroupInheritanceType *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
+	UserID               *int64            `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID              *int64            `url:"group_id,omitempty" json:"group_id,omitempty"`
+	GroupInheritanceType *int64            `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
 }
 
 // GroupEnvironmentApprovalRuleOptions represents the approval rules for a
@@ -171,12 +145,12 @@ type GroupEnvironmentAccessOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
 type GroupEnvironmentApprovalRuleOptions struct {
-	UserID                 *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID                *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
+	UserID                 *int64            `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID                *int64            `url:"group_id,omitempty" json:"group_id,omitempty"`
 	AccessLevel            *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
 	AccessLevelDescription *string           `url:"access_level_description,omitempty" json:"access_level_description,omitempty"`
-	RequiredApprovalCount  *int              `url:"required_approvals,omitempty" json:"required_approvals,omitempty"`
-	GroupInheritanceType   *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
+	RequiredApprovalCount  *int64            `url:"required_approvals,omitempty" json:"required_approvals,omitempty"`
+	GroupInheritanceType   *int64            `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
 }
 
 // ProtectGroupEnvironment protects a single group-level environment.
@@ -184,24 +158,12 @@ type GroupEnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
 func (s *GroupProtectedEnvironmentsService) ProtectGroupEnvironment(gid any, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/protected_environments", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pe := new(GroupProtectedEnvironment)
-	resp, err := s.client.Do(req, pe)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pe, resp, nil
+	return do[*GroupProtectedEnvironment](s.client,
+		withMethod(http.MethodPost),
+		withPath("groups/%s/protected_environments", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateGroupProtectedEnvironmentOptions represents the available
@@ -212,7 +174,7 @@ func (s *GroupProtectedEnvironmentsService) ProtectGroupEnvironment(gid any, opt
 type UpdateGroupProtectedEnvironmentOptions struct {
 	Name                  *string                                       `url:"name,omitempty" json:"name,omitempty"`
 	DeployAccessLevels    *[]*UpdateGroupEnvironmentAccessOptions       `url:"deploy_access_levels,omitempty" json:"deploy_access_levels,omitempty"`
-	RequiredApprovalCount *int                                          `url:"required_approval_count,omitempty" json:"required_approval_count,omitempty"`
+	RequiredApprovalCount *int64                                        `url:"required_approval_count,omitempty" json:"required_approval_count,omitempty"`
 	ApprovalRules         *[]*UpdateGroupEnvironmentApprovalRuleOptions `url:"approval_rules,omitempty" json:"approval_rules,omitempty"`
 }
 
@@ -223,10 +185,10 @@ type UpdateGroupProtectedEnvironmentOptions struct {
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment
 type UpdateGroupEnvironmentAccessOptions struct {
 	AccessLevel          *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
-	ID                   *int              `url:"id,omitempty" json:"id,omitempty"`
-	UserID               *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID              *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
-	GroupInheritanceType *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
+	ID                   *int64            `url:"id,omitempty" json:"id,omitempty"`
+	UserID               *int64            `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID              *int64            `url:"group_id,omitempty" json:"group_id,omitempty"`
+	GroupInheritanceType *int64            `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
 	Destroy              *bool             `url:"_destroy,omitempty" json:"_destroy,omitempty"`
 }
 
@@ -236,13 +198,13 @@ type UpdateGroupEnvironmentAccessOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment
 type UpdateGroupEnvironmentApprovalRuleOptions struct {
-	ID                     *int              `url:"id,omitempty" json:"id,omitempty"`
-	UserID                 *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
-	GroupID                *int              `url:"group_id,omitempty" json:"group_id,omitempty"`
+	ID                     *int64            `url:"id,omitempty" json:"id,omitempty"`
+	UserID                 *int64            `url:"user_id,omitempty" json:"user_id,omitempty"`
+	GroupID                *int64            `url:"group_id,omitempty" json:"group_id,omitempty"`
 	AccessLevel            *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
 	AccessLevelDescription *string           `url:"access_level_description,omitempty" json:"access_level_description,omitempty"`
-	RequiredApprovalCount  *int              `url:"required_approvals,omitempty" json:"required_approvals,omitempty"`
-	GroupInheritanceType   *int              `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
+	RequiredApprovalCount  *int64            `url:"required_approvals,omitempty" json:"required_approvals,omitempty"`
+	GroupInheritanceType   *int64            `url:"group_inheritance_type,omitempty" json:"group_inheritance_type,omitempty"`
 	Destroy                *bool             `url:"_destroy,omitempty" json:"_destroy,omitempty"`
 }
 
@@ -252,24 +214,12 @@ type UpdateGroupEnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment
 func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid any, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/protected_environments/%s", PathEscape(group), environment)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pe := new(GroupProtectedEnvironment)
-	resp, err := s.client.Do(req, pe)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pe, resp, nil
+	return do[*GroupProtectedEnvironment](s.client,
+		withMethod(http.MethodPut),
+		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UnprotectGroupEnvironment unprotects the given protected group-level
@@ -278,16 +228,10 @@ func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid 
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#unprotect-a-single-environment
 func (s *GroupProtectedEnvironmentsService) UnprotectGroupEnvironment(gid any, environment string, options ...RequestOptionFunc) (*Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("groups/%s/protected_environments/%s", PathEscape(group), environment)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

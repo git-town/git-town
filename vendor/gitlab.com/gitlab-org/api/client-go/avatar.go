@@ -53,20 +53,14 @@ type Avatar struct {
 // https://docs.gitlab.com/api/avatar/#get-details-on-an-account-avatar
 type GetAvatarOptions struct {
 	Email *string `url:"email,omitempty" json:"email,omitempty"`
-	Size  *int    `url:"size,omitempty" json:"size,omitempty"`
+	Size  *int64  `url:"size,omitempty" json:"size,omitempty"`
 }
 
 func (s *AvatarRequestsService) GetAvatar(opt *GetAvatarOptions, options ...RequestOptionFunc) (*Avatar, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "avatar", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	avatar := new(Avatar)
-	response, err := s.client.Do(req, avatar)
-	if err != nil {
-		return nil, response, err
-	}
-
-	return avatar, response, nil
+	return do[*Avatar](s.client,
+		withMethod(http.MethodGet),
+		withPath("avatar"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

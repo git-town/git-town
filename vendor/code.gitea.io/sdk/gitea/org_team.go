@@ -13,14 +13,15 @@ import (
 
 // Team represents a team in an organization
 type Team struct {
-	ID                      int64          `json:"id"`
-	Name                    string         `json:"name"`
-	Description             string         `json:"description"`
-	Organization            *Organization  `json:"organization"`
-	Permission              AccessMode     `json:"permission"`
-	CanCreateOrgRepo        bool           `json:"can_create_org_repo"`
-	IncludesAllRepositories bool           `json:"includes_all_repositories"`
-	Units                   []RepoUnitType `json:"units"`
+	ID                      int64             `json:"id"`
+	Name                    string            `json:"name"`
+	Description             string            `json:"description"`
+	Organization            *Organization     `json:"organization"`
+	Permission              AccessMode        `json:"permission"`
+	CanCreateOrgRepo        bool              `json:"can_create_org_repo"`
+	IncludesAllRepositories bool              `json:"includes_all_repositories"`
+	Units                   []RepoUnitType    `json:"units"`
+	UnitsMap                map[string]string `json:"units_map"`
 }
 
 // RepoUnitType represent all unit types of a repo gitea currently offer
@@ -120,12 +121,13 @@ func (c *Client) SearchOrgTeams(org string, opt *SearchTeamsOptions) ([]*Team, *
 
 // CreateTeamOption options for creating a team
 type CreateTeamOption struct {
-	Name                    string         `json:"name"`
-	Description             string         `json:"description"`
-	Permission              AccessMode     `json:"permission"`
-	CanCreateOrgRepo        bool           `json:"can_create_org_repo"`
-	IncludesAllRepositories bool           `json:"includes_all_repositories"`
-	Units                   []RepoUnitType `json:"units"`
+	Name                    string            `json:"name"`
+	Description             string            `json:"description"`
+	Permission              AccessMode        `json:"permission"`
+	CanCreateOrgRepo        bool              `json:"can_create_org_repo"`
+	IncludesAllRepositories bool              `json:"includes_all_repositories"`
+	Units                   []RepoUnitType    `json:"units"`
+	UnitsMap                map[string]string `json:"units_map"`
 }
 
 // Validate the CreateTeamOption struct
@@ -166,12 +168,13 @@ func (c *Client) CreateTeam(org string, opt CreateTeamOption) (*Team, *Response,
 
 // EditTeamOption options for editing a team
 type EditTeamOption struct {
-	Name                    string         `json:"name"`
-	Description             *string        `json:"description"`
-	Permission              AccessMode     `json:"permission"`
-	CanCreateOrgRepo        *bool          `json:"can_create_org_repo"`
-	IncludesAllRepositories *bool          `json:"includes_all_repositories"`
-	Units                   []RepoUnitType `json:"units"`
+	Name                    string            `json:"name"`
+	Description             *string           `json:"description"`
+	Permission              AccessMode        `json:"permission"`
+	CanCreateOrgRepo        *bool             `json:"can_create_org_repo"`
+	IncludesAllRepositories *bool             `json:"includes_all_repositories"`
+	Units                   []RepoUnitType    `json:"units"`
+	UnitsMap                map[string]string `json:"units_map"`
 }
 
 // Validate the EditTeamOption struct
@@ -260,6 +263,16 @@ func (c *Client) ListTeamRepositories(id int64, opt ListTeamRepositoriesOptions)
 	repos := make([]*Repository, 0, opt.PageSize)
 	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/teams/%d/repos?%s", id, opt.getURLQuery().Encode()), nil, nil, &repos)
 	return repos, resp, err
+}
+
+// GetTeamRepository gets a repository that belongs to a team.
+func (c *Client) GetTeamRepository(id int64, org, repo string) (*Repository, *Response, error) {
+	if err := escapeValidatePathSegments(&org, &repo); err != nil {
+		return nil, nil, err
+	}
+	result := new(Repository)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/teams/%d/repos/%s/%s", id, org, repo), nil, nil, result)
+	return result, resp, err
 }
 
 // AddTeamRepository adds a repository to a team

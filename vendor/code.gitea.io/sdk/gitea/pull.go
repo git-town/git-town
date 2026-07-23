@@ -25,20 +25,23 @@ type PRBranchInfo struct {
 
 // PullRequest represents a pull request
 type PullRequest struct {
-	ID        int64      `json:"id"`
-	URL       string     `json:"url"`
-	Index     int64      `json:"number"`
-	Poster    *User      `json:"user"`
-	Title     string     `json:"title"`
-	Body      string     `json:"body"`
-	Labels    []*Label   `json:"labels"`
-	Milestone *Milestone `json:"milestone"`
-	Assignee  *User      `json:"assignee"`
-	Assignees []*User    `json:"assignees"`
-	State     StateType  `json:"state"`
-	Draft     bool       `json:"draft"`
-	IsLocked  bool       `json:"is_locked"`
-	Comments  int        `json:"comments"`
+	ID                      int64      `json:"id"`
+	URL                     string     `json:"url"`
+	Index                   int64      `json:"number"`
+	Poster                  *User      `json:"user"`
+	Title                   string     `json:"title"`
+	Body                    string     `json:"body"`
+	Labels                  []*Label   `json:"labels"`
+	Milestone               *Milestone `json:"milestone"`
+	Assignee                *User      `json:"assignee"`
+	Assignees               []*User    `json:"assignees"`
+	RequestedReviewers      []*User    `json:"requested_reviewers"`
+	RequestedReviewersTeams []*Team    `json:"requested_reviewers_teams"`
+	State                   StateType  `json:"state"`
+	Draft                   bool       `json:"draft"`
+	IsLocked                bool       `json:"is_locked"`
+	Comments                int        `json:"comments"`
+	ReviewComments          int        `json:"review_comments,omitempty"`
 
 	HTMLURL  string `json:"html_url"`
 	DiffURL  string `json:"diff_url"`
@@ -59,6 +62,11 @@ type PullRequest struct {
 	Created  *time.Time `json:"created_at"`
 	Updated  *time.Time `json:"updated_at"`
 	Closed   *time.Time `json:"closed_at"`
+
+	Additions    *int `json:"additions,omitempty"`
+	Deletions    *int `json:"deletions,omitempty"`
+	ChangedFiles *int `json:"changed_files,omitempty"`
+	PinOrder     int  `json:"pin_order"`
 }
 
 // ChangedFile is a changed file in a diff
@@ -95,6 +103,10 @@ const (
 	MergeStyleRebaseMerge MergeStyle = "rebase-merge"
 	// MergeStyleSquash squash and merge pull
 	MergeStyleSquash MergeStyle = "squash"
+	// MergeStyleFastForwardOnly fast-forward merge
+	MergeStyleFastForwardOnly MergeStyle = "fast-forward-only"
+	// MergeStyleManuallyMerged manually merged
+	MergeStyleManuallyMerged MergeStyle = "manually-merged"
 )
 
 // QueryEncode turns options into querystring argument
@@ -140,6 +152,25 @@ func (c *Client) GetPullRequest(owner, repo string, index int64) (*PullRequest, 
 	}
 	pr := new(PullRequest)
 	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/pulls/%d", owner, repo, index), nil, nil, pr)
+	if c.checkServerVersionGreaterThanOrEqual(version1_14_0) != nil {
+		if err := fixPullHeadSha(c, pr); err != nil {
+			return pr, resp, err
+		}
+	}
+	return pr, resp, err
+}
+
+// GetPullRequestByBaseHead gets a pull request by its base and head branches.
+func (c *Client) GetPullRequestByBaseHead(owner, repo, base, head string) (*PullRequest, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo, &base); err != nil {
+		return nil, nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_22_0); err != nil {
+		return nil, nil, err
+	}
+	head = pathEscapeSegments(head)
+	pr := new(PullRequest)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/pulls/%s/%s", owner, repo, base, head), nil, nil, pr)
 	if c.checkServerVersionGreaterThanOrEqual(version1_14_0) != nil {
 		if err := fixPullHeadSha(c, pr); err != nil {
 			return pr, resp, err
@@ -232,7 +263,7 @@ type MergePullRequestOption struct {
 	MergeCommitID          string     `json:"MergeCommitID"`
 	Title                  string     `json:"MergeTitleField"`
 	Message                string     `json:"MergeMessageField"`
-	DeleteBranchAfterMerge bool       `json:"delete_branch_after_merge"`
+	DeleteBranchAfterMerge *bool      `json:"delete_branch_after_merge,omitempty"`
 	ForceMerge             bool       `json:"force_merge"`
 	HeadCommitId           string     `json:"head_commit_id"`
 	MergeWhenChecksSucceed bool       `json:"merge_when_checks_succeed"`
@@ -264,7 +295,7 @@ func (c *Client) MergePullRequest(owner, repo string, index int64, opt MergePull
 	if err != nil {
 		return false, resp, err
 	}
-	return status == 200, resp, nil
+	return status == 200 || status == 201, resp, nil
 }
 
 // IsPullRequestMerged test if one PR is merged to one repository
@@ -327,6 +358,17 @@ func (c *Client) GetPullRequestPatch(owner, repo string, index int64) ([]byte, *
 // GetPullRequestDiff gets the diff of a PR. For Gitea >= 1.16, you must set includeBinary to get an applicable diff
 func (c *Client) GetPullRequestDiff(owner, repo string, index int64, opts PullRequestDiffOptions) ([]byte, *Response, error) {
 	return c.getPullRequestDiffOrPatch(owner, repo, pullRequestDiffTypeDiff, index, opts)
+}
+
+// CancelScheduledAutoMerge cancels a scheduled automatic merge for a pull request.
+func (c *Client) CancelScheduledAutoMerge(owner, repo string, index int64) (*Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
+		return nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_18_0); err != nil {
+		return nil, err
+	}
+	return c.doRequestWithStatusHandle("DELETE", fmt.Sprintf("/repos/%s/%s/pulls/%d/merge", owner, repo, index), nil, nil)
 }
 
 // ListPullRequestCommitsOptions options for listing pull requests

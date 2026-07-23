@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -26,7 +25,7 @@ type (
 	LicenseServiceInterface interface {
 		GetLicense(options ...RequestOptionFunc) (*License, *Response, error)
 		AddLicense(opt *AddLicenseOptions, options ...RequestOptionFunc) (*License, *Response, error)
-		DeleteLicense(licenseID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteLicense(licenseID int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// LicenseService handles communication with the license
@@ -46,35 +45,55 @@ var _ LicenseServiceInterface = (*LicenseService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/
 type License struct {
-	ID               int        `json:"id"`
-	Plan             string     `json:"plan"`
-	CreatedAt        *time.Time `json:"created_at"`
-	StartsAt         *ISOTime   `json:"starts_at"`
-	ExpiresAt        *ISOTime   `json:"expires_at"`
-	HistoricalMax    int        `json:"historical_max"`
-	MaximumUserCount int        `json:"maximum_user_count"`
-	Expired          bool       `json:"expired"`
-	Overage          int        `json:"overage"`
-	UserLimit        int        `json:"user_limit"`
-	ActiveUsers      int        `json:"active_users"`
-	Licensee         struct {
-		Name    string `json:"Name"`
-		Company string `json:"Company"`
-		Email   string `json:"Email"`
-	} `json:"licensee"`
+	ID               int64           `json:"id"`
+	Plan             string          `json:"plan"`
+	CreatedAt        *time.Time      `json:"created_at"`
+	StartsAt         *ISOTime        `json:"starts_at"`
+	ExpiresAt        *ISOTime        `json:"expires_at"`
+	HistoricalMax    int64           `json:"historical_max"`
+	MaximumUserCount int64           `json:"maximum_user_count"`
+	Expired          bool            `json:"expired"`
+	Overage          int64           `json:"overage"`
+	UserLimit        int64           `json:"user_limit"`
+	ActiveUsers      int64           `json:"active_users"`
+	Licensee         LicenseLicensee `json:"licensee"`
 	// Add on codes that may occur in legacy licenses that don't have a plan yet.
 	// https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/app/models/license.rb
-	AddOns struct {
-		GitLabAuditorUser int `json:"GitLab_Auditor_User"`
-		GitLabDeployBoard int `json:"GitLab_DeployBoard"`
-		GitLabFileLocks   int `json:"GitLab_FileLocks"`
-		GitLabGeo         int `json:"GitLab_Geo"`
-		GitLabServiceDesk int `json:"GitLab_ServiceDesk"`
-	} `json:"add_ons"`
+	AddOns LicenseAddOns `json:"add_ons"`
 }
 
 func (l License) String() string {
 	return Stringify(l)
+}
+
+// LicenseLicensee represents a GitLab license licensee.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/license/
+type LicenseLicensee struct {
+	Name    string `json:"Name"`
+	Company string `json:"Company"`
+	Email   string `json:"Email"`
+}
+
+func (l LicenseLicensee) String() string {
+	return Stringify(l)
+}
+
+// LicenseAddOns represents a GitLab license add ons.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/license/
+type LicenseAddOns struct {
+	GitLabAuditorUser int64 `json:"GitLab_Auditor_User"`
+	GitLabDeployBoard int64 `json:"GitLab_DeployBoard"`
+	GitLabFileLocks   int64 `json:"GitLab_FileLocks"`
+	GitLabGeo         int64 `json:"GitLab_Geo"`
+	GitLabServiceDesk int64 `json:"GitLab_ServiceDesk"`
+}
+
+func (a LicenseAddOns) String() string {
+	return Stringify(a)
 }
 
 // GetLicense retrieves information about the current license.
@@ -82,18 +101,10 @@ func (l License) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#retrieve-information-about-the-current-license
 func (s *LicenseService) GetLicense(options ...RequestOptionFunc) (*License, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "license", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(License)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+	return do[*License](s.client,
+		withPath("license"),
+		withRequestOpts(options...),
+	)
 }
 
 // AddLicenseOptions represents the available AddLicense() options.
@@ -108,31 +119,23 @@ type AddLicenseOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#add-a-new-license
 func (s *LicenseService) AddLicense(opt *AddLicenseOptions, options ...RequestOptionFunc) (*License, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodPost, "license", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(License)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+	return do[*License](s.client,
+		withMethod(http.MethodPost),
+		withPath("license"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteLicense deletes an existing license.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#delete-a-license
-func (s *LicenseService) DeleteLicense(licenseID int, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("license/%d", licenseID)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *LicenseService) DeleteLicense(licenseID int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("license/%d", licenseID),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

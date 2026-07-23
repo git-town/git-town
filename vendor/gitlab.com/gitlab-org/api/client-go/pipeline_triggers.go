@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -25,10 +24,10 @@ import (
 type (
 	PipelineTriggersServiceInterface interface {
 		ListPipelineTriggers(pid any, opt *ListPipelineTriggersOptions, options ...RequestOptionFunc) ([]*PipelineTrigger, *Response, error)
-		GetPipelineTrigger(pid any, trigger int, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error)
+		GetPipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error)
 		AddPipelineTrigger(pid any, opt *AddPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error)
-		EditPipelineTrigger(pid any, trigger int, opt *EditPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error)
-		DeletePipelineTrigger(pid any, trigger int, options ...RequestOptionFunc) (*Response, error)
+		EditPipelineTrigger(pid any, trigger int64, opt *EditPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error)
+		DeletePipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*Response, error)
 		RunPipelineTrigger(pid any, opt *RunPipelineTriggerOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error)
 	}
 
@@ -48,7 +47,7 @@ var _ PipelineTriggersServiceInterface = (*PipelineTriggersService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/
 type PipelineTrigger struct {
-	ID          int        `json:"id"`
+	ID          int64      `json:"id"`
 	Description string     `json:"description"`
 	CreatedAt   *time.Time `json:"created_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`
@@ -62,56 +61,31 @@ type PipelineTrigger struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#list-project-trigger-tokens
-type ListPipelineTriggersOptions ListOptions
+type ListPipelineTriggersOptions struct {
+	ListOptions
+}
 
 // ListPipelineTriggers gets a list of project triggers.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#list-project-trigger-tokens
 func (s *PipelineTriggersService) ListPipelineTriggers(pid any, opt *ListPipelineTriggersOptions, options ...RequestOptionFunc) ([]*PipelineTrigger, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/triggers", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pt []*PipelineTrigger
-	resp, err := s.client.Do(req, &pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+	return do[[]*PipelineTrigger](s.client,
+		withPath("projects/%s/triggers", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetPipelineTrigger gets a specific pipeline trigger for a project.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#get-trigger-token-details
-func (s *PipelineTriggersService) GetPipelineTrigger(pid any, trigger int, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/triggers/%d", PathEscape(project), trigger)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pt := new(PipelineTrigger)
-	resp, err := s.client.Do(req, pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+func (s *PipelineTriggersService) GetPipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
+	return do[*PipelineTrigger](s.client,
+		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
+		withRequestOpts(options...),
+	)
 }
 
 // AddPipelineTriggerOptions represents the available AddPipelineTrigger() options.
@@ -127,24 +101,12 @@ type AddPipelineTriggerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#create-a-trigger-token
 func (s *PipelineTriggersService) AddPipelineTrigger(pid any, opt *AddPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/triggers", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pt := new(PipelineTrigger)
-	resp, err := s.client.Do(req, pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+	return do[*PipelineTrigger](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/triggers", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // EditPipelineTriggerOptions represents the available EditPipelineTrigger() options.
@@ -159,44 +121,26 @@ type EditPipelineTriggerOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#update-a-pipeline-trigger-token
-func (s *PipelineTriggersService) EditPipelineTrigger(pid any, trigger int, opt *EditPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/triggers/%d", PathEscape(project), trigger)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pt := new(PipelineTrigger)
-	resp, err := s.client.Do(req, pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+func (s *PipelineTriggersService) EditPipelineTrigger(pid any, trigger int64, opt *EditPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
+	return do[*PipelineTrigger](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeletePipelineTrigger removes a trigger from a project.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#remove-a-pipeline-trigger-token
-func (s *PipelineTriggersService) DeletePipelineTrigger(pid any, trigger int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/triggers/%d", PathEscape(project), trigger)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *PipelineTriggersService) DeletePipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
 // RunPipelineTriggerOptions represents the available RunPipelineTrigger() options.
@@ -218,22 +162,10 @@ type RunPipelineTriggerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#trigger-a-pipeline-with-a-token
 func (s *PipelineTriggersService) RunPipelineTrigger(pid any, opt *RunPipelineTriggerOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/trigger/pipeline", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pt := new(Pipeline)
-	resp, err := s.client.Do(req, pt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pt, resp, nil
+	return do[*Pipeline](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/trigger/pipeline", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

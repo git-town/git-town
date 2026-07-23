@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -27,73 +26,73 @@ type (
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
-		ListCustomUserAttributes(user int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
+		ListCustomUserAttributes(user int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
 
 		// ListCustomGroupAttributes lists the custom attributes of the specified group.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
-		ListCustomGroupAttributes(group int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
+		ListCustomGroupAttributes(group int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
 
 		// ListCustomProjectAttributes lists the custom attributes of the specified project.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
-		ListCustomProjectAttributes(project int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
+		ListCustomProjectAttributes(project int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error)
 
 		// GetCustomUserAttribute returns the user attribute with a specific key.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
-		GetCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		GetCustomUserAttribute(user int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// GetCustomGroupAttribute returns the group attribute with a specific key.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
-		GetCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		GetCustomGroupAttribute(group int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// GetCustomProjectAttribute returns the project attribute with a specific key.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
-		GetCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		GetCustomProjectAttribute(project int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// SetCustomUserAttribute sets the custom attributes of the specified user.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
-		SetCustomUserAttribute(user int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		SetCustomUserAttribute(user int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// SetCustomGroupAttribute sets the custom attributes of the specified group.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
-		SetCustomGroupAttribute(group int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		SetCustomGroupAttribute(group int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// SetCustomProjectAttribute sets the custom attributes of the specified project.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
-		SetCustomProjectAttribute(project int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
+		SetCustomProjectAttribute(project int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error)
 
 		// DeleteCustomUserAttribute removes the custom attribute of the specified user.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
-		DeleteCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*Response, error)
+		DeleteCustomUserAttribute(user int64, key string, options ...RequestOptionFunc) (*Response, error)
 
 		// DeleteCustomGroupAttribute removes the custom attribute of the specified group.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
-		DeleteCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*Response, error)
+		DeleteCustomGroupAttribute(group int64, key string, options ...RequestOptionFunc) (*Response, error)
 
 		// DeleteCustomProjectAttribute removes the custom attribute of the specified project.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
-		DeleteCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*Response, error)
+		DeleteCustomProjectAttribute(project int64, key string, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// CustomAttributesService handles communication with the group, project and
@@ -115,104 +114,99 @@ type CustomAttribute struct {
 	Value string `json:"value"`
 }
 
-func (s *CustomAttributesService) ListCustomUserAttributes(user int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) ListCustomUserAttributes(user int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("users", user, options...)
 }
 
-func (s *CustomAttributesService) ListCustomGroupAttributes(group int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) ListCustomGroupAttributes(group int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("groups", group, options...)
 }
 
-func (s *CustomAttributesService) ListCustomProjectAttributes(project int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) ListCustomProjectAttributes(project int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("projects", project, options...)
 }
 
-func (s *CustomAttributesService) listCustomAttributes(resource string, id int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
-	u := fmt.Sprintf("%s/%d/custom_attributes", resource, id)
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var cas []*CustomAttribute
-	resp, err := s.client.Do(req, &cas)
+func (s *CustomAttributesService) listCustomAttributes(resource string, id int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
+	res, resp, err := do[[]*CustomAttribute](s.client,
+		withMethod(http.MethodGet),
+		withPath("%s/%d/custom_attributes", resource, id),
+		withAPIOpts(nil),
+		withRequestOpts(options...),
+	)
 	if err != nil {
 		return nil, resp, err
 	}
-	return cas, resp, nil
+	return res, resp, nil
 }
 
-func (s *CustomAttributesService) GetCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) GetCustomUserAttribute(user int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("users", user, key, options...)
 }
 
-func (s *CustomAttributesService) GetCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) GetCustomGroupAttribute(group int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("groups", group, key, options...)
 }
 
-func (s *CustomAttributesService) GetCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) GetCustomProjectAttribute(project int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("projects", project, key, options...)
 }
 
-func (s *CustomAttributesService) getCustomAttribute(resource string, id int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
-	u := fmt.Sprintf("%s/%d/custom_attributes/%s", resource, id, key)
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ca *CustomAttribute
-	resp, err := s.client.Do(req, &ca)
+func (s *CustomAttributesService) getCustomAttribute(resource string, id int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+	res, resp, err := do[*CustomAttribute](s.client,
+		withMethod(http.MethodGet),
+		withPath("%s/%d/custom_attributes/%s", resource, id, key),
+		withAPIOpts(nil),
+		withRequestOpts(options...),
+	)
 	if err != nil {
 		return nil, resp, err
 	}
-	return ca, resp, nil
+	return res, resp, nil
 }
 
-func (s *CustomAttributesService) SetCustomUserAttribute(user int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) SetCustomUserAttribute(user int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("users", user, c, options...)
 }
 
-func (s *CustomAttributesService) SetCustomGroupAttribute(group int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) SetCustomGroupAttribute(group int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("groups", group, c, options...)
 }
 
-func (s *CustomAttributesService) SetCustomProjectAttribute(project int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+func (s *CustomAttributesService) SetCustomProjectAttribute(project int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("projects", project, c, options...)
 }
 
-func (s *CustomAttributesService) setCustomAttribute(resource string, id int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
-	u := fmt.Sprintf("%s/%d/custom_attributes/%s", resource, id, c.Key)
-	req, err := s.client.NewRequest(http.MethodPut, u, c, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	ca := new(CustomAttribute)
-	resp, err := s.client.Do(req, ca)
+func (s *CustomAttributesService) setCustomAttribute(resource string, id int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
+	res, resp, err := do[*CustomAttribute](s.client,
+		withMethod(http.MethodPut),
+		withPath("%s/%d/custom_attributes/%s", resource, id, c.Key),
+		withAPIOpts(c),
+		withRequestOpts(options...),
+	)
 	if err != nil {
 		return nil, resp, err
 	}
-	return ca, resp, nil
+	return res, resp, nil
 }
 
-func (s *CustomAttributesService) DeleteCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*Response, error) {
+func (s *CustomAttributesService) DeleteCustomUserAttribute(user int64, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("users", user, key, options...)
 }
 
-func (s *CustomAttributesService) DeleteCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*Response, error) {
+func (s *CustomAttributesService) DeleteCustomGroupAttribute(group int64, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("groups", group, key, options...)
 }
 
-func (s *CustomAttributesService) DeleteCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*Response, error) {
+func (s *CustomAttributesService) DeleteCustomProjectAttribute(project int64, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("projects", project, key, options...)
 }
 
-func (s *CustomAttributesService) deleteCustomAttribute(resource string, id int, key string, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("%s/%d/custom_attributes/%s", resource, id, key)
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-	return s.client.Do(req, nil)
+func (s *CustomAttributesService) deleteCustomAttribute(resource string, id int64, key string, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("%s/%d/custom_attributes/%s", resource, id, key),
+		withAPIOpts(nil),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

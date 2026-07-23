@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -26,33 +25,13 @@ type (
 	// Will be removed in v5 of the API, use Work Items API instead
 	EpicIssuesServiceInterface interface {
 		// Will be removed in v5 of the API, use Work Items API instead
-		// ListEpicIssues get a list of epic issues.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/epic_issues/#list-issues-for-an-epic
-		ListEpicIssues(gid any, epic int, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
-
-		// AssignEpicIssue assigns an existing issue to an epic.
+		ListEpicIssues(gid any, epic int64, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
 		// Will be removed in v5 of the API, use Work Items API instead
-		//
-		// GitLab API Docs:
-		// https://docs.gitlab.com/api/epic_issues/#assign-an-issue-to-the-epic
-		AssignEpicIssue(gid any, epic, issue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
-
-		// RemoveEpicIssue removes an issue from an epic.
+		AssignEpicIssue(gid any, epic, issue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
 		// Will be removed in v5 of the API, use Work Items API instead
-		//
-		// GitLab API Docs:
-		// https://docs.gitlab.com/api/epic_issues/#remove-an-issue-from-the-epic
-		RemoveEpicIssue(gid any, epic, epicIssue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
-
-		// UpdateEpicIssueAssignmentOptions describes the UpdateEpicIssueAssignment()
-		// options.
+		RemoveEpicIssue(gid any, epic, epicIssue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
 		// Will be removed in v5 of the API, use Work Items API instead
-		//
-		// GitLab API Docs:
-		// https://docs.gitlab.com/api/epic_issues/#update-epic---issue-association
-		UpdateEpicIssueAssignment(gid any, epic, epicIssue int, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
+		UpdateEpicIssueAssignment(gid any, epic, epicIssue int64, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
 	}
 
 	// EpicIssuesService handles communication with the epic issue related methods
@@ -74,83 +53,55 @@ var _ EpicIssuesServiceInterface = (*EpicIssuesService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/epic_issues/
 type EpicIssueAssignment struct {
-	ID    int    `json:"id"`
+	ID    int64  `json:"id"`
 	Epic  *Epic  `json:"epic"`
 	Issue *Issue `json:"issue"`
 }
 
-func (s *EpicIssuesService) ListEpicIssues(gid any, epic int, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/issues", PathEscape(group), epic)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var is []*Issue
-	resp, err := s.client.Do(req, &is)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return is, resp, nil
+// ListEpicIssues get a list of epic issues.
+// Will be removed in v5 of the API, use Work Items API instead
+//
+// Gitlab API docs:
+// https://docs.gitlab.com/api/epic_issues/#list-issues-for-an-epic
+func (s *EpicIssuesService) ListEpicIssues(gid any, epic int64, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
+	return do[[]*Issue](s.client,
+		withPath("groups/%s/epics/%d/issues", GroupID{gid}, epic),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/issues/%d", PathEscape(group), epic, issue)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	a := new(EpicIssueAssignment)
-	resp, err := s.client.Do(req, a)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return a, resp, nil
+// AssignEpicIssue assigns an existing issue to an epic.
+// Will be removed in v5 of the API, use Work Items API instead
+//
+// Gitlab API Docs:
+// https://docs.gitlab.com/api/epic_issues/#assign-an-issue-to-the-epic
+func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
+	return do[*EpicIssueAssignment](s.client,
+		withMethod(http.MethodPost),
+		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, issue),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *EpicIssuesService) RemoveEpicIssue(gid any, epic, epicIssue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/issues/%d", PathEscape(group), epic, epicIssue)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	a := new(EpicIssueAssignment)
-	resp, err := s.client.Do(req, a)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return a, resp, nil
+// RemoveEpicIssue removes an issue from an epic.
+// Will be removed in v5 of the API, use Work Items API instead
+//
+// Gitlab API Docs:
+// https://docs.gitlab.com/api/epic_issues/#remove-an-issue-from-the-epic
+func (s *EpicIssuesService) RemoveEpicIssue(gid any, epic, epicIssue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
+	return do[*EpicIssueAssignment](s.client,
+		withMethod(http.MethodDelete),
+		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, epicIssue),
+		withRequestOpts(options...),
+	)
 }
 
 type UpdateEpicIssueAssignmentOptions struct {
 	*ListOptions
-	MoveBeforeID *int `url:"move_before_id,omitempty" json:"move_before_id,omitempty"`
-	MoveAfterID  *int `url:"move_after_id,omitempty" json:"move_after_id,omitempty"`
+	MoveBeforeID *int64 `url:"move_before_id,omitempty" json:"move_before_id,omitempty"`
+	MoveAfterID  *int64 `url:"move_after_id,omitempty" json:"move_after_id,omitempty"`
 }
-
-// UpdateEpicIsssueAssignmentOptions is kept for backwards compatibility.
-// Deprecated: use UpdateEpicIssueAssignmentOptions instead.
-type UpdateEpicIsssueAssignmentOptions = UpdateEpicIssueAssignmentOptions
 
 // UpdateEpicIssueAssignment moves an issue before or after another issue in an
 // epic issue list.
@@ -158,23 +109,11 @@ type UpdateEpicIsssueAssignmentOptions = UpdateEpicIssueAssignmentOptions
 //
 // Gitlab API Docs:
 // https://docs.gitlab.com/api/epic_issues/#update-epic---issue-association
-func (s *EpicIssuesService) UpdateEpicIssueAssignment(gid any, epic, epicIssue int, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/issues/%d", PathEscape(group), epic, epicIssue)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var is []*Issue
-	resp, err := s.client.Do(req, &is)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return is, resp, nil
+func (s *EpicIssuesService) UpdateEpicIssueAssignment(gid any, epic, epicIssue int64, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
+	return do[[]*Issue](s.client,
+		withMethod(http.MethodPut),
+		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, epicIssue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
