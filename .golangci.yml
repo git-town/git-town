@@ -18,6 +18,7 @@ linters:
     - gocyclo # we keep track of this via code reviews
     - godot # comments don't really need to read like prose, we don't use the godoc web UI
     - godox # we allow todo comments
+    - gomodguard # deprecated, replaced by gomodguard_v2
     - inamedparam # we are okay with concise interfaces
     - lll # we aren't enforcing a line length at this point
     - maintidx # we keep complexity under check with code reviews
