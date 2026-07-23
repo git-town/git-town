@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -28,13 +27,13 @@ type (
 		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		ListClusters(pid any, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error)
 		// Deprecated: in GitLab 14.5, to be removed in 19.0
-		GetCluster(pid any, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
+		GetCluster(pid any, cluster int64, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
 		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		AddCluster(pid any, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
 		// Deprecated: in GitLab 14.5, to be removed in 19.0
-		EditCluster(pid any, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
+		EditCluster(pid any, cluster int64, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
 		// Deprecated: in GitLab 14.5, to be removed in 19.0
-		DeleteCluster(pid any, cluster int, options ...RequestOptionFunc) (*Response, error)
+		DeleteCluster(pid any, cluster int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ProjectClustersService handles communication with the
@@ -56,7 +55,7 @@ var _ ProjectClustersServiceInterface = (*ProjectClustersService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_clusters/
 type ProjectCluster struct {
-	ID                 int                 `json:"id"`
+	ID                 int64               `json:"id"`
 	Name               string              `json:"name"`
 	Domain             string              `json:"domain"`
 	CreatedAt          *time.Time          `json:"created_at"`
@@ -88,7 +87,7 @@ type PlatformKubernetes struct {
 // ManagementProject represents a GitLab Project Cluster management_project.
 // Deprecated: in GitLab 14.5, to be removed in 19.0
 type ManagementProject struct {
-	ID                int        `json:"id"`
+	ID                int64      `json:"id"`
 	Description       string     `json:"description"`
 	Name              string     `json:"name"`
 	NameWithNamespace string     `json:"name_with_namespace"`
@@ -103,24 +102,10 @@ type ManagementProject struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_clusters/#list-project-clusters
 func (s *ProjectClustersService) ListClusters(pid any, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/clusters", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pcs []*ProjectCluster
-	resp, err := s.client.Do(req, &pcs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pcs, resp, nil
+	return do[[]*ProjectCluster](s.client,
+		withPath("projects/%s/clusters", ProjectID{pid}),
+		withRequestOpts(options...),
+	)
 }
 
 // GetCluster gets a cluster.
@@ -128,25 +113,11 @@ func (s *ProjectClustersService) ListClusters(pid any, options ...RequestOptionF
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_clusters/#get-a-single-project-cluster
-func (s *ProjectClustersService) GetCluster(pid any, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/clusters/%d", PathEscape(project), cluster)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pc := new(ProjectCluster)
-	resp, err := s.client.Do(req, &pc)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pc, resp, nil
+func (s *ProjectClustersService) GetCluster(pid any, cluster int64, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
+	return do[*ProjectCluster](s.client,
+		withPath("projects/%s/clusters/%d", ProjectID{pid}, cluster),
+		withRequestOpts(options...),
+	)
 }
 
 // AddClusterOptions represents the available AddCluster() options.
@@ -180,24 +151,12 @@ type AddPlatformKubernetesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_clusters/#add-existing-cluster-to-project
 func (s *ProjectClustersService) AddCluster(pid any, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/clusters/user", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pc := new(ProjectCluster)
-	resp, err := s.client.Do(req, pc)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pc, resp, nil
+	return do[*ProjectCluster](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/clusters/user", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // EditClusterOptions represents the available EditCluster() options.
@@ -227,25 +186,13 @@ type EditPlatformKubernetesOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_clusters/#edit-project-cluster
-func (s *ProjectClustersService) EditCluster(pid any, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/clusters/%d", PathEscape(project), cluster)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pc := new(ProjectCluster)
-	resp, err := s.client.Do(req, pc)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pc, resp, nil
+func (s *ProjectClustersService) EditCluster(pid any, cluster int64, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
+	return do[*ProjectCluster](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/clusters/%d", ProjectID{pid}, cluster),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteCluster deletes an existing project cluster.
@@ -253,17 +200,11 @@ func (s *ProjectClustersService) EditCluster(pid any, cluster int, opt *EditClus
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_clusters/#delete-project-cluster
-func (s *ProjectClustersService) DeleteCluster(pid any, cluster int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/clusters/%d", PathEscape(project), cluster)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *ProjectClustersService) DeleteCluster(pid any, cluster int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/clusters/%d", ProjectID{pid}, cluster),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

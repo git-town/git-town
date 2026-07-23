@@ -67,9 +67,19 @@ func (c *Client) ListRepoTrackedTimes(owner, repo string, opt ListTrackedTimesOp
 }
 
 // GetMyTrackedTimes list tracked times of the current user
+//
+// Deprecated: Use ListMyTrackedTimes instead, which supports pagination and filtering.
 func (c *Client) GetMyTrackedTimes() ([]*TrackedTime, *Response, error) {
-	times := make([]*TrackedTime, 0, 10)
-	resp, err := c.getParsedResponse("GET", "/user/times", jsonHeader, nil, &times)
+	return c.ListMyTrackedTimes(ListTrackedTimesOptions{})
+}
+
+// ListMyTrackedTimes list tracked times of the current user with pagination and filtering
+func (c *Client) ListMyTrackedTimes(opt ListTrackedTimesOptions) ([]*TrackedTime, *Response, error) {
+	link, _ := url.Parse("/user/times")
+	opt.setDefaults()
+	link.RawQuery = opt.QueryEncode()
+	times := make([]*TrackedTime, 0, opt.PageSize)
+	resp, err := c.getParsedResponse("GET", link.String(), jsonHeader, nil, &times)
 	return times, resp, err
 }
 

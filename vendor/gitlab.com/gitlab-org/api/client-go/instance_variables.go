@@ -17,17 +17,36 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 )
 
 type (
 	InstanceVariablesServiceInterface interface {
+		// ListVariables gets a list of all variables for an instance.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/instance_level_ci_variables/#list-all-instance-variables
 		ListVariables(opt *ListInstanceVariablesOptions, options ...RequestOptionFunc) ([]*InstanceVariable, *Response, error)
+		// GetVariable gets a variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/instance_level_ci_variables/#show-instance-variable-details
 		GetVariable(key string, options ...RequestOptionFunc) (*InstanceVariable, *Response, error)
+		// CreateVariable creates a new instance level CI variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/instance_level_ci_variables/#create-instance-variable
 		CreateVariable(opt *CreateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error)
+		// UpdateVariable updates an existing instance level CI variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/instance_level_ci_variables/#update-instance-variable
 		UpdateVariable(key string, opt *UpdateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error)
+		// RemoveVariable removes an instance level CI variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/instance_level_ci_variables/#remove-instance-variable
 		RemoveVariable(key string, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -66,48 +85,23 @@ func (v InstanceVariable) String() string {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_level_ci_variables/#list-all-instance-variables
-type ListInstanceVariablesOptions ListOptions
-
-// ListVariables gets a list of all variables for an instance.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/instance_level_ci_variables/#list-all-instance-variables
-func (s *InstanceVariablesService) ListVariables(opt *ListInstanceVariablesOptions, options ...RequestOptionFunc) ([]*InstanceVariable, *Response, error) {
-	u := "admin/ci/variables"
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var vs []*InstanceVariable
-	resp, err := s.client.Do(req, &vs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return vs, resp, nil
+type ListInstanceVariablesOptions struct {
+	ListOptions
 }
 
-// GetVariable gets a variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/instance_level_ci_variables/#show-instance-variable-details
+func (s *InstanceVariablesService) ListVariables(opt *ListInstanceVariablesOptions, options ...RequestOptionFunc) ([]*InstanceVariable, *Response, error) {
+	return do[[]*InstanceVariable](s.client,
+		withPath("admin/ci/variables"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
+}
+
 func (s *InstanceVariablesService) GetVariable(key string, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	u := fmt.Sprintf("admin/ci/variables/%s", url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(InstanceVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*InstanceVariable](s.client,
+		withPath("admin/ci/variables/%s", url.PathEscape(key)),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateInstanceVariableOptions represents the available CreateVariable()
@@ -125,25 +119,13 @@ type CreateInstanceVariableOptions struct {
 	VariableType *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
-// CreateVariable creates a new instance level CI variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/instance_level_ci_variables/#create-instance-variable
 func (s *InstanceVariablesService) CreateVariable(opt *CreateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	u := "admin/ci/variables"
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(InstanceVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*InstanceVariable](s.client,
+		withMethod(http.MethodPost),
+		withPath("admin/ci/variables"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateInstanceVariableOptions represents the available UpdateVariable()
@@ -160,39 +142,20 @@ type UpdateInstanceVariableOptions struct {
 	VariableType *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
-// UpdateVariable updates the position of an existing
-// instance level CI variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/instance_level_ci_variables/#update-instance-variable
 func (s *InstanceVariablesService) UpdateVariable(key string, opt *UpdateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	u := fmt.Sprintf("admin/ci/variables/%s", url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(InstanceVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*InstanceVariable](s.client,
+		withMethod(http.MethodPut),
+		withPath("admin/ci/variables/%s", url.PathEscape(key)),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// RemoveVariable removes an instance level CI variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/instance_level_ci_variables/#remove-instance-variable
 func (s *InstanceVariablesService) RemoveVariable(key string, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("admin/ci/variables/%s", url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("admin/ci/variables/%s", url.PathEscape(key)),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

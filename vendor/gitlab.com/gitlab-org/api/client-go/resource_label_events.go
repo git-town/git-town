@@ -17,22 +17,20 @@
 package gitlab
 
 import (
-	"fmt"
-	"net/http"
 	"time"
 )
 
 type (
 	ResourceLabelEventsServiceInterface interface {
-		ListIssueLabelEvents(pid any, issue int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
-		GetIssueLabelEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
-		ListMergeRequestsLabelEvents(pid any, request int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
-		GetMergeRequestLabelEvent(pid any, request int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
+		ListIssueLabelEvents(pid any, issue int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
+		GetIssueLabelEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
+		ListMergeRequestsLabelEvents(pid any, request int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
+		GetMergeRequestLabelEvent(pid any, request int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
 
 		// Will be removed in v5, use Work Items API instead
-		ListGroupEpicLabelEvents(gid any, epic int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
+		ListGroupEpicLabelEvents(gid any, epic int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error)
 		// Will be removed in v5, use Work Items API instead
-		GetGroupEpicLabelEvent(gid any, epic int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
+		GetGroupEpicLabelEvent(gid any, epic int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error)
 	}
 
 	// ResourceLabelEventsService handles communication with the event related
@@ -51,26 +49,25 @@ var _ ResourceLabelEventsServiceInterface = (*ResourceLabelEventsService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#get-single-issue-label-event
 type LabelEvent struct {
-	ID           int        `json:"id"`
-	Action       string     `json:"action"`
-	CreatedAt    *time.Time `json:"created_at"`
-	ResourceType string     `json:"resource_type"`
-	ResourceID   int        `json:"resource_id"`
-	User         struct {
-		ID        int    `json:"id"`
-		Name      string `json:"name"`
-		Username  string `json:"username"`
-		State     string `json:"state"`
-		AvatarURL string `json:"avatar_url"`
-		WebURL    string `json:"web_url"`
-	} `json:"user"`
-	Label struct {
-		ID          int    `json:"id"`
-		Name        string `json:"name"`
-		Color       string `json:"color"`
-		TextColor   string `json:"text_color"`
-		Description string `json:"description"`
-	} `json:"label"`
+	ID           int64           `json:"id"`
+	Action       string          `json:"action"`
+	CreatedAt    *time.Time      `json:"created_at"`
+	ResourceType string          `json:"resource_type"`
+	ResourceID   int64           `json:"resource_id"`
+	User         BasicUser       `json:"user"`
+	Label        LabelEventLabel `json:"label"`
+}
+
+// LabelEventLabel represents a resource label event label.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/resource_label_events/#get-single-issue-label-event
+type LabelEventLabel struct {
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Color       string `json:"color"`
+	TextColor   string `json:"text_color"`
+	Description string `json:"description"`
 }
 
 // ListLabelEventsOptions represents the options for all resource label events
@@ -87,50 +84,23 @@ type ListLabelEventsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#list-project-issue-label-events
-func (s *ResourceLabelEventsService) ListIssueLabelEvents(pid any, issue int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_label_events", PathEscape(project), issue)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ls []*LabelEvent
-	resp, err := s.client.Do(req, &ls)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ls, resp, nil
+func (s *ResourceLabelEventsService) ListIssueLabelEvents(pid any, issue int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
+	return do[[]*LabelEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_label_events", ProjectID{pid}, issue),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetIssueLabelEvent gets a single issue-label-event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#get-single-issue-label-event
-func (s *ResourceLabelEventsService) GetIssueLabelEvent(pid any, issue int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/issues/%d/resource_label_events/%d", PathEscape(project), issue, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(LabelEvent)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+func (s *ResourceLabelEventsService) GetIssueLabelEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
+	return do[*LabelEvent](s.client,
+		withPath("projects/%s/issues/%d/resource_label_events/%d", ProjectID{pid}, issue, event),
+		withRequestOpts(options...),
+	)
 }
 
 // ListGroupEpicLabelEvents retrieves resource label events for the specified
@@ -139,25 +109,12 @@ func (s *ResourceLabelEventsService) GetIssueLabelEvent(pid any, issue int, even
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#list-group-epic-label-events
-func (s *ResourceLabelEventsService) ListGroupEpicLabelEvents(gid any, epic int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/resource_label_events", PathEscape(group), epic)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ls []*LabelEvent
-	resp, err := s.client.Do(req, &ls)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ls, resp, nil
+func (s *ResourceLabelEventsService) ListGroupEpicLabelEvents(gid any, epic int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
+	return do[[]*LabelEvent](s.client,
+		withPath("groups/%s/epics/%d/resource_label_events", GroupID{gid}, epic),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGroupEpicLabelEvent gets a single group epic label event.
@@ -165,25 +122,11 @@ func (s *ResourceLabelEventsService) ListGroupEpicLabelEvents(gid any, epic int,
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#get-single-epic-label-event
-func (s *ResourceLabelEventsService) GetGroupEpicLabelEvent(gid any, epic int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/epics/%d/resource_label_events/%d", PathEscape(group), epic, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(LabelEvent)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+func (s *ResourceLabelEventsService) GetGroupEpicLabelEvent(gid any, epic int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
+	return do[*LabelEvent](s.client,
+		withPath("groups/%s/epics/%d/resource_label_events/%d", GroupID{gid}, epic, event),
+		withRequestOpts(options...),
+	)
 }
 
 // ListMergeRequestsLabelEvents retrieves resource label events for the specified
@@ -191,48 +134,21 @@ func (s *ResourceLabelEventsService) GetGroupEpicLabelEvent(gid any, epic int, e
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#list-project-merge-request-label-events
-func (s *ResourceLabelEventsService) ListMergeRequestsLabelEvents(pid any, request int, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/resource_label_events", PathEscape(project), request)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var ls []*LabelEvent
-	resp, err := s.client.Do(req, &ls)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return ls, resp, nil
+func (s *ResourceLabelEventsService) ListMergeRequestsLabelEvents(pid any, request int64, opt *ListLabelEventsOptions, options ...RequestOptionFunc) ([]*LabelEvent, *Response, error) {
+	return do[[]*LabelEvent](s.client,
+		withPath("projects/%s/merge_requests/%d/resource_label_events", ProjectID{pid}, request),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetMergeRequestLabelEvent gets a single merge request label event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_label_events/#get-single-merge-request-label-event
-func (s *ResourceLabelEventsService) GetMergeRequestLabelEvent(pid any, request int, event int, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/merge_requests/%d/resource_label_events/%d", PathEscape(project), request, event)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(LabelEvent)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+func (s *ResourceLabelEventsService) GetMergeRequestLabelEvent(pid any, request int64, event int64, options ...RequestOptionFunc) (*LabelEvent, *Response, error) {
+	return do[*LabelEvent](s.client,
+		withPath("projects/%s/merge_requests/%d/resource_label_events/%d", ProjectID{pid}, request, event),
+		withRequestOpts(options...),
+	)
 }

@@ -1,17 +1,36 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	ProjectFeatureFlagServiceInterface interface {
+		// ListProjectFeatureFlags returns a list with the feature flags of a project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/feature_flags/#list-feature-flags-for-a-project
 		ListProjectFeatureFlags(pid any, opt *ListProjectFeatureFlagOptions, options ...RequestOptionFunc) ([]*ProjectFeatureFlag, *Response, error)
+		// GetProjectFeatureFlag gets a single feature flag for the specified project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/feature_flags/#get-a-single-feature-flag
 		GetProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error)
+		// CreateProjectFeatureFlag creates a feature flag.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 		CreateProjectFeatureFlag(pid any, opt *CreateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error)
+		// UpdateProjectFeatureFlag updates a feature flag.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/feature_flags/#update-a-feature-flag
 		UpdateProjectFeatureFlag(pid any, name string, opt *UpdateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error)
+		// DeleteProjectFeatureFlag deletes a feature flag.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/feature_flags/#delete-a-feature-flag
 		DeleteProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -44,7 +63,7 @@ type ProjectFeatureFlag struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/feature_flags/
 type ProjectFeatureFlagScope struct {
-	ID               int    `json:"id"`
+	ID               int64  `json:"id"`
 	EnvironmentScope string `json:"environment_scope"`
 }
 
@@ -52,7 +71,7 @@ type ProjectFeatureFlagScope struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/feature_flags/
 type ProjectFeatureFlagStrategy struct {
-	ID         int                                  `json:"id"`
+	ID         int64                                `json:"id"`
 	Name       string                               `json:"name"`
 	Parameters *ProjectFeatureFlagStrategyParameter `json:"parameters"`
 	Scopes     []*ProjectFeatureFlagScope           `json:"scopes"`
@@ -86,54 +105,19 @@ type ListProjectFeatureFlagOptions struct {
 	Scope *string `url:"scope,omitempty" json:"scope,omitempty"`
 }
 
-// ListProjectFeatureFlags returns a list with the feature flags of a project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/feature_flags/#list-feature-flags-for-a-project
 func (s *ProjectFeatureFlagService) ListProjectFeatureFlags(pid any, opt *ListProjectFeatureFlagOptions, options ...RequestOptionFunc) ([]*ProjectFeatureFlag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pffs []*ProjectFeatureFlag
-	resp, err := s.client.Do(req, &pffs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pffs, resp, nil
+	return do[[]*ProjectFeatureFlag](s.client,
+		withPath("projects/%s/feature_flags", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-// GetProjectFeatureFlag gets a single feature flag for the specified project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/feature_flags/#get-a-single-feature-flag
 func (s *ProjectFeatureFlagService) GetProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags/%s", PathEscape(project), name)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	flag := new(ProjectFeatureFlag)
-	resp, err := s.client.Do(req, flag)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return flag, resp, nil
+	return do[*ProjectFeatureFlag](s.client,
+		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateProjectFeatureFlagOptions represents the available
@@ -155,7 +139,7 @@ type CreateProjectFeatureFlagOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 type FeatureFlagStrategyOptions struct {
-	ID         *int                                 `url:"id,omitempty" json:"id,omitempty"`
+	ID         *int64                               `url:"id,omitempty" json:"id,omitempty"`
 	Name       *string                              `url:"name,omitempty" json:"name,omitempty"`
 	Parameters *ProjectFeatureFlagStrategyParameter `url:"parameters,omitempty" json:"parameters,omitempty"`
 	Scopes     *[]*ProjectFeatureFlagScope          `url:"scopes,omitempty" json:"scopes,omitempty"`
@@ -167,35 +151,17 @@ type FeatureFlagStrategyOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 type ProjectFeatureFlagScopeOptions struct {
-	ID               *int    `url:"id,omitempty" json:"id,omitempty"`
+	ID               *int64  `url:"id,omitempty" json:"id,omitempty"`
 	EnvironmentScope *string `url:"id,omitempty" json:"environment_scope,omitempty"`
 }
 
-// CreateProjectFeatureFlag creates a feature flag
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 func (s *ProjectFeatureFlagService) CreateProjectFeatureFlag(pid any, opt *CreateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags",
-		PathEscape(project),
+	return do[*ProjectFeatureFlag](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/feature_flags", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	flag := new(ProjectFeatureFlag)
-	resp, err := s.client.Do(req, flag)
-	if err != nil {
-		return flag, resp, err
-	}
-
-	return flag, resp, nil
 }
 
 // UpdateProjectFeatureFlagOptions represents the available
@@ -210,49 +176,20 @@ type UpdateProjectFeatureFlagOptions struct {
 	Strategies  *[]*FeatureFlagStrategyOptions `url:"strategies,omitempty" json:"strategies,omitempty"`
 }
 
-// UpdateProjectFeatureFlag updates a feature flag
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/feature_flags/#update-a-feature-flag
 func (s *ProjectFeatureFlagService) UpdateProjectFeatureFlag(pid any, name string, opt *UpdateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	group, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags/%s",
-		PathEscape(group),
-		name,
+	return do[*ProjectFeatureFlag](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	flag := new(ProjectFeatureFlag)
-	resp, err := s.client.Do(req, flag)
-	if err != nil {
-		return flag, resp, err
-	}
-
-	return flag, resp, nil
 }
 
-// DeleteProjectFeatureFlag deletes a feature flag
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/feature_flags/#delete-a-feature-flag
 func (s *ProjectFeatureFlagService) DeleteProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/feature_flags/%s", PathEscape(project), name)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

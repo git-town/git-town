@@ -20,6 +20,7 @@ type Label struct {
 	Color       string `json:"color"`
 	Description string `json:"description"`
 	Exclusive   bool   `json:"exclusive"`
+	IsArchived  bool   `json:"is_archived"`
 	URL         string `json:"url"`
 }
 
@@ -56,6 +57,7 @@ type CreateLabelOption struct {
 	Color       string `json:"color"`
 	Description string `json:"description"`
 	Exclusive   bool   `json:"exclusive"`
+	IsArchived  bool   `json:"is_archived"`
 }
 
 // Validate the CreateLabelOption struct
@@ -103,6 +105,7 @@ type EditLabelOption struct {
 	Color       *string `json:"color"`
 	Description *string `json:"description"`
 	Exclusive   *bool   `json:"exclusive"`
+	IsArchived  *bool   `json:"is_archived"`
 }
 
 // Validate the EditLabelOption struct

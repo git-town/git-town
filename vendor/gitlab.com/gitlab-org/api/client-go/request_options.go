@@ -18,6 +18,8 @@ package gitlab
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/url"
 	"strconv"
 
@@ -90,24 +92,92 @@ func WithKeysetPaginationParameters(nextLink string) RequestOptionFunc {
 
 // WithOffsetPaginationParameters takes a page number and modifies the request
 // to use that page for offset-based pagination, overriding any existing page value.
-func WithOffsetPaginationParameters(page int) RequestOptionFunc {
+func WithOffsetPaginationParameters(page int64) RequestOptionFunc {
 	return func(req *retryablehttp.Request) error {
 		q := req.URL.Query()
 		q.Del("page")
-		q.Add("page", strconv.Itoa(page))
+		q.Add("page", strconv.FormatInt(page, 10))
 		req.URL.RawQuery = q.Encode()
 		return nil
 	}
 }
 
-// WithSudo takes either a username or user ID and sets the SUDO request header.
+// withGraphQLPaginationParamters takes a PageInfo from a GraphQL response and
+// modifies the request to use that cursor for GraphQL pagination, overriding
+// any existing "after" variable.
+//
+// GraphQL API docs:
+// https://docs.gitlab.com/development/graphql_guide/pagination/
+func withGraphQLPaginationParamters(pi PageInfo) RequestOptionFunc {
+	if !pi.HasNextPage {
+		return nil
+	}
+
+	return func(req *retryablehttp.Request) error {
+		var q GraphQLQuery
+
+		data, err := req.BodyBytes()
+		if err != nil {
+			return fmt.Errorf("reading request body failed: %w", err)
+		}
+
+		if err := json.Unmarshal(data, &q); err != nil {
+			return fmt.Errorf("decoding request body failed: %w", err)
+		}
+
+		if q.Variables == nil {
+			q.Variables = make(map[string]any)
+		}
+
+		q.Variables["after"] = pi.EndCursor
+
+		data, err = json.Marshal(q)
+		if err != nil {
+			return fmt.Errorf("encoding request body failed: %w", err)
+		}
+
+		return req.SetBody(data)
+	}
+}
+
+// WithNext returns a RequestOptionFunc that configures the next page of a paginated
+// request based on pagination metadata from a previous response. It automatically
+// detects and handles all three pagination styles used by GitLab's APIs:
+//
+//   - GraphQL cursor pagination: Uses PageInfo.EndCursor with the "after" variable
+//   - REST keyset pagination: Extracts parameters from the "next" link header
+//   - REST offset pagination: Uses the NextPage number with "page" parameter
+//
+// If multiple pagination styles are present in the response, keyset/cursor pagination
+// is preferred over offset pagination for better performance and consistency.
+//
+// The boolean return value indicates whether more pages are available, similar to
+// the comma-ok idiom used for map accesses. When false, the returned
+// RequestOptionFunc is nil.
+func WithNext(resp *Response) (RequestOptionFunc, bool) {
+	switch {
+	case resp.PageInfo != nil:
+		return withGraphQLPaginationParamters(*resp.PageInfo), resp.PageInfo.HasNextPage
+
+	case resp.NextLink != "":
+		return WithKeysetPaginationParameters(resp.NextLink), true
+
+	case resp.NextPage != 0:
+		return WithOffsetPaginationParameters(resp.NextPage), true
+
+	default:
+		return nil, false
+	}
+}
+
+// WithSudo takes either a username or user ID and sets the Sudo request header.
 func WithSudo(uid any) RequestOptionFunc {
 	return func(req *retryablehttp.Request) error {
 		user, err := parseID(uid)
 		if err != nil {
 			return err
 		}
-		req.Header.Set("SUDO", user)
+		req.Header.Set("Sudo", user)
 		return nil
 	}
 }
@@ -117,11 +187,11 @@ func WithToken(authType AuthType, token string) RequestOptionFunc {
 	return func(req *retryablehttp.Request) error {
 		switch authType {
 		case JobToken:
-			req.Header.Set("JOB-TOKEN", token)
+			req.Header.Set("Job-Token", token)
 		case OAuthToken:
 			req.Header.Set("Authorization", "Bearer "+token)
 		case PrivateToken:
-			req.Header.Set("PRIVATE-TOKEN", token)
+			req.Header.Set("Private-Token", token)
 		}
 		return nil
 	}

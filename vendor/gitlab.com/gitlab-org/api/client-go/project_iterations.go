@@ -16,11 +16,7 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-	"time"
-)
+import "time"
 
 type (
 	ProjectIterationsServiceInterface interface {
@@ -42,13 +38,13 @@ var _ ProjectIterationsServiceInterface = (*ProjectIterationsService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/iterations/
 type ProjectIteration struct {
-	ID          int        `json:"id"`
-	IID         int        `json:"iid"`
-	Sequence    int        `json:"sequence"`
-	GroupID     int        `json:"group_id"`
+	ID          int64      `json:"id"`
+	IID         int64      `json:"iid"`
+	Sequence    int64      `json:"sequence"`
+	GroupID     int64      `json:"group_id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
-	State       int        `json:"state"`
+	State       int64      `json:"state"`
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
 	DueDate     *ISOTime   `json:"due_date"`
@@ -77,22 +73,9 @@ type ListProjectIterationsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/iterations/#list-project-iterations
 func (i *ProjectIterationsService) ListProjectIterations(pid any, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/iterations", PathEscape(project))
-
-	req, err := i.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pis []*ProjectIteration
-	resp, err := i.client.Do(req, &pis)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pis, resp, nil
+	return do[[]*ProjectIteration](i.client,
+		withPath("projects/%s/iterations", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

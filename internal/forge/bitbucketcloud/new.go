@@ -28,7 +28,7 @@ type NewConnectorArgs struct {
 }
 
 // NewConnector provides the correct connector for talking to Bitbucket Cloud.
-func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: ireturn
+func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
 	webConnector := WebConnector{
 		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
@@ -47,20 +47,24 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 			WebConnector:  webConnector,
 			cache:         forgedomain.APICache{},
 			log:           args.Log,
-		}
+		}, nil
 	}
 	userName, hasUserName := args.UserName.Get()
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if hasUserName && hasAPIToken {
+		client, err := bitbucket.NewBasicAuth(userName.String(), apiToken.String())
+		if err != nil {
+			return nil, err
+		}
 		apiConnector := APIConnector{
 			WebConnector: webConnector,
-			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), apiToken.String())),
+			client:       NewMutable(client),
 			log:          args.Log,
 		}
 		return &CachedAPIConnector{
 			api:   apiConnector,
 			cache: forgedomain.APICache{},
-		}
+		}, nil
 	}
-	return webConnector
+	return webConnector, nil
 }

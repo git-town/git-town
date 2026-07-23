@@ -83,9 +83,9 @@ func ErrorIs(t T, err error, target error, settings ...Setting) {
 
 // ErrorAs asserts err's tree contains an error that matches target.
 // If so, it sets target to the error value.
-func ErrorAs[E error, Target *E](t T, err error, target Target, settings ...Setting) {
+func ErrorAs[E error, Target any](t T, err error, target Target, settings ...Setting) {
 	t.Helper()
-	invoke(t, assertions.ErrorAs(err, target), settings...)
+	invoke(t, assertions.ErrorAs[E](err, target), settings...)
 }
 
 // NoError asserts err is a nil error.
@@ -359,6 +359,22 @@ func NonZero[N interfaces.Number](t T, n N, settings ...Setting) {
 func One[N interfaces.Number](t T, n N, settings ...Setting) {
 	t.Helper()
 	invoke(t, assertions.One(n), settings...)
+}
+
+// ZeroValue asserts v is the zero value for its type.
+// If v implements IsZero() bool, that method is used.
+// Otherwise, cmp.Equal is used to compare against the zero value.
+func ZeroValue[A any](t T, v A, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.ZeroValue(v, options(settings...)...), settings...)
+}
+
+// NotZeroValue asserts v is not the zero value for its type.
+// If v implements IsZero() bool, that method is used.
+// Otherwise, cmp.Equal is used to compare against the zero value.
+func NotZeroValue[A any](t T, v A, settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.NotZeroValue(v, options(settings...)...), settings...)
 }
 
 // Less asserts val < exp.

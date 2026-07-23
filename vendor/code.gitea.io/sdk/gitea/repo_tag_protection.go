@@ -15,7 +15,7 @@ import (
 
 // TagProtection represents a tag protection for a repository
 type TagProtection struct {
-	Id                 int64     `json:"id"`
+	ID                 int64     `json:"id"`
 	NamePattern        string    `json:"name_pattern"`
 	WhitelistUsernames []string  `json:"whitelist_usernames"`
 	WhitelistTeams     []string  `json:"whitelist_teams"`

@@ -15,7 +15,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -26,7 +25,18 @@ type (
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/container_repository_protection_rules/#list-container-repository-protection-rules
+		// ListContainerRegistryProtectionRules gets a list of container repository
+		// protection rules from a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#list-container-repository-protection-rules
 		ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error)
+
+		// CreateContainerRegistryProtectionRule creates a container repository
+		// protection rule for a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#create-a-container-repository-protection-rule
 
 		// CreateContainerRegistryProtectionRule creates a container repository
 		// protection rule for a project’s container registry.
@@ -40,14 +50,14 @@ type (
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/container_repository_protection_rules/#update-a-container-repository-protection-rule
-		UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
+		UpdateContainerRegistryProtectionRule(pid any, ruleID int64, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
 
 		// DeleteContainerRegistryProtectionRule deletes a container repository protection
 		// rule from a project’s container registry.
 		//
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/container_repository_protection_rules/#delete-a-container-repository-protection-rule
-		DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteContainerRegistryProtectionRule(pid any, ruleID int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ContainerRegistryProtectionRulesService handles communication with
@@ -69,8 +79,8 @@ var _ ContainerRegistryProtectionRulesServiceInterface = (*ContainerRegistryProt
 // GitLab API docs:
 // https://docs.gitlab.com/api/container_repository_protection_rules/
 type ContainerRegistryProtectionRule struct {
-	ID                          int                       `json:"id"`
-	ProjectID                   int                       `json:"project_id"`
+	ID                          int64                     `json:"id"`
+	ProjectID                   int64                     `json:"project_id"`
 	RepositoryPathPattern       string                    `json:"repository_path_pattern"`
 	MinimumAccessLevelForPush   ProtectionRuleAccessLevel `json:"minimum_access_level_for_push"`
 	MinimumAccessLevelForDelete ProtectionRuleAccessLevel `json:"minimum_access_level_for_delete"`
@@ -81,24 +91,11 @@ func (s ContainerRegistryProtectionRule) String() string {
 }
 
 func (s *ContainerRegistryProtectionRulesService) ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/registry/protection/repository/rules", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var rules []*ContainerRegistryProtectionRule
-	resp, err := s.client.Do(req, &rules)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rules, resp, nil
+	return do[[]*ContainerRegistryProtectionRule](s.client,
+		withMethod(http.MethodGet),
+		withPath("projects/%s/registry/protection/repository/rules", ProjectID{pid}),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateContainerRegistryProtectionRuleOptions represents the available
@@ -113,24 +110,12 @@ type CreateContainerRegistryProtectionRuleOptions struct {
 }
 
 func (s *ContainerRegistryProtectionRulesService) CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/registry/protection/repository/rules", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	rule := new(ContainerRegistryProtectionRule)
-	resp, err := s.client.Do(req, rule)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rule, resp, nil
+	return do[*ContainerRegistryProtectionRule](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/registry/protection/repository/rules", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateContainerRegistryProtectionRuleOptions represents the available
@@ -144,38 +129,20 @@ type UpdateContainerRegistryProtectionRuleOptions struct {
 	MinimumAccessLevelForDelete *ProtectionRuleAccessLevel `url:"minimum_access_level_for_delete,omitempty" json:"minimum_access_level_for_delete,omitempty"`
 }
 
-func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/registry/protection/repository/rules/%d", PathEscape(project), ruleID)
-
-	req, err := s.client.NewRequest(http.MethodPatch, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	rule := new(ContainerRegistryProtectionRule)
-	resp, err := s.client.Do(req, rule)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return rule, resp, nil
+func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid any, ruleID int64, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
+	return do[*ContainerRegistryProtectionRule](s.client,
+		withMethod(http.MethodPatch),
+		withPath("projects/%s/registry/protection/repository/rules/%d", ProjectID{pid}, ruleID),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/registry/protection/repository/rules/%d", PathEscape(project), ruleID)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid any, ruleID int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/registry/protection/repository/rules/%d", ProjectID{pid}, ruleID),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
