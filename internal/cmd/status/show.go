@@ -3,14 +3,14 @@ package status
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v23/internal/cli/flags"
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v23/internal/config/cliconfig"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/execute"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/flags"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v24/internal/config/cliconfig"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/execute"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

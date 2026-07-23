@@ -1,16 +1,16 @@
 package forge
 
 import (
-	"github.com/git-town/git-town/v23/internal/forge/azuredevops"
-	"github.com/git-town/git-town/v23/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v23/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/forge/forgejo"
-	"github.com/git-town/git-town/v23/internal/forge/gitea"
-	"github.com/git-town/git-town/v23/internal/forge/github"
-	"github.com/git-town/git-town/v23/internal/forge/gitlab"
-	"github.com/git-town/git-town/v23/internal/git/giturl"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/forge/azuredevops"
+	"github.com/git-town/git-town/v24/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v24/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgejo"
+	"github.com/git-town/git-town/v24/internal/forge/gitea"
+	"github.com/git-town/git-town/v24/internal/forge/github"
+	"github.com/git-town/git-town/v24/internal/forge/gitlab"
+	"github.com/git-town/git-town/v24/internal/git/giturl"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) Option[forgedomain.DetectedForgeType] {

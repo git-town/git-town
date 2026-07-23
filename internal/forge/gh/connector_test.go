@@ -4,13 +4,13 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/browser/browserdomain"
-	"github.com/git-town/git-town/v23/internal/cli/print"
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/forge/gh"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/forge/gh"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

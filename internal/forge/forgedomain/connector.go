@@ -1,9 +1,9 @@
 package forgedomain
 
 import (
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // This file defines an interface for every capability that a forge and connector implementation can support.

@@ -4,8 +4,8 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/slice"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 )
 
 type LocalBranchesSHAs map[gitdomain.LocalBranchName]gitdomain.SHA

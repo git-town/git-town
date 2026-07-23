@@ -1,16 +1,16 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v23/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/programs"
-	"github.com/git-town/git-town/v23/internal/undo/undobranches"
-	"github.com/git-town/git-town/v23/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v23/internal/undo/undostash"
-	"github.com/git-town/git-town/v23/internal/vm/opcodes"
-	"github.com/git-town/git-town/v23/internal/vm/program"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/programs"
+	"github.com/git-town/git-town/v24/internal/undo/undobranches"
+	"github.com/git-town/git-town/v24/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v24/internal/undo/undostash"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
+	"github.com/git-town/git-town/v24/internal/vm/program"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // creates the program for undoing a program that finished

@@ -3,9 +3,9 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/cli/flags"
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/cli/flags"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 	"github.com/shoenig/test/must"
 )
 

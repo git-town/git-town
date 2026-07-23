@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/forge/glab"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/forge/glab"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
