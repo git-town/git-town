@@ -3,7 +3,7 @@ package configdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 

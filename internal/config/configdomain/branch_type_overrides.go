@@ -3,7 +3,7 @@ package configdomain
 import (
 	"maps"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 )
 
 // BranchTypeOverrides contains all configured branch type overrides.

@@ -3,9 +3,9 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 const BranchTypeSuffix = ".branchtype"

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/git-town/git-town/v23/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringss"
-	"github.com/git-town/git-town/v23/internal/messages"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
+	"github.com/git-town/git-town/v24/internal/messages"
 )
 
 func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {

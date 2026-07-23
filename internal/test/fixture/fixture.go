@@ -7,19 +7,19 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/config/gitconfig"
-	"github.com/git-town/git-town/v23/internal/git"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/cache"
-	"github.com/git-town/git-town/v23/internal/test/commands"
-	"github.com/git-town/git-town/v23/internal/test/datatable"
-	"github.com/git-town/git-town/v23/internal/test/helpers"
-	"github.com/git-town/git-town/v23/internal/test/subshell"
-	"github.com/git-town/git-town/v23/internal/test/testgit"
-	"github.com/git-town/git-town/v23/internal/test/testruntime"
-	"github.com/git-town/git-town/v23/pkg/asserts"
-	. "github.com/git-town/git-town/v23/pkg/prelude"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/config/gitconfig"
+	"github.com/git-town/git-town/v24/internal/git"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/cache"
+	"github.com/git-town/git-town/v24/internal/test/commands"
+	"github.com/git-town/git-town/v24/internal/test/datatable"
+	"github.com/git-town/git-town/v24/internal/test/helpers"
+	"github.com/git-town/git-town/v24/internal/test/subshell"
+	"github.com/git-town/git-town/v24/internal/test/testgit"
+	"github.com/git-town/git-town/v24/internal/test/testruntime"
+	"github.com/git-town/git-town/v24/pkg/asserts"
+	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.

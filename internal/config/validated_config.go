@@ -1,11 +1,11 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v23/internal/config/configdomain"
-	"github.com/git-town/git-town/v23/internal/config/gitconfig"
-	"github.com/git-town/git-town/v23/internal/git/gitdomain"
-	"github.com/git-town/git-town/v23/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v23/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/config/gitconfig"
+	"github.com/git-town/git-town/v24/internal/git/gitdomain"
+	"github.com/git-town/git-town/v24/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
 )
 
 // ValidatedConfig provides type-safe access to Git Town configuration settings
