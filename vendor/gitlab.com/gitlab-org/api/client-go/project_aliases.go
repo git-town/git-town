@@ -1,7 +1,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -28,8 +27,8 @@ var _ ProjectAliasesServiceInterface = (*ProjectAliasesService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/
 type ProjectAlias struct {
-	ID        int    `json:"id"`
-	ProjectID int    `json:"project_id"`
+	ID        int64  `json:"id"`
+	ProjectID int64  `json:"project_id"`
 	Name      string `json:"name"`
 }
 
@@ -39,7 +38,7 @@ type ProjectAlias struct {
 // https://docs.gitlab.com/api/project_aliases/#create-a-project-alias
 type CreateProjectAliasOptions struct {
 	Name      *string `json:"name" url:"name,omitempty"`
-	ProjectID int     `json:"project_id" url:"project_id,omitempty"`
+	ProjectID int64   `json:"project_id" url:"project_id,omitempty"`
 }
 
 // ListProjectAliases gets a list of all project aliases.
@@ -47,20 +46,10 @@ type CreateProjectAliasOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#list-all-project-aliases
 func (s *ProjectAliasesService) ListProjectAliases(options ...RequestOptionFunc) ([]*ProjectAlias, *Response, error) {
-	u := "project_aliases"
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var aliases []*ProjectAlias
-	resp, err := s.client.Do(req, &aliases)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return aliases, resp, nil
+	return do[[]*ProjectAlias](s.client,
+		withPath("project_aliases"),
+		withRequestOpts(options...),
+	)
 }
 
 // GetProjectAlias gets details of a project alias.
@@ -68,20 +57,10 @@ func (s *ProjectAliasesService) ListProjectAliases(options ...RequestOptionFunc)
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#get-project-alias-details
 func (s *ProjectAliasesService) GetProjectAlias(name string, options ...RequestOptionFunc) (*ProjectAlias, *Response, error) {
-	u := fmt.Sprintf("project_aliases/%s", PathEscape(name))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	aliasObj := new(ProjectAlias)
-	resp, err := s.client.Do(req, aliasObj)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return aliasObj, resp, nil
+	return do[*ProjectAlias](s.client,
+		withPath("project_aliases/%s", name),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateProjectAlias creates a new project alias.
@@ -89,20 +68,12 @@ func (s *ProjectAliasesService) GetProjectAlias(name string, options ...RequestO
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#create-a-project-alias
 func (s *ProjectAliasesService) CreateProjectAlias(opt *CreateProjectAliasOptions, options ...RequestOptionFunc) (*ProjectAlias, *Response, error) {
-	u := "project_aliases"
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	alias := new(ProjectAlias)
-	resp, err := s.client.Do(req, alias)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return alias, resp, nil
+	return do[*ProjectAlias](s.client,
+		withMethod(http.MethodPost),
+		withPath("project_aliases"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteProjectAlias deletes a project alias.
@@ -110,12 +81,10 @@ func (s *ProjectAliasesService) CreateProjectAlias(opt *CreateProjectAliasOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#delete-a-project-alias
 func (s *ProjectAliasesService) DeleteProjectAlias(name string, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("project_aliases/%s", PathEscape(name))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("project_aliases/%s", name),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

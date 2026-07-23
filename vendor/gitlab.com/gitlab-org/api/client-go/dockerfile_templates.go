@@ -16,12 +16,6 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-)
-
 type (
 	// DockerfileTemplatesServiceInterface defines all the API methods for the DockerfileTemplatesService
 	DockerfileTemplatesServiceInterface interface {
@@ -69,36 +63,21 @@ type DockerfileTemplateListItem struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/dockerfiles/#list-dockerfile-templates
-type ListDockerfileTemplatesOptions ListOptions
+type ListDockerfileTemplatesOptions struct {
+	ListOptions
+}
 
 func (s *DockerfileTemplatesService) ListTemplates(opt *ListDockerfileTemplatesOptions, options ...RequestOptionFunc) ([]*DockerfileTemplateListItem, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "templates/dockerfiles", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var gs []*DockerfileTemplateListItem
-	resp, err := s.client.Do(req, &gs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return gs, resp, nil
+	return do[[]*DockerfileTemplateListItem](s.client,
+		withPath("templates/dockerfiles"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 func (s *DockerfileTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*DockerfileTemplate, *Response, error) {
-	u := fmt.Sprintf("templates/dockerfiles/%s", url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(DockerfileTemplate)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+	return do[*DockerfileTemplate](s.client,
+		withPath("templates/dockerfiles/%s", key),
+		withRequestOpts(options...),
+	)
 }

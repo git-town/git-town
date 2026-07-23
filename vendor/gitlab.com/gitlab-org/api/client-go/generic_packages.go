@@ -49,27 +49,33 @@ var _ GenericPackagesServiceInterface = (*GenericPackagesService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/user/packages/generic_packages/#publish-a-single-file
 type GenericPackagesFile struct {
-	ID        int        `json:"id"`
-	PackageID int        `json:"package_id"`
-	CreatedAt *time.Time `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
-	Size      int        `json:"size"`
-	FileStore int        `json:"file_store"`
-	FileMD5   string     `json:"file_md5"`
-	FileSHA1  string     `json:"file_sha1"`
-	FileName  string     `json:"file_name"`
-	File      struct {
-		URL string `json:"url"`
-	} `json:"file"`
-	FileSHA256             string     `json:"file_sha256"`
-	VerificationRetryAt    *time.Time `json:"verification_retry_at"`
-	VerifiedAt             *time.Time `json:"verified_at"`
-	VerificationFailure    bool       `json:"verification_failure"`
-	VerificationRetryCount int        `json:"verification_retry_count"`
-	VerificationChecksum   string     `json:"verification_checksum"`
-	VerificationState      int        `json:"verification_state"`
-	VerificationStartedAt  *time.Time `json:"verification_started_at"`
-	NewFilePath            string     `json:"new_file_path"`
+	ID                     int64                  `json:"id"`
+	PackageID              int64                  `json:"package_id"`
+	CreatedAt              *time.Time             `json:"created_at"`
+	UpdatedAt              *time.Time             `json:"updated_at"`
+	Size                   int64                  `json:"size"`
+	FileStore              int64                  `json:"file_store"`
+	FileMD5                string                 `json:"file_md5"`
+	FileSHA1               string                 `json:"file_sha1"`
+	FileName               string                 `json:"file_name"`
+	File                   GenericPackagesFileURL `json:"file"`
+	FileSHA256             string                 `json:"file_sha256"`
+	VerificationRetryAt    *time.Time             `json:"verification_retry_at"`
+	VerifiedAt             *time.Time             `json:"verified_at"`
+	VerificationFailure    bool                   `json:"verification_failure"`
+	VerificationRetryCount int64                  `json:"verification_retry_count"`
+	VerificationChecksum   string                 `json:"verification_checksum"`
+	VerificationState      int64                  `json:"verification_state"`
+	VerificationStartedAt  *time.Time             `json:"verification_started_at"`
+	NewFilePath            string                 `json:"new_file_path"`
+}
+
+// GenericPackagesFileURL represents a GitLab generic package file URL.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/user/packages/generic_packages/#publish-a-single-file
+type GenericPackagesFileURL struct {
+	URL string `json:"url"`
 }
 
 // FormatPackageURL returns the GitLab Package Registry URL for the given artifact metadata, without the BaseURL.
@@ -142,28 +148,12 @@ func (s *GenericPackagesService) PublishPackageFile(pid any, packageName, packag
 // GitLab docs:
 // https://docs.gitlab.com/user/packages/generic_packages/#download-a-single-file
 func (s *GenericPackagesService) DownloadPackageFile(pid any, packageName, packageVersion, fileName string, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf(
-		"projects/%s/packages/generic/%s/%s/%s",
-		PathEscape(project),
-		PathEscape(packageName),
-		PathEscape(packageVersion),
-		PathEscape(fileName),
+	buf, resp, err := do[bytes.Buffer](s.client,
+		withPath("projects/%s/packages/generic/%s/%s/%s", ProjectID{pid}, packageName, packageVersion, fileName),
+		withRequestOpts(options...),
 	)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var f bytes.Buffer
-	resp, err := s.client.Do(req, &f)
 	if err != nil {
 		return nil, resp, err
 	}
-
-	return f.Bytes(), resp, err
+	return buf.Bytes(), resp, nil
 }

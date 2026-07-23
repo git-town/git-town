@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -25,10 +24,30 @@ import (
 type (
 	// GroupVariablesServiceInterface defines methods for the GroupVariablesService.
 	GroupVariablesServiceInterface interface {
+		// ListVariables gets a list of all variables for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_level_variables/#list-group-variables
 		ListVariables(gid any, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error)
+		// GetVariable gets a variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_level_variables/#show-variable-details
 		GetVariable(gid any, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		// CreateVariable creates a new group variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_level_variables/#create-variable
 		CreateVariable(gid any, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		// UpdateVariable updates an existing group variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_level_variables/#update-variable
 		UpdateVariable(gid any, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		// RemoveVariable removes a group's variable.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_level_variables/#remove-variable
 		RemoveVariable(gid any, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -69,31 +88,16 @@ func (v GroupVariable) String() string {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#list-group-variables
-type ListGroupVariablesOptions ListOptions
+type ListGroupVariablesOptions struct {
+	ListOptions
+}
 
-// ListVariables gets a list of all variables for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_level_variables/#list-group-variables
 func (s *GroupVariablesService) ListVariables(gid any, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/variables", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var vs []*GroupVariable
-	resp, err := s.client.Do(req, &vs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return vs, resp, nil
+	return do[[]*GroupVariable](s.client,
+		withPath("groups/%s/variables", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGroupVariableOptions represents the available GetVariable()
@@ -105,29 +109,12 @@ type GetGroupVariableOptions struct {
 	Filter *VariableFilter `url:"filter,omitempty" json:"filter,omitempty"`
 }
 
-// GetVariable gets a variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_level_variables/#show-variable-details
 func (s *GroupVariablesService) GetVariable(gid any, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/variables/%s", PathEscape(group), url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(GroupVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*GroupVariable](s.client,
+		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateGroupVariableOptions represents the available CreateVariable()
@@ -147,29 +134,13 @@ type CreateGroupVariableOptions struct {
 	VariableType     *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
-// CreateVariable creates a new group variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_level_variables/#create-variable
 func (s *GroupVariablesService) CreateVariable(gid any, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/variables", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(GroupVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*GroupVariable](s.client,
+		withMethod(http.MethodPost),
+		withPath("groups/%s/variables", GroupID{gid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateGroupVariableOptions represents the available UpdateVariable()
@@ -188,30 +159,13 @@ type UpdateGroupVariableOptions struct {
 	VariableType     *VariableTypeValue `url:"variable_type,omitempty" json:"variable_type,omitempty"`
 }
 
-// UpdateVariable updates the position of an existing
-// group issue board list.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_level_variables/#update-variable
 func (s *GroupVariablesService) UpdateVariable(gid any, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("groups/%s/variables/%s", PathEscape(group), url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(GroupVariable)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*GroupVariable](s.client,
+		withMethod(http.MethodPut),
+		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // RemoveGroupVariableOptions represents the available RemoveVariable()
@@ -223,21 +177,12 @@ type RemoveGroupVariableOptions struct {
 	Filter *VariableFilter `url:"filter,omitempty" json:"filter,omitempty"`
 }
 
-// RemoveVariable removes a group's variable.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_level_variables/#remove-variable
 func (s *GroupVariablesService) RemoveVariable(gid any, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error) {
-	group, err := parseID(gid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("groups/%s/variables/%s", PathEscape(group), url.PathEscape(key))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, opt, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

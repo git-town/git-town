@@ -16,10 +16,7 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
+import "net/http"
 
 type (
 	// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
@@ -29,17 +26,17 @@ type (
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
 		ListGeoNodes(*ListGeoNodesOptions, ...RequestOptionFunc) ([]*GeoNode, *Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
-		GetGeoNode(int, ...RequestOptionFunc) (*GeoNode, *Response, error)
+		GetGeoNode(int64, ...RequestOptionFunc) (*GeoNode, *Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
-		EditGeoNode(int, *UpdateGeoNodesOptions, ...RequestOptionFunc) (*GeoNode, *Response, error)
+		EditGeoNode(int64, *UpdateGeoNodesOptions, ...RequestOptionFunc) (*GeoNode, *Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
-		DeleteGeoNode(int, ...RequestOptionFunc) (*Response, error)
+		DeleteGeoNode(int64, ...RequestOptionFunc) (*Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
-		RepairGeoNode(int, ...RequestOptionFunc) (*GeoNode, *Response, error)
+		RepairGeoNode(int64, ...RequestOptionFunc) (*GeoNode, *Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
 		RetrieveStatusOfAllGeoNodes(...RequestOptionFunc) ([]*GeoNodeStatus, *Response, error)
 		// Deprecated: will be removed in v5 of the API, use Geo Sites API instead
-		RetrieveStatusOfGeoNode(int, ...RequestOptionFunc) (*GeoNodeStatus, *Response, error)
+		RetrieveStatusOfGeoNode(int64, ...RequestOptionFunc) (*GeoNodeStatus, *Response, error)
 	}
 
 	// GeoNodesService handles communication with Geo Nodes related methods
@@ -60,21 +57,21 @@ var _ GeoNodesServiceInterface = (*GeoNodesService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/geo_nodes/
 type GeoNode struct {
-	ID                               int          `json:"id"`
+	ID                               int64        `json:"id"`
 	Name                             string       `json:"name"`
 	URL                              string       `json:"url"`
 	InternalURL                      string       `json:"internal_url"`
 	Primary                          bool         `json:"primary"`
 	Enabled                          bool         `json:"enabled"`
 	Current                          bool         `json:"current"`
-	FilesMaxCapacity                 int          `json:"files_max_capacity"`
-	ReposMaxCapacity                 int          `json:"repos_max_capacity"`
-	VerificationMaxCapacity          int          `json:"verification_max_capacity"`
+	FilesMaxCapacity                 int64        `json:"files_max_capacity"`
+	ReposMaxCapacity                 int64        `json:"repos_max_capacity"`
+	VerificationMaxCapacity          int64        `json:"verification_max_capacity"`
 	SelectiveSyncType                string       `json:"selective_sync_type"`
 	SelectiveSyncShards              []string     `json:"selective_sync_shards"`
-	SelectiveSyncNamespaceIds        []int        `json:"selective_sync_namespace_ids"`
-	MinimumReverificationInterval    int          `json:"minimum_reverification_interval"`
-	ContainerRepositoriesMaxCapacity int          `json:"container_repositories_max_capacity"`
+	SelectiveSyncNamespaceIDs        []int64      `json:"selective_sync_namespace_ids"`
+	MinimumReverificationInterval    int64        `json:"minimum_reverification_interval"`
+	ContainerRepositoriesMaxCapacity int64        `json:"container_repositories_max_capacity"`
 	SyncObjectStorage                bool         `json:"sync_object_storage"`
 	CloneProtocol                    string       `json:"clone_protocol"`
 	WebEditURL                       string       `json:"web_edit_url"`
@@ -103,15 +100,15 @@ type CreateGeoNodesOptions struct {
 	Name                             *string   `url:"name,omitempty" json:"name,omitempty"`
 	URL                              *string   `url:"url,omitempty" json:"url,omitempty"`
 	InternalURL                      *string   `url:"internal_url,omitempty" json:"internal_url,omitempty"`
-	FilesMaxCapacity                 *int      `url:"files_max_capacity,omitempty" json:"files_max_capacity,omitempty"`
-	ReposMaxCapacity                 *int      `url:"repos_max_capacity,omitempty" json:"repos_max_capacity,omitempty"`
-	VerificationMaxCapacity          *int      `url:"verification_max_capacity,omitempty" json:"verification_max_capacity,omitempty"`
-	ContainerRepositoriesMaxCapacity *int      `url:"container_repositories_max_capacity,omitempty" json:"container_repositories_max_capacity,omitempty"`
+	FilesMaxCapacity                 *int64    `url:"files_max_capacity,omitempty" json:"files_max_capacity,omitempty"`
+	ReposMaxCapacity                 *int64    `url:"repos_max_capacity,omitempty" json:"repos_max_capacity,omitempty"`
+	VerificationMaxCapacity          *int64    `url:"verification_max_capacity,omitempty" json:"verification_max_capacity,omitempty"`
+	ContainerRepositoriesMaxCapacity *int64    `url:"container_repositories_max_capacity,omitempty" json:"container_repositories_max_capacity,omitempty"`
 	SyncObjectStorage                *bool     `url:"sync_object_storage,omitempty" json:"sync_object_storage,omitempty"`
 	SelectiveSyncType                *string   `url:"selective_sync_type,omitempty" json:"selective_sync_type,omitempty"`
 	SelectiveSyncShards              *[]string `url:"selective_sync_shards,omitempty" json:"selective_sync_shards,omitempty"`
-	SelectiveSyncNamespaceIds        *[]int    `url:"selective_sync_namespace_ids,omitempty" json:"selective_sync_namespace_ids,omitempty"`
-	MinimumReverificationInterval    *int      `url:"minimum_reverification_interval,omitempty" json:"minimum_reverification_interval,omitempty"`
+	SelectiveSyncNamespaceIDs        *[]int64  `url:"selective_sync_namespace_ids,omitempty" json:"selective_sync_namespace_ids,omitempty"`
+	MinimumReverificationInterval    *int64    `url:"minimum_reverification_interval,omitempty" json:"minimum_reverification_interval,omitempty"`
 }
 
 // CreateGeoNode creates a new Geo Node.
@@ -120,18 +117,12 @@ type CreateGeoNodesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#create-a-new-geo-node
 func (s *GeoNodesService) CreateGeoNode(opt *CreateGeoNodesOptions, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodPost, "geo_nodes", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(GeoNode)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+	return do[*GeoNode](s.client,
+		withMethod(http.MethodPost),
+		withPath("geo_nodes"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // ListGeoNodesOptions represents the available ListGeoNodes() options.
@@ -139,7 +130,9 @@ func (s *GeoNodesService) CreateGeoNode(opt *CreateGeoNodesOptions, options ...R
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-configuration-about-all-geo-nodes
-type ListGeoNodesOptions ListOptions
+type ListGeoNodesOptions struct {
+	ListOptions
+}
 
 // ListGeoNodes gets a list of geo nodes.
 // Deprecated: will be removed in v5 of the API, use Geo Sites API instead
@@ -147,18 +140,11 @@ type ListGeoNodesOptions ListOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-configuration-about-all-geo-nodes
 func (s *GeoNodesService) ListGeoNodes(opt *ListGeoNodesOptions, options ...RequestOptionFunc) ([]*GeoNode, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "geo_nodes", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var gs []*GeoNode
-	resp, err := s.client.Do(req, &gs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return gs, resp, nil
+	return do[[]*GeoNode](s.client,
+		withPath("geo_nodes"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetGeoNode gets a specific geo node.
@@ -166,21 +152,11 @@ func (s *GeoNodesService) ListGeoNodes(opt *ListGeoNodesOptions, options ...Requ
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-configuration-about-a-specific-geo-node
-func (s *GeoNodesService) GetGeoNode(id int, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	u := fmt.Sprintf("geo_nodes/%d", id)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(GeoNode)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+func (s *GeoNodesService) GetGeoNode(id int64, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
+	return do[*GeoNode](s.client,
+		withPath("geo_nodes/%d", id),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdateGeoNodesOptions represents the available EditGeoNode() options.
@@ -189,20 +165,20 @@ func (s *GeoNodesService) GetGeoNode(id int, options ...RequestOptionFunc) (*Geo
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#edit-a-geo-node
 type UpdateGeoNodesOptions struct {
-	ID                               *int      `url:"primary,omitempty" json:"primary,omitempty"`
+	ID                               *int64    `url:"primary,omitempty" json:"primary,omitempty"`
 	Enabled                          *bool     `url:"enabled,omitempty" json:"enabled,omitempty"`
 	Name                             *string   `url:"name,omitempty" json:"name,omitempty"`
 	URL                              *string   `url:"url,omitempty" json:"url,omitempty"`
 	InternalURL                      *string   `url:"internal_url,omitempty" json:"internal_url,omitempty"`
-	FilesMaxCapacity                 *int      `url:"files_max_capacity,omitempty" json:"files_max_capacity,omitempty"`
-	ReposMaxCapacity                 *int      `url:"repos_max_capacity,omitempty" json:"repos_max_capacity,omitempty"`
-	VerificationMaxCapacity          *int      `url:"verification_max_capacity,omitempty" json:"verification_max_capacity,omitempty"`
-	ContainerRepositoriesMaxCapacity *int      `url:"container_repositories_max_capacity,omitempty" json:"container_repositories_max_capacity,omitempty"`
+	FilesMaxCapacity                 *int64    `url:"files_max_capacity,omitempty" json:"files_max_capacity,omitempty"`
+	ReposMaxCapacity                 *int64    `url:"repos_max_capacity,omitempty" json:"repos_max_capacity,omitempty"`
+	VerificationMaxCapacity          *int64    `url:"verification_max_capacity,omitempty" json:"verification_max_capacity,omitempty"`
+	ContainerRepositoriesMaxCapacity *int64    `url:"container_repositories_max_capacity,omitempty" json:"container_repositories_max_capacity,omitempty"`
 	SyncObjectStorage                *bool     `url:"sync_object_storage,omitempty" json:"sync_object_storage,omitempty"`
 	SelectiveSyncType                *string   `url:"selective_sync_type,omitempty" json:"selective_sync_type,omitempty"`
 	SelectiveSyncShards              *[]string `url:"selective_sync_shards,omitempty" json:"selective_sync_shards,omitempty"`
-	SelectiveSyncNamespaceIds        *[]int    `url:"selective_sync_namespace_ids,omitempty" json:"selective_sync_namespace_ids,omitempty"`
-	MinimumReverificationInterval    *int      `url:"minimum_reverification_interval,omitempty" json:"minimum_reverification_interval,omitempty"`
+	SelectiveSyncNamespaceIDs        *[]int64  `url:"selective_sync_namespace_ids,omitempty" json:"selective_sync_namespace_ids,omitempty"`
+	MinimumReverificationInterval    *int64    `url:"minimum_reverification_interval,omitempty" json:"minimum_reverification_interval,omitempty"`
 }
 
 // EditGeoNode updates settings of an existing Geo node.
@@ -210,21 +186,13 @@ type UpdateGeoNodesOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#edit-a-geo-node
-func (s *GeoNodesService) EditGeoNode(id int, opt *UpdateGeoNodesOptions, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	u := fmt.Sprintf("geo_nodes/%d", id)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(GeoNode)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+func (s *GeoNodesService) EditGeoNode(id int64, opt *UpdateGeoNodesOptions, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
+	return do[*GeoNode](s.client,
+		withMethod(http.MethodPut),
+		withPath("geo_nodes/%d", id),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // DeleteGeoNode removes the Geo node.
@@ -232,15 +200,13 @@ func (s *GeoNodesService) EditGeoNode(id int, opt *UpdateGeoNodesOptions, option
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#delete-a-geo-node
-func (s *GeoNodesService) DeleteGeoNode(id int, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("geo_nodes/%d", id)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *GeoNodesService) DeleteGeoNode(id int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("geo_nodes/%d", id),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
 // RepairGeoNode to repair the OAuth authentication of a Geo node.
@@ -248,21 +214,12 @@ func (s *GeoNodesService) DeleteGeoNode(id int, options ...RequestOptionFunc) (*
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#repair-a-geo-node
-func (s *GeoNodesService) RepairGeoNode(id int, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	u := fmt.Sprintf("geo_nodes/%d/repair", id)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	g := new(GeoNode)
-	resp, err := s.client.Do(req, g)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return g, resp, nil
+func (s *GeoNodesService) RepairGeoNode(id int64, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
+	return do[*GeoNode](s.client,
+		withMethod(http.MethodPost),
+		withPath("geo_nodes/%d/repair", id),
+		withRequestOpts(options...),
+	)
 }
 
 // GeoNodeStatus represents the status of Geo Node.
@@ -271,162 +228,162 @@ func (s *GeoNodesService) RepairGeoNode(id int, options ...RequestOptionFunc) (*
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-status-about-all-geo-nodes
 type GeoNodeStatus struct {
-	GeoNodeID                                     int    `json:"geo_node_id"`
+	GeoNodeID                                     int64  `json:"geo_node_id"`
 	Healthy                                       bool   `json:"healthy"`
 	Health                                        string `json:"health"`
 	HealthStatus                                  string `json:"health_status"`
 	MissingOauthApplication                       bool   `json:"missing_oauth_application"`
-	AttachmentsCount                              int    `json:"attachments_count"`
-	AttachmentsSyncedCount                        int    `json:"attachments_synced_count"`
-	AttachmentsFailedCount                        int    `json:"attachments_failed_count"`
-	AttachmentsSyncedMissingOnPrimaryCount        int    `json:"attachments_synced_missing_on_primary_count"`
+	AttachmentsCount                              int64  `json:"attachments_count"`
+	AttachmentsSyncedCount                        int64  `json:"attachments_synced_count"`
+	AttachmentsFailedCount                        int64  `json:"attachments_failed_count"`
+	AttachmentsSyncedMissingOnPrimaryCount        int64  `json:"attachments_synced_missing_on_primary_count"`
 	AttachmentsSyncedInPercentage                 string `json:"attachments_synced_in_percentage"`
-	DbReplicationLagSeconds                       int    `json:"db_replication_lag_seconds"`
-	LfsObjectsCount                               int    `json:"lfs_objects_count"`
-	LfsObjectsSyncedCount                         int    `json:"lfs_objects_synced_count"`
-	LfsObjectsFailedCount                         int    `json:"lfs_objects_failed_count"`
-	LfsObjectsSyncedMissingOnPrimaryCount         int    `json:"lfs_objects_synced_missing_on_primary_count"`
+	DbReplicationLagSeconds                       int64  `json:"db_replication_lag_seconds"`
+	LfsObjectsCount                               int64  `json:"lfs_objects_count"`
+	LfsObjectsSyncedCount                         int64  `json:"lfs_objects_synced_count"`
+	LfsObjectsFailedCount                         int64  `json:"lfs_objects_failed_count"`
+	LfsObjectsSyncedMissingOnPrimaryCount         int64  `json:"lfs_objects_synced_missing_on_primary_count"`
 	LfsObjectsSyncedInPercentage                  string `json:"lfs_objects_synced_in_percentage"`
-	JobArtifactsCount                             int    `json:"job_artifacts_count"`
-	JobArtifactsSyncedCount                       int    `json:"job_artifacts_synced_count"`
-	JobArtifactsFailedCount                       int    `json:"job_artifacts_failed_count"`
-	JobArtifactsSyncedMissingOnPrimaryCount       int    `json:"job_artifacts_synced_missing_on_primary_count"`
+	JobArtifactsCount                             int64  `json:"job_artifacts_count"`
+	JobArtifactsSyncedCount                       int64  `json:"job_artifacts_synced_count"`
+	JobArtifactsFailedCount                       int64  `json:"job_artifacts_failed_count"`
+	JobArtifactsSyncedMissingOnPrimaryCount       int64  `json:"job_artifacts_synced_missing_on_primary_count"`
 	JobArtifactsSyncedInPercentage                string `json:"job_artifacts_synced_in_percentage"`
-	ContainerRepositoriesCount                    int    `json:"container_repositories_count"`
-	ContainerRepositoriesSyncedCount              int    `json:"container_repositories_synced_count"`
-	ContainerRepositoriesFailedCount              int    `json:"container_repositories_failed_count"`
+	ContainerRepositoriesCount                    int64  `json:"container_repositories_count"`
+	ContainerRepositoriesSyncedCount              int64  `json:"container_repositories_synced_count"`
+	ContainerRepositoriesFailedCount              int64  `json:"container_repositories_failed_count"`
 	ContainerRepositoriesSyncedInPercentage       string `json:"container_repositories_synced_in_percentage"`
-	DesignRepositoriesCount                       int    `json:"design_repositories_count"`
-	DesignRepositoriesSyncedCount                 int    `json:"design_repositories_synced_count"`
-	DesignRepositoriesFailedCount                 int    `json:"design_repositories_failed_count"`
+	DesignRepositoriesCount                       int64  `json:"design_repositories_count"`
+	DesignRepositoriesSyncedCount                 int64  `json:"design_repositories_synced_count"`
+	DesignRepositoriesFailedCount                 int64  `json:"design_repositories_failed_count"`
 	DesignRepositoriesSyncedInPercentage          string `json:"design_repositories_synced_in_percentage"`
-	ProjectsCount                                 int    `json:"projects_count"`
-	RepositoriesCount                             int    `json:"repositories_count"`
-	RepositoriesFailedCount                       int    `json:"repositories_failed_count"`
-	RepositoriesSyncedCount                       int    `json:"repositories_synced_count"`
+	ProjectsCount                                 int64  `json:"projects_count"`
+	RepositoriesCount                             int64  `json:"repositories_count"`
+	RepositoriesFailedCount                       int64  `json:"repositories_failed_count"`
+	RepositoriesSyncedCount                       int64  `json:"repositories_synced_count"`
 	RepositoriesSyncedInPercentage                string `json:"repositories_synced_in_percentage"`
-	WikisCount                                    int    `json:"wikis_count"`
-	WikisFailedCount                              int    `json:"wikis_failed_count"`
-	WikisSyncedCount                              int    `json:"wikis_synced_count"`
+	WikisCount                                    int64  `json:"wikis_count"`
+	WikisFailedCount                              int64  `json:"wikis_failed_count"`
+	WikisSyncedCount                              int64  `json:"wikis_synced_count"`
 	WikisSyncedInPercentage                       string `json:"wikis_synced_in_percentage"`
-	ReplicationSlotsCount                         int    `json:"replication_slots_count"`
-	ReplicationSlotsUsedCount                     int    `json:"replication_slots_used_count"`
+	ReplicationSlotsCount                         int64  `json:"replication_slots_count"`
+	ReplicationSlotsUsedCount                     int64  `json:"replication_slots_used_count"`
 	ReplicationSlotsUsedInPercentage              string `json:"replication_slots_used_in_percentage"`
-	ReplicationSlotsMaxRetainedWalBytes           int    `json:"replication_slots_max_retained_wal_bytes"`
-	RepositoriesCheckedCount                      int    `json:"repositories_checked_count"`
-	RepositoriesCheckedFailedCount                int    `json:"repositories_checked_failed_count"`
+	ReplicationSlotsMaxRetainedWalBytes           int64  `json:"replication_slots_max_retained_wal_bytes"`
+	RepositoriesCheckedCount                      int64  `json:"repositories_checked_count"`
+	RepositoriesCheckedFailedCount                int64  `json:"repositories_checked_failed_count"`
 	RepositoriesCheckedInPercentage               string `json:"repositories_checked_in_percentage"`
-	RepositoriesChecksummedCount                  int    `json:"repositories_checksummed_count"`
-	RepositoriesChecksumFailedCount               int    `json:"repositories_checksum_failed_count"`
+	RepositoriesChecksummedCount                  int64  `json:"repositories_checksummed_count"`
+	RepositoriesChecksumFailedCount               int64  `json:"repositories_checksum_failed_count"`
 	RepositoriesChecksummedInPercentage           string `json:"repositories_checksummed_in_percentage"`
-	WikisChecksummedCount                         int    `json:"wikis_checksummed_count"`
-	WikisChecksumFailedCount                      int    `json:"wikis_checksum_failed_count"`
+	WikisChecksummedCount                         int64  `json:"wikis_checksummed_count"`
+	WikisChecksumFailedCount                      int64  `json:"wikis_checksum_failed_count"`
 	WikisChecksummedInPercentage                  string `json:"wikis_checksummed_in_percentage"`
-	RepositoriesVerifiedCount                     int    `json:"repositories_verified_count"`
-	RepositoriesVerificationFailedCount           int    `json:"repositories_verification_failed_count"`
+	RepositoriesVerifiedCount                     int64  `json:"repositories_verified_count"`
+	RepositoriesVerificationFailedCount           int64  `json:"repositories_verification_failed_count"`
 	RepositoriesVerifiedInPercentage              string `json:"repositories_verified_in_percentage"`
-	RepositoriesChecksumMismatchCount             int    `json:"repositories_checksum_mismatch_count"`
-	WikisVerifiedCount                            int    `json:"wikis_verified_count"`
-	WikisVerificationFailedCount                  int    `json:"wikis_verification_failed_count"`
+	RepositoriesChecksumMismatchCount             int64  `json:"repositories_checksum_mismatch_count"`
+	WikisVerifiedCount                            int64  `json:"wikis_verified_count"`
+	WikisVerificationFailedCount                  int64  `json:"wikis_verification_failed_count"`
 	WikisVerifiedInPercentage                     string `json:"wikis_verified_in_percentage"`
-	WikisChecksumMismatchCount                    int    `json:"wikis_checksum_mismatch_count"`
-	RepositoriesRetryingVerificationCount         int    `json:"repositories_retrying_verification_count"`
-	WikisRetryingVerificationCount                int    `json:"wikis_retrying_verification_count"`
-	LastEventID                                   int    `json:"last_event_id"`
-	LastEventTimestamp                            int    `json:"last_event_timestamp"`
-	CursorLastEventID                             int    `json:"cursor_last_event_id"`
-	CursorLastEventTimestamp                      int    `json:"cursor_last_event_timestamp"`
-	LastSuccessfulStatusCheckTimestamp            int    `json:"last_successful_status_check_timestamp"`
+	WikisChecksumMismatchCount                    int64  `json:"wikis_checksum_mismatch_count"`
+	RepositoriesRetryingVerificationCount         int64  `json:"repositories_retrying_verification_count"`
+	WikisRetryingVerificationCount                int64  `json:"wikis_retrying_verification_count"`
+	LastEventID                                   int64  `json:"last_event_id"`
+	LastEventTimestamp                            int64  `json:"last_event_timestamp"`
+	CursorLastEventID                             int64  `json:"cursor_last_event_id"`
+	CursorLastEventTimestamp                      int64  `json:"cursor_last_event_timestamp"`
+	LastSuccessfulStatusCheckTimestamp            int64  `json:"last_successful_status_check_timestamp"`
 	Version                                       string `json:"version"`
 	Revision                                      string `json:"revision"`
-	MergeRequestDiffsCount                        int    `json:"merge_request_diffs_count"`
-	MergeRequestDiffsChecksumTotalCount           int    `json:"merge_request_diffs_checksum_total_count"`
-	MergeRequestDiffsChecksummedCount             int    `json:"merge_request_diffs_checksummed_count"`
-	MergeRequestDiffsChecksumFailedCount          int    `json:"merge_request_diffs_checksum_failed_count"`
-	MergeRequestDiffsSyncedCount                  int    `json:"merge_request_diffs_synced_count"`
-	MergeRequestDiffsFailedCount                  int    `json:"merge_request_diffs_failed_count"`
-	MergeRequestDiffsRegistryCount                int    `json:"merge_request_diffs_registry_count"`
-	MergeRequestDiffsVerificationTotalCount       int    `json:"merge_request_diffs_verification_total_count"`
-	MergeRequestDiffsVerifiedCount                int    `json:"merge_request_diffs_verified_count"`
-	MergeRequestDiffsVerificationFailedCount      int    `json:"merge_request_diffs_verification_failed_count"`
+	MergeRequestDiffsCount                        int64  `json:"merge_request_diffs_count"`
+	MergeRequestDiffsChecksumTotalCount           int64  `json:"merge_request_diffs_checksum_total_count"`
+	MergeRequestDiffsChecksummedCount             int64  `json:"merge_request_diffs_checksummed_count"`
+	MergeRequestDiffsChecksumFailedCount          int64  `json:"merge_request_diffs_checksum_failed_count"`
+	MergeRequestDiffsSyncedCount                  int64  `json:"merge_request_diffs_synced_count"`
+	MergeRequestDiffsFailedCount                  int64  `json:"merge_request_diffs_failed_count"`
+	MergeRequestDiffsRegistryCount                int64  `json:"merge_request_diffs_registry_count"`
+	MergeRequestDiffsVerificationTotalCount       int64  `json:"merge_request_diffs_verification_total_count"`
+	MergeRequestDiffsVerifiedCount                int64  `json:"merge_request_diffs_verified_count"`
+	MergeRequestDiffsVerificationFailedCount      int64  `json:"merge_request_diffs_verification_failed_count"`
 	MergeRequestDiffsSyncedInPercentage           string `json:"merge_request_diffs_synced_in_percentage"`
 	MergeRequestDiffsVerifiedInPercentage         string `json:"merge_request_diffs_verified_in_percentage"`
-	PackageFilesCount                             int    `json:"package_files_count"`
-	PackageFilesChecksumTotalCount                int    `json:"package_files_checksum_total_count"`
-	PackageFilesChecksummedCount                  int    `json:"package_files_checksummed_count"`
-	PackageFilesChecksumFailedCount               int    `json:"package_files_checksum_failed_count"`
-	PackageFilesSyncedCount                       int    `json:"package_files_synced_count"`
-	PackageFilesFailedCount                       int    `json:"package_files_failed_count"`
-	PackageFilesRegistryCount                     int    `json:"package_files_registry_count"`
-	PackageFilesVerificationTotalCount            int    `json:"package_files_verification_total_count"`
-	PackageFilesVerifiedCount                     int    `json:"package_files_verified_count"`
-	PackageFilesVerificationFailedCount           int    `json:"package_files_verification_failed_count"`
+	PackageFilesCount                             int64  `json:"package_files_count"`
+	PackageFilesChecksumTotalCount                int64  `json:"package_files_checksum_total_count"`
+	PackageFilesChecksummedCount                  int64  `json:"package_files_checksummed_count"`
+	PackageFilesChecksumFailedCount               int64  `json:"package_files_checksum_failed_count"`
+	PackageFilesSyncedCount                       int64  `json:"package_files_synced_count"`
+	PackageFilesFailedCount                       int64  `json:"package_files_failed_count"`
+	PackageFilesRegistryCount                     int64  `json:"package_files_registry_count"`
+	PackageFilesVerificationTotalCount            int64  `json:"package_files_verification_total_count"`
+	PackageFilesVerifiedCount                     int64  `json:"package_files_verified_count"`
+	PackageFilesVerificationFailedCount           int64  `json:"package_files_verification_failed_count"`
 	PackageFilesSyncedInPercentage                string `json:"package_files_synced_in_percentage"`
 	PackageFilesVerifiedInPercentage              string `json:"package_files_verified_in_percentage"`
-	PagesDeploymentsCount                         int    `json:"pages_deployments_count"`
-	PagesDeploymentsChecksumTotalCount            int    `json:"pages_deployments_checksum_total_count"`
-	PagesDeploymentsChecksummedCount              int    `json:"pages_deployments_checksummed_count"`
-	PagesDeploymentsChecksumFailedCount           int    `json:"pages_deployments_checksum_failed_count"`
-	PagesDeploymentsSyncedCount                   int    `json:"pages_deployments_synced_count"`
-	PagesDeploymentsFailedCount                   int    `json:"pages_deployments_failed_count"`
-	PagesDeploymentsRegistryCount                 int    `json:"pages_deployments_registry_count"`
-	PagesDeploymentsVerificationTotalCount        int    `json:"pages_deployments_verification_total_count"`
-	PagesDeploymentsVerifiedCount                 int    `json:"pages_deployments_verified_count"`
-	PagesDeploymentsVerificationFailedCount       int    `json:"pages_deployments_verification_failed_count"`
+	PagesDeploymentsCount                         int64  `json:"pages_deployments_count"`
+	PagesDeploymentsChecksumTotalCount            int64  `json:"pages_deployments_checksum_total_count"`
+	PagesDeploymentsChecksummedCount              int64  `json:"pages_deployments_checksummed_count"`
+	PagesDeploymentsChecksumFailedCount           int64  `json:"pages_deployments_checksum_failed_count"`
+	PagesDeploymentsSyncedCount                   int64  `json:"pages_deployments_synced_count"`
+	PagesDeploymentsFailedCount                   int64  `json:"pages_deployments_failed_count"`
+	PagesDeploymentsRegistryCount                 int64  `json:"pages_deployments_registry_count"`
+	PagesDeploymentsVerificationTotalCount        int64  `json:"pages_deployments_verification_total_count"`
+	PagesDeploymentsVerifiedCount                 int64  `json:"pages_deployments_verified_count"`
+	PagesDeploymentsVerificationFailedCount       int64  `json:"pages_deployments_verification_failed_count"`
 	PagesDeploymentsSyncedInPercentage            string `json:"pages_deployments_synced_in_percentage"`
 	PagesDeploymentsVerifiedInPercentage          string `json:"pages_deployments_verified_in_percentage"`
-	TerraformStateVersionsCount                   int    `json:"terraform_state_versions_count"`
-	TerraformStateVersionsChecksumTotalCount      int    `json:"terraform_state_versions_checksum_total_count"`
-	TerraformStateVersionsChecksummedCount        int    `json:"terraform_state_versions_checksummed_count"`
-	TerraformStateVersionsChecksumFailedCount     int    `json:"terraform_state_versions_checksum_failed_count"`
-	TerraformStateVersionsSyncedCount             int    `json:"terraform_state_versions_synced_count"`
-	TerraformStateVersionsFailedCount             int    `json:"terraform_state_versions_failed_count"`
-	TerraformStateVersionsRegistryCount           int    `json:"terraform_state_versions_registry_count"`
-	TerraformStateVersionsVerificationTotalCount  int    `json:"terraform_state_versions_verification_total_count"`
-	TerraformStateVersionsVerifiedCount           int    `json:"terraform_state_versions_verified_count"`
-	TerraformStateVersionsVerificationFailedCount int    `json:"terraform_state_versions_verification_failed_count"`
+	TerraformStateVersionsCount                   int64  `json:"terraform_state_versions_count"`
+	TerraformStateVersionsChecksumTotalCount      int64  `json:"terraform_state_versions_checksum_total_count"`
+	TerraformStateVersionsChecksummedCount        int64  `json:"terraform_state_versions_checksummed_count"`
+	TerraformStateVersionsChecksumFailedCount     int64  `json:"terraform_state_versions_checksum_failed_count"`
+	TerraformStateVersionsSyncedCount             int64  `json:"terraform_state_versions_synced_count"`
+	TerraformStateVersionsFailedCount             int64  `json:"terraform_state_versions_failed_count"`
+	TerraformStateVersionsRegistryCount           int64  `json:"terraform_state_versions_registry_count"`
+	TerraformStateVersionsVerificationTotalCount  int64  `json:"terraform_state_versions_verification_total_count"`
+	TerraformStateVersionsVerifiedCount           int64  `json:"terraform_state_versions_verified_count"`
+	TerraformStateVersionsVerificationFailedCount int64  `json:"terraform_state_versions_verification_failed_count"`
 	TerraformStateVersionsSyncedInPercentage      string `json:"terraform_state_versions_synced_in_percentage"`
 	TerraformStateVersionsVerifiedInPercentage    string `json:"terraform_state_versions_verified_in_percentage"`
-	SnippetRepositoriesCount                      int    `json:"snippet_repositories_count"`
-	SnippetRepositoriesChecksumTotalCount         int    `json:"snippet_repositories_checksum_total_count"`
-	SnippetRepositoriesChecksummedCount           int    `json:"snippet_repositories_checksummed_count"`
-	SnippetRepositoriesChecksumFailedCount        int    `json:"snippet_repositories_checksum_failed_count"`
-	SnippetRepositoriesSyncedCount                int    `json:"snippet_repositories_synced_count"`
-	SnippetRepositoriesFailedCount                int    `json:"snippet_repositories_failed_count"`
-	SnippetRepositoriesRegistryCount              int    `json:"snippet_repositories_registry_count"`
-	SnippetRepositoriesVerificationTotalCount     int    `json:"snippet_repositories_verification_total_count"`
-	SnippetRepositoriesVerifiedCount              int    `json:"snippet_repositories_verified_count"`
-	SnippetRepositoriesVerificationFailedCount    int    `json:"snippet_repositories_verification_failed_count"`
+	SnippetRepositoriesCount                      int64  `json:"snippet_repositories_count"`
+	SnippetRepositoriesChecksumTotalCount         int64  `json:"snippet_repositories_checksum_total_count"`
+	SnippetRepositoriesChecksummedCount           int64  `json:"snippet_repositories_checksummed_count"`
+	SnippetRepositoriesChecksumFailedCount        int64  `json:"snippet_repositories_checksum_failed_count"`
+	SnippetRepositoriesSyncedCount                int64  `json:"snippet_repositories_synced_count"`
+	SnippetRepositoriesFailedCount                int64  `json:"snippet_repositories_failed_count"`
+	SnippetRepositoriesRegistryCount              int64  `json:"snippet_repositories_registry_count"`
+	SnippetRepositoriesVerificationTotalCount     int64  `json:"snippet_repositories_verification_total_count"`
+	SnippetRepositoriesVerifiedCount              int64  `json:"snippet_repositories_verified_count"`
+	SnippetRepositoriesVerificationFailedCount    int64  `json:"snippet_repositories_verification_failed_count"`
 	SnippetRepositoriesSyncedInPercentage         string `json:"snippet_repositories_synced_in_percentage"`
 	SnippetRepositoriesVerifiedInPercentage       string `json:"snippet_repositories_verified_in_percentage"`
-	GroupWikiRepositoriesCount                    int    `json:"group_wiki_repositories_count"`
-	GroupWikiRepositoriesChecksumTotalCount       int    `json:"group_wiki_repositories_checksum_total_count"`
-	GroupWikiRepositoriesChecksummedCount         int    `json:"group_wiki_repositories_checksummed_count"`
-	GroupWikiRepositoriesChecksumFailedCount      int    `json:"group_wiki_repositories_checksum_failed_count"`
-	GroupWikiRepositoriesSyncedCount              int    `json:"group_wiki_repositories_synced_count"`
-	GroupWikiRepositoriesFailedCount              int    `json:"group_wiki_repositories_failed_count"`
-	GroupWikiRepositoriesRegistryCount            int    `json:"group_wiki_repositories_registry_count"`
-	GroupWikiRepositoriesVerificationTotalCount   int    `json:"group_wiki_repositories_verification_total_count"`
-	GroupWikiRepositoriesVerifiedCount            int    `json:"group_wiki_repositories_verified_count"`
-	GroupWikiRepositoriesVerificationFailedCount  int    `json:"group_wiki_repositories_verification_failed_count"`
+	GroupWikiRepositoriesCount                    int64  `json:"group_wiki_repositories_count"`
+	GroupWikiRepositoriesChecksumTotalCount       int64  `json:"group_wiki_repositories_checksum_total_count"`
+	GroupWikiRepositoriesChecksummedCount         int64  `json:"group_wiki_repositories_checksummed_count"`
+	GroupWikiRepositoriesChecksumFailedCount      int64  `json:"group_wiki_repositories_checksum_failed_count"`
+	GroupWikiRepositoriesSyncedCount              int64  `json:"group_wiki_repositories_synced_count"`
+	GroupWikiRepositoriesFailedCount              int64  `json:"group_wiki_repositories_failed_count"`
+	GroupWikiRepositoriesRegistryCount            int64  `json:"group_wiki_repositories_registry_count"`
+	GroupWikiRepositoriesVerificationTotalCount   int64  `json:"group_wiki_repositories_verification_total_count"`
+	GroupWikiRepositoriesVerifiedCount            int64  `json:"group_wiki_repositories_verified_count"`
+	GroupWikiRepositoriesVerificationFailedCount  int64  `json:"group_wiki_repositories_verification_failed_count"`
 	GroupWikiRepositoriesSyncedInPercentage       string `json:"group_wiki_repositories_synced_in_percentage"`
 	GroupWikiRepositoriesVerifiedInPercentage     string `json:"group_wiki_repositories_verified_in_percentage"`
-	PipelineArtifactsCount                        int    `json:"pipeline_artifacts_count"`
-	PipelineArtifactsChecksumTotalCount           int    `json:"pipeline_artifacts_checksum_total_count"`
-	PipelineArtifactsChecksummedCount             int    `json:"pipeline_artifacts_checksummed_count"`
-	PipelineArtifactsChecksumFailedCount          int    `json:"pipeline_artifacts_checksum_failed_count"`
-	PipelineArtifactsSyncedCount                  int    `json:"pipeline_artifacts_synced_count"`
-	PipelineArtifactsFailedCount                  int    `json:"pipeline_artifacts_failed_count"`
-	PipelineArtifactsRegistryCount                int    `json:"pipeline_artifacts_registry_count"`
-	PipelineArtifactsVerificationTotalCount       int    `json:"pipeline_artifacts_verification_total_count"`
-	PipelineArtifactsVerifiedCount                int    `json:"pipeline_artifacts_verified_count"`
-	PipelineArtifactsVerificationFailedCount      int    `json:"pipeline_artifacts_verification_failed_count"`
+	PipelineArtifactsCount                        int64  `json:"pipeline_artifacts_count"`
+	PipelineArtifactsChecksumTotalCount           int64  `json:"pipeline_artifacts_checksum_total_count"`
+	PipelineArtifactsChecksummedCount             int64  `json:"pipeline_artifacts_checksummed_count"`
+	PipelineArtifactsChecksumFailedCount          int64  `json:"pipeline_artifacts_checksum_failed_count"`
+	PipelineArtifactsSyncedCount                  int64  `json:"pipeline_artifacts_synced_count"`
+	PipelineArtifactsFailedCount                  int64  `json:"pipeline_artifacts_failed_count"`
+	PipelineArtifactsRegistryCount                int64  `json:"pipeline_artifacts_registry_count"`
+	PipelineArtifactsVerificationTotalCount       int64  `json:"pipeline_artifacts_verification_total_count"`
+	PipelineArtifactsVerifiedCount                int64  `json:"pipeline_artifacts_verified_count"`
+	PipelineArtifactsVerificationFailedCount      int64  `json:"pipeline_artifacts_verification_failed_count"`
 	PipelineArtifactsSyncedInPercentage           string `json:"pipeline_artifacts_synced_in_percentage"`
 	PipelineArtifactsVerifiedInPercentage         string `json:"pipeline_artifacts_verified_in_percentage"`
-	UploadsCount                                  int    `json:"uploads_count"`
-	UploadsSyncedCount                            int    `json:"uploads_synced_count"`
-	UploadsFailedCount                            int    `json:"uploads_failed_count"`
-	UploadsRegistryCount                          int    `json:"uploads_registry_count"`
+	UploadsCount                                  int64  `json:"uploads_count"`
+	UploadsSyncedCount                            int64  `json:"uploads_synced_count"`
+	UploadsFailedCount                            int64  `json:"uploads_failed_count"`
+	UploadsRegistryCount                          int64  `json:"uploads_registry_count"`
 	UploadsSyncedInPercentage                     string `json:"uploads_synced_in_percentage"`
 }
 
@@ -436,18 +393,10 @@ type GeoNodeStatus struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-status-about-all-geo-nodes
 func (s *GeoNodesService) RetrieveStatusOfAllGeoNodes(options ...RequestOptionFunc) ([]*GeoNodeStatus, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "geo_nodes/status", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var gnss []*GeoNodeStatus
-	resp, err := s.client.Do(req, &gnss)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return gnss, resp, nil
+	return do[[]*GeoNodeStatus](s.client,
+		withPath("geo_nodes/status"),
+		withRequestOpts(options...),
+	)
 }
 
 // RetrieveStatusOfGeoNode get the of status of a specific Geo Nodes.
@@ -455,19 +404,9 @@ func (s *GeoNodesService) RetrieveStatusOfAllGeoNodes(options ...RequestOptionFu
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-status-about-a-specific-geo-node
-func (s *GeoNodesService) RetrieveStatusOfGeoNode(id int, options ...RequestOptionFunc) (*GeoNodeStatus, *Response, error) {
-	u := fmt.Sprintf("geo_nodes/%d/status", id)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	gns := new(GeoNodeStatus)
-	resp, err := s.client.Do(req, gns)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return gns, resp, nil
+func (s *GeoNodesService) RetrieveStatusOfGeoNode(id int64, options ...RequestOptionFunc) (*GeoNodeStatus, *Response, error) {
+	return do[*GeoNodeStatus](s.client,
+		withPath("geo_nodes/%d/status", id),
+		withRequestOpts(options...),
+	)
 }

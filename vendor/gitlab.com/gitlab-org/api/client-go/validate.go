@@ -16,14 +16,19 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
+import "net/http"
 
 type (
 	ValidateServiceInterface interface {
+		// ProjectNamespaceLint validates .gitlab-ci.yml content by project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/lint/#validate-sample-cicd-configuration
 		ProjectNamespaceLint(pid any, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
+		// ProjectLint validates .gitlab-ci.yml content by project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/lint/#validate-a-projects-cicd-configuration
 		ProjectLint(pid any, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
 	}
 
@@ -86,29 +91,13 @@ type ProjectNamespaceLintOptions struct {
 	Ref         *string `url:"ref,omitempty" json:"ref,omitempty"`
 }
 
-// ProjectNamespaceLint validates .gitlab-ci.yml content by project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/lint/#validate-sample-cicd-configuration
 func (s *ValidateService) ProjectNamespaceLint(pid any, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/ci/lint", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, &opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(ProjectLintResult)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+	return do[*ProjectLintResult](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/ci/lint", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // ProjectLintOptions represents the available ProjectLint() options.
@@ -123,27 +112,10 @@ type ProjectLintOptions struct {
 	Ref         *string `url:"ref,omitempty" json:"ref,omitempty"`
 }
 
-// ProjectLint validates .gitlab-ci.yml content by project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/lint/#validate-a-projects-cicd-configuration
 func (s *ValidateService) ProjectLint(pid any, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/ci/lint", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, &opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	l := new(ProjectLintResult)
-	resp, err := s.client.Do(req, l)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return l, resp, nil
+	return do[*ProjectLintResult](s.client,
+		withPath("projects/%s/ci/lint", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

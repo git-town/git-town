@@ -18,6 +18,7 @@ package gitlab
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -31,13 +32,16 @@ const (
 	EventConfidentialNote        EventType = "Confidential Note Hook"
 	EventTypeBuild               EventType = "Build Hook"
 	EventTypeDeployment          EventType = "Deployment Hook"
+	EventTypeEmoji               EventType = "Emoji Hook"
 	EventTypeFeatureFlag         EventType = "Feature Flag Hook"
 	EventTypeIssue               EventType = "Issue Hook"
 	EventTypeJob                 EventType = "Job Hook"
 	EventTypeMember              EventType = "Member Hook"
 	EventTypeMergeRequest        EventType = "Merge Request Hook"
+	EventTypeMilestone           EventType = "Milestone Hook"
 	EventTypeNote                EventType = "Note Hook"
 	EventTypePipeline            EventType = "Pipeline Hook"
+	EventTypeProject             EventType = "Project Hook"
 	EventTypePush                EventType = "Push Hook"
 	EventTypeRelease             EventType = "Release Hook"
 	EventTypeResourceAccessToken EventType = "Resource Access Token Hook"
@@ -45,6 +49,7 @@ const (
 	EventTypeSubGroup            EventType = "Subgroup Hook"
 	EventTypeSystemHook          EventType = "System Hook"
 	EventTypeTagPush             EventType = "Tag Push Hook"
+	EventTypeVulnerability       EventType = "Vulnerability Hook"
 	EventTypeWikiPage            EventType = "Wiki Page Hook"
 )
 
@@ -62,10 +67,12 @@ const (
 )
 
 type noteEvent struct {
-	ObjectKind       string `json:"object_kind"`
-	ObjectAttributes struct {
-		NoteableType string `json:"noteable_type"`
-	} `json:"object_attributes"`
+	ObjectKind       string                    `json:"object_kind"`
+	ObjectAttributes noteEventObjectAttributes `json:"object_attributes"`
+}
+
+type noteEventObjectAttributes struct {
+	NoteableType string `json:"noteable_type"`
 }
 
 type serviceEvent struct {
@@ -221,6 +228,8 @@ func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 		event = &BuildEvent{}
 	case EventTypeDeployment:
 		event = &DeploymentEvent{}
+	case EventTypeEmoji:
+		event = &EmojiEvent{}
 	case EventTypeFeatureFlag:
 		event = &FeatureFlagEvent{}
 	case EventTypeIssue, EventConfidentialIssue:
@@ -231,6 +240,8 @@ func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 		event = &MemberEvent{}
 	case EventTypeMergeRequest:
 		event = &MergeEvent{}
+	case EventTypeMilestone:
+		event = &MilestoneWebhookEvent{}
 	case EventTypeNote, EventConfidentialNote:
 		note := &noteEvent{}
 		err := json.Unmarshal(payload, note)
@@ -256,6 +267,8 @@ func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 		}
 	case EventTypePipeline:
 		event = &PipelineEvent{}
+	case EventTypeProject:
+		event = &ProjectWebhookEvent{}
 	case EventTypePush:
 		event = &PushEvent{}
 	case EventTypeRelease:
@@ -276,7 +289,7 @@ func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 		case projectEvent:
 			event = &ProjectResourceAccessTokenEvent{}
 		default:
-			return nil, fmt.Errorf("unexpected resource access token payload")
+			return nil, errors.New("unexpected resource access token payload")
 		}
 	case EventTypeServiceHook:
 		service := &serviceEvent{}
@@ -298,6 +311,8 @@ func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 		event = &SubGroupEvent{}
 	case EventTypeTagPush:
 		event = &TagEvent{}
+	case EventTypeVulnerability:
+		event = &VulnerabilityEvent{}
 	case EventTypeWikiPage:
 		event = &WikiPageEvent{}
 	default:

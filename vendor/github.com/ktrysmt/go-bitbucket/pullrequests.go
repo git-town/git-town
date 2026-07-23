@@ -37,8 +37,8 @@ func (p *PullRequests) GetCommits(po *PullRequestsOptions) (interface{}, error) 
 	return p.c.executePaginated("GET", urlStr, "", nil)
 }
 
-func (p *PullRequests) Gets(po *PullRequestsOptions) (interface{}, error) {
-	urlStr := p.c.GetApiBaseURL() + "/repositories/" + po.Owner + "/" + po.RepoSlug + "/pullrequests/"
+func (p *PullRequests) List(po *PullRequestsOptions) (interface{}, error) {
+	urlStr := p.c.GetApiBaseURL() + "/repositories/" + url.PathEscape(po.Owner) + "/" + url.PathEscape(po.RepoSlug) + "/pullrequests/"
 
 	if po.States != nil && len(po.States) != 0 {
 		parsed, err := url.Parse(urlStr)
@@ -76,6 +76,15 @@ func (p *PullRequests) Gets(po *PullRequestsOptions) (interface{}, error) {
 	}
 
 	return p.c.executePaginated("GET", urlStr, "", nil)
+}
+
+/*
+Redirect to List() which is the function name declared in bitbucket.go
+by Yoshimatsu on 6/10/19. This is to prevent breakage for anyone using
+the missnamed Gets() function call.
+*/
+func (p *PullRequests) Gets(po *PullRequestsOptions) (interface{}, error) {
+	return p.List(po)
 }
 
 func (p *PullRequests) Get(po *PullRequestsOptions) (interface{}, error) {
@@ -254,6 +263,10 @@ func (p *PullRequests) buildPullRequestBody(po *PullRequestsOptions) (string, er
 
 	if po.CloseSourceBranch || !po.CloseSourceBranch {
 		body["close_source_branch"] = po.CloseSourceBranch
+	}
+
+	if po.MergeStrategy != "" {
+		body["merge_strategy"] = po.MergeStrategy
 	}
 
 	if po.Draft {

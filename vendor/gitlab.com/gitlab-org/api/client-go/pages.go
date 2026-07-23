@@ -17,15 +17,28 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	PagesServiceInterface interface {
+		// UnpublishPages unpublishes pages. The user must have admin privileges.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/pages/#unpublish-pages
 		UnpublishPages(gid any, options ...RequestOptionFunc) (*Response, error)
+		// GetPages lists Pages settings for a project. The user must have at least
+		// maintainer privileges.
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/pages/#get-pages-settings-for-a-project
 		GetPages(gid any, options ...RequestOptionFunc) (*Pages, *Response, error)
+		// UpdatePages updates Pages settings for a project. The user must have
+		// administrator privileges.
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project
 		UpdatePages(pid any, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error)
 	}
 
@@ -48,6 +61,7 @@ type Pages struct {
 	IsUniqueDomainEnabled bool               `json:"is_unique_domain_enabled"`
 	ForceHTTPS            bool               `json:"force_https"`
 	Deployments           []*PagesDeployment `json:"deployments"`
+	PrimaryDomain         string             `json:"primary_domain"`
 }
 
 // PagesDeployment represents a Pages deployment.
@@ -60,49 +74,20 @@ type PagesDeployment struct {
 	RootDirectory string    `json:"root_directory"`
 }
 
-// UnpublishPages unpublished pages. The user must have admin privileges.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/pages/#unpublish-pages
 func (s *PagesService) UnpublishPages(gid any, options ...RequestOptionFunc) (*Response, error) {
-	page, err := parseID(gid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/pages", PathEscape(page))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/pages", ProjectID{gid}),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
-// GetPages lists Pages settings for a project. The user must have at least
-// maintainer privileges.
-//
-// GitLab API Docs:
-// https://docs.gitlab.com/api/pages/#get-pages-settings-for-a-project
 func (s *PagesService) GetPages(gid any, options ...RequestOptionFunc) (*Pages, *Response, error) {
-	project, err := parseID(gid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/pages", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	p := new(Pages)
-	resp, err := s.client.Do(req, p)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return p, resp, nil
+	return do[*Pages](s.client,
+		withPath("projects/%s/pages", ProjectID{gid}),
+		withRequestOpts(options...),
+	)
 }
 
 // UpdatePagesOptions represents the available UpdatePages() options.
@@ -110,32 +95,16 @@ func (s *PagesService) GetPages(gid any, options ...RequestOptionFunc) (*Pages, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project
 type UpdatePagesOptions struct {
-	PagesUniqueDomainEnabled *bool `url:"pages_unique_domain_enabled,omitempty" json:"pages_unique_domain_enabled,omitempty"`
-	PagesHTTPSOnly           *bool `url:"pages_https_only,omitempty" json:"pages_https_only,omitempty"`
+	PagesUniqueDomainEnabled *bool   `url:"pages_unique_domain_enabled,omitempty" json:"pages_unique_domain_enabled,omitempty"`
+	PagesHTTPSOnly           *bool   `url:"pages_https_only,omitempty" json:"pages_https_only,omitempty"`
+	PagesPrimaryDomain       *string `url:"pages_primary_domain,omitempty" json:"pages_primary_domain,omitempty"`
 }
 
-// UpdatePages updates Pages settings for a project. The user must have
-// administrator privileges.
-//
-// GitLab API Docs:
-// https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project
 func (s *PagesService) UpdatePages(pid any, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/pages", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPatch, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	p := new(Pages)
-	resp, err := s.client.Do(req, p)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return p, resp, nil
+	return do[*Pages](s.client,
+		withMethod(http.MethodPatch),
+		withPath("projects/%s/pages", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
