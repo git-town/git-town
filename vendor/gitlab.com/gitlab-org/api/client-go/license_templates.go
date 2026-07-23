@@ -16,11 +16,6 @@
 
 package gitlab
 
-import (
-	"fmt"
-	"net/http"
-)
-
 // LicenseTemplate represents a license template.
 //
 // GitLab API docs:
@@ -71,18 +66,11 @@ type ListLicenseTemplatesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/licenses/#list-license-templates
 func (s *LicenseTemplatesService) ListLicenseTemplates(opt *ListLicenseTemplatesOptions, options ...RequestOptionFunc) ([]*LicenseTemplate, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "templates/licenses", opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var lts []*LicenseTemplate
-	resp, err := s.client.Do(req, &lts)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return lts, resp, nil
+	return do[[]*LicenseTemplate](s.client,
+		withPath("templates/licenses"),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetLicenseTemplateOptions represents the available
@@ -101,18 +89,9 @@ type GetLicenseTemplateOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/licenses/#single-license-template
 func (s *LicenseTemplatesService) GetLicenseTemplate(template string, opt *GetLicenseTemplateOptions, options ...RequestOptionFunc) (*LicenseTemplate, *Response, error) {
-	u := fmt.Sprintf("templates/licenses/%s", template)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	lt := new(LicenseTemplate)
-	resp, err := s.client.Do(req, lt)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return lt, resp, nil
+	return do[*LicenseTemplate](s.client,
+		withPath("templates/licenses/%s", NoEscape{template}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

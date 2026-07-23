@@ -17,7 +17,6 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -31,38 +30,11 @@ type (
 		// GitLab API docs:
 		// https://docs.gitlab.com/api/environments/#list-environments
 		ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error)
-
-		// GetEnvironment gets a specific environment from a project.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/environments/#get-a-specific-environment
-		GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error)
-
-		// CreateEnvironment adds an environment to a project. This method is idempotent
-		// and can be called multiple times with the same parameters. Creating an environment
-		// that already exists does not affect the existing association.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/environments/#create-a-new-environment
+		GetEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Environment, *Response, error)
 		CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
-
-		// EditEnvironment updates a project team environment to a specified access level.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/environments/#update-an-existing-environment
-		EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
-
-		// DeleteEnvironment removes an environment from a project team.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/environments/#delete-an-environment
-		DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error)
-
-		// StopEnvironment stops an environment within a specific project.
-		//
-		// GitLab API docs:
-		// https://docs.gitlab.com/api/environments/#stop-an-environment
-		StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+		EditEnvironment(pid any, environment int64, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+		DeleteEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Response, error)
+		StopEnvironment(pid any, environmentID int64, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
 	}
 
 	// EnvironmentsService handles communication with the environment related methods
@@ -80,7 +52,7 @@ var _ EnvironmentsServiceInterface = (*EnvironmentsService)(nil)
 //
 // GitLab API docs: https://docs.gitlab.com/api/environments/
 type Environment struct {
-	ID                  int         `json:"id"`
+	ID                  int64       `json:"id"`
 	Name                string      `json:"name"`
 	Slug                string      `json:"slug"`
 	Description         string      `json:"description"`
@@ -114,45 +86,18 @@ type ListEnvironmentsOptions struct {
 }
 
 func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opts, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var envs []*Environment
-	resp, err := s.client.Do(req, &envs)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return envs, resp, nil
+	return do[[]*Environment](s.client,
+		withPath("projects/%s/environments", ProjectID{pid}),
+		withAPIOpts(opts),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *EnvironmentsService) GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments/%d", PathEscape(project), environment)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	env := new(Environment)
-	resp, err := s.client.Do(req, env)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return env, resp, nil
+func (s *EnvironmentsService) GetEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Environment, *Response, error) {
+	return do[*Environment](s.client,
+		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateEnvironmentOptions represents the available CreateEnvironment() options.
@@ -164,31 +109,19 @@ type CreateEnvironmentOptions struct {
 	Description         *string `url:"description,omitempty" json:"description,omitempty"`
 	ExternalURL         *string `url:"external_url,omitempty" json:"external_url,omitempty"`
 	Tier                *string `url:"tier,omitempty" json:"tier,omitempty"`
-	ClusterAgentID      *int    `url:"cluster_agent_id,omitempty" json:"cluster_agent_id,omitempty"`
+	ClusterAgentID      *int64  `url:"cluster_agent_id,omitempty" json:"cluster_agent_id,omitempty"`
 	KubernetesNamespace *string `url:"kubernetes_namespace,omitempty" json:"kubernetes_namespace,omitempty"`
 	FluxResourcePath    *string `url:"flux_resource_path,omitempty" json:"flux_resource_path,omitempty"`
 	AutoStopSetting     *string `url:"auto_stop_setting,omitempty" json:"auto_stop_setting,omitempty"`
 }
 
 func (s *EnvironmentsService) CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	env := new(Environment)
-	resp, err := s.client.Do(req, env)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return env, resp, nil
+	return do[*Environment](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/environments", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // EditEnvironmentOptions represents the available EditEnvironment() options.
@@ -200,46 +133,28 @@ type EditEnvironmentOptions struct {
 	Description         *string `url:"description,omitempty" json:"description,omitempty"`
 	ExternalURL         *string `url:"external_url,omitempty" json:"external_url,omitempty"`
 	Tier                *string `url:"tier,omitempty" json:"tier,omitempty"`
-	ClusterAgentID      *int    `url:"cluster_agent_id,omitempty" json:"cluster_agent_id,omitempty"`
+	ClusterAgentID      *int64  `url:"cluster_agent_id,omitempty" json:"cluster_agent_id,omitempty"`
 	KubernetesNamespace *string `url:"kubernetes_namespace,omitempty" json:"kubernetes_namespace,omitempty"`
 	FluxResourcePath    *string `url:"flux_resource_path,omitempty" json:"flux_resource_path,omitempty"`
 	AutoStopSetting     *string `url:"auto_stop_setting,omitempty" json:"auto_stop_setting,omitempty"`
 }
 
-func (s *EnvironmentsService) EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments/%d", PathEscape(project), environment)
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	env := new(Environment)
-	resp, err := s.client.Do(req, env)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return env, resp, nil
+func (s *EnvironmentsService) EditEnvironment(pid any, environment int64, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
+	return do[*Environment](s.client,
+		withMethod(http.MethodPut),
+		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
-func (s *EnvironmentsService) DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments/%d", PathEscape(project), environment)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *EnvironmentsService) DeleteEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }
 
 // StopEnvironmentOptions represents the available StopEnvironment() options.
@@ -250,23 +165,11 @@ type StopEnvironmentOptions struct {
 	Force *bool `url:"force,omitempty" json:"force,omitempty"`
 }
 
-func (s *EnvironmentsService) StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/environments/%d/stop", PathEscape(project), environmentID)
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	env := new(Environment)
-	resp, err := s.client.Do(req, env)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return env, resp, nil
+func (s *EnvironmentsService) StopEnvironment(pid any, environmentID int64, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
+	return do[*Environment](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/environments/%d/stop", ProjectID{pid}, environmentID),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }

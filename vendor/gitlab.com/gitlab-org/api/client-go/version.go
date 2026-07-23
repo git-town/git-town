@@ -16,8 +16,6 @@
 
 package gitlab
 
-import "net/http"
-
 type (
 	VersionServiceInterface interface {
 		GetVersion(options ...RequestOptionFunc) (*Version, *Response, error)
@@ -51,16 +49,8 @@ func (s Version) String() string {
 //
 // GitLab API docs: https://docs.gitlab.com/api/version/
 func (s *VersionService) GetVersion(options ...RequestOptionFunc) (*Version, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodGet, "version", nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(Version)
-	resp, err := s.client.Do(req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
+	return do[*Version](s.client,
+		withPath("version"),
+		withRequestOpts(options...),
+	)
 }

@@ -143,7 +143,7 @@ func (opt *ListIssueOption) QueryEncode() string {
 		query.Add("owner", opt.Owner)
 	}
 	if len(opt.Team) > 0 {
-		query.Add("team", opt.MentionedBy)
+		query.Add("team", opt.Team)
 	}
 
 	return query.Encode()

@@ -17,18 +17,17 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 )
 
 type (
 	ProjectAccessTokensServiceInterface interface {
 		ListProjectAccessTokens(pid any, opt *ListProjectAccessTokensOptions, options ...RequestOptionFunc) ([]*ProjectAccessToken, *Response, error)
-		GetProjectAccessToken(pid any, id int, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
+		GetProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
 		CreateProjectAccessToken(pid any, opt *CreateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
-		RotateProjectAccessToken(pid any, id int, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
+		RotateProjectAccessToken(pid any, id int64, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
 		RotateProjectAccessTokenSelf(pid any, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error)
-		RevokeProjectAccessToken(pid any, id int, options ...RequestOptionFunc) (*Response, error)
+		RevokeProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ProjectAccessTokensService handles communication with the
@@ -69,49 +68,22 @@ type ListProjectAccessTokensOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#list-all-project-access-tokens
 func (s *ProjectAccessTokensService) ListProjectAccessTokens(pid any, opt *ListProjectAccessTokensOptions, options ...RequestOptionFunc) ([]*ProjectAccessToken, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var pats []*ProjectAccessToken
-	resp, err := s.client.Do(req, &pats)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pats, resp, nil
+	return do[[]*ProjectAccessToken](s.client,
+		withPath("projects/%s/access_tokens", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // GetProjectAccessToken gets a single project access tokens in a project.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#get-details-on-a-project-access-token
-func (s *ProjectAccessTokensService) GetProjectAccessToken(pid any, id int, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens/%d", PathEscape(project), id)
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pat := new(ProjectAccessToken)
-	resp, err := s.client.Do(req, &pat)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pat, resp, nil
+func (s *ProjectAccessTokensService) GetProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
+	return do[*ProjectAccessToken](s.client,
+		withPath("projects/%s/access_tokens/%d", ProjectID{pid}, id),
+		withRequestOpts(options...),
+	)
 }
 
 // CreateProjectAccessTokenOptions represents the available CreateVariable()
@@ -132,24 +104,12 @@ type CreateProjectAccessTokenOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#create-a-project-access-token
 func (s *ProjectAccessTokensService) CreateProjectAccessToken(pid any, opt *CreateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens", PathEscape(project))
-
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pat := new(ProjectAccessToken)
-	resp, err := s.client.Do(req, pat)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pat, resp, nil
+	return do[*ProjectAccessToken](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/access_tokens", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // RotateProjectAccessTokenOptions represents the available RotateProjectAccessToken()
@@ -166,24 +126,13 @@ type RotateProjectAccessTokenOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#rotate-a-project-access-token
-func (s *ProjectAccessTokensService) RotateProjectAccessToken(pid any, id int, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	projects, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens/%d/rotate", PathEscape(projects), id)
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pat := new(ProjectAccessToken)
-	resp, err := s.client.Do(req, pat)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pat, resp, nil
+func (s *ProjectAccessTokensService) RotateProjectAccessToken(pid any, id int64, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
+	return do[*ProjectAccessToken](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/access_tokens/%d/rotate", ProjectID{pid}, id),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // RotateProjectAccessTokenSelf revokes the project access token used for the request
@@ -192,40 +141,23 @@ func (s *ProjectAccessTokensService) RotateProjectAccessToken(pid any, id int, o
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#self-rotate
 func (s *ProjectAccessTokensService) RotateProjectAccessTokenSelf(pid any, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	projects, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens/self/rotate", PathEscape(projects))
-	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	pat := new(ProjectAccessToken)
-	resp, err := s.client.Do(req, pat)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return pat, resp, nil
+	return do[*ProjectAccessToken](s.client,
+		withMethod(http.MethodPost),
+		withPath("projects/%s/access_tokens/self/rotate", ProjectID{pid}),
+		withAPIOpts(opt),
+		withRequestOpts(options...),
+	)
 }
 
 // RevokeProjectAccessToken revokes a project access token.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#revoke-a-project-access-token
-func (s *ProjectAccessTokensService) RevokeProjectAccessToken(pid any, id int, options ...RequestOptionFunc) (*Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, err
-	}
-	u := fmt.Sprintf("projects/%s/access_tokens/%d", PathEscape(project), id)
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
+func (s *ProjectAccessTokensService) RevokeProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*Response, error) {
+	_, resp, err := do[none](s.client,
+		withMethod(http.MethodDelete),
+		withPath("projects/%s/access_tokens/%d", ProjectID{pid}, id),
+		withRequestOpts(options...),
+	)
+	return resp, err
 }

@@ -7,6 +7,12 @@ A GitLab API client enabling Go programs to interact with GitLab in a simple and
 
 [[_TOC_]]
 
+## `client-go` 1.0 Has Been Released!
+
+We're pleased to announce that version 1.0 has been released for the `client-go` library, which comes with
+a backwards-compatibility guarantee. For more details of our major release plans moving forward, and for 
+migration guides, please see the [Migration Guides](#migration-guides) section below!
+
 ## Usage
 
 ```go
@@ -20,7 +26,7 @@ users:
 ```go
 git, err := gitlab.NewClient("yourtokengoeshere")
 if err != nil {
-  log.Fatalf("Failed to create client: %v", err)
+    log.Fatalf("Failed to create client: %v", err)
 }
 users, _, err := git.Users.ListUsers(&gitlab.ListUsersOptions{})
 ```
@@ -80,10 +86,10 @@ func main() {
 
 	// Add a new snippet
 	s := &gitlab.CreateProjectSnippetOptions{
-		Title:           gitlab.Ptr("Dummy Snippet"),
-		FileName:        gitlab.Ptr("snippet.go"),
-		Content:         gitlab.Ptr("package main...."),
-		Visibility:      gitlab.Ptr(gitlab.PublicVisibility),
+		Title:      gitlab.Ptr("Dummy Snippet"),
+		FileName:   gitlab.Ptr("snippet.go"),
+		Content:    gitlab.Ptr("package main...."),
+		Visibility: gitlab.Ptr(gitlab.PublicVisibility),
 	}
 	_, _, err = git.ProjectSnippets.CreateSnippet(project.ID, s)
 	if err != nil {
@@ -225,7 +231,7 @@ func main() {
 }
 ```
 
-For complete usage of go-gitlab, see the full [package docs](https://godoc.org/gitlab.com/gitlab-org/api/client-go).
+For complete usage of go-gitlab, see the full [package docs](https://pkg.go.dev/gitlab.com/gitlab-org/api/client-go).
 
 ## Installation
 
@@ -244,22 +250,22 @@ You can use them like this:
 
 ```go
 func TestMockExample(t *testing.T) {
-    client := gitlabtesting.NewTestClient(t)
-    opts := &gitlab.ListAgentsOptions{}
-    expectedResp := &gitlab.Response{}
-    pid := 1
-    // Setup expectations
-    client.MockClusterAgents.EXPECT().
-        ListAgents(pid, opts).
-        Return([]*gitlab.Agent{{ID: 1}}, expectedResp, nil)
+	client := gitlabtesting.NewTestClient(t)
+	opts := &gitlab.ListAgentsOptions{}
+	expectedResp := &gitlab.Response{}
+	pid := 1
+	// Setup expectations
+	client.MockClusterAgents.EXPECT().
+		ListAgents(pid, opts).
+		Return([]*gitlab.Agent{{ID: 1}}, expectedResp, nil)
 
-    // Use the client in your test
-    // You'd probably call your own code here that gets the client injected.
-    // You can also retrieve a `gitlab.Client` object from `client.Client`.
-    agents, resp, err := client.ClusterAgents.ListAgents(pid, opts)
-    assert.NoError(t, err)
-    assert.Equal(t, expectedResp, resp)
-    assert.Len(t, agents, 1)
+	// Use the client in your test
+	// You'd probably call your own code here that gets the client injected.
+	// You can also retrieve a `gitlab.Client` object from `client.Client`.
+	agents, resp, err := client.ClusterAgents.ListAgents(pid, opts)
+	assert.NoError(t, err)
+	assert.Equal(t, expectedResp, resp)
+	assert.Len(t, agents, 1)
 }
 ```
 
@@ -292,6 +298,13 @@ This compatibility is reflected in the `go` directive of the [`go.mod`](/go.mod)
 and the unit test matrix in [`.gitlab-ci.yml`](/.gitlab-ci.yml).
 
 You may also use https://endoflife.date/go to quickly discover the supported Go versions.
+
+### Migration Guides
+
+`client-go` will release a major update roughly once every 6 months to align to the Go release cycle. Each
+major release will publish a migration guide to help users migrate from the previous major release.
+
+- [Migration Guide for 0.X -> 1.X](docs/release-1.0-migration.md)
 
 ## Contributing
 
