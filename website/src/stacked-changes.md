@@ -21,7 +21,8 @@ and automates this extra work for you.
 Suppose you are adding a new feature to an existing codebase.
 Before we can do that cleanly, you need to prepare the code base:
 
-1. Refactor the architecture to make it easier to add the new feature cleanly
+1. [Prefactor](https://testing.googleblog.com/2026/07/prefactoring-clear-way-for-your-new.html)
+   the architecture to make it easier to add the new feature cleanly
 2. Clean up technical drift: rename variables, functions, etc
 3. Build the feature on top of the improved codebase
 
