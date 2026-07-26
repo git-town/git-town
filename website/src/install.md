@@ -100,6 +100,34 @@ You can install Git Town on BSD via
 [freshports](https://www.freshports.org/devel/git-town) or by downloading the
 matching binaries from the GitHub release.
 
+## Cross-platform installation with `mise`
+
+You can install Git Town on Windows,
+Linux and macOS with [`mise`](https://mise.jdx.dev/) using the
+[GitHub tool backend](https://mise.jdx.dev/dev-tools/backends/github.html).
+Make sure you have [installed `mise`](https://mise.jdx.dev/installing-mise.html)
+according to your operating system and shell first.
+
+```sh
+# for a global install
+mise use -g github:git-town/git-town
+
+# for a project-specific install
+cd path/to/your/project
+mise use github:git-town/git-town
+```
+
+You can also manually add it to the `[tools]` section of either a global
+or project-local `mise`
+[configuration file](https://mise.jdx.dev/configuration.html).
+
+```toml
+[tools]
+"github:git-town/git-town" = "latest"
+# or a specific version
+"github:git-town/git-town" = "24.0.0"
+```
+
 ## Manual installation
 
 ```sh
