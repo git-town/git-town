@@ -82,9 +82,6 @@ doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
 fix: ${TRICORDER}  # runs all linters and auto-fixes
-	make --no-print-directory generate-json-schema
-	$(GOFUMPT) -l -w .
-	$(RUMDL) fmt
 	$(DPRINT) fmt
 	$(DPRINT) fmt --config dprint-changelog.json
 	$(TAPLO) format

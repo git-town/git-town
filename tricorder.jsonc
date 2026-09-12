@@ -65,7 +65,7 @@
     "gherkin_lint": { "enabled": true, "ignore-files": [] },
     "ghokin": { "enabled": true, "ignore-files": [] },
     "git_diff_check": { "enabled": true },
-    "gofumpt": { "enabled": true, "ignore-files": [] },
+    "gofumpt": { "enabled": true },
     "golangci_lint": { "enabled": true },
     "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] },
     "prettier": { "enabled": true, "ignore-files": [] },
