@@ -1,5 +1,5 @@
-RTA_VERSION = 0.40.0
-TRICORDER_VERSION = 0.1.0
+RTA_VERSION = 0.40.0  # run-that-app version to use
+TRICORDER_VERSION = 0.1.0  # tricorder version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -80,7 +80,7 @@ dependencies: ${RTA}  # prints the dependencies between the internal Go packages
 doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
-fix: ${RTA}  # runs all linters and auto-fixes
+fix: ${TRICORDER}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_cmp_or/format_cmp_or.go
 	go run tools/format_unittests/format_unittests.go
