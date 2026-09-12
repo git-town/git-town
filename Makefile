@@ -31,6 +31,7 @@ SHFMT        = $(RTA) shfmt
 STATICCHECK  = $(RTA) --from-source staticcheck
 TAPLO        = $(RTA) taplo
 TEXTRUNNER   = $(NODE) node_modules/.bin/text-runner
+TRICORDER    = tools/tricorder@$(TRICORDER_VERSION)
 
 contest: ${RTA}  # run the Contest server
 	@$(CONTEST)
