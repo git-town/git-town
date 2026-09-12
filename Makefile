@@ -7,6 +7,7 @@ RELEASE_VERSION := "24.0.0"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
+TRICORDER    = tools/tricorder@$(TRICORDER_VERSION)
 ACTIONLINT   = $(RTA) actionlint
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
@@ -31,7 +32,6 @@ SHFMT        = $(RTA) shfmt
 STATICCHECK  = $(RTA) --from-source staticcheck
 TAPLO        = $(RTA) taplo
 TEXTRUNNER   = $(NODE) node_modules/.bin/text-runner
-TRICORDER    = tools/tricorder@$(TRICORDER_VERSION)
 
 contest: ${RTA}  # run the Contest server
 	@$(CONTEST)
