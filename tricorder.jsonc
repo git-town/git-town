@@ -1,0 +1,52 @@
+{
+  "$schema": "https://github.com/kevgo/tricorder/raw/refs/heads/main/docs/schema.json",
+
+  "ignore-files": [],
+
+  "global-lints": [
+    { "command": "tools/lint_1.sh", "name": "custom lint 1" }
+  ],
+  "global-fixes": [
+    { "command": "tools/fix_1.sh", "name": "custom fix 1" }
+  ],
+
+  "stacks": {
+    "css": {},
+    "cucumber": {},
+    "go": {},
+    "java": {},
+    "json": {},
+    "jsonc": {},
+    "markdown": {},
+    "python": {},
+    "rust": {},
+    "sql": {},
+    "toml": {},
+    "typescript": {},
+    "unknown": {},
+    "yml": {}
+  },
+
+  "applications": {
+    "actionlint": { "enabled": true },
+    "biome": { "enabled": true, "ignore-files": [] },
+    "checkstyle": { "enabled": true },
+    "delete_empty_folders": { "enabled": true },
+    "gherkin_lint": { "enabled": true, "ignore-files": [] },
+    "ghokin": { "enabled": true, "ignore-files": [] },
+    "git_diff_check": { "enabled": true },
+    "gofumpt": { "enabled": true, "ignore-files": [] },
+    "golangci_lint": { "enabled": true },
+    // github.com/google/keep-sorted is disabled by default
+    // because using it requires scanning the file content of all workspace files for markers.
+    "keep-sorted": { "enabled": false, "ignore-files": [] },
+    "prettier": { "enabled": true, "ignore-files": [] },
+    "pyright": { "enabled": true, "ignore-files": [] },
+    "ruff": { "enabled": true, "ignore-files": [] },
+    "rumdl": { "enabled": true, "ignore-files": [] },
+    "sqlfmt": { "enabled": true, "ignore-files": [] },
+    "taplo": { "enabled": true, "ignore-files": [] },
+    "text-runner": { "enabled": true },
+    "tikibase": { "enabled": true }
+  }
+}
