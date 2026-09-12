@@ -41,10 +41,10 @@
         "add": [
           {
             "name": "generate JSON schema",
-            "command": "make --no-print-directory generate-json-schema",
-          },
-        ],
-      },
+            "command": "make --no-print-directory generate-json-schema"
+          }
+        ]
+      }
     },
     "jsonc": {},
     "markdown": {},
@@ -54,7 +54,7 @@
     "toml": {},
     "typescript": {},
     "unknown": {},
-    "yml": {},
+    "yml": {}
   },
 
   "applications": {
