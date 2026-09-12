@@ -82,12 +82,6 @@ doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
 fix: ${TRICORDER}  # runs all linters and auto-fixes
-	make --no-print-directory fix-optioncompare-in-tests
-	go run tools/format_cmp_or/format_cmp_or.go
-	go run tools/format_unittests/format_unittests.go
-	go run tools/format_self/format_self.go
-	go run tools/sync_rta_version/sync_rta_version.go
-	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
 	$(GOFUMPT) -l -w .
 	$(RUMDL) fmt
@@ -179,10 +173,6 @@ lint-all: lint ${RTA}  # runs all linters
 
 alphavet: ${RTA}
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
-
-keep-sorted: ${RTA}
-	@$(RTA) --install ripgrep
-	@$(KEEPSORTED) $(shell $(RTA) ripgrep -l --hidden 'keep-sorted end' ./ --glob '!{.git,Makefile}')
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors

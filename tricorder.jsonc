@@ -14,13 +14,36 @@
         "add": [
           {
             "name": "optioncompare in tests",
-            "command": "make --no-print-directory fix-optioncompare-in-tests",
+            "command": "make --no-print-directory fix-optioncompare-in-tests"
           },
-        ],
-      },
+          {
+            "name": "format cmp_or",
+            "command": "go run tools/format_cmp_or/format_cmp_or.go"
+          },
+          {
+            "name": "format unittests",
+            "command": "go run tools/format_unittests/format_unittests.go"
+          },
+          {
+            "name": "format self",
+            "command": "go run tools/format_self/format_self.go"
+          },
+          {
+            "name": "sync RTA version",
+            "command": "go run tools/sync_rta_version/sync_rta_version.go"
+          }
+        ]
+      }
     },
     "java": {},
-    "json": {},
+    "json": {
+      "add": [
+        {
+          "name": "generate JSON schema",
+          "command": "make --no-print-directory generate-json-schema"
+        }
+      ]
+    },
     "jsonc": {},
     "markdown": {},
     "python": {},
@@ -29,7 +52,7 @@
     "toml": {},
     "typescript": {},
     "unknown": {},
-    "yml": {},
+    "yml": {}
   },
 
   "applications": {
@@ -50,6 +73,6 @@
     "sqlfmt": { "enabled": true, "ignore-files": [] },
     "taplo": { "enabled": true, "ignore-files": [] },
     "text-runner": { "enabled": true },
-    "tikibase": { "enabled": true },
-  },
+    "tikibase": { "enabled": true }
+  }
 }
