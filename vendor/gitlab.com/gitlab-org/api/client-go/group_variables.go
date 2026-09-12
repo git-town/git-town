@@ -93,7 +93,8 @@ type ListGroupVariablesOptions struct {
 }
 
 func (s *GroupVariablesService) ListVariables(gid any, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error) {
-	return do[[]*GroupVariable](s.client,
+	return do[[]*GroupVariable](
+		s.client,
 		withPath("groups/%s/variables", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -110,7 +111,8 @@ type GetGroupVariableOptions struct {
 }
 
 func (s *GroupVariablesService) GetVariable(gid any, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	return do[*GroupVariable](s.client,
+	return do[*GroupVariable](
+		s.client,
 		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -135,7 +137,8 @@ type CreateGroupVariableOptions struct {
 }
 
 func (s *GroupVariablesService) CreateVariable(gid any, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	return do[*GroupVariable](s.client,
+	return do[*GroupVariable](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/variables", GroupID{gid}),
 		withAPIOpts(opt),
@@ -160,7 +163,8 @@ type UpdateGroupVariableOptions struct {
 }
 
 func (s *GroupVariablesService) UpdateVariable(gid any, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
-	return do[*GroupVariable](s.client,
+	return do[*GroupVariable](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
 		withAPIOpts(opt),
@@ -178,7 +182,8 @@ type RemoveGroupVariableOptions struct {
 }
 
 func (s *GroupVariablesService) RemoveVariable(gid any, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/variables/%s", GroupID{gid}, url.PathEscape(key)),
 		withAPIOpts(opt),

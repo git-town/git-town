@@ -92,7 +92,8 @@ type ProjectNamespaceLintOptions struct {
 }
 
 func (s *ValidateService) ProjectNamespaceLint(pid any, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
-	return do[*ProjectLintResult](s.client,
+	return do[*ProjectLintResult](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/ci/lint", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -113,7 +114,8 @@ type ProjectLintOptions struct {
 }
 
 func (s *ValidateService) ProjectLint(pid any, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
-	return do[*ProjectLintResult](s.client,
+	return do[*ProjectLintResult](
+		s.client,
 		withPath("projects/%s/ci/lint", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

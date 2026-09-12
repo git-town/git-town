@@ -90,7 +90,8 @@ type ListInstanceVariablesOptions struct {
 }
 
 func (s *InstanceVariablesService) ListVariables(opt *ListInstanceVariablesOptions, options ...RequestOptionFunc) ([]*InstanceVariable, *Response, error) {
-	return do[[]*InstanceVariable](s.client,
+	return do[[]*InstanceVariable](
+		s.client,
 		withPath("admin/ci/variables"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -98,7 +99,8 @@ func (s *InstanceVariablesService) ListVariables(opt *ListInstanceVariablesOptio
 }
 
 func (s *InstanceVariablesService) GetVariable(key string, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	return do[*InstanceVariable](s.client,
+	return do[*InstanceVariable](
+		s.client,
 		withPath("admin/ci/variables/%s", url.PathEscape(key)),
 		withRequestOpts(options...),
 	)
@@ -120,7 +122,8 @@ type CreateInstanceVariableOptions struct {
 }
 
 func (s *InstanceVariablesService) CreateVariable(opt *CreateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	return do[*InstanceVariable](s.client,
+	return do[*InstanceVariable](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("admin/ci/variables"),
 		withAPIOpts(opt),
@@ -143,7 +146,8 @@ type UpdateInstanceVariableOptions struct {
 }
 
 func (s *InstanceVariablesService) UpdateVariable(key string, opt *UpdateInstanceVariableOptions, options ...RequestOptionFunc) (*InstanceVariable, *Response, error) {
-	return do[*InstanceVariable](s.client,
+	return do[*InstanceVariable](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("admin/ci/variables/%s", url.PathEscape(key)),
 		withAPIOpts(opt),
@@ -152,7 +156,8 @@ func (s *InstanceVariablesService) UpdateVariable(key string, opt *UpdateInstanc
 }
 
 func (s *InstanceVariablesService) RemoveVariable(key string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("admin/ci/variables/%s", url.PathEscape(key)),
 		withRequestOpts(options...),

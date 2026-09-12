@@ -32,7 +32,6 @@ type DiffStat struct {
 }
 
 func (d *Diff) GetDiff(do *DiffOptions) (interface{}, error) {
-
 	params := url.Values{}
 	if do.FromPullRequestID > 0 {
 		params.Add("from_pullrequest_id", strconv.Itoa(do.FromPullRequestID))
@@ -72,7 +71,6 @@ func (d *Diff) GetPatch(do *DiffOptions) (interface{}, error) {
 }
 
 func (d *Diff) GetDiffStat(dso *DiffStatOptions) (*DiffStatRes, error) {
-
 	params := url.Values{}
 	if dso.FromPullRequestID > 0 {
 		params.Add("from_pullrequest_id", strconv.Itoa(dso.FromPullRequestID))
@@ -130,7 +128,6 @@ func (d *Diff) GetDiffStat(dso *DiffStatOptions) (*DiffStatRes, error) {
 }
 
 func decodeDiffStat(diffStatResponseStr string) (*DiffStatRes, error) {
-
 	var diffStatRes DiffStatRes
 
 	err := json.Unmarshal([]byte(diffStatResponseStr), &diffStatRes)

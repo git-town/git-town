@@ -38,7 +38,8 @@ type (
 var _ DependencyProxyServiceInterface = (*DependencyProxyService)(nil)
 
 func (s *DependencyProxyService) PurgeGroupDependencyProxy(gid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/dependency_proxy/cache", GroupID{gid}),
 		withRequestOpts(options...),

@@ -71,7 +71,8 @@ type GetDORAMetricsOptions struct {
 }
 
 func (s *DORAMetricsService) GetProjectDORAMetrics(pid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
-	return do[[]DORAMetric](s.client,
+	return do[[]DORAMetric](
+		s.client,
 		withPath("projects/%s/dora/metrics", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -79,7 +80,8 @@ func (s *DORAMetricsService) GetProjectDORAMetrics(pid any, opt GetDORAMetricsOp
 }
 
 func (s *DORAMetricsService) GetGroupDORAMetrics(gid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
-	return do[[]DORAMetric](s.client,
+	return do[[]DORAMetric](
+		s.client,
 		withPath("groups/%s/dora/metrics", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

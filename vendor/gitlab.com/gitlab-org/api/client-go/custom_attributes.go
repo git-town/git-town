@@ -127,7 +127,8 @@ func (s *CustomAttributesService) ListCustomProjectAttributes(project int64, opt
 }
 
 func (s *CustomAttributesService) listCustomAttributes(resource string, id int64, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
-	res, resp, err := do[[]*CustomAttribute](s.client,
+	res, resp, err := do[[]*CustomAttribute](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("%s/%d/custom_attributes", resource, id),
 		withAPIOpts(nil),
@@ -152,7 +153,8 @@ func (s *CustomAttributesService) GetCustomProjectAttribute(project int64, key s
 }
 
 func (s *CustomAttributesService) getCustomAttribute(resource string, id int64, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
-	res, resp, err := do[*CustomAttribute](s.client,
+	res, resp, err := do[*CustomAttribute](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("%s/%d/custom_attributes/%s", resource, id, key),
 		withAPIOpts(nil),
@@ -177,7 +179,8 @@ func (s *CustomAttributesService) SetCustomProjectAttribute(project int64, c Cus
 }
 
 func (s *CustomAttributesService) setCustomAttribute(resource string, id int64, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
-	res, resp, err := do[*CustomAttribute](s.client,
+	res, resp, err := do[*CustomAttribute](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("%s/%d/custom_attributes/%s", resource, id, c.Key),
 		withAPIOpts(c),
@@ -202,7 +205,8 @@ func (s *CustomAttributesService) DeleteCustomProjectAttribute(project int64, ke
 }
 
 func (s *CustomAttributesService) deleteCustomAttribute(resource string, id int64, key string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("%s/%d/custom_attributes/%s", resource, id, key),
 		withAPIOpts(nil),

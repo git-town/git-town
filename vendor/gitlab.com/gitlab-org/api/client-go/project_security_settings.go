@@ -73,7 +73,8 @@ func (s ProjectSecuritySettings) String() string {
 }
 
 func (s *ProjectSecuritySettingsService) ListProjectSecuritySettings(pid any, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
-	return do[*ProjectSecuritySettings](s.client,
+	return do[*ProjectSecuritySettings](
+		s.client,
 		withPath("projects/%s/security_settings", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -89,7 +90,8 @@ type UpdateProjectSecuritySettingsOptions struct {
 }
 
 func (s *ProjectSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(pid any, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
-	return do[*ProjectSecuritySettings](s.client,
+	return do[*ProjectSecuritySettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/security_settings", ProjectID{pid}),
 		withAPIOpts(opt),

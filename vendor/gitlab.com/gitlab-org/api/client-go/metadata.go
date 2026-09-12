@@ -64,7 +64,8 @@ func (k MetadataKAS) String() string {
 //
 // GitLab API docs: https://docs.gitlab.com/api/metadata/
 func (s *MetadataService) GetMetadata(options ...RequestOptionFunc) (*Metadata, *Response, error) {
-	return do[*Metadata](s.client,
+	return do[*Metadata](
+		s.client,
 		withPath("metadata"),
 		withRequestOpts(options...),
 	)

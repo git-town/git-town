@@ -111,7 +111,7 @@ func Build(bin string) error {
 	if srcTemp != nil {
 		// @TODO: in case of modules we cannot build it our selves, we need to have this hacky option
 		pathTemp := filepath.Join(abs, "godog_dependency_file_test.go")
-		err = ioutil.WriteFile(pathTemp, srcTemp, 0644)
+		err = ioutil.WriteFile(pathTemp, srcTemp, 0o644)
 		if err != nil {
 			return err
 		}
@@ -174,7 +174,7 @@ func Build(bin string) error {
 
 	// replace _testmain.go file with our own
 	testmain := filepath.Join(testdir, "_testmain.go")
-	err = ioutil.WriteFile(testmain, src, 0644)
+	err = ioutil.WriteFile(testmain, src, 0o644)
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func Build(bin string) error {
 		data = append(data, []byte(fmt.Sprintf("importmap %s=%s\n", godogImportPath, vendored.ImportPath))...)
 		compilerCfg = filepath.Join(testdir, "importcfg")
 
-		err = ioutil.WriteFile(compilerCfg, data, 0644)
+		err = ioutil.WriteFile(compilerCfg, data, 0o644)
 		if err != nil {
 			return err
 		}
@@ -256,7 +256,7 @@ func filterImportCfg(path string) error {
 			res += l + "\n"
 		}
 	}
-	err = ioutil.WriteFile(path, []byte(res), 0600)
+	err = ioutil.WriteFile(path, []byte(res), 0o600)
 	if err != nil {
 		return fmt.Errorf("failed to write %s: %w", path, err)
 	}
@@ -287,6 +287,7 @@ func maybeVendoredGodog() *build.Package {
 func normaliseLocalImportPath(dir string) string {
 	return path.Join("_", strings.Map(makeImportValid, filepath.ToSlash(dir)))
 }
+
 func importPackage(dir string) *build.Package {
 	pkg, _ := build.ImportDir(dir, 0)
 

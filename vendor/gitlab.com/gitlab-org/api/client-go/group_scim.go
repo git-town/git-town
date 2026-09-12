@@ -50,7 +50,8 @@ type GroupSCIMIdentity struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/scim/#get-scim-identities-for-a-group
 func (s *GroupSCIMService) GetSCIMIdentitiesForGroup(gid any, options ...RequestOptionFunc) ([]*GroupSCIMIdentity, *Response, error) {
-	return do[[]*GroupSCIMIdentity](s.client,
+	return do[[]*GroupSCIMIdentity](
+		s.client,
 		withPath("groups/%s/scim/identities", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -61,7 +62,8 @@ func (s *GroupSCIMService) GetSCIMIdentitiesForGroup(gid any, options ...Request
 // GitLab API docs:
 // https://docs.gitlab.com/api/scim/#get-a-single-scim-identity
 func (s *GroupSCIMService) GetSCIMIdentity(gid any, uid string, options ...RequestOptionFunc) (*GroupSCIMIdentity, *Response, error) {
-	return do[*GroupSCIMIdentity](s.client,
+	return do[*GroupSCIMIdentity](
+		s.client,
 		withPath("groups/%s/scim/%s", GroupID{gid}, uid),
 		withRequestOpts(options...),
 	)
@@ -81,7 +83,8 @@ type UpdateSCIMIdentityOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/scim/#update-extern_uid-field-for-a-scim-identity
 func (s *GroupSCIMService) UpdateSCIMIdentity(gid any, uid string, opt *UpdateSCIMIdentityOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("groups/%s/scim/%s", GroupID{gid}, uid),
 		withAPIOpts(opt),
@@ -95,7 +98,8 @@ func (s *GroupSCIMService) UpdateSCIMIdentity(gid any, uid string, opt *UpdateSC
 // GitLab API docs:
 // https://docs.gitlab.com/api/scim/#delete-a-single-scim-identity
 func (s *GroupSCIMService) DeleteSCIMIdentity(gid any, uid string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/scim/%s", GroupID{gid}, uid),
 		withRequestOpts(options...),

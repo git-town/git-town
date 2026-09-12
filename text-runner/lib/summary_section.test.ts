@@ -29,10 +29,7 @@ suite("SummarySection", () => {
       {
         desc: "completions command",
         give: "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]",
-        want: [
-          ["--no-descriptions"],
-          ["-h", "--help"],
-        ],
+        want: [["--no-descriptions"], ["-h", "--help"]],
       },
       {
         desc: "config get-parent command",

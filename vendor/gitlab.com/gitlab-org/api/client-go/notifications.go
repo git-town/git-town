@@ -106,7 +106,8 @@ func (ns NotificationSettings) String() string {
 }
 
 func (s *NotificationSettingsService) GetGlobalSettings(options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withPath("notification_settings"),
 		withRequestOpts(options...),
 	)
@@ -140,10 +141,12 @@ type NotificationSettingsOptions struct {
 func (s *NotificationSettingsService) UpdateGlobalSettings(opt *NotificationSettingsOptions, options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
 	if opt.Level != nil && *opt.Level == GlobalNotificationLevel {
 		return nil, nil, errors.New(
-			"notification level 'global' is not valid for global notification settings")
+			"notification level 'global' is not valid for global notification settings",
+		)
 	}
 
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("notification_settings"),
 		withAPIOpts(opt),
@@ -152,21 +155,24 @@ func (s *NotificationSettingsService) UpdateGlobalSettings(opt *NotificationSett
 }
 
 func (s *NotificationSettingsService) GetSettingsForGroup(gid any, options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withPath("groups/%s/notification_settings", GroupID{gid}),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *NotificationSettingsService) GetSettingsForProject(pid any, options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withPath("projects/%s/notification_settings", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *NotificationSettingsService) UpdateSettingsForGroup(gid any, opt *NotificationSettingsOptions, options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/notification_settings", GroupID{gid}),
 		withAPIOpts(opt),
@@ -175,7 +181,8 @@ func (s *NotificationSettingsService) UpdateSettingsForGroup(gid any, opt *Notif
 }
 
 func (s *NotificationSettingsService) UpdateSettingsForProject(pid any, opt *NotificationSettingsOptions, options ...RequestOptionFunc) (*NotificationSettings, *Response, error) {
-	return do[*NotificationSettings](s.client,
+	return do[*NotificationSettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/notification_settings", ProjectID{pid}),
 		withAPIOpts(opt),

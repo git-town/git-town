@@ -30,14 +30,14 @@ func Record(rt http.RoundTripper, basepath string) Transport {
 				err = fmt.Errorf("problem while recording transport: %w", err)
 			}
 		}()
-		_ = os.MkdirAll(basepath, 0755)
+		_ = os.MkdirAll(basepath, 0o755)
 		b, err := httputil.DumpRequest(req, true)
 		if err != nil {
 			return nil, err
 		}
 		reqname, resname := buildName(b)
 		name := filepath.Join(basepath, reqname)
-		if err = os.WriteFile(name, b, 0644); err != nil {
+		if err = os.WriteFile(name, b, 0o644); err != nil {
 			return nil, err
 		}
 		if res, err = rt.RoundTrip(req); err != nil {
@@ -48,7 +48,7 @@ func Record(rt http.RoundTripper, basepath string) Transport {
 			return nil, err
 		}
 		name = filepath.Join(basepath, resname)
-		if err = os.WriteFile(name, b, 0644); err != nil {
+		if err = os.WriteFile(name, b, 0o644); err != nil {
 			return nil, err
 		}
 		return

@@ -82,7 +82,8 @@ func (v GroupCluster) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_clusters/#list-group-clusters
 func (s *GroupClustersService) ListClusters(pid any, options ...RequestOptionFunc) ([]*GroupCluster, *Response, error) {
-	return do[[]*GroupCluster](s.client,
+	return do[[]*GroupCluster](
+		s.client,
 		withPath("groups/%s/clusters", GroupID{pid}),
 		withRequestOpts(options...),
 	)
@@ -94,7 +95,8 @@ func (s *GroupClustersService) ListClusters(pid any, options ...RequestOptionFun
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_clusters/#get-a-single-group-cluster
 func (s *GroupClustersService) GetCluster(pid any, cluster int64, options ...RequestOptionFunc) (*GroupCluster, *Response, error) {
-	return do[*GroupCluster](s.client,
+	return do[*GroupCluster](
+		s.client,
 		withPath("groups/%s/clusters/%d", GroupID{pid}, cluster),
 		withRequestOpts(options...),
 	)
@@ -131,7 +133,8 @@ type AddGroupPlatformKubernetesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_clusters/#add-existing-cluster-to-group
 func (s *GroupClustersService) AddCluster(pid any, opt *AddGroupClusterOptions, options ...RequestOptionFunc) (*GroupCluster, *Response, error) {
-	return do[*GroupCluster](s.client,
+	return do[*GroupCluster](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/clusters/user", GroupID{pid}),
 		withAPIOpts(opt),
@@ -166,7 +169,8 @@ type EditGroupPlatformKubernetesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_clusters/#edit-group-cluster
 func (s *GroupClustersService) EditCluster(pid any, cluster int64, opt *EditGroupClusterOptions, options ...RequestOptionFunc) (*GroupCluster, *Response, error) {
-	return do[*GroupCluster](s.client,
+	return do[*GroupCluster](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/clusters/%d", GroupID{pid}, cluster),
 		withAPIOpts(opt),
@@ -180,7 +184,8 @@ func (s *GroupClustersService) EditCluster(pid any, cluster int64, opt *EditGrou
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_clusters/#delete-group-cluster
 func (s *GroupClustersService) DeleteCluster(pid any, cluster int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/clusters/%d", GroupID{pid}, cluster),
 		withRequestOpts(options...),

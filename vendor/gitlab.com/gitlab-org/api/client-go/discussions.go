@@ -259,7 +259,8 @@ type ListIssueDiscussionsOptions struct {
 }
 
 func (s *DiscussionsService) ListIssueDiscussions(pid any, issue int64, opt *ListIssueDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
-	return do[[]*Discussion](s.client,
+	return do[[]*Discussion](
+		s.client,
 		withPath("projects/%s/issues/%d/discussions", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -267,7 +268,8 @@ func (s *DiscussionsService) ListIssueDiscussions(pid any, issue int64, opt *Lis
 }
 
 func (s *DiscussionsService) GetIssueDiscussion(pid any, issue int64, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withPath("projects/%s/issues/%d/discussions/%s", ProjectID{pid}, issue, discussion),
 		withRequestOpts(options...),
 	)
@@ -284,7 +286,8 @@ type CreateIssueDiscussionOptions struct {
 }
 
 func (s *DiscussionsService) CreateIssueDiscussion(pid any, issue int64, opt *CreateIssueDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/discussions", ProjectID{pid}, issue),
 		withAPIOpts(opt),
@@ -303,7 +306,8 @@ type AddIssueDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) AddIssueDiscussionNote(pid any, issue int64, discussion string, opt *AddIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/discussions/%s/notes", ProjectID{pid}, issue, discussion),
 		withAPIOpts(opt),
@@ -322,7 +326,8 @@ type UpdateIssueDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) UpdateIssueDiscussionNote(pid any, issue int64, discussion string, note int64, opt *UpdateIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/issues/%d/discussions/%s/notes/%d", ProjectID{pid}, issue, discussion, note),
 		withAPIOpts(opt),
@@ -331,7 +336,8 @@ func (s *DiscussionsService) UpdateIssueDiscussionNote(pid any, issue int64, dis
 }
 
 func (s *DiscussionsService) DeleteIssueDiscussionNote(pid any, issue int64, discussion string, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/issues/%d/discussions/%s/notes/%d", ProjectID{pid}, issue, discussion, note),
 		withRequestOpts(options...),
@@ -349,7 +355,8 @@ type ListSnippetDiscussionsOptions struct {
 }
 
 func (s *DiscussionsService) ListSnippetDiscussions(pid any, snippet int64, opt *ListSnippetDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
-	return do[[]*Discussion](s.client,
+	return do[[]*Discussion](
+		s.client,
 		withPath("projects/%s/snippets/%d/discussions", ProjectID{pid}, snippet),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -357,7 +364,8 @@ func (s *DiscussionsService) ListSnippetDiscussions(pid any, snippet int64, opt 
 }
 
 func (s *DiscussionsService) GetSnippetDiscussion(pid any, snippet int64, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withPath("projects/%s/snippets/%d/discussions/%s", ProjectID{pid}, snippet, discussion),
 		withRequestOpts(options...),
 	)
@@ -374,7 +382,8 @@ type CreateSnippetDiscussionOptions struct {
 }
 
 func (s *DiscussionsService) CreateSnippetDiscussion(pid any, snippet int64, opt *CreateSnippetDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/snippets/%d/discussions", ProjectID{pid}, snippet),
 		withAPIOpts(opt),
@@ -393,7 +402,8 @@ type AddSnippetDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) AddSnippetDiscussionNote(pid any, snippet int64, discussion string, opt *AddSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/snippets/%d/discussions/%s/notes", ProjectID{pid}, snippet, discussion),
 		withAPIOpts(opt),
@@ -412,7 +422,8 @@ type UpdateSnippetDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) UpdateSnippetDiscussionNote(pid any, snippet int64, discussion string, note int64, opt *UpdateSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/snippets/%d/discussions/%s/notes/%d", ProjectID{pid}, snippet, discussion, note),
 		withAPIOpts(opt),
@@ -421,7 +432,8 @@ func (s *DiscussionsService) UpdateSnippetDiscussionNote(pid any, snippet int64,
 }
 
 func (s *DiscussionsService) DeleteSnippetDiscussionNote(pid any, snippet int64, discussion string, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/snippets/%d/discussions/%s/notes/%d", ProjectID{pid}, snippet, discussion, note),
 		withRequestOpts(options...),
@@ -439,7 +451,8 @@ type ListGroupEpicDiscussionsOptions struct {
 }
 
 func (s *DiscussionsService) ListGroupEpicDiscussions(gid any, epic int64, opt *ListGroupEpicDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
-	return do[[]*Discussion](s.client,
+	return do[[]*Discussion](
+		s.client,
 		withPath("groups/%s/epics/%d/discussions", GroupID{gid}, epic),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -447,7 +460,8 @@ func (s *DiscussionsService) ListGroupEpicDiscussions(gid any, epic int64, opt *
 }
 
 func (s *DiscussionsService) GetEpicDiscussion(gid any, epic int64, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withPath("groups/%s/epics/%d/discussions/%s", GroupID{gid}, epic, discussion),
 		withRequestOpts(options...),
 	)
@@ -464,7 +478,8 @@ type CreateEpicDiscussionOptions struct {
 }
 
 func (s *DiscussionsService) CreateEpicDiscussion(gid any, epic int64, opt *CreateEpicDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/epics/%d/discussions", GroupID{gid}, epic),
 		withAPIOpts(opt),
@@ -483,7 +498,8 @@ type AddEpicDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) AddEpicDiscussionNote(gid any, epic int64, discussion string, opt *AddEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/epics/%d/discussions/%s/notes", GroupID{gid}, epic, discussion),
 		withAPIOpts(opt),
@@ -502,7 +518,8 @@ type UpdateEpicDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) UpdateEpicDiscussionNote(gid any, epic int64, discussion string, note int64, opt *UpdateEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/epics/%d/discussions/%s/notes/%d", GroupID{gid}, epic, discussion, note),
 		withAPIOpts(opt),
@@ -511,7 +528,8 @@ func (s *DiscussionsService) UpdateEpicDiscussionNote(gid any, epic int64, discu
 }
 
 func (s *DiscussionsService) DeleteEpicDiscussionNote(gid any, epic int64, discussion string, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/epics/%d/discussions/%s/notes/%d", GroupID{gid}, epic, discussion, note),
 		withRequestOpts(options...),
@@ -529,7 +547,8 @@ type ListMergeRequestDiscussionsOptions struct {
 }
 
 func (s *DiscussionsService) ListMergeRequestDiscussions(pid any, mergeRequest int64, opt *ListMergeRequestDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
-	return do[[]*Discussion](s.client,
+	return do[[]*Discussion](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/discussions", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -537,7 +556,8 @@ func (s *DiscussionsService) ListMergeRequestDiscussions(pid any, mergeRequest i
 }
 
 func (s *DiscussionsService) GetMergeRequestDiscussion(pid any, mergeRequest int64, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/discussions/%s", ProjectID{pid}, mergeRequest, discussion),
 		withRequestOpts(options...),
 	)
@@ -587,7 +607,8 @@ type LinePositionOptions struct {
 }
 
 func (s *DiscussionsService) CreateMergeRequestDiscussion(pid any, mergeRequest int64, opt *CreateMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_requests/%d/discussions", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),
@@ -605,7 +626,8 @@ type ResolveMergeRequestDiscussionOptions struct {
 }
 
 func (s *DiscussionsService) ResolveMergeRequestDiscussion(pid any, mergeRequest int64, discussion string, opt *ResolveMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/merge_requests/%d/discussions/%s", ProjectID{pid}, mergeRequest, discussion),
 		withAPIOpts(opt),
@@ -624,7 +646,8 @@ type AddMergeRequestDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) AddMergeRequestDiscussionNote(pid any, mergeRequest int64, discussion string, opt *AddMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_requests/%d/discussions/%s/notes", ProjectID{pid}, mergeRequest, discussion),
 		withAPIOpts(opt),
@@ -644,7 +667,8 @@ type UpdateMergeRequestDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) UpdateMergeRequestDiscussionNote(pid any, mergeRequest int64, discussion string, note int64, opt *UpdateMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/merge_requests/%d/discussions/%s/notes/%d", ProjectID{pid}, mergeRequest, discussion, note),
 		withAPIOpts(opt),
@@ -653,7 +677,8 @@ func (s *DiscussionsService) UpdateMergeRequestDiscussionNote(pid any, mergeRequ
 }
 
 func (s *DiscussionsService) DeleteMergeRequestDiscussionNote(pid any, mergeRequest int64, discussion string, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/merge_requests/%d/discussions/%s/notes/%d", ProjectID{pid}, mergeRequest, discussion, note),
 		withRequestOpts(options...),
@@ -671,7 +696,8 @@ type ListCommitDiscussionsOptions struct {
 }
 
 func (s *DiscussionsService) ListCommitDiscussions(pid any, commit string, opt *ListCommitDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
-	return do[[]*Discussion](s.client,
+	return do[[]*Discussion](
+		s.client,
 		withPath("projects/%s/repository/commits/%s/discussions", ProjectID{pid}, commit),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -679,7 +705,8 @@ func (s *DiscussionsService) ListCommitDiscussions(pid any, commit string, opt *
 }
 
 func (s *DiscussionsService) GetCommitDiscussion(pid any, commit string, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withPath("projects/%s/repository/commits/%s/discussions/%s", ProjectID{pid}, commit, discussion),
 		withRequestOpts(options...),
 	)
@@ -697,7 +724,8 @@ type CreateCommitDiscussionOptions struct {
 }
 
 func (s *DiscussionsService) CreateCommitDiscussion(pid any, commit string, opt *CreateCommitDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
-	return do[*Discussion](s.client,
+	return do[*Discussion](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits/%s/discussions", ProjectID{pid}, commit),
 		withAPIOpts(opt),
@@ -716,7 +744,8 @@ type AddCommitDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) AddCommitDiscussionNote(pid any, commit string, discussion string, opt *AddCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits/%s/discussions/%s/notes", ProjectID{pid}, commit, discussion),
 		withAPIOpts(opt),
@@ -735,7 +764,8 @@ type UpdateCommitDiscussionNoteOptions struct {
 }
 
 func (s *DiscussionsService) UpdateCommitDiscussionNote(pid any, commit string, discussion string, note int64, opt *UpdateCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
-	return do[*Note](s.client,
+	return do[*Note](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/repository/commits/%s/discussions/%s/notes/%d", ProjectID{pid}, commit, discussion, note),
 		withAPIOpts(opt),
@@ -744,7 +774,8 @@ func (s *DiscussionsService) UpdateCommitDiscussionNote(pid any, commit string, 
 }
 
 func (s *DiscussionsService) DeleteCommitDiscussionNote(pid any, commit string, discussion string, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/repository/commits/%s/discussions/%s/notes/%d", ProjectID{pid}, commit, discussion, note),
 		withRequestOpts(options...),

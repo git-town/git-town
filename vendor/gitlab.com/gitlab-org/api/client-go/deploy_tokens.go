@@ -113,7 +113,8 @@ func (k DeployToken) String() string {
 }
 
 func (s *DeployTokensService) ListAllDeployTokens(options ...RequestOptionFunc) ([]*DeployToken, *Response, error) {
-	return do[[]*DeployToken](s.client,
+	return do[[]*DeployToken](
+		s.client,
 		withPath("deploy_tokens"),
 		withRequestOpts(options...),
 	)
@@ -129,7 +130,8 @@ type ListProjectDeployTokensOptions struct {
 }
 
 func (s *DeployTokensService) ListProjectDeployTokens(pid any, opt *ListProjectDeployTokensOptions, options ...RequestOptionFunc) ([]*DeployToken, *Response, error) {
-	return do[[]*DeployToken](s.client,
+	return do[[]*DeployToken](
+		s.client,
 		withPath("projects/%s/deploy_tokens", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -137,7 +139,8 @@ func (s *DeployTokensService) ListProjectDeployTokens(pid any, opt *ListProjectD
 }
 
 func (s *DeployTokensService) GetProjectDeployToken(pid any, deployToken int64, options ...RequestOptionFunc) (*DeployToken, *Response, error) {
-	return do[*DeployToken](s.client,
+	return do[*DeployToken](
+		s.client,
 		withPath("projects/%s/deploy_tokens/%d", ProjectID{pid}, deployToken),
 		withRequestOpts(options...),
 	)
@@ -155,7 +158,8 @@ type CreateProjectDeployTokenOptions struct {
 }
 
 func (s *DeployTokensService) CreateProjectDeployToken(pid any, opt *CreateProjectDeployTokenOptions, options ...RequestOptionFunc) (*DeployToken, *Response, error) {
-	return do[*DeployToken](s.client,
+	return do[*DeployToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/deploy_tokens", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -164,7 +168,8 @@ func (s *DeployTokensService) CreateProjectDeployToken(pid any, opt *CreateProje
 }
 
 func (s *DeployTokensService) DeleteProjectDeployToken(pid any, deployToken int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/deploy_tokens/%d", ProjectID{pid}, deployToken),
 		withRequestOpts(options...),
@@ -182,7 +187,8 @@ type ListGroupDeployTokensOptions struct {
 }
 
 func (s *DeployTokensService) ListGroupDeployTokens(gid any, opt *ListGroupDeployTokensOptions, options ...RequestOptionFunc) ([]*DeployToken, *Response, error) {
-	return do[[]*DeployToken](s.client,
+	return do[[]*DeployToken](
+		s.client,
 		withPath("groups/%s/deploy_tokens", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -190,7 +196,8 @@ func (s *DeployTokensService) ListGroupDeployTokens(gid any, opt *ListGroupDeplo
 }
 
 func (s *DeployTokensService) GetGroupDeployToken(gid any, deployToken int64, options ...RequestOptionFunc) (*DeployToken, *Response, error) {
-	return do[*DeployToken](s.client,
+	return do[*DeployToken](
+		s.client,
 		withPath("groups/%s/deploy_tokens/%d", GroupID{gid}, deployToken),
 		withRequestOpts(options...),
 	)
@@ -208,7 +215,8 @@ type CreateGroupDeployTokenOptions struct {
 }
 
 func (s *DeployTokensService) CreateGroupDeployToken(gid any, opt *CreateGroupDeployTokenOptions, options ...RequestOptionFunc) (*DeployToken, *Response, error) {
-	return do[*DeployToken](s.client,
+	return do[*DeployToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/deploy_tokens", GroupID{gid}),
 		withAPIOpts(opt),
@@ -217,7 +225,8 @@ func (s *DeployTokensService) CreateGroupDeployToken(gid any, opt *CreateGroupDe
 }
 
 func (s *DeployTokensService) DeleteGroupDeployToken(gid any, deployToken int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/deploy_tokens/%d", GroupID{gid}, deployToken),
 		withRequestOpts(options...),

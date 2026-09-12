@@ -514,7 +514,7 @@ func (t *ISOTime) UnmarshalJSON(data []byte) error {
 
 // EncodeValues implements the query.Encoder interface.
 func (t *ISOTime) EncodeValues(key string, v *url.Values) error {
-	if t == nil || (time.Time(*t)).IsZero() {
+	if t == nil || time.Time(*t).IsZero() {
 		return nil
 	}
 	v.Add(key, t.String())

@@ -120,7 +120,7 @@ func ToWriter(w io.Writer) ResponseHandler {
 // The file and its parent directories are created automatically.
 func ToFile(name string) ResponseHandler {
 	return func(res *http.Response) error {
-		_ = os.MkdirAll(filepath.Dir(name), 0777)
+		_ = os.MkdirAll(filepath.Dir(name), 0o777)
 
 		f, err := os.Create(name)
 		if err != nil {

@@ -4,6 +4,4 @@
 
 package must
 
-var (
-	fsRoot = "/"
-)
+var fsRoot = "/"

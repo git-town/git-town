@@ -110,7 +110,8 @@ type ListSnippetsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#list-all-snippets-for-current-user
 func (s *SnippetsService) ListSnippets(opt *ListSnippetsOptions, options ...RequestOptionFunc) ([]*Snippet, *Response, error) {
-	res, resp, err := do[[]*Snippet](s.client,
+	res, resp, err := do[[]*Snippet](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("snippets"),
 		withAPIOpts(opt),
@@ -127,7 +128,8 @@ func (s *SnippetsService) ListSnippets(opt *ListSnippetsOptions, options ...Requ
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#get-a-single-snippet
 func (s *SnippetsService) GetSnippet(snippet int64, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	res, resp, err := do[*Snippet](s.client,
+	res, resp, err := do[*Snippet](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("snippets/%d", snippet),
 		withAPIOpts(nil),
@@ -144,7 +146,8 @@ func (s *SnippetsService) GetSnippet(snippet int64, options ...RequestOptionFunc
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#single-snippet-contents
 func (s *SnippetsService) SnippetContent(snippet int64, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("snippets/%d/raw", snippet),
 		withRequestOpts(options...),
 	)
@@ -159,7 +162,8 @@ func (s *SnippetsService) SnippetContent(snippet int64, options ...RequestOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#snippet-repository-file-content
 func (s *SnippetsService) SnippetFileContent(snippet int64, ref, filename string, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("snippets/%d/files/%s/%s/raw", snippet, ref, filename),
 		withRequestOpts(options...),
 	)
@@ -197,7 +201,8 @@ type CreateSnippetOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#create-new-snippet
 func (s *SnippetsService) CreateSnippet(opt *CreateSnippetOptions, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	res, resp, err := do[*Snippet](s.client,
+	res, resp, err := do[*Snippet](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("snippets"),
 		withAPIOpts(opt),
@@ -239,7 +244,8 @@ type UpdateSnippetOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#update-snippet
 func (s *SnippetsService) UpdateSnippet(snippet int64, opt *UpdateSnippetOptions, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	res, resp, err := do[*Snippet](s.client,
+	res, resp, err := do[*Snippet](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("snippets/%d", snippet),
 		withAPIOpts(opt),
@@ -258,7 +264,8 @@ func (s *SnippetsService) UpdateSnippet(snippet int64, opt *UpdateSnippetOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#delete-snippet
 func (s *SnippetsService) DeleteSnippet(snippet int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("snippets/%d", snippet),
 		withAPIOpts(nil),
@@ -280,7 +287,8 @@ type ExploreSnippetsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#list-all-public-snippets
 func (s *SnippetsService) ExploreSnippets(opt *ExploreSnippetsOptions, options ...RequestOptionFunc) ([]*Snippet, *Response, error) {
-	res, resp, err := do[[]*Snippet](s.client,
+	res, resp, err := do[[]*Snippet](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("snippets/public"),
 		withAPIOpts(opt),
@@ -308,7 +316,8 @@ type ListAllSnippetsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/snippets/#list-all-snippets
 func (s *SnippetsService) ListAllSnippets(opt *ListAllSnippetsOptions, options ...RequestOptionFunc) ([]*Snippet, *Response, error) {
-	res, resp, err := do[[]*Snippet](s.client,
+	res, resp, err := do[[]*Snippet](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("snippets/all"),
 		withAPIOpts(opt),

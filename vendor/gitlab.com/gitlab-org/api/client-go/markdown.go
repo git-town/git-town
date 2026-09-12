@@ -40,7 +40,8 @@ type RenderOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/markdown/#render-an-arbitrary-markdown-document
 func (s *MarkdownService) Render(opt *RenderOptions, options ...RequestOptionFunc) (*Markdown, *Response, error) {
-	return do[*Markdown](s.client,
+	return do[*Markdown](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("markdown"),
 		withAPIOpts(opt),

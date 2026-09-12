@@ -46,7 +46,8 @@ type CreateProjectAliasOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#list-all-project-aliases
 func (s *ProjectAliasesService) ListProjectAliases(options ...RequestOptionFunc) ([]*ProjectAlias, *Response, error) {
-	return do[[]*ProjectAlias](s.client,
+	return do[[]*ProjectAlias](
+		s.client,
 		withPath("project_aliases"),
 		withRequestOpts(options...),
 	)
@@ -57,7 +58,8 @@ func (s *ProjectAliasesService) ListProjectAliases(options ...RequestOptionFunc)
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#get-project-alias-details
 func (s *ProjectAliasesService) GetProjectAlias(name string, options ...RequestOptionFunc) (*ProjectAlias, *Response, error) {
-	return do[*ProjectAlias](s.client,
+	return do[*ProjectAlias](
+		s.client,
 		withPath("project_aliases/%s", name),
 		withRequestOpts(options...),
 	)
@@ -68,7 +70,8 @@ func (s *ProjectAliasesService) GetProjectAlias(name string, options ...RequestO
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#create-a-project-alias
 func (s *ProjectAliasesService) CreateProjectAlias(opt *CreateProjectAliasOptions, options ...RequestOptionFunc) (*ProjectAlias, *Response, error) {
-	return do[*ProjectAlias](s.client,
+	return do[*ProjectAlias](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("project_aliases"),
 		withAPIOpts(opt),
@@ -81,7 +84,8 @@ func (s *ProjectAliasesService) CreateProjectAlias(opt *CreateProjectAliasOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_aliases/#delete-a-project-alias
 func (s *ProjectAliasesService) DeleteProjectAlias(name string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("project_aliases/%s", name),
 		withRequestOpts(options...),

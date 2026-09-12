@@ -219,8 +219,10 @@ type constrainExtensionAgentMsg struct {
 }
 
 // See [PROTOCOL.agent], section 4.7
-const agentExtension = 27
-const agentExtensionFailure = 28
+const (
+	agentExtension        = 27
+	agentExtensionFailure = 28
+)
 
 // ErrExtensionUnsupported indicates that an extension defined in
 // [PROTOCOL.agent] section 4.7 is unsupported by the agent. Specifically this

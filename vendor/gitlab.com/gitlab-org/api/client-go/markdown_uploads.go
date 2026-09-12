@@ -70,7 +70,8 @@ type ListMarkdownUploadsOptions struct {
 
 // listMarkdownUploads gets all markdown uploads for a resource
 func listMarkdownUploads[T any](client *Client, resourceType ResourceType, id Pather, opt *ListMarkdownUploadsOptions, options []RequestOptionFunc) ([]*T, *Response, error) {
-	return do[[]*T](client,
+	return do[[]*T](
+		client,
 		withMethod(http.MethodGet),
 		withPath("%s/%s/uploads", resourceType, id),
 		withAPIOpts(opt),
@@ -80,7 +81,8 @@ func listMarkdownUploads[T any](client *Client, resourceType ResourceType, id Pa
 
 // downloadMarkdownUploadByID downloads a specific upload by ID
 func downloadMarkdownUploadByID(client *Client, resourceType ResourceType, id Pather, uploadID int64, options []RequestOptionFunc) (*bytes.Buffer, *Response, error) {
-	file, resp, err := do[bytes.Buffer](client,
+	file, resp, err := do[bytes.Buffer](
+		client,
 		withMethod(http.MethodGet),
 		withPath("%s/%s/uploads/%d", resourceType, id, uploadID),
 		withRequestOpts(options...),
@@ -91,7 +93,8 @@ func downloadMarkdownUploadByID(client *Client, resourceType ResourceType, id Pa
 
 // downloadMarkdownUploadBySecretAndFilename downloads a specific upload by secret and filename
 func downloadMarkdownUploadBySecretAndFilename(client *Client, resourceType ResourceType, id Pather, secret string, filename string, options []RequestOptionFunc) (*bytes.Buffer, *Response, error) {
-	file, resp, err := do[bytes.Buffer](client,
+	file, resp, err := do[bytes.Buffer](
+		client,
 		withMethod(http.MethodGet),
 		withPath("%s/%s/uploads/%s/%s", resourceType, id, secret, filename),
 		withRequestOpts(options...),
@@ -102,7 +105,8 @@ func downloadMarkdownUploadBySecretAndFilename(client *Client, resourceType Reso
 
 // deleteMarkdownUploadByID deletes an upload by ID
 func deleteMarkdownUploadByID(client *Client, resourceType ResourceType, id Pather, uploadID int64, options []RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](client,
+	_, resp, err := do[none](
+		client,
 		withMethod(http.MethodDelete),
 		withPath("%s/%s/uploads/%d", resourceType, id, uploadID),
 		withAPIOpts(nil),
@@ -113,7 +117,8 @@ func deleteMarkdownUploadByID(client *Client, resourceType ResourceType, id Path
 
 // deleteMarkdownUploadBySecretAndFilename deletes an upload by secret and filename
 func deleteMarkdownUploadBySecretAndFilename(client *Client, resourceType ResourceType, id Pather, secret string, filename string, options []RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](client,
+	_, resp, err := do[none](
+		client,
 		withMethod(http.MethodDelete),
 		withPath("%s/%s/uploads/%s/%s", resourceType, id, secret, filename),
 		withAPIOpts(nil),

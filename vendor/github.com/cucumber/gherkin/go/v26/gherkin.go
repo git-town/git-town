@@ -3,9 +3,10 @@ package gherkin
 import (
 	"bufio"
 	"fmt"
-	"github.com/cucumber/messages/go/v21"
 	"io"
 	"strings"
+
+	"github.com/cucumber/messages/go/v21"
 )
 
 type Parser interface {
@@ -45,6 +46,7 @@ type Token struct {
 func (t *Token) IsEOF() bool {
 	return t.Type == TokenTypeEOF
 }
+
 func (t *Token) String() string {
 	return fmt.Sprintf("%v: %s/%s", t.Type, t.Keyword, t.Text)
 }
@@ -129,7 +131,6 @@ func ParseGherkinDocument(in io.Reader, newId func() string) (gherkinDocument *m
 }
 
 func ParseGherkinDocumentForLanguage(in io.Reader, language string, newId func() string) (gherkinDocument *messages.GherkinDocument, err error) {
-
 	builder := NewAstBuilder(newId)
 	parser := NewParser(builder)
 	parser.StopAtFirstError(false)

@@ -63,7 +63,8 @@ type ListTemplatesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/gitignores/#get-all-gitignore-templates
 func (s *GitIgnoreTemplatesService) ListTemplates(opt *ListTemplatesOptions, options ...RequestOptionFunc) ([]*GitIgnoreTemplateListItem, *Response, error) {
-	return do[[]*GitIgnoreTemplateListItem](s.client,
+	return do[[]*GitIgnoreTemplateListItem](
+		s.client,
 		withPath("templates/gitignores"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -75,7 +76,8 @@ func (s *GitIgnoreTemplatesService) ListTemplates(opt *ListTemplatesOptions, opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/gitignores/#get-a-single-gitignore-template
 func (s *GitIgnoreTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*GitIgnoreTemplate, *Response, error) {
-	return do[*GitIgnoreTemplate](s.client,
+	return do[*GitIgnoreTemplate](
+		s.client,
 		withPath("templates/gitignores/%s", key),
 		withRequestOpts(options...),
 	)

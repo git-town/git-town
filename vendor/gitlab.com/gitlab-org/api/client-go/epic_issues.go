@@ -64,7 +64,8 @@ type EpicIssueAssignment struct {
 // Gitlab API docs:
 // https://docs.gitlab.com/api/epic_issues/#list-issues-for-an-epic
 func (s *EpicIssuesService) ListEpicIssues(gid any, epic int64, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("groups/%s/epics/%d/issues", GroupID{gid}, epic),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -77,7 +78,8 @@ func (s *EpicIssuesService) ListEpicIssues(gid any, epic int64, opt *ListOptions
 // Gitlab API Docs:
 // https://docs.gitlab.com/api/epic_issues/#assign-an-issue-to-the-epic
 func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
-	return do[*EpicIssueAssignment](s.client,
+	return do[*EpicIssueAssignment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, issue),
 		withRequestOpts(options...),
@@ -90,7 +92,8 @@ func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int64, options 
 // Gitlab API Docs:
 // https://docs.gitlab.com/api/epic_issues/#remove-an-issue-from-the-epic
 func (s *EpicIssuesService) RemoveEpicIssue(gid any, epic, epicIssue int64, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
-	return do[*EpicIssueAssignment](s.client,
+	return do[*EpicIssueAssignment](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, epicIssue),
 		withRequestOpts(options...),
@@ -110,7 +113,8 @@ type UpdateEpicIssueAssignmentOptions struct {
 // Gitlab API Docs:
 // https://docs.gitlab.com/api/epic_issues/#update-epic---issue-association
 func (s *EpicIssuesService) UpdateEpicIssueAssignment(gid any, epic, epicIssue int64, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/epics/%d/issues/%d", GroupID{gid}, epic, epicIssue),
 		withAPIOpts(opt),

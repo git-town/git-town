@@ -62,7 +62,8 @@ type BulkImportStartMigrationResponse struct {
 }
 
 func (b *BulkImportsService) StartMigration(startMigrationOptions *BulkImportStartMigrationOptions, options ...RequestOptionFunc) (*BulkImportStartMigrationResponse, *Response, error) {
-	return do[*BulkImportStartMigrationResponse](b.client,
+	return do[*BulkImportStartMigrationResponse](
+		b.client,
 		withMethod(http.MethodPost),
 		withPath("bulk_imports"),
 		withAPIOpts(startMigrationOptions),

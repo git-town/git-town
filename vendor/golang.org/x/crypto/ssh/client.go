@@ -130,7 +130,8 @@ func (c *connection) clientHandshake(dialAddress string, config *ClientConfig) e
 
 	c.transport = newClientTransport(
 		newTransport(c.sshConn.conn, config.Rand, true /* is client */),
-		c.clientVersion, c.serverVersion, config, dialAddress, c.sshConn.RemoteAddr())
+		c.clientVersion, c.serverVersion, config, dialAddress, c.sshConn.RemoteAddr(),
+	)
 	if err := c.transport.waitSession(); err != nil {
 		return err
 	}

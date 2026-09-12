@@ -28,7 +28,7 @@ func decodeWebhook(response interface{}) (*Webhook, error) {
 		return nil, DecodeError(respMap)
 	}
 
-	var webhook = new(Webhook)
+	webhook := new(Webhook)
 	err := mapstructure.Decode(respMap, webhook)
 	if err != nil {
 		return nil, err

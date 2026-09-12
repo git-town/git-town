@@ -176,7 +176,8 @@ type ListCommitsOptions struct {
 }
 
 func (s *CommitsService) ListCommits(pid any, opt *ListCommitsOptions, options ...RequestOptionFunc) ([]*Commit, *Response, error) {
-	return do[[]*Commit](s.client,
+	return do[[]*Commit](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -203,7 +204,8 @@ type GetCommitRefsOptions struct {
 }
 
 func (s *CommitsService) GetCommitRefs(pid any, sha string, opt *GetCommitRefsOptions, options ...RequestOptionFunc) ([]*CommitRef, *Response, error) {
-	return do[[]*CommitRef](s.client,
+	return do[[]*CommitRef](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/refs", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -224,7 +226,8 @@ func (s *CommitsService) GetCommit(pid any, sha string, opt *GetCommitOptions, o
 		return nil, nil, errors.New("SHA must be a non-empty string")
 	}
 
-	return do[*Commit](s.client,
+	return do[*Commit](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -263,7 +266,8 @@ type CommitActionOptions struct {
 }
 
 func (s *CommitsService) CreateCommit(pid any, opt *CreateCommitOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
-	return do[*Commit](s.client,
+	return do[*Commit](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -299,7 +303,8 @@ type GetCommitDiffOptions struct {
 }
 
 func (s *CommitsService) GetCommitDiff(pid any, sha string, opt *GetCommitDiffOptions, options ...RequestOptionFunc) ([]*Diff, *Response, error) {
-	return do[[]*Diff](s.client,
+	return do[[]*Diff](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/diff", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -342,7 +347,8 @@ type GetCommitCommentsOptions struct {
 }
 
 func (s *CommitsService) GetCommitComments(pid any, sha string, opt *GetCommitCommentsOptions, options ...RequestOptionFunc) ([]*CommitComment, *Response, error) {
-	return do[[]*CommitComment](s.client,
+	return do[[]*CommitComment](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/comments", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -363,7 +369,8 @@ type PostCommitCommentOptions struct {
 }
 
 func (s *CommitsService) PostCommitComment(pid any, sha string, opt *PostCommitCommentOptions, options ...RequestOptionFunc) (*CommitComment, *Response, error) {
-	return do[*CommitComment](s.client,
+	return do[*CommitComment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits/%s/comments", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -404,7 +411,8 @@ type CommitStatus struct {
 }
 
 func (s *CommitsService) GetCommitStatuses(pid any, sha string, opt *GetCommitStatusesOptions, options ...RequestOptionFunc) ([]*CommitStatus, *Response, error) {
-	return do[[]*CommitStatus](s.client,
+	return do[[]*CommitStatus](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/statuses", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -427,7 +435,8 @@ type SetCommitStatusOptions struct {
 }
 
 func (s *CommitsService) SetCommitStatus(pid any, sha string, opt *SetCommitStatusOptions, options ...RequestOptionFunc) (*CommitStatus, *Response, error) {
-	return do[*CommitStatus](s.client,
+	return do[*CommitStatus](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/statuses/%s", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -436,7 +445,8 @@ func (s *CommitsService) SetCommitStatus(pid any, sha string, opt *SetCommitStat
 }
 
 func (s *CommitsService) ListMergeRequestsByCommit(pid any, sha string, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	return do[[]*BasicMergeRequest](s.client,
+	return do[[]*BasicMergeRequest](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/merge_requests", ProjectID{pid}, sha),
 		withRequestOpts(options...),
@@ -459,7 +469,8 @@ type RevertCommitOptions struct {
 }
 
 func (s *CommitsService) CherryPickCommit(pid any, sha string, opt *CherryPickCommitOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
-	return do[*Commit](s.client,
+	return do[*Commit](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits/%s/cherry_pick", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -468,7 +479,8 @@ func (s *CommitsService) CherryPickCommit(pid any, sha string, opt *CherryPickCo
 }
 
 func (s *CommitsService) RevertCommit(pid any, sha string, opt *RevertCommitOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
-	return do[*Commit](s.client,
+	return do[*Commit](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/commits/%s/revert", ProjectID{pid}, sha),
 		withAPIOpts(opt),
@@ -490,7 +502,8 @@ type GPGSignature struct {
 }
 
 func (s *CommitsService) GetGPGSignature(pid any, sha string, options ...RequestOptionFunc) (*GPGSignature, *Response, error) {
-	return do[*GPGSignature](s.client,
+	return do[*GPGSignature](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/commits/%s/signature", ProjectID{pid}, sha),
 		withRequestOpts(options...),

@@ -103,7 +103,7 @@ func (f *JUnit) buildJUNITPackageSuite() JunitPackageSuite {
 			TestCases: make([]*junitTestCase, len(pickles)),
 		}
 
-		var testcaseNames = make(map[string]int)
+		testcaseNames := make(map[string]int)
 		for _, pickle := range pickles {
 			testcaseNames[pickle.Name] = testcaseNames[pickle.Name] + 1
 		}
@@ -111,7 +111,7 @@ func (f *JUnit) buildJUNITPackageSuite() JunitPackageSuite {
 		firstPickleStartedAt := testRunStartedAt
 		lastPickleFinishedAt := testRunStartedAt
 
-		var outlineNo = make(map[string]int)
+		outlineNo := make(map[string]int)
 		for idx, pickle := range pickles {
 			tc := junitTestCase{}
 			tc.Name = pickle.Name

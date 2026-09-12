@@ -76,7 +76,8 @@ type ListProtectedTagsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_tags/#list-protected-tags
 func (s *ProtectedTagsService) ListProtectedTags(pid any, opt *ListProtectedTagsOptions, options ...RequestOptionFunc) ([]*ProtectedTag, *Response, error) {
-	return do[[]*ProtectedTag](s.client,
+	return do[[]*ProtectedTag](
+		s.client,
 		withPath("projects/%s/protected_tags", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -88,7 +89,8 @@ func (s *ProtectedTagsService) ListProtectedTags(pid any, opt *ListProtectedTags
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_tags/#get-a-single-protected-tag-or-wildcard-protected-tag
 func (s *ProtectedTagsService) GetProtectedTag(pid any, tag string, options ...RequestOptionFunc) (*ProtectedTag, *Response, error) {
-	return do[*ProtectedTag](s.client,
+	return do[*ProtectedTag](
+		s.client,
 		withPath("projects/%s/protected_tags/%s", ProjectID{pid}, tag),
 		withRequestOpts(options...),
 	)
@@ -122,7 +124,8 @@ type TagsPermissionOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_tags/#protect-repository-tags
 func (s *ProtectedTagsService) ProtectRepositoryTags(pid any, opt *ProtectRepositoryTagsOptions, options ...RequestOptionFunc) (*ProtectedTag, *Response, error) {
-	return do[*ProtectedTag](s.client,
+	return do[*ProtectedTag](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/protected_tags", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -136,7 +139,8 @@ func (s *ProtectedTagsService) ProtectRepositoryTags(pid any, opt *ProtectReposi
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_tags/#unprotect-repository-tags
 func (s *ProtectedTagsService) UnprotectRepositoryTags(pid any, tag string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/protected_tags/%s", ProjectID{pid}, tag),
 		withRequestOpts(options...),

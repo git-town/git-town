@@ -1,8 +1,9 @@
 package messages
 
 import (
-	"github.com/gofrs/uuid"
 	"strconv"
+
+	"github.com/gofrs/uuid"
 )
 
 type IdGenerator interface {

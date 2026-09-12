@@ -83,7 +83,9 @@ export class FlagLine {
     // The description starts after 2 or more spaces
     const match = this.text.match(/^\s+(.+?)\s{2,}/)
     if (!match) {
-      throw new Error(`This flag line doesn't seem to contain flags: ${this.text}`)
+      throw new Error(
+        `This flag line doesn't seem to contain flags: ${this.text}`,
+      )
     }
     const flagsPart = match[1].trim()
     // Remove default value notation like [="all"]
@@ -96,7 +98,10 @@ export function replaceValueNotation(flag: string): string {
 }
 
 export function isNegatedFlagsGroup(flags: string[]): boolean {
-  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-") || flag.startsWith("--non-"))
+  return (
+    flags.length > 0
+    && flags.every((flag) => flag.startsWith("--no-") || flag.startsWith("--non-"))
+  )
 }
 
 export function getPositiveFlagName(negatedFlag: string): string {
@@ -114,11 +119,17 @@ export function matchesFlag(flag: string, positiveFlag: string): boolean {
   return flag === positiveFlag || flag.startsWith(positiveFlag + " ")
 }
 
-export function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
-  return result.find(group => group.some(flag => matchesFlag(flag, positiveFlag)))
+export function findGroupWithPositiveFlag(
+  result: string[][],
+  positiveFlag: string,
+): string[] | undefined {
+  return result.find((group) => group.some((flag) => matchesFlag(flag, positiveFlag)))
 }
 
-function extractNegated(flags: string[][]): { normal: string[][]; negated: string[][] } {
+function extractNegated(flags: string[][]): {
+  normal: string[][]
+  negated: string[][]
+} {
   const negated: string[][] = []
   const normal: string[][] = []
   for (const currentFlags of flags) {
@@ -154,7 +165,7 @@ export function mergeFlags(flags: string[][]): string[][] {
 
 function getSortKey(flags: string[]): string {
   // Prefer long flag (--xxx) over short flag (-x) for sorting
-  const longFlag = flags.find(flag => flag.startsWith("--"))
+  const longFlag = flags.find((flag) => flag.startsWith("--"))
   const flagToUse = longFlag || flags[0]
   // Remove leading dashes and extract the flag name (without value type)
   return flagToUse.replace(/^-+/, "").split(" ")[0].toLowerCase()

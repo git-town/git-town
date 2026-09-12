@@ -1,8 +1,9 @@
 package gherkin
 
 import (
-	"github.com/cucumber/messages/go/v21"
 	"strings"
+
+	"github.com/cucumber/messages/go/v21"
 )
 
 func Pickles(gherkinDocument messages.GherkinDocument, uri string, newId func() string) []*messages.Pickle {
@@ -63,7 +64,6 @@ func compileRule(
 		}
 	}
 	return pickles
-
 }
 
 func compileScenarioOutline(
@@ -208,7 +208,6 @@ func pickleStep(
 	newId func() string,
 	previous messages.PickleStepType,
 ) *messages.PickleStep {
-
 	var valueCells []*messages.TableCell
 	if valuesRow != nil {
 		valueCells = valuesRow.Cells

@@ -69,7 +69,8 @@ type UpdateGroupSecuritySettingsOptions struct {
 // GitLab API Docs:
 // https://docs.gitlab.com/api/group_security_settings/#update-secret_push_protection_enabled-setting
 func (s *GroupSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(gid any, opt UpdateGroupSecuritySettingsOptions, options ...RequestOptionFunc) (*GroupSecuritySettings, *Response, error) {
-	return do[*GroupSecuritySettings](s.client,
+	return do[*GroupSecuritySettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/security_settings", GroupID{gid}),
 		withAPIOpts(opt),

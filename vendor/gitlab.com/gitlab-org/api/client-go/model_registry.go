@@ -32,8 +32,10 @@ func (s *ModelRegistryService) DownloadMachineLearningModelPackage(pid, modelVer
 		return nil, nil, err
 	}
 
-	buf, resp, err := do[bytes.Buffer](s.client,
-		withPath("projects/%s/packages/ml_models/%s/files/%s/%s",
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
+		withPath(
+			"projects/%s/packages/ml_models/%s/files/%s/%s",
 			ProjectID{pid},
 			// the following URI components must not escape `.` which is what withPath does by default
 			// without NoEscape.

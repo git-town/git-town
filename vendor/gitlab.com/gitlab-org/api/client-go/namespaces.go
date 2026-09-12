@@ -74,7 +74,8 @@ type ListNamespacesOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/namespaces/#list-all-namespaces
 func (s *NamespacesService) ListNamespaces(opt *ListNamespacesOptions, options ...RequestOptionFunc) ([]*Namespace, *Response, error) {
-	return do[[]*Namespace](s.client,
+	return do[[]*Namespace](
+		s.client,
 		withPath("namespaces"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -92,7 +93,8 @@ func (s *NamespacesService) SearchNamespace(query string, options ...RequestOpti
 	}
 	q.Search = query
 
-	return do[[]*Namespace](s.client,
+	return do[[]*Namespace](
+		s.client,
 		withPath("namespaces"),
 		withAPIOpts(&q),
 		withRequestOpts(options...),
@@ -108,7 +110,8 @@ func (s *NamespacesService) GetNamespace(id any, options ...RequestOptionFunc) (
 	if err != nil {
 		return nil, nil, err
 	}
-	return do[*Namespace](s.client,
+	return do[*Namespace](
+		s.client,
 		withPath("namespaces/%s", namespace),
 		withRequestOpts(options...),
 	)
@@ -140,7 +143,8 @@ func (s *NamespacesService) NamespaceExists(id any, opt *NamespaceExistsOptions,
 	if err != nil {
 		return nil, nil, err
 	}
-	return do[*NamespaceExistance](s.client,
+	return do[*NamespaceExistance](
+		s.client,
 		withPath("namespaces/%s/exists", namespace),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

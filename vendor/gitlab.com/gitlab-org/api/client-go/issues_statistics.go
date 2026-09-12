@@ -102,7 +102,8 @@ type GetIssuesStatisticsOptions struct {
 }
 
 func (s *IssuesStatisticsService) GetIssuesStatistics(opt *GetIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
-	return do[*IssuesStatistics](s.client,
+	return do[*IssuesStatistics](
+		s.client,
 		withPath("issues_statistics"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -133,7 +134,8 @@ type GetGroupIssuesStatisticsOptions struct {
 }
 
 func (s *IssuesStatisticsService) GetGroupIssuesStatistics(gid any, opt *GetGroupIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
-	return do[*IssuesStatistics](s.client,
+	return do[*IssuesStatistics](
+		s.client,
 		withPath("groups/%s/issues_statistics", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -164,7 +166,8 @@ type GetProjectIssuesStatisticsOptions struct {
 }
 
 func (s *IssuesStatisticsService) GetProjectIssuesStatistics(pid any, opt *GetProjectIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
-	return do[*IssuesStatistics](s.client,
+	return do[*IssuesStatistics](
+		s.client,
 		withPath("projects/%s/issues_statistics", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

@@ -433,7 +433,6 @@ func (tr *traversal) traverse() {
 				}
 				tr.typ(path, offset, opType, -1, obj.Type())
 			}
-
 		} else if T, ok := types.Unalias(tname.Type()).(*types.Named); ok {
 			// defined type
 			var path []byte

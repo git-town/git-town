@@ -74,7 +74,8 @@ type CreateApplicationOptions struct {
 }
 
 func (s *ApplicationsService) CreateApplication(opt *CreateApplicationOptions, options ...RequestOptionFunc) (*Application, *Response, error) {
-	return do[*Application](s.client,
+	return do[*Application](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("applications"),
 		withAPIOpts(opt),
@@ -89,7 +90,8 @@ type ListApplicationsOptions struct {
 }
 
 func (s *ApplicationsService) ListApplications(opt *ListApplicationsOptions, options ...RequestOptionFunc) ([]*Application, *Response, error) {
-	return do[[]*Application](s.client,
+	return do[[]*Application](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("applications"),
 		withAPIOpts(opt),
@@ -98,7 +100,8 @@ func (s *ApplicationsService) ListApplications(opt *ListApplicationsOptions, opt
 }
 
 func (s *ApplicationsService) DeleteApplication(application int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("applications/%d", application),
 		withRequestOpts(options...),

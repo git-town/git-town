@@ -242,7 +242,8 @@ type ListJobsOptions struct {
 }
 
 func (s *JobsService) ListProjectJobs(pid any, opts *ListJobsOptions, options ...RequestOptionFunc) ([]*Job, *Response, error) {
-	return do[[]*Job](s.client,
+	return do[[]*Job](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/jobs", ProjectID{pid}),
 		withAPIOpts(opts),
@@ -251,7 +252,8 @@ func (s *JobsService) ListProjectJobs(pid any, opts *ListJobsOptions, options ..
 }
 
 func (s *JobsService) ListPipelineJobs(pid any, pipelineID int64, opts *ListJobsOptions, options ...RequestOptionFunc) ([]*Job, *Response, error) {
-	return do[[]*Job](s.client,
+	return do[[]*Job](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/pipelines/%d/jobs", ProjectID{pid}, pipelineID),
 		withAPIOpts(opts),
@@ -260,7 +262,8 @@ func (s *JobsService) ListPipelineJobs(pid any, pipelineID int64, opts *ListJobs
 }
 
 func (s *JobsService) ListPipelineBridges(pid any, pipelineID int64, opts *ListJobsOptions, options ...RequestOptionFunc) ([]*Bridge, *Response, error) {
-	return do[[]*Bridge](s.client,
+	return do[[]*Bridge](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/pipelines/%d/bridges", ProjectID{pid}, pipelineID),
 		withAPIOpts(opts),
@@ -276,7 +279,8 @@ type GetJobTokensJobOptions struct {
 }
 
 func (s *JobsService) GetJobTokensJob(opts *GetJobTokensJobOptions, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("job"),
 		withAPIOpts(opts),
@@ -285,7 +289,8 @@ func (s *JobsService) GetJobTokensJob(opts *GetJobTokensJobOptions, options ...R
 }
 
 func (s *JobsService) GetJob(pid any, jobID int64, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/jobs/%d", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -294,7 +299,8 @@ func (s *JobsService) GetJob(pid any, jobID int64, options ...RequestOptionFunc)
 }
 
 func (s *JobsService) GetJobArtifacts(pid any, jobID int64, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/jobs/%d/artifacts", ProjectID{pid}, jobID),
 		withRequestOpts(options...),
 	)
@@ -312,7 +318,8 @@ type DownloadArtifactsFileOptions struct {
 }
 
 func (s *JobsService) DownloadArtifactsFile(pid any, refName string, opt *DownloadArtifactsFileOptions, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/jobs/artifacts/%s/download", ProjectID{pid}, NoEscape{refName}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -322,7 +329,8 @@ func (s *JobsService) DownloadArtifactsFile(pid any, refName string, opt *Downlo
 }
 
 func (s *JobsService) DownloadSingleArtifactsFile(pid any, jobID int64, artifactPath string, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/jobs/%d/artifacts/%s", ProjectID{pid}, jobID, NoEscape{artifactPath}),
 		withRequestOpts(options...),
 	)
@@ -331,7 +339,8 @@ func (s *JobsService) DownloadSingleArtifactsFile(pid any, jobID int64, artifact
 }
 
 func (s *JobsService) DownloadSingleArtifactsFileByTagOrBranch(pid any, refName string, artifactPath string, opt *DownloadArtifactsFileOptions, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/jobs/artifacts/%s/raw/%s", ProjectID{pid}, refName, NoEscape{artifactPath}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -341,7 +350,8 @@ func (s *JobsService) DownloadSingleArtifactsFileByTagOrBranch(pid any, refName 
 }
 
 func (s *JobsService) GetTraceFile(pid any, jobID int64, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/jobs/%d/trace", ProjectID{pid}, jobID),
 		withRequestOpts(options...),
 	)
@@ -350,7 +360,8 @@ func (s *JobsService) GetTraceFile(pid any, jobID int64, options ...RequestOptio
 }
 
 func (s *JobsService) CancelJob(pid any, jobID int64, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/jobs/%d/cancel", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -359,7 +370,8 @@ func (s *JobsService) CancelJob(pid any, jobID int64, options ...RequestOptionFu
 }
 
 func (s *JobsService) RetryJob(pid any, jobID int64, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/jobs/%d/retry", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -368,7 +380,8 @@ func (s *JobsService) RetryJob(pid any, jobID int64, options ...RequestOptionFun
 }
 
 func (s *JobsService) EraseJob(pid any, jobID int64, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/jobs/%d/erase", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -377,7 +390,8 @@ func (s *JobsService) EraseJob(pid any, jobID int64, options ...RequestOptionFun
 }
 
 func (s *JobsService) KeepArtifacts(pid any, jobID int64, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/jobs/%d/artifacts/keep", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -404,7 +418,8 @@ type JobVariableOptions struct {
 }
 
 func (s *JobsService) PlayJob(pid any, jobID int64, opt *PlayJobOptions, options ...RequestOptionFunc) (*Job, *Response, error) {
-	return do[*Job](s.client,
+	return do[*Job](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/jobs/%d/play", ProjectID{pid}, jobID),
 		withAPIOpts(opt),
@@ -413,7 +428,8 @@ func (s *JobsService) PlayJob(pid any, jobID int64, opt *PlayJobOptions, options
 }
 
 func (s *JobsService) DeleteArtifacts(pid any, jobID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/jobs/%d/artifacts", ProjectID{pid}, jobID),
 		withAPIOpts(nil),
@@ -423,7 +439,8 @@ func (s *JobsService) DeleteArtifacts(pid any, jobID int64, options ...RequestOp
 }
 
 func (s *JobsService) DeleteProjectArtifacts(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/artifacts", ProjectID{pid}),
 		withAPIOpts(nil),

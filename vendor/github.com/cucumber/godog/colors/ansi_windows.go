@@ -203,7 +203,8 @@ func getConsoleScreenBufferInfo(hConsoleOutput uintptr) *consoleScreenBufferInfo
 	var csbi consoleScreenBufferInfo
 	ret, _, _ := procGetConsoleScreenBufferInfo.Call(
 		hConsoleOutput,
-		uintptr(unsafe.Pointer(&csbi)))
+		uintptr(unsafe.Pointer(&csbi)),
+	)
 	if ret == 0 {
 		return nil
 	}
@@ -213,7 +214,8 @@ func getConsoleScreenBufferInfo(hConsoleOutput uintptr) *consoleScreenBufferInfo
 func setConsoleTextAttribute(hConsoleOutput uintptr, wAttributes uint16) bool {
 	ret, _, _ := procSetConsoleTextAttribute.Call(
 		hConsoleOutput,
-		uintptr(wAttributes))
+		uintptr(wAttributes),
+	)
 	return ret != 0
 }
 

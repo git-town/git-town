@@ -245,7 +245,7 @@ func (f *Pretty) Summary() {
 
 func (f *Pretty) printOutlineExample(pickle *messages.Pickle, step *messages.PickleStep, backgroundSteps int) {
 	var errorMsg string
-	var clr = green
+	clr := green
 
 	feature := f.Storage.MustGetFeature(pickle.Uri)
 	astScenario := feature.FindScenario(pickle.AstNodeIds[0])
@@ -294,7 +294,7 @@ func (f *Pretty) printOutlineExample(pickle *messages.Pickle, step *messages.Pic
 			pickleStep := f.Storage.MustGetPickleStep(result.PickleStepID)
 			astStep := feature.FindStep(pickleStep.AstNodeIds[0])
 
-			var text = ""
+			text := ""
 			if result.Def != nil {
 				if m := outlinePlaceholderRegexp.FindAllStringIndex(astStep.Text, -1); len(m) > 0 {
 					var pos int
@@ -478,7 +478,7 @@ func (f *Pretty) printDocString(docString *messages.DocString) {
 // @TODO: need to make example header cells bold
 func (f *Pretty) printTable(t *messages.PickleTable, c colors.ColorFunc) {
 	maxColLengths := maxColLengths(t, c)
-	var cols = make([]string, len(t.Rows[0].Cells))
+	cols := make([]string, len(t.Rows[0].Cells))
 
 	for _, row := range t.Rows {
 		for i, cell := range row.Cells {

@@ -85,7 +85,8 @@ type ListRunnerControllersOptions struct {
 }
 
 func (s *RunnerControllersService) ListRunnerControllers(opt *ListRunnerControllersOptions, options ...RequestOptionFunc) ([]*RunnerController, *Response, error) {
-	return do[[]*RunnerController](s.client,
+	return do[[]*RunnerController](
+		s.client,
 		withPath("runner_controllers"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -93,7 +94,8 @@ func (s *RunnerControllersService) ListRunnerControllers(opt *ListRunnerControll
 }
 
 func (s *RunnerControllersService) GetRunnerController(rid int64, options ...RequestOptionFunc) (*RunnerController, *Response, error) {
-	return do[*RunnerController](s.client,
+	return do[*RunnerController](
+		s.client,
 		withPath("runner_controllers/%d", rid),
 		withRequestOpts(options...),
 	)
@@ -109,7 +111,8 @@ type CreateRunnerControllerOptions struct {
 }
 
 func (s *RunnerControllersService) CreateRunnerController(opt *CreateRunnerControllerOptions, options ...RequestOptionFunc) (*RunnerController, *Response, error) {
-	return do[*RunnerController](s.client,
+	return do[*RunnerController](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runner_controllers"),
 		withAPIOpts(opt),
@@ -127,7 +130,8 @@ type UpdateRunnerControllerOptions struct {
 }
 
 func (s *RunnerControllersService) UpdateRunnerController(rid int64, opt *UpdateRunnerControllerOptions, options ...RequestOptionFunc) (*RunnerController, *Response, error) {
-	return do[*RunnerController](s.client,
+	return do[*RunnerController](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("runner_controllers/%d", rid),
 		withAPIOpts(opt),
@@ -136,7 +140,8 @@ func (s *RunnerControllersService) UpdateRunnerController(rid int64, opt *Update
 }
 
 func (s *RunnerControllersService) DeleteRunnerController(rid int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runner_controllers/%d", rid),
 		withRequestOpts(options...),

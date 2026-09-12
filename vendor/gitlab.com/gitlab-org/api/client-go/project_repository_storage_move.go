@@ -102,7 +102,8 @@ type RetrieveAllProjectStorageMovesOptions struct {
 }
 
 func (p ProjectRepositoryStorageMoveService) RetrieveAllStorageMoves(opts RetrieveAllProjectStorageMovesOptions, options ...RequestOptionFunc) ([]*ProjectRepositoryStorageMove, *Response, error) {
-	return do[[]*ProjectRepositoryStorageMove](p.client,
+	return do[[]*ProjectRepositoryStorageMove](
+		p.client,
 		withPath("project_repository_storage_moves"),
 		withAPIOpts(opts),
 		withRequestOpts(options...),
@@ -110,7 +111,8 @@ func (p ProjectRepositoryStorageMoveService) RetrieveAllStorageMoves(opts Retrie
 }
 
 func (p ProjectRepositoryStorageMoveService) RetrieveAllStorageMovesForProject(project int64, opts RetrieveAllProjectStorageMovesOptions, options ...RequestOptionFunc) ([]*ProjectRepositoryStorageMove, *Response, error) {
-	return do[[]*ProjectRepositoryStorageMove](p.client,
+	return do[[]*ProjectRepositoryStorageMove](
+		p.client,
 		withPath("projects/%d/repository_storage_moves", project),
 		withAPIOpts(opts),
 		withRequestOpts(options...),
@@ -118,14 +120,16 @@ func (p ProjectRepositoryStorageMoveService) RetrieveAllStorageMovesForProject(p
 }
 
 func (p ProjectRepositoryStorageMoveService) GetStorageMove(repositoryStorage int64, options ...RequestOptionFunc) (*ProjectRepositoryStorageMove, *Response, error) {
-	return do[*ProjectRepositoryStorageMove](p.client,
+	return do[*ProjectRepositoryStorageMove](
+		p.client,
 		withPath("project_repository_storage_moves/%d", repositoryStorage),
 		withRequestOpts(options...),
 	)
 }
 
 func (p ProjectRepositoryStorageMoveService) GetStorageMoveForProject(project int64, repositoryStorage int64, options ...RequestOptionFunc) (*ProjectRepositoryStorageMove, *Response, error) {
-	return do[*ProjectRepositoryStorageMove](p.client,
+	return do[*ProjectRepositoryStorageMove](
+		p.client,
 		withPath("projects/%d/repository_storage_moves/%d", project, repositoryStorage),
 		withRequestOpts(options...),
 	)
@@ -141,7 +145,8 @@ type ScheduleStorageMoveForProjectOptions struct {
 }
 
 func (p ProjectRepositoryStorageMoveService) ScheduleStorageMoveForProject(project int64, opts ScheduleStorageMoveForProjectOptions, options ...RequestOptionFunc) (*ProjectRepositoryStorageMove, *Response, error) {
-	return do[*ProjectRepositoryStorageMove](p.client,
+	return do[*ProjectRepositoryStorageMove](
+		p.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%d/repository_storage_moves", project),
 		withAPIOpts(opts),
@@ -160,7 +165,8 @@ type ScheduleAllProjectStorageMovesOptions struct {
 }
 
 func (p ProjectRepositoryStorageMoveService) ScheduleAllStorageMoves(opts ScheduleAllProjectStorageMovesOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](p.client,
+	_, resp, err := do[none](
+		p.client,
 		withMethod(http.MethodPost),
 		withPath("project_repository_storage_moves"),
 		withAPIOpts(opts),

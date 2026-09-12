@@ -207,11 +207,21 @@ suite("Lines", () => {
       const output = new HelpOutput(appendHelpOutput)
       const have = output.lines().flagLines()
       const want = [
-        new FlagLine("      --auto-resolve      auto-resolve phantom merge conflicts"),
-        new FlagLine("  -b, --beam              beam some commits from this branch to the new branch"),
-        new FlagLine("  -c, --commit            commit the stashed changes into the new branch"),
-        new FlagLine("  -d, --detached          don't update the perennial root branch"),
-        new FlagLine("      --dry-run           print but do not run the Git commands"),
+        new FlagLine(
+          "      --auto-resolve      auto-resolve phantom merge conflicts",
+        ),
+        new FlagLine(
+          "  -b, --beam              beam some commits from this branch to the new branch",
+        ),
+        new FlagLine(
+          "  -c, --commit            commit the stashed changes into the new branch",
+        ),
+        new FlagLine(
+          "  -d, --detached          don't update the perennial root branch",
+        ),
+        new FlagLine(
+          "      --dry-run           print but do not run the Git commands",
+        ),
         new FlagLine("  -h, --help              help for append"),
         new FlagLine("      --interactive       enable interactive mode"),
         new FlagLine("  -m, --message string    the commit message"),
@@ -219,14 +229,20 @@ suite("Lines", () => {
         new FlagLine("      --no-detached       disable detached"),
         new FlagLine("      --non-interactive   disable interactive mode"),
         new FlagLine("      --no-push           don't push branches"),
-        new FlagLine("      --no-stash          don't stash uncommitted changes"),
+        new FlagLine(
+          "      --no-stash          don't stash uncommitted changes",
+        ),
         new FlagLine("      --no-sync           don't sync branches"),
         new FlagLine("      --propose           propose the new branch"),
         new FlagLine("  -p, --prototype         create a prototype branch"),
         new FlagLine("      --push              push local branches"),
-        new FlagLine("      --stash             stash uncommitted changes when creating branches"),
+        new FlagLine(
+          "      --stash             stash uncommitted changes when creating branches",
+        ),
         new FlagLine("      --sync              sync branches (default true)"),
-        new FlagLine("  -v, --verbose           display all Git commands run under the hood"),
+        new FlagLine(
+          "  -v, --verbose           display all Git commands run under the hood",
+        ),
       ]
       deepEqual(have, want)
     })
@@ -237,7 +253,10 @@ suite("FlagLine", () => {
   suite(".flags()", () => {
     const tests = {
       "  -b, --beam             description": ["-b", "--beam"],
-      "  -d, --display-types string[=\"all\"]   display the branch types": ["-d", "--display-types string"],
+      "  -d, --display-types string[=\"all\"]   display the branch types": [
+        "-d",
+        "--display-types string",
+      ],
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -252,7 +271,7 @@ suite("FlagLine", () => {
 suite("replaceValueNotation()", () => {
   const tests = {
     "string[=\"all\"]": "string",
-    "string": "string",
+    string: "string",
   }
   for (const [give, want] of Object.entries(tests)) {
     test(give, () => {
@@ -265,7 +284,10 @@ suite("replaceValueNotation()", () => {
 suite("mergeFlags()", () => {
   test("merge flags", () => {
     const give = [["-b", "--beam"], ["-d", "--detached"], ["--no-detached"]]
-    const want = [["-b", "--beam"], ["-d", "--detached", "--no-detached"]]
+    const want = [
+      ["-b", "--beam"],
+      ["-d", "--detached", "--no-detached"],
+    ]
     const have = mergeFlags(give)
     deepEqual(have, want)
   })

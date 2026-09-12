@@ -50,7 +50,8 @@ var _ GroupImportExportServiceInterface = (*GroupImportExportService)(nil)
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_import_export/#schedule-new-export
 func (s *GroupImportExportService) ScheduleExport(gid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/export", GroupID{gid}),
 		withAPIOpts(nil),
@@ -64,7 +65,8 @@ func (s *GroupImportExportService) ScheduleExport(gid any, options ...RequestOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_import_export/#export-download
 func (s *GroupImportExportService) ExportDownload(gid any, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("groups/%s/export/download", GroupID{gid}),
 		withRequestOpts(options...),
 	)

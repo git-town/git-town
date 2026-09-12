@@ -93,7 +93,8 @@ type ListBroadcastMessagesOptions struct {
 }
 
 func (s *BroadcastMessagesService) ListBroadcastMessages(opt *ListBroadcastMessagesOptions, options ...RequestOptionFunc) ([]*BroadcastMessage, *Response, error) {
-	return do[[]*BroadcastMessage](s.client,
+	return do[[]*BroadcastMessage](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("broadcast_messages"),
 		withAPIOpts(opt),
@@ -102,7 +103,8 @@ func (s *BroadcastMessagesService) ListBroadcastMessages(opt *ListBroadcastMessa
 }
 
 func (s *BroadcastMessagesService) GetBroadcastMessage(broadcast int64, options ...RequestOptionFunc) (*BroadcastMessage, *Response, error) {
-	return do[*BroadcastMessage](s.client,
+	return do[*BroadcastMessage](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("broadcast_messages/%d", broadcast),
 		withRequestOpts(options...),
@@ -127,7 +129,8 @@ type CreateBroadcastMessageOptions struct {
 }
 
 func (s *BroadcastMessagesService) CreateBroadcastMessage(opt *CreateBroadcastMessageOptions, options ...RequestOptionFunc) (*BroadcastMessage, *Response, error) {
-	return do[*BroadcastMessage](s.client,
+	return do[*BroadcastMessage](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("broadcast_messages"),
 		withAPIOpts(opt),
@@ -153,7 +156,8 @@ type UpdateBroadcastMessageOptions struct {
 }
 
 func (s *BroadcastMessagesService) UpdateBroadcastMessage(broadcast int64, opt *UpdateBroadcastMessageOptions, options ...RequestOptionFunc) (*BroadcastMessage, *Response, error) {
-	return do[*BroadcastMessage](s.client,
+	return do[*BroadcastMessage](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("broadcast_messages/%d", broadcast),
 		withAPIOpts(opt),
@@ -162,7 +166,8 @@ func (s *BroadcastMessagesService) UpdateBroadcastMessage(broadcast int64, opt *
 }
 
 func (s *BroadcastMessagesService) DeleteBroadcastMessage(broadcast int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("broadcast_messages/%d", broadcast),
 		withRequestOpts(options...),

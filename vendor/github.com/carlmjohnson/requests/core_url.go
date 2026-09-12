@@ -33,7 +33,6 @@ func (ub *urlBuilder) Scheme(scheme string) {
 
 func (ub *urlBuilder) Host(host string) {
 	ub.host = host
-
 }
 
 func (ub *urlBuilder) Path(path string) {

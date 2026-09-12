@@ -140,7 +140,8 @@ func (r *keyring) List() ([]*Key, error) {
 		ids = append(ids, &Key{
 			Format:  pub.Type(),
 			Blob:    pub.Marshal(),
-			Comment: k.comment})
+			Comment: k.comment,
+		})
 	}
 	return ids, nil
 }
@@ -166,7 +167,6 @@ func (r *keyring) Add(key AddedKey) error {
 	}
 
 	signer, err := ssh.NewSignerFromKey(key.PrivateKey)
-
 	if err != nil {
 		return err
 	}

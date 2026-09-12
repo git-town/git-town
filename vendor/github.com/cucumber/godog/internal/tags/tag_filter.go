@@ -13,7 +13,7 @@ func ApplyTagFilter(filter string, pickles []*messages.Pickle) []*messages.Pickl
 		return pickles
 	}
 
-	var result = []*messages.Pickle{}
+	result := []*messages.Pickle{}
 
 	for _, pickle := range pickles {
 		if match(filter, pickle.Tags) {

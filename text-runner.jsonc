@@ -1,10 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/kevgo/text-runner/refs/heads/main/documentation/text-runner.schema.json",
   "files": "**/*.md",
-  "exclude": [
-    "website/src/SUMMARY.md",
-    "vendor/"
-  ],
+  "exclude": ["website/src/SUMMARY.md", "vendor/"],
   "format": "dot",
   // regex patterns for link targets to ignore
   "ignoreLinkTargets": [],
@@ -19,5 +16,5 @@
   // whether to verify online files/links (warning: this makes tests flaky)
   "online": false,
   // whether to delete all files in the workspace folder before running the tests
-  "emptyWorkspace": true
+  "emptyWorkspace": true,
 }

@@ -128,7 +128,8 @@ type ListAccessRequestsOptions struct {
 }
 
 func (s *AccessRequestsService) ListProjectAccessRequests(pid any, opt *ListAccessRequestsOptions, options ...RequestOptionFunc) ([]*AccessRequest, *Response, error) {
-	return do[[]*AccessRequest](s.client,
+	return do[[]*AccessRequest](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/access_requests", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -137,7 +138,8 @@ func (s *AccessRequestsService) ListProjectAccessRequests(pid any, opt *ListAcce
 }
 
 func (s *AccessRequestsService) ListGroupAccessRequests(gid any, opt *ListAccessRequestsOptions, options ...RequestOptionFunc) ([]*AccessRequest, *Response, error) {
-	return do[[]*AccessRequest](s.client,
+	return do[[]*AccessRequest](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/access_requests", GroupID{gid}),
 		withAPIOpts(opt),
@@ -146,7 +148,8 @@ func (s *AccessRequestsService) ListGroupAccessRequests(gid any, opt *ListAccess
 }
 
 func (s *AccessRequestsService) RequestProjectAccess(pid any, options ...RequestOptionFunc) (*AccessRequest, *Response, error) {
-	return do[*AccessRequest](s.client,
+	return do[*AccessRequest](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/access_requests", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -154,7 +157,8 @@ func (s *AccessRequestsService) RequestProjectAccess(pid any, options ...Request
 }
 
 func (s *AccessRequestsService) RequestGroupAccess(gid any, options ...RequestOptionFunc) (*AccessRequest, *Response, error) {
-	return do[*AccessRequest](s.client,
+	return do[*AccessRequest](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/access_requests", GroupID{gid}),
 		withRequestOpts(options...),
@@ -171,7 +175,8 @@ type ApproveAccessRequestOptions struct {
 }
 
 func (s *AccessRequestsService) ApproveProjectAccessRequest(pid any, user int64, opt *ApproveAccessRequestOptions, options ...RequestOptionFunc) (*AccessRequest, *Response, error) {
-	return do[*AccessRequest](s.client,
+	return do[*AccessRequest](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/access_requests/%d/approve", ProjectID{pid}, user),
 		withAPIOpts(opt),
@@ -180,7 +185,8 @@ func (s *AccessRequestsService) ApproveProjectAccessRequest(pid any, user int64,
 }
 
 func (s *AccessRequestsService) ApproveGroupAccessRequest(gid any, user int64, opt *ApproveAccessRequestOptions, options ...RequestOptionFunc) (*AccessRequest, *Response, error) {
-	return do[*AccessRequest](s.client,
+	return do[*AccessRequest](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/access_requests/%d/approve", GroupID{gid}, user),
 		withAPIOpts(opt),
@@ -189,7 +195,8 @@ func (s *AccessRequestsService) ApproveGroupAccessRequest(gid any, user int64, o
 }
 
 func (s *AccessRequestsService) DenyProjectAccessRequest(pid any, user int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/access_requests/%d", ProjectID{pid}, user),
 		withRequestOpts(options...),
@@ -198,7 +205,8 @@ func (s *AccessRequestsService) DenyProjectAccessRequest(pid any, user int64, op
 }
 
 func (s *AccessRequestsService) DenyGroupAccessRequest(gid any, user int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/access_requests/%d", GroupID{gid}, user),
 		withRequestOpts(options...),

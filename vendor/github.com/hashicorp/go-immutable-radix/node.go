@@ -254,7 +254,6 @@ func (n *Node) WalkPrefix(prefix []byte, fn WalkFn) {
 		// Consume the search prefix
 		if bytes.HasPrefix(search, n.prefix) {
 			search = search[len(n.prefix):]
-
 		} else if bytes.HasPrefix(n.prefix, search) {
 			// Child may be under our search prefix
 			recursiveWalk(n, fn)

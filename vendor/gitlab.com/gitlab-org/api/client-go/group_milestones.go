@@ -94,7 +94,8 @@ type ListGroupMilestonesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#list-group-milestones
 func (s *GroupMilestonesService) ListGroupMilestones(gid any, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error) {
-	return do[[]*GroupMilestone](s.client,
+	return do[[]*GroupMilestone](
+		s.client,
 		withPath("groups/%s/milestones", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -106,7 +107,8 @@ func (s *GroupMilestonesService) ListGroupMilestones(gid any, opt *ListGroupMile
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-single-milestone
 func (s *GroupMilestonesService) GetGroupMilestone(gid any, milestone int64, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	return do[*GroupMilestone](s.client,
+	return do[*GroupMilestone](
+		s.client,
 		withPath("groups/%s/milestones/%d", GroupID{gid}, milestone),
 		withRequestOpts(options...),
 	)
@@ -128,7 +130,8 @@ type CreateGroupMilestoneOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#create-new-milestone
 func (s *GroupMilestonesService) CreateGroupMilestone(gid any, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	return do[*GroupMilestone](s.client,
+	return do[*GroupMilestone](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/milestones", GroupID{gid}),
 		withAPIOpts(opt),
@@ -153,7 +156,8 @@ type UpdateGroupMilestoneOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#edit-milestone
 func (s *GroupMilestonesService) UpdateGroupMilestone(gid any, milestone int64, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
-	return do[*GroupMilestone](s.client,
+	return do[*GroupMilestone](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/milestones/%d", GroupID{gid}, milestone),
 		withAPIOpts(opt),
@@ -166,7 +170,8 @@ func (s *GroupMilestonesService) UpdateGroupMilestone(gid any, milestone int64, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#delete-group-milestone
 func (s *GroupMilestonesService) DeleteGroupMilestone(pid any, milestone int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/milestones/%d", GroupID{pid}, milestone),
 		withRequestOpts(options...),
@@ -187,7 +192,8 @@ type GetGroupMilestoneIssuesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-issues-assigned-to-a-single-milestone
 func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid any, milestone int64, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("groups/%s/milestones/%d/issues", GroupID{gid}, milestone),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -209,7 +215,8 @@ type GetGroupMilestoneMergeRequestsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-merge-requests-assigned-to-a-single-milestone
 func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milestone int64, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	return do[[]*BasicMergeRequest](s.client,
+	return do[[]*BasicMergeRequest](
+		s.client,
 		withPath("groups/%s/milestones/%d/merge_requests", GroupID{gid}, milestone),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -241,7 +248,8 @@ type GetGroupMilestoneBurndownChartEventsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone
 func (s *GroupMilestonesService) GetGroupMilestoneBurndownChartEvents(gid any, milestone int64, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error) {
-	return do[[]*BurndownChartEvent](s.client,
+	return do[[]*BurndownChartEvent](
+		s.client,
 		withPath("groups/%s/milestones/%d/burndown_events", GroupID{gid}, milestone),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

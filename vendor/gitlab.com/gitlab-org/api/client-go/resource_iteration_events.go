@@ -83,7 +83,8 @@ type ListIterationEventsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_iteration_events/#list-project-issue-iteration-events
 func (s *ResourceIterationEventsService) ListIssueIterationEvents(pid any, issue int64, opt *ListIterationEventsOptions, options ...RequestOptionFunc) ([]*IterationEvent, *Response, error) {
-	return do[[]*IterationEvent](s.client,
+	return do[[]*IterationEvent](
+		s.client,
 		withPath("projects/%s/issues/%d/resource_iteration_events", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -95,7 +96,8 @@ func (s *ResourceIterationEventsService) ListIssueIterationEvents(pid any, issue
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_iteration_events/#get-single-issue-iteration-event
 func (s *ResourceIterationEventsService) GetIssueIterationEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*IterationEvent, *Response, error) {
-	return do[*IterationEvent](s.client,
+	return do[*IterationEvent](
+		s.client,
 		withPath("projects/%s/issues/%d/resource_iteration_events/%d", ProjectID{pid}, issue, event),
 		withRequestOpts(options...),
 	)

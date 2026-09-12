@@ -224,7 +224,8 @@ type ListRunnersOptions struct {
 }
 
 func (s *RunnersService) ListRunners(opt *ListRunnersOptions, options ...RequestOptionFunc) ([]*Runner, *Response, error) {
-	res, resp, err := do[[]*Runner](s.client,
+	res, resp, err := do[[]*Runner](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("runners"),
 		withAPIOpts(opt),
@@ -237,7 +238,8 @@ func (s *RunnersService) ListRunners(opt *ListRunnersOptions, options ...Request
 }
 
 func (s *RunnersService) ListAllRunners(opt *ListRunnersOptions, options ...RequestOptionFunc) ([]*Runner, *Response, error) {
-	res, resp, err := do[[]*Runner](s.client,
+	res, resp, err := do[[]*Runner](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("runners/all"),
 		withAPIOpts(opt),
@@ -250,7 +252,8 @@ func (s *RunnersService) ListAllRunners(opt *ListRunnersOptions, options ...Requ
 }
 
 func (s *RunnersService) GetRunnerDetails(rid any, options ...RequestOptionFunc) (*RunnerDetails, *Response, error) {
-	res, resp, err := do[*RunnerDetails](s.client,
+	res, resp, err := do[*RunnerDetails](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("runners/%s", RunnerID{rid}),
 		withAPIOpts(nil),
@@ -281,7 +284,8 @@ type UpdateRunnerDetailsOptions struct {
 }
 
 func (s *RunnersService) UpdateRunnerDetails(rid any, opt *UpdateRunnerDetailsOptions, options ...RequestOptionFunc) (*RunnerDetails, *Response, error) {
-	res, resp, err := do[*RunnerDetails](s.client,
+	res, resp, err := do[*RunnerDetails](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("runners/%s", RunnerID{rid}),
 		withAPIOpts(opt),
@@ -294,7 +298,8 @@ func (s *RunnersService) UpdateRunnerDetails(rid any, opt *UpdateRunnerDetailsOp
 }
 
 func (s *RunnersService) RemoveRunner(rid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runners/%s", RunnerID{rid}),
 		withAPIOpts(nil),
@@ -316,7 +321,8 @@ type ListRunnerJobsOptions struct {
 }
 
 func (s *RunnersService) ListRunnerJobs(rid any, opt *ListRunnerJobsOptions, options ...RequestOptionFunc) ([]*Job, *Response, error) {
-	res, resp, err := do[[]*Job](s.client,
+	res, resp, err := do[[]*Job](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("runners/%s/jobs", RunnerID{rid}),
 		withAPIOpts(opt),
@@ -336,7 +342,8 @@ func (s *RunnersService) ListRunnerJobs(rid any, opt *ListRunnerJobsOptions, opt
 type ListProjectRunnersOptions ListRunnersOptions
 
 func (s *RunnersService) ListProjectRunners(pid any, opt *ListProjectRunnersOptions, options ...RequestOptionFunc) ([]*Runner, *Response, error) {
-	res, resp, err := do[[]*Runner](s.client,
+	res, resp, err := do[[]*Runner](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/runners", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -358,7 +365,8 @@ type EnableProjectRunnerOptions struct {
 }
 
 func (s *RunnersService) EnableProjectRunner(pid any, opt *EnableProjectRunnerOptions, options ...RequestOptionFunc) (*Runner, *Response, error) {
-	res, resp, err := do[*Runner](s.client,
+	res, resp, err := do[*Runner](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/runners", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -371,7 +379,8 @@ func (s *RunnersService) EnableProjectRunner(pid any, opt *EnableProjectRunnerOp
 }
 
 func (s *RunnersService) DisableProjectRunner(pid any, runner int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/runners/%d", ProjectID{pid}, runner),
 		withAPIOpts(nil),
@@ -392,7 +401,8 @@ type ListGroupsRunnersOptions struct {
 }
 
 func (s *RunnersService) ListGroupsRunners(gid any, opt *ListGroupsRunnersOptions, options ...RequestOptionFunc) ([]*Runner, *Response, error) {
-	res, resp, err := do[[]*Runner](s.client,
+	res, resp, err := do[[]*Runner](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/runners", GroupID{gid}),
 		withAPIOpts(opt),
@@ -439,7 +449,8 @@ type RegisterNewRunnerInfoOptions struct {
 }
 
 func (s *RunnersService) RegisterNewRunner(opt *RegisterNewRunnerOptions, options ...RequestOptionFunc) (*Runner, *Response, error) {
-	res, resp, err := do[*Runner](s.client,
+	res, resp, err := do[*Runner](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runners"),
 		withAPIOpts(opt),
@@ -461,7 +472,8 @@ type DeleteRegisteredRunnerOptions struct {
 }
 
 func (s *RunnersService) DeleteRegisteredRunner(opt *DeleteRegisteredRunnerOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runners"),
 		withAPIOpts(opt),
@@ -471,7 +483,8 @@ func (s *RunnersService) DeleteRegisteredRunner(opt *DeleteRegisteredRunnerOptio
 }
 
 func (s *RunnersService) DeleteRegisteredRunnerByID(rid int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath(fmt.Sprintf("runners/%d", rid)),
 		withAPIOpts(nil),
@@ -490,7 +503,8 @@ type VerifyRegisteredRunnerOptions struct {
 }
 
 func (s *RunnersService) VerifyRegisteredRunner(opt *VerifyRegisteredRunnerOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runners/verify"),
 		withAPIOpts(opt),
@@ -511,7 +525,8 @@ type RunnerRegistrationToken struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/runners/#reset-instances-runner-registration-token
 func (s *RunnersService) ResetInstanceRunnerRegistrationToken(options ...RequestOptionFunc) (*RunnerRegistrationToken, *Response, error) {
-	res, resp, err := do[*RunnerRegistrationToken](s.client,
+	res, resp, err := do[*RunnerRegistrationToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runners/reset_registration_token"),
 		withAPIOpts(nil),
@@ -529,7 +544,8 @@ func (s *RunnersService) ResetInstanceRunnerRegistrationToken(options ...Request
 // GitLab API docs:
 // https://docs.gitlab.com/api/runners/#reset-groups-runner-registration-token
 func (s *RunnersService) ResetGroupRunnerRegistrationToken(gid any, options ...RequestOptionFunc) (*RunnerRegistrationToken, *Response, error) {
-	res, resp, err := do[*RunnerRegistrationToken](s.client,
+	res, resp, err := do[*RunnerRegistrationToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/runners/reset_registration_token", GroupID{gid}),
 		withAPIOpts(nil),
@@ -547,7 +563,8 @@ func (s *RunnersService) ResetGroupRunnerRegistrationToken(gid any, options ...R
 // GitLab API docs:
 // https://docs.gitlab.com/api/runners/#reset-projects-runner-registration-token
 func (s *RunnersService) ResetProjectRunnerRegistrationToken(pid any, options ...RequestOptionFunc) (*RunnerRegistrationToken, *Response, error) {
-	res, resp, err := do[*RunnerRegistrationToken](s.client,
+	res, resp, err := do[*RunnerRegistrationToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/runners/reset_registration_token", ProjectID{pid}),
 		withAPIOpts(nil),
@@ -565,7 +582,8 @@ type RunnerAuthenticationToken struct {
 }
 
 func (s *RunnersService) ResetRunnerAuthenticationToken(rid int64, options ...RequestOptionFunc) (*RunnerAuthenticationToken, *Response, error) {
-	res, resp, err := do[*RunnerAuthenticationToken](s.client,
+	res, resp, err := do[*RunnerAuthenticationToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runners/%d/reset_authentication_token", rid),
 		withAPIOpts(nil),

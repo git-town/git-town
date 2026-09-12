@@ -187,7 +187,7 @@ func StringToSid(s string) (*SID, error) {
 	if e != nil {
 		return nil, e
 	}
-	defer LocalFree((Handle)(unsafe.Pointer(sid)))
+	defer LocalFree(Handle(unsafe.Pointer(sid)))
 	return sid.Copy()
 }
 
@@ -235,7 +235,7 @@ func (sid *SID) String() string {
 	if e != nil {
 		return ""
 	}
-	defer LocalFree((Handle)(unsafe.Pointer(s)))
+	defer LocalFree(Handle(unsafe.Pointer(s)))
 	return UTF16ToString((*[256]uint16)(unsafe.Pointer(s))[:])
 }
 

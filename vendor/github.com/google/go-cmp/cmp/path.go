@@ -177,20 +177,22 @@ func (ps pathStep) String() string {
 
 // StructField is a [PathStep] that represents a struct field access
 // on a field called [StructField.Name].
-type StructField struct{ *structField }
-type structField struct {
-	pathStep
-	name string
-	idx  int
+type (
+	StructField struct{ *structField }
+	structField struct {
+		pathStep
+		name string
+		idx  int
 
-	// These fields are used for forcibly accessing an unexported field.
-	// pvx, pvy, and field are only valid if unexported is true.
-	unexported bool
-	mayForce   bool                // Forcibly allow visibility
-	paddr      bool                // Was parent addressable?
-	pvx, pvy   reflect.Value       // Parent values (always addressable)
-	field      reflect.StructField // Field information
-}
+		// These fields are used for forcibly accessing an unexported field.
+		// pvx, pvy, and field are only valid if unexported is true.
+		unexported bool
+		mayForce   bool                // Forcibly allow visibility
+		paddr      bool                // Was parent addressable?
+		pvx, pvy   reflect.Value       // Parent values (always addressable)
+		field      reflect.StructField // Field information
+	}
+)
 
 func (sf StructField) Type() reflect.Type { return sf.typ }
 func (sf StructField) Values() (vx, vy reflect.Value) {
@@ -217,12 +219,14 @@ func (sf StructField) Index() int { return sf.idx }
 
 // SliceIndex is a [PathStep] that represents an index operation on
 // a slice or array at some index [SliceIndex.Key].
-type SliceIndex struct{ *sliceIndex }
-type sliceIndex struct {
-	pathStep
-	xkey, ykey int
-	isSlice    bool // False for reflect.Array
-}
+type (
+	SliceIndex struct{ *sliceIndex }
+	sliceIndex struct {
+		pathStep
+		xkey, ykey int
+		isSlice    bool // False for reflect.Array
+	}
+)
 
 func (si SliceIndex) Type() reflect.Type             { return si.typ }
 func (si SliceIndex) Values() (vx, vy reflect.Value) { return si.vx, si.vy }
@@ -262,11 +266,13 @@ func (si SliceIndex) Key() int {
 func (si SliceIndex) SplitKeys() (ix, iy int) { return si.xkey, si.ykey }
 
 // MapIndex is a [PathStep] that represents an index operation on a map at some index Key.
-type MapIndex struct{ *mapIndex }
-type mapIndex struct {
-	pathStep
-	key reflect.Value
-}
+type (
+	MapIndex struct{ *mapIndex }
+	mapIndex struct {
+		pathStep
+		key reflect.Value
+	}
+)
 
 func (mi MapIndex) Type() reflect.Type             { return mi.typ }
 func (mi MapIndex) Values() (vx, vy reflect.Value) { return mi.vx, mi.vy }
@@ -276,20 +282,24 @@ func (mi MapIndex) String() string                 { return fmt.Sprintf("[%#v]",
 func (mi MapIndex) Key() reflect.Value { return mi.key }
 
 // Indirect is a [PathStep] that represents pointer indirection on the parent type.
-type Indirect struct{ *indirect }
-type indirect struct {
-	pathStep
-}
+type (
+	Indirect struct{ *indirect }
+	indirect struct {
+		pathStep
+	}
+)
 
 func (in Indirect) Type() reflect.Type             { return in.typ }
 func (in Indirect) Values() (vx, vy reflect.Value) { return in.vx, in.vy }
 func (in Indirect) String() string                 { return "*" }
 
 // TypeAssertion is a [PathStep] that represents a type assertion on an interface.
-type TypeAssertion struct{ *typeAssertion }
-type typeAssertion struct {
-	pathStep
-}
+type (
+	TypeAssertion struct{ *typeAssertion }
+	typeAssertion struct {
+		pathStep
+	}
+)
 
 func (ta TypeAssertion) Type() reflect.Type             { return ta.typ }
 func (ta TypeAssertion) Values() (vx, vy reflect.Value) { return ta.vx, ta.vy }
@@ -297,11 +307,13 @@ func (ta TypeAssertion) String() string                 { return fmt.Sprintf(".(
 
 // Transform is a [PathStep] that represents a transformation
 // from the parent type to the current type.
-type Transform struct{ *transform }
-type transform struct {
-	pathStep
-	trans *transformer
-}
+type (
+	Transform struct{ *transform }
+	transform struct {
+		pathStep
+		trans *transformer
+	}
+)
 
 func (tf Transform) Type() reflect.Type             { return tf.typ }
 func (tf Transform) Values() (vx, vy reflect.Value) { return tf.vx, tf.vy }

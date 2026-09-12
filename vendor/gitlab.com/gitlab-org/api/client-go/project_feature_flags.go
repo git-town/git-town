@@ -106,7 +106,8 @@ type ListProjectFeatureFlagOptions struct {
 }
 
 func (s *ProjectFeatureFlagService) ListProjectFeatureFlags(pid any, opt *ListProjectFeatureFlagOptions, options ...RequestOptionFunc) ([]*ProjectFeatureFlag, *Response, error) {
-	return do[[]*ProjectFeatureFlag](s.client,
+	return do[[]*ProjectFeatureFlag](
+		s.client,
 		withPath("projects/%s/feature_flags", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -114,7 +115,8 @@ func (s *ProjectFeatureFlagService) ListProjectFeatureFlags(pid any, opt *ListPr
 }
 
 func (s *ProjectFeatureFlagService) GetProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	return do[*ProjectFeatureFlag](s.client,
+	return do[*ProjectFeatureFlag](
+		s.client,
 		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
 		withRequestOpts(options...),
 	)
@@ -156,7 +158,8 @@ type ProjectFeatureFlagScopeOptions struct {
 }
 
 func (s *ProjectFeatureFlagService) CreateProjectFeatureFlag(pid any, opt *CreateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	return do[*ProjectFeatureFlag](s.client,
+	return do[*ProjectFeatureFlag](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/feature_flags", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -177,7 +180,8 @@ type UpdateProjectFeatureFlagOptions struct {
 }
 
 func (s *ProjectFeatureFlagService) UpdateProjectFeatureFlag(pid any, name string, opt *UpdateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
-	return do[*ProjectFeatureFlag](s.client,
+	return do[*ProjectFeatureFlag](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
 		withAPIOpts(opt),
@@ -186,7 +190,8 @@ func (s *ProjectFeatureFlagService) UpdateProjectFeatureFlag(pid any, name strin
 }
 
 func (s *ProjectFeatureFlagService) DeleteProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/feature_flags/%s", ProjectID{pid}, name),
 		withRequestOpts(options...),

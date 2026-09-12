@@ -128,7 +128,8 @@ type ListTagsOptions struct {
 }
 
 func (s *TagsService) ListTags(pid any, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error) {
-	return do[[]*Tag](s.client,
+	return do[[]*Tag](
+		s.client,
 		withPath("projects/%s/repository/tags", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -136,14 +137,16 @@ func (s *TagsService) ListTags(pid any, opt *ListTagsOptions, options ...Request
 }
 
 func (s *TagsService) GetTag(pid any, tag string, options ...RequestOptionFunc) (*Tag, *Response, error) {
-	return do[*Tag](s.client,
+	return do[*Tag](
+		s.client,
 		withPath("projects/%s/repository/tags/%s", ProjectID{pid}, tag),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *TagsService) GetTagSignature(pid any, tag string, options ...RequestOptionFunc) (*X509Signature, *Response, error) {
-	return do[*X509Signature](s.client,
+	return do[*X509Signature](
+		s.client,
 		withPath("projects/%s/repository/tags/%s/signature", ProjectID{pid}, tag),
 		withRequestOpts(options...),
 	)
@@ -160,7 +163,8 @@ type CreateTagOptions struct {
 }
 
 func (s *TagsService) CreateTag(pid any, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error) {
-	return do[*Tag](s.client,
+	return do[*Tag](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/tags", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -169,7 +173,8 @@ func (s *TagsService) CreateTag(pid any, opt *CreateTagOptions, options ...Reque
 }
 
 func (s *TagsService) DeleteTag(pid any, tag string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/repository/tags/%s", ProjectID{pid}, tag),
 		withRequestOpts(options...),

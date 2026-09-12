@@ -76,7 +76,8 @@ type ListRunnerControllerTokensOptions struct {
 }
 
 func (s *RunnerControllerTokensService) ListRunnerControllerTokens(rid int64, opt *ListRunnerControllerTokensOptions, options ...RequestOptionFunc) ([]*RunnerControllerToken, *Response, error) {
-	return do[[]*RunnerControllerToken](s.client,
+	return do[[]*RunnerControllerToken](
+		s.client,
 		withPath("runner_controllers/%d/tokens", rid),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -84,7 +85,8 @@ func (s *RunnerControllerTokensService) ListRunnerControllerTokens(rid int64, op
 }
 
 func (s *RunnerControllerTokensService) GetRunnerControllerToken(rid int64, tokenID int64, options ...RequestOptionFunc) (*RunnerControllerToken, *Response, error) {
-	return do[*RunnerControllerToken](s.client,
+	return do[*RunnerControllerToken](
+		s.client,
 		withPath("runner_controllers/%d/tokens/%d", rid, tokenID),
 		withRequestOpts(options...),
 	)
@@ -99,7 +101,8 @@ type CreateRunnerControllerTokenOptions struct {
 }
 
 func (s *RunnerControllerTokensService) CreateRunnerControllerToken(rid int64, opt *CreateRunnerControllerTokenOptions, options ...RequestOptionFunc) (*RunnerControllerToken, *Response, error) {
-	return do[*RunnerControllerToken](s.client,
+	return do[*RunnerControllerToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runner_controllers/%d/tokens", rid),
 		withAPIOpts(opt),
@@ -108,7 +111,8 @@ func (s *RunnerControllerTokensService) CreateRunnerControllerToken(rid int64, o
 }
 
 func (s *RunnerControllerTokensService) RotateRunnerControllerToken(rid int64, tokenID int64, options ...RequestOptionFunc) (*RunnerControllerToken, *Response, error) {
-	return do[*RunnerControllerToken](s.client,
+	return do[*RunnerControllerToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runner_controllers/%d/tokens/%d/rotate", rid, tokenID),
 		withRequestOpts(options...),
@@ -116,7 +120,8 @@ func (s *RunnerControllerTokensService) RotateRunnerControllerToken(rid int64, t
 }
 
 func (s *RunnerControllerTokensService) RevokeRunnerControllerToken(rid int64, tokenID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runner_controllers/%d/tokens/%d", rid, tokenID),
 		withRequestOpts(options...),

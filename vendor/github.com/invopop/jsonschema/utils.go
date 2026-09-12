@@ -7,8 +7,10 @@ import (
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
-var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
-var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
+var (
+	matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
+	matchAllCap   = regexp.MustCompile("([a-z0-9])([A-Z])")
+)
 
 // ToSnakeCase converts the provided string into snake case using dashes.
 // This is useful for Schema IDs and definitions to be coherent with

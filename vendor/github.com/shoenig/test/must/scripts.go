@@ -42,6 +42,7 @@ type script struct {
 func (s *script) Label() string {
 	return strings.TrimSpace(s.label)
 }
+
 func (s *script) Content() string {
 	return "\t" + strings.TrimSpace(s.content)
 }

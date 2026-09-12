@@ -76,7 +76,8 @@ type (
 )
 
 func (s *ProjectMarkdownUploadsService) UploadProjectMarkdown(pid any, content io.Reader, filename string, options ...RequestOptionFunc) (*ProjectMarkdownUploadedFile, *Response, error) {
-	return do[*ProjectMarkdownUploadedFile](s.client,
+	return do[*ProjectMarkdownUploadedFile](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/uploads", ProjectID{pid}),
 		withUpload(content, filename, UploadFile),

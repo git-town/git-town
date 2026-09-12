@@ -85,7 +85,8 @@ type UpdatePackageProtectionRulesOptions struct {
 }
 
 func (s *ProtectedPackagesService) ListPackageProtectionRules(pid any, opts *ListPackageProtectionRulesOptions, options ...RequestOptionFunc) ([]*PackageProtectionRule, *Response, error) {
-	return do[[]*PackageProtectionRule](s.client,
+	return do[[]*PackageProtectionRule](
+		s.client,
 		withPath("projects/%s/packages/protection/rules", ProjectID{pid}),
 		withAPIOpts(opts),
 		withRequestOpts(options...),
@@ -93,7 +94,8 @@ func (s *ProtectedPackagesService) ListPackageProtectionRules(pid any, opts *Lis
 }
 
 func (s *ProtectedPackagesService) CreatePackageProtectionRules(pid any, opt *CreatePackageProtectionRulesOptions, options ...RequestOptionFunc) (*PackageProtectionRule, *Response, error) {
-	return do[*PackageProtectionRule](s.client,
+	return do[*PackageProtectionRule](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/packages/protection/rules", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -102,7 +104,8 @@ func (s *ProtectedPackagesService) CreatePackageProtectionRules(pid any, opt *Cr
 }
 
 func (s *ProtectedPackagesService) DeletePackageProtectionRules(pid any, packageProtectionRule int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/packages/protection/rules/%d", ProjectID{pid}, packageProtectionRule),
 		withRequestOpts(options...),
@@ -111,7 +114,8 @@ func (s *ProtectedPackagesService) DeletePackageProtectionRules(pid any, package
 }
 
 func (s *ProtectedPackagesService) UpdatePackageProtectionRules(pid any, packageProtectionRule int64, opt *UpdatePackageProtectionRulesOptions, options ...RequestOptionFunc) (*PackageProtectionRule, *Response, error) {
-	return do[*PackageProtectionRule](s.client,
+	return do[*PackageProtectionRule](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("projects/%s/packages/protection/rules/%d", ProjectID{pid}, packageProtectionRule),
 		withAPIOpts(opt),

@@ -49,7 +49,7 @@ func hashBlocksGeneric(h *[8]uint64, c *[2]uint64, flag uint64, blocks []byte) {
 		}
 
 		for j := range precomputed {
-			s := &(precomputed[j])
+			s := &precomputed[j]
 
 			v0 += m[s[0]]
 			v0 += v4

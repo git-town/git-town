@@ -54,7 +54,8 @@ type Key struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/keys/#get-ssh-key-with-user-by-id-of-an-ssh-key
 func (s *KeysService) GetKeyWithUser(key int64, options ...RequestOptionFunc) (*Key, *Response, error) {
-	return do[*Key](s.client,
+	return do[*Key](
+		s.client,
 		withPath("keys/%d", key),
 		withRequestOpts(options...),
 	)
@@ -77,7 +78,8 @@ type GetKeyByFingerprintOptions struct {
 // https://docs.gitlab.com/api/keys/#get-user-by-fingerprint-of-ssh-key
 // https://docs.gitlab.com/api/keys/#get-user-by-deploy-key-fingerprint
 func (s *KeysService) GetKeyByFingerprint(opt *GetKeyByFingerprintOptions, options ...RequestOptionFunc) (*Key, *Response, error) {
-	return do[*Key](s.client,
+	return do[*Key](
+		s.client,
 		withPath("keys"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

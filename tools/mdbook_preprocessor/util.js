@@ -25,7 +25,7 @@ export function tokenize(line) {
       }
       token += char
     } else {
-      const nextGroup = GROUP_CHARS.find(group => group[0] === char)
+      const nextGroup = GROUP_CHARS.find((group) => group[0] === char)
       if (nextGroup) {
         group = nextGroup
         token += char

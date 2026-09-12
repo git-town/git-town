@@ -58,4 +58,3 @@ volumes:
   config-ee:
   logs-ee:
   data-ee:
-

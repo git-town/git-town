@@ -77,7 +77,8 @@ type ListProjectDependenciesOptions struct {
 }
 
 func (s *DependenciesService) ListProjectDependencies(pid any, opt *ListProjectDependenciesOptions, options ...RequestOptionFunc) ([]*Dependency, *Response, error) {
-	return do[[]*Dependency](s.client,
+	return do[[]*Dependency](
+		s.client,
 		withPath("projects/%s/dependencies", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

@@ -103,7 +103,8 @@ func (s *UsersService) ListUserContributionEvents(uid any, opt *ListContribution
 		return nil, nil, err
 	}
 
-	return do[[]*ContributionEvent](s.client,
+	return do[[]*ContributionEvent](
+		s.client,
 		withPath("users/%s/events", user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -111,7 +112,8 @@ func (s *UsersService) ListUserContributionEvents(uid any, opt *ListContribution
 }
 
 func (s *EventsService) ListCurrentUserContributionEvents(opt *ListContributionEventsOptions, options ...RequestOptionFunc) ([]*ContributionEvent, *Response, error) {
-	return do[[]*ContributionEvent](s.client,
+	return do[[]*ContributionEvent](
+		s.client,
 		withPath("events"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -234,7 +236,8 @@ type ListProjectVisibleEventsOptions struct {
 }
 
 func (s *EventsService) ListProjectVisibleEvents(pid any, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error) {
-	return do[[]*ProjectEvent](s.client,
+	return do[[]*ProjectEvent](
+		s.client,
 		withPath("projects/%s/events", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

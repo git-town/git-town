@@ -180,7 +180,7 @@ func ParseFeatures(fsys fs.FS, filter, dialect string, paths []string) ([]*model
 		}
 	}
 
-	var features = make([]*models.Feature, len(uniqueFeatureURI))
+	features := make([]*models.Feature, len(uniqueFeatureURI))
 	for uri, feature := range uniqueFeatureURI {
 		idx := featureIdxs[uri]
 		features[idx] = feature
@@ -219,7 +219,7 @@ func ParseFromBytes(filter, dialect string, featuresInputs []FeatureContent) ([]
 		order++
 	}
 
-	var features = make([]*models.Feature, len(uniqueFeatureURI))
+	features := make([]*models.Feature, len(uniqueFeatureURI))
 	for uri, feature := range uniqueFeatureURI {
 		idx := featureIdxs[uri]
 		features[idx] = feature

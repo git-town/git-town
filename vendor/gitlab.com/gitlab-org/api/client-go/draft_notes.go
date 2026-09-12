@@ -102,7 +102,8 @@ type ListDraftNotesOptions struct {
 }
 
 func (s *DraftNotesService) ListDraftNotes(pid any, mergeRequest int64, opt *ListDraftNotesOptions, options ...RequestOptionFunc) ([]*DraftNote, *Response, error) {
-	return do[[]*DraftNote](s.client,
+	return do[[]*DraftNote](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/draft_notes", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -110,7 +111,8 @@ func (s *DraftNotesService) ListDraftNotes(pid any, mergeRequest int64, opt *Lis
 }
 
 func (s *DraftNotesService) GetDraftNote(pid any, mergeRequest int64, note int64, options ...RequestOptionFunc) (*DraftNote, *Response, error) {
-	return do[*DraftNote](s.client,
+	return do[*DraftNote](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/draft_notes/%d", ProjectID{pid}, mergeRequest, note),
 		withRequestOpts(options...),
 	)
@@ -131,7 +133,8 @@ type CreateDraftNoteOptions struct {
 }
 
 func (s *DraftNotesService) CreateDraftNote(pid any, mergeRequest int64, opt *CreateDraftNoteOptions, options ...RequestOptionFunc) (*DraftNote, *Response, error) {
-	return do[*DraftNote](s.client,
+	return do[*DraftNote](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_requests/%d/draft_notes", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),
@@ -151,7 +154,8 @@ type UpdateDraftNoteOptions struct {
 }
 
 func (s *DraftNotesService) UpdateDraftNote(pid any, mergeRequest int64, note int64, opt *UpdateDraftNoteOptions, options ...RequestOptionFunc) (*DraftNote, *Response, error) {
-	return do[*DraftNote](s.client,
+	return do[*DraftNote](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/merge_requests/%d/draft_notes/%d", ProjectID{pid}, mergeRequest, note),
 		withAPIOpts(opt),
@@ -160,7 +164,8 @@ func (s *DraftNotesService) UpdateDraftNote(pid any, mergeRequest int64, note in
 }
 
 func (s *DraftNotesService) DeleteDraftNote(pid any, mergeRequest int64, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/merge_requests/%d/draft_notes/%d", ProjectID{pid}, mergeRequest, note),
 		withRequestOpts(options...),
@@ -169,7 +174,8 @@ func (s *DraftNotesService) DeleteDraftNote(pid any, mergeRequest int64, note in
 }
 
 func (s *DraftNotesService) PublishDraftNote(pid any, mergeRequest int64, note int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/merge_requests/%d/draft_notes/%d/publish", ProjectID{pid}, mergeRequest, note),
 		withRequestOpts(options...),
@@ -178,7 +184,8 @@ func (s *DraftNotesService) PublishDraftNote(pid any, mergeRequest int64, note i
 }
 
 func (s *DraftNotesService) PublishAllDraftNotes(pid any, mergeRequest int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_requests/%d/draft_notes/bulk_publish", ProjectID{pid}, mergeRequest),
 		withRequestOpts(options...),

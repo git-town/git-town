@@ -818,7 +818,7 @@ func DescendingCmp[A any](slice []A, compare func(a, b A) int) (s string) {
 
 func DescendingLess[L interfaces.LessFunc[L]](slice []L) (s string) {
 	for i := 0; i < len(slice)-1; i++ {
-		if !(slice[i+1].Less(slice[i])) {
+		if !slice[i+1].Less(slice[i]) {
 			s = fmt.Sprintf("expected slice[%d].Less(slice[%d])\n", i+1, i)
 			s += bullet("slice[%d]: %v\n", i, slice[i])
 			s += bullet("slice[%d]: %v\n", i+1, slice[i+1])
@@ -948,7 +948,7 @@ func MapEqual[M interfaces.MapEqualFunc[K, V], K comparable, V interfaces.EqualF
 			return
 		}
 
-		if !(valB).Equal(valA) {
+		if !valB.Equal(valA) {
 			s = "expected maps of same values via .Equal method\n"
 			s += diff(exp, val, nil)
 			return

@@ -66,7 +66,8 @@ type ListGroupLabelsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_labels/#list-group-labels
 func (s *GroupLabelsService) ListGroupLabels(gid any, opt *ListGroupLabelsOptions, options ...RequestOptionFunc) ([]*GroupLabel, *Response, error) {
-	return do[[]*GroupLabel](s.client,
+	return do[[]*GroupLabel](
+		s.client,
 		withPath("groups/%s/labels", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -78,7 +79,8 @@ func (s *GroupLabelsService) ListGroupLabels(gid any, opt *ListGroupLabelsOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_labels/#get-a-single-group-label
 func (s *GroupLabelsService) GetGroupLabel(gid any, lid any, options ...RequestOptionFunc) (*GroupLabel, *Response, error) {
-	return do[*GroupLabel](s.client,
+	return do[*GroupLabel](
+		s.client,
 		withPath("groups/%s/labels/%s", GroupID{gid}, LabelID{lid}),
 		withRequestOpts(options...),
 	)
@@ -101,7 +103,8 @@ type CreateGroupLabelOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_labels/#create-a-new-group-label
 func (s *GroupLabelsService) CreateGroupLabel(gid any, opt *CreateGroupLabelOptions, options ...RequestOptionFunc) (*GroupLabel, *Response, error) {
-	return do[*GroupLabel](s.client,
+	return do[*GroupLabel](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/labels", GroupID{gid}),
 		withAPIOpts(opt),
@@ -123,7 +126,8 @@ type DeleteGroupLabelOptions struct {
 // https://docs.gitlab.com/api/group_labels/#delete-a-group-label
 func (s *GroupLabelsService) DeleteGroupLabel(gid any, lid any, opt *DeleteGroupLabelOptions, options ...RequestOptionFunc) (*Response, error) {
 	reqOpts := make([]doOption, 0, 4)
-	reqOpts = append(reqOpts,
+	reqOpts = append(
+		reqOpts,
 		withMethod(http.MethodDelete),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -158,7 +162,8 @@ type UpdateGroupLabelOptions struct {
 // https://docs.gitlab.com/api/group_labels/#update-a-group-label
 func (s *GroupLabelsService) UpdateGroupLabel(gid any, lid any, opt *UpdateGroupLabelOptions, options ...RequestOptionFunc) (*GroupLabel, *Response, error) {
 	reqOpts := make([]doOption, 0, 4)
-	reqOpts = append(reqOpts,
+	reqOpts = append(
+		reqOpts,
 		withMethod(http.MethodPut),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -180,7 +185,8 @@ func (s *GroupLabelsService) UpdateGroupLabel(gid any, lid any, opt *UpdateGroup
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_labels/#subscribe-to-a-group-label
 func (s *GroupLabelsService) SubscribeToGroupLabel(gid any, lid any, options ...RequestOptionFunc) (*GroupLabel, *Response, error) {
-	return do[*GroupLabel](s.client,
+	return do[*GroupLabel](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/labels/%s/subscribe", GroupID{gid}, LabelID{lid}),
 		withRequestOpts(options...),
@@ -194,7 +200,8 @@ func (s *GroupLabelsService) SubscribeToGroupLabel(gid any, lid any, options ...
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_labels/#unsubscribe-from-a-group-label
 func (s *GroupLabelsService) UnsubscribeFromGroupLabel(gid any, lid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/labels/%s/unsubscribe", GroupID{gid}, LabelID{lid}),
 		withRequestOpts(options...),

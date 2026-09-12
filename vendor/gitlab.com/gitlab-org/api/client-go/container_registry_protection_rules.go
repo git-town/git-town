@@ -91,7 +91,8 @@ func (s ContainerRegistryProtectionRule) String() string {
 }
 
 func (s *ContainerRegistryProtectionRulesService) ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error) {
-	return do[[]*ContainerRegistryProtectionRule](s.client,
+	return do[[]*ContainerRegistryProtectionRule](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/registry/protection/repository/rules", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -110,7 +111,8 @@ type CreateContainerRegistryProtectionRuleOptions struct {
 }
 
 func (s *ContainerRegistryProtectionRulesService) CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
-	return do[*ContainerRegistryProtectionRule](s.client,
+	return do[*ContainerRegistryProtectionRule](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/registry/protection/repository/rules", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -130,7 +132,8 @@ type UpdateContainerRegistryProtectionRuleOptions struct {
 }
 
 func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid any, ruleID int64, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
-	return do[*ContainerRegistryProtectionRule](s.client,
+	return do[*ContainerRegistryProtectionRule](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("projects/%s/registry/protection/repository/rules/%d", ProjectID{pid}, ruleID),
 		withAPIOpts(opt),
@@ -139,7 +142,8 @@ func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtect
 }
 
 func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid any, ruleID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/registry/protection/repository/rules/%d", ProjectID{pid}, ruleID),
 		withRequestOpts(options...),

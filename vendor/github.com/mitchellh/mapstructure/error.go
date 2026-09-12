@@ -22,7 +22,8 @@ func (e *Error) Error() string {
 	sort.Strings(points)
 	return fmt.Sprintf(
 		"%d error(s) decoding:\n\n%s",
-		len(e.Errors), strings.Join(points, "\n"))
+		len(e.Errors), strings.Join(points, "\n"),
+	)
 }
 
 // WrappedErrors implements the errwrap.Wrapper interface to make this

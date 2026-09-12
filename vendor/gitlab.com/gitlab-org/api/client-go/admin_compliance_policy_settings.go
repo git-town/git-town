@@ -59,7 +59,8 @@ func (s AdminCompliancePolicySettings) String() string {
 }
 
 func (s *AdminCompliancePolicySettingsService) GetCompliancePolicySettings(options ...RequestOptionFunc) (*AdminCompliancePolicySettings, *Response, error) {
-	return do[*AdminCompliancePolicySettings](s.client,
+	return do[*AdminCompliancePolicySettings](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("admin/security/compliance_policy_settings"),
 		withRequestOpts(options...),
@@ -76,7 +77,8 @@ type UpdateAdminCompliancePolicySettingsOptions struct {
 }
 
 func (s *AdminCompliancePolicySettingsService) UpdateCompliancePolicySettings(opt *UpdateAdminCompliancePolicySettingsOptions, options ...RequestOptionFunc) (*AdminCompliancePolicySettings, *Response, error) {
-	return do[*AdminCompliancePolicySettings](s.client,
+	return do[*AdminCompliancePolicySettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("admin/security/compliance_policy_settings"),
 		withAPIOpts(opt),

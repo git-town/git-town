@@ -68,7 +68,8 @@ type ListPendingInvitationsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#list-all-invitations-pending-for-a-group-or-project
 func (s *InvitesService) ListPendingGroupInvitations(gid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
-	return do[[]*PendingInvite](s.client,
+	return do[[]*PendingInvite](
+		s.client,
 		withPath("groups/%s/invitations", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -80,7 +81,8 @@ func (s *InvitesService) ListPendingGroupInvitations(gid any, opt *ListPendingIn
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#list-all-invitations-pending-for-a-group-or-project
 func (s *InvitesService) ListPendingProjectInvitations(pid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
-	return do[[]*PendingInvite](s.client,
+	return do[[]*PendingInvite](
+		s.client,
 		withPath("projects/%s/invitations", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -114,7 +116,8 @@ type InvitesResult struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#add-a-member-to-a-group-or-project
 func (s *InvitesService) GroupInvites(gid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
-	return do[*InvitesResult](s.client,
+	return do[*InvitesResult](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/invitations", GroupID{gid}),
 		withAPIOpts(opt),
@@ -127,7 +130,8 @@ func (s *InvitesService) GroupInvites(gid any, opt *InvitesOptions, options ...R
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#add-a-member-to-a-group-or-project
 func (s *InvitesService) ProjectInvites(pid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
-	return do[*InvitesResult](s.client,
+	return do[*InvitesResult](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/invitations", ProjectID{pid}),
 		withAPIOpts(opt),

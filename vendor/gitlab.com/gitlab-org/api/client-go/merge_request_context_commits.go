@@ -40,7 +40,8 @@ type (
 var _ MergeRequestContextCommitsServiceInterface = (*MergeRequestContextCommitsService)(nil)
 
 func (s *MergeRequestContextCommitsService) ListMergeRequestContextCommits(pid any, mergeRequest int64, options ...RequestOptionFunc) ([]*Commit, *Response, error) {
-	return do[[]*Commit](s.client,
+	return do[[]*Commit](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
 		withRequestOpts(options...),
 	)
@@ -56,7 +57,8 @@ type CreateMergeRequestContextCommitsOptions struct {
 }
 
 func (s *MergeRequestContextCommitsService) CreateMergeRequestContextCommits(pid any, mergeRequest int64, opt *CreateMergeRequestContextCommitsOptions, options ...RequestOptionFunc) ([]*Commit, *Response, error) {
-	return do[[]*Commit](s.client,
+	return do[[]*Commit](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),
@@ -74,7 +76,8 @@ type DeleteMergeRequestContextCommitsOptions struct {
 }
 
 func (s *MergeRequestContextCommitsService) DeleteMergeRequestContextCommits(pid any, mergeRequest int64, opt *DeleteMergeRequestContextCommitsOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/merge_requests/%d/context_commits", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opt),

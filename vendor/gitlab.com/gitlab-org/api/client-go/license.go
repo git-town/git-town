@@ -101,7 +101,8 @@ func (a LicenseAddOns) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#retrieve-information-about-the-current-license
 func (s *LicenseService) GetLicense(options ...RequestOptionFunc) (*License, *Response, error) {
-	return do[*License](s.client,
+	return do[*License](
+		s.client,
 		withPath("license"),
 		withRequestOpts(options...),
 	)
@@ -119,7 +120,8 @@ type AddLicenseOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#add-a-new-license
 func (s *LicenseService) AddLicense(opt *AddLicenseOptions, options ...RequestOptionFunc) (*License, *Response, error) {
-	return do[*License](s.client,
+	return do[*License](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("license"),
 		withAPIOpts(opt),
@@ -132,7 +134,8 @@ func (s *LicenseService) AddLicense(opt *AddLicenseOptions, options ...RequestOp
 // GitLab API docs:
 // https://docs.gitlab.com/api/license/#delete-a-license
 func (s *LicenseService) DeleteLicense(licenseID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("license/%d", licenseID),
 		withRequestOpts(options...),

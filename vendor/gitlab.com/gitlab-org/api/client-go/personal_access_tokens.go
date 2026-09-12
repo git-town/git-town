@@ -100,7 +100,8 @@ type ListPersonalAccessTokensOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#list-all-personal-access-tokens
 func (s *PersonalAccessTokensService) ListPersonalAccessTokens(opt *ListPersonalAccessTokensOptions, options ...RequestOptionFunc) ([]*PersonalAccessToken, *Response, error) {
-	return do[[]*PersonalAccessToken](s.client,
+	return do[[]*PersonalAccessToken](
+		s.client,
 		withPath("personal_access_tokens"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -112,7 +113,8 @@ func (s *PersonalAccessTokensService) ListPersonalAccessTokens(opt *ListPersonal
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#get-details-on-a-personal-access-token
 func (s *PersonalAccessTokensService) GetSinglePersonalAccessTokenByID(token int64, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withPath("personal_access_tokens/%d", token),
 		withRequestOpts(options...),
 	)
@@ -124,7 +126,8 @@ func (s *PersonalAccessTokensService) GetSinglePersonalAccessTokenByID(token int
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#self-inform
 func (s *PersonalAccessTokensService) GetSinglePersonalAccessToken(options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withPath("personal_access_tokens/self"),
 		withRequestOpts(options...),
 	)
@@ -150,7 +153,8 @@ func (s *PersonalAccessTokensService) RotatePersonalAccessToken(token int64, opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#rotate-a-personal-access-token
 func (s *PersonalAccessTokensService) RotatePersonalAccessTokenByID(token int64, opt *RotatePersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("personal_access_tokens/%d/rotate", token),
 		withAPIOpts(opt),
@@ -164,7 +168,8 @@ func (s *PersonalAccessTokensService) RotatePersonalAccessTokenByID(token int64,
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#self-rotate
 func (s *PersonalAccessTokensService) RotatePersonalAccessTokenSelf(opt *RotatePersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("personal_access_tokens/self/rotate"),
 		withAPIOpts(opt),
@@ -183,7 +188,8 @@ func (s *PersonalAccessTokensService) RevokePersonalAccessToken(token int64, opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#revoke-a-personal-access-token
 func (s *PersonalAccessTokensService) RevokePersonalAccessTokenByID(token int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("personal_access_tokens/%d", token),
 		withRequestOpts(options...),
@@ -197,7 +203,8 @@ func (s *PersonalAccessTokensService) RevokePersonalAccessTokenByID(token int64,
 // GitLab API docs:
 // https://docs.gitlab.com/api/personal_access_tokens/#self-revoke
 func (s *PersonalAccessTokensService) RevokePersonalAccessTokenSelf(options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("personal_access_tokens/self"),
 		withRequestOpts(options...),

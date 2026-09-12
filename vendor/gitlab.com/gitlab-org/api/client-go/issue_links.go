@@ -89,7 +89,8 @@ type IssueRelation struct {
 // https://docs.gitlab.com/api/issue_links/#list-issue-relations
 func (s *IssueLinksService) ListIssueRelations(pid any, issue int64, options ...RequestOptionFunc) ([]*IssueRelation, *Response, error) {
 	// Use explicit format string for the path
-	return do[[]*IssueRelation](s.client,
+	return do[[]*IssueRelation](
+		s.client,
 		withPath("projects/%s/issues/%d/links", ProjectID{pid}, issue),
 		withRequestOpts(options...),
 	)
@@ -101,7 +102,8 @@ func (s *IssueLinksService) ListIssueRelations(pid any, issue int64, options ...
 // https://docs.gitlab.com/api/issue_links/#get-an-issue-link
 func (s *IssueLinksService) GetIssueLink(pid any, issue, issueLink int64, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
 	// Use explicit format string for the path
-	return do[*IssueLink](s.client,
+	return do[*IssueLink](
+		s.client,
 		withPath("projects/%s/issues/%d/links/%d", ProjectID{pid}, issue, issueLink),
 		withRequestOpts(options...),
 	)
@@ -122,7 +124,8 @@ type CreateIssueLinkOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#create-an-issue-link
 func (s *IssueLinksService) CreateIssueLink(pid any, issue int64, opt *CreateIssueLinkOptions, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
-	return do[*IssueLink](s.client,
+	return do[*IssueLink](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/links", ProjectID{pid}, issue),
 		withAPIOpts(opt),
@@ -135,7 +138,8 @@ func (s *IssueLinksService) CreateIssueLink(pid any, issue int64, opt *CreateIss
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#delete-an-issue-link
 func (s *IssueLinksService) DeleteIssueLink(pid any, issue, issueLink int64, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
-	return do[*IssueLink](s.client,
+	return do[*IssueLink](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/issues/%d/links/%d", ProjectID{pid}, issue, issueLink),
 		withRequestOpts(options...),

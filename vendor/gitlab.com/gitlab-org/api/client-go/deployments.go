@@ -139,7 +139,8 @@ type ListProjectDeploymentsOptions struct {
 }
 
 func (s *DeploymentsService) ListProjectDeployments(pid any, opts *ListProjectDeploymentsOptions, options ...RequestOptionFunc) ([]*Deployment, *Response, error) {
-	return do[[]*Deployment](s.client,
+	return do[[]*Deployment](
+		s.client,
 		withPath("projects/%s/deployments", ProjectID{pid}),
 		withAPIOpts(opts),
 		withRequestOpts(options...),
@@ -147,7 +148,8 @@ func (s *DeploymentsService) ListProjectDeployments(pid any, opts *ListProjectDe
 }
 
 func (s *DeploymentsService) GetProjectDeployment(pid any, deployment int64, options ...RequestOptionFunc) (*Deployment, *Response, error) {
-	return do[*Deployment](s.client,
+	return do[*Deployment](
+		s.client,
 		withPath("projects/%s/deployments/%d", ProjectID{pid}, deployment),
 		withRequestOpts(options...),
 	)
@@ -167,7 +169,8 @@ type CreateProjectDeploymentOptions struct {
 }
 
 func (s *DeploymentsService) CreateProjectDeployment(pid any, opt *CreateProjectDeploymentOptions, options ...RequestOptionFunc) (*Deployment, *Response, error) {
-	return do[*Deployment](s.client,
+	return do[*Deployment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/deployments", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -185,7 +188,8 @@ type UpdateProjectDeploymentOptions struct {
 }
 
 func (s *DeploymentsService) UpdateProjectDeployment(pid any, deployment int64, opt *UpdateProjectDeploymentOptions, options ...RequestOptionFunc) (*Deployment, *Response, error) {
-	return do[*Deployment](s.client,
+	return do[*Deployment](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/deployments/%d", ProjectID{pid}, deployment),
 		withAPIOpts(opt),
@@ -205,7 +209,8 @@ type ApproveOrRejectProjectDeploymentOptions struct {
 }
 
 func (s *DeploymentsService) ApproveOrRejectProjectDeployment(pid any, deployment int64, opt *ApproveOrRejectProjectDeploymentOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/deployments/%d/approval", ProjectID{pid}, deployment),
 		withAPIOpts(opt),
@@ -215,7 +220,8 @@ func (s *DeploymentsService) ApproveOrRejectProjectDeployment(pid any, deploymen
 }
 
 func (s *DeploymentsService) DeleteProjectDeployment(pid any, deployment int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/deployments/%d", ProjectID{pid}, deployment),
 		withRequestOpts(options...),

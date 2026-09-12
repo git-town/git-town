@@ -790,7 +790,7 @@ func (ld *loader) refine(response *DriverResponse) ([]*Package, error) {
 	}
 	ld.pkgs = make(map[string]*loaderPackage)
 	// first pass, fixup and build the map and roots
-	var initial = make([]*loaderPackage, len(roots))
+	initial := make([]*loaderPackage, len(roots))
 	for _, pkg := range response.Packages {
 		rootIndex := -1
 		if i, found := rootMap[pkg.ID]; found {

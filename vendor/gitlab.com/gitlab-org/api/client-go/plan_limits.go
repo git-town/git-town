@@ -63,7 +63,8 @@ type GetCurrentPlanLimitsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/plan_limits/#get-current-plan-limits
 func (s *PlanLimitsService) GetCurrentPlanLimits(opt *GetCurrentPlanLimitsOptions, options ...RequestOptionFunc) (*PlanLimit, *Response, error) {
-	return do[*PlanLimit](s.client,
+	return do[*PlanLimit](
+		s.client,
 		withPath("application/plan_limits"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -91,7 +92,8 @@ type ChangePlanLimitOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/plan_limits/#change-plan-limits
 func (s *PlanLimitsService) ChangePlanLimits(opt *ChangePlanLimitOptions, options ...RequestOptionFunc) (*PlanLimit, *Response, error) {
-	return do[*PlanLimit](s.client,
+	return do[*PlanLimit](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("application/plan_limits"),
 		withAPIOpts(opt),

@@ -274,7 +274,8 @@ func (m *Model) san() runeutil.Sanitizer {
 		// Textinput has all its input on a single line so collapse
 		// newlines/tabs to single spaces.
 		m.rsan = runeutil.NewSanitizer(
-			runeutil.ReplaceTabs(" "), runeutil.ReplaceNewlines(" "))
+			runeutil.ReplaceTabs(" "), runeutil.ReplaceNewlines(" "),
+		)
 	}
 	return m.rsan
 }

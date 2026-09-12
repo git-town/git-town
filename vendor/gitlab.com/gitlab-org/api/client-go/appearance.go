@@ -67,7 +67,8 @@ type Appearance struct {
 }
 
 func (s *AppearanceService) GetAppearance(options ...RequestOptionFunc) (*Appearance, *Response, error) {
-	return do[*Appearance](s.client,
+	return do[*Appearance](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("application/appearance"),
 		withRequestOpts(options...),
@@ -100,7 +101,8 @@ type ChangeAppearanceOptions struct {
 }
 
 func (s *AppearanceService) ChangeAppearance(opt *ChangeAppearanceOptions, options ...RequestOptionFunc) (*Appearance, *Response, error) {
-	return do[*Appearance](s.client,
+	return do[*Appearance](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("application/appearance"),
 		withAPIOpts(opt),

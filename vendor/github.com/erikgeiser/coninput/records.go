@@ -152,7 +152,7 @@ type KeyEventRecord struct {
 	// zero for some keys.
 	Char rune
 
-	//ControlKeyState holds the state of the control keys.
+	// ControlKeyState holds the state of the control keys.
 	ControlKeyState ControlKeyState
 }
 

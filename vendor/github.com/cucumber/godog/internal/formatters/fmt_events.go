@@ -10,8 +10,10 @@ import (
 	messages "github.com/cucumber/messages/go/v21"
 )
 
-const nanoSec = 1000000
-const spec = "0.1.0"
+const (
+	nanoSec = 1000000
+	spec    = "0.1.0"
+)
 
 func init() {
 	formatters.Format("events", fmt.Sprintf("Produces JSON event stream, based on spec: %s.", spec), EventsFormatterFunc)
@@ -156,7 +158,6 @@ func (f *Events) step(pickle *messages.Pickle, pickleStep *messages.PickleStep) 
 
 	if pickleStepResult.Attachments != nil {
 		for _, attachment := range pickleStepResult.Attachments {
-
 			f.event(&struct {
 				Event           string `json:"event"`
 				Location        string `json:"location"`
@@ -174,7 +175,6 @@ func (f *Events) step(pickle *messages.Pickle, pickleStep *messages.PickleStep) 
 				attachment.MimeType,
 				string(attachment.Data),
 			})
-
 		}
 	}
 

@@ -3,10 +3,11 @@ package gherkin
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cucumber/messages/go/v21"
 	"io"
 	"io/ioutil"
 	"strings"
+
+	"github.com/cucumber/messages/go/v21"
 )
 
 func Messages(

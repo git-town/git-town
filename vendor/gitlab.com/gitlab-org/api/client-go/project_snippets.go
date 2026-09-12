@@ -53,7 +53,8 @@ type ListProjectSnippetsOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_snippets/#list-snippets
 func (s *ProjectSnippetsService) ListSnippets(pid any, opt *ListProjectSnippetsOptions, options ...RequestOptionFunc) ([]*Snippet, *Response, error) {
-	return do[[]*Snippet](s.client,
+	return do[[]*Snippet](
+		s.client,
 		withPath("projects/%s/snippets", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -65,7 +66,8 @@ func (s *ProjectSnippetsService) ListSnippets(pid any, opt *ListProjectSnippetsO
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_snippets/#single-snippet
 func (s *ProjectSnippetsService) GetSnippet(pid any, snippet int64, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	return do[*Snippet](s.client,
+	return do[*Snippet](
+		s.client,
 		withPath("projects/%s/snippets/%d", ProjectID{pid}, snippet),
 		withRequestOpts(options...),
 	)
@@ -93,7 +95,8 @@ type CreateProjectSnippetOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_snippets/#create-new-snippet
 func (s *ProjectSnippetsService) CreateSnippet(pid any, opt *CreateProjectSnippetOptions, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	return do[*Snippet](s.client,
+	return do[*Snippet](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/snippets", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -123,7 +126,8 @@ type UpdateProjectSnippetOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_snippets/#update-snippet
 func (s *ProjectSnippetsService) UpdateSnippet(pid any, snippet int64, opt *UpdateProjectSnippetOptions, options ...RequestOptionFunc) (*Snippet, *Response, error) {
-	return do[*Snippet](s.client,
+	return do[*Snippet](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/snippets/%d", ProjectID{pid}, snippet),
 		withAPIOpts(opt),
@@ -138,7 +142,8 @@ func (s *ProjectSnippetsService) UpdateSnippet(pid any, snippet int64, opt *Upda
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_snippets/#delete-snippet
 func (s *ProjectSnippetsService) DeleteSnippet(pid any, snippet int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/snippets/%d", ProjectID{pid}, snippet),
 		withRequestOpts(options...),
@@ -151,7 +156,8 @@ func (s *ProjectSnippetsService) DeleteSnippet(pid any, snippet int64, options .
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_snippets/#snippet-content
 func (s *ProjectSnippetsService) SnippetContent(pid any, snippet int64, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/snippets/%d/raw", ProjectID{pid}, snippet),
 		withRequestOpts(options...),
 	)

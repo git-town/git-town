@@ -141,7 +141,8 @@ type ListAgentsOptions struct {
 }
 
 func (s *ClusterAgentsService) ListAgents(pid any, opt *ListAgentsOptions, options ...RequestOptionFunc) ([]*Agent, *Response, error) {
-	return do[[]*Agent](s.client,
+	return do[[]*Agent](
+		s.client,
 		withPath("projects/%s/cluster_agents", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -149,7 +150,8 @@ func (s *ClusterAgentsService) ListAgents(pid any, opt *ListAgentsOptions, optio
 }
 
 func (s *ClusterAgentsService) GetAgent(pid any, id int64, options ...RequestOptionFunc) (*Agent, *Response, error) {
-	return do[*Agent](s.client,
+	return do[*Agent](
+		s.client,
 		withPath("projects/%s/cluster_agents/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),
 	)
@@ -165,7 +167,8 @@ type RegisterAgentOptions struct {
 }
 
 func (s *ClusterAgentsService) RegisterAgent(pid any, opt *RegisterAgentOptions, options ...RequestOptionFunc) (*Agent, *Response, error) {
-	return do[*Agent](s.client,
+	return do[*Agent](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/cluster_agents", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -174,7 +177,8 @@ func (s *ClusterAgentsService) RegisterAgent(pid any, opt *RegisterAgentOptions,
 }
 
 func (s *ClusterAgentsService) DeleteAgent(pid any, id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/cluster_agents/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),
@@ -191,7 +195,8 @@ type ListAgentTokensOptions struct {
 }
 
 func (s *ClusterAgentsService) ListAgentTokens(pid any, aid int64, opt *ListAgentTokensOptions, options ...RequestOptionFunc) ([]*AgentToken, *Response, error) {
-	return do[[]*AgentToken](s.client,
+	return do[[]*AgentToken](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/cluster_agents/%d/tokens", ProjectID{pid}, aid),
 		withAPIOpts(opt),
@@ -200,7 +205,8 @@ func (s *ClusterAgentsService) ListAgentTokens(pid any, aid int64, opt *ListAgen
 }
 
 func (s *ClusterAgentsService) GetAgentToken(pid any, aid int64, id int64, options ...RequestOptionFunc) (*AgentToken, *Response, error) {
-	return do[*AgentToken](s.client,
+	return do[*AgentToken](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/cluster_agents/%d/tokens/%d", ProjectID{pid}, aid, id),
 		withRequestOpts(options...),
@@ -217,7 +223,8 @@ type CreateAgentTokenOptions struct {
 }
 
 func (s *ClusterAgentsService) CreateAgentToken(pid any, aid int64, opt *CreateAgentTokenOptions, options ...RequestOptionFunc) (*AgentToken, *Response, error) {
-	return do[*AgentToken](s.client,
+	return do[*AgentToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/cluster_agents/%d/tokens", ProjectID{pid}, aid),
 		withAPIOpts(opt),
@@ -226,7 +233,8 @@ func (s *ClusterAgentsService) CreateAgentToken(pid any, aid int64, opt *CreateA
 }
 
 func (s *ClusterAgentsService) RevokeAgentToken(pid any, aid int64, id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/cluster_agents/%d/tokens/%d", ProjectID{pid}, aid, id),
 		withRequestOpts(options...),

@@ -218,7 +218,8 @@ func IoctlFileDedupeRange(srcFd int, value *FileDedupeRange) error {
 	for i := range value.Info {
 		rawinfo := (*RawFileDedupeRangeInfo)(unsafe.Pointer(
 			uintptr(unsafe.Pointer(&buf[0])) + uintptr(SizeofRawFileDedupeRange) +
-				uintptr(i*SizeofRawFileDedupeRangeInfo)))
+				uintptr(i*SizeofRawFileDedupeRangeInfo),
+		))
 		rawinfo.Dest_fd = value.Info[i].Dest_fd
 		rawinfo.Dest_offset = value.Info[i].Dest_offset
 		rawinfo.Bytes_deduped = value.Info[i].Bytes_deduped
@@ -232,7 +233,8 @@ func IoctlFileDedupeRange(srcFd int, value *FileDedupeRange) error {
 	for i := range value.Info {
 		rawinfo := (*RawFileDedupeRangeInfo)(unsafe.Pointer(
 			uintptr(unsafe.Pointer(&buf[0])) + uintptr(SizeofRawFileDedupeRange) +
-				uintptr(i*SizeofRawFileDedupeRangeInfo)))
+				uintptr(i*SizeofRawFileDedupeRangeInfo),
+		))
 		value.Info[i].Dest_fd = rawinfo.Dest_fd
 		value.Info[i].Dest_offset = rawinfo.Dest_offset
 		value.Info[i].Bytes_deduped = rawinfo.Bytes_deduped

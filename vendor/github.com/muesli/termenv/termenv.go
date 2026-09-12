@@ -7,10 +7,8 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
-var (
-	// ErrStatusReport gets returned when the terminal can't be queried.
-	ErrStatusReport = errors.New("unable to retrieve status report")
-)
+// ErrStatusReport gets returned when the terminal can't be queried.
+var ErrStatusReport = errors.New("unable to retrieve status report")
 
 const (
 	// Escape character.

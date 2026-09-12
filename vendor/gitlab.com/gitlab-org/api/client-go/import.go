@@ -89,7 +89,8 @@ type ImportRepositoryFromGitHubOptionalStagesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-github
 func (s *ImportService) ImportRepositoryFromGitHub(opt *ImportRepositoryFromGitHubOptions, options ...RequestOptionFunc) (*GitHubImport, *Response, error) {
-	return do[*GitHubImport](s.client,
+	return do[*GitHubImport](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("import/github"),
 		withAPIOpts(opt),
@@ -131,7 +132,8 @@ type CancelGitHubProjectImportOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#cancel-github-project-import
 func (s *ImportService) CancelGitHubProjectImport(opt *CancelGitHubProjectImportOptions, options ...RequestOptionFunc) (*CancelledGitHubImport, *Response, error) {
-	return do[*CancelledGitHubImport](s.client,
+	return do[*CancelledGitHubImport](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("import/github/cancel"),
 		withAPIOpts(opt),
@@ -153,7 +155,8 @@ type ImportGitHubGistsIntoGitLabSnippetsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-github-gists-into-gitlab-snippets
 func (s *ImportService) ImportGitHubGistsIntoGitLabSnippets(opt *ImportGitHubGistsIntoGitLabSnippetsOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("import/github/gists"),
 		withAPIOpts(opt),
@@ -199,7 +202,8 @@ type ImportRepositoryFromBitbucketServerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-bitbucket-server
 func (s *ImportService) ImportRepositoryFromBitbucketServer(opt *ImportRepositoryFromBitbucketServerOptions, options ...RequestOptionFunc) (*BitbucketServerImport, *Response, error) {
-	return do[*BitbucketServerImport](s.client,
+	return do[*BitbucketServerImport](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("import/bitbucket_server"),
 		withAPIOpts(opt),
@@ -248,7 +252,8 @@ type ImportRepositoryFromBitbucketCloudOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-bitbucket-cloud
 func (s *ImportService) ImportRepositoryFromBitbucketCloud(opt *ImportRepositoryFromBitbucketCloudOptions, options ...RequestOptionFunc) (*BitbucketCloudImport, *Response, error) {
-	return do[*BitbucketCloudImport](s.client,
+	return do[*BitbucketCloudImport](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("import/bitbucket"),
 		withAPIOpts(opt),

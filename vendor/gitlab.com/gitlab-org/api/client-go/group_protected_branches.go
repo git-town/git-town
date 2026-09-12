@@ -89,7 +89,8 @@ type ListGroupProtectedBranchesOptions struct {
 }
 
 func (s *GroupProtectedBranchesService) ListProtectedBranches(gid any, opt *ListGroupProtectedBranchesOptions, options ...RequestOptionFunc) ([]*GroupProtectedBranch, *Response, error) {
-	return do[[]*GroupProtectedBranch](s.client,
+	return do[[]*GroupProtectedBranch](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/protected_branches", GroupID{gid}),
 		withAPIOpts(opt),
@@ -98,7 +99,8 @@ func (s *GroupProtectedBranchesService) ListProtectedBranches(gid any, opt *List
 }
 
 func (s *GroupProtectedBranchesService) GetProtectedBranch(gid any, branch string, options ...RequestOptionFunc) (*GroupProtectedBranch, *Response, error) {
-	return do[*GroupProtectedBranch](s.client,
+	return do[*GroupProtectedBranch](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/protected_branches/%s", GroupID{gid}, url.PathEscape(branch)),
 		withRequestOpts(options...),
@@ -136,7 +138,8 @@ type GroupBranchPermissionOptions struct {
 }
 
 func (s *GroupProtectedBranchesService) ProtectRepositoryBranches(gid any, opt *ProtectGroupRepositoryBranchesOptions, options ...RequestOptionFunc) (*GroupProtectedBranch, *Response, error) {
-	return do[*GroupProtectedBranch](s.client,
+	return do[*GroupProtectedBranch](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/protected_branches", GroupID{gid}),
 		withAPIOpts(opt),
@@ -159,7 +162,8 @@ type UpdateGroupProtectedBranchOptions struct {
 }
 
 func (s *GroupProtectedBranchesService) UpdateProtectedBranch(gid any, branch string, opt *UpdateGroupProtectedBranchOptions, options ...RequestOptionFunc) (*GroupProtectedBranch, *Response, error) {
-	return do[*GroupProtectedBranch](s.client,
+	return do[*GroupProtectedBranch](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("groups/%s/protected_branches/%s", GroupID{gid}, url.PathEscape(branch)),
 		withAPIOpts(opt),
@@ -168,7 +172,8 @@ func (s *GroupProtectedBranchesService) UpdateProtectedBranch(gid any, branch st
 }
 
 func (s *GroupProtectedBranchesService) UnprotectRepositoryBranches(gid any, branch string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/protected_branches/%s", GroupID{gid}, url.PathEscape(branch)),
 		withRequestOpts(options...),

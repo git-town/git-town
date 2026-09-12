@@ -32,7 +32,6 @@ type SoftPaletteSettings struct {
 // happens to fall outside of the color-space, which can only happen if you
 // specify a CheckColor function.
 func SoftPaletteExWithRand(colorsCount int, settings SoftPaletteSettings, rand RandInterface) ([]Color, error) {
-
 	// Checks whether it's a valid RGB and also fulfills the potentially provided constraint.
 	check := func(col lab_t) bool {
 		c := Lab(col.L, col.A, col.B)

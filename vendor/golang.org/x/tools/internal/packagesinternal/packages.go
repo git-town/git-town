@@ -19,5 +19,7 @@ func (err PackageError) String() string {
 	return fmt.Sprintf("%s: %s (import stack: %s)", err.Pos, err.Err, err.ImportStack)
 }
 
-var TypecheckCgo int
-var DepsErrors int // must be set as a LoadMode to call GetDepsErrors
+var (
+	TypecheckCgo int
+	DepsErrors   int // must be set as a LoadMode to call GetDepsErrors
+)

@@ -137,7 +137,8 @@ type ListGroupEpicsOptions struct {
 }
 
 func (s *EpicsService) ListGroupEpics(gid any, opt *ListGroupEpicsOptions, options ...RequestOptionFunc) ([]*Epic, *Response, error) {
-	return do[[]*Epic](s.client,
+	return do[[]*Epic](
+		s.client,
 		withPath("groups/%s/epics", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -149,7 +150,8 @@ func (s *EpicsService) ListGroupEpics(gid any, opt *ListGroupEpicsOptions, optio
 //
 // GitLab API docs: https://docs.gitlab.com/api/epics/#single-epic
 func (s *EpicsService) GetEpic(gid any, epic int64, options ...RequestOptionFunc) (*Epic, *Response, error) {
-	return do[*Epic](s.client,
+	return do[*Epic](
+		s.client,
 		withPath("groups/%s/epics/%d", GroupID{gid}, epic),
 		withRequestOpts(options...),
 	)
@@ -160,7 +162,8 @@ func (s *EpicsService) GetEpic(gid any, epic int64, options ...RequestOptionFunc
 //
 // GitLab API docs: https://docs.gitlab.com/api/epic_links/
 func (s *EpicsService) GetEpicLinks(gid any, epic int64, options ...RequestOptionFunc) ([]*Epic, *Response, error) {
-	return do[[]*Epic](s.client,
+	return do[[]*Epic](
+		s.client,
 		withPath("groups/%s/epics/%d/epics", GroupID{gid}, epic),
 		withRequestOpts(options...),
 	)
@@ -185,7 +188,8 @@ type CreateEpicOptions struct {
 }
 
 func (s *EpicsService) CreateEpic(gid any, opt *CreateEpicOptions, options ...RequestOptionFunc) (*Epic, *Response, error) {
-	return do[*Epic](s.client,
+	return do[*Epic](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/epics", GroupID{gid}),
 		withAPIOpts(opt),
@@ -220,7 +224,8 @@ type UpdateEpicOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/epics/#update-epic
 func (s *EpicsService) UpdateEpic(gid any, epic int64, opt *UpdateEpicOptions, options ...RequestOptionFunc) (*Epic, *Response, error) {
-	return do[*Epic](s.client,
+	return do[*Epic](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/epics/%d", GroupID{gid}, epic),
 		withAPIOpts(opt),
@@ -233,7 +238,8 @@ func (s *EpicsService) UpdateEpic(gid any, epic int64, opt *UpdateEpicOptions, o
 //
 // GitLab API docs: https://docs.gitlab.com/api/epics/#delete-epic
 func (s *EpicsService) DeleteEpic(gid any, epic int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/epics/%d", GroupID{gid}, epic),
 		withRequestOpts(options...),

@@ -99,7 +99,8 @@ type ListProjectMirrorOptions struct {
 }
 
 func (s *ProjectMirrorService) ListProjectMirror(pid any, opt *ListProjectMirrorOptions, options ...RequestOptionFunc) ([]*ProjectMirror, *Response, error) {
-	return do[[]*ProjectMirror](s.client,
+	return do[[]*ProjectMirror](
+		s.client,
 		withPath("projects/%s/remote_mirrors", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -107,14 +108,16 @@ func (s *ProjectMirrorService) ListProjectMirror(pid any, opt *ListProjectMirror
 }
 
 func (s *ProjectMirrorService) GetProjectMirror(pid any, mirror int64, options ...RequestOptionFunc) (*ProjectMirror, *Response, error) {
-	return do[*ProjectMirror](s.client,
+	return do[*ProjectMirror](
+		s.client,
 		withPath("projects/%s/remote_mirrors/%d", ProjectID{pid}, mirror),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *ProjectMirrorService) GetProjectMirrorPublicKey(pid any, mirror int64, options ...RequestOptionFunc) (*ProjectMirrorPublicKey, *Response, error) {
-	return do[*ProjectMirrorPublicKey](s.client,
+	return do[*ProjectMirrorPublicKey](
+		s.client,
 		withPath("projects/%s/remote_mirrors/%d/public_key", ProjectID{pid}, mirror),
 		withRequestOpts(options...),
 	)
@@ -135,7 +138,8 @@ type AddProjectMirrorOptions struct {
 }
 
 func (s *ProjectMirrorService) AddProjectMirror(pid any, opt *AddProjectMirrorOptions, options ...RequestOptionFunc) (*ProjectMirror, *Response, error) {
-	return do[*ProjectMirror](s.client,
+	return do[*ProjectMirror](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/remote_mirrors", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -157,7 +161,8 @@ type EditProjectMirrorOptions struct {
 }
 
 func (s *ProjectMirrorService) EditProjectMirror(pid any, mirror int64, opt *EditProjectMirrorOptions, options ...RequestOptionFunc) (*ProjectMirror, *Response, error) {
-	return do[*ProjectMirror](s.client,
+	return do[*ProjectMirror](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/remote_mirrors/%d", ProjectID{pid}, mirror),
 		withAPIOpts(opt),
@@ -166,7 +171,8 @@ func (s *ProjectMirrorService) EditProjectMirror(pid any, mirror int64, opt *Edi
 }
 
 func (s *ProjectMirrorService) DeleteProjectMirror(pid any, mirror int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/remote_mirrors/%d", ProjectID{pid}, mirror),
 		withRequestOpts(options...),
@@ -175,7 +181,8 @@ func (s *ProjectMirrorService) DeleteProjectMirror(pid any, mirror int64, option
 }
 
 func (s *ProjectMirrorService) ForcePushMirrorUpdate(pid any, mirror int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/remote_mirrors/%d/sync", ProjectID{pid}, mirror),
 		withRequestOpts(options...),

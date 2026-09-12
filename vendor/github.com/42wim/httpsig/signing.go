@@ -213,7 +213,7 @@ func setSignatureHeader(h http.Header, targetHeader, prefix, pubKeyId, algo, enc
 	b.WriteString(algorithmParameter)
 	b.WriteString(parameterKVSeparater)
 	b.WriteString(parameterValueDelimiter)
-	b.WriteString("hs2019") //real algorithm is hidden, see newest version of spec draft
+	b.WriteString("hs2019") // real algorithm is hidden, see newest version of spec draft
 	b.WriteString(parameterValueDelimiter)
 	b.WriteString(parameterSeparater)
 

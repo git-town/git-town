@@ -48,7 +48,7 @@ func (hc *HexColor) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var col, err = Hex(hexCode)
+	col, err := Hex(hexCode)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (hc HexColor) MarshalJSON() ([]byte, error) {
 
 // Decode - deserialize function for https://github.com/kelseyhightower/envconfig
 func (hc *HexColor) Decode(hexCode string) error {
-	var col, err = Hex(hexCode)
+	col, err := Hex(hexCode)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (hc *HexColor) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return err
 	}
 
-	var col, err = Hex(hexCode)
+	col, err := Hex(hexCode)
 	if err != nil {
 		return err
 	}

@@ -17,10 +17,8 @@ const (
 	id = "id"
 )
 
-var (
-	// ErrNotFound is returned when the requested item is not found
-	ErrNotFound = fmt.Errorf("not found")
-)
+// ErrNotFound is returned when the requested item is not found
+var ErrNotFound = fmt.Errorf("not found")
 
 // tableIndex is a tuple of (Table, Index) used for lookups
 type tableIndex struct {

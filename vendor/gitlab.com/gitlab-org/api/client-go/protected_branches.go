@@ -82,7 +82,8 @@ type ListProtectedBranchesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#list-protected-branches
 func (s *ProtectedBranchesService) ListProtectedBranches(pid any, opt *ListProtectedBranchesOptions, options ...RequestOptionFunc) ([]*ProtectedBranch, *Response, error) {
-	return do[[]*ProtectedBranch](s.client,
+	return do[[]*ProtectedBranch](
+		s.client,
 		withPath("projects/%s/protected_branches", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -94,7 +95,8 @@ func (s *ProtectedBranchesService) ListProtectedBranches(pid any, opt *ListProte
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#get-a-single-protected-branch-or-wildcard-protected-branch
 func (s *ProtectedBranchesService) GetProtectedBranch(pid any, branch string, options ...RequestOptionFunc) (*ProtectedBranch, *Response, error) {
-	return do[*ProtectedBranch](s.client,
+	return do[*ProtectedBranch](
+		s.client,
 		withPath("projects/%s/protected_branches/%s", ProjectID{pid}, branch),
 		withRequestOpts(options...),
 	)
@@ -136,7 +138,8 @@ type BranchPermissionOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#protect-repository-branches
 func (s *ProtectedBranchesService) ProtectRepositoryBranches(pid any, opt *ProtectRepositoryBranchesOptions, options ...RequestOptionFunc) (*ProtectedBranch, *Response, error) {
-	return do[*ProtectedBranch](s.client,
+	return do[*ProtectedBranch](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/protected_branches", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -150,7 +153,8 @@ func (s *ProtectedBranchesService) ProtectRepositoryBranches(pid any, opt *Prote
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#unprotect-repository-branches
 func (s *ProtectedBranchesService) UnprotectRepositoryBranches(pid any, branch string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/protected_branches/%s", ProjectID{pid}, branch),
 		withRequestOpts(options...),
@@ -177,7 +181,8 @@ type UpdateProtectedBranchOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#update-a-protected-branch
 func (s *ProtectedBranchesService) UpdateProtectedBranch(pid any, branch string, opt *UpdateProtectedBranchOptions, options ...RequestOptionFunc) (*ProtectedBranch, *Response, error) {
-	return do[*ProtectedBranch](s.client,
+	return do[*ProtectedBranch](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("projects/%s/protected_branches/%s", ProjectID{pid}, branch),
 		withAPIOpts(opt),

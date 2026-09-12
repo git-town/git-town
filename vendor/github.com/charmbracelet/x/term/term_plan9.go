@@ -62,7 +62,6 @@ func getState(fd uintptr) (*State, error) {
 		return nil, err
 	}
 	return &State{state: state{termName: t, raw: false, ctl: ctl}}, nil
-
 }
 
 func restore(_ uintptr, state *State) error {

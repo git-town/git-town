@@ -21,10 +21,12 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-const DEFAULT_PAGE_LENGTH = 10
-const DEFAULT_LIMIT_PAGES = 0
-const DEFAULT_MAX_DEPTH = 1
-const DEFAULT_BITBUCKET_API_BASE_URL = "https://api.bitbucket.org/2.0"
+const (
+	DEFAULT_PAGE_LENGTH            = 10
+	DEFAULT_LIMIT_PAGES            = 0
+	DEFAULT_MAX_DEPTH              = 1
+	DEFAULT_BITBUCKET_API_BASE_URL = "https://api.bitbucket.org/2.0"
+)
 
 func apiBaseUrlEnv() (*url.URL, error) {
 	ev := os.Getenv("BITBUCKET_API_BASE_URL")
@@ -120,7 +122,6 @@ func NewOAuthClientCredentialsWithEndpoint(i, s, tokenURL string) (*Client, erro
 	}
 	a.token = *tok
 	return injectClient(a)
-
 }
 
 // NewOAuth performs an interactive OAuth flow using stdin/stdout.
@@ -324,8 +325,10 @@ func NewAPITokenAuthWithBaseUrlStrCaCert(email, token, urlStr string, caCerts []
 }
 
 func injectClient(a *auth) (*Client, error) {
-	c := &Client{Auth: a, Pagelen: DEFAULT_PAGE_LENGTH, MaxDepth: DEFAULT_MAX_DEPTH,
-		LimitPages: DEFAULT_LIMIT_PAGES}
+	c := &Client{
+		Auth: a, Pagelen: DEFAULT_PAGE_LENGTH, MaxDepth: DEFAULT_MAX_DEPTH,
+		LimitPages: DEFAULT_LIMIT_PAGES,
+	}
 	if a.apiBaseUrl != nil {
 		c.apiBaseURL = a.apiBaseUrl
 	} else {
@@ -522,7 +525,6 @@ func (c *Client) executeFileUpload(method string, urlStr string, files []File, f
 	}
 	c.authenticateRequest(req)
 	return c.doRequest(req, true)
-
 }
 
 func (c *Client) authenticateRequest(req *http.Request) {
@@ -675,7 +677,6 @@ func unexpectedHttpStatusCode(statusCode int) bool {
 }
 
 func (c *Client) requestUrl(template string, args ...interface{}) string {
-
 	if len(args) == 1 && args[0] == "" {
 		return c.GetApiBaseURL() + template
 	}

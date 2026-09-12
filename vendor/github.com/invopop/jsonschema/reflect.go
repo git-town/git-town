@@ -43,11 +43,15 @@ type propertyAliasSchemaImpl interface {
 	JSONSchemaProperty(prop string) any
 }
 
-var customAliasSchema = reflect.TypeOf((*aliasSchemaImpl)(nil)).Elem()
-var customPropertyAliasSchema = reflect.TypeOf((*propertyAliasSchemaImpl)(nil)).Elem()
+var (
+	customAliasSchema         = reflect.TypeOf((*aliasSchemaImpl)(nil)).Elem()
+	customPropertyAliasSchema = reflect.TypeOf((*propertyAliasSchemaImpl)(nil)).Elem()
+)
 
-var customType = reflect.TypeOf((*customSchemaImpl)(nil)).Elem()
-var extendType = reflect.TypeOf((*extendSchemaImpl)(nil)).Elem()
+var (
+	customType = reflect.TypeOf((*customSchemaImpl)(nil)).Elem()
+	extendType = reflect.TypeOf((*extendSchemaImpl)(nil)).Elem()
+)
 
 // customSchemaGetFieldDocString
 type customSchemaGetFieldDocString interface {

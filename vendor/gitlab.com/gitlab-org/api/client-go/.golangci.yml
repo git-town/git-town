@@ -66,9 +66,9 @@ linters:
         - name: use-errors-new
         - name: var-naming
           arguments:
-           - []
-           - []
-           - - skip-package-name-collision-with-go-std: true
+            - []
+            - []
+            - - skip-package-name-collision-with-go-std: true
 
     staticcheck:
       checks:

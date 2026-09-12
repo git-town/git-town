@@ -64,7 +64,8 @@ type MemberRole struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#get-all-instance-member-roles
 func (s *MemberRolesService) ListInstanceMemberRoles(options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
-	return do[[]*MemberRole](s.client,
+	return do[[]*MemberRole](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("member_roles"),
 		withAPIOpts(nil),
@@ -109,7 +110,8 @@ type CreateMemberRoleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#create-a-instance-member-role
 func (s *MemberRolesService) CreateInstanceMemberRole(opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
-	return do[*MemberRole](s.client,
+	return do[*MemberRole](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("member_roles"),
 		withAPIOpts(opt),
@@ -122,7 +124,8 @@ func (s *MemberRolesService) CreateInstanceMemberRole(opt *CreateMemberRoleOptio
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#delete-an-instance-member-role
 func (s *MemberRolesService) DeleteInstanceMemberRole(memberRoleID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("member_roles/%d", memberRoleID),
 		withAPIOpts(nil),
@@ -136,7 +139,8 @@ func (s *MemberRolesService) DeleteInstanceMemberRole(memberRoleID int64, option
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#get-all-group-member-roles
 func (s *MemberRolesService) ListMemberRoles(gid any, options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
-	return do[[]*MemberRole](s.client,
+	return do[[]*MemberRole](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/member_roles", GroupID{gid}),
 		withAPIOpts(nil),
@@ -149,7 +153,8 @@ func (s *MemberRolesService) ListMemberRoles(gid any, options ...RequestOptionFu
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#add-a-member-role-to-a-group
 func (s *MemberRolesService) CreateMemberRole(gid any, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
-	return do[*MemberRole](s.client,
+	return do[*MemberRole](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/member_roles", GroupID{gid}),
 		withAPIOpts(opt),
@@ -162,7 +167,8 @@ func (s *MemberRolesService) CreateMemberRole(gid any, opt *CreateMemberRoleOpti
 // GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#remove-member-role-of-a-group
 func (s *MemberRolesService) DeleteMemberRole(gid any, memberRole int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/member_roles/%d", GroupID{gid}, memberRole),
 		withAPIOpts(nil),

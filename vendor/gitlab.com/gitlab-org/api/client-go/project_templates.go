@@ -72,7 +72,8 @@ type ListProjectTemplatesOptions struct {
 }
 
 func (s *ProjectTemplatesService) ListTemplates(pid any, templateType string, opt *ListProjectTemplatesOptions, options ...RequestOptionFunc) ([]*ProjectTemplate, *Response, error) {
-	return do[[]*ProjectTemplate](s.client,
+	return do[[]*ProjectTemplate](
+		s.client,
 		withPath("projects/%s/templates/%s", ProjectID{pid}, NoEscape{templateType}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -80,7 +81,8 @@ func (s *ProjectTemplatesService) ListTemplates(pid any, templateType string, op
 }
 
 func (s *ProjectTemplatesService) GetProjectTemplate(pid any, templateType string, templateName string, options ...RequestOptionFunc) (*ProjectTemplate, *Response, error) {
-	return do[*ProjectTemplate](s.client,
+	return do[*ProjectTemplate](
+		s.client,
 		withPath("projects/%s/templates/%s/%s", ProjectID{pid}, NoEscape{templateType}, NoEscape{templateName}),
 		withRequestOpts(options...),
 	)

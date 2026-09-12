@@ -524,7 +524,8 @@ func (s Settings) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/settings/#get-details-on-current-application-settings
 func (s *SettingsService) GetSettings(options ...RequestOptionFunc) (*Settings, *Response, error) {
-	return do[*Settings](s.client,
+	return do[*Settings](
+		s.client,
 		withPath("application/settings"),
 		withRequestOpts(options...),
 	)
@@ -985,7 +986,8 @@ type BranchProtectionDefaultsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/settings/#update-application-settings
 func (s *SettingsService) UpdateSettings(opt *UpdateSettingsOptions, options ...RequestOptionFunc) (*Settings, *Response, error) {
-	return do[*Settings](s.client,
+	return do[*Settings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("application/settings"),
 		withAPIOpts(opt),

@@ -61,7 +61,8 @@ type QueueMetricsQueue struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
 func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMetrics, *Response, error) {
-	return do[*QueueMetrics](s.client,
+	return do[*QueueMetrics](
+		s.client,
 		withPath("/sidekiq/queue_metrics"),
 		withRequestOpts(options...),
 	)
@@ -96,7 +97,8 @@ type ProcessMetricsProcess struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
 func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*ProcessMetrics, *Response, error) {
-	return do[*ProcessMetrics](s.client,
+	return do[*ProcessMetrics](
+		s.client,
 		withPath("/sidekiq/process_metrics"),
 		withRequestOpts(options...),
 	)
@@ -125,7 +127,8 @@ type JobStatsJobs struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
 func (s *SidekiqService) GetJobStats(options ...RequestOptionFunc) (*JobStats, *Response, error) {
-	return do[*JobStats](s.client,
+	return do[*JobStats](
+		s.client,
 		withPath("/sidekiq/job_stats"),
 		withRequestOpts(options...),
 	)
@@ -147,7 +150,8 @@ type CompoundMetrics struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/sidekiq_metrics/#get-a-compound-response-of-all-the-previously-mentioned-metrics
 func (s *SidekiqService) GetCompoundMetrics(options ...RequestOptionFunc) (*CompoundMetrics, *Response, error) {
-	return do[*CompoundMetrics](s.client,
+	return do[*CompoundMetrics](
+		s.client,
 		withPath("/sidekiq/compound_metrics"),
 		withRequestOpts(options...),
 	)

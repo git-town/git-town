@@ -98,7 +98,7 @@ func (m *matcher) MatchTagLine(line *Line) (ok bool, token *Token, err error) {
 	commentDelimiter := regexp.MustCompile(`\s+` + CommentPrefix)
 	uncommentedLine := commentDelimiter.Split(line.TrimmedLineText, 2)[0]
 	var tags []*LineSpan
-	var column = line.Indent() + 1
+	column := line.Indent() + 1
 
 	splits := strings.Split(uncommentedLine, TagPrefix)
 	for i := range splits {
@@ -142,12 +142,15 @@ func (m *matcher) matchTitleLine(line *Line, tokenType TokenType, keywords []str
 func (m *matcher) MatchFeatureLine(line *Line) (ok bool, token *Token, err error) {
 	return m.matchTitleLine(line, TokenTypeFeatureLine, m.dialect.FeatureKeywords())
 }
+
 func (m *matcher) MatchRuleLine(line *Line) (ok bool, token *Token, err error) {
 	return m.matchTitleLine(line, TokenTypeRuleLine, m.dialect.RuleKeywords())
 }
+
 func (m *matcher) MatchBackgroundLine(line *Line) (ok bool, token *Token, err error) {
 	return m.matchTitleLine(line, TokenTypeBackgroundLine, m.dialect.BackgroundKeywords())
 }
+
 func (m *matcher) MatchScenarioLine(line *Line) (ok bool, token *Token, err error) {
 	ok, token, err = m.matchTitleLine(line, TokenTypeScenarioLine, m.dialect.ScenarioKeywords())
 	if ok || (err != nil) {
@@ -156,9 +159,11 @@ func (m *matcher) MatchScenarioLine(line *Line) (ok bool, token *Token, err erro
 	ok, token, err = m.matchTitleLine(line, TokenTypeScenarioLine, m.dialect.ScenarioOutlineKeywords())
 	return ok, token, err
 }
+
 func (m *matcher) MatchExamplesLine(line *Line) (ok bool, token *Token, err error) {
 	return m.matchTitleLine(line, TokenTypeExamplesLine, m.dialect.ExamplesKeywords())
 }
+
 func (m *matcher) MatchStepLine(line *Line) (ok bool, token *Token, err error) {
 	keywords := m.dialect.StepKeywords()
 	for i := range keywords {
@@ -210,11 +215,11 @@ func isSpaceAndNotNewLine(r rune) bool {
 }
 
 func (m *matcher) MatchTableRow(line *Line) (ok bool, token *Token, err error) {
-	var firstChar, firstPos = utf8.DecodeRuneInString(line.TrimmedLineText)
+	firstChar, firstPos := utf8.DecodeRuneInString(line.TrimmedLineText)
 	if firstChar == TableCellSeparator {
 		var cells []*LineSpan
 		var cell []rune
-		var startCol = line.Indent() + 2 // column where the current cell started
+		startCol := line.Indent() + 2 // column where the current cell started
 		// start after the first separator, it's not included in the cell
 		for i, w, col := firstPos, 0, startCol; i < len(line.TrimmedLineText); i += w {
 			var char rune

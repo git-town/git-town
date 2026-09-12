@@ -96,7 +96,8 @@ type ListProtectedEnvironmentsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#list-protected-environments
 func (s *ProtectedEnvironmentsService) ListProtectedEnvironments(pid any, opt *ListProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*ProtectedEnvironment, *Response, error) {
-	return do[[]*ProtectedEnvironment](s.client,
+	return do[[]*ProtectedEnvironment](
+		s.client,
 		withPath("projects/%s/protected_environments", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -109,7 +110,8 @@ func (s *ProtectedEnvironmentsService) ListProtectedEnvironments(pid any, opt *L
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#get-a-single-protected-environment
 func (s *ProtectedEnvironmentsService) GetProtectedEnvironment(pid any, environment string, options ...RequestOptionFunc) (*ProtectedEnvironment, *Response, error) {
-	return do[*ProtectedEnvironment](s.client,
+	return do[*ProtectedEnvironment](
+		s.client,
 		withPath("projects/%s/protected_environments/%s", ProjectID{pid}, environment),
 		withRequestOpts(options...),
 	)
@@ -159,7 +161,8 @@ type EnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#protect-a-single-environment
 func (s *ProtectedEnvironmentsService) ProtectRepositoryEnvironments(pid any, opt *ProtectRepositoryEnvironmentsOptions, options ...RequestOptionFunc) (*ProtectedEnvironment, *Response, error) {
-	return do[*ProtectedEnvironment](s.client,
+	return do[*ProtectedEnvironment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/protected_environments", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -215,7 +218,8 @@ type UpdateEnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#update-a-protected-environment
 func (s *ProtectedEnvironmentsService) UpdateProtectedEnvironments(pid any, environment string, opt *UpdateProtectedEnvironmentsOptions, options ...RequestOptionFunc) (*ProtectedEnvironment, *Response, error) {
-	return do[*ProtectedEnvironment](s.client,
+	return do[*ProtectedEnvironment](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/protected_environments/%s", ProjectID{pid}, environment),
 		withAPIOpts(opt),
@@ -229,7 +233,8 @@ func (s *ProtectedEnvironmentsService) UpdateProtectedEnvironments(pid any, envi
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#unprotect-a-single-environment
 func (s *ProtectedEnvironmentsService) UnprotectEnvironment(pid any, environment string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/protected_environments/%s", ProjectID{pid}, environment),
 		withRequestOpts(options...),

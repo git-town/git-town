@@ -43,7 +43,7 @@ func decodeUser(userResponse interface{}) (*User, error) {
 		return nil, DecodeError(userMap)
 	}
 
-	var user = new(User)
+	user := new(User)
 	err := mapstructure.Decode(userMap, user)
 	if err != nil {
 		return nil, err

@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package localereader
@@ -69,7 +70,6 @@ loop:
 		nDst += utf8.EncodeRune(dst[nDst:], r)
 	}
 	return nDst, nSrc, err
-
 }
 
 func newReader(r io.Reader) io.Reader {

@@ -249,7 +249,8 @@ type ListIssuesOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#list-issues
 func (s *IssuesService) ListIssues(opt *ListIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("issues"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -304,7 +305,8 @@ type ListGroupIssuesOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#list-group-issues
 func (s *IssuesService) ListGroupIssues(pid any, opt *ListGroupIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("groups/%s/issues", GroupID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -358,7 +360,8 @@ type ListProjectIssuesOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#list-project-issues
 func (s *IssuesService) ListProjectIssues(pid any, opt *ListProjectIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("projects/%s/issues", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -369,7 +372,8 @@ func (s *IssuesService) ListProjectIssues(pid any, opt *ListProjectIssuesOptions
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#single-issue
 func (s *IssuesService) GetIssueByID(issue int64, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withPath("issues/%d", issue),
 		withRequestOpts(options...),
 	)
@@ -379,7 +383,8 @@ func (s *IssuesService) GetIssueByID(issue int64, options ...RequestOptionFunc) 
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#single-project-issue
 func (s *IssuesService) GetIssue(pid any, issue int64, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withPath("projects/%s/issues/%d", ProjectID{pid}, issue),
 		withRequestOpts(options...),
 	)
@@ -412,7 +417,8 @@ type CreateIssueOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#new-issue
 func (s *IssuesService) CreateIssue(pid any, opt *CreateIssueOptions, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -509,7 +515,8 @@ func (o UpdateIssueOptions) MarshalJSON() ([]byte, error) {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#edit-an-issue
 func (s *IssuesService) UpdateIssue(pid any, issue int64, opt *UpdateIssueOptions, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/issues/%d", ProjectID{pid}, issue),
 		withAPIOpts(opt),
@@ -521,7 +528,8 @@ func (s *IssuesService) UpdateIssue(pid any, issue int64, opt *UpdateIssueOption
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#delete-an-issue
 func (s *IssuesService) DeleteIssue(pid any, issue int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/issues/%d", ProjectID{pid}, issue),
 		withRequestOpts(options...),
@@ -541,7 +549,8 @@ type ReorderIssueOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#reorder-an-issue
 func (s *IssuesService) ReorderIssue(pid any, issue int64, opt *ReorderIssueOptions, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/issues/%d/reorder", ProjectID{pid}, issue),
 		withAPIOpts(opt),
@@ -561,7 +570,8 @@ type MoveIssueOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/issues/#move-an-issue
 func (s *IssuesService) MoveIssue(pid any, issue int64, opt *MoveIssueOptions, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/move", ProjectID{pid}, issue),
 		withAPIOpts(opt),
@@ -576,7 +586,8 @@ func (s *IssuesService) MoveIssue(pid any, issue int64, opt *MoveIssueOptions, o
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#subscribe-to-an-issue
 func (s *IssuesService) SubscribeToIssue(pid any, issue int64, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/subscribe", ProjectID{pid}, issue),
 		withRequestOpts(options...),
@@ -590,7 +601,8 @@ func (s *IssuesService) SubscribeToIssue(pid any, issue int64, options ...Reques
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#unsubscribe-from-an-issue
 func (s *IssuesService) UnsubscribeFromIssue(pid any, issue int64, options ...RequestOptionFunc) (*Issue, *Response, error) {
-	return do[*Issue](s.client,
+	return do[*Issue](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/unsubscribe", ProjectID{pid}, issue),
 		withRequestOpts(options...),
@@ -604,7 +616,8 @@ func (s *IssuesService) UnsubscribeFromIssue(pid any, issue int64, options ...Re
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#create-a-to-do-item
 func (s *IssuesService) CreateTodo(pid any, issue int64, options ...RequestOptionFunc) (*Todo, *Response, error) {
-	return do[*Todo](s.client,
+	return do[*Todo](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/issues/%d/todo", ProjectID{pid}, issue),
 		withRequestOpts(options...),
@@ -626,7 +639,8 @@ type ListMergeRequestsClosingIssueOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#list-merge-requests-that-close-a-particular-issue-on-merge
 func (s *IssuesService) ListMergeRequestsClosingIssue(pid any, issue int64, opt *ListMergeRequestsClosingIssueOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	return do[[]*BasicMergeRequest](s.client,
+	return do[[]*BasicMergeRequest](
+		s.client,
 		withPath("projects/%s/issues/%d/closed_by", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -648,7 +662,8 @@ type ListMergeRequestsRelatedToIssueOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#list-merge-requests-related-to-issue
 func (s *IssuesService) ListMergeRequestsRelatedToIssue(pid any, issue int64, opt *ListMergeRequestsRelatedToIssueOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	return do[[]*BasicMergeRequest](s.client,
+	return do[[]*BasicMergeRequest](
+		s.client,
 		withPath("projects/%s/issues/%d/related_merge_requests", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -700,7 +715,8 @@ func (s *IssuesService) GetTimeSpent(pid any, issue int64, options ...RequestOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues/#list-participants-in-an-issue
 func (s *IssuesService) GetParticipants(pid any, issue int64, options ...RequestOptionFunc) ([]*BasicUser, *Response, error) {
-	return do[[]*BasicUser](s.client,
+	return do[[]*BasicUser](
+		s.client,
 		withPath("projects/%s/issues/%d/participants", ProjectID{pid}, issue),
 		withRequestOpts(options...),
 	)

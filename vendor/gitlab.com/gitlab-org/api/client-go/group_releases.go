@@ -44,7 +44,8 @@ type ListGroupReleasesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_releases.html#list-group-releases
 func (s *GroupReleasesService) ListGroupReleases(gid any, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error) {
-	return do[[]*Release](s.client,
+	return do[[]*Release](
+		s.client,
 		withPath("groups/%s/releases", GroupID{gid}),
 		withAPIOpts(opts),
 		withRequestOpts(options...),

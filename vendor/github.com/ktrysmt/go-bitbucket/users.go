@@ -16,18 +16,16 @@ func (u *Users) Get(t string) (*User, error) {
 }
 
 func (u *Users) Followers(t string) (interface{}, error) {
-
 	urlStr := u.c.GetApiBaseURL() + "/users/" + t + "/followers"
 	return u.c.execute("GET", urlStr, "")
 }
 
 func (u *Users) Following(t string) (interface{}, error) {
-
 	urlStr := u.c.GetApiBaseURL() + "/users/" + t + "/following"
 	return u.c.execute("GET", urlStr, "")
 }
-func (u *Users) Repositories(t string) (interface{}, error) {
 
+func (u *Users) Repositories(t string) (interface{}, error) {
 	urlStr := u.c.GetApiBaseURL() + "/users/" + t + "/repositories"
 	return u.c.execute("GET", urlStr, "")
 }

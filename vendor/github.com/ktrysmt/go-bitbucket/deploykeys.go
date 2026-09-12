@@ -33,7 +33,7 @@ func decodeDeployKey(response interface{}) (*DeployKey, error) {
 		return nil, DecodeError(respMap)
 	}
 
-	var deployKey = new(DeployKey)
+	deployKey := new(DeployKey)
 	err := mapstructure.Decode(respMap, deployKey)
 	if err != nil {
 		return nil, err

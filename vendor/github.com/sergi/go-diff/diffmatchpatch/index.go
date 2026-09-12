@@ -2,9 +2,11 @@ package diffmatchpatch
 
 type index uint32
 
-const runeSkipStart = 0xd800
-const runeSkipEnd = 0xdfff + 1
-const runeMax = 0x110000 // next invalid code point
+const (
+	runeSkipStart = 0xd800
+	runeSkipEnd   = 0xdfff + 1
+	runeMax       = 0x110000 // next invalid code point
+)
 
 func stringToIndex(text string) []index {
 	runes := []rune(text)

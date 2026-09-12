@@ -67,7 +67,8 @@ type ListMilestoneEventsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#list-project-issue-milestone-events
 func (s *ResourceMilestoneEventsService) ListIssueMilestoneEvents(pid any, issue int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
-	return do[[]*MilestoneEvent](s.client,
+	return do[[]*MilestoneEvent](
+		s.client,
 		withPath("projects/%s/issues/%d/resource_milestone_events", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -79,7 +80,8 @@ func (s *ResourceMilestoneEventsService) ListIssueMilestoneEvents(pid any, issue
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#get-single-issue-milestone-event
 func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid any, issue int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
-	return do[*MilestoneEvent](s.client,
+	return do[*MilestoneEvent](
+		s.client,
 		withPath("projects/%s/issues/%d/resource_milestone_events/%d", ProjectID{pid}, issue, event),
 		withRequestOpts(options...),
 	)
@@ -91,7 +93,8 @@ func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid any, issue i
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#list-project-merge-request-milestone-events
 func (s *ResourceMilestoneEventsService) ListMergeMilestoneEvents(pid any, request int64, opt *ListMilestoneEventsOptions, options ...RequestOptionFunc) ([]*MilestoneEvent, *Response, error) {
-	return do[[]*MilestoneEvent](s.client,
+	return do[[]*MilestoneEvent](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/resource_milestone_events", ProjectID{pid}, request),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -103,7 +106,8 @@ func (s *ResourceMilestoneEventsService) ListMergeMilestoneEvents(pid any, reque
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_milestone_events/#get-single-merge-request-milestone-event
 func (s *ResourceMilestoneEventsService) GetMergeRequestMilestoneEvent(pid any, request int64, event int64, options ...RequestOptionFunc) (*MilestoneEvent, *Response, error) {
-	return do[*MilestoneEvent](s.client,
+	return do[*MilestoneEvent](
+		s.client,
 		withPath("projects/%s/merge_requests/%d/resource_milestone_events/%d", ProjectID{pid}, request, event),
 		withRequestOpts(options...),
 	)

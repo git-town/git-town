@@ -1,8 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/kevgo/cucumber-sort/refs/heads/main/docs/schema.json",
-  "include": [
-    "features/**/*.feature"
-  ],
+  "include": ["features/**/*.feature"],
   "exclude": [
     "features/append/branch_prefix/config_file.feature",
     "features/delete/interactive/cli/disable_via_false.feature",
@@ -80,10 +78,7 @@
   ],
   "record": true,
   "fail-fast": false,
-  "keep-order": [
-    "I ran .*",
-    "I run .*"
-  ],
+  "keep-order": ["I ran .*", "I run .*"],
   "steps": [
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
@@ -97,10 +92,7 @@
     "^the origin is .*$",
     "^the home directory contains file \".*\" with content$",
     "^the committed configuration file:$",
-    [
-      "^the branches$",
-      "^the commits$"
-    ],
+    ["^the branches$", "^the commits$"],
     "^the proposals$",
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",

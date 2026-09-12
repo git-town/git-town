@@ -80,7 +80,8 @@ func (v InstanceCluster) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#list-instance-clusters
 func (s *InstanceClustersService) ListClusters(options ...RequestOptionFunc) ([]*InstanceCluster, *Response, error) {
-	return do[[]*InstanceCluster](s.client,
+	return do[[]*InstanceCluster](
+		s.client,
 		withPath("admin/clusters"),
 		withRequestOpts(options...),
 	)
@@ -92,7 +93,8 @@ func (s *InstanceClustersService) ListClusters(options ...RequestOptionFunc) ([]
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#get-a-single-instance-cluster
 func (s *InstanceClustersService) GetCluster(cluster int64, options ...RequestOptionFunc) (*InstanceCluster, *Response, error) {
-	return do[*InstanceCluster](s.client,
+	return do[*InstanceCluster](
+		s.client,
 		withPath("admin/clusters/%d", cluster),
 		withRequestOpts(options...),
 	)
@@ -104,7 +106,8 @@ func (s *InstanceClustersService) GetCluster(cluster int64, options ...RequestOp
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#add-existing-instance-cluster
 func (s *InstanceClustersService) AddCluster(opt *AddClusterOptions, options ...RequestOptionFunc) (*InstanceCluster, *Response, error) {
-	return do[*InstanceCluster](s.client,
+	return do[*InstanceCluster](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("admin/clusters/add"),
 		withAPIOpts(opt),
@@ -118,7 +121,8 @@ func (s *InstanceClustersService) AddCluster(opt *AddClusterOptions, options ...
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#edit-instance-cluster
 func (s *InstanceClustersService) EditCluster(cluster int64, opt *EditClusterOptions, options ...RequestOptionFunc) (*InstanceCluster, *Response, error) {
-	return do[*InstanceCluster](s.client,
+	return do[*InstanceCluster](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("admin/clusters/%d", cluster),
 		withAPIOpts(opt),
@@ -132,7 +136,8 @@ func (s *InstanceClustersService) EditCluster(cluster int64, opt *EditClusterOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#delete-instance-cluster
 func (s *InstanceClustersService) DeleteCluster(cluster int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("admin/clusters/%d", cluster),
 		withRequestOpts(options...),

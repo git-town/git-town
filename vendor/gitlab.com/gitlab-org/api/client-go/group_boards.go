@@ -110,7 +110,8 @@ type ListGroupIssueBoardsOptions struct {
 }
 
 func (s *GroupIssueBoardsService) ListGroupIssueBoards(gid any, opt *ListGroupIssueBoardsOptions, options ...RequestOptionFunc) ([]*GroupIssueBoard, *Response, error) {
-	return do[[]*GroupIssueBoard](s.client,
+	return do[[]*GroupIssueBoard](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/boards", GroupID{gid}),
 		withAPIOpts(opt),
@@ -128,7 +129,8 @@ type CreateGroupIssueBoardOptions struct {
 }
 
 func (s *GroupIssueBoardsService) CreateGroupIssueBoard(gid any, opt *CreateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
-	return do[*GroupIssueBoard](s.client,
+	return do[*GroupIssueBoard](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/boards", GroupID{gid}),
 		withAPIOpts(opt),
@@ -137,7 +139,8 @@ func (s *GroupIssueBoardsService) CreateGroupIssueBoard(gid any, opt *CreateGrou
 }
 
 func (s *GroupIssueBoardsService) GetGroupIssueBoard(gid any, board int64, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
-	return do[*GroupIssueBoard](s.client,
+	return do[*GroupIssueBoard](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/boards/%d", GroupID{gid}, board),
 		withRequestOpts(options...),
@@ -157,7 +160,8 @@ type UpdateGroupIssueBoardOptions struct {
 }
 
 func (s *GroupIssueBoardsService) UpdateIssueBoard(gid any, board int64, opt *UpdateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
-	return do[*GroupIssueBoard](s.client,
+	return do[*GroupIssueBoard](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/boards/%d", GroupID{gid}, board),
 		withAPIOpts(opt),
@@ -166,7 +170,8 @@ func (s *GroupIssueBoardsService) UpdateIssueBoard(gid any, board int64, opt *Up
 }
 
 func (s *GroupIssueBoardsService) DeleteIssueBoard(gid any, board int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/boards/%d", GroupID{gid}, board),
 		withRequestOpts(options...),
@@ -184,7 +189,8 @@ type ListGroupIssueBoardListsOptions struct {
 }
 
 func (s *GroupIssueBoardsService) ListGroupIssueBoardLists(gid any, board int64, opt *ListGroupIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
-	return do[[]*BoardList](s.client,
+	return do[[]*BoardList](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/boards/%d/lists", GroupID{gid}, board),
 		withAPIOpts(opt),
@@ -193,7 +199,8 @@ func (s *GroupIssueBoardsService) ListGroupIssueBoardLists(gid any, board int64,
 }
 
 func (s *GroupIssueBoardsService) GetGroupIssueBoardList(gid any, board, list int64, options ...RequestOptionFunc) (*BoardList, *Response, error) {
-	return do[*BoardList](s.client,
+	return do[*BoardList](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/boards/%d/lists/%d", GroupID{gid}, board, list),
 		withRequestOpts(options...),
@@ -210,7 +217,8 @@ type CreateGroupIssueBoardListOptions struct {
 }
 
 func (s *GroupIssueBoardsService) CreateGroupIssueBoardList(gid any, board int64, opt *CreateGroupIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error) {
-	return do[*BoardList](s.client,
+	return do[*BoardList](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/boards/%d/lists", GroupID{gid}, board),
 		withAPIOpts(opt),
@@ -228,7 +236,8 @@ type UpdateGroupIssueBoardListOptions struct {
 }
 
 func (s *GroupIssueBoardsService) UpdateIssueBoardList(gid any, board, list int64, opt *UpdateGroupIssueBoardListOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
-	return do[[]*BoardList](s.client,
+	return do[[]*BoardList](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/boards/%d/lists/%d", GroupID{gid}, board, list),
 		withAPIOpts(opt),
@@ -237,7 +246,8 @@ func (s *GroupIssueBoardsService) UpdateIssueBoardList(gid any, board, list int6
 }
 
 func (s *GroupIssueBoardsService) DeleteGroupIssueBoardList(gid any, board, list int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/boards/%d/lists/%d", GroupID{gid}, board, list),
 		withRequestOpts(options...),

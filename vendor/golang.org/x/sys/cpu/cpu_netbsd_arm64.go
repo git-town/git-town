@@ -34,7 +34,8 @@ func sysctl(mib []int32, old *byte, oldlen *uintptr, new *byte, newlen uintptr) 
 		uintptr(unsafe.Pointer(old)),
 		uintptr(unsafe.Pointer(oldlen)),
 		uintptr(unsafe.Pointer(new)),
-		uintptr(newlen))
+		uintptr(newlen),
+	)
 	if errno != 0 {
 		return errno
 	}
@@ -154,7 +155,8 @@ func sysctlCPUID(name string) (*aarch64SysctlCPUID, error) {
 		uintptr(unsafe.Pointer(&out)),
 		uintptr(unsafe.Pointer(&n)),
 		uintptr(0),
-		uintptr(0))
+		uintptr(0),
+	)
 	if errno != 0 {
 		return nil, errno
 	}

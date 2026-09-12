@@ -58,14 +58,16 @@ type ServicePingData struct {
 }
 
 func (s *UsageDataService) GetServicePing(options ...RequestOptionFunc) (*ServicePingData, *Response, error) {
-	return do[*ServicePingData](s.client,
+	return do[*ServicePingData](
+		s.client,
 		withPath("usage_data/service_ping"),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *UsageDataService) GetMetricDefinitionsAsYAML(options ...RequestOptionFunc) (io.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("usage_data/metric_definitions"),
 		withRequestOpts(append([]RequestOptionFunc{WithHeader("Accept", "text/yaml")}, options...)...),
 	)
@@ -102,7 +104,8 @@ type ServicePingQueries struct {
 }
 
 func (s *UsageDataService) GetQueries(options ...RequestOptionFunc) (*ServicePingQueries, *Response, error) {
-	return do[*ServicePingQueries](s.client,
+	return do[*ServicePingQueries](
+		s.client,
 		withPath("usage_data/queries"),
 		withRequestOpts(options...),
 	)
@@ -134,7 +137,8 @@ type ServicePingNonSQLMetrics struct {
 }
 
 func (s *UsageDataService) GetNonSQLMetrics(options ...RequestOptionFunc) (*ServicePingNonSQLMetrics, *Response, error) {
-	return do[*ServicePingNonSQLMetrics](s.client,
+	return do[*ServicePingNonSQLMetrics](
+		s.client,
 		withPath("usage_data/non_sql_metrics"),
 		withRequestOpts(options...),
 	)
@@ -150,7 +154,8 @@ type TrackEventOptions struct {
 }
 
 func (s *UsageDataService) TrackEvent(opt *TrackEventOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("usage_data/track_event"),
 		withAPIOpts(opt),
@@ -165,7 +170,8 @@ type TrackEventsOptions struct {
 }
 
 func (s *UsageDataService) TrackEvents(opt *TrackEventsOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("usage_data/track_events"),
 		withAPIOpts(opt),

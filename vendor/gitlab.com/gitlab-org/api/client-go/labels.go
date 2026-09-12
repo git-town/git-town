@@ -100,7 +100,8 @@ type ListLabelsOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/labels/#list-labels
 func (s *LabelsService) ListLabels(pid any, opt *ListLabelsOptions, options ...RequestOptionFunc) ([]*Label, *Response, error) {
-	return do[[]*Label](s.client,
+	return do[[]*Label](
+		s.client,
 		withPath("projects/%s/labels", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -111,7 +112,8 @@ func (s *LabelsService) ListLabels(pid any, opt *ListLabelsOptions, options ...R
 //
 // GitLab API docs: https://docs.gitlab.com/api/labels/#get-a-single-project-label
 func (s *LabelsService) GetLabel(pid any, lid any, options ...RequestOptionFunc) (*Label, *Response, error) {
-	return do[*Label](s.client,
+	return do[*Label](
+		s.client,
 		withPath("projects/%s/labels/%s", ProjectID{pid}, LabelID{lid}),
 		withRequestOpts(options...),
 	)
@@ -133,7 +135,8 @@ type CreateLabelOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/labels/#create-a-new-label
 func (s *LabelsService) CreateLabel(pid any, opt *CreateLabelOptions, options ...RequestOptionFunc) (*Label, *Response, error) {
-	return do[*Label](s.client,
+	return do[*Label](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/labels", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -153,7 +156,8 @@ type DeleteLabelOptions struct {
 // GitLab API docs: https://docs.gitlab.com/api/labels/#delete-a-label
 func (s *LabelsService) DeleteLabel(pid any, lid any, opt *DeleteLabelOptions, options ...RequestOptionFunc) (*Response, error) {
 	reqOpts := make([]doOption, 0, 4)
-	reqOpts = append(reqOpts,
+	reqOpts = append(
+		reqOpts,
 		withMethod(http.MethodDelete),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -187,7 +191,8 @@ type UpdateLabelOptions struct {
 // GitLab API docs: https://docs.gitlab.com/api/labels/#edit-an-existing-label
 func (s *LabelsService) UpdateLabel(pid any, lid any, opt *UpdateLabelOptions, options ...RequestOptionFunc) (*Label, *Response, error) {
 	reqOpts := make([]doOption, 0, 4)
-	reqOpts = append(reqOpts,
+	reqOpts = append(
+		reqOpts,
 		withMethod(http.MethodPut),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -209,7 +214,8 @@ func (s *LabelsService) UpdateLabel(pid any, lid any, opt *UpdateLabelOptions, o
 // GitLab API docs:
 // https://docs.gitlab.com/api/labels/#subscribe-to-a-label
 func (s *LabelsService) SubscribeToLabel(pid any, lid any, options ...RequestOptionFunc) (*Label, *Response, error) {
-	return do[*Label](s.client,
+	return do[*Label](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/labels/%s/subscribe", ProjectID{pid}, LabelID{lid}),
 		withRequestOpts(options...),
@@ -223,7 +229,8 @@ func (s *LabelsService) SubscribeToLabel(pid any, lid any, options ...RequestOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/labels/#unsubscribe-from-a-label
 func (s *LabelsService) UnsubscribeFromLabel(pid any, lid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/labels/%s/unsubscribe", ProjectID{pid}, LabelID{lid}),
 		withRequestOpts(options...),
@@ -236,7 +243,8 @@ func (s *LabelsService) UnsubscribeFromLabel(pid any, lid any, options ...Reques
 // GitLab API docs:
 // https://docs.gitlab.com/api/labels/#promote-a-project-label-to-a-group-label
 func (s *LabelsService) PromoteLabel(pid any, lid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/labels/%s/promote", ProjectID{pid}, LabelID{lid}),
 		withRequestOpts(options...),

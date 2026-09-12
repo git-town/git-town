@@ -83,7 +83,8 @@ func (s *DependencyListExportService) CreateDependencyListExport(pipelineID int6
 		opt.ExportType = Ptr(defaultExportType)
 	}
 
-	return do[*DependencyListExport](s.client,
+	return do[*DependencyListExport](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("pipelines/%d/dependency_list_exports", pipelineID),
 		withAPIOpts(opt),
@@ -92,14 +93,16 @@ func (s *DependencyListExportService) CreateDependencyListExport(pipelineID int6
 }
 
 func (s *DependencyListExportService) GetDependencyListExport(id int64, options ...RequestOptionFunc) (*DependencyListExport, *Response, error) {
-	return do[*DependencyListExport](s.client,
+	return do[*DependencyListExport](
+		s.client,
 		withPath("dependency_list_exports/%d", id),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *DependencyListExportService) DownloadDependencyListExport(id int64, options ...RequestOptionFunc) (io.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("dependency_list_exports/%d/download", id),
 		withRequestOpts(options...),
 	)

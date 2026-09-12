@@ -7,7 +7,8 @@ func FastWarmColorWithRand(rand RandInterface) Color {
 	return Hsv(
 		rand.Float64()*360.0,
 		0.5+rand.Float64()*0.3,
-		0.3+rand.Float64()*0.3)
+		0.3+rand.Float64()*0.3,
+	)
 }
 
 func FastWarmColor() Color {
@@ -31,7 +32,8 @@ func randomWarmWithRand(rand RandInterface) Color {
 	return Hcl(
 		rand.Float64()*360.0,
 		0.1+rand.Float64()*0.3,
-		0.2+rand.Float64()*0.3)
+		0.2+rand.Float64()*0.3,
+	)
 }
 
 // Creates a random bright, "pimpy" color through a restricted HSV space.
@@ -39,7 +41,8 @@ func FastHappyColorWithRand(rand RandInterface) Color {
 	return Hsv(
 		rand.Float64()*360.0,
 		0.7+rand.Float64()*0.3,
-		0.6+rand.Float64()*0.3)
+		0.6+rand.Float64()*0.3,
+	)
 }
 
 func FastHappyColor() Color {
@@ -63,5 +66,6 @@ func randomPimpWithRand(rand RandInterface) Color {
 	return Hcl(
 		rand.Float64()*360.0,
 		0.5+rand.Float64()*0.3,
-		0.5+rand.Float64()*0.3)
+		0.5+rand.Float64()*0.3,
+	)
 }

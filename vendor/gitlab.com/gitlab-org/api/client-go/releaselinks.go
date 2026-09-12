@@ -61,7 +61,8 @@ type ListReleaseLinksOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/releases/links/#list-links-of-a-release
 func (s *ReleaseLinksService) ListReleaseLinks(pid any, tagName string, opt *ListReleaseLinksOptions, options ...RequestOptionFunc) ([]*ReleaseLink, *Response, error) {
-	return do[[]*ReleaseLink](s.client,
+	return do[[]*ReleaseLink](
+		s.client,
 		withPath("projects/%s/releases/%s/assets/links", ProjectID{pid}, tagName),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -72,7 +73,8 @@ func (s *ReleaseLinksService) ListReleaseLinks(pid any, tagName string, opt *Lis
 //
 // GitLab API docs: https://docs.gitlab.com/api/releases/links/#get-a-release-link
 func (s *ReleaseLinksService) GetReleaseLink(pid any, tagName string, link int64, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
-	return do[*ReleaseLink](s.client,
+	return do[*ReleaseLink](
+		s.client,
 		withPath("projects/%s/releases/%s/assets/links/%d", ProjectID{pid}, tagName, link),
 		withRequestOpts(options...),
 	)
@@ -93,7 +95,8 @@ type CreateReleaseLinkOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/releases/links/#create-a-release-link
 func (s *ReleaseLinksService) CreateReleaseLink(pid any, tagName string, opt *CreateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
-	return do[*ReleaseLink](s.client,
+	return do[*ReleaseLink](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/releases/%s/assets/links", ProjectID{pid}, tagName),
 		withAPIOpts(opt),
@@ -118,7 +121,8 @@ type UpdateReleaseLinkOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/releases/links/#update-a-release-link
 func (s *ReleaseLinksService) UpdateReleaseLink(pid any, tagName string, link int64, opt *UpdateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
-	return do[*ReleaseLink](s.client,
+	return do[*ReleaseLink](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/releases/%s/assets/links/%d", ProjectID{pid}, tagName, link),
 		withAPIOpts(opt),
@@ -130,7 +134,8 @@ func (s *ReleaseLinksService) UpdateReleaseLink(pid any, tagName string, link in
 //
 // GitLab API docs: https://docs.gitlab.com/api/releases/links/#delete-a-release-link
 func (s *ReleaseLinksService) DeleteReleaseLink(pid any, tagName string, link int64, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
-	return do[*ReleaseLink](s.client,
+	return do[*ReleaseLink](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/releases/%s/assets/links/%d", ProjectID{pid}, tagName, link),
 		withRequestOpts(options...),

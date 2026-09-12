@@ -535,7 +535,7 @@ func WriteOverlays(overlay map[string][]byte) (filename string, cleanup func(), 
 		// to avoid creating nested directories.
 		base := fmt.Sprintf("%d-%s", 1+len(overlays), filepath.Base(k))
 		filename := filepath.Join(dir, base)
-		err := os.WriteFile(filename, v, 0666)
+		err := os.WriteFile(filename, v, 0o666)
 		if err != nil {
 			return "", nil, err
 		}
@@ -559,7 +559,7 @@ func WriteOverlays(overlay map[string][]byte) (filename string, cleanup func(), 
 		return "", nil, err
 	}
 	filename = filepath.Join(dir, "overlay.json")
-	if err := os.WriteFile(filename, b, 0666); err != nil {
+	if err := os.WriteFile(filename, b, 0o666); err != nil {
 		return "", nil, err
 	}
 

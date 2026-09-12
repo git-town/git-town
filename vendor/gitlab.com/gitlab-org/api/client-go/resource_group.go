@@ -67,7 +67,8 @@ func (rg ResourceGroup) String() string {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#get-all-resource-groups-for-a-project
 func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid any, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error) {
-	return do[[]*ResourceGroup](s.client,
+	return do[[]*ResourceGroup](
+		s.client,
 		withPath("projects/%s/resource_groups", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -79,7 +80,8 @@ func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid any, options 
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#get-a-specific-resource-group
 func (s *ResourceGroupService) GetASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
-	return do[*ResourceGroup](s.client,
+	return do[*ResourceGroup](
+		s.client,
 		withPath("projects/%s/resource_groups/%s", ProjectID{pid}, key),
 		withRequestOpts(options...),
 	)
@@ -91,7 +93,8 @@ func (s *ResourceGroupService) GetASpecificResourceGroup(pid any, key string, op
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#list-upcoming-jobs-for-a-specific-resource-group
 func (s *ResourceGroupService) ListUpcomingJobsForASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) ([]*Job, *Response, error) {
-	return do[[]*Job](s.client,
+	return do[[]*Job](
+		s.client,
 		withPath("projects/%s/resource_groups/%s/upcoming_jobs", ProjectID{pid}, key),
 		withRequestOpts(options...),
 	)
@@ -112,7 +115,8 @@ type EditAnExistingResourceGroupOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/#edit-an-existing-resource-group
 func (s *ResourceGroupService) EditAnExistingResourceGroup(pid any, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
-	return do[*ResourceGroup](s.client,
+	return do[*ResourceGroup](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/resource_groups/%s", ProjectID{pid}, key),
 		withAPIOpts(opts),

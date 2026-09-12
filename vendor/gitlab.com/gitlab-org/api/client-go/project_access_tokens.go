@@ -68,7 +68,8 @@ type ListProjectAccessTokensOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#list-all-project-access-tokens
 func (s *ProjectAccessTokensService) ListProjectAccessTokens(pid any, opt *ListProjectAccessTokensOptions, options ...RequestOptionFunc) ([]*ProjectAccessToken, *Response, error) {
-	return do[[]*ProjectAccessToken](s.client,
+	return do[[]*ProjectAccessToken](
+		s.client,
 		withPath("projects/%s/access_tokens", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -80,7 +81,8 @@ func (s *ProjectAccessTokensService) ListProjectAccessTokens(pid any, opt *ListP
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#get-details-on-a-project-access-token
 func (s *ProjectAccessTokensService) GetProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	return do[*ProjectAccessToken](s.client,
+	return do[*ProjectAccessToken](
+		s.client,
 		withPath("projects/%s/access_tokens/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),
 	)
@@ -104,7 +106,8 @@ type CreateProjectAccessTokenOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#create-a-project-access-token
 func (s *ProjectAccessTokensService) CreateProjectAccessToken(pid any, opt *CreateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	return do[*ProjectAccessToken](s.client,
+	return do[*ProjectAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/access_tokens", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -127,7 +130,8 @@ type RotateProjectAccessTokenOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#rotate-a-project-access-token
 func (s *ProjectAccessTokensService) RotateProjectAccessToken(pid any, id int64, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	return do[*ProjectAccessToken](s.client,
+	return do[*ProjectAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/access_tokens/%d/rotate", ProjectID{pid}, id),
 		withAPIOpts(opt),
@@ -141,7 +145,8 @@ func (s *ProjectAccessTokensService) RotateProjectAccessToken(pid any, id int64,
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#self-rotate
 func (s *ProjectAccessTokensService) RotateProjectAccessTokenSelf(pid any, opt *RotateProjectAccessTokenOptions, options ...RequestOptionFunc) (*ProjectAccessToken, *Response, error) {
-	return do[*ProjectAccessToken](s.client,
+	return do[*ProjectAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/access_tokens/self/rotate", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -154,7 +159,8 @@ func (s *ProjectAccessTokensService) RotateProjectAccessTokenSelf(pid any, opt *
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_access_tokens/#revoke-a-project-access-token
 func (s *ProjectAccessTokensService) RevokeProjectAccessToken(pid any, id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/access_tokens/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),

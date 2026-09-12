@@ -155,7 +155,8 @@ type ListGroupMembersOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/members/#list-all-members-of-a-group-or-project
 func (s *GroupsService) ListGroupMembers(gid any, opt *ListGroupMembersOptions, options ...RequestOptionFunc) ([]*GroupMember, *Response, error) {
-	return do[[]*GroupMember](s.client,
+	return do[[]*GroupMember](
+		s.client,
 		withPath("groups/%s/members", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -168,7 +169,8 @@ func (s *GroupsService) ListGroupMembers(gid any, opt *ListGroupMembersOptions, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/members/#list-all-members-of-a-group-or-project-including-inherited-and-invited-members
 func (s *GroupsService) ListAllGroupMembers(gid any, opt *ListGroupMembersOptions, options ...RequestOptionFunc) ([]*GroupMember, *Response, error) {
-	return do[[]*GroupMember](s.client,
+	return do[[]*GroupMember](
+		s.client,
 		withPath("groups/%s/members/all", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -188,14 +190,16 @@ type AddGroupMemberOptions struct {
 }
 
 func (s *GroupMembersService) GetGroupMember(gid any, user int64, options ...RequestOptionFunc) (*GroupMember, *Response, error) {
-	return do[*GroupMember](s.client,
+	return do[*GroupMember](
+		s.client,
 		withPath("groups/%s/members/%d", GroupID{gid}, user),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *GroupMembersService) GetInheritedGroupMember(gid any, user int64, options ...RequestOptionFunc) (*GroupMember, *Response, error) {
-	return do[*GroupMember](s.client,
+	return do[*GroupMember](
+		s.client,
 		withPath("groups/%s/members/all/%d", GroupID{gid}, user),
 		withRequestOpts(options...),
 	)
@@ -218,7 +222,8 @@ type ListBillableGroupMembersOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/members/#list-all-billable-members-of-a-group
 func (s *GroupsService) ListBillableGroupMembers(gid any, opt *ListBillableGroupMembersOptions, options ...RequestOptionFunc) ([]*BillableGroupMember, *Response, error) {
-	return do[[]*BillableGroupMember](s.client,
+	return do[[]*BillableGroupMember](
+		s.client,
 		withPath("groups/%s/billable_members", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -240,7 +245,8 @@ type ListMembershipsForBillableGroupMemberOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/members/#list-memberships-for-a-billable-member-of-a-group
 func (s *GroupsService) ListMembershipsForBillableGroupMember(gid any, user int64, opt *ListMembershipsForBillableGroupMemberOptions, options ...RequestOptionFunc) ([]*BillableUserMembership, *Response, error) {
-	return do[[]*BillableUserMembership](s.client,
+	return do[[]*BillableUserMembership](
+		s.client,
 		withPath("groups/%s/billable_members/%d/memberships", GroupID{gid}, user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -252,7 +258,8 @@ func (s *GroupsService) ListMembershipsForBillableGroupMember(gid any, user int6
 // GitLab API docs:
 // https://docs.gitlab.com/api/members/#remove-a-billable-member-from-a-group
 func (s *GroupsService) RemoveBillableGroupMember(gid any, user int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/billable_members/%d", GroupID{gid}, user),
 		withRequestOpts(options...),
@@ -261,7 +268,8 @@ func (s *GroupsService) RemoveBillableGroupMember(gid any, user int64, options .
 }
 
 func (s *GroupMembersService) AddGroupMember(gid any, opt *AddGroupMemberOptions, options ...RequestOptionFunc) (*GroupMember, *Response, error) {
-	return do[*GroupMember](s.client,
+	return do[*GroupMember](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/members", GroupID{gid}),
 		withAPIOpts(opt),
@@ -270,7 +278,8 @@ func (s *GroupMembersService) AddGroupMember(gid any, opt *AddGroupMemberOptions
 }
 
 func (s *GroupMembersService) ShareWithGroup(gid any, opt *ShareWithGroupOptions, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/share", GroupID{gid}),
 		withAPIOpts(opt),
@@ -279,7 +288,8 @@ func (s *GroupMembersService) ShareWithGroup(gid any, opt *ShareWithGroupOptions
 }
 
 func (s *GroupMembersService) DeleteShareWithGroup(gid any, groupID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/share/%d", GroupID{gid}, groupID),
 		withRequestOpts(options...),
@@ -299,7 +309,8 @@ type EditGroupMemberOptions struct {
 }
 
 func (s *GroupMembersService) EditGroupMember(gid any, user int64, opt *EditGroupMemberOptions, options ...RequestOptionFunc) (*GroupMember, *Response, error) {
-	return do[*GroupMember](s.client,
+	return do[*GroupMember](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/members/%d", GroupID{gid}, user),
 		withAPIOpts(opt),
@@ -317,7 +328,8 @@ type RemoveGroupMemberOptions struct {
 }
 
 func (s *GroupMembersService) RemoveGroupMember(gid any, user int64, opt *RemoveGroupMemberOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/members/%d", GroupID{gid}, user),
 		withAPIOpts(opt),

@@ -65,7 +65,8 @@ type ListWeightEventsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_weight_events/#list-project-issue-weight-events
 func (s *ResourceWeightEventsService) ListIssueWeightEvents(pid any, issue int64, opt *ListWeightEventsOptions, options ...RequestOptionFunc) ([]*WeightEvent, *Response, error) {
-	return do[[]*WeightEvent](s.client,
+	return do[[]*WeightEvent](
+		s.client,
 		withPath("projects/%s/issues/%d/resource_weight_events", ProjectID{pid}, issue),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

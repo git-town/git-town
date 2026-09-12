@@ -73,7 +73,8 @@ type ListProjectIterationsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/iterations/#list-project-iterations
 func (i *ProjectIterationsService) ListProjectIterations(pid any, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error) {
-	return do[[]*ProjectIteration](i.client,
+	return do[[]*ProjectIteration](
+		i.client,
 		withPath("projects/%s/iterations", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

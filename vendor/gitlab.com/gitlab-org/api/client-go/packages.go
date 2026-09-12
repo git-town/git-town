@@ -136,7 +136,8 @@ type ListProjectPackagesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#for-a-project
 func (s *PackagesService) ListProjectPackages(pid any, opt *ListProjectPackagesOptions, options ...RequestOptionFunc) ([]*Package, *Response, error) {
-	return do[[]*Package](s.client,
+	return do[[]*Package](
+		s.client,
 		withPath("projects/%s/packages", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -164,7 +165,8 @@ type ListGroupPackagesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#for-a-group
 func (s *PackagesService) ListGroupPackages(gid any, opt *ListGroupPackagesOptions, options ...RequestOptionFunc) ([]*GroupPackage, *Response, error) {
-	return do[[]*GroupPackage](s.client,
+	return do[[]*GroupPackage](
+		s.client,
 		withPath("groups/%s/packages", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -185,7 +187,8 @@ type ListPackageFilesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#list-package-files
 func (s *PackagesService) ListPackageFiles(pid any, pkg int64, opt *ListPackageFilesOptions, options ...RequestOptionFunc) ([]*PackageFile, *Response, error) {
-	return do[[]*PackageFile](s.client,
+	return do[[]*PackageFile](
+		s.client,
 		withPath("projects/%s/packages/%d/package_files", ProjectID{pid}, pkg),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -197,7 +200,8 @@ func (s *PackagesService) ListPackageFiles(pid any, pkg int64, opt *ListPackageF
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#delete-a-project-package
 func (s *PackagesService) DeleteProjectPackage(pid any, pkg int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/packages/%d", ProjectID{pid}, pkg),
 		withRequestOpts(options...),
@@ -210,7 +214,8 @@ func (s *PackagesService) DeleteProjectPackage(pid any, pkg int64, options ...Re
 // GitLab API docs:
 // https://docs.gitlab.com/api/packages/#delete-a-package-file
 func (s *PackagesService) DeletePackageFile(pid any, pkg, file int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/packages/%d/package_files/%d", ProjectID{pid}, pkg, file),
 		withRequestOpts(options...),

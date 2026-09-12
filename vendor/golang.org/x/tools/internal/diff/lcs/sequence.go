@@ -21,6 +21,7 @@ func (s bytesSeqs) lengths() (int, int) { return len(s.a), len(s.b) }
 func (s bytesSeqs) commonPrefixLen(ai, aj, bi, bj int) int {
 	return commonPrefixLen(s.a[ai:aj:aj], s.b[bi:bj:bj])
 }
+
 func (s bytesSeqs) commonSuffixLen(ai, aj, bi, bj int) int {
 	return commonSuffixLen(s.a[ai:aj:aj], s.b[bi:bj:bj])
 }
@@ -31,6 +32,7 @@ func (s runesSeqs) lengths() (int, int) { return len(s.a), len(s.b) }
 func (s runesSeqs) commonPrefixLen(ai, aj, bi, bj int) int {
 	return commonPrefixLen(s.a[ai:aj:aj], s.b[bi:bj:bj])
 }
+
 func (s runesSeqs) commonSuffixLen(ai, aj, bi, bj int) int {
 	return commonSuffixLen(s.a[ai:aj:aj], s.b[bi:bj:bj])
 }
@@ -41,6 +43,7 @@ func (s linesSeqs) lengths() (int, int) { return len(s.a), len(s.b) }
 func (s linesSeqs) commonPrefixLen(ai, aj, bi, bj int) int {
 	return commonPrefixLen(s.a[ai:aj], s.b[bi:bj])
 }
+
 func (s linesSeqs) commonSuffixLen(ai, aj, bi, bj int) int {
 	return commonSuffixLen(s.a[ai:aj], s.b[bi:bj])
 }

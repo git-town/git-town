@@ -112,7 +112,8 @@ type ListMilestonesOptions struct {
 }
 
 func (s *MilestonesService) ListMilestones(pid any, opt *ListMilestonesOptions, options ...RequestOptionFunc) ([]*Milestone, *Response, error) {
-	return do[[]*Milestone](s.client,
+	return do[[]*Milestone](
+		s.client,
 		withPath("projects/%s/milestones", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -120,7 +121,8 @@ func (s *MilestonesService) ListMilestones(pid any, opt *ListMilestonesOptions, 
 }
 
 func (s *MilestonesService) GetMilestone(pid any, milestone int64, options ...RequestOptionFunc) (*Milestone, *Response, error) {
-	return do[*Milestone](s.client,
+	return do[*Milestone](
+		s.client,
 		withPath("projects/%s/milestones/%d", ProjectID{pid}, milestone),
 		withRequestOpts(options...),
 	)
@@ -138,7 +140,8 @@ type CreateMilestoneOptions struct {
 }
 
 func (s *MilestonesService) CreateMilestone(pid any, opt *CreateMilestoneOptions, options ...RequestOptionFunc) (*Milestone, *Response, error) {
-	return do[*Milestone](s.client,
+	return do[*Milestone](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/milestones", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -159,7 +162,8 @@ type UpdateMilestoneOptions struct {
 }
 
 func (s *MilestonesService) UpdateMilestone(pid any, milestone int64, opt *UpdateMilestoneOptions, options ...RequestOptionFunc) (*Milestone, *Response, error) {
-	return do[*Milestone](s.client,
+	return do[*Milestone](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/milestones/%d", ProjectID{pid}, milestone),
 		withAPIOpts(opt),
@@ -168,7 +172,8 @@ func (s *MilestonesService) UpdateMilestone(pid any, milestone int64, opt *Updat
 }
 
 func (s *MilestonesService) DeleteMilestone(pid any, milestone int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/milestones/%d", ProjectID{pid}, milestone),
 		withRequestOpts(options...),
@@ -185,7 +190,8 @@ type GetMilestoneIssuesOptions struct {
 }
 
 func (s *MilestonesService) GetMilestoneIssues(pid any, milestone int64, opt *GetMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
-	return do[[]*Issue](s.client,
+	return do[[]*Issue](
+		s.client,
 		withPath("projects/%s/milestones/%d/issues", ProjectID{pid}, milestone),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -202,7 +208,8 @@ type GetMilestoneMergeRequestsOptions struct {
 }
 
 func (s *MilestonesService) GetMilestoneMergeRequests(pid any, milestone int64, opt *GetMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
-	return do[[]*BasicMergeRequest](s.client,
+	return do[[]*BasicMergeRequest](
+		s.client,
 		withPath("projects/%s/milestones/%d/merge_requests", ProjectID{pid}, milestone),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

@@ -54,7 +54,8 @@ type ApplicationStatistics struct {
 }
 
 func (s *ApplicationStatisticsService) GetApplicationStatistics(options ...RequestOptionFunc) (*ApplicationStatistics, *Response, error) {
-	return do[*ApplicationStatistics](s.client,
+	return do[*ApplicationStatistics](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("application/statistics"),
 		withRequestOpts(options...),

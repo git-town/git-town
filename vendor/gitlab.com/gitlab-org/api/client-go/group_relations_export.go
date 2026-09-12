@@ -80,7 +80,8 @@ type (
 var _ GroupRelationsExportServiceInterface = (*GroupRelationsExportService)(nil)
 
 func (s *GroupRelationsExportService) ScheduleExport(gid any, opt *GroupRelationsScheduleExportOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/export_relations", GroupID{gid}),
 		withAPIOpts(opt),
@@ -90,7 +91,8 @@ func (s *GroupRelationsExportService) ScheduleExport(gid any, opt *GroupRelation
 }
 
 func (s *GroupRelationsExportService) ListExportStatus(gid any, opt *ListGroupRelationsStatusOptions, options ...RequestOptionFunc) ([]*GroupRelationStatus, *Response, error) {
-	return do[[]*GroupRelationStatus](s.client,
+	return do[[]*GroupRelationStatus](
+		s.client,
 		withPath("groups/%s/export_relations/status", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -98,7 +100,8 @@ func (s *GroupRelationsExportService) ListExportStatus(gid any, opt *ListGroupRe
 }
 
 func (s *GroupRelationsExportService) ExportDownload(gid any, opt *GroupRelationsDownloadOptions, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("groups/%s/export_relations/download", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

@@ -2,16 +2,15 @@ package jsonschema
 
 import (
 	"fmt"
+	"go/ast"
+	"go/doc"
+	"go/parser"
+	"go/token"
 	"io/fs"
 	gopath "path"
 	"path/filepath"
 	"reflect"
 	"strings"
-
-	"go/ast"
-	"go/doc"
-	"go/parser"
-	"go/token"
 )
 
 type commentOptions struct {

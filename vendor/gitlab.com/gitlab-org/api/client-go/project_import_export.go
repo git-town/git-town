@@ -135,7 +135,8 @@ type ScheduleExportUploadOptions struct {
 }
 
 func (s *ProjectImportExportService) ScheduleExport(pid any, opt *ScheduleExportOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/export", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -145,14 +146,16 @@ func (s *ProjectImportExportService) ScheduleExport(pid any, opt *ScheduleExport
 }
 
 func (s *ProjectImportExportService) ExportStatus(pid any, options ...RequestOptionFunc) (*ExportStatus, *Response, error) {
-	return do[*ExportStatus](s.client,
+	return do[*ExportStatus](
+		s.client,
 		withPath("projects/%s/export", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *ProjectImportExportService) ExportDownload(pid any, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/export/download", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -175,7 +178,8 @@ type ImportFileOptions struct {
 }
 
 func (s *ProjectImportExportService) ImportFromFile(archive io.Reader, opt *ImportFileOptions, options ...RequestOptionFunc) (*ImportStatus, *Response, error) {
-	return do[*ImportStatus](s.client,
+	return do[*ImportStatus](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/import"),
 		withUpload(archive, "archive.tar.gz", UploadFile),
@@ -185,7 +189,8 @@ func (s *ProjectImportExportService) ImportFromFile(archive io.Reader, opt *Impo
 }
 
 func (s *ProjectImportExportService) ImportStatus(pid any, options ...RequestOptionFunc) (*ImportStatus, *Response, error) {
-	return do[*ImportStatus](s.client,
+	return do[*ImportStatus](
+		s.client,
 		withPath("projects/%s/import", ProjectID{pid}),
 		withRequestOpts(options...),
 	)

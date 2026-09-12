@@ -130,7 +130,8 @@ type CreateGeoSitesOptions struct {
 }
 
 func (s *GeoSitesService) CreateGeoSite(opt *CreateGeoSitesOptions, options ...RequestOptionFunc) (*GeoSite, *Response, error) {
-	return do[*GeoSite](s.client,
+	return do[*GeoSite](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("geo_sites"),
 		withAPIOpts(opt),
@@ -147,7 +148,8 @@ type ListGeoSitesOptions struct {
 }
 
 func (s *GeoSitesService) ListGeoSites(opt *ListGeoSitesOptions, options ...RequestOptionFunc) ([]*GeoSite, *Response, error) {
-	return do[[]*GeoSite](s.client,
+	return do[[]*GeoSite](
+		s.client,
 		withPath("geo_sites"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -155,7 +157,8 @@ func (s *GeoSitesService) ListGeoSites(opt *ListGeoSitesOptions, options ...Requ
 }
 
 func (s *GeoSitesService) GetGeoSite(id int64, options ...RequestOptionFunc) (*GeoSite, *Response, error) {
-	return do[*GeoSite](s.client,
+	return do[*GeoSite](
+		s.client,
 		withPath("geo_sites/%d", id),
 		withRequestOpts(options...),
 	)
@@ -181,7 +184,8 @@ type EditGeoSiteOptions struct {
 }
 
 func (s *GeoSitesService) EditGeoSite(id int64, opt *EditGeoSiteOptions, options ...RequestOptionFunc) (*GeoSite, *Response, error) {
-	return do[*GeoSite](s.client,
+	return do[*GeoSite](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("geo_sites/%d", id),
 		withAPIOpts(opt),
@@ -190,7 +194,8 @@ func (s *GeoSitesService) EditGeoSite(id int64, opt *EditGeoSiteOptions, options
 }
 
 func (s *GeoSitesService) DeleteGeoSite(id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("geo_sites/%d", id),
 		withRequestOpts(options...),
@@ -199,7 +204,8 @@ func (s *GeoSitesService) DeleteGeoSite(id int64, options ...RequestOptionFunc) 
 }
 
 func (s *GeoSitesService) RepairGeoSite(id int64, options ...RequestOptionFunc) (*GeoSite, *Response, error) {
-	return do[*GeoSite](s.client,
+	return do[*GeoSite](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("geo_sites/%d/repair", id),
 		withRequestOpts(options...),
@@ -442,7 +448,8 @@ type ListStatusOfAllGeoSitesOptions struct {
 }
 
 func (s *GeoSitesService) ListStatusOfAllGeoSites(opt *ListStatusOfAllGeoSitesOptions, options ...RequestOptionFunc) ([]*GeoSiteStatus, *Response, error) {
-	return do[[]*GeoSiteStatus](s.client,
+	return do[[]*GeoSiteStatus](
+		s.client,
 		withPath("geo_sites/status"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -450,7 +457,8 @@ func (s *GeoSitesService) ListStatusOfAllGeoSites(opt *ListStatusOfAllGeoSitesOp
 }
 
 func (s *GeoSitesService) GetStatusOfGeoSite(id int64, options ...RequestOptionFunc) (*GeoSiteStatus, *Response, error) {
-	return do[*GeoSiteStatus](s.client,
+	return do[*GeoSiteStatus](
+		s.client,
 		withPath("geo_sites/%d/status", id),
 		withRequestOpts(options...),
 	)

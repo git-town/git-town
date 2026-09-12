@@ -97,11 +97,13 @@ function processChapter(chapter) {
  * @returns {string}
  */
 function processContent(content) {
-  return content.replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
-    return processCommandSummary(code)
-  }).replaceAll(/^( *)```wrap\n([\s\S]*?)\n\1```/gm, (_, indent, code) => {
-    return processCodeWrap(code, indent)
-  })
+  return content
+    .replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
+      return processCommandSummary(code)
+    })
+    .replaceAll(/^( *)```wrap\n([\s\S]*?)\n\1```/gm, (_, indent, code) => {
+      return processCodeWrap(code, indent)
+    })
 }
 
 /**
@@ -148,14 +150,16 @@ function processCommandSummary(code) {
   return `<pre><code>${
     code
       .split("\n")
-      .map(line => {
+      .map((line) => {
         const tokens = tokenize(line)
         const { command, otherTokens } = extractCommand(tokens)
 
         const indent = command.length + 1
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
           otherTokens
-            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .map(
+              (token) => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`,
+            )
             .join(" ")
         }</div>`
       })
@@ -207,12 +211,14 @@ function processCodeWrap(code, indent) {
   return `${indent}<pre><code>${
     code
       .split("\n")
-      .map(line => {
+      .map((line) => {
         const tokens = tokenize(line.slice(indent.length))
 
         return `<div class="gt-code-wrap">${
           tokens
-            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .map(
+              (token) => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`,
+            )
             .join(" ")
         }</div>`
       })

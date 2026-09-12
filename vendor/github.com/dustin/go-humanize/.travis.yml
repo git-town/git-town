@@ -13,7 +13,7 @@ matrix:
     - go: master
   fast_finish: true
 install:
-  - # Do nothing. This is needed to prevent default install action "go get -t -v ./..." from happening here (we want it to happen inside script step).
+  -  # Do nothing. This is needed to prevent default install action "go get -t -v ./..." from happening here (we want it to happen inside script step).
 script:
   - diff -u <(echo -n) <(gofmt -d -s .)
   - go vet .

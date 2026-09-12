@@ -58,7 +58,7 @@ func main() {
 
 	// Write it out.
 	log.Print("Writing to ", os.Args[2])
-	if err := ioutil.WriteFile(os.Args[2], formatted, 0644); err != nil {
+	if err := ioutil.WriteFile(os.Args[2], formatted, 0o644); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -1,8 +1,9 @@
 package gherkin
 
 import (
-	"github.com/cucumber/messages/go/v21"
 	"strings"
+
+	"github.com/cucumber/messages/go/v21"
 )
 
 type AstBuilder interface {
@@ -66,7 +67,7 @@ func (a *astNode) getToken(tt TokenType) *Token {
 }
 
 func (a *astNode) getTokens(tt TokenType) []*Token {
-	var items = a.getItems(tt.RuleType())
+	items := a.getItems(tt.RuleType())
 	var tokens []*Token
 	for i := range items {
 		if val, ok := items[i].(*Token); ok {

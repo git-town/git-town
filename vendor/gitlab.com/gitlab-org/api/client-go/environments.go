@@ -86,7 +86,8 @@ type ListEnvironmentsOptions struct {
 }
 
 func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error) {
-	return do[[]*Environment](s.client,
+	return do[[]*Environment](
+		s.client,
 		withPath("projects/%s/environments", ProjectID{pid}),
 		withAPIOpts(opts),
 		withRequestOpts(options...),
@@ -94,7 +95,8 @@ func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOp
 }
 
 func (s *EnvironmentsService) GetEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	return do[*Environment](s.client,
+	return do[*Environment](
+		s.client,
 		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
 		withRequestOpts(options...),
 	)
@@ -116,7 +118,8 @@ type CreateEnvironmentOptions struct {
 }
 
 func (s *EnvironmentsService) CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	return do[*Environment](s.client,
+	return do[*Environment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/environments", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -140,7 +143,8 @@ type EditEnvironmentOptions struct {
 }
 
 func (s *EnvironmentsService) EditEnvironment(pid any, environment int64, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	return do[*Environment](s.client,
+	return do[*Environment](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
 		withAPIOpts(opt),
@@ -149,7 +153,8 @@ func (s *EnvironmentsService) EditEnvironment(pid any, environment int64, opt *E
 }
 
 func (s *EnvironmentsService) DeleteEnvironment(pid any, environment int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/environments/%d", ProjectID{pid}, environment),
 		withRequestOpts(options...),
@@ -166,7 +171,8 @@ type StopEnvironmentOptions struct {
 }
 
 func (s *EnvironmentsService) StopEnvironment(pid any, environmentID int64, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
-	return do[*Environment](s.client,
+	return do[*Environment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/environments/%d/stop", ProjectID{pid}, environmentID),
 		withAPIOpts(opt),

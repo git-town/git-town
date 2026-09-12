@@ -163,7 +163,7 @@ func decodeBranchRestriction(branchResponse interface{}) (*BranchRestrictions, e
 		return nil, DecodeError(branchMap)
 	}
 
-	var branchRestriction = new(BranchRestrictions)
+	branchRestriction := new(BranchRestrictions)
 	err := mapstructure.Decode(branchMap, branchRestriction)
 	if err != nil {
 		return nil, err

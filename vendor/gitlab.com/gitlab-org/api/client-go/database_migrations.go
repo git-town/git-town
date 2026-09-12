@@ -50,7 +50,8 @@ type MarkMigrationAsSuccessfulOptions struct {
 }
 
 func (s *DatabaseMigrationsService) MarkMigrationAsSuccessful(version int64, opt *MarkMigrationAsSuccessfulOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("admin/migrations/%d/mark", version),
 		withAPIOpts(opt),

@@ -59,7 +59,8 @@ type ListEnterpriseUsersOptions struct {
 }
 
 func (s *EnterpriseUsersService) ListEnterpriseUsers(gid any, opt *ListEnterpriseUsersOptions, options ...RequestOptionFunc) ([]*User, *Response, error) {
-	return do[[]*User](s.client,
+	return do[[]*User](
+		s.client,
 		withPath("groups/%s/enterprise_users", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -71,7 +72,8 @@ func (s *EnterpriseUsersService) ListEnterpriseUsers(gid any, opt *ListEnterpris
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_enterprise_users/#get-details-on-an-enterprise-user
 func (s *EnterpriseUsersService) GetEnterpriseUser(gid any, uid int64, options ...RequestOptionFunc) (*User, *Response, error) {
-	return do[*User](s.client,
+	return do[*User](
+		s.client,
 		withPath("groups/%s/enterprise_users/%d", GroupID{gid}, uid),
 		withRequestOpts(options...),
 	)
@@ -83,7 +85,8 @@ func (s *EnterpriseUsersService) GetEnterpriseUser(gid any, uid int64, options .
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_enterprise_users/#disable-two-factor-authentication-for-an-enterprise-user
 func (s *EnterpriseUsersService) Disable2FAForEnterpriseUser(gid any, uid int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("groups/%s/enterprise_users/%d/disable_two_factor", GroupID{gid}, uid),
 		withRequestOpts(options...),
@@ -104,7 +107,8 @@ type DeleteEnterpriseUserOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_enterprise_users/#delete-an-enterprise-user
 func (s *EnterpriseUsersService) DeleteEnterpriseUser(gid any, uid int64, opt *DeleteEnterpriseUserOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/enterprise_users/%d", GroupID{gid}, uid),
 		withAPIOpts(opt),

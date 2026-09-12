@@ -77,7 +77,8 @@ type ListGroupPersonalAccessTokensOptions struct {
 }
 
 func (g *GroupCredentialsService) ListGroupPersonalAccessTokens(gid any, opt *ListGroupPersonalAccessTokensOptions, options ...RequestOptionFunc) ([]*GroupPersonalAccessToken, *Response, error) {
-	return do[[]*GroupPersonalAccessToken](g.client,
+	return do[[]*GroupPersonalAccessToken](
+		g.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/manage/personal_access_tokens", GroupID{gid}),
 		withAPIOpts(opt),
@@ -113,7 +114,8 @@ type ListGroupSSHKeysOptions struct {
 }
 
 func (g *GroupCredentialsService) ListGroupSSHKeys(gid any, opt *ListGroupSSHKeysOptions, options ...RequestOptionFunc) ([]*GroupSSHKey, *Response, error) {
-	return do[[]*GroupSSHKey](g.client,
+	return do[[]*GroupSSHKey](
+		g.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/manage/ssh_keys", GroupID{gid}),
 		withAPIOpts(opt),
@@ -122,7 +124,8 @@ func (g *GroupCredentialsService) ListGroupSSHKeys(gid any, opt *ListGroupSSHKey
 }
 
 func (g *GroupCredentialsService) RevokeGroupPersonalAccessToken(gid any, tokenID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](g.client,
+	_, resp, err := do[none](
+		g.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/manage/personal_access_tokens/%d", GroupID{gid}, tokenID),
 		withRequestOpts(options...),
@@ -131,7 +134,8 @@ func (g *GroupCredentialsService) RevokeGroupPersonalAccessToken(gid any, tokenI
 }
 
 func (g *GroupCredentialsService) DeleteGroupSSHKey(gid any, keyID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](g.client,
+	_, resp, err := do[none](
+		g.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/manage/ssh_keys/%d", GroupID{gid}, keyID),
 		withRequestOpts(options...),

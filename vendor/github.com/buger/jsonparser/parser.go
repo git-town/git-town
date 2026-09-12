@@ -308,7 +308,7 @@ func searchKeys(data []byte, keys ...string) int {
 		case '[':
 			// If we want to get array element by index
 			if keyLevel == level && keys[level][0] == '[' {
-				var keyLen = len(keys[level])
+				keyLen := len(keys[level])
 				if keyLen < 3 || keys[level][0] != '[' || keys[level][keyLen-1] != ']' {
 					return -1
 				}
@@ -319,7 +319,7 @@ func searchKeys(data []byte, keys ...string) int {
 				var curIdx int
 				var valueFound []byte
 				var valueOffset int
-				var curI = i
+				curI := i
 				ArrayEach(data[i:], func(value []byte, dataType ValueType, offset int, err error) {
 					if curIdx == aIdx {
 						valueFound = value
@@ -662,7 +662,6 @@ func calcAllocateSpace(keys []string, setValue []byte, comma, object bool) int {
 		}
 	}
 
-
 	lk += len(setValue)
 	for i := 1; i < len(keys); i++ {
 		if string(keys[i][0]) == "[" {
@@ -688,12 +687,10 @@ func WriteToBuffer(buffer []byte, str string) int {
 }
 
 /*
-
 Del - Receives existing data structure, path to delete.
 
 Returns:
 `data` - return modified data
-
 */
 func Delete(data []byte, keys ...string) []byte {
 	lk := len(keys)
@@ -774,13 +771,11 @@ func Delete(data []byte, keys ...string) []byte {
 }
 
 /*
-
 Set - Receives existing data structure, path to set, and data to set at that key.
 
 Returns:
 `value` - modified byte array
 `err` - On any parsing error
-
 */
 func Set(data []byte, setValue []byte, keys ...string) (value []byte, err error) {
 	// ensure keys are set

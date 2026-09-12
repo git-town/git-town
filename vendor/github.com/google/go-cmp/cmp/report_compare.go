@@ -57,15 +57,18 @@ func (opts formatOptions) WithDiffMode(d diffMode) formatOptions {
 	opts.DiffMode = d
 	return opts
 }
+
 func (opts formatOptions) WithTypeMode(t typeMode) formatOptions {
 	opts.TypeMode = t
 	return opts
 }
+
 func (opts formatOptions) WithVerbosity(level int) formatOptions {
 	opts.VerbosityLevel = level
 	opts.LimitVerbosity = true
 	return opts
 }
+
 func (opts formatOptions) verbosity() uint {
 	switch {
 	case opts.VerbosityLevel < 0:

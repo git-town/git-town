@@ -201,8 +201,10 @@ type ignore struct{ core }
 
 func (ignore) isFiltered() bool                                                     { return false }
 func (ignore) filter(_ *state, _ reflect.Type, _, _ reflect.Value) applicableOption { return ignore{} }
-func (ignore) apply(s *state, _, _ reflect.Value)                                   { s.report(true, reportByIgnore) }
-func (ignore) String() string                                                       { return "Ignore()" }
+
+func (ignore) apply(s *state, _, _ reflect.Value) { s.report(true, reportByIgnore) }
+
+func (ignore) String() string { return "Ignore()" }
 
 // validator is a sentinel Option type to indicate that some options could not
 // be evaluated due to unexported fields, missing slice elements, or
@@ -218,6 +220,7 @@ func (validator) filter(_ *state, _ reflect.Type, vx, vy reflect.Value) applicab
 	}
 	return nil
 }
+
 func (validator) apply(s *state, vx, vy reflect.Value) {
 	// Implies missing slice element or map entry.
 	if !vx.IsValid() || !vy.IsValid() {
@@ -514,16 +517,19 @@ func Reporter(r interface {
 	// PopStep ascends back up the value tree.
 	// There is always a matching pop call for every push call.
 	PopStep()
-}) Option {
+},
+) Option {
 	return reporter{r}
 }
 
-type reporter struct{ reporterIface }
-type reporterIface interface {
-	PushStep(PathStep)
-	Report(Result)
-	PopStep()
-}
+type (
+	reporter      struct{ reporterIface }
+	reporterIface interface {
+		PushStep(PathStep)
+		Report(Result)
+		PopStep()
+	}
+)
 
 func (reporter) filter(_ *state, _ reflect.Type, _, _ reflect.Value) applicableOption {
 	panic("not implemented")

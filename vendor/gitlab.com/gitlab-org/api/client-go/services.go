@@ -111,7 +111,8 @@ type Service = Integration
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_integrations/#list-all-active-integrations
 func (s *ServicesService) ListServices(pid any, options ...RequestOptionFunc) ([]*Service, *Response, error) {
-	return do[[]*Service](s.client,
+	return do[[]*Service](
+		s.client,
 		withPath("projects/%s/services", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -141,7 +142,8 @@ type CustomIssueTrackerServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-custom-issue-tracker-settings
 func (s *ServicesService) GetCustomIssueTrackerService(pid any, options ...RequestOptionFunc) (*CustomIssueTrackerService, *Response, error) {
-	return do[*CustomIssueTrackerService](s.client,
+	return do[*CustomIssueTrackerService](
+		s.client,
 		withPath("projects/%s/services/custom-issue-tracker", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -163,7 +165,8 @@ type SetCustomIssueTrackerServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-a-custom-issue-tracker
 func (s *ServicesService) SetCustomIssueTrackerService(pid any, opt *SetCustomIssueTrackerServiceOptions, options ...RequestOptionFunc) (*CustomIssueTrackerService, *Response, error) {
-	return do[*CustomIssueTrackerService](s.client,
+	return do[*CustomIssueTrackerService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/custom-issue-tracker", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -176,7 +179,8 @@ func (s *ServicesService) SetCustomIssueTrackerService(pid any, opt *SetCustomIs
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-a-custom-issue-tracker
 func (s *ServicesService) DeleteCustomIssueTrackerService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/custom-issue-tracker", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -213,7 +217,8 @@ type DataDogServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-datadog-settings
 func (s *ServicesService) GetDataDogService(pid any, options ...RequestOptionFunc) (*DataDogService, *Response, error) {
-	return do[*DataDogService](s.client,
+	return do[*DataDogService](
+		s.client,
 		withPath("projects/%s/integrations/datadog", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -241,7 +246,8 @@ type SetDataDogServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-datadog
 func (s *ServicesService) SetDataDogService(pid any, opt *SetDataDogServiceOptions, options ...RequestOptionFunc) (*DataDogService, *Response, error) {
-	return do[*DataDogService](s.client,
+	return do[*DataDogService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/datadog", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -254,7 +260,8 @@ func (s *ServicesService) SetDataDogService(pid any, opt *SetDataDogServiceOptio
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-datadog
 func (s *ServicesService) DeleteDataDogService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/datadog", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -285,7 +292,8 @@ type DiscordServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-discord-notifications-settings
 func (s *ServicesService) GetDiscordService(pid any, options ...RequestOptionFunc) (*DiscordService, *Response, error) {
-	return do[*DiscordService](s.client,
+	return do[*DiscordService](
+		s.client,
 		withPath("projects/%s/services/discord", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -331,7 +339,8 @@ type SetDiscordServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-discord-notifications
 func (s *ServicesService) SetDiscordService(pid any, opt *SetDiscordServiceOptions, options ...RequestOptionFunc) (*DiscordService, *Response, error) {
-	return do[*DiscordService](s.client,
+	return do[*DiscordService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/discord", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -344,7 +353,8 @@ func (s *ServicesService) SetDiscordService(pid any, opt *SetDiscordServiceOptio
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-discord-notifications
 func (s *ServicesService) DeleteDiscordService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/discord", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -375,7 +385,8 @@ type DroneCIServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-drone-settings
 func (s *ServicesService) GetDroneCIService(pid any, options ...RequestOptionFunc) (*DroneCIService, *Response, error) {
-	return do[*DroneCIService](s.client,
+	return do[*DroneCIService](
+		s.client,
 		withPath("projects/%s/services/drone-ci", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -400,7 +411,8 @@ type SetDroneCIServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-drone
 func (s *ServicesService) SetDroneCIService(pid any, opt *SetDroneCIServiceOptions, options ...RequestOptionFunc) (*DroneCIService, *Response, error) {
-	return do[*DroneCIService](s.client,
+	return do[*DroneCIService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/drone-ci", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -413,7 +425,8 @@ func (s *ServicesService) SetDroneCIService(pid any, opt *SetDroneCIServiceOptio
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-drone
 func (s *ServicesService) DeleteDroneCIService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/drone-ci", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -451,7 +464,8 @@ type EmailsOnPushServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-emails-on-push-settings
 func (s *ServicesService) GetEmailsOnPushService(pid any, options ...RequestOptionFunc) (*EmailsOnPushService, *Response, error) {
-	return do[*EmailsOnPushService](s.client,
+	return do[*EmailsOnPushService](
+		s.client,
 		withPath("projects/%s/integrations/emails-on-push", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -476,7 +490,8 @@ type SetEmailsOnPushServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-emails-on-push
 func (s *ServicesService) SetEmailsOnPushService(pid any, opt *SetEmailsOnPushServiceOptions, options ...RequestOptionFunc) (*EmailsOnPushService, *Response, error) {
-	return do[*EmailsOnPushService](s.client,
+	return do[*EmailsOnPushService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/emails-on-push", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -489,7 +504,8 @@ func (s *ServicesService) SetEmailsOnPushService(pid any, opt *SetEmailsOnPushSe
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-emails-on-push
 func (s *ServicesService) DeleteEmailsOnPushService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/emails-on-push", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -519,7 +535,8 @@ type ExternalWikiServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-external-wiki-settings
 func (s *ServicesService) GetExternalWikiService(pid any, options ...RequestOptionFunc) (*ExternalWikiService, *Response, error) {
-	return do[*ExternalWikiService](s.client,
+	return do[*ExternalWikiService](
+		s.client,
 		withPath("projects/%s/services/external-wiki", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -539,7 +556,8 @@ type SetExternalWikiServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-an-external-wiki
 func (s *ServicesService) SetExternalWikiService(pid any, opt *SetExternalWikiServiceOptions, options ...RequestOptionFunc) (*ExternalWikiService, *Response, error) {
-	return do[*ExternalWikiService](s.client,
+	return do[*ExternalWikiService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/external-wiki", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -552,7 +570,8 @@ func (s *ServicesService) SetExternalWikiService(pid any, opt *SetExternalWikiSe
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-an-external-wiki
 func (s *ServicesService) DeleteExternalWikiService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/external-wiki", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -583,7 +602,8 @@ type GithubServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-github-settings
 func (s *ServicesService) GetGithubService(pid any, options ...RequestOptionFunc) (*GithubService, *Response, error) {
-	return do[*GithubService](s.client,
+	return do[*GithubService](
+		s.client,
 		withPath("projects/%s/services/github", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -605,7 +625,8 @@ type SetGithubServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-github
 func (s *ServicesService) SetGithubService(pid any, opt *SetGithubServiceOptions, options ...RequestOptionFunc) (*GithubService, *Response, error) {
-	return do[*GithubService](s.client,
+	return do[*GithubService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/github", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -618,7 +639,8 @@ func (s *ServicesService) SetGithubService(pid any, opt *SetGithubServiceOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-github
 func (s *ServicesService) DeleteGithubService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/github", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -652,7 +674,8 @@ type HarborServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-harbor-settings
 func (s *ServicesService) GetHarborService(pid any, options ...RequestOptionFunc) (*HarborService, *Response, error) {
-	return do[*HarborService](s.client,
+	return do[*HarborService](
+		s.client,
 		withPath("projects/%s/integrations/harbor", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -670,7 +693,8 @@ type SetHarborServiceOptions = SetUpHarborOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-harbor
 func (s *ServicesService) SetHarborService(pid any, opt *SetHarborServiceOptions, options ...RequestOptionFunc) (*HarborService, *Response, error) {
-	return do[*HarborService](s.client,
+	return do[*HarborService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/harbor", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -683,7 +707,8 @@ func (s *ServicesService) SetHarborService(pid any, opt *SetHarborServiceOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-harbor
 func (s *ServicesService) DeleteHarborService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/harbor", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -734,7 +759,8 @@ type SlackApplicationProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-gitlab-for-slack-app-settings
 func (s *ServicesService) GetSlackApplication(pid any, options ...RequestOptionFunc) (*SlackApplication, *Response, error) {
-	return do[*SlackApplication](s.client,
+	return do[*SlackApplication](
+		s.client,
 		withPath("projects/%s/integrations/gitlab-slack-application", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -788,7 +814,8 @@ type SetSlackApplicationOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-gitlab-for-slack-app
 func (s *ServicesService) SetSlackApplication(pid any, opt *SetSlackApplicationOptions, options ...RequestOptionFunc) (*SlackApplication, *Response, error) {
-	return do[*SlackApplication](s.client,
+	return do[*SlackApplication](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/gitlab-slack-application", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -801,7 +828,8 @@ func (s *ServicesService) SetSlackApplication(pid any, opt *SetSlackApplicationO
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-gitlab-for-slack-app
 func (s *ServicesService) DisableSlackApplication(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/gitlab-slack-application", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -834,7 +862,8 @@ type JenkinsCIServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-jenkins-settings
 func (s *ServicesService) GetJenkinsCIService(pid any, options ...RequestOptionFunc) (*JenkinsCIService, *Response, error) {
-	return do[*JenkinsCIService](s.client,
+	return do[*JenkinsCIService](
+		s.client,
 		withPath("projects/%s/services/jenkins", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -861,7 +890,8 @@ type SetJenkinsCIServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-jenkins
 func (s *ServicesService) SetJenkinsCIService(pid any, opt *SetJenkinsCIServiceOptions, options ...RequestOptionFunc) (*JenkinsCIService, *Response, error) {
-	return do[*JenkinsCIService](s.client,
+	return do[*JenkinsCIService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/jenkins", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -874,7 +904,8 @@ func (s *ServicesService) SetJenkinsCIService(pid any, opt *SetJenkinsCIServiceO
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-jenkins
 func (s *ServicesService) DeleteJenkinsCIService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/jenkins", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -949,7 +980,8 @@ func (p *JiraServiceProperties) UnmarshalJSON(b []byte) error {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-jira-settings
 func (s *ServicesService) GetJiraService(pid any, options ...RequestOptionFunc) (*JiraService, *Response, error) {
-	return do[*JiraService](s.client,
+	return do[*JiraService](
+		s.client,
 		withPath("projects/%s/integrations/jira", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -984,7 +1016,8 @@ type SetJiraServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-jira-issues
 func (s *ServicesService) SetJiraService(pid any, opt *SetJiraServiceOptions, options ...RequestOptionFunc) (*JiraService, *Response, error) {
-	return do[*JiraService](s.client,
+	return do[*JiraService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/jira", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -997,7 +1030,8 @@ func (s *ServicesService) SetJiraService(pid any, opt *SetJiraServiceOptions, op
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-jira
 func (s *ServicesService) DeleteJiraService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/jira", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1032,7 +1066,8 @@ type MatrixServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-matrix-notifications-settings
 func (s *ServicesService) GetMatrixService(pid any, options ...RequestOptionFunc) (*MatrixService, *Response, error) {
-	return do[*MatrixService](s.client,
+	return do[*MatrixService](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/integrations/matrix", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1067,7 +1102,8 @@ type SetMatrixServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-matrix-notifications
 func (s *ServicesService) SetMatrixService(pid any, opt *SetMatrixServiceOptions, options ...RequestOptionFunc) (*MatrixService, *Response, error) {
-	return do[*MatrixService](s.client,
+	return do[*MatrixService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/matrix", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1080,7 +1116,8 @@ func (s *ServicesService) SetMatrixService(pid any, opt *SetMatrixServiceOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-matrix-notifications
 func (s *ServicesService) DeleteMatrixService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/matrix", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1124,7 +1161,8 @@ type MattermostServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-mattermost-notifications-settings
 func (s *ServicesService) GetMattermostService(pid any, options ...RequestOptionFunc) (*MattermostService, *Response, error) {
-	return do[*MattermostService](s.client,
+	return do[*MattermostService](
+		s.client,
 		withPath("projects/%s/services/mattermost", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1166,7 +1204,8 @@ type SetMattermostServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-mattermost-notifications
 func (s *ServicesService) SetMattermostService(pid any, opt *SetMattermostServiceOptions, options ...RequestOptionFunc) (*MattermostService, *Response, error) {
-	return do[*MattermostService](s.client,
+	return do[*MattermostService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/mattermost", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1179,7 +1218,8 @@ func (s *ServicesService) SetMattermostService(pid any, opt *SetMattermostServic
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-mattermost-notifications
 func (s *ServicesService) DeleteMattermostService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/mattermost", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1210,7 +1250,8 @@ type MattermostSlashCommandsProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-mattermost-slash-commands-settings
 func (s *ServicesService) GetMattermostSlashCommandsService(pid any, options ...RequestOptionFunc) (*MattermostSlashCommandsService, *Response, error) {
-	return do[*MattermostSlashCommandsService](s.client,
+	return do[*MattermostSlashCommandsService](
+		s.client,
 		withPath("projects/%s/services/mattermost-slash-commands", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1231,7 +1272,8 @@ type SetMattermostSlashCommandsServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-mattermost-slash-commands
 func (s *ServicesService) SetMattermostSlashCommandsService(pid any, opt *SetMattermostSlashCommandsServiceOptions, options ...RequestOptionFunc) (*MattermostSlashCommandsService, *Response, error) {
-	return do[*MattermostSlashCommandsService](s.client,
+	return do[*MattermostSlashCommandsService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/mattermost-slash-commands", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1244,7 +1286,8 @@ func (s *ServicesService) SetMattermostSlashCommandsService(pid any, opt *SetMat
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-mattermost-slash-commands
 func (s *ServicesService) DeleteMattermostSlashCommandsService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/mattermost-slash-commands", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1284,7 +1327,8 @@ type MicrosoftTeamsServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-microsoft-teams-notifications-settings
 func (s *ServicesService) GetMicrosoftTeamsService(pid any, options ...RequestOptionFunc) (*MicrosoftTeamsService, *Response, error) {
-	return do[*MicrosoftTeamsService](s.client,
+	return do[*MicrosoftTeamsService](
+		s.client,
 		withPath("projects/%s/services/microsoft-teams", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1315,7 +1359,8 @@ type SetMicrosoftTeamsServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-microsoft-teams-notifications
 func (s *ServicesService) SetMicrosoftTeamsService(pid any, opt *SetMicrosoftTeamsServiceOptions, options ...RequestOptionFunc) (*MicrosoftTeamsService, *Response, error) {
-	return do[*MicrosoftTeamsService](s.client,
+	return do[*MicrosoftTeamsService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/microsoft-teams", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1328,7 +1373,8 @@ func (s *ServicesService) SetMicrosoftTeamsService(pid any, opt *SetMicrosoftTea
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-microsoft-teams-notifications
 func (s *ServicesService) DeleteMicrosoftTeamsService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/microsoft-teams", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1361,7 +1407,8 @@ type PipelinesEmailProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-pipeline-status-emails-settings
 func (s *ServicesService) GetPipelinesEmailService(pid any, options ...RequestOptionFunc) (*PipelinesEmailService, *Response, error) {
-	return do[*PipelinesEmailService](s.client,
+	return do[*PipelinesEmailService](
+		s.client,
 		withPath("projects/%s/services/pipelines-email", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1386,7 +1433,8 @@ type SetPipelinesEmailServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-pipeline-status-emails
 func (s *ServicesService) SetPipelinesEmailService(pid any, opt *SetPipelinesEmailServiceOptions, options ...RequestOptionFunc) (*PipelinesEmailService, *Response, error) {
-	return do[*PipelinesEmailService](s.client,
+	return do[*PipelinesEmailService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/pipelines-email", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1399,7 +1447,8 @@ func (s *ServicesService) SetPipelinesEmailService(pid any, opt *SetPipelinesEma
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-pipeline-status-emails
 func (s *ServicesService) DeletePipelinesEmailService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/pipelines-email", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1432,7 +1481,8 @@ type RedmineServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-redmine-settings
 func (s *ServicesService) GetRedmineService(pid any, options ...RequestOptionFunc) (*RedmineService, *Response, error) {
-	return do[*RedmineService](s.client,
+	return do[*RedmineService](
+		s.client,
 		withPath("projects/%s/integrations/redmine", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1455,7 +1505,8 @@ type SetRedmineServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-redmine
 func (s *ServicesService) SetRedmineService(pid any, opt *SetRedmineServiceOptions, options ...RequestOptionFunc) (*RedmineService, *Response, error) {
-	return do[*RedmineService](s.client,
+	return do[*RedmineService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/integrations/redmine", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1468,7 +1519,8 @@ func (s *ServicesService) SetRedmineService(pid any, opt *SetRedmineServiceOptio
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-redmine
 func (s *ServicesService) DeleteRedmineService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/integrations/redmine", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1515,7 +1567,8 @@ type SlackServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-slack-notifications-settings
 func (s *ServicesService) GetSlackService(pid any, options ...RequestOptionFunc) (*SlackService, *Response, error) {
-	return do[*SlackService](s.client,
+	return do[*SlackService](
+		s.client,
 		withPath("projects/%s/services/slack", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1562,7 +1615,8 @@ type SetSlackServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-slack-notifications
 func (s *ServicesService) SetSlackService(pid any, opt *SetSlackServiceOptions, options ...RequestOptionFunc) (*SlackService, *Response, error) {
-	return do[*SlackService](s.client,
+	return do[*SlackService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/slack", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1575,7 +1629,8 @@ func (s *ServicesService) SetSlackService(pid any, opt *SetSlackServiceOptions, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-slack-notifications
 func (s *ServicesService) DeleteSlackService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/slack", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1605,7 +1660,8 @@ type SlackSlashCommandsProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-slack-slash-commands-settings
 func (s *ServicesService) GetSlackSlashCommandsService(pid any, options ...RequestOptionFunc) (*SlackSlashCommandsService, *Response, error) {
-	return do[*SlackSlashCommandsService](s.client,
+	return do[*SlackSlashCommandsService](
+		s.client,
 		withPath("projects/%s/services/slack-slash-commands", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1625,7 +1681,8 @@ type SetSlackSlashCommandsServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-slack-slash-commands
 func (s *ServicesService) SetSlackSlashCommandsService(pid any, opt *SetSlackSlashCommandsServiceOptions, options ...RequestOptionFunc) (*SlackSlashCommandsService, *Response, error) {
-	return do[*SlackSlashCommandsService](s.client,
+	return do[*SlackSlashCommandsService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/slack-slash-commands", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1638,7 +1695,8 @@ func (s *ServicesService) SetSlackSlashCommandsService(pid any, opt *SetSlackSla
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-slack-slash-commands
 func (s *ServicesService) DeleteSlackSlashCommandsService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/slack-slash-commands", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1670,7 +1728,8 @@ type TelegramServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-telegram-settings
 func (s *ServicesService) GetTelegramService(pid any, options ...RequestOptionFunc) (*TelegramService, *Response, error) {
-	return do[*TelegramService](s.client,
+	return do[*TelegramService](
+		s.client,
 		withPath("projects/%s/services/telegram", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1702,7 +1761,8 @@ type SetTelegramServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-telegram
 func (s *ServicesService) SetTelegramService(pid any, opt *SetTelegramServiceOptions, options ...RequestOptionFunc) (*TelegramService, *Response, error) {
-	return do[*TelegramService](s.client,
+	return do[*TelegramService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/telegram", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1715,7 +1775,8 @@ func (s *ServicesService) SetTelegramService(pid any, opt *SetTelegramServiceOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-telegram
 func (s *ServicesService) DeleteTelegramService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/telegram", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -1748,7 +1809,8 @@ type YouTrackServiceProperties struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#get-youtrack-settings
 func (s *ServicesService) GetYouTrackService(pid any, options ...RequestOptionFunc) (*YouTrackService, *Response, error) {
-	return do[*YouTrackService](s.client,
+	return do[*YouTrackService](
+		s.client,
 		withPath("projects/%s/services/youtrack", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -1771,7 +1833,8 @@ type SetYouTrackServiceOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-youtrack
 func (s *ServicesService) SetYouTrackService(pid any, opt *SetYouTrackServiceOptions, options ...RequestOptionFunc) (*YouTrackService, *Response, error) {
-	return do[*YouTrackService](s.client,
+	return do[*YouTrackService](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/services/youtrack", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -1784,7 +1847,8 @@ func (s *ServicesService) SetYouTrackService(pid any, opt *SetYouTrackServiceOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#disable-youtrack
 func (s *ServicesService) DeleteYouTrackService(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/services/youtrack", ProjectID{pid}),
 		withRequestOpts(options...),

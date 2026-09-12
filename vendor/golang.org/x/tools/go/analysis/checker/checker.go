@@ -363,7 +363,8 @@ func (act *Action) execOnce() {
 		if got, want := reflect.TypeOf(result), pass.Analyzer.ResultType; got != want {
 			return nil, fmt.Errorf(
 				"internal error: on package %s, analyzer %s returned a result of type %v, but declared ResultType %v",
-				pass.Pkg.Path(), pass.Analyzer, got, want)
+				pass.Pkg.Path(), pass.Analyzer, got, want,
+			)
 		}
 
 		// resolve diagnostic URLs

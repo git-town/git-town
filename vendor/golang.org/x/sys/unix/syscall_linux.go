@@ -1690,7 +1690,7 @@ func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (c
 			return 0, err
 		}
 		n += copy(buf[addr%SizeofPtr:], data)
-		word := *((*uintptr)(unsafe.Pointer(&buf[0])))
+		word := *(*uintptr)(unsafe.Pointer(&buf[0]))
 		err = ptrace(pokeReq, pid, addr-addr%SizeofPtr, word)
 		if err != nil {
 			return 0, err
@@ -1700,7 +1700,7 @@ func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (c
 
 	// Interior.
 	for len(data) > SizeofPtr {
-		word := *((*uintptr)(unsafe.Pointer(&data[0])))
+		word := *(*uintptr)(unsafe.Pointer(&data[0]))
 		err = ptrace(pokeReq, pid, addr+uintptr(n), word)
 		if err != nil {
 			return n, err
@@ -1717,7 +1717,7 @@ func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (c
 			return n, err
 		}
 		copy(buf[0:], data)
-		word := *((*uintptr)(unsafe.Pointer(&buf[0])))
+		word := *(*uintptr)(unsafe.Pointer(&buf[0]))
 		err = ptrace(pokeReq, pid, addr+uintptr(n), word)
 		if err != nil {
 			return n, err
@@ -2293,7 +2293,7 @@ func Faccessat(dirfd int, path string, mode uint32, flags int) (err error) {
 			// Root can read and write any file.
 			return nil
 		}
-		if st.Mode&0111 != 0 {
+		if st.Mode&0o111 != 0 {
 			// Root can execute any file that anybody can execute.
 			return nil
 		}
@@ -2525,7 +2525,7 @@ func Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *
 		// A sigset stores one bit per signal,
 		// offset by 1 (because signal 0 does not exist).
 		// So the number of words needed is ⌈__C_NSIG - 1 / wordBits⌉.
-		sigsetWords := (_C__NSIG - 1 + wordBits - 1) / (wordBits)
+		sigsetWords := (_C__NSIG - 1 + wordBits - 1) / wordBits
 
 		sigsetBytes := uintptr(sigsetWords * (wordBits / 8))
 		kernelMask = &sigset_argpack{

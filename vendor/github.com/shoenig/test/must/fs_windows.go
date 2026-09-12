@@ -8,9 +8,7 @@ import (
 	"os"
 )
 
-var (
-	fsRoot = os.Getenv("HOMEDRIVE")
-)
+var fsRoot = os.Getenv("HOMEDRIVE")
 
 func init() {
 	if fsRoot == "" {

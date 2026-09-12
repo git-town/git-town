@@ -141,7 +141,8 @@ func (s *TerraformStatesService) Get(projectFullPath string, name string, option
 }
 
 func (s *TerraformStatesService) DownloadLatest(pid any, name string, options ...RequestOptionFunc) (io.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/terraform/state/%s", ProjectID{pid}, name),
 		withRequestOpts(options...),
 	)
@@ -152,7 +153,8 @@ func (s *TerraformStatesService) DownloadLatest(pid any, name string, options ..
 }
 
 func (s *TerraformStatesService) Download(pid any, name string, serial uint64, options ...RequestOptionFunc) (io.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/terraform/state/%s/versions/%d", ProjectID{pid}, name, serial),
 		withRequestOpts(options...),
 	)
@@ -166,7 +168,8 @@ func (s *TerraformStatesService) Download(pid any, name string, serial uint64, o
 //
 // GitLab API docs: https://docs.gitlab.com/user/infrastructure/iac/terraform_state/
 func (s *TerraformStatesService) Delete(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/terraform/state/%s", ProjectID{pid}, name),
 		withRequestOpts(options...),
@@ -178,7 +181,8 @@ func (s *TerraformStatesService) Delete(pid any, name string, options ...Request
 //
 // GitLab API docs: https://docs.gitlab.com/user/infrastructure/iac/terraform_state/
 func (s *TerraformStatesService) DeleteVersion(pid any, name string, serial uint64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/terraform/state/%s/versions/%d", ProjectID{pid}, name, serial),
 		withRequestOpts(options...),
@@ -190,7 +194,8 @@ func (s *TerraformStatesService) DeleteVersion(pid any, name string, serial uint
 //
 // GitLab API docs: https://docs.gitlab.com/user/infrastructure/iac/terraform_state/
 func (s *TerraformStatesService) Lock(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/terraform/state/%s/lock", ProjectID{pid}, name),
 		withRequestOpts(options...),
@@ -202,7 +207,8 @@ func (s *TerraformStatesService) Lock(pid any, name string, options ...RequestOp
 //
 // GitLab API docs: https://docs.gitlab.com/user/infrastructure/iac/terraform_state/
 func (s *TerraformStatesService) Unlock(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/terraform/state/%s/lock", ProjectID{pid}, name),
 		withRequestOpts(options...),

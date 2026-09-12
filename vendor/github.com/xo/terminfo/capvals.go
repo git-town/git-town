@@ -1006,6 +1006,7 @@ const (
 	// The BoxChars1 [box_chars_1, box1] string capability is the box characters primary set.
 	BoxChars1
 )
+
 const (
 	// CapCountBool is the count of bool capabilities.
 	CapCountBool = ReturnDoesClrEol + 1

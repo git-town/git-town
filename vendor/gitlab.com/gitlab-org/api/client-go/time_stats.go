@@ -54,7 +54,8 @@ type SetTimeEstimateOptions struct {
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#set-a-time-estimate-for-an-issue
 func (s *timeStatsService) setTimeEstimate(pid any, entity string, issue int64, opt *SetTimeEstimateOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	return do[*TimeStats](s.client,
+	return do[*TimeStats](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/time_estimate", ProjectID{pid}, entity, issue),
 		withAPIOpts(opt),
@@ -66,7 +67,8 @@ func (s *timeStatsService) setTimeEstimate(pid any, entity string, issue int64, 
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#reset-the-time-estimate-for-an-issue
 func (s *timeStatsService) resetTimeEstimate(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	return do[*TimeStats](s.client,
+	return do[*TimeStats](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/reset_time_estimate", ProjectID{pid}, entity, issue),
 		withRequestOpts(options...),
@@ -85,7 +87,8 @@ type AddSpentTimeOptions struct {
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#add-spent-time-for-an-issue
 func (s *timeStatsService) addSpentTime(pid any, entity string, issue int64, opt *AddSpentTimeOptions, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	return do[*TimeStats](s.client,
+	return do[*TimeStats](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/add_spent_time", ProjectID{pid}, entity, issue),
 		withAPIOpts(opt),
@@ -97,7 +100,8 @@ func (s *timeStatsService) addSpentTime(pid any, entity string, issue int64, opt
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#reset-spent-time-for-an-issue
 func (s *timeStatsService) resetSpentTime(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	return do[*TimeStats](s.client,
+	return do[*TimeStats](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/reset_spent_time", ProjectID{pid}, entity, issue),
 		withRequestOpts(options...),
@@ -108,7 +112,8 @@ func (s *timeStatsService) resetSpentTime(pid any, entity string, issue int64, o
 //
 // GitLab docs: https://docs.gitlab.com/api/issues/#get-time-tracking-stats
 func (s *timeStatsService) getTimeSpent(pid any, entity string, issue int64, options ...RequestOptionFunc) (*TimeStats, *Response, error) {
-	return do[*TimeStats](s.client,
+	return do[*TimeStats](
+		s.client,
 		withPath("projects/%s/%s/%d/time_stats", ProjectID{pid}, entity, issue),
 		withRequestOpts(options...),
 	)

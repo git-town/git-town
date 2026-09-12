@@ -31,8 +31,9 @@ func NewReader(reader io.Reader) (CancelReader, error) {
 	// it is necessary to open CONIN$ (NOT windows.STD_INPUT_HANDLE) in
 	// overlapped mode to be able to use it with WaitForMultipleObjects.
 	conin, err := windows.CreateFile(
-		&(utf16.Encode([]rune("CONIN$\x00"))[0]), windows.GENERIC_READ|windows.GENERIC_WRITE,
-		fileShareValidFlags, nil, windows.OPEN_EXISTING, windows.FILE_FLAG_OVERLAPPED, 0)
+		&utf16.Encode([]rune("CONIN$\x00"))[0], windows.GENERIC_READ|windows.GENERIC_WRITE,
+		fileShareValidFlags, nil, windows.OPEN_EXISTING, windows.FILE_FLAG_OVERLAPPED, 0,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("open CONIN$ in overlapping mode: %w", err)
 	}

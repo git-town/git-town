@@ -47,7 +47,8 @@ type ListServiceAccountsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#list-all-group-service-accounts
 func (s *GroupsService) ListServiceAccounts(gid any, opt *ListServiceAccountsOptions, options ...RequestOptionFunc) ([]*GroupServiceAccount, *Response, error) {
-	return do[[]*GroupServiceAccount](s.client,
+	return do[[]*GroupServiceAccount](
+		s.client,
 		withPath("groups/%s/service_accounts", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -71,7 +72,8 @@ type CreateServiceAccountOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#create-a-group-service-account
 func (s *GroupsService) CreateServiceAccount(gid any, opt *CreateServiceAccountOptions, options ...RequestOptionFunc) (*GroupServiceAccount, *Response, error) {
-	return do[*GroupServiceAccount](s.client,
+	return do[*GroupServiceAccount](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/service_accounts", GroupID{gid}),
 		withAPIOpts(opt),
@@ -96,7 +98,8 @@ type UpdateServiceAccountOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#update-a-group-service-account
 func (s *GroupsService) UpdateServiceAccount(gid any, serviceAccount int64, opt *UpdateServiceAccountOptions, options ...RequestOptionFunc) (*GroupServiceAccount, *Response, error) {
-	return do[*GroupServiceAccount](s.client,
+	return do[*GroupServiceAccount](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("groups/%s/service_accounts/%d", GroupID{gid}, serviceAccount),
 		withAPIOpts(opt),
@@ -119,7 +122,8 @@ type DeleteServiceAccountOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#delete-a-group-service-account
 func (s *GroupsService) DeleteServiceAccount(gid any, serviceAccount int64, opt *DeleteServiceAccountOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/service_accounts/%d", GroupID{gid}, serviceAccount),
 		withAPIOpts(opt),
@@ -154,7 +158,8 @@ type ListServiceAccountPersonalAccessTokensOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#list-all-personal-access-tokens-for-a-group-service-account
 func (s *GroupsService) ListServiceAccountPersonalAccessTokens(gid any, serviceAccount int64, opt *ListServiceAccountPersonalAccessTokensOptions, options ...RequestOptionFunc) ([]*PersonalAccessToken, *Response, error) {
-	return do[[]*PersonalAccessToken](s.client,
+	return do[[]*PersonalAccessToken](
+		s.client,
 		withPath("groups/%s/service_accounts/%d/personal_access_tokens", GroupID{gid}, serviceAccount),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -179,7 +184,8 @@ type CreateServiceAccountPersonalAccessTokenOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#create-a-personal-access-token-for-a-group-service-account
 func (s *GroupsService) CreateServiceAccountPersonalAccessToken(gid any, serviceAccount int64, opt *CreateServiceAccountPersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/service_accounts/%d/personal_access_tokens", GroupID{gid}, serviceAccount),
 		withAPIOpts(opt),
@@ -193,7 +199,8 @@ func (s *GroupsService) CreateServiceAccountPersonalAccessToken(gid any, service
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#revoke-a-personal-access-token-for-a-group-service-account
 func (s *GroupsService) RevokeServiceAccountPersonalAccessToken(gid any, serviceAccount, token int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/service_accounts/%d/personal_access_tokens/%d", GroupID{gid}, serviceAccount, token),
 		withRequestOpts(options...),
@@ -216,7 +223,8 @@ type RotateServiceAccountPersonalAccessTokenOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/service_accounts/#rotate-a-personal-access-token-for-a-group-service-account
 func (s *GroupsService) RotateServiceAccountPersonalAccessToken(gid any, serviceAccount, token int64, opt *RotateServiceAccountPersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/service_accounts/%d/personal_access_tokens/%d/rotate", GroupID{gid}, serviceAccount, token),
 		withAPIOpts(opt),

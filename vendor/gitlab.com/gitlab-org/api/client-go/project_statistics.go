@@ -37,7 +37,8 @@ type DayStats struct {
 var _ ProjectStatisticsServiceInterface = (*ProjectStatisticsService)(nil)
 
 func (s *ProjectStatisticsService) Last30DaysStatistics(pid any, options ...RequestOptionFunc) (*ProjectStatistics, *Response, error) {
-	return do[*ProjectStatistics](s.client,
+	return do[*ProjectStatistics](
+		s.client,
 		withPath("projects/%s/statistics", ProjectID{pid}),
 		withRequestOpts(options...),
 	)

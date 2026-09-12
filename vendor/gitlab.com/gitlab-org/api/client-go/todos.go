@@ -138,7 +138,8 @@ type ListTodosOptions struct {
 }
 
 func (s *TodosService) ListTodos(opt *ListTodosOptions, options ...RequestOptionFunc) ([]*Todo, *Response, error) {
-	return do[[]*Todo](s.client,
+	return do[[]*Todo](
+		s.client,
 		withPath("todos"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -146,7 +147,8 @@ func (s *TodosService) ListTodos(opt *ListTodosOptions, options ...RequestOption
 }
 
 func (s *TodosService) MarkTodoAsDone(id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("todos/%d/mark_as_done", id),
 		withRequestOpts(options...),
@@ -155,7 +157,8 @@ func (s *TodosService) MarkTodoAsDone(id int64, options ...RequestOptionFunc) (*
 }
 
 func (s *TodosService) MarkAllTodosAsDone(options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("todos/mark_as_done"),
 		withRequestOpts(options...),

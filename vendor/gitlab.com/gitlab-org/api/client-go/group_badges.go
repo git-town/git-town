@@ -77,7 +77,8 @@ type ListGroupBadgesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#list-all-badges-of-a-group
 func (s *GroupBadgesService) ListGroupBadges(gid any, opt *ListGroupBadgesOptions, options ...RequestOptionFunc) ([]*GroupBadge, *Response, error) {
-	return do[[]*GroupBadge](s.client,
+	return do[[]*GroupBadge](
+		s.client,
 		withPath("groups/%s/badges", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -89,7 +90,8 @@ func (s *GroupBadgesService) ListGroupBadges(gid any, opt *ListGroupBadgesOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#get-a-badge-of-a-group
 func (s *GroupBadgesService) GetGroupBadge(gid any, badge int64, options ...RequestOptionFunc) (*GroupBadge, *Response, error) {
-	return do[*GroupBadge](s.client,
+	return do[*GroupBadge](
+		s.client,
 		withPath("groups/%s/badges/%d", GroupID{gid}, badge),
 		withRequestOpts(options...),
 	)
@@ -110,7 +112,8 @@ type AddGroupBadgeOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#add-a-badge-to-a-group
 func (s *GroupBadgesService) AddGroupBadge(gid any, opt *AddGroupBadgeOptions, options ...RequestOptionFunc) (*GroupBadge, *Response, error) {
-	return do[*GroupBadge](s.client,
+	return do[*GroupBadge](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/badges", GroupID{gid}),
 		withAPIOpts(opt),
@@ -133,7 +136,8 @@ type EditGroupBadgeOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#edit-a-badge-of-a-group
 func (s *GroupBadgesService) EditGroupBadge(gid any, badge int64, opt *EditGroupBadgeOptions, options ...RequestOptionFunc) (*GroupBadge, *Response, error) {
-	return do[*GroupBadge](s.client,
+	return do[*GroupBadge](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/badges/%d", GroupID{gid}, badge),
 		withAPIOpts(opt),
@@ -146,7 +150,8 @@ func (s *GroupBadgesService) EditGroupBadge(gid any, badge int64, opt *EditGroup
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#remove-a-badge-from-a-group
 func (s *GroupBadgesService) DeleteGroupBadge(gid any, badge int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/badges/%d", GroupID{gid}, badge),
 		withRequestOpts(options...),
@@ -170,7 +175,8 @@ type GroupBadgePreviewOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_badges/#preview-a-badge-from-a-group
 func (s *GroupBadgesService) PreviewGroupBadge(gid any, opt *GroupBadgePreviewOptions, options ...RequestOptionFunc) (*GroupBadge, *Response, error) {
-	return do[*GroupBadge](s.client,
+	return do[*GroupBadge](
+		s.client,
 		withPath("groups/%s/badges/render", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

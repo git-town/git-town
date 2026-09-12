@@ -37,7 +37,8 @@ type (
 var _ DeploymentMergeRequestsServiceInterface = (*DeploymentMergeRequestsService)(nil)
 
 func (s *DeploymentMergeRequestsService) ListDeploymentMergeRequests(pid any, deployment int64, opts *ListMergeRequestsOptions, options ...RequestOptionFunc) ([]*MergeRequest, *Response, error) {
-	return do[[]*MergeRequest](s.client,
+	return do[[]*MergeRequest](
+		s.client,
 		withPath("projects/%s/deployments/%d/merge_requests", ProjectID{pid}, deployment),
 		withAPIOpts(opts),
 		withRequestOpts(options...),

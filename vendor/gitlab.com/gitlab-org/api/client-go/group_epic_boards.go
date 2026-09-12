@@ -64,7 +64,8 @@ type ListGroupEpicBoardsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_epic_boards/#list-all-epic-boards-in-a-group
 func (s *GroupEpicBoardsService) ListGroupEpicBoards(gid any, opt *ListGroupEpicBoardsOptions, options ...RequestOptionFunc) ([]*GroupEpicBoard, *Response, error) {
-	return do[[]*GroupEpicBoard](s.client,
+	return do[[]*GroupEpicBoard](
+		s.client,
 		withPath("groups/%s/epic_boards", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -76,7 +77,8 @@ func (s *GroupEpicBoardsService) ListGroupEpicBoards(gid any, opt *ListGroupEpic
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_epic_boards/#single-group-epic-board
 func (s *GroupEpicBoardsService) GetGroupEpicBoard(gid any, board int64, options ...RequestOptionFunc) (*GroupEpicBoard, *Response, error) {
-	return do[*GroupEpicBoard](s.client,
+	return do[*GroupEpicBoard](
+		s.client,
 		withPath("groups/%s/epic_boards/%d", GroupID{gid}, board),
 		withRequestOpts(options...),
 	)

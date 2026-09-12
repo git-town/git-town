@@ -41,7 +41,6 @@ func ValidateFixes(fset *token.FileSet, a *analysis.Analyzer, fixes []analysis.S
 //
 // It updates fix so that fix.End.IsValid().
 func validateFix(fset *token.FileSet, fix *analysis.SuggestedFix) error {
-
 	// Stably sort edits by Pos. This ordering puts insertions
 	// (end = start) before deletions (end > start) at the same
 	// point, but uses a stable sort to preserve the order of
@@ -103,7 +102,8 @@ func validateFix(fset *token.FileSet, fix *analysis.SuggestedFix) error {
 			xend := fset.Position(prev.End)
 			ypos := fset.Position(edit.Pos)
 			yend := fset.Position(edit.End)
-			return fmt.Errorf("overlapping edits to %s (%d:%d-%d:%d and %d:%d-%d:%d)",
+			return fmt.Errorf(
+				"overlapping edits to %s (%d:%d-%d:%d and %d:%d-%d:%d)",
 				xpos.Filename,
 				xpos.Line, xpos.Column,
 				xend.Line, xend.Column,

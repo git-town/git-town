@@ -38,7 +38,7 @@ export class SummarySection {
       }
       const normalizedArgText = argText.replace(/<.+?>/g, "string")
       // Split by | to get the different variations of the flag
-      const variations = normalizedArgText.split("|").map(v => v.trim())
+      const variations = normalizedArgText.split("|").map((v) => v.trim())
       // expand --(no)-foo into --foo and --no-foo
       const expanded = splitNegations(variations)
       result.push(expanded)
@@ -48,7 +48,9 @@ export class SummarySection {
 
   /** provides the name of the Git Town command described by this summary section */
   command(): GitTownCommand {
-    const match = this.text.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
+    const match = this.text.match(
+      /^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/,
+    )
     const commandName = match?.[1]?.trim() || ""
     return new GitTownCommand(commandName)
   }

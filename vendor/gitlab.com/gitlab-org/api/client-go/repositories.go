@@ -118,7 +118,8 @@ type ListTreeOptions struct {
 }
 
 func (s *RepositoriesService) ListTree(pid any, opt *ListTreeOptions, options ...RequestOptionFunc) ([]*TreeNode, *Response, error) {
-	return do[[]*TreeNode](s.client,
+	return do[[]*TreeNode](
+		s.client,
 		withPath("projects/%s/repository/tree", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -126,7 +127,8 @@ func (s *RepositoriesService) ListTree(pid any, opt *ListTreeOptions, options ..
 }
 
 func (s *RepositoriesService) Blob(pid any, sha string, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/repository/blobs/%s", ProjectID{pid}, sha),
 		withRequestOpts(options...),
 	)
@@ -137,7 +139,8 @@ func (s *RepositoriesService) Blob(pid any, sha string, options ...RequestOption
 }
 
 func (s *RepositoriesService) RawBlobContent(pid any, sha string, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/repository/blobs/%s/raw", ProjectID{pid}, sha),
 		withRequestOpts(options...),
 	)
@@ -163,7 +166,8 @@ func (s *RepositoriesService) Archive(pid any, opt *ArchiveOptions, options ...R
 		suffix = "." + *opt.Format
 	}
 
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/repository/archive%s", ProjectID{pid}, NoEscape{suffix}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -223,7 +227,8 @@ type CompareOptions struct {
 }
 
 func (s *RepositoriesService) Compare(pid any, opt *CompareOptions, options ...RequestOptionFunc) (*Compare, *Response, error) {
-	return do[*Compare](s.client,
+	return do[*Compare](
+		s.client,
 		withPath("projects/%s/repository/compare", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -255,7 +260,8 @@ type ListContributorsOptions struct {
 }
 
 func (s *RepositoriesService) Contributors(pid any, opt *ListContributorsOptions, options ...RequestOptionFunc) ([]*Contributor, *Response, error) {
-	return do[[]*Contributor](s.client,
+	return do[[]*Contributor](
+		s.client,
 		withPath("projects/%s/repository/contributors", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -271,7 +277,8 @@ type MergeBaseOptions struct {
 }
 
 func (s *RepositoriesService) MergeBase(pid any, opt *MergeBaseOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
-	return do[*Commit](s.client,
+	return do[*Commit](
+		s.client,
 		withPath("projects/%s/repository/merge_base", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -295,7 +302,8 @@ type AddChangelogOptions struct {
 }
 
 func (s *RepositoriesService) AddChangelog(pid any, opt *AddChangelogOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/changelog", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -331,7 +339,8 @@ type GenerateChangelogDataOptions struct {
 }
 
 func (s *RepositoriesService) GenerateChangelogData(pid any, opt GenerateChangelogDataOptions, options ...RequestOptionFunc) (*ChangelogData, *Response, error) {
-	return do[*ChangelogData](s.client,
+	return do[*ChangelogData](
+		s.client,
 		withPath("projects/%s/repository/changelog", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

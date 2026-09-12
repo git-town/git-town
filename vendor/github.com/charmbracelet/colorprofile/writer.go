@@ -100,7 +100,8 @@ func handleSgr(w *Writer, p *ansi.Parser, buf *bytes.Buffer) {
 				continue
 			}
 			style = style.ForegroundColor(
-				w.Profile.Convert(ansi.BasicColor(param - 30))) //nolint:gosec
+				w.Profile.Convert(ansi.BasicColor(param - 30)),
+			) //nolint:gosec
 		case 38: // 16 or 24-bit foreground color
 			var c color.Color
 			if n := ansi.ReadStyleColor(params[i:], &c); n > 0 {
@@ -120,7 +121,8 @@ func handleSgr(w *Writer, p *ansi.Parser, buf *bytes.Buffer) {
 				continue
 			}
 			style = style.BackgroundColor(
-				w.Profile.Convert(ansi.BasicColor(param - 40))) //nolint:gosec
+				w.Profile.Convert(ansi.BasicColor(param - 40)),
+			) //nolint:gosec
 		case 48: // 16 or 24-bit background color
 			var c color.Color
 			if n := ansi.ReadStyleColor(params[i:], &c); n > 0 {
@@ -154,13 +156,15 @@ func handleSgr(w *Writer, p *ansi.Parser, buf *bytes.Buffer) {
 				continue
 			}
 			style = style.ForegroundColor(
-				w.Profile.Convert(ansi.BasicColor(param - 90 + 8))) //nolint:gosec
+				w.Profile.Convert(ansi.BasicColor(param - 90 + 8)),
+			) //nolint:gosec
 		case 100, 101, 102, 103, 104, 105, 106, 107: // 8-bit bright background color
 			if w.Profile < ANSI {
 				continue
 			}
 			style = style.BackgroundColor(
-				w.Profile.Convert(ansi.BasicColor(param - 100 + 8))) //nolint:gosec
+				w.Profile.Convert(ansi.BasicColor(param - 100 + 8)),
+			) //nolint:gosec
 		default:
 			// If this is not a color attribute, just append it to the style.
 			style = append(style, strconv.Itoa(param))

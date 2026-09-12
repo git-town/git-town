@@ -34,8 +34,10 @@ const (
 	KeyValuePredicate = trbFunc // func(T, R) bool
 )
 
-var boolType = reflect.TypeOf(true)
-var intType = reflect.TypeOf(0)
+var (
+	boolType = reflect.TypeOf(true)
+	intType  = reflect.TypeOf(0)
+)
 
 // IsType reports whether the reflect.Type is of the specified function type.
 func IsType(t reflect.Type, ft funcType) bool {

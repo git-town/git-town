@@ -42,8 +42,7 @@ func (v textValue) String() string {
 	return ""
 }
 
-//end of copy
-
+// end of copy
 func (v textValue) Type() string {
 	return reflect.ValueOf(v.p).Type().Name()
 }

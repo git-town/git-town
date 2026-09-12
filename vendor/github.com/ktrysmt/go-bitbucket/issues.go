@@ -216,7 +216,6 @@ func (p *Issues) UpdateComment(ico *IssueCommentsOptions) (interface{}, error) {
 	}
 
 	return p.c.execute("PUT", urlStr, data)
-
 }
 
 func (p *Issues) DeleteComment(ico *IssueCommentsOptions) (interface{}, error) {

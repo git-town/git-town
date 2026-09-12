@@ -69,7 +69,8 @@ type ListGroupWikisOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#list-wiki-pages
 func (s *GroupWikisService) ListGroupWikis(gid any, opt *ListGroupWikisOptions, options ...RequestOptionFunc) ([]*GroupWiki, *Response, error) {
-	return do[[]*GroupWiki](s.client,
+	return do[[]*GroupWiki](
+		s.client,
 		withPath("groups/%s/wikis", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -90,7 +91,8 @@ type GetGroupWikiPageOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#get-a-wiki-page
 func (s *GroupWikisService) GetGroupWikiPage(gid any, slug string, opt *GetGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
-	return do[*GroupWiki](s.client,
+	return do[*GroupWiki](
+		s.client,
 		withPath("groups/%s/wikis/%s", GroupID{gid}, slug),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -113,7 +115,8 @@ type CreateGroupWikiPageOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#create-a-new-wiki-page
 func (s *GroupWikisService) CreateGroupWikiPage(gid any, opt *CreateGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
-	return do[*GroupWiki](s.client,
+	return do[*GroupWiki](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/wikis", GroupID{gid}),
 		withAPIOpts(opt),
@@ -137,7 +140,8 @@ type EditGroupWikiPageOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#edit-an-existing-wiki-page
 func (s *GroupWikisService) EditGroupWikiPage(gid any, slug string, opt *EditGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
-	return do[*GroupWiki](s.client,
+	return do[*GroupWiki](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/wikis/%s", GroupID{gid}, slug),
 		withAPIOpts(opt),
@@ -150,7 +154,8 @@ func (s *GroupWikisService) EditGroupWikiPage(gid any, slug string, opt *EditGro
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#delete-a-wiki-page
 func (s *GroupWikisService) DeleteGroupWikiPage(gid any, slug string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/wikis/%s", GroupID{gid}, slug),
 		withRequestOpts(options...),

@@ -66,7 +66,8 @@ type ListLicenseTemplatesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/licenses/#list-license-templates
 func (s *LicenseTemplatesService) ListLicenseTemplates(opt *ListLicenseTemplatesOptions, options ...RequestOptionFunc) ([]*LicenseTemplate, *Response, error) {
-	return do[[]*LicenseTemplate](s.client,
+	return do[[]*LicenseTemplate](
+		s.client,
 		withPath("templates/licenses"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -89,7 +90,8 @@ type GetLicenseTemplateOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/templates/licenses/#single-license-template
 func (s *LicenseTemplatesService) GetLicenseTemplate(template string, opt *GetLicenseTemplateOptions, options ...RequestOptionFunc) (*LicenseTemplate, *Response, error) {
-	return do[*LicenseTemplate](s.client,
+	return do[*LicenseTemplate](
+		s.client,
 		withPath("templates/licenses/%s", NoEscape{template}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

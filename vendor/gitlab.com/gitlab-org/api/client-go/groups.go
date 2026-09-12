@@ -266,7 +266,8 @@ type ListGroupsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-groups
 func (s *GroupsService) ListGroups(opt *ListGroupsOptions, options ...RequestOptionFunc) ([]*Group, *Response, error) {
-	return do[[]*Group](s.client,
+	return do[[]*Group](
+		s.client,
 		withPath("groups"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -284,7 +285,8 @@ type ListSubGroupsOptions ListGroupsOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-subgroups
 func (s *GroupsService) ListSubGroups(gid any, opt *ListSubGroupsOptions, options ...RequestOptionFunc) ([]*Group, *Response, error) {
-	return do[[]*Group](s.client,
+	return do[[]*Group](
+		s.client,
 		withPath("groups/%s/subgroups", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -303,7 +305,8 @@ type ListDescendantGroupsOptions ListGroupsOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-descendant-groups
 func (s *GroupsService) ListDescendantGroups(gid any, opt *ListDescendantGroupsOptions, options ...RequestOptionFunc) ([]*Group, *Response, error) {
-	return do[[]*Group](s.client,
+	return do[[]*Group](
+		s.client,
 		withPath("groups/%s/descendant_groups", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -340,7 +343,8 @@ type ListGroupProjectsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-projects
 func (s *GroupsService) ListGroupProjects(gid any, opt *ListGroupProjectsOptions, options ...RequestOptionFunc) ([]*Project, *Response, error) {
-	return do[[]*Project](s.client,
+	return do[[]*Project](
+		s.client,
 		withPath("groups/%s/projects", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -362,7 +366,8 @@ type GetGroupOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/groups/#get-a-single-group
 func (s *GroupsService) GetGroup(gid any, opt *GetGroupOptions, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withPath("groups/%s", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -374,7 +379,8 @@ func (s *GroupsService) GetGroup(gid any, opt *GetGroupOptions, options ...Reque
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#download-a-group-avatar
 func (s *GroupsService) DownloadAvatar(gid any, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("groups/%s/avatar", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -453,7 +459,7 @@ func (d *DefaultBranchProtectionDefaultsOptions) EncodeValues(key string, v *url
 	if d.AllowedToMerge != nil {
 		for _, atm := range *d.AllowedToMerge {
 			if atm != nil {
-				v.Add(key+"[allowed_to_merge][][access_level]", strconv.FormatInt((int64)(*atm.AccessLevel), 10))
+				v.Add(key+"[allowed_to_merge][][access_level]", strconv.FormatInt(int64(*atm.AccessLevel), 10))
 			}
 		}
 	}
@@ -463,7 +469,7 @@ func (d *DefaultBranchProtectionDefaultsOptions) EncodeValues(key string, v *url
 	if d.AllowedToPush != nil {
 		for _, atp := range *d.AllowedToPush {
 			if atp != nil {
-				v.Add(key+"[allowed_to_push][][access_level]", strconv.FormatInt((int64)(*atp.AccessLevel), 10))
+				v.Add(key+"[allowed_to_push][][access_level]", strconv.FormatInt(int64(*atp.AccessLevel), 10))
 			}
 		}
 	}
@@ -503,7 +509,8 @@ func (s *GroupsService) CreateGroup(opt *CreateGroupOptions, options ...RequestO
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#transfer-a-project-to-a-group
 func (s *GroupsService) TransferGroup(gid any, pid any, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/projects/%s", GroupID{gid}, ProjectID{pid}),
 		withRequestOpts(options...),
@@ -524,7 +531,8 @@ type TransferSubGroupOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#transfer-a-group
 func (s *GroupsService) TransferSubGroup(gid any, opt *TransferSubGroupOptions, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/transfer", GroupID{gid}),
 		withAPIOpts(opt),
@@ -625,7 +633,8 @@ func (s *GroupsService) UpdateGroup(gid any, opt *UpdateGroupOptions, options ..
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#upload-a-group-avatar
 func (s *GroupsService) UploadAvatar(gid any, avatar io.Reader, filename string, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s", GroupID{gid}),
 		withUpload(avatar, filename, UploadAvatar),
@@ -645,7 +654,8 @@ type DeleteGroupOptions struct {
 //
 // GitLab API docs: https://docs.gitlab.com/api/groups/#delete-a-group
 func (s *GroupsService) DeleteGroup(gid any, opt *DeleteGroupOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s", GroupID{gid}),
 		withAPIOpts(opt),
@@ -659,7 +669,8 @@ func (s *GroupsService) DeleteGroup(gid any, opt *DeleteGroupOptions, options ..
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#restore-a-group-marked-for-deletion
 func (s *GroupsService) RestoreGroup(gid any, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/restore", GroupID{gid}),
 		withRequestOpts(options...),
@@ -675,7 +686,8 @@ func (s *GroupsService) SearchGroup(query string, options ...RequestOptionFunc) 
 	}
 	q.Search = query
 
-	return do[[]*Group](s.client,
+	return do[[]*Group](
+		s.client,
 		withPath("groups"),
 		withAPIOpts(&q),
 		withRequestOpts(options...),
@@ -702,7 +714,8 @@ type ListProvisionedUsersOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-provisioned-users
 func (s *GroupsService) ListProvisionedUsers(gid any, opt *ListProvisionedUsersOptions, options ...RequestOptionFunc) ([]*User, *Response, error) {
-	return do[[]*User](s.client,
+	return do[[]*User](
+		s.client,
 		withPath("groups/%s/provisioned_users", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -715,7 +728,8 @@ func (s *GroupsService) ListProvisionedUsers(gid any, opt *ListProvisionedUsersO
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ldap_links/#list-ldap-group-links
 func (s *GroupsService) ListGroupLDAPLinks(gid any, options ...RequestOptionFunc) ([]*LDAPGroupLink, *Response, error) {
-	return do[[]*LDAPGroupLink](s.client,
+	return do[[]*LDAPGroupLink](
+		s.client,
 		withPath("groups/%s/ldap_group_links", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -739,7 +753,8 @@ type AddGroupLDAPLinkOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ldap_links/#add-an-ldap-group-link-with-cn-or-filter
 func (s *GroupsService) AddGroupLDAPLink(gid any, opt *AddGroupLDAPLinkOptions, options ...RequestOptionFunc) (*LDAPGroupLink, *Response, error) {
-	return do[*LDAPGroupLink](s.client,
+	return do[*LDAPGroupLink](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/ldap_group_links", GroupID{gid}),
 		withAPIOpts(opt),
@@ -754,7 +769,8 @@ func (s *GroupsService) AddGroupLDAPLink(gid any, opt *AddGroupLDAPLinkOptions, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ldap_links/#delete-an-ldap-group-link-deprecated
 func (s *GroupsService) DeleteGroupLDAPLink(gid any, cn string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/ldap_group_links/%s", GroupID{gid}, cn),
 		withRequestOpts(options...),
@@ -778,7 +794,8 @@ type DeleteGroupLDAPLinkWithCNOrFilterOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ldap_links/#delete-an-ldap-group-link-with-cn-or-filter
 func (s *GroupsService) DeleteGroupLDAPLinkWithCNOrFilter(gid any, opts *DeleteGroupLDAPLinkWithCNOrFilterOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/ldap_group_links", GroupID{gid}),
 		withAPIOpts(opts),
@@ -793,7 +810,8 @@ func (s *GroupsService) DeleteGroupLDAPLinkWithCNOrFilter(gid any, opts *DeleteG
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ldap_links/#delete-an-ldap-group-link-deprecated
 func (s *GroupsService) DeleteGroupLDAPLinkForProvider(gid any, provider, cn string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/ldap_group_links/%s/%s", GroupID{gid}, provider, cn),
 		withRequestOpts(options...),
@@ -807,7 +825,8 @@ func (s *GroupsService) DeleteGroupLDAPLinkForProvider(gid any, provider, cn str
 // GitLab API docs:
 // https://docs.gitlab.com/api/saml/#list-saml-group-links
 func (s *GroupsService) ListGroupSAMLLinks(gid any, options ...RequestOptionFunc) ([]*SAMLGroupLink, *Response, error) {
-	return do[[]*SAMLGroupLink](s.client,
+	return do[[]*SAMLGroupLink](
+		s.client,
 		withPath("groups/%s/saml_group_links", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -837,7 +856,8 @@ type ListGroupSharedProjectsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#list-shared-projects
 func (s *GroupsService) ListGroupSharedProjects(gid any, opt *ListGroupSharedProjectsOptions, options ...RequestOptionFunc) ([]*Project, *Response, error) {
-	return do[[]*Project](s.client,
+	return do[[]*Project](
+		s.client,
 		withPath("groups/%s/projects/shared", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -850,7 +870,8 @@ func (s *GroupsService) ListGroupSharedProjects(gid any, opt *ListGroupSharedPro
 // GitLab API docs:
 // https://docs.gitlab.com/api/saml/#get-a-saml-group-link
 func (s *GroupsService) GetGroupSAMLLink(gid any, samlGroupName string, options ...RequestOptionFunc) (*SAMLGroupLink, *Response, error) {
-	return do[*SAMLGroupLink](s.client,
+	return do[*SAMLGroupLink](
+		s.client,
 		withPath("groups/%s/saml_group_links/%s", GroupID{gid}, samlGroupName),
 		withRequestOpts(options...),
 	)
@@ -873,7 +894,8 @@ type AddGroupSAMLLinkOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/saml/#add-a-saml-group-link
 func (s *GroupsService) AddGroupSAMLLink(gid any, opt *AddGroupSAMLLinkOptions, options ...RequestOptionFunc) (*SAMLGroupLink, *Response, error) {
-	return do[*SAMLGroupLink](s.client,
+	return do[*SAMLGroupLink](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/saml_group_links", GroupID{gid}),
 		withAPIOpts(opt),
@@ -887,7 +909,8 @@ func (s *GroupsService) AddGroupSAMLLink(gid any, opt *AddGroupSAMLLinkOptions, 
 // GitLab API docs:
 // https://docs.gitlab.com/api/saml/#delete-a-saml-group-link
 func (s *GroupsService) DeleteGroupSAMLLink(gid any, samlGroupName string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/saml_group_links/%s", GroupID{gid}, samlGroupName),
 		withRequestOpts(options...),
@@ -911,7 +934,8 @@ type ShareGroupWithGroupOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#create-a-link-to-share-a-group-with-another-group
 func (s *GroupsService) ShareGroupWithGroup(gid any, opt *ShareGroupWithGroupOptions, options ...RequestOptionFunc) (*Group, *Response, error) {
-	return do[*Group](s.client,
+	return do[*Group](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/share", GroupID{gid}),
 		withAPIOpts(opt),
@@ -924,7 +948,8 @@ func (s *GroupsService) ShareGroupWithGroup(gid any, opt *ShareGroupWithGroupOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/groups/#delete-the-link-that-shares-a-group-with-another-group
 func (s *GroupsService) UnshareGroupFromGroup(gid any, groupID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/share/%d", GroupID{gid}, groupID),
 		withRequestOpts(options...),
@@ -959,7 +984,8 @@ type GroupPushRules struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_push_rules/#get-the-push-rules-of-a-group
 func (s *GroupsService) GetGroupPushRules(gid any, options ...RequestOptionFunc) (*GroupPushRules, *Response, error) {
-	return do[*GroupPushRules](s.client,
+	return do[*GroupPushRules](
+		s.client,
 		withPath("groups/%s/push_rule", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -991,7 +1017,8 @@ type AddGroupPushRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_push_rules/#add-push-rules-to-a-group
 func (s *GroupsService) AddGroupPushRule(gid any, opt *AddGroupPushRuleOptions, options ...RequestOptionFunc) (*GroupPushRules, *Response, error) {
-	return do[*GroupPushRules](s.client,
+	return do[*GroupPushRules](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/push_rule", GroupID{gid}),
 		withAPIOpts(opt),
@@ -1025,7 +1052,8 @@ type EditGroupPushRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_push_rules/#edit-the-push-rules-of-a-group
 func (s *GroupsService) EditGroupPushRule(gid any, opt *EditGroupPushRuleOptions, options ...RequestOptionFunc) (*GroupPushRules, *Response, error) {
-	return do[*GroupPushRules](s.client,
+	return do[*GroupPushRules](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/push_rule", GroupID{gid}),
 		withAPIOpts(opt),
@@ -1038,7 +1066,8 @@ func (s *GroupsService) EditGroupPushRule(gid any, opt *EditGroupPushRuleOptions
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_push_rules/#delete-the-push-rules-of-a-group
 func (s *GroupsService) DeleteGroupPushRule(gid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/push_rule", GroupID{gid}),
 		withRequestOpts(options...),

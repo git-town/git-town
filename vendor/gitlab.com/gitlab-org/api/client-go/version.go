@@ -49,7 +49,8 @@ func (s Version) String() string {
 //
 // GitLab API docs: https://docs.gitlab.com/api/version/
 func (s *VersionService) GetVersion(options ...RequestOptionFunc) (*Version, *Response, error) {
-	return do[*Version](s.client,
+	return do[*Version](
+		s.client,
 		withPath("version"),
 		withRequestOpts(options...),
 	)

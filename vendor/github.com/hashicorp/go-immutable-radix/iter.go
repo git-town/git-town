@@ -39,7 +39,6 @@ func (i *Iterator) SeekPrefixWatch(prefix []byte) (watch <-chan struct{}) {
 		// Consume the search prefix
 		if bytes.HasPrefix(search, n.prefix) {
 			search = search[len(n.prefix):]
-
 		} else if bytes.HasPrefix(n.prefix, search) {
 			i.node = n
 			return

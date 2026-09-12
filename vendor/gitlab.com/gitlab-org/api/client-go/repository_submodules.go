@@ -75,7 +75,8 @@ type UpdateSubmoduleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_submodules/#update-existing-submodule-reference-in-repository
 func (s *RepositorySubmodulesService) UpdateSubmodule(pid any, submodule string, opt *UpdateSubmoduleOptions, options ...RequestOptionFunc) (*SubmoduleCommit, *Response, error) {
-	return do[*SubmoduleCommit](s.client,
+	return do[*SubmoduleCommit](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/repository/submodules/%s", ProjectID{pid}, submodule),
 		withAPIOpts(opt),

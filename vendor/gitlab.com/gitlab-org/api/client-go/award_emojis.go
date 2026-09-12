@@ -226,7 +226,8 @@ func (s *AwardEmojiService) ListSnippetAwardEmoji(pid any, snippetID int64, opt 
 }
 
 func (s *AwardEmojiService) listAwardEmoji(pid any, resource string, resourceID int64, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
-	return do[[]*AwardEmoji](s.client,
+	return do[[]*AwardEmoji](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/%s/%d/award_emoji", ProjectID{pid}, resource, resourceID),
 		withAPIOpts(opt),
@@ -247,7 +248,8 @@ func (s *AwardEmojiService) GetSnippetAwardEmoji(pid any, snippetID, awardID int
 }
 
 func (s *AwardEmojiService) getAwardEmoji(pid any, resource string, resourceID, awardID int64, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
-	return do[*AwardEmoji](s.client,
+	return do[*AwardEmoji](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/%s/%d/award_emoji/%d", ProjectID{pid}, resource, resourceID, awardID),
 		withRequestOpts(options...),
@@ -276,7 +278,8 @@ func (s *AwardEmojiService) CreateSnippetAwardEmoji(pid any, snippetID int64, op
 }
 
 func (s *AwardEmojiService) createAwardEmoji(pid any, resource string, resourceID int64, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
-	return do[*AwardEmoji](s.client,
+	return do[*AwardEmoji](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/award_emoji", ProjectID{pid}, resource, resourceID),
 		withAPIOpts(opt),
@@ -301,7 +304,8 @@ func (s *AwardEmojiService) DeleteSnippetAwardEmoji(pid any, snippetID, awardID 
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction
 func (s *AwardEmojiService) deleteAwardEmoji(pid any, resource string, resourceID, awardID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/%s/%d/award_emoji/%d", ProjectID{pid}, resource, resourceID, awardID),
 		withRequestOpts(options...),
@@ -322,7 +326,8 @@ func (s *AwardEmojiService) ListSnippetAwardEmojiOnNote(pid any, snippetIID, not
 }
 
 func (s *AwardEmojiService) listAwardEmojiOnNote(pid any, resources string, resourceID, noteID int64, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
-	return do[[]*AwardEmoji](s.client,
+	return do[[]*AwardEmoji](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/%s/%d/notes/%d/award_emoji", ProjectID{pid}, resources, resourceID, noteID),
 		withAPIOpts(opt),
@@ -344,7 +349,8 @@ func (s *AwardEmojiService) GetSnippetAwardEmojiOnNote(pid any, snippetIID, note
 }
 
 func (s *AwardEmojiService) getSingleNoteAwardEmoji(pid any, resource string, resourceID, noteID, awardID int64, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
-	return do[*AwardEmoji](s.client,
+	return do[*AwardEmoji](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/%s/%d/notes/%d/award_emoji/%d", ProjectID{pid}, resource, resourceID, noteID, awardID),
 		withRequestOpts(options...),
@@ -368,7 +374,8 @@ func (s *AwardEmojiService) CreateSnippetAwardEmojiOnNote(pid any, snippetIID, n
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction-to-a-comment
 func (s *AwardEmojiService) createAwardEmojiOnNote(pid any, resource string, resourceID, noteID int64, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
-	return do[*AwardEmoji](s.client,
+	return do[*AwardEmoji](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/%s/%d/notes/%d/award_emoji", ProjectID{pid}, resource, resourceID, noteID),
 		withAPIOpts(opt),
@@ -390,7 +397,8 @@ func (s *AwardEmojiService) DeleteSnippetAwardEmojiOnNote(pid any, snippetIID, n
 }
 
 func (s *AwardEmojiService) deleteAwardEmojiOnNote(pid any, resource string, resourceID, noteID, awardID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/%s/%d/notes/%d/award_emoji/%d", ProjectID{pid}, resource, resourceID, noteID, awardID),
 		withRequestOpts(options...),

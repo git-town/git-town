@@ -118,7 +118,8 @@ type ListWikisOptions struct {
 }
 
 func (s *WikisService) ListWikis(pid any, opt *ListWikisOptions, options ...RequestOptionFunc) ([]*Wiki, *Response, error) {
-	return do[[]*Wiki](s.client,
+	return do[[]*Wiki](
+		s.client,
 		withPath("projects/%s/wikis", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -135,7 +136,8 @@ type GetWikiPageOptions struct {
 }
 
 func (s *WikisService) GetWikiPage(pid any, slug string, opt *GetWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
-	return do[*Wiki](s.client,
+	return do[*Wiki](
+		s.client,
 		withPath("projects/%s/wikis/%s", ProjectID{pid}, slug),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -153,7 +155,8 @@ type CreateWikiPageOptions struct {
 }
 
 func (s *WikisService) CreateWikiPage(pid any, opt *CreateWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
-	return do[*Wiki](s.client,
+	return do[*Wiki](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/wikis", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -172,7 +175,8 @@ type EditWikiPageOptions struct {
 }
 
 func (s *WikisService) EditWikiPage(pid any, slug string, opt *EditWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
-	return do[*Wiki](s.client,
+	return do[*Wiki](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/wikis/%s", ProjectID{pid}, slug),
 		withAPIOpts(opt),
@@ -181,7 +185,8 @@ func (s *WikisService) EditWikiPage(pid any, slug string, opt *EditWikiPageOptio
 }
 
 func (s *WikisService) DeleteWikiPage(pid any, slug string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/wikis/%s", ProjectID{pid}, slug),
 		withRequestOpts(options...),
@@ -198,7 +203,8 @@ type UploadWikiAttachmentOptions struct {
 }
 
 func (s *WikisService) UploadWikiAttachment(pid any, content io.Reader, filename string, opt *UploadWikiAttachmentOptions, options ...RequestOptionFunc) (*WikiAttachment, *Response, error) {
-	return do[*WikiAttachment](s.client,
+	return do[*WikiAttachment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/wikis/attachments", ProjectID{pid}),
 		withUpload(content, filename, UploadFile),

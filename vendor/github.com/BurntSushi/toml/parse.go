@@ -234,7 +234,8 @@ func (p *parser) keyString(it item) string {
 var datetimeRepl = strings.NewReplacer(
 	"z", "Z",
 	"t", "T",
-	" ", "T")
+	" ", "T",
+)
 
 // value translates an expected value from the lexer into a Go value wrapped
 // as an empty interface.
@@ -398,12 +399,10 @@ func missingLeadingZero(d, l string) bool {
 func (p *parser) valueArray(it item) (any, tomlType) {
 	p.setType(p.currentKey, tomlArray, it.pos)
 
-	var (
-		// Initialize to a non-nil slice to make it consistent with how S = []
-		// decodes into a non-nil slice inside something like struct { S
-		// []string }. See #338
-		array = make([]any, 0, 2)
-	)
+	// Initialize to a non-nil slice to make it consistent with how S = []
+	// decodes into a non-nil slice inside something like struct { S
+	// []string }. See #338
+	array := make([]any, 0, 2)
 	for it = p.next(); it.typ != itemArrayEnd; it = p.next() {
 		if it.typ == itemCommentStart {
 			p.expect(itemText)

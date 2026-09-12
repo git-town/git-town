@@ -69,7 +69,8 @@ type MergeRequestApprovalSetting struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#get-group-mr-approval-settings
 func (s *MergeRequestApprovalSettingsService) GetGroupMergeRequestApprovalSettings(gid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
-	return do[*MergeRequestApprovalSettings](s.client,
+	return do[*MergeRequestApprovalSettings](
+		s.client,
 		withPath("groups/%s/merge_request_approval_setting", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -110,7 +111,8 @@ type UpdateGroupMergeRequestApprovalSettingsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#update-group-mr-approval-settings
 func (s *MergeRequestApprovalSettingsService) UpdateGroupMergeRequestApprovalSettings(gid any, opt *UpdateGroupMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
-	return do[*MergeRequestApprovalSettings](s.client,
+	return do[*MergeRequestApprovalSettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/merge_request_approval_setting", GroupID{gid}),
 		withAPIOpts(opt),
@@ -124,7 +126,8 @@ func (s *MergeRequestApprovalSettingsService) UpdateGroupMergeRequestApprovalSet
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#get-project-mr-approval-settings
 func (s *MergeRequestApprovalSettingsService) GetProjectMergeRequestApprovalSettings(pid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
-	return do[*MergeRequestApprovalSettings](s.client,
+	return do[*MergeRequestApprovalSettings](
+		s.client,
 		withPath("projects/%s/merge_request_approval_setting", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -136,7 +139,8 @@ func (s *MergeRequestApprovalSettingsService) GetProjectMergeRequestApprovalSett
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#update-project-mr-approval-settings
 func (s *MergeRequestApprovalSettingsService) UpdateProjectMergeRequestApprovalSettings(pid any, opt *UpdateProjectMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
-	return do[*MergeRequestApprovalSettings](s.client,
+	return do[*MergeRequestApprovalSettings](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/merge_request_approval_setting", ProjectID{pid}),
 		withAPIOpts(opt),

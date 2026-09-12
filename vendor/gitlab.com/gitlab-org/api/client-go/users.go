@@ -475,7 +475,8 @@ type ListUsersOptions struct {
 }
 
 func (s *UsersService) ListUsers(opt *ListUsersOptions, options ...RequestOptionFunc) ([]*User, *Response, error) {
-	return do[[]*User](s.client,
+	return do[[]*User](
+		s.client,
 		withPath("users"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -490,7 +491,8 @@ type GetUsersOptions struct {
 }
 
 func (s *UsersService) GetUser(user int64, opt GetUsersOptions, options ...RequestOptionFunc) (*User, *Response, error) {
-	return do[*User](s.client,
+	return do[*User](
+		s.client,
 		withPath("users/%d", user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -589,7 +591,8 @@ func (s *UsersService) ModifyUser(user int64, opt *ModifyUserOptions, options ..
 }
 
 func (s *UsersService) DeleteUser(user int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d", user),
 		withRequestOpts(options...),
@@ -598,7 +601,8 @@ func (s *UsersService) DeleteUser(user int64, options ...RequestOptionFunc) (*Re
 }
 
 func (s *UsersService) CurrentUser(options ...RequestOptionFunc) (*User, *Response, error) {
-	return do[*User](s.client,
+	return do[*User](
+		s.client,
 		withPath("user"),
 		withRequestOpts(options...),
 	)
@@ -617,7 +621,8 @@ type UserStatus struct {
 }
 
 func (s *UsersService) CurrentUserStatus(options ...RequestOptionFunc) (*UserStatus, *Response, error) {
-	return do[*UserStatus](s.client,
+	return do[*UserStatus](
+		s.client,
 		withPath("user/status"),
 		withRequestOpts(options...),
 	)
@@ -631,7 +636,8 @@ func (s *UsersService) CurrentUserStatus(options ...RequestOptionFunc) (*UserSta
 // GitLab API docs:
 // https://docs.gitlab.com/api/users/#get-the-status-of-a-user
 func (s *UsersService) GetUserStatus(uid any, options ...RequestOptionFunc) (*UserStatus, *Response, error) {
-	return do[*UserStatus](s.client,
+	return do[*UserStatus](
+		s.client,
 		withPath("users/%s/status", UserID{uid}),
 		withRequestOpts(options...),
 	)
@@ -649,7 +655,8 @@ type UserStatusOptions struct {
 }
 
 func (s *UsersService) SetUserStatus(opt *UserStatusOptions, options ...RequestOptionFunc) (*UserStatus, *Response, error) {
-	return do[*UserStatus](s.client,
+	return do[*UserStatus](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("user/status"),
 		withAPIOpts(opt),
@@ -673,7 +680,8 @@ type UserAssociationsCount struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/users/#get-a-count-of-a-users-projects-groups-issues-and-merge-requests
 func (s *UsersService) GetUserAssociationsCount(user int64, options ...RequestOptionFunc) (*UserAssociationsCount, *Response, error) {
-	return do[*UserAssociationsCount](s.client,
+	return do[*UserAssociationsCount](
+		s.client,
 		withPath("users/%d/associations_count", user),
 		withRequestOpts(options...),
 	)
@@ -699,7 +707,8 @@ type ListSSHKeysOptions struct {
 }
 
 func (s *UsersService) ListSSHKeys(opt *ListSSHKeysOptions, options ...RequestOptionFunc) ([]*SSHKey, *Response, error) {
-	return do[[]*SSHKey](s.client,
+	return do[[]*SSHKey](
+		s.client,
 		withPath("user/keys"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -722,7 +731,8 @@ type ListSSHKeysForUserOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/user_keys/#list-all-ssh-keys-for-a-user
 func (s *UsersService) ListSSHKeysForUser(uid any, opt *ListSSHKeysForUserOptions, options ...RequestOptionFunc) ([]*SSHKey, *Response, error) {
-	return do[[]*SSHKey](s.client,
+	return do[[]*SSHKey](
+		s.client,
 		withPath("users/%s/keys", UserID{uid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -730,14 +740,16 @@ func (s *UsersService) ListSSHKeysForUser(uid any, opt *ListSSHKeysForUserOption
 }
 
 func (s *UsersService) GetSSHKey(key int64, options ...RequestOptionFunc) (*SSHKey, *Response, error) {
-	return do[*SSHKey](s.client,
+	return do[*SSHKey](
+		s.client,
 		withPath("user/keys/%d", key),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *UsersService) GetSSHKeyForUser(user int64, key int64, options ...RequestOptionFunc) (*SSHKey, *Response, error) {
-	return do[*SSHKey](s.client,
+	return do[*SSHKey](
+		s.client,
 		withPath("users/%d/keys/%d", user, key),
 		withRequestOpts(options...),
 	)
@@ -754,7 +766,8 @@ type AddSSHKeyOptions struct {
 }
 
 func (s *UsersService) AddSSHKey(opt *AddSSHKeyOptions, options ...RequestOptionFunc) (*SSHKey, *Response, error) {
-	return do[*SSHKey](s.client,
+	return do[*SSHKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("user/keys"),
 		withAPIOpts(opt),
@@ -763,7 +776,8 @@ func (s *UsersService) AddSSHKey(opt *AddSSHKeyOptions, options ...RequestOption
 }
 
 func (s *UsersService) AddSSHKeyForUser(user int64, opt *AddSSHKeyOptions, options ...RequestOptionFunc) (*SSHKey, *Response, error) {
-	return do[*SSHKey](s.client,
+	return do[*SSHKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/keys", user),
 		withAPIOpts(opt),
@@ -772,7 +786,8 @@ func (s *UsersService) AddSSHKeyForUser(user int64, opt *AddSSHKeyOptions, optio
 }
 
 func (s *UsersService) DeleteSSHKey(key int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("user/keys/%d", key),
 		withRequestOpts(options...),
@@ -781,7 +796,8 @@ func (s *UsersService) DeleteSSHKey(key int64, options ...RequestOptionFunc) (*R
 }
 
 func (s *UsersService) DeleteSSHKeyForUser(user, key int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d/keys/%d", user, key),
 		withRequestOpts(options...),
@@ -799,14 +815,16 @@ type GPGKey struct {
 }
 
 func (s *UsersService) ListGPGKeys(options ...RequestOptionFunc) ([]*GPGKey, *Response, error) {
-	return do[[]*GPGKey](s.client,
+	return do[[]*GPGKey](
+		s.client,
 		withPath("user/gpg_keys"),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *UsersService) GetGPGKey(key int64, options ...RequestOptionFunc) (*GPGKey, *Response, error) {
-	return do[*GPGKey](s.client,
+	return do[*GPGKey](
+		s.client,
 		withPath("user/gpg_keys/%d", key),
 		withRequestOpts(options...),
 	)
@@ -820,7 +838,8 @@ type AddGPGKeyOptions struct {
 }
 
 func (s *UsersService) AddGPGKey(opt *AddGPGKeyOptions, options ...RequestOptionFunc) (*GPGKey, *Response, error) {
-	return do[*GPGKey](s.client,
+	return do[*GPGKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("user/gpg_keys"),
 		withAPIOpts(opt),
@@ -829,7 +848,8 @@ func (s *UsersService) AddGPGKey(opt *AddGPGKeyOptions, options ...RequestOption
 }
 
 func (s *UsersService) DeleteGPGKey(key int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("user/gpg_keys/%d", key),
 		withRequestOpts(options...),
@@ -838,21 +858,24 @@ func (s *UsersService) DeleteGPGKey(key int64, options ...RequestOptionFunc) (*R
 }
 
 func (s *UsersService) ListGPGKeysForUser(user int64, options ...RequestOptionFunc) ([]*GPGKey, *Response, error) {
-	return do[[]*GPGKey](s.client,
+	return do[[]*GPGKey](
+		s.client,
 		withPath("users/%d/gpg_keys", user),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *UsersService) GetGPGKeyForUser(user, key int64, options ...RequestOptionFunc) (*GPGKey, *Response, error) {
-	return do[*GPGKey](s.client,
+	return do[*GPGKey](
+		s.client,
 		withPath("users/%d/gpg_keys/%d", user, key),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *UsersService) AddGPGKeyForUser(user int64, opt *AddGPGKeyOptions, options ...RequestOptionFunc) (*GPGKey, *Response, error) {
-	return do[*GPGKey](s.client,
+	return do[*GPGKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/gpg_keys", user),
 		withAPIOpts(opt),
@@ -861,7 +884,8 @@ func (s *UsersService) AddGPGKeyForUser(user int64, opt *AddGPGKeyOptions, optio
 }
 
 func (s *UsersService) DeleteGPGKeyForUser(user, key int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d/gpg_keys/%d", user, key),
 		withRequestOpts(options...),
@@ -880,7 +904,8 @@ type Email struct {
 }
 
 func (s *UsersService) ListEmails(options ...RequestOptionFunc) ([]*Email, *Response, error) {
-	return do[[]*Email](s.client,
+	return do[[]*Email](
+		s.client,
 		withPath("user/emails"),
 		withRequestOpts(options...),
 	)
@@ -895,7 +920,8 @@ type ListEmailsForUserOptions struct {
 }
 
 func (s *UsersService) ListEmailsForUser(user int64, opt *ListEmailsForUserOptions, options ...RequestOptionFunc) ([]*Email, *Response, error) {
-	return do[[]*Email](s.client,
+	return do[[]*Email](
+		s.client,
 		withPath("users/%d/emails", user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -903,7 +929,8 @@ func (s *UsersService) ListEmailsForUser(user int64, opt *ListEmailsForUserOptio
 }
 
 func (s *UsersService) GetEmail(email int64, options ...RequestOptionFunc) (*Email, *Response, error) {
-	return do[*Email](s.client,
+	return do[*Email](
+		s.client,
 		withPath("user/emails/%d", email),
 		withRequestOpts(options...),
 	)
@@ -919,7 +946,8 @@ type AddEmailOptions struct {
 }
 
 func (s *UsersService) AddEmail(opt *AddEmailOptions, options ...RequestOptionFunc) (*Email, *Response, error) {
-	return do[*Email](s.client,
+	return do[*Email](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("user/emails"),
 		withAPIOpts(opt),
@@ -928,7 +956,8 @@ func (s *UsersService) AddEmail(opt *AddEmailOptions, options ...RequestOptionFu
 }
 
 func (s *UsersService) AddEmailForUser(user int64, opt *AddEmailOptions, options ...RequestOptionFunc) (*Email, *Response, error) {
-	return do[*Email](s.client,
+	return do[*Email](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/emails", user),
 		withAPIOpts(opt),
@@ -937,7 +966,8 @@ func (s *UsersService) AddEmailForUser(user int64, opt *AddEmailOptions, options
 }
 
 func (s *UsersService) DeleteEmail(email int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("user/emails/%d", email),
 		withRequestOpts(options...),
@@ -946,7 +976,8 @@ func (s *UsersService) DeleteEmail(email int64, options ...RequestOptionFunc) (*
 }
 
 func (s *UsersService) DeleteEmailForUser(user, email int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d/emails/%d", user, email),
 		withRequestOpts(options...),
@@ -955,7 +986,8 @@ func (s *UsersService) DeleteEmailForUser(user, email int64, options ...RequestO
 }
 
 func (s *UsersService) BlockUser(user int64, options ...RequestOptionFunc) error {
-	_, _, err := do[none](s.client,
+	_, _, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/block", user),
 		withRequestOpts(options...),
@@ -964,7 +996,8 @@ func (s *UsersService) BlockUser(user int64, options ...RequestOptionFunc) error
 }
 
 func (s *UsersService) UnblockUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/unblock", user),
 		withRequestOpts(options...),
@@ -986,7 +1019,8 @@ func (s *UsersService) UnblockUser(user int64, options ...RequestOptionFunc) err
 }
 
 func (s *UsersService) BanUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/ban", user),
 		withRequestOpts(options...),
@@ -1006,7 +1040,8 @@ func (s *UsersService) BanUser(user int64, options ...RequestOptionFunc) error {
 }
 
 func (s *UsersService) UnbanUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/unban", user),
 		withRequestOpts(options...),
@@ -1026,7 +1061,8 @@ func (s *UsersService) UnbanUser(user int64, options ...RequestOptionFunc) error
 }
 
 func (s *UsersService) DeactivateUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/deactivate", user),
 		withRequestOpts(options...),
@@ -1048,7 +1084,8 @@ func (s *UsersService) DeactivateUser(user int64, options ...RequestOptionFunc) 
 }
 
 func (s *UsersService) ActivateUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/activate", user),
 		withRequestOpts(options...),
@@ -1070,7 +1107,8 @@ func (s *UsersService) ActivateUser(user int64, options ...RequestOptionFunc) er
 }
 
 func (s *UsersService) ApproveUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/approve", user),
 		withRequestOpts(options...),
@@ -1092,7 +1130,8 @@ func (s *UsersService) ApproveUser(user int64, options ...RequestOptionFunc) err
 }
 
 func (s *UsersService) RejectUser(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/reject", user),
 		withRequestOpts(options...),
@@ -1142,7 +1181,8 @@ type GetAllImpersonationTokensOptions struct {
 }
 
 func (s *UsersService) GetAllImpersonationTokens(user int64, opt *GetAllImpersonationTokensOptions, options ...RequestOptionFunc) ([]*ImpersonationToken, *Response, error) {
-	return do[[]*ImpersonationToken](s.client,
+	return do[[]*ImpersonationToken](
+		s.client,
 		withPath("users/%d/impersonation_tokens", user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -1150,7 +1190,8 @@ func (s *UsersService) GetAllImpersonationTokens(user int64, opt *GetAllImperson
 }
 
 func (s *UsersService) GetImpersonationToken(user, token int64, options ...RequestOptionFunc) (*ImpersonationToken, *Response, error) {
-	return do[*ImpersonationToken](s.client,
+	return do[*ImpersonationToken](
+		s.client,
 		withPath("users/%d/impersonation_tokens/%d", user, token),
 		withRequestOpts(options...),
 	)
@@ -1168,7 +1209,8 @@ type CreateImpersonationTokenOptions struct {
 }
 
 func (s *UsersService) CreateImpersonationToken(user int64, opt *CreateImpersonationTokenOptions, options ...RequestOptionFunc) (*ImpersonationToken, *Response, error) {
-	return do[*ImpersonationToken](s.client,
+	return do[*ImpersonationToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/impersonation_tokens", user),
 		withAPIOpts(opt),
@@ -1177,7 +1219,8 @@ func (s *UsersService) CreateImpersonationToken(user int64, opt *CreateImpersona
 }
 
 func (s *UsersService) RevokeImpersonationToken(user, token int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d/impersonation_tokens/%d", user, token),
 		withRequestOpts(options...),
@@ -1198,7 +1241,8 @@ type CreatePersonalAccessTokenOptions struct {
 }
 
 func (s *UsersService) CreatePersonalAccessToken(user int64, opt *CreatePersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("users/%d/personal_access_tokens", user),
 		withAPIOpts(opt),
@@ -1219,7 +1263,8 @@ type CreatePersonalAccessTokenForCurrentUserOptions struct {
 }
 
 func (s *UsersService) CreatePersonalAccessTokenForCurrentUser(opt *CreatePersonalAccessTokenForCurrentUserOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error) {
-	return do[*PersonalAccessToken](s.client,
+	return do[*PersonalAccessToken](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("user/personal_access_tokens"),
 		withAPIOpts(opt),
@@ -1246,7 +1291,8 @@ type GetUserActivitiesOptions struct {
 }
 
 func (s *UsersService) GetUserActivities(opt *GetUserActivitiesOptions, options ...RequestOptionFunc) ([]*UserActivity, *Response, error) {
-	return do[[]*UserActivity](s.client,
+	return do[[]*UserActivity](
+		s.client,
 		withPath("user/activities"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -1274,7 +1320,8 @@ type GetUserMembershipOptions struct {
 }
 
 func (s *UsersService) GetUserMemberships(user int64, opt *GetUserMembershipOptions, options ...RequestOptionFunc) ([]*UserMembership, *Response, error) {
-	return do[[]*UserMembership](s.client,
+	return do[[]*UserMembership](
+		s.client,
 		withPath("users/%d/memberships", user),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -1282,7 +1329,8 @@ func (s *UsersService) GetUserMemberships(user int64, opt *GetUserMembershipOpti
 }
 
 func (s *UsersService) DisableTwoFactor(user int64, options ...RequestOptionFunc) error {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("users/%d/disable_two_factor", user),
 		withRequestOpts(options...),
@@ -1334,7 +1382,8 @@ type CreateUserRunnerOptions struct {
 }
 
 func (s *UsersService) CreateUserRunner(opts *CreateUserRunnerOptions, options ...RequestOptionFunc) (*UserRunner, *Response, error) {
-	return do[*UserRunner](s.client,
+	return do[*UserRunner](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("user/runners"),
 		withAPIOpts(opts),
@@ -1353,7 +1402,8 @@ type CreateServiceAccountUserOptions struct {
 }
 
 func (s *UsersService) CreateServiceAccountUser(opts *CreateServiceAccountUserOptions, options ...RequestOptionFunc) (*User, *Response, error) {
-	return do[*User](s.client,
+	return do[*User](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("service_accounts"),
 		withAPIOpts(opts),
@@ -1362,7 +1412,8 @@ func (s *UsersService) CreateServiceAccountUser(opts *CreateServiceAccountUserOp
 }
 
 func (s *UsersService) ListServiceAccounts(opt *ListServiceAccountsOptions, options ...RequestOptionFunc) ([]*ServiceAccount, *Response, error) {
-	return do[[]*ServiceAccount](s.client,
+	return do[[]*ServiceAccount](
+		s.client,
 		withPath("service_accounts"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -1370,7 +1421,8 @@ func (s *UsersService) ListServiceAccounts(opt *ListServiceAccountsOptions, opti
 }
 
 func (s *UsersService) UploadAvatar(avatar io.Reader, filename string, options ...RequestOptionFunc) (*User, *Response, error) {
-	return do[*User](s.client,
+	return do[*User](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("user/avatar"),
 		withUpload(avatar, filename, UploadAvatar),
@@ -1379,7 +1431,8 @@ func (s *UsersService) UploadAvatar(avatar io.Reader, filename string, options .
 }
 
 func (s *UsersService) DeleteUserIdentity(user int64, provider string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("users/%d/identities/%s", user, provider),
 		withRequestOpts(options...),

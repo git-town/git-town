@@ -70,7 +70,8 @@ type ListPipelineTriggersOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#list-project-trigger-tokens
 func (s *PipelineTriggersService) ListPipelineTriggers(pid any, opt *ListPipelineTriggersOptions, options ...RequestOptionFunc) ([]*PipelineTrigger, *Response, error) {
-	return do[[]*PipelineTrigger](s.client,
+	return do[[]*PipelineTrigger](
+		s.client,
 		withPath("projects/%s/triggers", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -82,7 +83,8 @@ func (s *PipelineTriggersService) ListPipelineTriggers(pid any, opt *ListPipelin
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#get-trigger-token-details
 func (s *PipelineTriggersService) GetPipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	return do[*PipelineTrigger](s.client,
+	return do[*PipelineTrigger](
+		s.client,
 		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
 		withRequestOpts(options...),
 	)
@@ -101,7 +103,8 @@ type AddPipelineTriggerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#create-a-trigger-token
 func (s *PipelineTriggersService) AddPipelineTrigger(pid any, opt *AddPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	return do[*PipelineTrigger](s.client,
+	return do[*PipelineTrigger](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/triggers", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -122,7 +125,8 @@ type EditPipelineTriggerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#update-a-pipeline-trigger-token
 func (s *PipelineTriggersService) EditPipelineTrigger(pid any, trigger int64, opt *EditPipelineTriggerOptions, options ...RequestOptionFunc) (*PipelineTrigger, *Response, error) {
-	return do[*PipelineTrigger](s.client,
+	return do[*PipelineTrigger](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
 		withAPIOpts(opt),
@@ -135,7 +139,8 @@ func (s *PipelineTriggersService) EditPipelineTrigger(pid any, trigger int64, op
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#remove-a-pipeline-trigger-token
 func (s *PipelineTriggersService) DeletePipelineTrigger(pid any, trigger int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/triggers/%d", ProjectID{pid}, trigger),
 		withRequestOpts(options...),
@@ -162,7 +167,8 @@ type RunPipelineTriggerOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_triggers/#trigger-a-pipeline-with-a-token
 func (s *PipelineTriggersService) RunPipelineTrigger(pid any, opt *RunPipelineTriggerOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/trigger/pipeline", ProjectID{pid}),
 		withAPIOpts(opt),

@@ -143,7 +143,8 @@ type ListGroupRegistryRepositoriesOptions struct {
 }
 
 func (s *ContainerRegistryService) ListProjectRegistryRepositories(pid any, opt *ListProjectRegistryRepositoriesOptions, options ...RequestOptionFunc) ([]*RegistryRepository, *Response, error) {
-	return do[[]*RegistryRepository](s.client,
+	return do[[]*RegistryRepository](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/registry/repositories", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -152,7 +153,8 @@ func (s *ContainerRegistryService) ListProjectRegistryRepositories(pid any, opt 
 }
 
 func (s *ContainerRegistryService) ListGroupRegistryRepositories(gid any, opt *ListGroupRegistryRepositoriesOptions, options ...RequestOptionFunc) ([]*RegistryRepository, *Response, error) {
-	return do[[]*RegistryRepository](s.client,
+	return do[[]*RegistryRepository](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/registry/repositories", GroupID{gid}),
 		withAPIOpts(opt),
@@ -171,7 +173,8 @@ type GetSingleRegistryRepositoryOptions struct {
 }
 
 func (s *ContainerRegistryService) GetSingleRegistryRepository(pid any, opt *GetSingleRegistryRepositoryOptions, options ...RequestOptionFunc) (*RegistryRepository, *Response, error) {
-	return do[*RegistryRepository](s.client,
+	return do[*RegistryRepository](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("registry/repositories/%s", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -180,7 +183,8 @@ func (s *ContainerRegistryService) GetSingleRegistryRepository(pid any, opt *Get
 }
 
 func (s *ContainerRegistryService) DeleteRegistryRepository(pid any, repository int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/registry/repositories/%d", ProjectID{pid}, repository),
 		withRequestOpts(options...),
@@ -198,7 +202,8 @@ type ListRegistryRepositoryTagsOptions struct {
 }
 
 func (s *ContainerRegistryService) ListRegistryRepositoryTags(pid any, repository int64, opt *ListRegistryRepositoryTagsOptions, options ...RequestOptionFunc) ([]*RegistryRepositoryTag, *Response, error) {
-	return do[[]*RegistryRepositoryTag](s.client,
+	return do[[]*RegistryRepositoryTag](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/registry/repositories/%d/tags", ProjectID{pid}, repository),
 		withAPIOpts(opt),
@@ -207,7 +212,8 @@ func (s *ContainerRegistryService) ListRegistryRepositoryTags(pid any, repositor
 }
 
 func (s *ContainerRegistryService) GetRegistryRepositoryTagDetail(pid any, repository int64, tagName string, options ...RequestOptionFunc) (*RegistryRepositoryTag, *Response, error) {
-	return do[*RegistryRepositoryTag](s.client,
+	return do[*RegistryRepositoryTag](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/registry/repositories/%d/tags/%s", ProjectID{pid}, repository, tagName),
 		withRequestOpts(options...),
@@ -215,7 +221,8 @@ func (s *ContainerRegistryService) GetRegistryRepositoryTagDetail(pid any, repos
 }
 
 func (s *ContainerRegistryService) DeleteRegistryRepositoryTag(pid any, repository int64, tagName string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/registry/repositories/%d/tags/%s", ProjectID{pid}, repository, tagName),
 		withRequestOpts(options...),
@@ -239,7 +246,8 @@ type DeleteRegistryRepositoryTagsOptions struct {
 }
 
 func (s *ContainerRegistryService) DeleteRegistryRepositoryTags(pid any, repository int64, opt *DeleteRegistryRepositoryTagsOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/registry/repositories/%d/tags", ProjectID{pid}, repository),
 		withAPIOpts(opt),

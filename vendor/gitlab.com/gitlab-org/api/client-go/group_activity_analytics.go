@@ -65,7 +65,8 @@ type GetRecentlyCreatedIssuesCountOptions struct {
 }
 
 func (s *GroupActivityAnalyticsService) GetRecentlyCreatedIssuesCount(opt *GetRecentlyCreatedIssuesCountOptions, options ...RequestOptionFunc) (*IssuesCount, *Response, error) {
-	return do[*IssuesCount](s.client,
+	return do[*IssuesCount](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("analytics/group_activity/issues_count"),
 		withAPIOpts(opt),
@@ -92,7 +93,8 @@ type GetRecentlyCreatedMergeRequestsCountOptions struct {
 }
 
 func (s *GroupActivityAnalyticsService) GetRecentlyCreatedMergeRequestsCount(opt *GetRecentlyCreatedMergeRequestsCountOptions, options ...RequestOptionFunc) (*MergeRequestsCount, *Response, error) {
-	return do[*MergeRequestsCount](s.client,
+	return do[*MergeRequestsCount](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("analytics/group_activity/merge_requests_count"),
 		withAPIOpts(opt),
@@ -118,7 +120,8 @@ type GetRecentlyAddedMembersCountOptions struct {
 }
 
 func (s *GroupActivityAnalyticsService) GetRecentlyAddedMembersCount(opt *GetRecentlyAddedMembersCountOptions, options ...RequestOptionFunc) (*NewMembersCount, *Response, error) {
-	return do[*NewMembersCount](s.client,
+	return do[*NewMembersCount](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("analytics/group_activity/new_members_count"),
 		withAPIOpts(opt),

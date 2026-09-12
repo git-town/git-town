@@ -160,7 +160,8 @@ func (om *OrderedMap[K, V]) UnmarshalJSON(data []byte) error {
 
 			om.Set(key, value)
 			return nil
-		})
+		},
+	)
 }
 
 func decodeUTF8(input []byte) (string, error) {

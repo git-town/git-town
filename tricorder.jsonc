@@ -3,12 +3,8 @@
 
   "ignore-files": [],
 
-  "global-lints": [
-    { "command": "tools/lint_1.sh", "name": "custom lint 1" }
-  ],
-  "global-fixes": [
-    { "command": "tools/fix_1.sh", "name": "custom fix 1" }
-  ],
+  "global-lints": [],
+  "global-fixes": [],
 
   "stacks": {
     "css": {},
@@ -18,10 +14,10 @@
         "add": [
           {
             "name": "optioncompare in tests",
-            "command": "make --no-print-directory fix-optioncompare-in-tests"
-          }
-        ]
-      }
+            "command": "make --no-print-directory fix-optioncompare-in-tests",
+          },
+        ],
+      },
     },
     "java": {},
     "json": {},
@@ -33,7 +29,7 @@
     "toml": {},
     "typescript": {},
     "unknown": {},
-    "yml": {}
+    "yml": {},
   },
 
   "applications": {
@@ -46,7 +42,7 @@
     "git_diff_check": { "enabled": true },
     "gofumpt": { "enabled": true, "ignore-files": [] },
     "golangci_lint": { "enabled": true },
-    "keep-sorted": { "enabled": true, "ignore-files": [] },
+    "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] },
     "prettier": { "enabled": true, "ignore-files": [] },
     "pyright": { "enabled": true, "ignore-files": [] },
     "ruff": { "enabled": true, "ignore-files": [] },
@@ -54,6 +50,6 @@
     "sqlfmt": { "enabled": true, "ignore-files": [] },
     "taplo": { "enabled": true, "ignore-files": [] },
     "text-runner": { "enabled": true },
-    "tikibase": { "enabled": true }
-  }
+    "tikibase": { "enabled": true },
+  },
 }

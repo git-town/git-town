@@ -74,7 +74,8 @@ type ListCIYMLTemplatesOptions struct {
 }
 
 func (s *CIYMLTemplatesService) ListAllTemplates(opt *ListCIYMLTemplatesOptions, options ...RequestOptionFunc) ([]*CIYMLTemplateListItem, *Response, error) {
-	return do[[]*CIYMLTemplateListItem](s.client,
+	return do[[]*CIYMLTemplateListItem](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("templates/gitlab_ci_ymls"),
 		withAPIOpts(opt),
@@ -83,7 +84,8 @@ func (s *CIYMLTemplatesService) ListAllTemplates(opt *ListCIYMLTemplatesOptions,
 }
 
 func (s *CIYMLTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*CIYMLTemplate, *Response, error) {
-	return do[*CIYMLTemplate](s.client,
+	return do[*CIYMLTemplate](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("templates/gitlab_ci_ymls/%s", key),
 		withRequestOpts(options...),

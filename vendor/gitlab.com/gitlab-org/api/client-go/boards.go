@@ -159,7 +159,8 @@ type CreateIssueBoardOptions struct {
 }
 
 func (s *IssueBoardsService) CreateIssueBoard(pid any, opt *CreateIssueBoardOptions, options ...RequestOptionFunc) (*IssueBoard, *Response, error) {
-	return do[*IssueBoard](s.client,
+	return do[*IssueBoard](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/boards", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -181,7 +182,8 @@ type UpdateIssueBoardOptions struct {
 }
 
 func (s *IssueBoardsService) UpdateIssueBoard(pid any, board int64, opt *UpdateIssueBoardOptions, options ...RequestOptionFunc) (*IssueBoard, *Response, error) {
-	return do[*IssueBoard](s.client,
+	return do[*IssueBoard](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/boards/%d", ProjectID{pid}, board),
 		withAPIOpts(opt),
@@ -190,7 +192,8 @@ func (s *IssueBoardsService) UpdateIssueBoard(pid any, board int64, opt *UpdateI
 }
 
 func (s *IssueBoardsService) DeleteIssueBoard(pid any, board int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/boards/%d", ProjectID{pid}, board),
 		withRequestOpts(options...),
@@ -206,7 +209,8 @@ type ListIssueBoardsOptions struct {
 }
 
 func (s *IssueBoardsService) ListIssueBoards(pid any, opt *ListIssueBoardsOptions, options ...RequestOptionFunc) ([]*IssueBoard, *Response, error) {
-	return do[[]*IssueBoard](s.client,
+	return do[[]*IssueBoard](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/boards", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -215,7 +219,8 @@ func (s *IssueBoardsService) ListIssueBoards(pid any, opt *ListIssueBoardsOption
 }
 
 func (s *IssueBoardsService) GetIssueBoard(pid any, board int64, options ...RequestOptionFunc) (*IssueBoard, *Response, error) {
-	return do[*IssueBoard](s.client,
+	return do[*IssueBoard](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/boards/%d", ProjectID{pid}, board),
 		withRequestOpts(options...),
@@ -230,7 +235,8 @@ type GetIssueBoardListsOptions struct {
 }
 
 func (s *IssueBoardsService) GetIssueBoardLists(pid any, board int64, opt *GetIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
-	return do[[]*BoardList](s.client,
+	return do[[]*BoardList](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/boards/%d/lists", ProjectID{pid}, board),
 		withAPIOpts(opt),
@@ -239,7 +245,8 @@ func (s *IssueBoardsService) GetIssueBoardLists(pid any, board int64, opt *GetIs
 }
 
 func (s *IssueBoardsService) GetIssueBoardList(pid any, board, list int64, options ...RequestOptionFunc) (*BoardList, *Response, error) {
-	return do[*BoardList](s.client,
+	return do[*BoardList](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/boards/%d/lists/%d", ProjectID{pid}, board, list),
 		withRequestOpts(options...),
@@ -258,7 +265,8 @@ type CreateIssueBoardListOptions struct {
 }
 
 func (s *IssueBoardsService) CreateIssueBoardList(pid any, board int64, opt *CreateIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error) {
-	return do[*BoardList](s.client,
+	return do[*BoardList](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/boards/%d/lists", ProjectID{pid}, board),
 		withAPIOpts(opt),
@@ -275,7 +283,8 @@ type UpdateIssueBoardListOptions struct {
 }
 
 func (s *IssueBoardsService) UpdateIssueBoardList(pid any, board, list int64, opt *UpdateIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error) {
-	return do[*BoardList](s.client,
+	return do[*BoardList](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/boards/%d/lists/%d", ProjectID{pid}, board, list),
 		withAPIOpts(opt),
@@ -284,7 +293,8 @@ func (s *IssueBoardsService) UpdateIssueBoardList(pid any, board, list int64, op
 }
 
 func (s *IssueBoardsService) DeleteIssueBoardList(pid any, board, list int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/boards/%d/lists/%d", ProjectID{pid}, board, list),
 		withRequestOpts(options...),

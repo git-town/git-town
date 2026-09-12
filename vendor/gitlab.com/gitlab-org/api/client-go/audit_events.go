@@ -112,7 +112,8 @@ type ListAuditEventsOptions struct {
 }
 
 func (s *AuditEventsService) ListInstanceAuditEvents(opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	return do[[]*AuditEvent](s.client,
+	return do[[]*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("audit_events"),
 		withAPIOpts(opt),
@@ -121,7 +122,8 @@ func (s *AuditEventsService) ListInstanceAuditEvents(opt *ListAuditEventsOptions
 }
 
 func (s *AuditEventsService) GetInstanceAuditEvent(event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	return do[*AuditEvent](s.client,
+	return do[*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("audit_events/%d", event),
 		withRequestOpts(options...),
@@ -129,7 +131,8 @@ func (s *AuditEventsService) GetInstanceAuditEvent(event int64, options ...Reque
 }
 
 func (s *AuditEventsService) ListGroupAuditEvents(gid any, opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	return do[[]*AuditEvent](s.client,
+	return do[[]*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/audit_events", GroupID{gid}),
 		withAPIOpts(opt),
@@ -138,7 +141,8 @@ func (s *AuditEventsService) ListGroupAuditEvents(gid any, opt *ListAuditEventsO
 }
 
 func (s *AuditEventsService) GetGroupAuditEvent(gid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	return do[*AuditEvent](s.client,
+	return do[*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("groups/%s/audit_events/%d", GroupID{gid}, event),
 		withRequestOpts(options...),
@@ -146,7 +150,8 @@ func (s *AuditEventsService) GetGroupAuditEvent(gid any, event int64, options ..
 }
 
 func (s *AuditEventsService) ListProjectAuditEvents(pid any, opt *ListAuditEventsOptions, options ...RequestOptionFunc) ([]*AuditEvent, *Response, error) {
-	return do[[]*AuditEvent](s.client,
+	return do[[]*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/audit_events", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -155,7 +160,8 @@ func (s *AuditEventsService) ListProjectAuditEvents(pid any, opt *ListAuditEvent
 }
 
 func (s *AuditEventsService) GetProjectAuditEvent(pid any, event int64, options ...RequestOptionFunc) (*AuditEvent, *Response, error) {
-	return do[*AuditEvent](s.client,
+	return do[*AuditEvent](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/audit_events/%d", ProjectID{pid}, event),
 		withRequestOpts(options...),

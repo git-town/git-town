@@ -34,7 +34,7 @@ func decodeSSHKey(response interface{}) (*SSHKey, error) {
 		return nil, DecodeError(respMap)
 	}
 
-	var sshKey = new(SSHKey)
+	sshKey := new(SSHKey)
 	err := mapstructure.Decode(respMap, sshKey)
 	if err != nil {
 		return nil, err

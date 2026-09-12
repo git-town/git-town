@@ -95,7 +95,8 @@ func (p ErrorTrackingSettings) String() string {
 }
 
 func (s *ErrorTrackingService) GetErrorTrackingSettings(pid any, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
-	return do[*ErrorTrackingSettings](s.client,
+	return do[*ErrorTrackingSettings](
+		s.client,
 		withPath("projects/%s/error_tracking/settings", ProjectID{pid}),
 		withRequestOpts(options...),
 	)
@@ -112,7 +113,8 @@ type EnableDisableErrorTrackingOptions struct {
 }
 
 func (s *ErrorTrackingService) EnableDisableErrorTracking(pid any, opt *EnableDisableErrorTrackingOptions, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
-	return do[*ErrorTrackingSettings](s.client,
+	return do[*ErrorTrackingSettings](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("projects/%s/error_tracking/settings", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -129,7 +131,8 @@ type ListClientKeysOptions struct {
 }
 
 func (s *ErrorTrackingService) ListClientKeys(pid any, opt *ListClientKeysOptions, options ...RequestOptionFunc) ([]*ErrorTrackingClientKey, *Response, error) {
-	return do[[]*ErrorTrackingClientKey](s.client,
+	return do[[]*ErrorTrackingClientKey](
+		s.client,
 		withPath("projects/%s/error_tracking/client_keys", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -137,7 +140,8 @@ func (s *ErrorTrackingService) ListClientKeys(pid any, opt *ListClientKeysOption
 }
 
 func (s *ErrorTrackingService) CreateClientKey(pid any, options ...RequestOptionFunc) (*ErrorTrackingClientKey, *Response, error) {
-	return do[*ErrorTrackingClientKey](s.client,
+	return do[*ErrorTrackingClientKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/error_tracking/client_keys", ProjectID{pid}),
 		withRequestOpts(options...),
@@ -149,7 +153,8 @@ func (s *ErrorTrackingService) CreateClientKey(pid any, options ...RequestOption
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#delete-a-client-key
 func (s *ErrorTrackingService) DeleteClientKey(pid any, keyID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/error_tracking/client_keys/%d", ProjectID{pid}, keyID),
 		withRequestOpts(options...),

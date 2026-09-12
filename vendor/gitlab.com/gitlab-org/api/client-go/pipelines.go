@@ -271,7 +271,8 @@ type ListProjectPipelinesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#list-project-pipelines
 func (s *PipelinesService) ListProjectPipelines(pid any, opt *ListProjectPipelinesOptions, options ...RequestOptionFunc) ([]*PipelineInfo, *Response, error) {
-	return do[[]*PipelineInfo](s.client,
+	return do[[]*PipelineInfo](
+		s.client,
 		withPath("projects/%s/pipelines", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -283,7 +284,8 @@ func (s *PipelinesService) ListProjectPipelines(pid any, opt *ListProjectPipelin
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#get-a-single-pipeline
 func (s *PipelinesService) GetPipeline(pid any, pipeline int64, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withPath("projects/%s/pipelines/%d", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
 	)
@@ -294,7 +296,8 @@ func (s *PipelinesService) GetPipeline(pid any, pipeline int64, options ...Reque
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#get-variables-of-a-pipeline
 func (s *PipelinesService) GetPipelineVariables(pid any, pipeline int64, options ...RequestOptionFunc) ([]*PipelineVariable, *Response, error) {
-	return do[[]*PipelineVariable](s.client,
+	return do[[]*PipelineVariable](
+		s.client,
 		withPath("projects/%s/pipelines/%d/variables", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
 	)
@@ -305,7 +308,8 @@ func (s *PipelinesService) GetPipelineVariables(pid any, pipeline int64, options
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#get-a-pipelines-test-report
 func (s *PipelinesService) GetPipelineTestReport(pid any, pipeline int64, options ...RequestOptionFunc) (*PipelineTestReport, *Response, error) {
-	return do[*PipelineTestReport](s.client,
+	return do[*PipelineTestReport](
+		s.client,
 		withPath("projects/%s/pipelines/%d/test_report", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
 	)
@@ -316,7 +320,8 @@ func (s *PipelinesService) GetPipelineTestReport(pid any, pipeline int64, option
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#get-a-test-report-summary-for-a-pipeline
 func (s *PipelinesService) GetPipelineTestReportSummary(pid any, pipeline int64, options ...RequestOptionFunc) (*PipelineTestReportSummary, *Response, error) {
-	return do[*PipelineTestReportSummary](s.client,
+	return do[*PipelineTestReportSummary](
+		s.client,
 		withPath("projects/%s/pipelines/%d/test_report_summary", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
 	)
@@ -335,7 +340,8 @@ type GetLatestPipelineOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#get-the-latest-pipeline
 func (s *PipelinesService) GetLatestPipeline(pid any, opt *GetLatestPipelineOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withPath("projects/%s/pipelines/latest", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -446,7 +452,8 @@ func NewPipelineInputValue[T PipelineInputValueType](value T) PipelineInputValue
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline
 func (s *PipelinesService) CreatePipeline(pid any, opt *CreatePipelineOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/pipeline", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -459,7 +466,8 @@ func (s *PipelinesService) CreatePipeline(pid any, opt *CreatePipelineOptions, o
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#retry-jobs-in-a-pipeline
 func (s *PipelinesService) RetryPipelineBuild(pid any, pipeline int64, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/pipelines/%d/retry", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
@@ -471,7 +479,8 @@ func (s *PipelinesService) RetryPipelineBuild(pid any, pipeline int64, options .
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#cancel-a-pipelines-jobs
 func (s *PipelinesService) CancelPipelineBuild(pid any, pipeline int64, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/pipelines/%d/cancel", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
@@ -483,7 +492,8 @@ func (s *PipelinesService) CancelPipelineBuild(pid any, pipeline int64, options 
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#delete-a-pipeline
 func (s *PipelinesService) DeletePipeline(pid any, pipeline int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/pipelines/%d", ProjectID{pid}, pipeline),
 		withRequestOpts(options...),
@@ -506,7 +516,8 @@ type UpdatePipelineMetadataOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pipelines/#update-pipeline-metadata
 func (s *PipelinesService) UpdatePipelineMetadata(pid any, pipeline int64, opt *UpdatePipelineMetadataOptions, options ...RequestOptionFunc) (*Pipeline, *Response, error) {
-	return do[*Pipeline](s.client,
+	return do[*Pipeline](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/pipelines/%d/metadata", ProjectID{pid}, pipeline),
 		withAPIOpts(opt),

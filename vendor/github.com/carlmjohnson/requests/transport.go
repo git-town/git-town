@@ -114,7 +114,8 @@ func (cl closeLogger) Close() error {
 // which has higher level concerns.
 func DoerTransport(cl interface {
 	Do(req *http.Request) (*http.Response, error)
-}) Transport {
+},
+) Transport {
 	return RoundTripFunc(cl.Do)
 }
 

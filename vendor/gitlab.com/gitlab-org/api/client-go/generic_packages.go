@@ -148,7 +148,8 @@ func (s *GenericPackagesService) PublishPackageFile(pid any, packageName, packag
 // GitLab docs:
 // https://docs.gitlab.com/user/packages/generic_packages/#download-a-single-file
 func (s *GenericPackagesService) DownloadPackageFile(pid any, packageName, packageVersion, fileName string, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/packages/generic/%s/%s/%s", ProjectID{pid}, packageName, packageVersion, fileName),
 		withRequestOpts(options...),
 	)

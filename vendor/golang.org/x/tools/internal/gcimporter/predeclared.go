@@ -13,8 +13,10 @@ import (
 //
 // Cache a distinct result based on the runtime value of any.
 // The pointer value of the any type varies based on GODEBUG settings.
-var predeclMu sync.Mutex
-var predecl map[types.Type][]types.Type
+var (
+	predeclMu sync.Mutex
+	predecl   map[types.Type][]types.Type
+)
 
 func predeclared() []types.Type {
 	anyt := types.Universe.Lookup("any").Type()

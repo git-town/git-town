@@ -82,14 +82,16 @@ func (h Hook) String() string {
 }
 
 func (s *SystemHooksService) ListHooks(options ...RequestOptionFunc) ([]*Hook, *Response, error) {
-	return do[[]*Hook](s.client,
+	return do[[]*Hook](
+		s.client,
 		withPath("hooks"),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *SystemHooksService) GetHook(hook int64, options ...RequestOptionFunc) (*Hook, *Response, error) {
-	return do[*Hook](s.client,
+	return do[*Hook](
+		s.client,
 		withPath("hooks/%d", hook),
 		withRequestOpts(options...),
 	)
@@ -110,7 +112,8 @@ type AddHookOptions struct {
 }
 
 func (s *SystemHooksService) AddHook(opt *AddHookOptions, options ...RequestOptionFunc) (*Hook, *Response, error) {
-	return do[*Hook](s.client,
+	return do[*Hook](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("hooks"),
 		withAPIOpts(opt),
@@ -135,14 +138,16 @@ func (h HookEvent) String() string {
 }
 
 func (s *SystemHooksService) TestHook(hook int64, options ...RequestOptionFunc) (*HookEvent, *Response, error) {
-	return do[*HookEvent](s.client,
+	return do[*HookEvent](
+		s.client,
 		withPath("hooks/%d", hook),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *SystemHooksService) DeleteHook(hook int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("hooks/%d", hook),
 		withRequestOpts(options...),

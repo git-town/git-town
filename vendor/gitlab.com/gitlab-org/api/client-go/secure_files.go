@@ -111,7 +111,8 @@ type ListProjectSecureFilesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/#list-project-secure-files
 func (s SecureFilesService) ListProjectSecureFiles(pid any, opt *ListProjectSecureFilesOptions, options ...RequestOptionFunc) ([]*SecureFile, *Response, error) {
-	return do[[]*SecureFile](s.client,
+	return do[[]*SecureFile](
+		s.client,
 		withPath("projects/%s/secure_files", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -123,7 +124,8 @@ func (s SecureFilesService) ListProjectSecureFiles(pid any, opt *ListProjectSecu
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/#show-secure-file-details
 func (s SecureFilesService) ShowSecureFileDetails(pid any, id int64, options ...RequestOptionFunc) (*SecureFile, *Response, error) {
-	return do[*SecureFile](s.client,
+	return do[*SecureFile](
+		s.client,
 		withPath("projects/%s/secure_files/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),
 	)
@@ -143,7 +145,8 @@ type CreateSecureFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/#create-secure-file
 func (s SecureFilesService) CreateSecureFile(pid any, content io.Reader, opt *CreateSecureFileOptions, options ...RequestOptionFunc) (*SecureFile, *Response, error) {
-	return do[*SecureFile](s.client,
+	return do[*SecureFile](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/secure_files", ProjectID{pid}),
 		withUpload(content, *opt.Name, UploadFile),
@@ -157,7 +160,8 @@ func (s SecureFilesService) CreateSecureFile(pid any, content io.Reader, opt *Cr
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/#download-secure-file
 func (s SecureFilesService) DownloadSecureFile(pid any, id int64, options ...RequestOptionFunc) (io.Reader, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/secure_files/%d/download", ProjectID{pid}, id),
 		withRequestOpts(options...),
 	)
@@ -172,7 +176,8 @@ func (s SecureFilesService) DownloadSecureFile(pid any, id int64, options ...Req
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/#remove-secure-file
 func (s SecureFilesService) RemoveSecureFile(pid any, id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/secure_files/%d", ProjectID{pid}, id),
 		withRequestOpts(options...),

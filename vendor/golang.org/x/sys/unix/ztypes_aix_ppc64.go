@@ -21,9 +21,11 @@ type (
 	_C_long_long int64
 )
 
-type off64 int64
-type off int64
-type Mode_t uint32
+type (
+	off64  int64
+	off    int64
+	Mode_t uint32
+)
 
 type Timespec struct {
 	Sec  int64

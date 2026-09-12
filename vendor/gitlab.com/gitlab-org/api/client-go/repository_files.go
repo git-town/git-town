@@ -81,7 +81,8 @@ type GetFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#get-file-from-repository
 func (s *RepositoryFilesService) GetFile(pid any, fileName string, opt *GetFileOptions, options ...RequestOptionFunc) (*File, *Response, error) {
-	return do[*File](s.client,
+	return do[*File](
+		s.client,
 		withPath("projects/%s/repository/files/%s", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -102,7 +103,8 @@ type GetFileMetaDataOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#get-file-from-repository
 func (s *RepositoryFilesService) GetFileMetaData(pid any, fileName string, opt *GetFileMetaDataOptions, options ...RequestOptionFunc) (*File, *Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodHead),
 		withPath("projects/%s/repository/files/%s", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
@@ -195,7 +197,8 @@ type GetFileBlameOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#get-file-blame-from-repository
 func (s *RepositoryFilesService) GetFileBlame(pid any, file string, opt *GetFileBlameOptions, options ...RequestOptionFunc) ([]*FileBlameRange, *Response, error) {
-	return do[[]*FileBlameRange](s.client,
+	return do[[]*FileBlameRange](
+		s.client,
 		withPath("projects/%s/repository/files/%s/blame", ProjectID{pid}, file),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -216,7 +219,8 @@ type GetRawFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#get-raw-file-from-repository
 func (s *RepositoryFilesService) GetRawFile(pid any, fileName string, opt *GetRawFileOptions, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	buf, resp, err := do[bytes.Buffer](s.client,
+	buf, resp, err := do[bytes.Buffer](
+		s.client,
 		withPath("projects/%s/repository/files/%s/raw", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -232,7 +236,8 @@ func (s *RepositoryFilesService) GetRawFile(pid any, fileName string, opt *GetRa
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#get-raw-file-from-repository
 func (s *RepositoryFilesService) GetRawFileMetaData(pid any, fileName string, opt *GetRawFileOptions, options ...RequestOptionFunc) (*File, *Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodHead),
 		withPath("projects/%s/repository/files/%s/raw", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
@@ -282,7 +287,8 @@ type CreateFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#create-new-file-in-repository
 func (s *RepositoryFilesService) CreateFile(pid any, fileName string, opt *CreateFileOptions, options ...RequestOptionFunc) (*FileInfo, *Response, error) {
-	return do[*FileInfo](s.client,
+	return do[*FileInfo](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/files/%s", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
@@ -311,7 +317,8 @@ type UpdateFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#update-existing-file-in-repository
 func (s *RepositoryFilesService) UpdateFile(pid any, fileName string, opt *UpdateFileOptions, options ...RequestOptionFunc) (*FileInfo, *Response, error) {
-	return do[*FileInfo](s.client,
+	return do[*FileInfo](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/repository/files/%s", ProjectID{pid}, fileName),
 		withAPIOpts(opt),
@@ -337,7 +344,8 @@ type DeleteFileOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/repository_files/#delete-existing-file-in-repository
 func (s *RepositoryFilesService) DeleteFile(pid any, fileName string, opt *DeleteFileOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/repository/files/%s", ProjectID{pid}, fileName),
 		withAPIOpts(opt),

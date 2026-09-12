@@ -90,14 +90,16 @@ type RunnerControllerScopes struct {
 }
 
 func (s *RunnerControllerScopesService) ListRunnerControllerScopes(rid int64, options ...RequestOptionFunc) (*RunnerControllerScopes, *Response, error) {
-	return do[*RunnerControllerScopes](s.client,
+	return do[*RunnerControllerScopes](
+		s.client,
 		withPath("runner_controllers/%d/scopes", rid),
 		withRequestOpts(options...),
 	)
 }
 
 func (s *RunnerControllerScopesService) AddRunnerControllerInstanceScope(rid int64, options ...RequestOptionFunc) (*RunnerControllerInstanceLevelScoping, *Response, error) {
-	return do[*RunnerControllerInstanceLevelScoping](s.client,
+	return do[*RunnerControllerInstanceLevelScoping](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runner_controllers/%d/scopes/instance", rid),
 		withRequestOpts(options...),
@@ -105,7 +107,8 @@ func (s *RunnerControllerScopesService) AddRunnerControllerInstanceScope(rid int
 }
 
 func (s *RunnerControllerScopesService) RemoveRunnerControllerInstanceScope(rid int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runner_controllers/%d/scopes/instance", rid),
 		withRequestOpts(options...),
@@ -114,7 +117,8 @@ func (s *RunnerControllerScopesService) RemoveRunnerControllerInstanceScope(rid 
 }
 
 func (s *RunnerControllerScopesService) AddRunnerControllerRunnerScope(rid, runnerID int64, options ...RequestOptionFunc) (*RunnerControllerRunnerLevelScoping, *Response, error) {
-	return do[*RunnerControllerRunnerLevelScoping](s.client,
+	return do[*RunnerControllerRunnerLevelScoping](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("runner_controllers/%d/scopes/runners/%d", rid, runnerID),
 		withRequestOpts(options...),
@@ -122,7 +126,8 @@ func (s *RunnerControllerScopesService) AddRunnerControllerRunnerScope(rid, runn
 }
 
 func (s *RunnerControllerScopesService) RemoveRunnerControllerRunnerScope(rid, runnerID int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("runner_controllers/%d/scopes/runners/%d", rid, runnerID),
 		withRequestOpts(options...),

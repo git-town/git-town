@@ -471,7 +471,6 @@ func (r *Repository) WriteFileContent(ro *RepositoryContentWriteOptions) error {
 // ListRefs gets all refs in the Bitbucket repository and returns them as a RepositoryRefs.
 // It takes in a RepositoryRefOptions instance as its only parameter.
 func (r *Repository) ListRefs(rbo *RepositoryRefOptions) (*RepositoryRefs, error) {
-
 	params := url.Values{}
 	if rbo.Query != "" {
 		params.Add("q", rbo.Query)
@@ -602,7 +601,6 @@ func (r *Repository) CreateBranch(rbo *RepositoryBranchCreationOptions) (*Reposi
 }
 
 func (r *Repository) ListTags(rbo *RepositoryTagOptions) (*RepositoryTags, error) {
-
 	params := url.Values{}
 	if rbo.Query != "" {
 		params.Add("q", rbo.Query)
@@ -776,7 +774,6 @@ func (r *Repository) UpdatePipelineConfig(rpo *RepositoryPipelineOptions) (*Pipe
 }
 
 func (r *Repository) ListPipelineVariables(opt *RepositoryPipelineVariablesOptions) (*PipelineVariables, error) {
-
 	params := url.Values{}
 	if opt.Query != "" {
 		params.Add("q", opt.Query)
@@ -1322,7 +1319,7 @@ func decodeRepository(repoResponse interface{}) (*Repository, error) {
 		return nil, DecodeError(repoMap)
 	}
 
-	var repository = new(Repository)
+	repository := new(Repository)
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		Metadata:   nil,
 		Result:     repository,
@@ -1346,7 +1343,7 @@ func decodeRepositoryFiles(repoResponse interface{}) ([]RepositoryFile, error) {
 		return nil, DecodeError(repoFileMap)
 	}
 
-	var repositoryFiles = new([]RepositoryFile)
+	repositoryFiles := new([]RepositoryFile)
 	err := mapstructure.Decode(repoFileMap["values"], repositoryFiles)
 	if err != nil {
 		return nil, err
@@ -1356,7 +1353,6 @@ func decodeRepositoryFiles(repoResponse interface{}) ([]RepositoryFile, error) {
 }
 
 func decodeRepositoryRefs(refResponseStr string) (*RepositoryRefs, error) {
-
 	var refResponseMap map[string]interface{}
 	err := json.Unmarshal([]byte(refResponseStr), &refResponseMap)
 	if err != nil {
@@ -1408,7 +1404,6 @@ func decodeRepositoryRefs(refResponseStr string) (*RepositoryRefs, error) {
 }
 
 func decodeRepositoryBranches(branchResponseStr string) (*RepositoryBranches, error) {
-
 	var branchResponseMap map[string]interface{}
 	err := json.Unmarshal([]byte(branchResponseStr), &branchResponseMap)
 	if err != nil {
@@ -1460,7 +1455,6 @@ func decodeRepositoryBranches(branchResponseStr string) (*RepositoryBranches, er
 }
 
 func decodeRepositoryBranch(branchResponseStr string) (*RepositoryBranch, error) {
-
 	var branchResponseMap map[string]interface{}
 	err := json.Unmarshal([]byte(branchResponseStr), &branchResponseMap)
 	if err != nil {
@@ -1545,7 +1539,7 @@ func decodePipelineRepository(repoResponse interface{}) (*Pipeline, error) {
 		return nil, DecodeError(repoMap)
 	}
 
-	var pipeline = new(Pipeline)
+	pipeline := new(Pipeline)
 	err := mapstructure.Decode(repoMap, pipeline)
 	if err != nil {
 		return nil, err
@@ -1555,7 +1549,6 @@ func decodePipelineRepository(repoResponse interface{}) (*Pipeline, error) {
 }
 
 func decodePipelineVariables(responseStr string) (*PipelineVariables, error) {
-
 	var responseMap map[string]interface{}
 	err := json.Unmarshal([]byte(responseStr), &responseMap)
 	if err != nil {
@@ -1613,7 +1606,7 @@ func decodePipelineVariableRepository(repoResponse interface{}) (*PipelineVariab
 		return nil, DecodeError(repoMap)
 	}
 
-	var pipelineVariable = new(PipelineVariable)
+	pipelineVariable := new(PipelineVariable)
 	err := mapstructure.Decode(repoMap, pipelineVariable)
 	if err != nil {
 		return nil, err
@@ -1629,7 +1622,7 @@ func decodePipelineKeyPairRepository(repoResponse interface{}) (*PipelineKeyPair
 		return nil, DecodeError(repoMap)
 	}
 
-	var pipelineKeyPair = new(PipelineKeyPair)
+	pipelineKeyPair := new(PipelineKeyPair)
 	err := mapstructure.Decode(repoMap, pipelineKeyPair)
 	if err != nil {
 		return nil, err
@@ -1645,7 +1638,7 @@ func decodePipelineBuildNumberRepository(repoResponse interface{}) (*PipelineBui
 		return nil, DecodeError(repoMap)
 	}
 
-	var pipelineBuildNumber = new(PipelineBuildNumber)
+	pipelineBuildNumber := new(PipelineBuildNumber)
 	err := mapstructure.Decode(repoMap, pipelineBuildNumber)
 	if err != nil {
 		return nil, err
@@ -1661,7 +1654,7 @@ func decodeBranchingModel(branchingModelResponse interface{}) (*BranchingModel, 
 		return nil, DecodeError(branchingModelMap)
 	}
 
-	var branchingModel = new(BranchingModel)
+	branchingModel := new(BranchingModel)
 	err := mapstructure.Decode(branchingModelMap, branchingModel)
 	if err != nil {
 		return nil, err
@@ -1738,7 +1731,7 @@ func decodeEnvironment(response interface{}) (*Environment, error) {
 		return nil, DecodeError(responseMap)
 	}
 
-	var environment = new(Environment)
+	environment := new(Environment)
 	err := mapstructure.Decode(responseMap, &environment)
 	if err != nil {
 		return nil, err
@@ -1815,7 +1808,7 @@ func decodeDeploymentVariable(response interface{}) (*DeploymentVariable, error)
 		return nil, DecodeError(responseMap)
 	}
 
-	var variable = new(DeploymentVariable)
+	variable := new(DeploymentVariable)
 	err := mapstructure.Decode(responseMap, &variable)
 	if err != nil {
 		return nil, err

@@ -60,7 +60,6 @@ func (cm *Commits) CreateCommitStatus(cmo *CommitsOptions, cso *CommitStatusOpti
 }
 
 func (cm *Commits) buildCommitsQuery(include, exclude string) string {
-
 	p := url.Values{}
 
 	if include != "" {

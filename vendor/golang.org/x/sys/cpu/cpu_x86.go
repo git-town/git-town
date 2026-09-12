@@ -63,7 +63,6 @@ func initOptions() {
 }
 
 func archInit() {
-
 	// From internal/cpu
 	const (
 		// eax bits

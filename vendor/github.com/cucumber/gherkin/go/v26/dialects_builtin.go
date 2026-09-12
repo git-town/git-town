@@ -23,7 +23,8 @@ const (
 
 var builtinDialects = gherkinDialectMap{
 	"af": &Dialect{
-		"af", "Afrikaans", "Afrikaans", map[string][]string{
+		"af", "Afrikaans", "Afrikaans",
+		map[string][]string{
 			feature: {
 				"Funksie",
 				"Besigheid Behoefte",
@@ -78,9 +79,11 @@ var builtinDialects = gherkinDialectMap{
 			"Maar ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"am": &Dialect{
-		"am", "Armenian", "հայերեն", map[string][]string{
+		"am", "Armenian", "հայերեն",
+		map[string][]string{
 			feature: {
 				"Ֆունկցիոնալություն",
 				"Հատկություն",
@@ -137,9 +140,11 @@ var builtinDialects = gherkinDialectMap{
 			"Բայց ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"an": &Dialect{
-		"an", "Aragonese", "Aragonés", map[string][]string{
+		"an", "Aragonese", "Aragonés",
+		map[string][]string{
 			feature: {
 				"Caracteristica",
 			},
@@ -210,9 +215,11 @@ var builtinDialects = gherkinDialectMap{
 			"Pero ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ar": &Dialect{
-		"ar", "Arabic", "العربية", map[string][]string{
+		"ar", "Arabic", "العربية",
+		map[string][]string{
 			feature: {
 				"خاصية",
 			},
@@ -271,9 +278,11 @@ var builtinDialects = gherkinDialectMap{
 			"لكن ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ast": &Dialect{
-		"ast", "Asturian", "asturianu", map[string][]string{
+		"ast", "Asturian", "asturianu",
+		map[string][]string{
 			feature: {
 				"Carauterística",
 			},
@@ -338,9 +347,11 @@ var builtinDialects = gherkinDialectMap{
 			"Peru ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"az": &Dialect{
-		"az", "Azerbaijani", "Azərbaycanca", map[string][]string{
+		"az", "Azerbaijani", "Azərbaycanca",
+		map[string][]string{
 			feature: {
 				"Özəllik",
 			},
@@ -406,9 +417,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ancaq ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"be": &Dialect{
-		"be", "Belarusian", "Беларуская", map[string][]string{
+		"be", "Belarusian", "Беларуская",
+		map[string][]string{
 			feature: {
 				"Функцыянальнасць",
 				"Фіча",
@@ -475,9 +488,11 @@ var builtinDialects = gherkinDialectMap{
 			"Інакш ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"bg": &Dialect{
-		"bg", "Bulgarian", "български", map[string][]string{
+		"bg", "Bulgarian", "български",
+		map[string][]string{
 			feature: {
 				"Функционалност",
 			},
@@ -530,9 +545,11 @@ var builtinDialects = gherkinDialectMap{
 			"Но ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"bm": &Dialect{
-		"bm", "Malay", "Bahasa Melayu", map[string][]string{
+		"bm", "Malay", "Bahasa Melayu",
+		map[string][]string{
 			feature: {
 				"Fungsi",
 			},
@@ -598,9 +615,11 @@ var builtinDialects = gherkinDialectMap{
 			"Tapi ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"bs": &Dialect{
-		"bs", "Bosnian", "Bosanski", map[string][]string{
+		"bs", "Bosnian", "Bosanski",
+		map[string][]string{
 			feature: {
 				"Karakteristika",
 			},
@@ -658,9 +677,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ali ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ca": &Dialect{
-		"ca", "Catalan", "català", map[string][]string{
+		"ca", "Catalan", "català",
+		map[string][]string{
 			feature: {
 				"Característica",
 				"Funcionalitat",
@@ -727,9 +748,11 @@ var builtinDialects = gherkinDialectMap{
 			"Però ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"cs": &Dialect{
-		"cs", "Czech", "Česky", map[string][]string{
+		"cs", "Czech", "Česky",
+		map[string][]string{
 			feature: {
 				"Požadavek",
 			},
@@ -790,9 +813,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ale ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"cy-GB": &Dialect{
-		"cy-GB", "Welsh", "Cymraeg", map[string][]string{
+		"cy-GB", "Welsh", "Cymraeg",
+		map[string][]string{
 			feature: {
 				"Arwedd",
 			},
@@ -845,9 +870,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ond ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"da": &Dialect{
-		"da", "Danish", "dansk", map[string][]string{
+		"da", "Danish", "dansk",
+		map[string][]string{
 			feature: {
 				"Egenskab",
 			},
@@ -900,9 +927,11 @@ var builtinDialects = gherkinDialectMap{
 			"Men ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"de": &Dialect{
-		"de", "German", "Deutsch", map[string][]string{
+		"de", "German", "Deutsch",
+		map[string][]string{
 			feature: {
 				"Funktionalität",
 				"Funktion",
@@ -967,9 +996,11 @@ var builtinDialects = gherkinDialectMap{
 			"Aber ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"el": &Dialect{
-		"el", "Greek", "Ελληνικά", map[string][]string{
+		"el", "Greek", "Ελληνικά",
+		map[string][]string{
 			feature: {
 				"Δυνατότητα",
 				"Λειτουργία",
@@ -1025,9 +1056,11 @@ var builtinDialects = gherkinDialectMap{
 			"Αλλά ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"em": &Dialect{
-		"em", "Emoji", "😀", map[string][]string{
+		"em", "Emoji", "😀",
+		map[string][]string{
 			feature: {
 				"📚",
 			},
@@ -1080,9 +1113,11 @@ var builtinDialects = gherkinDialectMap{
 			"😔": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en": &Dialect{
-		"en", "English", "English", map[string][]string{
+		"en", "English", "English",
+		map[string][]string{
 			feature: {
 				"Feature",
 				"Business Need",
@@ -1139,9 +1174,11 @@ var builtinDialects = gherkinDialectMap{
 			"But ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-Scouse": &Dialect{
-		"en-Scouse", "Scouse", "Scouse", map[string][]string{
+		"en-Scouse", "Scouse", "Scouse",
+		map[string][]string{
 			feature: {
 				"Feature",
 			},
@@ -1202,9 +1239,11 @@ var builtinDialects = gherkinDialectMap{
 			"Buh ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-au": &Dialect{
-		"en-au", "Australian", "Australian", map[string][]string{
+		"en-au", "Australian", "Australian",
+		map[string][]string{
 			feature: {
 				"Pretty much",
 			},
@@ -1256,9 +1295,11 @@ var builtinDialects = gherkinDialectMap{
 			"Yeah nah ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-lol": &Dialect{
-		"en-lol", "LOLCAT", "LOLCAT", map[string][]string{
+		"en-lol", "LOLCAT", "LOLCAT",
+		map[string][]string{
 			feature: {
 				"OH HAI",
 			},
@@ -1310,9 +1351,11 @@ var builtinDialects = gherkinDialectMap{
 			"BUT ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-old": &Dialect{
-		"en-old", "Old English", "Englisc", map[string][]string{
+		"en-old", "Old English", "Englisc",
+		map[string][]string{
 			feature: {
 				"Hwaet",
 				"Hwæt",
@@ -1408,9 +1451,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ac ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-pirate": &Dialect{
-		"en-pirate", "Pirate", "Pirate", map[string][]string{
+		"en-pirate", "Pirate", "Pirate",
+		map[string][]string{
 			feature: {
 				"Ahoy matey!",
 			},
@@ -1462,9 +1507,11 @@ var builtinDialects = gherkinDialectMap{
 			"Avast! ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"en-tx": &Dialect{
-		"en-tx", "Texas", "Texas", map[string][]string{
+		"en-tx", "Texas", "Texas",
+		map[string][]string{
 			feature: {
 				"This ain’t my first rodeo",
 				"All gussied up",
@@ -1516,9 +1563,11 @@ var builtinDialects = gherkinDialectMap{
 			"Well now hold on, I'll you what ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"eo": &Dialect{
-		"eo", "Esperanto", "Esperanto", map[string][]string{
+		"eo", "Esperanto", "Esperanto",
+		map[string][]string{
 			feature: {
 				"Trajto",
 			},
@@ -1577,9 +1626,11 @@ var builtinDialects = gherkinDialectMap{
 			"Sed ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"es": &Dialect{
-		"es", "Spanish", "español", map[string][]string{
+		"es", "Spanish", "español",
+		map[string][]string{
 			feature: {
 				"Característica",
 				"Necesidad del negocio",
@@ -1647,9 +1698,11 @@ var builtinDialects = gherkinDialectMap{
 			"Pero ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"et": &Dialect{
-		"et", "Estonian", "eesti keel", map[string][]string{
+		"et", "Estonian", "eesti keel",
+		map[string][]string{
 			feature: {
 				"Omadus",
 			},
@@ -1703,9 +1756,11 @@ var builtinDialects = gherkinDialectMap{
 			"Kuid ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"fa": &Dialect{
-		"fa", "Persian", "فارسی", map[string][]string{
+		"fa", "Persian", "فارسی",
+		map[string][]string{
 			feature: {
 				"وِیژگی",
 			},
@@ -1758,9 +1813,11 @@ var builtinDialects = gherkinDialectMap{
 			"اما ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"fi": &Dialect{
-		"fi", "Finnish", "suomi", map[string][]string{
+		"fi", "Finnish", "suomi",
+		map[string][]string{
 			feature: {
 				"Ominaisuus",
 			},
@@ -1812,9 +1869,11 @@ var builtinDialects = gherkinDialectMap{
 			"Mutta ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"fr": &Dialect{
-		"fr", "French", "français", map[string][]string{
+		"fr", "French", "français",
+		map[string][]string{
 			feature: {
 				"Fonctionnalité",
 			},
@@ -1934,9 +1993,11 @@ var builtinDialects = gherkinDialectMap{
 			"Mais ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ga": &Dialect{
-		"ga", "Irish", "Gaeilge", map[string][]string{
+		"ga", "Irish", "Gaeilge",
+		map[string][]string{
 			feature: {
 				"Gné",
 			},
@@ -2007,9 +2068,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ach": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"gj": &Dialect{
-		"gj", "Gujarati", "ગુજરાતી", map[string][]string{
+		"gj", "Gujarati", "ગુજરાતી",
+		map[string][]string{
 			feature: {
 				"લક્ષણ",
 				"વ્યાપાર જરૂર",
@@ -2065,9 +2128,11 @@ var builtinDialects = gherkinDialectMap{
 			"પણ ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"gl": &Dialect{
-		"gl", "Galician", "galego", map[string][]string{
+		"gl", "Galician", "galego",
+		map[string][]string{
 			feature: {
 				"Característica",
 			},
@@ -2135,9 +2200,11 @@ var builtinDialects = gherkinDialectMap{
 			"Pero ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"he": &Dialect{
-		"he", "Hebrew", "עברית", map[string][]string{
+		"he", "Hebrew", "עברית",
+		map[string][]string{
 			feature: {
 				"תכונה",
 			},
@@ -2193,9 +2260,11 @@ var builtinDialects = gherkinDialectMap{
 			"אבל ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"hi": &Dialect{
-		"hi", "Hindi", "हिंदी", map[string][]string{
+		"hi", "Hindi", "हिंदी",
+		map[string][]string{
 			feature: {
 				"रूप लेख",
 			},
@@ -2268,9 +2337,11 @@ var builtinDialects = gherkinDialectMap{
 			"किन्तु ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"hr": &Dialect{
-		"hr", "Croatian", "hrvatski", map[string][]string{
+		"hr", "Croatian", "hrvatski",
+		map[string][]string{
 			feature: {
 				"Osobina",
 				"Mogućnost",
@@ -2339,9 +2410,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ali ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ht": &Dialect{
-		"ht", "Creole", "kreyòl", map[string][]string{
+		"ht", "Creole", "kreyòl",
+		map[string][]string{
 			feature: {
 				"Karakteristik",
 				"Mak",
@@ -2419,9 +2492,11 @@ var builtinDialects = gherkinDialectMap{
 			"Men ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"hu": &Dialect{
-		"hu", "Hungarian", "magyar", map[string][]string{
+		"hu", "Hungarian", "magyar",
+		map[string][]string{
 			feature: {
 				"Jellemző",
 			},
@@ -2483,9 +2558,11 @@ var builtinDialects = gherkinDialectMap{
 			"De ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"id": &Dialect{
-		"id", "Indonesian", "Bahasa Indonesia", map[string][]string{
+		"id", "Indonesian", "Bahasa Indonesia",
+		map[string][]string{
 			feature: {
 				"Fitur",
 			},
@@ -2559,9 +2636,11 @@ var builtinDialects = gherkinDialectMap{
 			"Tetapi ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"is": &Dialect{
-		"is", "Icelandic", "Íslenska", map[string][]string{
+		"is", "Icelandic", "Íslenska",
+		map[string][]string{
 			feature: {
 				"Eiginleiki",
 			},
@@ -2615,9 +2694,11 @@ var builtinDialects = gherkinDialectMap{
 			"En ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"it": &Dialect{
-		"it", "Italian", "italiano", map[string][]string{
+		"it", "Italian", "italiano",
+		map[string][]string{
 			feature: {
 				"Funzionalità",
 				"Esigenza di Business",
@@ -2681,9 +2762,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ma ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ja": &Dialect{
-		"ja", "Japanese", "日本語", map[string][]string{
+		"ja", "Japanese", "日本語",
+		map[string][]string{
 			feature: {
 				"フィーチャ",
 				"機能",
@@ -2752,9 +2835,11 @@ var builtinDialects = gherkinDialectMap{
 			"ただし": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"jv": &Dialect{
-		"jv", "Javanese", "Basa Jawa", map[string][]string{
+		"jv", "Javanese", "Basa Jawa",
+		map[string][]string{
 			feature: {
 				"Fitur",
 			},
@@ -2822,9 +2907,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ananging ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ka": &Dialect{
-		"ka", "Georgian", "ქართული", map[string][]string{
+		"ka", "Georgian", "ქართული",
+		map[string][]string{
 			feature: {
 				"თვისება",
 				"მოთხოვნა",
@@ -2904,9 +2991,11 @@ var builtinDialects = gherkinDialectMap{
 			"თუმცა ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"kn": &Dialect{
-		"kn", "Kannada", "ಕನ್ನಡ", map[string][]string{
+		"kn", "Kannada", "ಕನ್ನಡ",
+		map[string][]string{
 			feature: {
 				"ಹೆಚ್ಚಳ",
 			},
@@ -2959,9 +3048,11 @@ var builtinDialects = gherkinDialectMap{
 			"ಆದರೆ ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ko": &Dialect{
-		"ko", "Korean", "한국어", map[string][]string{
+		"ko", "Korean", "한국어",
+		map[string][]string{
 			feature: {
 				"기능",
 			},
@@ -3022,9 +3113,11 @@ var builtinDialects = gherkinDialectMap{
 			"단": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"lt": &Dialect{
-		"lt", "Lithuanian", "lietuvių kalba", map[string][]string{
+		"lt", "Lithuanian", "lietuvių kalba",
+		map[string][]string{
 			feature: {
 				"Savybė",
 			},
@@ -3079,9 +3172,11 @@ var builtinDialects = gherkinDialectMap{
 			"Bet ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"lu": &Dialect{
-		"lu", "Luxemburgish", "Lëtzebuergesch", map[string][]string{
+		"lu", "Luxemburgish", "Lëtzebuergesch",
+		map[string][]string{
 			feature: {
 				"Funktionalitéit",
 			},
@@ -3140,9 +3235,11 @@ var builtinDialects = gherkinDialectMap{
 			"mä ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"lv": &Dialect{
-		"lv", "Latvian", "latviešu", map[string][]string{
+		"lv", "Latvian", "latviešu",
+		map[string][]string{
 			feature: {
 				"Funkcionalitāte",
 				"Fīča",
@@ -3198,9 +3295,11 @@ var builtinDialects = gherkinDialectMap{
 			"Bet ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"mk-Cyrl": &Dialect{
-		"mk-Cyrl", "Macedonian", "Македонски", map[string][]string{
+		"mk-Cyrl", "Macedonian", "Македонски",
+		map[string][]string{
 			feature: {
 				"Функционалност",
 				"Бизнис потреба",
@@ -3263,9 +3362,11 @@ var builtinDialects = gherkinDialectMap{
 			"Но ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"mk-Latn": &Dialect{
-		"mk-Latn", "Macedonian (Latin)", "Makedonski (Latinica)", map[string][]string{
+		"mk-Latn", "Macedonian (Latin)", "Makedonski (Latinica)",
+		map[string][]string{
 			feature: {
 				"Funkcionalnost",
 				"Biznis potreba",
@@ -3327,9 +3428,11 @@ var builtinDialects = gherkinDialectMap{
 			"No ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"mn": &Dialect{
-		"mn", "Mongolian", "монгол", map[string][]string{
+		"mn", "Mongolian", "монгол",
+		map[string][]string{
 			feature: {
 				"Функц",
 				"Функционал",
@@ -3394,9 +3497,11 @@ var builtinDialects = gherkinDialectMap{
 			"Харин ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ne": &Dialect{
-		"ne", "Nepali", "नेपाली", map[string][]string{
+		"ne", "Nepali", "नेपाली",
+		map[string][]string{
 			feature: {
 				"सुविधा",
 				"विशेषता",
@@ -3462,9 +3567,11 @@ var builtinDialects = gherkinDialectMap{
 			"तर ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"nl": &Dialect{
-		"nl", "Dutch", "Nederlands", map[string][]string{
+		"nl", "Dutch", "Nederlands",
+		map[string][]string{
 			feature: {
 				"Functionaliteit",
 			},
@@ -3523,9 +3630,11 @@ var builtinDialects = gherkinDialectMap{
 			"Maar ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"no": &Dialect{
-		"no", "Norwegian", "norsk", map[string][]string{
+		"no", "Norwegian", "norsk",
+		map[string][]string{
 			feature: {
 				"Egenskap",
 			},
@@ -3579,9 +3688,11 @@ var builtinDialects = gherkinDialectMap{
 			"Men ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"pa": &Dialect{
-		"pa", "Panjabi", "ਪੰਜਾਬੀ", map[string][]string{
+		"pa", "Panjabi", "ਪੰਜਾਬੀ",
+		map[string][]string{
 			feature: {
 				"ਖਾਸੀਅਤ",
 				"ਮੁਹਾਂਦਰਾ",
@@ -3640,9 +3751,11 @@ var builtinDialects = gherkinDialectMap{
 			"ਪਰ ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"pl": &Dialect{
-		"pl", "Polish", "polski", map[string][]string{
+		"pl", "Polish", "polski",
+		map[string][]string{
 			feature: {
 				"Właściwość",
 				"Funkcja",
@@ -3717,9 +3830,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ale ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"pt": &Dialect{
-		"pt", "Portuguese", "português", map[string][]string{
+		"pt", "Portuguese", "português",
+		map[string][]string{
 			feature: {
 				"Funcionalidade",
 				"Característica",
@@ -3795,9 +3910,11 @@ var builtinDialects = gherkinDialectMap{
 			"Mas ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ro": &Dialect{
-		"ro", "Romanian", "română", map[string][]string{
+		"ro", "Romanian", "română",
+		map[string][]string{
 			feature: {
 				"Functionalitate",
 				"Funcționalitate",
@@ -3877,9 +3994,11 @@ var builtinDialects = gherkinDialectMap{
 			"Dar ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ru": &Dialect{
-		"ru", "Russian", "русский", map[string][]string{
+		"ru", "Russian", "русский",
+		map[string][]string{
 			feature: {
 				"Функция",
 				"Функциональность",
@@ -3965,9 +4084,11 @@ var builtinDialects = gherkinDialectMap{
 			"Иначе ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"sk": &Dialect{
-		"sk", "Slovak", "Slovensky", map[string][]string{
+		"sk", "Slovak", "Slovensky",
+		map[string][]string{
 			feature: {
 				"Požiadavka",
 				"Funkcia",
@@ -4042,9 +4163,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ale ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"sl": &Dialect{
-		"sl", "Slovenian", "Slovenski", map[string][]string{
+		"sl", "Slovenian", "Slovenski",
+		map[string][]string{
 			feature: {
 				"Funkcionalnost",
 				"Funkcija",
@@ -4137,9 +4260,11 @@ var builtinDialects = gherkinDialectMap{
 			"Vendar ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"sr-Cyrl": &Dialect{
-		"sr-Cyrl", "Serbian", "Српски", map[string][]string{
+		"sr-Cyrl", "Serbian", "Српски",
+		map[string][]string{
 			feature: {
 				"Функционалност",
 				"Могућност",
@@ -4209,9 +4334,11 @@ var builtinDialects = gherkinDialectMap{
 			"Али ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"sr-Latn": &Dialect{
-		"sr-Latn", "Serbian (Latin)", "Srpski (Latinica)", map[string][]string{
+		"sr-Latn", "Serbian (Latin)", "Srpski (Latinica)",
+		map[string][]string{
 			feature: {
 				"Funkcionalnost",
 				"Mogućnost",
@@ -4281,9 +4408,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ali ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"sv": &Dialect{
-		"sv", "Swedish", "Svenska", map[string][]string{
+		"sv", "Swedish", "Svenska",
+		map[string][]string{
 			feature: {
 				"Egenskap",
 			},
@@ -4336,9 +4465,11 @@ var builtinDialects = gherkinDialectMap{
 			"Men ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ta": &Dialect{
-		"ta", "Tamil", "தமிழ்", map[string][]string{
+		"ta", "Tamil", "தமிழ்",
+		map[string][]string{
 			feature: {
 				"அம்சம்",
 				"வணிக தேவை",
@@ -4399,9 +4530,11 @@ var builtinDialects = gherkinDialectMap{
 			"ஆனால்  ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"th": &Dialect{
-		"th", "Thai", "ไทย", map[string][]string{
+		"th", "Thai", "ไทย",
+		map[string][]string{
 			feature: {
 				"โครงหลัก",
 				"ความต้องการทางธุรกิจ",
@@ -4457,9 +4590,11 @@ var builtinDialects = gherkinDialectMap{
 			"แต่ ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"te": &Dialect{
-		"te", "Telugu", "తెలుగు", map[string][]string{
+		"te", "Telugu", "తెలుగు",
+		map[string][]string{
 			feature: {
 				"గుణము",
 			},
@@ -4512,9 +4647,11 @@ var builtinDialects = gherkinDialectMap{
 			"కాని ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"tlh": &Dialect{
-		"tlh", "Klingon", "tlhIngan", map[string][]string{
+		"tlh", "Klingon", "tlhIngan",
+		map[string][]string{
 			feature: {
 				"Qap",
 				"Qu'meH 'ut",
@@ -4580,9 +4717,11 @@ var builtinDialects = gherkinDialectMap{
 			"'a ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"tr": &Dialect{
-		"tr", "Turkish", "Türkçe", map[string][]string{
+		"tr", "Turkish", "Türkçe",
+		map[string][]string{
 			feature: {
 				"Özellik",
 			},
@@ -4638,9 +4777,11 @@ var builtinDialects = gherkinDialectMap{
 			"Ama ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"tt": &Dialect{
-		"tt", "Tatar", "Татарча", map[string][]string{
+		"tt", "Tatar", "Татарча",
+		map[string][]string{
 			feature: {
 				"Мөмкинлек",
 				"Үзенчәлеклелек",
@@ -4700,9 +4841,11 @@ var builtinDialects = gherkinDialectMap{
 			"Әмма ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"uk": &Dialect{
-		"uk", "Ukrainian", "Українська", map[string][]string{
+		"uk", "Ukrainian", "Українська",
+		map[string][]string{
 			feature: {
 				"Функціонал",
 			},
@@ -4776,9 +4919,11 @@ var builtinDialects = gherkinDialectMap{
 			"Але ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"ur": &Dialect{
-		"ur", "Urdu", "اردو", map[string][]string{
+		"ur", "Urdu", "اردو",
+		map[string][]string{
 			feature: {
 				"صلاحیت",
 				"کاروبار کی ضرورت",
@@ -4841,9 +4986,11 @@ var builtinDialects = gherkinDialectMap{
 			"لیکن ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"uz": &Dialect{
-		"uz", "Uzbek", "Узбекча", map[string][]string{
+		"uz", "Uzbek", "Узбекча",
+		map[string][]string{
 			feature: {
 				"Функционал",
 			},
@@ -4901,9 +5048,11 @@ var builtinDialects = gherkinDialectMap{
 			"Аммо ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"vi": &Dialect{
-		"vi", "Vietnamese", "Tiếng Việt", map[string][]string{
+		"vi", "Vietnamese", "Tiếng Việt",
+		map[string][]string{
 			feature: {
 				"Tính năng",
 			},
@@ -4960,9 +5109,11 @@ var builtinDialects = gherkinDialectMap{
 			"Nhưng ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"zh-CN": &Dialect{
-		"zh-CN", "Chinese simplified", "简体中文", map[string][]string{
+		"zh-CN", "Chinese simplified", "简体中文",
+		map[string][]string{
 			feature: {
 				"功能",
 			},
@@ -5029,9 +5180,11 @@ var builtinDialects = gherkinDialectMap{
 			"但是": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"zh-TW": &Dialect{
-		"zh-TW", "Chinese traditional", "繁體中文", map[string][]string{
+		"zh-TW", "Chinese traditional", "繁體中文",
+		map[string][]string{
 			feature: {
 				"功能",
 			},
@@ -5097,9 +5250,11 @@ var builtinDialects = gherkinDialectMap{
 			"但是": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"mr": &Dialect{
-		"mr", "Marathi", "मराठी", map[string][]string{
+		"mr", "Marathi", "मराठी",
+		map[string][]string{
 			feature: {
 				"वैशिष्ट्य",
 				"सुविधा",
@@ -5164,9 +5319,11 @@ var builtinDialects = gherkinDialectMap{
 			"परंतु ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 	"amh": &Dialect{
-		"amh", "Amharic", "አማርኛ", map[string][]string{
+		"amh", "Amharic", "አማርኛ",
+		map[string][]string{
 			feature: {
 				"ስራ",
 				"የተፈለገው ስራ",
@@ -5225,5 +5382,6 @@ var builtinDialects = gherkinDialectMap{
 			"ግን ": messages.StepKeywordType_CONJUNCTION,
 
 			"* ": messages.StepKeywordType_UNKNOWN,
-		}},
+		},
+	},
 }

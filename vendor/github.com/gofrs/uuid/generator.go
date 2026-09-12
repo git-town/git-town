@@ -373,27 +373,27 @@ func (g *Gen) NewV7() (UUID, error) {
 	if err != nil {
 		return Nil, err
 	}
-	//UUIDv7 features a 48 bit timestamp. First 32bit (4bytes) represents seconds since 1970, followed by 2 bytes for the ms granularity.
-	u[0] = byte(ms >> 40) //1-6 bytes: big-endian unsigned number of Unix epoch timestamp
+	// UUIDv7 features a 48 bit timestamp. First 32bit (4bytes) represents seconds since 1970, followed by 2 bytes for the ms granularity.
+	u[0] = byte(ms >> 40) // 1-6 bytes: big-endian unsigned number of Unix epoch timestamp
 	u[1] = byte(ms >> 32)
 	u[2] = byte(ms >> 24)
 	u[3] = byte(ms >> 16)
 	u[4] = byte(ms >> 8)
 	u[5] = byte(ms)
 
-	//support batching by using a monotonic pseudo-random sequence
-	//The 6th byte contains the version and partially rand_a data.
-	//We will lose the most significant bites from the clockSeq (with SetVersion), but it is ok, we need the least significant that contains the counter to ensure the monotonic property
+	// support batching by using a monotonic pseudo-random sequence
+	// The 6th byte contains the version and partially rand_a data.
+	// We will lose the most significant bites from the clockSeq (with SetVersion), but it is ok, we need the least significant that contains the counter to ensure the monotonic property
 	binary.BigEndian.PutUint16(u[6:8], clockSeq) // set rand_a with clock seq which is random and monotonic
 
-	//override first 4bits of u[6].
+	// override first 4bits of u[6].
 	u.SetVersion(V7)
 
-	//set rand_b 64bits of pseudo-random bits (first 2 will be overridden)
+	// set rand_b 64bits of pseudo-random bits (first 2 will be overridden)
 	if _, err = io.ReadFull(g.rand, u[8:16]); err != nil {
 		return Nil, err
 	}
-	//override first 2 bits of byte[8] for the variant
+	// override first 2 bits of byte[8] for the variant
 	u.SetVariant(VariantRFC4122)
 
 	return u, nil

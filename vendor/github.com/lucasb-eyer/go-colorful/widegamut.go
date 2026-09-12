@@ -82,7 +82,8 @@ func (c1 Color) BlendDisplayP3(c2 Color, t float64) Color {
 	return DisplayP3(
 		r1+t*(r2-r1),
 		g1+t*(g2-g1),
-		b1+t*(b2-b1))
+		b1+t*(b2-b1),
+	)
 }
 
 /// A98 RGB ///
@@ -151,7 +152,8 @@ func (c1 Color) BlendA98Rgb(c2 Color, t float64) Color {
 	return A98Rgb(
 		r1+t*(r2-r1),
 		g1+t*(g2-g1),
-		b1+t*(b2-b1))
+		b1+t*(b2-b1),
+	)
 }
 
 /// ProPhoto RGB ///
@@ -216,7 +218,8 @@ func (c1 Color) BlendProPhotoRgb(c2 Color, t float64) Color {
 	return ProPhotoRgb(
 		r1+t*(r2-r1),
 		g1+t*(g2-g1),
-		b1+t*(b2-b1))
+		b1+t*(b2-b1),
+	)
 }
 
 /// Rec. 2020 ///
@@ -286,5 +289,6 @@ func (c1 Color) BlendRec2020(c2 Color, t float64) Color {
 	return Rec2020(
 		r1+t*(r2-r1),
 		g1+t*(g2-g1),
-		b1+t*(b2-b1))
+		b1+t*(b2-b1),
+	)
 }

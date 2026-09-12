@@ -35,11 +35,11 @@ func GetZosLibVec() uintptr
 
 func init() {
 	initZosLibVec()
-	r0, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS_____GETENV_A<<4, uintptr(unsafe.Pointer(&([]byte("__ZOS_XSYSTRACE\x00"))[0])))
+	r0, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS_____GETENV_A<<4, uintptr(unsafe.Pointer(&[]byte("__ZOS_XSYSTRACE\x00")[0])))
 	if r0 != 0 {
 		n, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS___ATOI_A<<4, r0)
 		ZosTraceLevel = int(n)
-		r0, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS_____GETENV_A<<4, uintptr(unsafe.Pointer(&([]byte("__ZOS_XSYSTRACEFD\x00"))[0])))
+		r0, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS_____GETENV_A<<4, uintptr(unsafe.Pointer(&[]byte("__ZOS_XSYSTRACEFD\x00")[0])))
 		if r0 != 0 {
 			fd, _, _ := CallLeFuncWithPtrReturn(GetZosLibVec()+SYS___ATOI_A<<4, r0)
 			f := os.NewFile(fd, "zostracefile")
@@ -181,8 +181,8 @@ func isValidLeFunc(f uintptr) error {
 // Retrieve function name from descriptor
 func getLeFuncName(f uintptr) (string, error) {
 	// assume it has been checked, only check ppa1 validity here
-	entry := ((*[2]uintptr)(unsafe.Pointer(f)))[1]
-	preamp := ((*[4]uint32)(unsafe.Pointer(entry - eyecatcherOffset)))
+	entry := (*[2]uintptr)(unsafe.Pointer(f))[1]
+	preamp := (*[4]uint32)(unsafe.Pointer(entry - eyecatcherOffset))
 
 	offsetPpa1 := preamp[2]
 	if offsetPpa1 > 0x0ffff {
@@ -237,11 +237,11 @@ func copyStat(stat *Stat_t, statLE *Stat_LE_t) {
 	stat.Rdev = uint64(statLE.Rdev)
 	stat.Size = statLE.Size
 	stat.Atim.Sec = int64(statLE.Atim)
-	stat.Atim.Nsec = 0 //zos doesn't return nanoseconds
+	stat.Atim.Nsec = 0 // zos doesn't return nanoseconds
 	stat.Mtim.Sec = int64(statLE.Mtim)
-	stat.Mtim.Nsec = 0 //zos doesn't return nanoseconds
+	stat.Mtim.Nsec = 0 // zos doesn't return nanoseconds
 	stat.Ctim.Sec = int64(statLE.Ctim)
-	stat.Ctim.Nsec = 0 //zos doesn't return nanoseconds
+	stat.Ctim.Nsec = 0 // zos doesn't return nanoseconds
 	stat.Blksize = int64(statLE.Blksize)
 	stat.Blocks = statLE.Blocks
 }
@@ -265,7 +265,7 @@ func (d *Dirent) NameString() string {
 
 func DecodeData(dest []byte, sz int, val uint64) {
 	for i := 0; i < sz; i++ {
-		dest[sz-1-i] = byte((val >> (uint64(i * 8))) & 0xff)
+		dest[sz-1-i] = byte((val >> uint64(i*8)) & 0xff)
 	}
 }
 
@@ -683,6 +683,7 @@ func pipe2Impl(p []int, flags int) (err error) {
 	}
 	return
 }
+
 func pipe2Error(p []int, flags int) (err error) {
 	return fmt.Errorf("Pipe2 is not available on this system")
 }
@@ -796,7 +797,7 @@ func Getpgrp() (pid int) {
 func Getrusage(who int, rusage *Rusage) (err error) {
 	var ruz rusage_zos
 	err = getrusage(who, &ruz)
-	//Only the first two fields of Rusage are set
+	// Only the first two fields of Rusage are set
 	rusage.Utime.Sec = ruz.Utime.Sec
 	rusage.Utime.Usec = int64(ruz.Utime.Usec)
 	rusage.Stime.Sec = ruz.Stime.Sec
@@ -824,11 +825,12 @@ func Lstat(path string, stat *Stat_t) (err error) {
 
 // for checking symlinks begins with $VERSION/ $SYSNAME/ $SYSSYMR/ $SYSSYMA/
 func isSpecialPath(path []byte) (v bool) {
-	var special = [4][8]byte{
+	special := [4][8]byte{
 		{'V', 'E', 'R', 'S', 'I', 'O', 'N', '/'},
 		{'S', 'Y', 'S', 'N', 'A', 'M', 'E', '/'},
 		{'S', 'Y', 'S', 'S', 'Y', 'M', 'R', '/'},
-		{'S', 'Y', 'S', 'S', 'Y', 'M', 'A', '/'}}
+		{'S', 'Y', 'S', 'S', 'Y', 'M', 'A', '/'},
+	}
 
 	var i, j int
 	for i = 0; i < len(special); i++ {
@@ -849,8 +851,10 @@ func realpath(srcpath string, abspath []byte) (pathlen int, errno int) {
 	copy(source[:], srcpath)
 	source[len(srcpath)] = 0
 	ret := runtime.CallLeFuncByPtr(runtime.XplinkLibvec+SYS___REALPATH_A<<4, //__realpath_a()
-		[]uintptr{uintptr(unsafe.Pointer(&source[0])),
-			uintptr(unsafe.Pointer(&abspath[0]))})
+		[]uintptr{
+			uintptr(unsafe.Pointer(&source[0])),
+			uintptr(unsafe.Pointer(&abspath[0])),
+		})
 	if ret != 0 {
 		index := bytes.IndexByte(abspath[:], byte(0))
 		if index != -1 {
@@ -1243,7 +1247,7 @@ func setTimespec(sec, nsec int64) Timespec {
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
-func setTimeval(sec, usec int64) Timeval { //fix
+func setTimeval(sec, usec int64) Timeval { // fix
 	return Timeval{Sec: sec, Usec: usec}
 }
 
@@ -2076,7 +2080,6 @@ func enter_Flock(fd int, how int) (err error) {
 }
 
 func legacyFlock(fd int, how int) error {
-
 	var flock_type int16
 	var fcntl_cmd int
 
@@ -2159,8 +2162,7 @@ func Munlockall() (err error) {
 }
 
 func ClockGettime(clockid int32, ts *Timespec) error {
-
-	var ticks_per_sec uint32 = 100 //TODO(kenan): value is currently hardcoded; need sysconf() call otherwise
+	var ticks_per_sec uint32 = 100 // TODO(kenan): value is currently hardcoded; need sysconf() call otherwise
 	var nsec_per_sec int64 = 1000000000
 
 	if ts == nil {
@@ -2296,8 +2298,10 @@ var (
 	errENOENT error = syscall.ENOENT
 )
 
-var ZosTraceLevel int
-var ZosTracefile *os.File
+var (
+	ZosTraceLevel int
+	ZosTracefile  *os.File
+)
 
 var (
 	signalNameMapOnce sync.Once
@@ -2438,7 +2442,7 @@ func (m *mmapper) Mmap(fd int, offset int64, length int, prot int, flags int) (d
 	}
 
 	// Slice memory layout
-	var sl = struct {
+	sl := struct {
 		addr uintptr
 		len  int
 		cap  int
@@ -2650,7 +2654,7 @@ func SetsockoptByte(fd, level, opt int, value byte) (err error) {
 }
 
 func SetsockoptInt(fd, level, opt int, value int) (err error) {
-	var n = int32(value)
+	n := int32(value)
 	return setsockopt(fd, level, opt, unsafe.Pointer(&n), 4)
 }
 
@@ -3027,6 +3031,7 @@ func ZosConsolePrintf(format string, v ...interface{}) (int, error) {
 	}
 	return 0, nil
 }
+
 func ZosStringToEbcdicBytes(str string, nullterm bool) (ebcdicBytes []byte) {
 	if nullterm {
 		ebcdicBytes = []byte(str + "\x00")
@@ -3036,6 +3041,7 @@ func ZosStringToEbcdicBytes(str string, nullterm bool) (ebcdicBytes []byte) {
 	A2e(ebcdicBytes)
 	return
 }
+
 func ZosEbcdicBytesToString(b []byte, trimRight bool) (str string) {
 	res := make([]byte, len(b))
 	copy(res, b)
@@ -3169,7 +3175,7 @@ func sendfile(outfd int, infd int, offset *int64, count int) (written int, err e
 	if err != nil {
 		return -1, err
 	}
-	//start reading data from in_fd
+	// start reading data from in_fd
 	if offset != nil {
 		_, err := Seek(infd, *offset, SEEK_SET)
 		if err != nil {
@@ -3198,7 +3204,7 @@ func sendfile(outfd int, infd int, offset *int64, count int) (written int, err e
 		return -1, err
 	}
 
-	//When sendfile() returns, this variable will be set to the
+	// When sendfile() returns, this variable will be set to the
 	// offset of the byte following the last byte that was read.
 	if offset != nil {
 		*offset = *offset + int64(n)

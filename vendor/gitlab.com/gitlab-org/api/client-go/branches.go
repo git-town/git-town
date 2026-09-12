@@ -94,7 +94,8 @@ type ListBranchesOptions struct {
 }
 
 func (s *BranchesService) ListBranches(pid any, opts *ListBranchesOptions, options ...RequestOptionFunc) ([]*Branch, *Response, error) {
-	return do[[]*Branch](s.client,
+	return do[[]*Branch](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/branches", ProjectID{pid}),
 		withAPIOpts(opts),
@@ -103,7 +104,8 @@ func (s *BranchesService) ListBranches(pid any, opts *ListBranchesOptions, optio
 }
 
 func (s *BranchesService) GetBranch(pid any, branch string, options ...RequestOptionFunc) (*Branch, *Response, error) {
-	return do[*Branch](s.client,
+	return do[*Branch](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/repository/branches/%s", ProjectID{pid}, branch),
 		withRequestOpts(options...),
@@ -120,7 +122,8 @@ type CreateBranchOptions struct {
 }
 
 func (s *BranchesService) CreateBranch(pid any, opt *CreateBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error) {
-	return do[*Branch](s.client,
+	return do[*Branch](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/repository/branches", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -129,7 +132,8 @@ func (s *BranchesService) CreateBranch(pid any, opt *CreateBranchOptions, option
 }
 
 func (s *BranchesService) DeleteBranch(pid any, branch string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/repository/branches/%s", ProjectID{pid}, branch),
 		withRequestOpts(options...),
@@ -138,7 +142,8 @@ func (s *BranchesService) DeleteBranch(pid any, branch string, options ...Reques
 }
 
 func (s *BranchesService) DeleteMergedBranches(pid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/repository/merged_branches", ProjectID{pid}),
 		withRequestOpts(options...),

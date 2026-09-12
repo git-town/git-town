@@ -40,7 +40,8 @@ type GroupSSHCertificate struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#get-all-ssh-certificates-for-a-particular-group
 func (s *GroupSSHCertificatesService) ListGroupSSHCertificates(gid any, options ...RequestOptionFunc) ([]*GroupSSHCertificate, *Response, error) {
-	return do[[]*GroupSSHCertificate](s.client,
+	return do[[]*GroupSSHCertificate](
+		s.client,
 		withPath("groups/%s/ssh_certificates", GroupID{gid}),
 		withRequestOpts(options...),
 	)
@@ -61,7 +62,8 @@ type CreateGroupSSHCertificateOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#create-ssh-certificate
 func (s *GroupSSHCertificatesService) CreateGroupSSHCertificate(gid any, opt *CreateGroupSSHCertificateOptions, options ...RequestOptionFunc) (*GroupSSHCertificate, *Response, error) {
-	return do[*GroupSSHCertificate](s.client,
+	return do[*GroupSSHCertificate](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/ssh_certificates", GroupID{gid}),
 		withAPIOpts(opt),
@@ -74,7 +76,8 @@ func (s *GroupSSHCertificatesService) CreateGroupSSHCertificate(gid any, opt *Cr
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#delete-group-ssh-certificate
 func (s *GroupSSHCertificatesService) DeleteGroupSSHCertificate(gid any, cert int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/ssh_certificates/%d", GroupID{gid}, cert),
 		withRequestOpts(options...),

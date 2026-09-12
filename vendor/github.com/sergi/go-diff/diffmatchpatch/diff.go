@@ -157,9 +157,9 @@ func (dmp *DiffMatchPatch) diffCompute(text1, text2 []rune, checklines bool, dea
 		}
 		// Shorter text is inside the longer text (speedup).
 		return []Diff{
-			Diff{op, string(longtext[:i])},
-			Diff{DiffEqual, string(shorttext)},
-			Diff{op, string(longtext[i+len(shorttext):])},
+			{op, string(longtext[:i])},
+			{DiffEqual, string(shorttext)},
+			{op, string(longtext[i+len(shorttext):])},
 		}
 	} else if len(shorttext) == 1 {
 		// Single character string.
@@ -336,7 +336,7 @@ func (dmp *DiffMatchPatch) diffBisect(runes1, runes2 []rune, deadline time.Time)
 			} else {
 				x2 = v2[k2Offset-1] + 1
 			}
-			var y2 = x2 - k2
+			y2 := x2 - k2
 			for x2 < runes1Len && y2 < runes2Len {
 				if runes1[runes1Len-x2-1] != runes2[runes2Len-y2-1] {
 					break
@@ -374,7 +374,8 @@ func (dmp *DiffMatchPatch) diffBisect(runes1, runes2 []rune, deadline time.Time)
 }
 
 func (dmp *DiffMatchPatch) diffBisectSplit(runes1, runes2 []rune, x, y int,
-	deadline time.Time) []Diff {
+	deadline time.Time,
+) []Diff {
 	runes1a := runes1[:x]
 	runes2a := runes2[:y]
 	runes1b := runes1[x:]
@@ -692,8 +693,7 @@ func (dmp *DiffMatchPatch) DiffCleanupSemantic(diffs []Diff) []Diff {
 
 					// Overlap found. Insert an equality and trim the surrounding edits.
 					diffs = splice(diffs, pointer, 0, Diff{DiffEqual, insertion[:overlapLength1]})
-					diffs[pointer-1].Text =
-						deletion[0 : len(deletion)-overlapLength1]
+					diffs[pointer-1].Text = deletion[0 : len(deletion)-overlapLength1]
 					diffs[pointer+1].Text = insertion[overlapLength1:]
 					pointer++
 				}
@@ -1178,7 +1178,7 @@ func (dmp *DiffMatchPatch) DiffPrettyText(diffs []Diff) string {
 
 // DiffText1 computes and returns the source text (all equalities and deletions).
 func (dmp *DiffMatchPatch) DiffText1(diffs []Diff) string {
-	//StringBuilder text = new StringBuilder()
+	// StringBuilder text = new StringBuilder()
 	var text bytes.Buffer
 
 	for _, aDiff := range diffs {
@@ -1323,7 +1323,7 @@ func (dmp *DiffMatchPatch) diffLinesToStrings(text1, text2 string) (string, stri
 	lineArray := []string{""} // e.g. lineArray[4] == 'Hello\n'
 
 	lineHash := make(map[string]int)
-	//Each string has the index of lineArray which it points to
+	// Each string has the index of lineArray which it points to
 	strIndexArray1 := dmp.diffLinesToStringsMunge(text1, &lineArray, lineHash)
 	strIndexArray2 := dmp.diffLinesToStringsMunge(text2, &lineArray, lineHash)
 

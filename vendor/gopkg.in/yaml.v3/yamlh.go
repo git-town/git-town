@@ -287,7 +287,6 @@ func (e yaml_event_type_t) String() string {
 
 // The event structure.
 type yaml_event_t struct {
-
 	// The event type.
 	typ yaml_event_type_t
 
@@ -329,9 +328,11 @@ type yaml_event_t struct {
 	style yaml_style_t
 }
 
-func (e *yaml_event_t) scalar_style() yaml_scalar_style_t     { return yaml_scalar_style_t(e.style) }
+func (e *yaml_event_t) scalar_style() yaml_scalar_style_t { return yaml_scalar_style_t(e.style) }
+
 func (e *yaml_event_t) sequence_style() yaml_sequence_style_t { return yaml_sequence_style_t(e.style) }
-func (e *yaml_event_t) mapping_style() yaml_mapping_style_t   { return yaml_mapping_style_t(e.style) }
+
+func (e *yaml_event_t) mapping_style() yaml_mapping_style_t { return yaml_mapping_style_t(e.style) }
 
 // Nodes
 
@@ -407,12 +408,10 @@ type yaml_node_t struct {
 
 	start_mark yaml_mark_t // The beginning of the node.
 	end_mark   yaml_mark_t // The end of the node.
-
 }
 
 // The document structure.
 type yaml_document_t struct {
-
 	// The document nodes.
 	nodes []yaml_node_t
 
@@ -438,7 +437,9 @@ type yaml_document_t struct {
 // The number of written bytes should be set to the size_read variable.
 //
 // [in,out]   data        A pointer to an application data specified by
-//                        yaml_parser_set_input().
+//
+//	yaml_parser_set_input().
+//
 // [out]      buffer      The buffer to write the data from the source.
 // [in]       size        The size of the buffer.
 // [out]      size_read   The actual number of bytes read from the source.
@@ -553,7 +554,6 @@ type yaml_alias_data_t struct {
 // All members are internal. Manage the structure using the
 // yaml_parser_ family of functions.
 type yaml_parser_t struct {
-
 	// Error handling
 
 	error yaml_error_type_t // Error type.
@@ -639,7 +639,6 @@ type yaml_parser_t struct {
 }
 
 type yaml_comment_t struct {
-
 	scan_mark  yaml_mark_t // Position where scanning for comments started
 	token_mark yaml_mark_t // Position after which tokens will be associated with this comment
 	start_mark yaml_mark_t // Position of '#' comment mark
@@ -659,13 +658,14 @@ type yaml_comment_t struct {
 // @a buffer to the output.
 //
 // @param[in,out]   data        A pointer to an application data specified by
-//                              yaml_emitter_set_output().
+//
+//	yaml_emitter_set_output().
+//
 // @param[in]       buffer      The buffer with bytes to be written.
 // @param[in]       size        The size of the buffer.
 //
 // @returns On success, the handler should return @c 1.  If the handler failed,
 // the returned value should be @c 0.
-//
 type yaml_write_handler_t func(emitter *yaml_emitter_t, buffer []byte) error
 
 type yaml_emitter_state_t int
@@ -701,7 +701,6 @@ const (
 // All members are internal.  Manage the structure using the @c yaml_emitter_
 // family of functions.
 type yaml_emitter_t struct {
-
 	// Error handling
 
 	error   yaml_error_type_t // Error type.

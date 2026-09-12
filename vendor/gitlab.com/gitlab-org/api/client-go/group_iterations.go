@@ -73,7 +73,8 @@ type ListGroupIterationsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_iterations/#list-group-iterations
 func (s *GroupIterationsService) ListGroupIterations(gid any, opt *ListGroupIterationsOptions, options ...RequestOptionFunc) ([]*GroupIteration, *Response, error) {
-	return do[[]*GroupIteration](s.client,
+	return do[[]*GroupIteration](
+		s.client,
 		withPath("groups/%s/iterations", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),

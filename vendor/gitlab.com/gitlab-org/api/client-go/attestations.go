@@ -46,7 +46,8 @@ type Attestation struct {
 }
 
 func (s *AttestationsService) ListAttestations(pid any, subjectDigest string, options ...RequestOptionFunc) ([]*Attestation, *Response, error) {
-	return do[[]*Attestation](s.client,
+	return do[[]*Attestation](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/attestations/%s", ProjectID{pid}, subjectDigest),
 		withRequestOpts(options...),
@@ -54,7 +55,8 @@ func (s *AttestationsService) ListAttestations(pid any, subjectDigest string, op
 }
 
 func (s *AttestationsService) DownloadAttestation(pid any, attestationIID int64, options ...RequestOptionFunc) ([]byte, *Response, error) {
-	b, resp, err := do[bytes.Buffer](s.client,
+	b, resp, err := do[bytes.Buffer](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/attestations/%d/download", ProjectID{pid}, attestationIID),
 		withRequestOpts(options...),

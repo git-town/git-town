@@ -101,7 +101,6 @@ func clearAttach(ctx context.Context) context.Context {
 }
 
 func pickleAttachments(ctx context.Context) []models.PickleAttachment {
-
 	pickledAttachments := []models.PickleAttachment{}
 	attachments := Attachments(ctx)
 
@@ -572,9 +571,7 @@ func keywordMatches(k formatters.Keyword, stepType messages.PickleStepType) bool
 }
 
 func (s *suite) runSteps(ctx context.Context, pickle *Scenario, steps []*Step) (context.Context, error) {
-	var (
-		stepErr, scenarioErr error
-	)
+	var stepErr, scenarioErr error
 
 	for i, step := range steps {
 		isLast := i == len(steps)-1

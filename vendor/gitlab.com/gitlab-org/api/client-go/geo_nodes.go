@@ -117,7 +117,8 @@ type CreateGeoNodesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#create-a-new-geo-node
 func (s *GeoNodesService) CreateGeoNode(opt *CreateGeoNodesOptions, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	return do[*GeoNode](s.client,
+	return do[*GeoNode](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("geo_nodes"),
 		withAPIOpts(opt),
@@ -140,7 +141,8 @@ type ListGeoNodesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-configuration-about-all-geo-nodes
 func (s *GeoNodesService) ListGeoNodes(opt *ListGeoNodesOptions, options ...RequestOptionFunc) ([]*GeoNode, *Response, error) {
-	return do[[]*GeoNode](s.client,
+	return do[[]*GeoNode](
+		s.client,
 		withPath("geo_nodes"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -153,7 +155,8 @@ func (s *GeoNodesService) ListGeoNodes(opt *ListGeoNodesOptions, options ...Requ
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-configuration-about-a-specific-geo-node
 func (s *GeoNodesService) GetGeoNode(id int64, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	return do[*GeoNode](s.client,
+	return do[*GeoNode](
+		s.client,
 		withPath("geo_nodes/%d", id),
 		withRequestOpts(options...),
 	)
@@ -187,7 +190,8 @@ type UpdateGeoNodesOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#edit-a-geo-node
 func (s *GeoNodesService) EditGeoNode(id int64, opt *UpdateGeoNodesOptions, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	return do[*GeoNode](s.client,
+	return do[*GeoNode](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("geo_nodes/%d", id),
 		withAPIOpts(opt),
@@ -201,7 +205,8 @@ func (s *GeoNodesService) EditGeoNode(id int64, opt *UpdateGeoNodesOptions, opti
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#delete-a-geo-node
 func (s *GeoNodesService) DeleteGeoNode(id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("geo_nodes/%d", id),
 		withRequestOpts(options...),
@@ -215,7 +220,8 @@ func (s *GeoNodesService) DeleteGeoNode(id int64, options ...RequestOptionFunc) 
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#repair-a-geo-node
 func (s *GeoNodesService) RepairGeoNode(id int64, options ...RequestOptionFunc) (*GeoNode, *Response, error) {
-	return do[*GeoNode](s.client,
+	return do[*GeoNode](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("geo_nodes/%d/repair", id),
 		withRequestOpts(options...),
@@ -393,7 +399,8 @@ type GeoNodeStatus struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-status-about-all-geo-nodes
 func (s *GeoNodesService) RetrieveStatusOfAllGeoNodes(options ...RequestOptionFunc) ([]*GeoNodeStatus, *Response, error) {
-	return do[[]*GeoNodeStatus](s.client,
+	return do[[]*GeoNodeStatus](
+		s.client,
 		withPath("geo_nodes/status"),
 		withRequestOpts(options...),
 	)
@@ -405,7 +412,8 @@ func (s *GeoNodesService) RetrieveStatusOfAllGeoNodes(options ...RequestOptionFu
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_nodes/#retrieve-status-about-a-specific-geo-node
 func (s *GeoNodesService) RetrieveStatusOfGeoNode(id int64, options ...RequestOptionFunc) (*GeoNodeStatus, *Response, error) {
-	return do[*GeoNodeStatus](s.client,
+	return do[*GeoNodeStatus](
+		s.client,
 		withPath("geo_nodes/%d/status", id),
 		withRequestOpts(options...),
 	)

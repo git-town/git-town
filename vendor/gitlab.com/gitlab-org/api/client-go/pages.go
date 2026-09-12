@@ -75,7 +75,8 @@ type PagesDeployment struct {
 }
 
 func (s *PagesService) UnpublishPages(gid any, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/pages", ProjectID{gid}),
 		withRequestOpts(options...),
@@ -84,7 +85,8 @@ func (s *PagesService) UnpublishPages(gid any, options ...RequestOptionFunc) (*R
 }
 
 func (s *PagesService) GetPages(gid any, options ...RequestOptionFunc) (*Pages, *Response, error) {
-	return do[*Pages](s.client,
+	return do[*Pages](
+		s.client,
 		withPath("projects/%s/pages", ProjectID{gid}),
 		withRequestOpts(options...),
 	)
@@ -101,7 +103,8 @@ type UpdatePagesOptions struct {
 }
 
 func (s *PagesService) UpdatePages(pid any, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error) {
-	return do[*Pages](s.client,
+	return do[*Pages](
+		s.client,
 		withMethod(http.MethodPatch),
 		withPath("projects/%s/pages", ProjectID{pid}),
 		withAPIOpts(opt),

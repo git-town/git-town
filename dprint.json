@@ -1,18 +1,19 @@
 {
-  "dockerfile": {
-  },
+  "dockerfile": {},
   "incremental": true,
-  "json": {
-  },
-  "toml": {
-  },
+  "json": {},
+  "toml": {},
   "typescript": {
     "semiColons": "asi"
   },
-  "yaml": {
-  },
+  "yaml": {},
   "includes": ["**/*.{js,ts,json}"],
-  "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
+  "excludes": [
+    "CHANGELOG.md",
+    "vendor/**",
+    "tools/node_modules/**",
+    "website/book/**"
+  ],
   "plugins": [
     "https://plugins.dprint.dev/dockerfile-0.4.1.wasm",
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",

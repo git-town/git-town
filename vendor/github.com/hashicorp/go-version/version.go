@@ -123,7 +123,8 @@ func newVersion(v string, pattern *regexp.Regexp) (*Version, error) {
 		val, err := strconv.ParseInt(str, 10, 64)
 		if err != nil {
 			return nil, fmt.Errorf(
-				"error parsing version: %s", err)
+				"error parsing version: %s", err,
+			)
 		}
 
 		segments[i] = val

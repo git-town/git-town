@@ -89,7 +89,8 @@ type ListTopicsOptions struct {
 }
 
 func (s *TopicsService) ListTopics(opt *ListTopicsOptions, options ...RequestOptionFunc) ([]*Topic, *Response, error) {
-	res, resp, err := do[[]*Topic](s.client,
+	res, resp, err := do[[]*Topic](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("topics"),
 		withAPIOpts(opt),
@@ -102,7 +103,8 @@ func (s *TopicsService) ListTopics(opt *ListTopicsOptions, options ...RequestOpt
 }
 
 func (s *TopicsService) GetTopic(topic int64, options ...RequestOptionFunc) (*Topic, *Response, error) {
-	res, resp, err := do[*Topic](s.client,
+	res, resp, err := do[*Topic](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("topics/%d", topic),
 		withAPIOpts(nil),
@@ -178,7 +180,8 @@ func (s *TopicsService) UpdateTopic(topic int64, opt *UpdateTopicOptions, option
 }
 
 func (s *TopicsService) DeleteTopic(topic int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("topics/%d", topic),
 		withAPIOpts(nil),

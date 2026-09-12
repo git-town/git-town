@@ -144,8 +144,10 @@ var m = [3][3]float64{
 	{0.055630079696993609, -0.20397695888897657, 1.0569715142428786},
 }
 
-const kappa = 903.2962962962963
-const epsilon = 0.0088564516790356308
+const (
+	kappa   = 903.2962962962963
+	epsilon = 0.0088564516790356308
+)
 
 func maxChromaForLH(l, h float64) float64 {
 	hRad := h / 360.0 * math.Pi * 2.0

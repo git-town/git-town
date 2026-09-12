@@ -17,7 +17,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-
 	"log"
 	"os"
 	"runtime"
@@ -206,7 +205,7 @@ func Run(args []string, analyzers []*analysis.Analyzer) (exitcode int) {
 			}
 		}
 		write := func(filename string, content []byte) error {
-			return os.WriteFile(filename, content, 0644)
+			return os.WriteFile(filename, content, 0o644)
 		}
 		if err := driverutil.ApplyFixes(fixActions, write, analysisflags.Diff, dbg('v')); err != nil {
 			// Fail when applying fixes failed.

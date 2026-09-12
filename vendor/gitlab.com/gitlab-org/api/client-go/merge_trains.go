@@ -70,7 +70,8 @@ type ListMergeTrainsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_trains/#list-merge-trains-for-a-project
 func (s *MergeTrainsService) ListProjectMergeTrains(pid any, opt *ListMergeTrainsOptions, options ...RequestOptionFunc) ([]*MergeTrain, *Response, error) {
-	return do[[]*MergeTrain](s.client,
+	return do[[]*MergeTrain](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/merge_trains", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -84,7 +85,8 @@ func (s *MergeTrainsService) ListProjectMergeTrains(pid any, opt *ListMergeTrain
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_trains/#list-merge-requests-in-a-merge-train
 func (s *MergeTrainsService) ListMergeRequestInMergeTrain(pid any, targetBranch string, opts *ListMergeTrainsOptions, options ...RequestOptionFunc) ([]*MergeTrain, *Response, error) {
-	return do[[]*MergeTrain](s.client,
+	return do[[]*MergeTrain](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/merge_trains/%s", ProjectID{pid}, targetBranch),
 		withAPIOpts(opts),
@@ -98,7 +100,8 @@ func (s *MergeTrainsService) ListMergeRequestInMergeTrain(pid any, targetBranch 
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_trains/#get-the-status-of-a-merge-request-on-a-merge-train
 func (s *MergeTrainsService) GetMergeRequestOnAMergeTrain(pid any, mergeRequest int64, options ...RequestOptionFunc) (*MergeTrain, *Response, error) {
-	return do[*MergeTrain](s.client,
+	return do[*MergeTrain](
+		s.client,
 		withPath("projects/%s/merge_trains/merge_requests/%d", ProjectID{pid}, mergeRequest),
 		withRequestOpts(options...),
 	)
@@ -124,7 +127,8 @@ type AddMergeRequestToMergeTrainOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_trains/#add-a-merge-request-to-a-merge-train
 func (s *MergeTrainsService) AddMergeRequestToMergeTrain(pid any, mergeRequest int64, opts *AddMergeRequestToMergeTrainOptions, options ...RequestOptionFunc) ([]*MergeTrain, *Response, error) {
-	return do[[]*MergeTrain](s.client,
+	return do[[]*MergeTrain](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/merge_trains/merge_requests/%d", ProjectID{pid}, mergeRequest),
 		withAPIOpts(opts),

@@ -299,7 +299,6 @@ func (c Cursor) Child(n ast.Node) Cursor {
 				return child
 			}
 		}
-
 	} else {
 		// optimized implementation
 		events := c.in.events
@@ -438,7 +437,6 @@ func (c Cursor) Contains(c2 Cursor) bool {
 // FindNode returns the cursor for node n if it belongs to the subtree
 // rooted at c. It returns zero if n is not found.
 func (c Cursor) FindNode(n ast.Node) (Cursor, bool) {
-
 	// FindNode is equivalent to this code,
 	// but more convenient and 15-20% faster:
 	if false {

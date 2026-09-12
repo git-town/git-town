@@ -68,7 +68,8 @@ type ListDockerfileTemplatesOptions struct {
 }
 
 func (s *DockerfileTemplatesService) ListTemplates(opt *ListDockerfileTemplatesOptions, options ...RequestOptionFunc) ([]*DockerfileTemplateListItem, *Response, error) {
-	return do[[]*DockerfileTemplateListItem](s.client,
+	return do[[]*DockerfileTemplateListItem](
+		s.client,
 		withPath("templates/dockerfiles"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -76,7 +77,8 @@ func (s *DockerfileTemplatesService) ListTemplates(opt *ListDockerfileTemplatesO
 }
 
 func (s *DockerfileTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*DockerfileTemplate, *Response, error) {
-	return do[*DockerfileTemplate](s.client,
+	return do[*DockerfileTemplate](
+		s.client,
 		withPath("templates/dockerfiles/%s", key),
 		withRequestOpts(options...),
 	)

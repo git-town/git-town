@@ -80,7 +80,8 @@ type ListPagesDomainsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#list-pages-domains
 func (s *PagesDomainsService) ListPagesDomains(pid any, opt *ListPagesDomainsOptions, options ...RequestOptionFunc) ([]*PagesDomain, *Response, error) {
-	return do[[]*PagesDomain](s.client,
+	return do[[]*PagesDomain](
+		s.client,
 		withPath("projects/%s/pages/domains", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -92,7 +93,8 @@ func (s *PagesDomainsService) ListPagesDomains(pid any, opt *ListPagesDomainsOpt
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#list-all-pages-domains
 func (s *PagesDomainsService) ListAllPagesDomains(options ...RequestOptionFunc) ([]*PagesDomain, *Response, error) {
-	return do[[]*PagesDomain](s.client,
+	return do[[]*PagesDomain](
+		s.client,
 		withPath("pages/domains"),
 		withRequestOpts(options...),
 	)
@@ -103,7 +105,8 @@ func (s *PagesDomainsService) ListAllPagesDomains(options ...RequestOptionFunc) 
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#single-pages-domain
 func (s *PagesDomainsService) GetPagesDomain(pid any, domain string, options ...RequestOptionFunc) (*PagesDomain, *Response, error) {
-	return do[*PagesDomain](s.client,
+	return do[*PagesDomain](
+		s.client,
 		withPath("projects/%s/pages/domains/%s", ProjectID{pid}, domain),
 		withRequestOpts(options...),
 	)
@@ -125,7 +128,8 @@ type CreatePagesDomainOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#create-new-pages-domain
 func (s *PagesDomainsService) CreatePagesDomain(pid any, opt *CreatePagesDomainOptions, options ...RequestOptionFunc) (*PagesDomain, *Response, error) {
-	return do[*PagesDomain](s.client,
+	return do[*PagesDomain](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/pages/domains", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -148,7 +152,8 @@ type UpdatePagesDomainOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#update-pages-domain
 func (s *PagesDomainsService) UpdatePagesDomain(pid any, domain string, opt *UpdatePagesDomainOptions, options ...RequestOptionFunc) (*PagesDomain, *Response, error) {
-	return do[*PagesDomain](s.client,
+	return do[*PagesDomain](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/pages/domains/%s", ProjectID{pid}, domain),
 		withAPIOpts(opt),
@@ -161,7 +166,8 @@ func (s *PagesDomainsService) UpdatePagesDomain(pid any, domain string, opt *Upd
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#delete-pages-domain
 func (s *PagesDomainsService) DeletePagesDomain(pid any, domain string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/pages/domains/%s", ProjectID{pid}, domain),
 		withRequestOpts(options...),

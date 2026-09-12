@@ -170,7 +170,8 @@ type ListInstanceDeployKeysOptions struct {
 }
 
 func (s *DeployKeysService) ListAllDeployKeys(opt *ListInstanceDeployKeysOptions, options ...RequestOptionFunc) ([]*InstanceDeployKey, *Response, error) {
-	return do[[]*InstanceDeployKey](s.client,
+	return do[[]*InstanceDeployKey](
+		s.client,
 		withPath("deploy_keys"),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -189,7 +190,8 @@ type AddInstanceDeployKeyOptions struct {
 }
 
 func (s *DeployKeysService) AddInstanceDeployKey(opt *AddInstanceDeployKeyOptions, options ...RequestOptionFunc) (*InstanceDeployKey, *Response, error) {
-	return do[*InstanceDeployKey](s.client,
+	return do[*InstanceDeployKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("deploy_keys"),
 		withAPIOpts(opt),
@@ -207,7 +209,8 @@ type ListProjectDeployKeysOptions struct {
 }
 
 func (s *DeployKeysService) ListProjectDeployKeys(pid any, opt *ListProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error) {
-	return do[[]*ProjectDeployKey](s.client,
+	return do[[]*ProjectDeployKey](
+		s.client,
 		withPath("projects/%s/deploy_keys", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -231,7 +234,8 @@ type ListUserProjectDeployKeysOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/deploy_keys/#list-project-deploy-keys-for-user
 func (s *DeployKeysService) ListUserProjectDeployKeys(uid any, opt *ListUserProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error) {
-	return do[[]*ProjectDeployKey](s.client,
+	return do[[]*ProjectDeployKey](
+		s.client,
 		withPath("users/%s/project_deploy_keys", UserID{uid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -239,7 +243,8 @@ func (s *DeployKeysService) ListUserProjectDeployKeys(uid any, opt *ListUserProj
 }
 
 func (s *DeployKeysService) GetDeployKey(pid any, deployKey int64, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
-	return do[*ProjectDeployKey](s.client,
+	return do[*ProjectDeployKey](
+		s.client,
 		withPath("projects/%s/deploy_keys/%d", ProjectID{pid}, deployKey),
 		withRequestOpts(options...),
 	)
@@ -257,7 +262,8 @@ type AddDeployKeyOptions struct {
 }
 
 func (s *DeployKeysService) AddDeployKey(pid any, opt *AddDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
-	return do[*ProjectDeployKey](s.client,
+	return do[*ProjectDeployKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/deploy_keys", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -266,7 +272,8 @@ func (s *DeployKeysService) AddDeployKey(pid any, opt *AddDeployKeyOptions, opti
 }
 
 func (s *DeployKeysService) DeleteDeployKey(pid any, deployKey int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/deploy_keys/%d", ProjectID{pid}, deployKey),
 		withRequestOpts(options...),
@@ -275,7 +282,8 @@ func (s *DeployKeysService) DeleteDeployKey(pid any, deployKey int64, options ..
 }
 
 func (s *DeployKeysService) EnableDeployKey(pid any, deployKey int64, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
-	return do[*ProjectDeployKey](s.client,
+	return do[*ProjectDeployKey](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/deploy_keys/%d/enable", ProjectID{pid}, deployKey),
 		withRequestOpts(options...),
@@ -292,7 +300,8 @@ type UpdateDeployKeyOptions struct {
 }
 
 func (s *DeployKeysService) UpdateDeployKey(pid any, deployKey int64, opt *UpdateDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
-	return do[*ProjectDeployKey](s.client,
+	return do[*ProjectDeployKey](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/deploy_keys/%d", ProjectID{pid}, deployKey),
 		withAPIOpts(opt),

@@ -203,7 +203,7 @@ func processResults(fset *token.FileSet, id, fixArchive string, results []result
 		// If "go fix" provides a fix archive, we write files
 		// into it so that mutations happen after the build.
 		write := func(filename string, content []byte) error {
-			return os.WriteFile(filename, content, 0644)
+			return os.WriteFile(filename, content, 0o644)
 		}
 		if fixArchive != "" {
 			f, err := os.Create(fixArchive)
@@ -318,7 +318,7 @@ var (
 	}
 
 	exportFacts = func(cfg *Config, data []byte) error {
-		return os.WriteFile(cfg.VetxOutput, data, 0666)
+		return os.WriteFile(cfg.VetxOutput, data, 0o666)
 	}
 )
 

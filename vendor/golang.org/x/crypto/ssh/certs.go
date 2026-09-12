@@ -269,12 +269,14 @@ func NewCertSigner(cert *Certificate, signer Signer) (Signer, error) {
 	case MultiAlgorithmSigner:
 		return &multiAlgorithmSigner{
 			AlgorithmSigner: &algorithmOpenSSHCertSigner{
-				&openSSHCertSigner{cert, signer}, s},
+				&openSSHCertSigner{cert, signer}, s,
+			},
 			supportedAlgorithms: s.Algorithms(),
 		}, nil
 	case AlgorithmSigner:
 		return &algorithmOpenSSHCertSigner{
-			&openSSHCertSigner{cert, signer}, s}, nil
+			&openSSHCertSigner{cert, signer}, s,
+		}, nil
 	default:
 		return &openSSHCertSigner{cert, signer}, nil
 	}

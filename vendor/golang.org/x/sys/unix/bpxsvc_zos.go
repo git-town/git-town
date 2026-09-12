@@ -37,17 +37,17 @@ const (
 )
 
 const (
-	//options
-	//byte1
+	// options
+	// byte1
 	BPX_OPNFHIGH = 0x80
-	//byte2
+	// byte2
 	BPX_OPNFEXEC = 0x80
-	//byte3
+	// byte3
 	BPX_O_NOLARGEFILE = 0x08
 	BPX_O_LARGEFILE   = 0x04
 	BPX_O_ASYNCSIG    = 0x02
 	BPX_O_SYNC        = 0x01
-	//byte4
+	// byte4
 	BPX_O_CREXCL   = 0xc0
 	BPX_O_CREAT    = 0x80
 	BPX_O_EXCL     = 0x40
@@ -62,7 +62,7 @@ const (
 	BPX_O_ACCMODE  = 0x03
 	BPX_O_GETFL    = 0x0f
 
-	//mode
+	// mode
 	// byte1 (file type)
 	BPX_FT_DIR      = 1
 	BPX_FT_CHARSPEC = 2
@@ -70,13 +70,13 @@ const (
 	BPX_FT_FIFO     = 4
 	BPX_FT_SYMLINK  = 5
 	BPX_FT_SOCKET   = 6
-	//byte3
+	// byte3
 	BPX_S_ISUID  = 0x08
 	BPX_S_ISGID  = 0x04
 	BPX_S_ISVTX  = 0x02
 	BPX_S_IRWXU1 = 0x01
 	BPX_S_IRUSR  = 0x01
-	//byte4
+	// byte4
 	BPX_S_IRWXU2 = 0xc0
 	BPX_S_IWUSR  = 0x80
 	BPX_S_IXUSR  = 0x40
@@ -386,6 +386,7 @@ func BpxCondTimedWait(sec uint32, nsec uint32, events uint32, secrem *uint32, ns
 	bpxcall(parms[:], BPX4CTW)
 	return rv, rc, rn
 }
+
 func BpxGetthent(in *Pgtha, outlen *uint32, out unsafe.Pointer) (rv int32, rc int32, rn int32) {
 	var parms [7]unsafe.Pointer
 	inlen := uint32(26) // nothing else will work. Go says Pgtha is 28-byte because of alignment, but Pgtha is "packed" and must be 26-byte
@@ -399,6 +400,7 @@ func BpxGetthent(in *Pgtha, outlen *uint32, out unsafe.Pointer) (rv int32, rc in
 	bpxcall(parms[:], BPX4GTH)
 	return rv, rc, rn
 }
+
 func ZosJobname() (jobname string, err error) {
 	var pgtha Pgtha
 	pgtha.Pid = uint32(Getpid())
@@ -424,6 +426,7 @@ func ZosJobname() (jobname string, err error) {
 	}
 	return
 }
+
 func Bpx4ptq(code int32, data string) (rv int32, rc int32, rn int32) {
 	var userdata [8]byte
 	var parms [5]unsafe.Pointer
@@ -443,10 +446,10 @@ const (
 	PT_READ_I               = 1  // Read a full word
 	PT_READ_D               = 2  // Read a full word
 	PT_READ_U               = 3  // Read control info
-	PT_WRITE_I              = 4  //Write a full word
-	PT_WRITE_D              = 5  //Write a full word
-	PT_CONTINUE             = 7  //Continue the process
-	PT_KILL                 = 8  //Terminate the process
+	PT_WRITE_I              = 4  // Write a full word
+	PT_WRITE_D              = 5  // Write a full word
+	PT_CONTINUE             = 7  // Continue the process
+	PT_KILL                 = 8  // Terminate the process
 	PT_READ_GPR             = 11 // Read GPR, CR, PSW
 	PT_READ_FPR             = 12 // Read FPR
 	PT_READ_VR              = 13 // Read VR

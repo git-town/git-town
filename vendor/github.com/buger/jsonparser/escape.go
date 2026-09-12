@@ -7,12 +7,16 @@ import (
 
 // JSON Unicode stuff: see https://tools.ietf.org/html/rfc7159#section-7
 
-const supplementalPlanesOffset = 0x10000
-const highSurrogateOffset = 0xD800
-const lowSurrogateOffset = 0xDC00
+const (
+	supplementalPlanesOffset = 0x10000
+	highSurrogateOffset      = 0xD800
+	lowSurrogateOffset       = 0xDC00
+)
 
-const basicMultilingualPlaneReservedOffset = 0xDFFF
-const basicMultilingualPlaneOffset = 0xFFFF
+const (
+	basicMultilingualPlaneReservedOffset = 0xDFFF
+	basicMultilingualPlaneOffset         = 0xFFFF
+)
 
 func combineUTF16Surrogates(high, low rune) rune {
 	return supplementalPlanesOffset + (high-highSurrogateOffset)<<10 + (low - lowSurrogateOffset)
@@ -122,11 +126,16 @@ func unescapeToUTF8(in, out []byte) (inLen int, outLen int) {
 
 // unescape unescapes the string contained in 'in' and returns it as a slice.
 // If 'in' contains no escaped characters:
-//   Returns 'in'.
+//
+//	Returns 'in'.
+//
 // Else, if 'out' is of sufficient capacity (guaranteed if cap(out) >= len(in)):
-//   'out' is used to build the unescaped string and is returned with no extra allocation
+//
+//	'out' is used to build the unescaped string and is returned with no extra allocation
+//
 // Else:
-//   A new slice is allocated and returned.
+//
+//	A new slice is allocated and returned.
 func Unescape(in, out []byte) ([]byte, error) {
 	firstBackslash := bytes.IndexByte(in, '\\')
 	if firstBackslash == -1 {

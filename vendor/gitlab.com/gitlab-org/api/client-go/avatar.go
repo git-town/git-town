@@ -57,7 +57,8 @@ type GetAvatarOptions struct {
 }
 
 func (s *AvatarRequestsService) GetAvatar(opt *GetAvatarOptions, options ...RequestOptionFunc) (*Avatar, *Response, error) {
-	return do[*Avatar](s.client,
+	return do[*Avatar](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("avatar"),
 		withAPIOpts(opt),

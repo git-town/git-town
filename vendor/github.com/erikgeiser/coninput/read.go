@@ -30,7 +30,8 @@ func NewStdinHandle() (windows.Handle, error) {
 // cases it is more practical to either use ReadConsoleInput or
 // ReadNConsoleInputs.
 func WinReadConsoleInput(consoleInput windows.Handle, buffer *InputRecord,
-	length uint32, numberOfEventsRead *uint32) error {
+	length uint32, numberOfEventsRead *uint32,
+) error {
 	r, _, e := syscall.Syscall6(procReadConsoleInputW.Addr(), 4,
 		uintptr(consoleInput), uintptr(unsafe.Pointer(buffer)), uintptr(length),
 		uintptr(unsafe.Pointer(numberOfEventsRead)), 0, 0)
@@ -50,7 +51,7 @@ func ReadNConsoleInputs(console windows.Handle, maxEvents uint32) ([]InputRecord
 		return nil, fmt.Errorf("maxEvents cannot be zero")
 	}
 
-	var inputRecords = make([]InputRecord, maxEvents)
+	inputRecords := make([]InputRecord, maxEvents)
 	n, err := ReadConsoleInput(console, inputRecords)
 
 	return inputRecords[:n], err
@@ -77,7 +78,8 @@ func ReadConsoleInput(console windows.Handle, inputRecords []InputRecord) (uint3
 // cases it is more practical to either use PeekConsoleInput or
 // PeekNConsoleInputs.
 func WinPeekConsoleInput(consoleInput windows.Handle, buffer *InputRecord,
-	length uint32, numberOfEventsRead *uint32) error {
+	length uint32, numberOfEventsRead *uint32,
+) error {
 	r, _, e := syscall.Syscall6(procPeekConsoleInputW.Addr(), 4,
 		uintptr(consoleInput), uintptr(unsafe.Pointer(buffer)), uintptr(length),
 		uintptr(unsafe.Pointer(numberOfEventsRead)), 0, 0)
@@ -86,7 +88,6 @@ func WinPeekConsoleInput(consoleInput windows.Handle, buffer *InputRecord,
 	}
 
 	return nil
-
 }
 
 // PeekNConsoleInputs is a wrapper around PeekConsoleInput (see
@@ -98,7 +99,7 @@ func PeekNConsoleInputs(console windows.Handle, maxEvents uint32) ([]InputRecord
 		return nil, fmt.Errorf("maxEvents cannot be zero")
 	}
 
-	var inputRecords = make([]InputRecord, maxEvents)
+	inputRecords := make([]InputRecord, maxEvents)
 	n, err := PeekConsoleInput(console, inputRecords)
 
 	return inputRecords[:n], err

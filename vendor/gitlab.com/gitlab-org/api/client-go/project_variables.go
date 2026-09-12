@@ -97,7 +97,8 @@ type ListProjectVariablesOptions struct {
 }
 
 func (s *ProjectVariablesService) ListVariables(pid any, opt *ListProjectVariablesOptions, options ...RequestOptionFunc) ([]*ProjectVariable, *Response, error) {
-	return do[[]*ProjectVariable](s.client,
+	return do[[]*ProjectVariable](
+		s.client,
 		withPath("projects/%s/variables", ProjectID{pid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -114,7 +115,8 @@ type GetProjectVariableOptions struct {
 }
 
 func (s *ProjectVariablesService) GetVariable(pid any, key string, opt *GetProjectVariableOptions, options ...RequestOptionFunc) (*ProjectVariable, *Response, error) {
-	return do[*ProjectVariable](s.client,
+	return do[*ProjectVariable](
+		s.client,
 		withPath("projects/%s/variables/%s", ProjectID{pid}, url.PathEscape(key)),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -139,7 +141,8 @@ type CreateProjectVariableOptions struct {
 }
 
 func (s *ProjectVariablesService) CreateVariable(pid any, opt *CreateProjectVariableOptions, options ...RequestOptionFunc) (*ProjectVariable, *Response, error) {
-	return do[*ProjectVariable](s.client,
+	return do[*ProjectVariable](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/variables", ProjectID{pid}),
 		withAPIOpts(opt),
@@ -164,7 +167,8 @@ type UpdateProjectVariableOptions struct {
 }
 
 func (s *ProjectVariablesService) UpdateVariable(pid any, key string, opt *UpdateProjectVariableOptions, options ...RequestOptionFunc) (*ProjectVariable, *Response, error) {
-	return do[*ProjectVariable](s.client,
+	return do[*ProjectVariable](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/variables/%s", ProjectID{pid}, url.PathEscape(key)),
 		withAPIOpts(opt),
@@ -182,7 +186,8 @@ type RemoveProjectVariableOptions struct {
 }
 
 func (s *ProjectVariablesService) RemoveVariable(pid any, key string, opt *RemoveProjectVariableOptions, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/variables/%s", ProjectID{pid}, url.PathEscape(key)),
 		withAPIOpts(opt),

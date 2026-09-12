@@ -96,7 +96,8 @@ type ListGroupProtectedEnvironmentsOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#list-group-level-protected-environments
 func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid any, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error) {
-	return do[[]*GroupProtectedEnvironment](s.client,
+	return do[[]*GroupProtectedEnvironment](
+		s.client,
 		withPath("groups/%s/protected_environments", GroupID{gid}),
 		withAPIOpts(opt),
 		withRequestOpts(options...),
@@ -109,7 +110,8 @@ func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid a
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#get-a-single-protected-environment
 func (s *GroupProtectedEnvironmentsService) GetGroupProtectedEnvironment(gid any, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	return do[*GroupProtectedEnvironment](s.client,
+	return do[*GroupProtectedEnvironment](
+		s.client,
 		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
 		withRequestOpts(options...),
 	)
@@ -158,7 +160,8 @@ type GroupEnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
 func (s *GroupProtectedEnvironmentsService) ProtectGroupEnvironment(gid any, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	return do[*GroupProtectedEnvironment](s.client,
+	return do[*GroupProtectedEnvironment](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("groups/%s/protected_environments", GroupID{gid}),
 		withAPIOpts(opt),
@@ -214,7 +217,8 @@ type UpdateGroupEnvironmentApprovalRuleOptions struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment
 func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid any, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
-	return do[*GroupProtectedEnvironment](s.client,
+	return do[*GroupProtectedEnvironment](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
 		withAPIOpts(opt),
@@ -228,7 +232,8 @@ func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid 
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#unprotect-a-single-environment
 func (s *GroupProtectedEnvironmentsService) UnprotectGroupEnvironment(gid any, environment string, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("groups/%s/protected_environments/%s", GroupID{gid}, environment),
 		withRequestOpts(options...),

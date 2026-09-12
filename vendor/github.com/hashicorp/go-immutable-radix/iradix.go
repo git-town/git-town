@@ -488,7 +488,6 @@ func (t *Txn) DeletePrefix(prefix []byte) bool {
 		return true
 	}
 	return false
-
 }
 
 // Root returns the current root of the radix tree within this

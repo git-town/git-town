@@ -82,7 +82,8 @@ type UploadMetricImageOptions struct {
 }
 
 func (s *AlertManagementService) UploadMetricImage(pid any, alertIID int64, content io.Reader, filename string, opt *UploadMetricImageOptions, options ...RequestOptionFunc) (*MetricImage, *Response, error) {
-	return do[*MetricImage](s.client,
+	return do[*MetricImage](
+		s.client,
 		withMethod(http.MethodPost),
 		withPath("projects/%s/alert_management_alerts/%d/metric_images", ProjectID{pid}, alertIID),
 		withUpload(content, filename, UploadFile),
@@ -100,7 +101,8 @@ type ListMetricImagesOptions struct {
 }
 
 func (s *AlertManagementService) ListMetricImages(pid any, alertIID int64, opt *ListMetricImagesOptions, options ...RequestOptionFunc) ([]*MetricImage, *Response, error) {
-	return do[[]*MetricImage](s.client,
+	return do[[]*MetricImage](
+		s.client,
 		withMethod(http.MethodGet),
 		withPath("projects/%s/alert_management_alerts/%d/metric_images", ProjectID{pid}, alertIID),
 		withAPIOpts(opt),
@@ -118,7 +120,8 @@ type UpdateMetricImageOptions struct {
 }
 
 func (s *AlertManagementService) UpdateMetricImage(pid any, alertIID int64, id int64, opt *UpdateMetricImageOptions, options ...RequestOptionFunc) (*MetricImage, *Response, error) {
-	return do[*MetricImage](s.client,
+	return do[*MetricImage](
+		s.client,
 		withMethod(http.MethodPut),
 		withPath("projects/%s/alert_management_alerts/%d/metric_images/%d", ProjectID{pid}, alertIID, id),
 		withAPIOpts(opt),
@@ -127,7 +130,8 @@ func (s *AlertManagementService) UpdateMetricImage(pid any, alertIID int64, id i
 }
 
 func (s *AlertManagementService) DeleteMetricImage(pid any, alertIID int64, id int64, options ...RequestOptionFunc) (*Response, error) {
-	_, resp, err := do[none](s.client,
+	_, resp, err := do[none](
+		s.client,
 		withMethod(http.MethodDelete),
 		withPath("projects/%s/alert_management_alerts/%d/metric_images/%d", ProjectID{pid}, alertIID, id),
 		withRequestOpts(options...),

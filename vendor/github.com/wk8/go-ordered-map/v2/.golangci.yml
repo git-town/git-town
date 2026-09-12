@@ -1,7 +1,7 @@
 run:
   tests: false
 
-linters: 
+linters:
   disable-all: true
   enable:
     - asciicheck
