@@ -28,6 +28,7 @@ tools/rta*
 tools/scc*
 tools/shellcheck*
 tools/shfmt*
+tools/tricorder*
 website/bin/
 website/book/
 www/
