@@ -1,4 +1,5 @@
-RTA_VERSION = 0.40.0  # run-that-app version to use
+RTA_VERSION = 0.40.0
+TRICORDER_VERSION = 0.1.0
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -327,6 +328,11 @@ ${RTA}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 	@ln -s rta@${RTA_VERSION} tools/rta
+
+${TRICORDER}:
+	@rm -f tools/tricorder*
+	@(cd tools && curl https://raw.githubusercontent.com/kevgo/tricorder/main/download.sh | sh -s -- --version ${TRICORDER_VERSION} --name tricorder@${TRICORDER_VERSION})
+	@ln -s tricorder@${TRICORDER_VERSION} tools/tricorder
 
 node_modules: package-lock.json ${RTA}
 	@echo "Installing Node based tools"
