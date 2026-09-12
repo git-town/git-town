@@ -99,6 +99,9 @@ fix: ${TRICORDER}  # runs all linters and auto-fixes
 	tools/generate_opcodes_all.sh
 	$(CUCUMBERSORT) format
 
+fix-optioncompare-in-tests:
+	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...
+
 generate-json-schema:  # exports the JSON-Schema for the configuration file
 	(cd tools/generate_json_schema && go build) && ./tools/generate_json_schema/generate_json_schema > docs/git-town.schema.json
 
@@ -176,9 +179,6 @@ lint-all: lint ${RTA}  # runs all linters
 
 alphavet: ${RTA}
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
-
-fix-optioncompare-in-tests:
-	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...
 
 keep-sorted: ${RTA}
 	@$(RTA) --install ripgrep

@@ -13,7 +13,16 @@
   "stacks": {
     "css": {},
     "cucumber": {},
-    "go": {},
+    "go": {
+      "fix": {
+        "add": [
+          {
+            "name": "optioncompare in tests",
+            "command": "make --no-print-directory fix-optioncompare-in-tests"
+          }
+        ]
+      }
+    },
     "java": {},
     "json": {},
     "jsonc": {},
