@@ -41,9 +41,9 @@ Feature: syncing a branch with dependent changes where a commit was amended
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                             |
       | branch-2 | git fetch --prune --tags                                                            |
-      |          | git checkout branch-1                                                               |
+      |          | git checkout --quiet branch-1                                                       |
       | branch-1 | git push --force-with-lease --force-if-includes                                     |
-      |          | git checkout branch-2                                                               |
+      |          | git checkout --quiet branch-2                                                       |
       | branch-2 | git push --force-with-lease --force-if-includes                                     |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
     And Git Town prints the error:

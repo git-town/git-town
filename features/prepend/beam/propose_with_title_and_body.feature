@@ -22,13 +22,13 @@ Feature: propose a newly prepended branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                                 |
       |          | Finding proposal from existing into main ... none                                                                       |
-      | existing | git checkout -b new main                                                                                                |
+      | existing | git checkout --quiet -b new main                                                                                        |
       | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                                                                    |
-      |          | git checkout existing                                                                                                   |
+      |          | git checkout --quiet existing                                                                                           |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'unrelated commit' }}^ {{ sha-initial 'unrelated commit' }} |
       |          | git -c rebase.updateRefs=false rebase new                                                                               |
       |          | git push --force-with-lease --force-if-includes                                                                         |
-      |          | git checkout new                                                                                                        |
+      |          | git checkout --quiet new                                                                                                |
       | new      | git push -u origin new                                                                                                  |
       |          | Finding proposal from new into main ... none                                                                            |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
@@ -47,7 +47,7 @@ Feature: propose a newly prepended branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | new      | git checkout existing                           |
+      | new      | git checkout --quiet existing                   |
       | existing | git reset --hard {{ sha 'unrelated commit' }}   |
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |

@@ -26,9 +26,9 @@ Feature: running a sync after running another Git Town command
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
-      |        | git checkout parent                             |
+      |        | git checkout --quiet parent                     |
       | parent | git push --force-with-lease --force-if-includes |
-      |        | git checkout child                              |
+      |        | git checkout --quiet child                      |
       | child  | git push --force-with-lease --force-if-includes |
     And the branches are now
       | REPOSITORY | BRANCHES                 |

@@ -19,7 +19,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | hooks  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git branch -D hooks                               |
       |        | git push --tags                                   |
@@ -38,7 +38,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       | BRANCH | COMMAND                                     |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch hooks {{ sha 'hooks commit' }}   |
-      |        | git checkout hooks                          |
+      |        | git checkout --quiet hooks                  |
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, hooks |

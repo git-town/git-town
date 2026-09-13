@@ -18,14 +18,14 @@ Feature: sync a feature branch with new commits on the main branch in detached m
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                        |
-      | beta   | git fetch --prune --tags       |
-      |        | git checkout alpha             |
-      | alpha  | git checkout beta              |
-      | beta   | git merge --no-edit --ff alpha |
-      |        | git reset --soft alpha --      |
-      |        | git commit -m "beta commit"    |
-      |        | git push --force-with-lease    |
+      | BRANCH | COMMAND                             |
+      | beta   | git fetch --prune --tags            |
+      |        | git checkout --quiet alpha          |
+      | alpha  | git checkout --quiet beta           |
+      | beta   | git merge --no-edit --ff alpha      |
+      |        | git reset --soft alpha --           |
+      |        | git commit --quiet -m "beta commit" |
+      |        | git push --force-with-lease         |
     And the initial commits exist now
 
   Scenario: undo

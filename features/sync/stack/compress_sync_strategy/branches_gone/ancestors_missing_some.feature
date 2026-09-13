@@ -23,21 +23,21 @@ Feature: stacked changes where an ancestor branch isn't local
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | gamma  | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/main  |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft origin/main --       |
-      |        | git commit -m "local alpha commit"    |
-      |        | git push --force-with-lease           |
-      |        | git checkout gamma                    |
-      | gamma  | git merge --no-edit --ff origin/beta  |
-      |        | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/gamma |
-      |        | git reset --soft origin/beta --       |
-      |        | git commit -m "local gamma commit"    |
-      |        | git push --force-with-lease           |
+      | BRANCH | COMMAND                                    |
+      | gamma  | git fetch --prune --tags                   |
+      |        | git checkout --quiet alpha                 |
+      | alpha  | git merge --no-edit --ff origin/main       |
+      |        | git merge --no-edit --ff origin/alpha      |
+      |        | git reset --soft origin/main --            |
+      |        | git commit --quiet -m "local alpha commit" |
+      |        | git push --force-with-lease                |
+      |        | git checkout --quiet gamma                 |
+      | gamma  | git merge --no-edit --ff origin/beta       |
+      |        | git merge --no-edit --ff alpha             |
+      |        | git merge --no-edit --ff origin/gamma      |
+      |        | git reset --soft origin/beta --            |
+      |        | git commit --quiet -m "local gamma commit" |
+      |        | git push --force-with-lease                |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
@@ -50,10 +50,10 @@ Feature: stacked changes where an ancestor branch isn't local
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                    |
-      | gamma  | git checkout alpha                                                                         |
+      | gamma  | git checkout --quiet alpha                                                                 |
       | alpha  | git reset --hard {{ sha-initial 'local alpha commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin alpha commit' }}:alpha |
-      |        | git checkout gamma                                                                         |
+      |        | git checkout --quiet gamma                                                                 |
       | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
     And the initial lineage exists now

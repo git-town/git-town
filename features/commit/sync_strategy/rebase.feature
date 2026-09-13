@@ -19,9 +19,9 @@ Feature: rebase sync strategy
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                          |
-      | branch-2 | git checkout branch-1                                                            |
-      | branch-1 | git commit -m commit-1b                                                          |
-      |          | git checkout branch-2                                                            |
+      | branch-2 | git checkout --quiet branch-1                                                    |
+      | branch-1 | git commit --quiet -m commit-1b                                                  |
+      |          | git checkout --quiet branch-2                                                    |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'initial commit' }} |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
@@ -34,9 +34,9 @@ Feature: rebase sync strategy
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                |
-      | branch-2 | git checkout branch-1                  |
+      | branch-2 | git checkout --quiet branch-1          |
       | branch-1 | git reset --hard {{ sha 'commit 1a' }} |
-      |          | git checkout branch-2                  |
+      |          | git checkout --quiet branch-2          |
       | branch-2 | git reset --hard {{ sha 'commit 2a' }} |
     And the initial branches and lineage exist now
     And the initial commits exist now

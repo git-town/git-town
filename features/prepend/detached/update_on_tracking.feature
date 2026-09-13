@@ -17,7 +17,7 @@ Feature: prepend a branch to a feature branch in detached mode with a new commit
       | BRANCH | COMMAND                                |
       | branch | git fetch --prune --tags               |
       |        | git merge --no-edit --ff origin/branch |
-      |        | git checkout -b parent main            |
+      |        | git checkout --quiet -b parent main    |
     And this lineage exists now
       """
       main
@@ -33,7 +33,7 @@ Feature: prepend a branch to a feature branch in detached mode with a new commit
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
-      | parent | git checkout branch                       |
+      | parent | git checkout --quiet branch               |
       | branch | git reset --hard {{ sha 'local commit' }} |
       |        | git branch -D parent                      |
     And the initial lineage exists now

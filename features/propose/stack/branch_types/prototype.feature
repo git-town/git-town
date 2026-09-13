@@ -19,15 +19,15 @@ Feature: proposing a stack containing a prototype branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      |        | git checkout parent                                                       |
-      | parent | git checkout child                                                        |
+      |        | git checkout --quiet parent                                               |
+      | parent | git checkout --quiet child                                                |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
-      |        | git checkout parent                                                       |
+      |        | git checkout --quiet parent                                               |
       |        | Finding proposal from parent into main ... none                           |
       | parent | open https://github.com/git-town/git-town/compare/parent?expand=1         |
       |        | git push -u origin child                                                  |
-      |        | git checkout child                                                        |
+      |        | git checkout --quiet child                                                |
       |        | Finding proposal from child into parent ... none                          |
       | child  | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial lineage exists now

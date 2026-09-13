@@ -9,11 +9,11 @@ Feature: undo changes made manually
     And the current branch is "branch-2"
     When I run "git-town walk --all -- git commit --allow-empty -m commit"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                            |
-      | branch-2 | git checkout branch-1              |
-      | branch-1 | git commit --allow-empty -m commit |
-      |          | git checkout branch-2              |
-      | branch-2 | git commit --allow-empty -m commit |
+      | BRANCH   | COMMAND                                    |
+      | branch-2 | git checkout --quiet branch-1              |
+      | branch-1 | git commit --quiet --allow-empty -m commit |
+      |          | git checkout --quiet branch-2              |
+      | branch-2 | git commit --quiet --allow-empty -m commit |
     And Git Town prints:
       """
       Branch walk done.
@@ -29,9 +29,9 @@ Feature: undo changes made manually
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
-      | branch-2 | git checkout branch-1                       |
+      | branch-2 | git checkout --quiet branch-1               |
       | branch-1 | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout branch-2                       |
+      |          | git checkout --quiet branch-2               |
       | branch-2 | git reset --hard {{ sha 'initial commit' }} |
     And the current branch is now "branch-2"
     And no commits exist now

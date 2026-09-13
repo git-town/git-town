@@ -20,10 +20,10 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | alpha  | git fetch --prune --tags      |
       |        | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout beta             |
+      |        | git checkout --quiet beta     |
       | beta   | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout alpha            |
+      |        | git checkout --quiet alpha    |
       | alpha  | git push --tags               |
     And all branches are now synchronized
     And these commits exist now
@@ -40,9 +40,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH | COMMAND                                         |
       | alpha  | git reset --hard {{ sha 'folder commit' }}      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'beta commit' }}        |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
     And the initial branches and lineage exist now
     And the initial commits exist now

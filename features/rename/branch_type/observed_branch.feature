@@ -16,7 +16,7 @@ Feature: rename an observed branch
       | BRANCH   | COMMAND                        |
       | observed | git fetch --prune --tags       |
       |          | git branch --move observed new |
-      |          | git checkout new               |
+      |          | git checkout --quiet new       |
       | new      | git push -u origin new         |
       |          | git push origin :observed      |
     And this lineage exists now
@@ -35,7 +35,7 @@ Feature: rename an observed branch
       | BRANCH   | COMMAND                                               |
       | new      | git branch observed {{ sha 'somebody elses commit' }} |
       |          | git push -u origin observed                           |
-      |          | git checkout observed                                 |
+      |          | git checkout --quiet observed                         |
       | observed | git branch -D new                                     |
       |          | git push origin :new                                  |
     And the initial branches and lineage exist now

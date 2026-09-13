@@ -35,9 +35,9 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git commit --no-edit |
-      |         | git push             |
+      | BRANCH  | COMMAND                      |
+      | feature | git commit --quiet --no-edit |
+      |         | git push                     |
     And no merge is now in progress
     And all branches are now synchronized
 

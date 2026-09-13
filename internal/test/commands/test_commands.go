@@ -49,7 +49,7 @@ func (self *TestCommands) AddRemote(name gitdomain.Remote, url string) {
 // AddSubmodule adds a Git submodule with the given URL to this repository.
 func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "submodule", "add", url)
-	self.MustRun("git", "commit", "-m", "added submodule")
+	self.MustRun("git", "commit", "--quiet", "-m", "added submodule")
 }
 
 func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchName) {
@@ -57,7 +57,7 @@ func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchN
 }
 
 func (self *TestCommands) AmendCommit() {
-	self.MustRun("git", "commit", "--amend", "--no-edit")
+	self.MustRun("git", "commit", "--quiet", "--amend", "--no-edit")
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
@@ -103,7 +103,7 @@ func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 
 // CommitStagedChanges commits the currently staged changes.
 func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
-	self.MustRun("git", "commit", "-m", message.String())
+	self.MustRun("git", "commit", "--quiet", "-m", message.String())
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
@@ -178,7 +178,7 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 // To create feature branches, use CreateAndCheckoutFeatureBranch.
 func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.Git.CurrentBranchCache.Set(name)
-	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
+	self.MustRun("git", "checkout", "--quiet", "-b", name.String(), parent.String())
 }
 
 // CreateAndCheckoutFeatureBranch creates a feature branch with the given name and checks it out.
@@ -215,7 +215,7 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.CheckoutBranch(commit.Branch)
 	self.CreateFile(commit.FileName, commit.FileContent)
 	self.MustRun("git", "add", commit.FileName)
-	commands := []string{"commit", "-m", commit.Message.String()}
+	commands := []string{"commit", "--quiet", "-m", commit.Message.String()}
 	if len(commit.Author) > 0 {
 		commands = append(commands, "--author="+commit.Author.String())
 	}
@@ -279,16 +279,16 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 // CreateStandaloneTag creates a tag not on a branch.
 func (self *TestCommands) CreateStandaloneTag(name string) {
 	const tempBranchName = "temp"
-	self.MustRun("git", "checkout", "-b", tempBranchName)
+	self.MustRun("git", "checkout", "--quiet", "-b", tempBranchName)
 	filePath := filepath.Join(self.WorkingDir, "a.txt")
 	file, err := os.Create(filePath)
 	asserts.NoError(err)
 	err = file.Close()
 	asserts.NoError(err)
 	self.MustRun("git", "add", "-A")
-	self.MustRun("git", "commit", "-m", tempBranchName)
+	self.MustRun("git", "commit", "--quiet", "-m", tempBranchName)
 	self.MustRun("git", "tag", "-a", name, "-m", name)
-	self.MustRun("git", "checkout", "-")
+	self.MustRun("git", "checkout", "--quiet", "-")
 	self.MustRun("git", "branch", "-D", tempBranchName)
 }
 

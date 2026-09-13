@@ -21,7 +21,7 @@ Feature: rename a branch that has an overridden branch type
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
-      |        | git checkout new          |
+      |        | git checkout --quiet new  |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
     And Git setting "git-town-branch.new.branchtype" is now "feature"
@@ -37,7 +37,7 @@ Feature: rename a branch that has an overridden branch type
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git push -u origin old                |
-      |        | git checkout old                      |
+      |        | git checkout --quiet old              |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
     And Git setting "git-town-branch.new.branchtype" now doesn't exist

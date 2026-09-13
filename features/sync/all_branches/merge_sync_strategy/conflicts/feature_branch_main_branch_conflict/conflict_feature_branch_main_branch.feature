@@ -21,10 +21,10 @@ Feature: handle merge conflicts between feature branch and main branch
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout alpha                                |
+      |        | git checkout --quiet alpha                        |
       | alpha  | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
       | beta   | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
@@ -37,10 +37,10 @@ Feature: handle merge conflicts between feature branch and main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git merge --abort                               |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
+      |        | git checkout --quiet main                       |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
     And no merge is now in progress
     And the initial commits exist now
@@ -51,10 +51,10 @@ Feature: handle merge conflicts between feature branch and main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git merge --abort             |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |
     And no merge is now in progress
     And these commits exist now
@@ -100,12 +100,12 @@ Feature: handle merge conflicts between feature branch and main branch
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | beta   | git commit --no-edit          |
+      | beta   | git commit --quiet --no-edit  |
       |        | git push                      |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |
     And no merge is now in progress
     And these committed files exist now
@@ -125,8 +125,8 @@ Feature: handle merge conflicts between feature branch and main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git push                      |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |

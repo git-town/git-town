@@ -601,7 +601,7 @@ echo "new line" >> file
 		devRepo.CheckoutBranch(commit.Branch)
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
 		asserts.NoError(devRepo.Run("git", "add", commit.FileName))
-		return devRepo.Run("git", "commit", "--amend", "--message", commit.Message.String())
+		return devRepo.Run("git", "commit", "--quiet", "--amend", "--message", commit.Message.String())
 	})
 
 	sc.Step(`^I am not prompted for any parent branches$`, func(ctx context.Context) error {

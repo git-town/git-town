@@ -25,10 +25,10 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
       | branch-2 | git fetch --prune --tags                          |
-      |          | git checkout main                                 |
+      |          | git checkout --quiet main                         |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git branch -D branch-1                            |
-      |          | git checkout branch-2                             |
+      |          | git checkout --quiet branch-2                     |
       | branch-2 | git merge --no-edit --ff main                     |
     # TODO: auto-resolve this phantom merge conflict
     #
@@ -59,10 +59,10 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                             |
       | branch-2 | git merge --abort                                   |
-      |          | git checkout main                                   |
+      |          | git checkout --quiet main                           |
       | main     | git reset --hard {{ sha 'create file' }}            |
       |          | git branch branch-1 {{ sha-initial 'delete-file' }} |
-      |          | git checkout branch-2                               |
+      |          | git checkout --quiet branch-2                       |
     And no merge is now in progress
     And the initial commits exist now
 
@@ -79,9 +79,9 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     When I ran "git add file"
     And I ran "git town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND              |
-      | branch-2 | git commit --no-edit |
-      |          | git push             |
+      | BRANCH   | COMMAND                      |
+      | branch-2 | git commit --quiet --no-edit |
+      |          | git push                     |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME      | FILE CONTENT     |
       | main     | local, origin | create file                       | file           | main content     |

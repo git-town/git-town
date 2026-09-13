@@ -26,7 +26,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | beta   | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
@@ -42,7 +42,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | main   | GIT_EDITOR=true git rebase --continue |
       |        | git push                              |
       |        | git branch -D alpha                   |
-      |        | git checkout beta                     |
+      |        | git checkout --quiet beta             |
       | beta   | git merge --no-edit --ff main         |
     And Git Town prints the error:
       """
@@ -52,9 +52,9 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
+      | BRANCH | COMMAND                      |
+      | beta   | git commit --quiet --no-edit |
+      |        | git push                     |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT          |
@@ -67,8 +67,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | main   | git rebase --abort |
-      |        | git checkout beta  |
+      | BRANCH | COMMAND                   |
+      | main   | git rebase --abort        |
+      |        | git checkout --quiet beta |
     And the initial commits exist now
     And the initial branches and lineage exist now

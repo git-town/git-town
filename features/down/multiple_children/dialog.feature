@@ -15,8 +15,8 @@ Feature: move down when branch has multiple children
       | DIALOG       | KEYS  |
       | child-branch | enter |
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                |
-      | branch-1 | git checkout branch-1a |
+      | BRANCH   | COMMAND                        |
+      | branch-1 | git checkout --quiet branch-1a |
     And Git Town prints:
       """
         main
@@ -30,8 +30,8 @@ Feature: move down when branch has multiple children
       | DIALOG       | KEYS       |
       | child-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                |
-      | branch-1 | git checkout branch-1b |
+      | BRANCH   | COMMAND                        |
+      | branch-1 | git checkout --quiet branch-1b |
     And Git Town prints:
       """
         main

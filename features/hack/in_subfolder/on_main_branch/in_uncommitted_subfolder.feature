@@ -13,7 +13,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH | COMMAND                     |
       | main   | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new         |
+      |        | git checkout --quiet -b new |
       | new    | git stash pop               |
       |        | git restore --staged .      |
     And this lineage exists now
@@ -29,7 +29,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
+      |        | git checkout --quiet main   |
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

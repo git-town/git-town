@@ -17,7 +17,7 @@ Feature: ship hotfixes
     Then Git Town runs the commands
       | BRANCH     | COMMAND                            |
       | hotfix     | git fetch --prune --tags           |
-      |            | git checkout production            |
+      |            | git checkout --quiet production    |
       | production | git merge --no-ff --edit -- hotfix |
       |            | git push                           |
       |            | git push origin :hotfix            |
@@ -37,7 +37,7 @@ Feature: ship hotfixes
       | BRANCH     | COMMAND                                     |
       | production | git branch hotfix {{ sha 'hotfix commit' }} |
       |            | git push -u origin hotfix                   |
-      |            | git checkout hotfix                         |
+      |            | git checkout --quiet hotfix                 |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                               |

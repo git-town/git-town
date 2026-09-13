@@ -16,7 +16,7 @@ Feature: conflicts between the main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
       | existing | git fetch --prune --tags                          |
-      |          | git checkout main                                 |
+      |          | git checkout --quiet main                         |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
@@ -27,9 +27,9 @@ Feature: conflicts between the main branch and its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | main   | git rebase --abort    |
-      |        | git checkout existing |
+      | BRANCH | COMMAND                       |
+      | main   | git rebase --abort            |
+      |        | git checkout --quiet existing |
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -48,7 +48,7 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND                               |
       | main   | GIT_EDITOR=true git rebase --continue |
       |        | git push                              |
-      |        | git checkout -b new                   |
+      |        | git checkout --quiet -b new           |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
@@ -63,6 +63,6 @@ Feature: conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git push            |
-      |        | git checkout -b new |
+      | BRANCH | COMMAND                     |
+      | main   | git push                    |
+      |        | git checkout --quiet -b new |

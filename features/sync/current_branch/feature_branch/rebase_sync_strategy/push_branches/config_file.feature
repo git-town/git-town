@@ -31,12 +31,12 @@ Feature: disable pushing through the config file
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                               |
       | child  | git fetch --prune --tags                                                              |
-      |        | git checkout main                                                                     |
+      |        | git checkout --quiet main                                                             |
       | main   | git -c rebase.updateRefs=false rebase origin/main                                     |
-      |        | git checkout parent                                                                   |
+      |        | git checkout --quiet parent                                                           |
       | parent | git -c rebase.updateRefs=false rebase origin/parent                                   |
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }}   |
-      |        | git checkout child                                                                    |
+      |        | git checkout --quiet child                                                            |
       | child  | git -c rebase.updateRefs=false rebase origin/child                                    |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'persisted config file' }} |
     And the initial branches and lineage exist now
@@ -56,10 +56,10 @@ Feature: disable pushing through the config file
     Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | child  | git reset --hard {{ sha 'local child commit' }}  |
-      |        | git checkout main                                |
+      |        | git checkout --quiet main                        |
       | main   | git reset --hard {{ sha 'local main commit' }}   |
-      |        | git checkout parent                              |
+      |        | git checkout --quiet parent                      |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
-      |        | git checkout child                               |
+      |        | git checkout --quiet child                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

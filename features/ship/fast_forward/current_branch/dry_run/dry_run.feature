@@ -16,7 +16,7 @@ Feature: dry-run shipping via the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git fetch --prune --tags    |
-      |         | git checkout main           |
+      |         | git checkout --quiet main   |
       | main    | git merge --ff-only feature |
       |         | git push origin :feature    |
       |         | git branch -D feature       |

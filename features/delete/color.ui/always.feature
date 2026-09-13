@@ -18,11 +18,11 @@ Feature: delete a branch within a branch chain
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git push origin :beta    |
-      |        | git checkout alpha       |
-      | alpha  | git branch -D beta       |
+      | BRANCH | COMMAND                    |
+      | beta   | git fetch --prune --tags   |
+      |        | git push origin :beta      |
+      |        | git checkout --quiet alpha |
+      | alpha  | git branch -D beta         |
     And Git Town prints:
       """
       branch gamma is now a child of alpha
@@ -48,6 +48,6 @@ Feature: delete a branch within a branch chain
       | BRANCH | COMMAND                                 |
       | alpha  | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
-      |        | git checkout beta                       |
+      |        | git checkout --quiet beta               |
     And the initial branches and lineage exist now
     And the initial commits exist now

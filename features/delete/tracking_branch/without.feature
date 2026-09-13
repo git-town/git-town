@@ -14,10 +14,10 @@ Feature: delete a local branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout other       |
-      | other   | git branch -D current    |
+      | BRANCH  | COMMAND                    |
+      | current | git fetch --prune --tags   |
+      |         | git checkout --quiet other |
+      | other   | git branch -D current      |
     And this lineage exists now
       """
       main
@@ -33,6 +33,6 @@ Feature: delete a local branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | other  | git branch current {{ sha 'local commit' }} |
-      |        | git checkout current                        |
+      |        | git checkout --quiet current                |
     And the initial branches and lineage exist now
     And the initial commits exist now
