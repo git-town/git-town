@@ -15,7 +15,7 @@ Feature: choosing the commit message when shipping via the forge API
     And Git setting "git-town.ship-strategy" is "api"
     And the current branch is "feature"
 
-  Scenario: default uses the forge's commit message without opening an editor
+  Scenario: default uses the proposal title and number as the commit title
     When I run "git-town ship"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                           |
@@ -23,6 +23,23 @@ Feature: choosing the commit message when shipping via the forge API
       |         | Finding proposal from feature into main ... #1 (feature proposal) |
       |         | git checkout main                                                 |
       |         | GitHub API: merging PR #1 ... ok                                  |
+      |         | commit title "feature proposal (#1)"                              |
+      | main    | git push origin :feature                                          |
+      |         | git branch -D feature                                             |
+    And the branches are now
+      | REPOSITORY    | BRANCHES |
+      | local, origin | main     |
+    And the initial proposals exist now
+
+  Scenario: the "--message" flag provides the commit message
+    When I run "git-town ship -m 'custom message'"
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                           |
+      | feature | git fetch --prune --tags                                          |
+      |         | Finding proposal from feature into main ... #1 (feature proposal) |
+      |         | git checkout main                                                 |
+      |         | GitHub API: merging PR #1 ... ok                                  |
+      |         | commit title "custom message"                                     |
       | main    | git push origin :feature                                          |
       |         | git branch -D feature                                             |
     And the branches are now
@@ -42,6 +59,7 @@ Feature: choosing the commit message when shipping via the forge API
       |         | git commit                                                        |
       |         | git reset --hard HEAD~1                                           |
       |         | GitHub API: merging PR #1 ... ok                                  |
+      |         | commit title "my message"                                         |
       |         | git push origin :feature                                          |
       |         | git branch -D feature                                             |
     And the branches are now
