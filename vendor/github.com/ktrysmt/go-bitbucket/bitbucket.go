@@ -344,26 +344,27 @@ const (
 )
 
 type PullRequestsOptions struct {
-	ID                string                    `json:"id"`
-	CommentID         string                    `json:"comment_id"`
-	Owner             string                    `json:"owner"`
-	RepoSlug          string                    `json:"repo_slug"`
-	Title             string                    `json:"title"`
-	Description       string                    `json:"description"`
-	CloseSourceBranch bool                      `json:"close_source_branch"`
-	SourceBranch      string                    `json:"source_branch"`
-	SourceRepository  string                    `json:"source_repository"`
-	DestinationBranch string                    `json:"destination_branch"`
-	DestinationCommit string                    `json:"destination_repository"`
-	MergeStrategy     PullRequestsMergeStrategy `json:"merge_strategy"`
-	Message           string                    `json:"message"`
-	Reviewers         []string                  `json:"reviewers"`
-	States            []string                  `json:"states"`
-	Query             string                    `json:"query"`
-	Sort              string                    `json:"sort"`
-	Draft             bool                      `json:"draft"`
-	Commit            string                    `json:"commit"`
-	ctx               context.Context
+	ID                 string                    `json:"id"`
+	CommentID          string                    `json:"comment_id"`
+	Owner              string                    `json:"owner"`
+	RepoSlug           string                    `json:"repo_slug"`
+	Title              string                    `json:"title"`
+	Description        string                    `json:"description"`
+	CloseSourceBranch  bool                      `json:"close_source_branch"`
+	SourceBranch       string                    `json:"source_branch"`
+	SourceRepository   string                    `json:"source_repository"`
+	DestinationBranch  string                    `json:"destination_branch"`
+	DestinationCommit  string                    `json:"destination_repository"`
+	MergeStrategy      PullRequestsMergeStrategy `json:"merge_strategy"`
+	Message            string                    `json:"message"`
+	Reviewers          []string                  `json:"reviewers"`
+	ReviewerAccountIDs []string                  `json:"reviewer_account_ids"`
+	States             []string                  `json:"states"`
+	Query              string                    `json:"query"`
+	Sort               string                    `json:"sort"`
+	Draft              bool                      `json:"draft"`
+	Commit             string                    `json:"commit"`
+	ctx                context.Context
 }
 
 func (po *PullRequestsOptions) WithContext(ctx context.Context) *PullRequestsOptions {
