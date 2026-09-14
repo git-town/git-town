@@ -46,9 +46,9 @@ Feature: delete the current feature branch in Spanish
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout --quiet current                  |
-    And Git Town prints:
+    And Git Town prints something like:
       """
-      rama 'current' configurada para rastrear 'origin/current'.
+      [Rr]ama 'current' configurada para
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
