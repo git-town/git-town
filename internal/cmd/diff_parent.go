@@ -80,8 +80,8 @@ Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
+		PrintBranchNames: nameOnly.GetOr(false).Disabled(),
+		PrintCommands:    nameOnly.GetOr(false).Disabled(),
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
 	})
