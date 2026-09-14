@@ -16,14 +16,14 @@ Feature: ship the supplied feature branch from a subfolder
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                         |
-      | other  | git fetch --prune --tags        |
-      |        | git checkout main               |
-      | main   | git merge --squash --ff feature |
-      |        | git commit -m "feature done"    |
-      |        | git push                        |
-      |        | git checkout other              |
-      | other  | git branch -D feature           |
+      | BRANCH | COMMAND                              |
+      | other  | git fetch --prune --tags             |
+      |        | git checkout --quiet main            |
+      | main   | git merge --squash --ff feature      |
+      |        | git commit --quiet -m "feature done" |
+      |        | git push                             |
+      |        | git checkout --quiet other           |
+      | other  | git branch -D feature                |
     And this lineage exists now
       """
       main
@@ -41,11 +41,11 @@ Feature: ship the supplied feature branch from a subfolder
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git checkout main                             |
+      | other  | git checkout --quiet main                     |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout other                            |
+      |        | git checkout --quiet other                    |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

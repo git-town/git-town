@@ -21,7 +21,7 @@ Feature: combining local branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | beta   | git fetch --prune --tags                 |
-      |        | git checkout alpha                       |
+      |        | git checkout --quiet alpha               |
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git branch -D beta                       |
     And this lineage exists now
@@ -40,6 +40,6 @@ Feature: combining local branches
       | BRANCH | COMMAND                                         |
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git branch beta {{ sha-initial 'beta commit' }} |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
     And the initial lineage exists now
     And the initial commits exist now

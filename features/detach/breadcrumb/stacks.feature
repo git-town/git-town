@@ -28,19 +28,19 @@ Feature: detach the current feature branch from a stack and update proposals
       |        | Finding proposal from beta into alpha ... #2 (beta proposal)     |
       |        | Finding proposal from gamma1 into beta ... #3 (gamma1 proposal)  |
       |        | Finding proposal from gamma2 into beta ... #4 (gamma2 proposal)  |
-      |        | git checkout gamma1                                              |
+      |        | git checkout --quiet gamma1                                      |
       | gamma1 | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
       |        | git push --force-with-lease                                      |
-      |        | git checkout gamma2                                              |
+      |        | git checkout --quiet gamma2                                      |
       | gamma2 | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
       |        | git push --force-with-lease                                      |
-      |        | git checkout delta                                               |
+      |        | git checkout --quiet delta                                       |
       | delta  | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta         |
       |        | git push --force-with-lease                                      |
-      |        | git checkout beta                                                |
+      |        | git checkout --quiet beta                                        |
       | beta   | git -c rebase.updateRefs=false rebase --onto main alpha          |
       |        | Updating target branch of proposal #2 to main ... ok             |
       |        | Updating target branch of proposal #3 to alpha ... ok            |

@@ -51,8 +51,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH    | COMMAND              |
-      | prototype | git commit --no-edit |
+      | BRANCH    | COMMAND                      |
+      | prototype | git commit --quiet --no-edit |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
@@ -68,8 +68,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND              |
-      | prototype | git commit --no-edit |
+      | BRANCH    | COMMAND                      |
+      | prototype | git commit --quiet --no-edit |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |

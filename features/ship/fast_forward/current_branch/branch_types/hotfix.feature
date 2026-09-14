@@ -15,13 +15,13 @@ Feature: ship hotfixes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                    |
-      | hotfix     | git fetch --prune --tags   |
-      |            | git checkout production    |
-      | production | git merge --ff-only hotfix |
-      |            | git push                   |
-      |            | git push origin :hotfix    |
-      |            | git branch -D hotfix       |
+      | BRANCH     | COMMAND                         |
+      | hotfix     | git fetch --prune --tags        |
+      |            | git checkout --quiet production |
+      | production | git merge --ff-only hotfix      |
+      |            | git push                        |
+      |            | git push origin :hotfix         |
+      |            | git branch -D hotfix            |
     And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES         |
@@ -36,7 +36,7 @@ Feature: ship hotfixes
       | BRANCH     | COMMAND                                     |
       | production | git branch hotfix {{ sha 'hotfix commit' }} |
       |            | git push -u origin hotfix                   |
-      |            | git checkout hotfix                         |
+      |            | git checkout --quiet hotfix                 |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE       |

@@ -18,16 +18,16 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | branch-2 | git fetch --prune --tags                 |
-      |          | git checkout branch-1                    |
-      | branch-1 | git checkout branch-2                    |
-      | branch-2 | git merge --no-edit --ff branch-1        |
-      |          | git merge --no-edit --ff origin/branch-2 |
-      |          | git reset --soft branch-1 --             |
-      |          | git commit -m "branch-2 commit"          |
-      |          | git push --force-with-lease              |
-      |          | git checkout -b branch-1a branch-1       |
+      | BRANCH   | COMMAND                                    |
+      | branch-2 | git fetch --prune --tags                   |
+      |          | git checkout --quiet branch-1              |
+      | branch-1 | git checkout --quiet branch-2              |
+      | branch-2 | git merge --no-edit --ff branch-1          |
+      |          | git merge --no-edit --ff origin/branch-2   |
+      |          | git reset --soft branch-1 --               |
+      |          | git commit --quiet -m "branch-2 commit"    |
+      |          | git push --force-with-lease                |
+      |          | git checkout --quiet -b branch-1a branch-1 |
     And this lineage exists now
       """
       main
@@ -44,7 +44,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                      |
-      | branch-1a | git checkout branch-2                                                        |
+      | branch-1a | git checkout --quiet branch-2                                                |
       | branch-2  | git reset --hard {{ sha-initial 'branch-2 commit' }}                         |
       |           | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:branch-2 |
       |           | git branch -D branch-1a                                                      |

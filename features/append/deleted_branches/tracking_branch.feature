@@ -16,10 +16,10 @@ Feature: append a branch to a branch whose tracking branch was deleted
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | shipped | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git branch -D shipped                             |
-      |         | git checkout -b new                               |
+      |         | git checkout --quiet -b new                       |
     And Git Town prints:
       """
       deleted branch shipped
@@ -38,9 +38,9 @@ Feature: append a branch to a branch whose tracking branch was deleted
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
-      | new     | git checkout main                             |
+      | new     | git checkout --quiet main                     |
       | main    | git reset --hard {{ sha 'initial commit' }}   |
       |         | git branch shipped {{ sha 'shipped commit' }} |
-      |         | git checkout shipped                          |
+      |         | git checkout --quiet shipped                  |
       | shipped | git branch -D new                             |
     And the initial branches and lineage exist now

@@ -37,7 +37,7 @@ Feature: combine the current feature branch and update proposals
       | beta   | git fetch --prune --tags                                       |
       |        | Finding proposal from gamma into beta ... #3 (gamma proposal)  |
       |        | Updating target branch of proposal #3 to alpha ... ok          |
-      |        | git checkout alpha                                             |
+      |        | git checkout --quiet alpha                                     |
       | alpha  | git reset --hard {{ sha 'beta commit' }}                       |
       |        | git push origin :beta                                          |
       |        | git branch -D beta                                             |
@@ -109,7 +109,7 @@ Feature: combine the current feature branch and update proposals
       |        | git branch beta {{ sha 'beta commit' }}                       |
       |        | git push -u origin beta                                       |
       |        | Updating target branch of proposal #3 to beta ... ok          |
-      |        | git checkout beta                                             |
+      |        | git checkout --quiet beta                                     |
       |        | Finding all proposals for alpha ... main                      |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal) |
       |        | Finding proposal from gamma into alpha ... none               |

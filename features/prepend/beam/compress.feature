@@ -22,15 +22,15 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
-      | old    | git checkout -b parent main                                                                             |
+      | old    | git checkout --quiet -b parent main                                                                     |
       | parent | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
       |        | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
-      |        | git checkout old                                                                                        |
+      |        | git checkout --quiet old                                                                                |
       | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |        | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |        | git merge --no-edit --ff parent                                                                         |
       |        | git push --force-with-lease --force-if-includes                                                         |
-      |        | git checkout parent                                                                                     |
+      |        | git checkout --quiet parent                                                                             |
     And this lineage exists now
       """
       main
@@ -51,11 +51,11 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
   Scenario: sync
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                   |
-      | parent | git fetch --prune --tags  |
-      |        | git reset --soft main --  |
-      |        | git commit -m "commit 1"  |
-      |        | git push -u origin parent |
+      | BRANCH | COMMAND                          |
+      | parent | git fetch --prune --tags         |
+      |        | git reset --soft main --         |
+      |        | git commit --quiet -m "commit 1" |
+      |        | git push -u origin parent        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | parent | local, origin | commit 1                       |
@@ -73,17 +73,17 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     And the current branch is "old"
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                         |
-      | old    | git fetch --prune --tags        |
-      |        | git checkout parent             |
-      | parent | git reset --soft main --        |
-      |        | git commit -m "commit 1"        |
-      |        | git push -u origin parent       |
-      |        | git checkout old                |
-      | old    | git merge --no-edit --ff parent |
-      |        | git reset --soft parent --      |
-      |        | git commit -m "commit 1"        |
-      |        | git push --force-with-lease     |
+      | BRANCH | COMMAND                          |
+      | old    | git fetch --prune --tags         |
+      |        | git checkout --quiet parent      |
+      | parent | git reset --soft main --         |
+      |        | git commit --quiet -m "commit 1" |
+      |        | git push -u origin parent        |
+      |        | git checkout --quiet old         |
+      | old    | git merge --no-edit --ff parent  |
+      |        | git reset --soft parent --       |
+      |        | git commit --quiet -m "commit 1" |
+      |        | git push --force-with-lease      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | parent | local, origin | commit 1 |
@@ -93,7 +93,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | parent | git checkout old                                |
+      | parent | git checkout --quiet old                        |
       | old    | git reset --hard {{ sha 'commit 4' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D parent                            |

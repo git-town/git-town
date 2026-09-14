@@ -18,11 +18,11 @@ Feature: ship a parent branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                    |
       | child  | git fetch --prune --tags   |
-      |        | git checkout main          |
+      |        | git checkout --quiet main  |
       | main   | git merge --ff-only parent |
       |        | git push                   |
       |        | git push origin :parent    |
-      |        | git checkout child         |
+      |        | git checkout --quiet child |
       | child  | git branch -D parent       |
     And Git Town prints:
       """

@@ -16,15 +16,15 @@ Feature: ship a parent branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                        |
-      | child  | git fetch --prune --tags       |
-      |        | git checkout main              |
-      | main   | git merge --squash --ff parent |
-      |        | git commit -m "parent done"    |
-      |        | git push                       |
-      |        | git push origin :parent        |
-      |        | git checkout child             |
-      | child  | git branch -D parent           |
+      | BRANCH | COMMAND                             |
+      | child  | git fetch --prune --tags            |
+      |        | git checkout --quiet main           |
+      | main   | git merge --squash --ff parent      |
+      |        | git commit --quiet -m "parent done" |
+      |        | git push                            |
+      |        | git push origin :parent             |
+      |        | git checkout --quiet child          |
+      | child  | git branch -D parent                |
     And this lineage exists now
       """
       main
@@ -39,12 +39,12 @@ Feature: ship a parent branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
-      | child  | git checkout main                           |
+      | child  | git checkout --quiet main                   |
       | main   | git revert {{ sha 'parent done' }}          |
       |        | git push                                    |
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
-      |        | git checkout child                          |
+      |        | git checkout --quiet child                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

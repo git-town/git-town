@@ -14,8 +14,8 @@ Feature: no TTY, missing parent branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                   |
-      | branch-1 | git fetch --prune --tags  |
-      |          | git push origin :branch-1 |
-      |          | git checkout branch-2     |
-      | branch-2 | git branch -D branch-1    |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git fetch --prune --tags      |
+      |          | git push origin :branch-1     |
+      |          | git checkout --quiet branch-2 |
+      | branch-2 | git branch -D branch-1        |

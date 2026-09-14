@@ -15,11 +15,11 @@ Feature: delete the current prototype branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                    |
-      | prototype | git fetch --prune --tags   |
-      |           | git push origin :prototype |
-      |           | git checkout previous      |
-      | previous  | git branch -D prototype    |
+      | BRANCH    | COMMAND                       |
+      | prototype | git fetch --prune --tags      |
+      |           | git push origin :prototype    |
+      |           | git checkout --quiet previous |
+      | previous  | git branch -D prototype       |
     And this lineage exists now
       """
       main
@@ -39,7 +39,7 @@ Feature: delete the current prototype branch
       | BRANCH   | COMMAND                                           |
       | previous | git branch prototype {{ sha 'prototype commit' }} |
       |          | git push -u origin prototype                      |
-      |          | git checkout prototype                            |
+      |          | git checkout --quiet prototype                    |
     And the initial branches and lineage exist now
     And branch "prototype" now has type "prototype"
     And the initial commits exist now

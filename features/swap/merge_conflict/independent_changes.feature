@@ -32,13 +32,13 @@ Feature: swapping a feature branch in a stack with independent changes
       | branch-2 | git fetch --prune --tags                                                                  |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1                                |
       |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-1                                                                     |
+      |          | git checkout --quiet branch-1                                                             |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main                                |
       |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-3                                                                     |
+      |          | git checkout --quiet branch-3                                                             |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'branch-2 commit' }} |
       |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-2                                                                     |
+      |          | git checkout --quiet branch-2                                                             |
     And this lineage exists now
       """
       main
@@ -57,15 +57,15 @@ Feature: swapping a feature branch in a stack with independent changes
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | branch-2 | git checkout branch-1                           |
+      | branch-2 | git checkout --quiet branch-1                   |
       | branch-1 | git reset --hard {{ sha 'branch-1 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      |          | git checkout --quiet branch-2                   |
       | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
+      |          | git checkout --quiet branch-3                   |
       | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      |          | git checkout --quiet branch-2                   |
     And the initial lineage exists now
     And the initial commits exist now

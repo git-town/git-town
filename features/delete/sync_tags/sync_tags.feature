@@ -18,7 +18,7 @@ Feature: don't sync tags while deleting branches
       | BRANCH  | COMMAND                     |
       | current | git fetch --prune --no-tags |
       |         | git push origin :current    |
-      |         | git checkout main           |
+      |         | git checkout --quiet main   |
       | main    | git branch -D current       |
     And the initial tags exist now
 
@@ -28,7 +28,7 @@ Feature: don't sync tags while deleting branches
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git push -u origin current                    |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial lineage exists now
     And the initial commits exist now
     And the initial tags exist now

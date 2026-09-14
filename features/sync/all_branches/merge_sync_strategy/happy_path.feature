@@ -30,23 +30,23 @@ Feature: sync all feature branches
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                 |
       | alpha      | git fetch --prune --tags                                |
-      |            | git checkout main                                       |
+      |            | git checkout --quiet main                               |
       | main       | git -c rebase.updateRefs=false rebase origin/main       |
-      |            | git checkout alpha                                      |
+      |            | git checkout --quiet alpha                              |
       | alpha      | git merge --no-edit --ff main                           |
       |            | git push                                                |
-      |            | git checkout beta                                       |
+      |            | git checkout --quiet beta                               |
       | beta       | git merge --no-edit --ff main                           |
       |            | git push                                                |
-      |            | git checkout observed                                   |
+      |            | git checkout --quiet observed                           |
       | observed   | git -c rebase.updateRefs=false rebase origin/observed   |
-      |            | git checkout production                                 |
+      |            | git checkout --quiet production                         |
       | production | git -c rebase.updateRefs=false rebase origin/production |
       |            | git push                                                |
-      |            | git checkout qa                                         |
+      |            | git checkout --quiet qa                                 |
       | qa         | git -c rebase.updateRefs=false rebase origin/qa         |
       |            | git push                                                |
-      |            | git checkout alpha                                      |
+      |            | git checkout --quiet alpha                              |
       | alpha      | git push --tags                                         |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                        |
@@ -70,23 +70,23 @@ Feature: sync all feature branches
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                                      |
       | alpha      | git fetch --prune --tags                                                     |
-      |            | git checkout main                                                            |
+      |            | git checkout --quiet main                                                    |
       | main       | git -c rebase.updateRefs=false rebase origin/main                            |
-      |            | git checkout alpha                                                           |
+      |            | git checkout --quiet alpha                                                   |
       | alpha      | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |            | git push --force-with-lease --force-if-includes                              |
-      |            | git checkout beta                                                            |
+      |            | git checkout --quiet beta                                                    |
       | beta       | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |            | git push --force-with-lease --force-if-includes                              |
-      |            | git checkout observed                                                        |
+      |            | git checkout --quiet observed                                                |
       | observed   | git -c rebase.updateRefs=false rebase origin/observed                        |
-      |            | git checkout production                                                      |
+      |            | git checkout --quiet production                                              |
       | production | git -c rebase.updateRefs=false rebase origin/production                      |
       |            | git push                                                                     |
-      |            | git checkout qa                                                              |
+      |            | git checkout --quiet qa                                                      |
       | qa         | git -c rebase.updateRefs=false rebase origin/qa                              |
       |            | git push                                                                     |
-      |            | git checkout alpha                                                           |
+      |            | git checkout --quiet alpha                                                   |
       | alpha      | git push --tags                                                              |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |

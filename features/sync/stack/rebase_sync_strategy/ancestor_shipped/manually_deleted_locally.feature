@@ -20,9 +20,9 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                      |
       | child  | git fetch --prune --tags                                                     |
-      |        | git checkout main                                                            |
+      |        | git checkout --quiet main                                                    |
       | main   | git -c rebase.updateRefs=false rebase origin/main                            |
-      |        | git checkout child                                                           |
+      |        | git checkout --quiet child                                                   |
       | child  | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                              |
     And this lineage exists now
@@ -40,9 +40,9 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       | BRANCH | COMMAND                                         |
       | child  | git reset --hard {{ sha 'child commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
+      |        | git checkout --quiet main                       |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git checkout child                              |
+      |        | git checkout --quiet child                      |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |

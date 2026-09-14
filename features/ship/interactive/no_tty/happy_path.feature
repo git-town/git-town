@@ -16,7 +16,7 @@ Feature: no TTY, no main branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                      |
-      | existing | git checkout main            |
+      | existing | git checkout --quiet main    |
       | main     | git merge --ff-only existing |
       |          | git branch -D existing       |
 
@@ -26,4 +26,4 @@ Feature: no TTY, no main branch
       | BRANCH | COMMAND                                         |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git branch existing {{ sha 'existing commit' }} |
-      |        | git checkout existing                           |
+      |        | git checkout --quiet existing                   |

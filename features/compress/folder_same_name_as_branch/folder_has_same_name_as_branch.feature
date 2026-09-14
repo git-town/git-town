@@ -17,10 +17,10 @@ Feature: compress the branch that has the same name as a folder
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git reset --soft main -- |
-      |         | git commit -m "commit 1" |
+      | BRANCH  | COMMAND                          |
+      | feature | git fetch --prune --tags         |
+      |         | git reset --soft main --         |
+      |         | git commit --quiet -m "commit 1" |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
       | main    | local    | commit 1 |

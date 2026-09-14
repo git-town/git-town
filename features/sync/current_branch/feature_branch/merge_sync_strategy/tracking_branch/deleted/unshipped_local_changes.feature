@@ -17,9 +17,9 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | shipped | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout shipped                              |
+      |         | git checkout --quiet shipped                      |
       | shipped | git merge --no-edit --ff main                     |
     And Git Town prints:
       """
@@ -31,9 +31,9 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                               |
-      | shipped | git checkout main                                     |
+      | shipped | git checkout --quiet main                             |
       | main    | git reset --hard {{ sha 'initial commit' }}           |
-      |         | git checkout shipped                                  |
+      |         | git checkout --quiet shipped                          |
       | shipped | git reset --hard {{ sha-initial 'unshipped commit' }} |
     And the initial branches and lineage exist now
     And the initial commits exist now

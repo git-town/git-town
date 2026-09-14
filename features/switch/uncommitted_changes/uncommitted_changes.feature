@@ -18,6 +18,6 @@ Feature: switch to another branch with uncommitted changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | alpha  | git checkout beta |
+      | BRANCH | COMMAND                   |
+      | alpha  | git checkout --quiet beta |
     And the uncommitted file still exists

@@ -112,7 +112,7 @@ func TestTestCommands(t *testing.T) {
 			// Create a commit with an empty message
 			runtime.CreateFile("file2", "content2")
 			runtime.StageFiles("file2")
-			runtime.MustRun("git", "commit", "--allow-empty-message", "-m", "")
+			runtime.MustRun("git", "commit", "--quiet", "--allow-empty-message", "-m", "")
 			// Get all commits
 			commits := runtime.CommitSHAs()
 			must.EqOp(t, "", commits[0].Message)

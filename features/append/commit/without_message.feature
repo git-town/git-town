@@ -16,10 +16,10 @@ Feature: commit without message
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | existing | git checkout -b new   |
-      | new      | git commit            |
-      |          | git checkout existing |
+      | BRANCH   | COMMAND                       |
+      | existing | git checkout --quiet -b new   |
+      | new      | git commit --quiet            |
+      |          | git checkout --quiet existing |
     And this lineage exists now
       """
       main

@@ -17,7 +17,7 @@ Feature: rename a local-only branch
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
-      |        | git checkout new          |
+      |        | git checkout --quiet new  |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -28,6 +28,6 @@ Feature: rename a local-only branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
+      |        | git checkout --quiet old              |
       | old    | git branch -D new                     |
     And the initial branches and lineage exist now

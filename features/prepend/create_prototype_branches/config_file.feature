@@ -18,9 +18,9 @@ Feature: prepend a new branch when prototype branches are configured via config 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git fetch --prune --tags    |
-      |        | git checkout -b parent main |
+      | BRANCH | COMMAND                             |
+      | old    | git fetch --prune --tags            |
+      |        | git checkout --quiet -b parent main |
     And this lineage exists now
       """
       main
@@ -33,8 +33,8 @@ Feature: prepend a new branch when prototype branches are configured via config 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                  |
+      | parent | git checkout --quiet old |
+      | old    | git branch -D parent     |
     And the initial lineage exists now
     And the initial commits exist now

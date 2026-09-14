@@ -16,10 +16,10 @@ Feature: propose uncommitted changes via a separate parent branch, provide commi
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git checkout -b new main |
-      | new      | git commit -m unrelated  |
-      |          | git checkout existing    |
+      | BRANCH   | COMMAND                          |
+      | existing | git checkout --quiet -b new main |
+      | new      | git commit --quiet -m unrelated  |
+      |          | git checkout --quiet existing    |
     And this lineage exists now
       """
       main

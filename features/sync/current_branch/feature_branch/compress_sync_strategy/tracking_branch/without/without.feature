@@ -19,13 +19,13 @@ Feature: sync the current feature branch without a tracking branch using the "co
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
       |         | git reset --soft main --                          |
-      |         | git commit -m "local feature commit 1"            |
+      |         | git commit --quiet -m "local feature commit 1"    |
       |         | git push -u origin feature                        |
     And the branches are now
       | REPOSITORY    | BRANCHES      |

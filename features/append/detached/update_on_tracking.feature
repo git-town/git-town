@@ -17,7 +17,7 @@ Feature: append a new feature branch to an existing feature branch in detached m
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
       |          | git merge --no-edit --ff origin/existing |
-      |          | git checkout -b new                      |
+      |          | git checkout --quiet -b new              |
     And this lineage exists now
       """
       main
@@ -33,7 +33,7 @@ Feature: append a new feature branch to an existing feature branch in detached m
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                      |
-      | new      | git checkout existing                        |
+      | new      | git checkout --quiet existing                |
       | existing | git reset --hard {{ sha 'existing commit' }} |
       |          | git branch -D new                            |
     And the initial lineage exists now

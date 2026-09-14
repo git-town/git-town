@@ -21,10 +21,10 @@ Feature: sync a feature branch that is already compressed using the "compress" s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git checkout alpha       |
-      | alpha  | git checkout beta        |
+      | BRANCH | COMMAND                    |
+      | beta   | git fetch --prune --tags   |
+      |        | git checkout --quiet alpha |
+      | alpha  | git checkout --quiet beta  |
     And the initial commits exist now
 
   Scenario: undo

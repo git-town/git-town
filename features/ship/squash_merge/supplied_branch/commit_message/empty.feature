@@ -19,11 +19,11 @@ Feature: abort the ship via empty commit message
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
-      |        | git checkout main               |
+      |        | git checkout --quiet main       |
       | main   | git merge --squash --ff feature |
-      |        | git commit                      |
+      |        | git commit --quiet              |
       |        | git reset --hard                |
-      |        | git checkout other              |
+      |        | git checkout --quiet other      |
     And Git Town prints the error:
       """
       aborted because merge exited with error

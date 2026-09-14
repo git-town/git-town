@@ -30,7 +30,7 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | Updating target branch of proposal #3 to alpha ... ok            |
       |        | Updating target branch of proposal #4 to alpha ... ok            |
       |        | git push origin :beta                                            |
-      |        | git checkout delta                                               |
+      |        | git checkout --quiet delta                                       |
       | delta  | git branch -D beta                                               |
       |        | Finding all proposals for alpha ... main                         |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)    |
@@ -158,7 +158,7 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | git push -u origin beta                                         |
       |        | Updating target branch of proposal #3 to beta ... ok            |
       |        | Updating target branch of proposal #4 to beta ... ok            |
-      |        | git checkout beta                                               |
+      |        | git checkout --quiet beta                                       |
       |        | Finding all proposals for alpha ... main                        |
       |        | Finding proposal from alpha into main ... #1 (alpha proposal)   |
       |        | Finding proposal from gamma1 into alpha ... none                |

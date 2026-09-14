@@ -18,13 +18,13 @@ Feature: prune enabled via CLI
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-1 | git fetch --prune --tags                          |
-      |           | git checkout main                                 |
+      |           | git checkout --quiet main                         |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
       |           | git push                                          |
-      |           | git checkout feature-1                            |
+      |           | git checkout --quiet feature-1                    |
       | feature-1 | git merge --no-edit --ff main                     |
       |           | git merge --no-edit --ff origin/feature-1         |
-      |           | git checkout feature-2                            |
+      |           | git checkout --quiet feature-2                    |
       | feature-2 | git push origin :feature-1                        |
       |           | git branch -D feature-1                           |
     And this lineage exists now
@@ -43,7 +43,7 @@ Feature: prune enabled via CLI
       | BRANCH    | COMMAND                                                         |
       | feature-2 | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
       |           | git branch feature-1 {{ sha 'feature-1 commit' }}               |
-      |           | git checkout feature-1                                          |
+      |           | git checkout --quiet feature-1                                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |

@@ -23,11 +23,11 @@ Feature: does not compress an active observed branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | observed | git fetch --prune --tags                        |
-      |          | git checkout child                              |
+      |          | git checkout --quiet child                      |
       | child    | git reset --soft observed --                    |
-      |          | git commit -m "child 1"                         |
+      |          | git commit --quiet -m "child 1"                 |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout observed                           |
+      |          | git checkout --quiet observed                   |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
@@ -41,9 +41,9 @@ Feature: does not compress an active observed branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | observed | git checkout child                              |
+      | observed | git checkout --quiet child                      |
       | child    | git reset --hard {{ sha 'child 2' }}            |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout observed                           |
+      |          | git checkout --quiet observed                   |
     And the initial branches and lineage exist now
     And the initial commits exist now

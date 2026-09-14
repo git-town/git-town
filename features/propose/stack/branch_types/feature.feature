@@ -21,20 +21,20 @@ Feature: propose an entire stack
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                        |
       | branch-2 | git fetch --prune --tags                                                       |
-      |          | git checkout branch-1                                                          |
-      | branch-1 | git checkout branch-2                                                          |
+      |          | git checkout --quiet branch-1                                                  |
+      | branch-1 | git checkout --quiet branch-2                                                  |
       | branch-2 | git merge --no-edit --ff branch-1                                              |
       |          | git push                                                                       |
-      |          | git checkout branch-3                                                          |
+      |          | git checkout --quiet branch-3                                                  |
       | branch-3 | git merge --no-edit --ff branch-2                                              |
       |          | git push                                                                       |
-      |          | git checkout branch-1                                                          |
+      |          | git checkout --quiet branch-1                                                  |
       |          | Finding proposal from branch-1 into main ... none                              |
       | branch-1 | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
-      |          | git checkout branch-2                                                          |
+      |          | git checkout --quiet branch-2                                                  |
       |          | Finding proposal from branch-2 into branch-1 ... none                          |
       | branch-2 | open https://github.com/git-town/git-town/compare/branch-1...branch-2?expand=1 |
-      |          | git checkout branch-3                                                          |
+      |          | git checkout --quiet branch-3                                                  |
       |          | Finding proposal from branch-3 into branch-2 ... none                          |
       | branch-3 | open https://github.com/git-town/git-town/compare/branch-2...branch-3?expand=1 |
 
@@ -42,12 +42,12 @@ Feature: propose an entire stack
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | branch-3 | git checkout branch-2                           |
+      | branch-3 | git checkout --quiet branch-2                   |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
+      |          | git checkout --quiet branch-3                   |
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      |          | git checkout --quiet branch-2                   |
     And the initial lineage exists now
     And the initial branches exist now

@@ -15,6 +15,6 @@ Feature: the Git configuration uses includeIf
       """
     When I run "git-town hack new"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git checkout -b new      |
+      | BRANCH | COMMAND                     |
+      | main   | git fetch --prune --tags    |
+      |        | git checkout --quiet -b new |
