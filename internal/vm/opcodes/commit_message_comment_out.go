@@ -9,10 +9,12 @@ import (
 )
 
 // CommitMessageCommentOut comments out the currently active commit message.
-type CommitMessageCommentOut struct{}
+type CommitMessageCommentOut struct {
+	Prefix Option[string]
+}
 
 func (self *CommitMessageCommentOut) Run(args shared.RunArgs) error {
-	if err := args.Git.CommentOutSquashCommitMessage(args.Backend, None[string]()); err != nil {
+	if err := args.Git.CommentOutSquashCommitMessage(args.Backend, self.Prefix); err != nil {
 		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	return nil
