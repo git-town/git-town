@@ -13,10 +13,11 @@ import (
 
 // MergeSquashProgram prepends the opcodes to squash merge the branch with the given name into the current branch.
 type MergeSquashProgram struct {
-	Authors       []gitdomain.Author
-	Branch        gitdomain.LocalBranchName
-	CommitMessage Option[gitdomain.CommitMessage]
-	Parent        gitdomain.LocalBranchName
+	Authors             []gitdomain.Author
+	Branch              gitdomain.LocalBranchName
+	CommitMessage       Option[gitdomain.CommitMessage]
+	CommitMessagePrefix Option[string]
+	Parent              gitdomain.LocalBranchName
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
@@ -40,7 +41,7 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 		},
 	}
 	if !args.Config.Value.NormalConfig.DryRun {
-		program = append(program, &CommitMessageCommentOut{})
+		program = append(program, &CommitMessageCommentOut{Prefix: self.CommitMessagePrefix})
 	}
 	program = append(
 		program,

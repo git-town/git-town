@@ -139,12 +139,18 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 
 var _ forgedomain.ProposalMerger = glabConnector // type check
 
-func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+func (self Connector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
 	args := []string{"mr", "merge", "--squash"}
-	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
-		args = append(args, "--squash-message="+commitMessage.String())
+	// When no commit message is given, use the proposal title and number
+	// as the squash commit message.
+	squashMessage := message.GetOrZero().String()
+	if squashMessage == "" {
+		squashMessage = gitlab.DefaultMergeCommitTitle(proposalData)
 	}
-	args = append(args, number.String())
+	if squashMessage != "" {
+		args = append(args, "--squash-message="+squashMessage)
+	}
+	args = append(args, proposalData.Number.String())
 	return self.Frontend.Run("glab", args...)
 }
 

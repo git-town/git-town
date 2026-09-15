@@ -75,9 +75,9 @@ func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName
 
 var _ forgedomain.ProposalMerger = &cachedAPIConnector
 
-func (self *CachedAPIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
-	self.cache.Clear(number)
-	return self.api.SquashMergeProposal(number, message)
+func (self *CachedAPIConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
+	self.cache.Clear(proposalData.Number)
+	return self.api.SquashMergeProposal(proposalData, message)
 }
 
 // ============================================================================

@@ -71,7 +71,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitAutoUndo{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitIfNeeded{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
-				&opcodes.CommitMessageCommentOut{},
+				&opcodes.CommitMessageCommentOut{Prefix: Some("prefix")},
 				&opcodes.CommitRemove{SHA: "123456"},
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
@@ -98,7 +98,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParentResolvePhantomConflicts{CurrentBranch: "current", CurrentParent: "parent", InitialParentName: gitdomain.LocalBranchNameOpt("original-parent"), InitialParentSHA: Some(gitdomain.SHA("123456"))},
-				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
+				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), CommitMessagePrefix: Some("commit message prefix"), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
@@ -378,7 +378,9 @@ func TestLoadSave(t *testing.T) {
       "type": "CommitIfNeeded"
     },
     {
-      "data": {},
+      "data": {
+        "Prefix": "prefix"
+      },
       "type": "CommitMessageCommentOut"
     },
     {
@@ -576,6 +578,7 @@ func TestLoadSave(t *testing.T) {
         ],
         "Branch": "branch",
         "CommitMessage": "commit message",
+        "CommitMessagePrefix": "commit message prefix",
         "Parent": "parent"
       },
       "type": "MergeSquashProgram"
