@@ -7,6 +7,10 @@
 - `git town diff-parent --name-only` now omits the Git command to make the output easier to parse.
 - The website now provides instructions to install Git Town via `mise`.
 
+#### Contributors
+
+Big thanks to @AllySummers, @LouisDeconinck, @genx7up, @kevgo, @mw00120 for contributing 13 shipped pull requests to 3 resolved issues!
+
 ## 24.0.0 (2026-07-22)
 
 #### BREAKING CHANGES
