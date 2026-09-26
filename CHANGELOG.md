@@ -1,5 +1,12 @@
 # Git Town Changelog
 
+## 24.1.0 (2026-09-26)
+
+#### New Features
+
+- `git town diff-parent --name-only` now omits the Git command to make the output easier to parse.
+- The website now provides instructions to install Git Town via `mise`.
+
 ## 24.0.0 (2026-07-22)
 
 #### BREAKING CHANGES
