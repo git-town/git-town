@@ -125,7 +125,7 @@ or project-local `mise`
 [tools]
 "github:git-town/git-town" = "latest"
 # or a specific version
-"github:git-town/git-town" = "24.0.0"
+"github:git-town/git-town" = "24.1.0"
 ```
 
 ## Manual installation
