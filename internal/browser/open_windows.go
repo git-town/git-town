@@ -8,6 +8,7 @@ import . "github.com/git-town/git-town/v24/pkg/prelude"
 func defaultBrowserCommand() Option[string] {
 	// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 	//       In particular, "?" can be escaped via "\", but "=" cannot.
-	//       So we are using "start" here.
+	//       So we are using "start" here, wrapped as "cmd /C start <url>" by the
+	//       frontend runner, which also escapes CMD metacharacters in the URL.
 	return Some("start")
 }
