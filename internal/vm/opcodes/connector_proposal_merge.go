@@ -70,8 +70,8 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canMergeProposals {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	// When no commit message is given, the forge determines the squash commit message.
-	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, commitMessage)
+	// When no commit message is given, the connector uses a default squash commit message.
+	self.mergeError = proposalMerger.SquashMergeProposal(proposalData, commitMessage)
 	return self.mergeError
 }
 

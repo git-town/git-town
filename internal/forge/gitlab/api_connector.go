@@ -97,23 +97,27 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector
 
-func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
-	if number <= 0 {
+func (self APIConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
+	if proposalData.Number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
+	self.log.Start(messages.ForgeGitlabMergingViaAPI, proposalData.Number)
 	options := &gitlab.AcceptMergeRequestOptions{
 		Squash: new(true),
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: new(false),
 	}
-	// When no commit message is given, GitLab determines the squash commit message.
-	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
+	// When no commit message is given, use the proposal title and number
+	// as the squash commit message.
+	squashCommitMessage := message.GetOrZero().String()
+	if squashCommitMessage == "" {
+		squashCommitMessage = DefaultMergeCommitTitle(proposalData)
+	}
+	if squashCommitMessage != "" {
 		// the GitLab API wants the full commit message in the body
-		squashCommitMessage := commitMessage.String()
 		options.SquashCommitMessage = &squashCommitMessage
 	}
-	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number.Int64(), options)
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), proposalData.Number.Int64(), options)
 	self.log.Finished(err)
 	return err
 }

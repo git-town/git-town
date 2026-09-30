@@ -113,20 +113,25 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 
 var _ forgedomain.ProposalMerger = &apiConnector // type check
 
-func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+func (self *AuthConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
 	client, err := self.getClient()
 	if err != nil {
 		return err
 	}
-	if number <= 0 {
+	if proposalData.Number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	// When no commit message is given, Gitea determines the squash commit message.
 	commitMessageParts := message.GetOrZero().Parts()
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(number.String()))
-	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), gitea.MergePullRequestOption{
+	// When no commit title is given, mimic the Gitea UI
+	// and use the proposal title and number as the commit title.
+	commitTitle := commitMessageParts.Title.String()
+	if commitTitle == "" {
+		commitTitle = DefaultMergeCommitTitle(proposalData)
+	}
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(proposalData.Number.String()))
+	_, _, err = client.MergePullRequest(self.Organization, self.Repository, proposalData.Number.Int64(), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Title.String(),
+		Title:   commitTitle,
 		Message: commitMessageParts.Body,
 	})
 	if err != nil {

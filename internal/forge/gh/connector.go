@@ -149,20 +149,23 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 
 var _ forgedomain.ProposalMerger = ghConnector // type-check
 
-func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+func (self Connector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
 	args := []string{"pr", "merge", "--squash"}
 
-	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
-		messageParts := commitMessage.Parts()
-		if messageParts.Title.String() != "" {
-			args = append(args, "--subject="+messageParts.Title.String())
-		}
-		if messageParts.Body != "" {
-			args = append(args, "--body="+messageParts.Body)
-		}
+	messageParts := message.GetOrZero().Parts()
+	subject := messageParts.Title.String()
+	if subject == "" {
+		// mimic the GitHub UI, which uses the proposal title and number as the commit subject
+		subject = github.DefaultMergeCommitTitle(proposalData)
+	}
+	if subject != "" {
+		args = append(args, "--subject="+subject)
+	}
+	if messageParts.Body != "" {
+		args = append(args, "--body="+messageParts.Body)
 	}
 
-	args = append(args, number.String())
+	args = append(args, proposalData.Number.String())
 	return self.Frontend.Run("gh", args...)
 }
 

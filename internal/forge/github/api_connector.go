@@ -96,16 +96,21 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector // type check
 
-func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
-	if number <= 0 {
+func (self APIConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
+	if proposalData.Number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
-	// When no commit message is given, GitHub determines the squash commit message.
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+proposalData.Number.String()))
 	commitMessageParts := message.GetOrZero().Parts()
-	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number.Int(), commitMessageParts.Body, &github.PullRequestOptions{
+	// When no commit title is given, mimic the GitHub UI
+	// and use the proposal title and number as the commit title.
+	commitTitle := commitMessageParts.Title.String()
+	if commitTitle == "" {
+		commitTitle = DefaultMergeCommitTitle(proposalData)
+	}
+	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, proposalData.Number.Int(), commitMessageParts.Body, &github.PullRequestOptions{
 		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Title.String(),
+		CommitTitle: commitTitle,
 	})
 	self.log.Finished(err)
 	return err
