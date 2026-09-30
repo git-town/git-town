@@ -23,10 +23,10 @@ Feature: sync a branch whose parent is active in another worktree
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                        |
       | child  | git fetch --prune --tags                                                       |
-      |        | git checkout main                                                              |
+      |        | git checkout --quiet main                                                      |
       | main   | git -c rebase.updateRefs=false rebase origin/main                              |
       |        | git push                                                                       |
-      |        | git checkout child                                                             |
+      |        | git checkout --quiet child                                                     |
       | child  | git push --force-with-lease --force-if-includes                                |
       |        | git -c rebase.updateRefs=false rebase origin/child                             |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |

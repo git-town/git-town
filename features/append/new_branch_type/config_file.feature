@@ -18,9 +18,9 @@ Feature: append a new branch when prototype branches are configured via the conf
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout -b new      |
+      | BRANCH   | COMMAND                     |
+      | existing | git fetch --prune --tags    |
+      |          | git checkout --quiet -b new |
     And this lineage exists now
       """
       main
@@ -33,8 +33,8 @@ Feature: append a new branch when prototype branches are configured via the conf
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |
     And the initial lineage exists now
     And the initial commits exist now

@@ -22,13 +22,13 @@ Feature: allowing shipping into a feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git checkout alpha       |
-      | alpha  | git merge --ff-only beta |
-      |        | git push                 |
-      |        | git push origin :beta    |
-      |        | git branch -D beta       |
+      | BRANCH | COMMAND                    |
+      | beta   | git fetch --prune --tags   |
+      |        | git checkout --quiet alpha |
+      | alpha  | git merge --ff-only beta   |
+      |        | git push                   |
+      |        | git push origin :beta      |
+      |        | git branch -D beta         |
     And this lineage exists now
       """
       main
@@ -52,6 +52,6 @@ Feature: allowing shipping into a feature branch
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch beta {{ sha 'beta 2' }}              |
       |        | git push -u origin beta                         |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

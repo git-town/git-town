@@ -16,7 +16,7 @@ Feature: sync a branch whose tracking branch was shipped
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git branch -D feature                             |
       |         | git push --tags                                   |
@@ -35,5 +35,5 @@ Feature: sync a branch whose tracking branch was shipped
       | BRANCH | COMMAND                                         |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git branch feature {{ sha 'feature-1 commit' }} |
-      |        | git checkout feature                            |
+      |        | git checkout --quiet feature                    |
     And the initial branches and lineage exist now

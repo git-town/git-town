@@ -15,8 +15,8 @@ Feature: switch branches using the "merge" flag
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | current | git checkout other -m |
+      | BRANCH  | COMMAND                       |
+      | current | git checkout --quiet other -m |
 
     Examples:
       | FLAG    |

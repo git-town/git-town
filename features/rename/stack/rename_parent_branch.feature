@@ -18,7 +18,7 @@ Feature: rename a parent branch
       | BRANCH | COMMAND                      |
       | parent | git fetch --prune --tags     |
       |        | git branch --move parent new |
-      |        | git checkout new             |
+      |        | git checkout --quiet new     |
       | new    | git push -u origin new       |
       |        | git push origin :parent      |
     And this lineage exists now
@@ -38,7 +38,7 @@ Feature: rename a parent branch
       | BRANCH | COMMAND                                     |
       | new    | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
-      |        | git checkout parent                         |
+      |        | git checkout --quiet parent                 |
       | parent | git branch -D new                           |
       |        | git push origin :new                        |
     And the initial branches and lineage exist now

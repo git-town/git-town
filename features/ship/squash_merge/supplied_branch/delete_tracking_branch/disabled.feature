@@ -18,14 +18,14 @@ Feature: skip deleting the remote branch when shipping another branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                         |
-      | other  | git fetch --prune --tags        |
-      |        | git checkout main               |
-      | main   | git merge --squash --ff feature |
-      |        | git commit -m "feature done"    |
-      |        | git push                        |
-      |        | git checkout other              |
-      | other  | git branch -D feature           |
+      | BRANCH | COMMAND                              |
+      | other  | git fetch --prune --tags             |
+      |        | git checkout --quiet main            |
+      | main   | git merge --squash --ff feature      |
+      |        | git commit --quiet -m "feature done" |
+      |        | git push                             |
+      |        | git checkout --quiet other           |
+      | other  | git branch -D feature                |
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -43,11 +43,11 @@ Feature: skip deleting the remote branch when shipping another branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git checkout main                             |
+      | other  | git checkout --quiet main                     |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout other                            |
+      |        | git checkout --quiet other                    |
     And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |

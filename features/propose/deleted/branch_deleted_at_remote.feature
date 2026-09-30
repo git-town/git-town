@@ -14,10 +14,10 @@ Feature: proposing a branch that was deleted at the remote
 
   Scenario: a PR for this branch exists already
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git branch -D feature    |
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git checkout --quiet main |
+      | main    | git branch -D feature     |
     And Git Town prints:
       """
       branch feature was deleted at the remote
@@ -32,6 +32,6 @@ Feature: proposing a branch that was deleted at the remote
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'initial commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

@@ -29,18 +29,18 @@ Feature: shipped branch with multiple descendents
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                           |
       | feature-1  | git fetch --prune --tags                          |
-      |            | git checkout main                                 |
+      |            | git checkout --quiet main                         |
       | main       | git -c rebase.updateRefs=false rebase origin/main |
       |            | git branch -D feature-1                           |
-      |            | git checkout feature-1a                           |
+      |            | git checkout --quiet feature-1a                   |
       | feature-1a | git merge --no-edit --ff main                     |
       |            | git reset --soft main --                          |
-      |            | git commit -m "feature-1a commit"                 |
+      |            | git commit --quiet -m "feature-1a commit"         |
       |            | git push --force-with-lease                       |
-      |            | git checkout feature-1b                           |
+      |            | git checkout --quiet feature-1b                   |
       | feature-1b | git merge --no-edit --ff main                     |
       |            | git reset --soft main --                          |
-      |            | git commit -m "feature-1b commit"                 |
+      |            | git commit --quiet -m "feature-1b commit"         |
       |            | git push --force-with-lease                       |
       |            | git push --tags                                   |
     And Git Town prints:
@@ -74,14 +74,14 @@ Feature: shipped branch with multiple descendents
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                           |
-      | feature-1b | git checkout feature-1a                           |
+      | feature-1b | git checkout --quiet feature-1a                   |
       | feature-1a | git reset --hard {{ sha 'feature-1a commit' }}    |
       |            | git push --force-with-lease --force-if-includes   |
-      |            | git checkout feature-1b                           |
+      |            | git checkout --quiet feature-1b                   |
       | feature-1b | git reset --hard {{ sha 'feature-1b commit' }}    |
       |            | git push --force-with-lease --force-if-includes   |
-      |            | git checkout main                                 |
+      |            | git checkout --quiet main                         |
       | main       | git reset --hard {{ sha 'initial commit' }}       |
       |            | git branch feature-1 {{ sha 'feature-1 commit' }} |
-      |            | git checkout feature-1                            |
+      |            | git checkout --quiet feature-1                    |
     And the initial branches and lineage exist now

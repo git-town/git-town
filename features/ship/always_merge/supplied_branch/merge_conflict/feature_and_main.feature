@@ -18,10 +18,10 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     Then Git Town runs the commands
       | BRANCH | COMMAND                             |
       | other  | git fetch --prune --tags            |
-      |        | git checkout main                   |
+      |        | git checkout --quiet main           |
       | main   | git merge --no-ff --edit -- feature |
       |        | git merge --abort                   |
-      |        | git checkout other                  |
+      |        | git checkout --quiet other          |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

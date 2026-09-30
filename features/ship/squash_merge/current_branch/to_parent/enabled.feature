@@ -17,9 +17,9 @@ Feature: allowing shiping into a feature branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                      |
-      | beta   | git checkout alpha           |
+      | beta   | git checkout --quiet alpha   |
       | alpha  | git merge --squash --ff beta |
-      |        | git commit -m done           |
+      |        | git commit --quiet -m done   |
       |        | git branch -D beta           |
     And this lineage exists now
       """
@@ -40,6 +40,6 @@ Feature: allowing shiping into a feature branch
       | BRANCH | COMMAND                                   |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git branch beta {{ sha 'beta commit' }}   |
-      |        | git checkout beta                         |
+      |        | git checkout --quiet beta                 |
     And the initial branches and lineage exist now
     And the initial commits exist now

@@ -10,8 +10,8 @@ Feature: move down using the "merge" flag
     And an uncommitted file
     When I run "git-town down <FLAG>"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | alpha  | git checkout beta -m |
+      | BRANCH | COMMAND                      |
+      | alpha  | git checkout --quiet beta -m |
     And Git Town prints:
       """
         main

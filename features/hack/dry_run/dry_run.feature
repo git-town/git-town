@@ -14,10 +14,10 @@ Feature: dry-run hacking a new feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git checkout -b new      |
+      | BRANCH   | COMMAND                     |
+      | existing | git fetch --prune --tags    |
+      |          | git checkout --quiet main   |
+      | main     | git checkout --quiet -b new |
     And the initial branches and lineage exist now
     And the initial commits exist now
   #

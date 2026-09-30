@@ -18,7 +18,7 @@ Feature: rename with configured branch-prefix via config file
       | BRANCH       | COMMAND                                  |
       | feature-1    | git fetch --prune --tags                 |
       |              | git branch --move feature-1 kg-feature-2 |
-      |              | git checkout kg-feature-2                |
+      |              | git checkout --quiet kg-feature-2        |
       | kg-feature-2 | git push -u origin kg-feature-2          |
       |              | git push origin :feature-1               |
     And the current branch is now "kg-feature-2"
@@ -40,7 +40,7 @@ Feature: rename with configured branch-prefix via config file
       | BRANCH       | COMMAND                                                |
       | kg-feature-2 | git branch feature-1 {{ sha 'persisted config file' }} |
       |              | git push -u origin feature-1                           |
-      |              | git checkout feature-1                                 |
+      |              | git checkout --quiet feature-1                         |
       | feature-1    | git branch -D kg-feature-2                             |
       |              | git push origin :kg-feature-2                          |
     And the current branch is now "feature-1"

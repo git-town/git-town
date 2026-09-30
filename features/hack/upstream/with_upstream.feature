@@ -16,7 +16,7 @@ Feature: on a forked repo
       |        | git fetch upstream main                             |
       |        | git -c rebase.updateRefs=false rebase upstream/main |
       |        | git push                                            |
-      |        | git checkout -b new                                 |
+      |        | git checkout --quiet -b new                         |
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
@@ -24,9 +24,9 @@ Feature: on a forked repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git checkout main |
-      | main   | git branch -D new |
+      | BRANCH | COMMAND                   |
+      | new    | git checkout --quiet main |
+      | main   | git branch -D new         |
     And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |

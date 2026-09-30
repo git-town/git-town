@@ -18,13 +18,13 @@ Feature: append a branch to a branch whose parent was shipped on the remote
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git branch -D parent                              |
-      |        | git checkout child                                |
+      |        | git checkout --quiet child                        |
       | child  | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout -b new                               |
+      |        | git checkout --quiet -b new                       |
     And Git Town prints:
       """
       deleted branch parent
@@ -49,12 +49,12 @@ Feature: append a branch to a branch whose parent was shipped on the remote
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                             |
-      | new    | git checkout child                                  |
+      | new    | git checkout --quiet child                          |
       | child  | git reset --hard {{ sha 'child commit' }}           |
       |        | git push --force-with-lease --force-if-includes     |
-      |        | git checkout main                                   |
+      |        | git checkout --quiet main                           |
       | main   | git reset --hard {{ sha 'initial commit' }}         |
       |        | git branch parent {{ sha-initial 'parent commit' }} |
-      |        | git checkout child                                  |
+      |        | git checkout --quiet child                          |
       | child  | git branch -D new                                   |
     And the initial branches and lineage exist now

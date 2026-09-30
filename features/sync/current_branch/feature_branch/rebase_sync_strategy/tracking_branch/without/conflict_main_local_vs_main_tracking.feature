@@ -17,7 +17,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
@@ -28,9 +28,9 @@ Feature: handle conflicts between the main branch and its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | main   | git rebase --abort   |
-      |        | git checkout feature |
+      | BRANCH | COMMAND                      |
+      | main   | git rebase --abort           |
+      |        | git checkout --quiet feature |
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -40,9 +40,9 @@ Feature: handle conflicts between the main branch and its tracking branch
       | DIALOG              | KEYS    |
       | unfinished runstate | 2 enter |
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | main   | git rebase --abort   |
-      |        | git checkout feature |
+      | BRANCH | COMMAND                      |
+      | main   | git rebase --abort           |
+      |        | git checkout --quiet feature |
     And Git Town prints:
       """
       Handle unfinished command: undo
@@ -66,7 +66,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH  | COMMAND                                                                      |
       | main    | GIT_EDITOR=true git rebase --continue                                        |
       |         | git push                                                                     |
-      |         | git checkout feature                                                         |
+      |         | git checkout --quiet feature                                                 |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
@@ -83,7 +83,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | main    | git push                                                                     |
-      |         | git checkout feature                                                         |
+      |         | git checkout --quiet feature                                                 |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress

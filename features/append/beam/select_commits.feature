@@ -22,12 +22,12 @@ Feature: beam multiple commits onto a new child branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
-      | existing | git checkout -b new                                                                                     |
-      | new      | git checkout existing                                                                                   |
+      | existing | git checkout --quiet -b new                                                                             |
+      | new      | git checkout --quiet existing                                                                           |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
-      |          | git checkout new                                                                                        |
+      |          | git checkout --quiet new                                                                                |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
     And no rebase is now in progress
     And this lineage exists now
@@ -48,7 +48,7 @@ Feature: beam multiple commits onto a new child branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                |
-      | new      | git checkout existing                                                  |
+      | new      | git checkout --quiet existing                                          |
       | existing | git reset --hard {{ sha-initial 'commit 4' }}                          |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
       |          | git branch -D new                                                      |
@@ -64,12 +64,12 @@ Feature: beam multiple commits onto a new child branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                         |
       | new      | git fetch --prune --tags                                                                        |
-      |          | git checkout main                                                                               |
+      |          | git checkout --quiet main                                                                       |
       | main     | git -c rebase.updateRefs=false rebase origin/main                                               |
-      |          | git checkout existing                                                                           |
+      |          | git checkout --quiet existing                                                                   |
       | existing | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                    |
       |          | git push --force-with-lease --force-if-includes                                                 |
-      |          | git checkout new                                                                                |
+      |          | git checkout --quiet new                                                                        |
       | new      | git -c rebase.updateRefs=false rebase --onto existing {{ sha-in-origin-before-run 'commit 3' }} |
       |          | git push -u origin new                                                                          |
     And these commits exist now

@@ -24,14 +24,14 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-3 | git fetch --prune --tags                          |
-      |           | git checkout main                                 |
+      |           | git checkout --quiet main                         |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
       |           | git branch -D feature-1                           |
       |           | git branch -D feature-2                           |
-      |           | git checkout feature-3                            |
+      |           | git checkout --quiet feature-3                    |
       | feature-3 | git merge --no-edit --ff main                     |
       |           | git reset --soft main --                          |
-      |           | git commit -m "feature-3 commit A"                |
+      |           | git commit --quiet -m "feature-3 commit A"        |
       |           | git push --force-with-lease                       |
     And Git Town prints:
       """
@@ -56,9 +56,9 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | BRANCH    | COMMAND                                                   |
       | feature-3 | git reset --hard {{ sha-initial 'feature-3 commit B' }}   |
       |           | git push --force-with-lease --force-if-includes           |
-      |           | git checkout main                                         |
+      |           | git checkout --quiet main                                 |
       | main      | git reset --hard {{ sha 'initial commit' }}               |
       |           | git branch feature-1 {{ sha-initial 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-initial 'feature-2 commit' }} |
-      |           | git checkout feature-3                                    |
+      |           | git checkout --quiet feature-3                            |
     And the initial branches and lineage exist now

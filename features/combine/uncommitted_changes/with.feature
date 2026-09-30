@@ -24,7 +24,7 @@ Feature: combining a branch with uncommitted changes
       | beta   | git fetch --prune --tags                        |
       |        | git add -A                                      |
       |        | git stash -m "Git Town WIP"                     |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'beta commit' }}        |
       |        | git push origin :beta                           |
       |        | git branch -D beta                              |
@@ -56,7 +56,7 @@ Feature: combining a branch with uncommitted changes
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch beta {{ sha 'beta commit' }}         |
       |        | git push -u origin beta                         |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git stash pop                                   |
       |        | git restore --staged .                          |
     And the initial lineage exists now

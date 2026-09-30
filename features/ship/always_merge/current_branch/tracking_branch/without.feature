@@ -16,7 +16,7 @@ Feature: ship a local feature branch using the always-merge strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                             |
       | feature | git fetch --prune --tags            |
-      |         | git checkout main                   |
+      |         | git checkout --quiet main           |
       | main    | git merge --no-ff --edit -- feature |
       |         | git push                            |
       |         | git branch -D feature               |
@@ -34,7 +34,7 @@ Feature: ship a local feature branch using the always-merge strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |

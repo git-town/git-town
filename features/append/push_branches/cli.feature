@@ -10,9 +10,9 @@ Feature: disable pushing through the CLI
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-1 | git fetch --prune --tags |
-      |          | git checkout -b branch-2 |
+      | BRANCH   | COMMAND                          |
+      | branch-1 | git fetch --prune --tags         |
+      |          | git checkout --quiet -b branch-2 |
     And this lineage exists now
       """
       main
@@ -27,9 +27,9 @@ Feature: disable pushing through the CLI
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                |
-      | branch-2 | git checkout branch-1  |
-      | branch-1 | git branch -D branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-1 |
+      | branch-1 | git branch -D branch-2        |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES       |

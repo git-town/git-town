@@ -19,9 +19,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | main   | git checkout alpha            |
+      | main   | git checkout --quiet alpha    |
       | alpha  | git merge --no-edit --ff main |
-      |        | git checkout beta             |
+      |        | git checkout --quiet beta     |
       | beta   | git merge --no-edit --ff main |
     And Git Town prints the error:
       """
@@ -34,9 +34,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | beta   | git merge --abort                         |
-      |        | git checkout alpha                        |
+      |        | git checkout --quiet alpha                |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
-      |        | git checkout main                         |
+      |        | git checkout --quiet main                 |
     And no merge is now in progress
     And the initial commits exist now
 
@@ -45,9 +45,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git merge --abort             |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
     And no merge is now in progress
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE                        |
@@ -80,10 +80,10 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | beta   | git commit --no-edit          |
-      |        | git checkout gamma            |
+      | beta   | git commit --quiet --no-edit  |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
     And no merge is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -101,6 +101,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | beta   | git checkout gamma            |
+      | beta   | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |

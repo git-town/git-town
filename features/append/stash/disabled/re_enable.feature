@@ -12,7 +12,7 @@ Feature: enforce stashing via CLI flag
       | BRANCH | COMMAND                     |
       | main   | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new         |
+      |        | git checkout --quiet -b new |
       | new    | git stash pop               |
       |        | git restore --staged .      |
     And this lineage exists now
@@ -27,7 +27,7 @@ Feature: enforce stashing via CLI flag
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
+      |        | git checkout --quiet main   |
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

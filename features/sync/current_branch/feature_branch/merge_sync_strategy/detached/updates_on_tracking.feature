@@ -17,9 +17,9 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
+      |        | git checkout --quiet alpha            |
       | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git checkout beta                     |
+      |        | git checkout --quiet beta             |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
@@ -35,8 +35,8 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | COMMAND                                                                   |
       | beta   | git reset --hard {{ sha 'initial commit' }}                               |
       |        | git push --force-with-lease origin {{ sha-in-origin 'beta commit' }}:beta |
-      |        | git checkout alpha                                                        |
+      |        | git checkout --quiet alpha                                                |
       | alpha  | git reset --hard {{ sha 'initial commit' }}                               |
-      |        | git checkout beta                                                         |
+      |        | git checkout --quiet beta                                                 |
     And the initial branches and lineage exist now
     And the initial commits exist now

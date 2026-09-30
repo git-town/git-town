@@ -18,11 +18,11 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                           |
       | child      | git fetch --prune --tags                          |
-      |            | git checkout main                                 |
+      |            | git checkout --quiet main                         |
       | main       | git -c rebase.updateRefs=false rebase origin/main |
       |            | git push                                          |
       |            | git branch -D child                               |
-      |            | git checkout grandchild                           |
+      |            | git checkout --quiet grandchild                   |
       | grandchild | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
@@ -47,5 +47,5 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | BRANCH     | COMMAND                     |
       | grandchild | git fetch --prune --tags    |
       |            | git push origin :grandchild |
-      |            | git checkout main           |
+      |            | git checkout --quiet main   |
       | main       | git branch -D grandchild    |

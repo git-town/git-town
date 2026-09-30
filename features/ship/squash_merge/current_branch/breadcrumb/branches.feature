@@ -26,10 +26,10 @@ Feature: ship a parent branch and update proposals
       | BRANCH | COMMAND                                                         |
       | parent | git fetch --prune --tags                                        |
       |        | Finding proposal from child into parent ... #2 (child proposal) |
-      |        | git checkout main                                               |
+      |        | git checkout --quiet main                                       |
       |        | Updating target branch of proposal #2 to main ... ok            |
       | main   | git merge --squash --ff parent                                  |
-      |        | git commit -m "parent done"                                     |
+      |        | git commit --quiet -m "parent done"                             |
       |        | git push                                                        |
       |        | git push origin :parent                                         |
       |        | git branch -D parent                                            |
@@ -80,7 +80,7 @@ Feature: ship a parent branch and update proposals
       |        | git branch parent {{ sha 'parent commit' }}            |
       |        | git push -u origin parent                              |
       |        | Updating target branch of proposal #2 to parent ... ok |
-      |        | git checkout parent                                    |
+      |        | git checkout --quiet parent                            |
       |        | Finding all proposals for child ... parent             |
       |        | Finding proposal from child into main ... none         |
       |        | Update body for #2 ... ok                              |

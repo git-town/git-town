@@ -60,7 +60,7 @@ Feature: swapping a feature branch in a stack with dependent changes
       | BRANCH   | COMMAND                                                    |
       | branch-2 | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease --force-if-includes            |
-      |          | git checkout branch-1                                      |
+      |          | git checkout --quiet branch-1                              |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main |
     And Git Town prints the error:
       """
@@ -89,10 +89,10 @@ Feature: swapping a feature branch in a stack with dependent changes
       | BRANCH   | COMMAND                                                                                   |
       | branch-1 | GIT_EDITOR=true git rebase --continue                                                     |
       |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-3                                                                     |
+      |          | git checkout --quiet branch-3                                                             |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'branch-2 commit' }} |
       |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-2                                                                     |
+      |          | git checkout --quiet branch-2                                                             |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |

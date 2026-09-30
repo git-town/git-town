@@ -16,10 +16,10 @@ Feature: delete the current contribution branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                    |
-      | contribution | git fetch --prune --tags   |
-      |              | git checkout feature       |
-      | feature      | git branch -D contribution |
+      | BRANCH       | COMMAND                      |
+      | contribution | git fetch --prune --tags     |
+      |              | git checkout --quiet feature |
+      | feature      | git branch -D contribution   |
     And this lineage exists now
       """
       main
@@ -40,7 +40,7 @@ Feature: delete the current contribution branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                 |
       | feature | git branch contribution {{ sha 'contribution commit' }} |
-      |         | git checkout contribution                               |
+      |         | git checkout --quiet contribution                       |
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"
     And the initial commits exist now

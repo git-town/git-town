@@ -13,13 +13,13 @@ Feature: no TTY
     Then Git Town runs the commands
       | BRANCH   | COMMAND                        |
       | existing | git branch --move existing new |
-      |          | git checkout new               |
+      |          | git checkout --quiet new       |
 
   Scenario: undo
     When I run "git-town undo" in a non-TTY shell
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                        |
       | new      | git branch existing {{ sha 'initial commit' }} |
-      |          | git checkout existing                          |
+      |          | git checkout --quiet existing                  |
       | existing | git branch -D new                              |
     And the initial branches and lineage exist now

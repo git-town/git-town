@@ -11,10 +11,10 @@ Feature: combining a prototype branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout parent      |
-      | parent  | git branch -D current    |
+      | BRANCH  | COMMAND                     |
+      | current | git fetch --prune --tags    |
+      |         | git checkout --quiet parent |
+      | parent  | git branch -D current       |
     And this lineage exists now
       """
       main
@@ -26,6 +26,6 @@ Feature: combining a prototype branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | parent | git branch current {{ sha 'initial commit' }} |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial lineage exists now
     And the initial commits exist now

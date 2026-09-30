@@ -11,10 +11,10 @@ Feature: override the push-branches setting
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | branch-1 | git fetch --prune --tags    |
-      |          | git push -u origin branch-1 |
-      |          | git checkout -b branch-2    |
+      | BRANCH   | COMMAND                          |
+      | branch-1 | git fetch --prune --tags         |
+      |          | git push -u origin branch-1      |
+      |          | git checkout --quiet -b branch-2 |
     And this lineage exists now
       """
       main
@@ -29,10 +29,10 @@ Feature: override the push-branches setting
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                   |
-      | branch-2 | git checkout branch-1     |
-      | branch-1 | git branch -D branch-2    |
-      |          | git push origin :branch-1 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-1 |
+      | branch-1 | git branch -D branch-2        |
+      |          | git push origin :branch-1     |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES       |

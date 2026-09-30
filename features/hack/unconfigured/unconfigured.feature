@@ -20,7 +20,7 @@ Feature: missing configuration
       | BRANCH | COMMAND                              |
       | main   | git fetch --prune --tags             |
       |        | git config git-town.main-branch main |
-      |        | git checkout -b feature              |
+      |        | git checkout --quiet -b feature      |
     And this lineage exists now
       """
       main
@@ -31,7 +31,7 @@ Feature: missing configuration
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git checkout main     |
-      | main    | git branch -D feature |
+      | BRANCH  | COMMAND                   |
+      | feature | git checkout --quiet main |
+      | main    | git branch -D feature     |
     And no lineage exists now

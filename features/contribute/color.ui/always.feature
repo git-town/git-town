@@ -11,8 +11,8 @@ Feature: make another remote branch a contribution branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      |        | git checkout remote-feature |
+      | BRANCH | COMMAND                             |
+      |        | git checkout --quiet remote-feature |
     And Git Town prints:
       """
       branch remote-feature is now a contribution branch
@@ -23,6 +23,6 @@ Feature: make another remote branch a contribution branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
-      | remote-feature | git checkout main            |
+      | remote-feature | git checkout --quiet main    |
       | main           | git branch -D remote-feature |
     And branch "remote-feature" now has type "feature"

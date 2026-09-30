@@ -16,9 +16,9 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git checkout other    |
-      | other   | git branch -D feature |
+      | BRANCH  | COMMAND                    |
+      | feature | git checkout --quiet other |
+      | other   | git branch -D feature      |
     And this lineage exists now
       """
       main
@@ -39,6 +39,6 @@ Feature: offline mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

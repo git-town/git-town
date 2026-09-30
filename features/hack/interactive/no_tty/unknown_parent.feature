@@ -9,7 +9,7 @@ Feature: no TTY, unknown parent
     And the current branch is "branch"
     When I run "git-town hack new" in a non-TTY shell
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | branch | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git checkout -b new      |
+      | BRANCH | COMMAND                     |
+      | branch | git fetch --prune --tags    |
+      |        | git checkout --quiet main   |
+      | main   | git checkout --quiet -b new |

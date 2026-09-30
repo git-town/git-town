@@ -20,10 +20,10 @@ Feature: skip deleting the remote branch when shipping another branch using the 
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | other  | git fetch --prune --tags    |
-      |        | git checkout main           |
+      |        | git checkout --quiet main   |
       | main   | git merge --ff-only feature |
       |        | git push                    |
-      |        | git checkout other          |
+      |        | git checkout --quiet other  |
       | other  | git branch -D feature       |
     And the branches are now
       | REPOSITORY    | BRANCHES    |

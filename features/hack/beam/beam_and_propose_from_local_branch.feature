@@ -25,18 +25,18 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
-      | existing | git checkout -b new main                                                                                |
-      | new      | git commit -m uncommitted                                                                               |
+      | existing | git checkout --quiet -b new main                                                                        |
+      | new      | git commit --quiet -m uncommitted                                                                       |
       |          | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
       |          | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
-      |          | git checkout existing                                                                                   |
+      |          | git checkout --quiet existing                                                                           |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
-      |          | git checkout new                                                                                        |
+      |          | git checkout --quiet new                                                                                |
       | new      | git push -u origin new                                                                                  |
       |          | Finding proposal from new into main ... none                                                            |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                        |
-      |          | git checkout existing                                                                                   |
+      |          | git checkout --quiet existing                                                                           |
     And no rebase is now in progress
     And this lineage exists now
       """

@@ -22,7 +22,7 @@ Feature: proposing using the "compress" sync strategy
       | existing | git fetch --prune --tags                                            |
       |          | git merge --no-edit --ff origin/existing                            |
       |          | git reset --soft main --                                            |
-      |          | git commit -m "local existing commit 1"                             |
+      |          | git commit --quiet -m "local existing commit 1"                     |
       |          | git push --force-with-lease                                         |
       |          | Finding proposal from existing into main ... none                   |
       |          | open https://github.com/git-town/git-town/compare/existing?expand=1 |

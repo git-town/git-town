@@ -45,11 +45,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                  |
-      | feature | git commit --no-edit                     |
-      |         | git reset --soft main --                 |
-      |         | git commit -m "conflicting local commit" |
-      |         | git push --force-with-lease              |
+      | BRANCH  | COMMAND                                          |
+      | feature | git commit --quiet --no-edit                     |
+      |         | git reset --soft main --                         |
+      |         | git commit --quiet -m "conflicting local commit" |
+      |         | git push --force-with-lease                      |
     And no merge is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -61,7 +61,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                  |
-      | feature | git reset --soft main --                 |
-      |         | git commit -m "conflicting local commit" |
-      |         | git push --force-with-lease              |
+      | BRANCH  | COMMAND                                          |
+      | feature | git reset --soft main --                         |
+      |         | git commit --quiet -m "conflicting local commit" |
+      |         | git push --force-with-lease                      |

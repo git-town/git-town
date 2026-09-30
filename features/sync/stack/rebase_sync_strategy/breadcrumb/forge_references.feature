@@ -29,10 +29,10 @@ Feature: sync stacked changes and update proposals with forge references
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                |
       | child  | git fetch --prune --tags                                                               |
-      |        | git checkout parent                                                                    |
+      |        | git checkout --quiet parent                                                            |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                        |
-      |        | git checkout child                                                                     |
+      |        | git checkout --quiet child                                                             |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                        |
       |        | Finding all proposals for child ... parent                                             |
@@ -95,10 +95,10 @@ Feature: sync stacked changes and update proposals with forge references
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                |
       | child  | git fetch --prune --tags                                                               |
-      |        | git checkout parent                                                                    |
+      |        | git checkout --quiet parent                                                            |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                        |
-      |        | git checkout child                                                                     |
+      |        | git checkout --quiet child                                                             |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                        |
       |        | Finding all proposals for child ... parent                                             |
@@ -160,10 +160,10 @@ Feature: sync stacked changes and update proposals with forge references
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                |
       | child  | git fetch --prune --tags                                                               |
-      |        | git checkout parent                                                                    |
+      |        | git checkout --quiet parent                                                            |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                        |
-      |        | git checkout child                                                                     |
+      |        | git checkout --quiet child                                                             |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                        |
       |        | Finding all proposals for child ... parent                                             |
@@ -225,10 +225,10 @@ Feature: sync stacked changes and update proposals with forge references
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                |
       | child  | git fetch --prune --tags                                                               |
-      |        | git checkout parent                                                                    |
+      |        | git checkout --quiet parent                                                            |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                        |
-      |        | git checkout child                                                                     |
+      |        | git checkout --quiet child                                                             |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                        |
       |        | Finding all proposals for child ... parent                                             |

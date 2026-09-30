@@ -61,7 +61,7 @@ Feature: remove a branch and all its children from a stack with dependent change
       | BRANCH   | COMMAND                                                        |
       | branch-2 | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease --force-if-includes                |
-      |          | git checkout branch-3                                          |
+      |          | git checkout --quiet branch-3                                  |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
     And a rebase is now in progress
@@ -86,7 +86,7 @@ Feature: remove a branch and all its children from a stack with dependent change
       | BRANCH   | COMMAND                                         |
       | branch-3 | GIT_EDITOR=true git rebase --continue           |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      |          | git checkout --quiet branch-2                   |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                               |

@@ -25,9 +25,9 @@ Feature: stack that changes the same file in multiple commits per branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                 |
       | beta   | git fetch --prune --tags                                |
-      |        | git checkout main                                       |
+      |        | git checkout --quiet main                               |
       | main   | git -c rebase.updateRefs=false rebase origin/main       |
-      |        | git checkout beta                                       |
+      |        | git checkout --quiet beta                               |
       | beta   | git pull                                                |
       |        | git -c rebase.updateRefs=false rebase --onto main alpha |
       |        | git push --force-with-lease                             |
@@ -46,9 +46,9 @@ Feature: stack that changes the same file in multiple commits per branch
       | BRANCH | COMMAND                                             |
       | beta   | git reset --hard {{ sha 'beta commit 2' }}          |
       |        | git push --force-with-lease --force-if-includes     |
-      |        | git checkout main                                   |
+      |        | git checkout --quiet main                           |
       | main   | git reset --hard {{ sha 'initial commit' }}         |
       |        | git branch alpha {{ sha-initial 'alpha commit 2' }} |
-      |        | git checkout beta                                   |
+      |        | git checkout --quiet beta                           |
     And the initial branches and lineage exist now
     And the initial commits exist now

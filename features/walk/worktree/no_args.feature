@@ -18,8 +18,8 @@ Feature: walk each branch of a stack without arguments when some branches are ch
     And the current branch is still "branch-2"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-3 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -27,8 +27,8 @@ Feature: walk each branch of a stack without arguments when some branches are ch
     And the current branch is now "branch-3"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-3 | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Branch walk done.

@@ -24,11 +24,11 @@ Feature: sync a feature branch with new commits on the tracking branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | beta   | git fetch --prune --tags             |
-      |        | git checkout alpha                   |
-      | alpha  | git checkout beta                    |
+      |        | git checkout --quiet alpha           |
+      | alpha  | git checkout --quiet beta            |
       | beta   | git merge --no-edit --ff origin/beta |
       |        | git reset --soft alpha --            |
-      |        | git commit -m "beta commit"          |
+      |        | git commit --quiet -m "beta commit"  |
       |        | git push --force-with-lease          |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT |

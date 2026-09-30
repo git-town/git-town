@@ -12,5 +12,5 @@ Feature: switch branches that have no lineage information
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | alpha  | git checkout beta |
+      | BRANCH | COMMAND                   |
+      | alpha  | git checkout --quiet beta |

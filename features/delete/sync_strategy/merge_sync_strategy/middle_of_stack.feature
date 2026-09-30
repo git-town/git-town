@@ -26,11 +26,11 @@ Feature: deleting a branch that conflicts with the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                    |
-      | feature-2 | git fetch --prune --tags   |
-      |           | git push origin :feature-2 |
-      |           | git checkout feature-3     |
-      | feature-3 | git branch -D feature-2    |
+      | BRANCH    | COMMAND                        |
+      | feature-2 | git fetch --prune --tags       |
+      |           | git push origin :feature-2     |
+      |           | git checkout --quiet feature-3 |
+      | feature-3 | git branch -D feature-2        |
     And this lineage exists now
       """
       main
@@ -47,7 +47,7 @@ Feature: deleting a branch that conflicts with the main branch
       | BRANCH    | COMMAND                                           |
       | feature-3 | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
-      |           | git checkout feature-2                            |
+      |           | git checkout --quiet feature-2                    |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES                              |

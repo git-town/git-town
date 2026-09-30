@@ -22,7 +22,7 @@ Feature: combining a branch with disabled push-hook
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                     |
       | beta   | git fetch --prune --tags                                    |
-      |        | git checkout alpha                                          |
+      |        | git checkout --quiet alpha                                  |
       | alpha  | git reset --hard {{ sha 'beta commit' }}                    |
       |        | git push origin :beta                                       |
       |        | git branch -D beta                                          |
@@ -45,6 +45,6 @@ Feature: combining a branch with disabled push-hook
       |        | git push --force-with-lease --force-if-includes --no-verify |
       |        | git branch beta {{ sha 'beta commit' }}                     |
       |        | git push --no-verify -u origin beta                         |
-      |        | git checkout beta                                           |
+      |        | git checkout --quiet beta                                   |
     And the initial lineage exists now
     And the initial commits exist now

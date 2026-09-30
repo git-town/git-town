@@ -55,18 +55,18 @@ Feature: sync a workspace with two independent stacks
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git checkout first       |
-      | first  | git checkout second      |
-      | second | git checkout third       |
-      | third  | git checkout fourth      |
-      | fourth | git checkout one         |
-      | one    | git checkout two         |
-      | two    | git checkout three       |
-      | three  | git checkout four        |
-      | four   | git checkout main        |
-      | main   | git push --tags          |
+      | BRANCH | COMMAND                     |
+      | main   | git fetch --prune --tags    |
+      |        | git checkout --quiet first  |
+      | first  | git checkout --quiet second |
+      | second | git checkout --quiet third  |
+      | third  | git checkout --quiet fourth |
+      | fourth | git checkout --quiet one    |
+      | one    | git checkout --quiet two    |
+      | two    | git checkout --quiet three  |
+      | three  | git checkout --quiet four   |
+      | four   | git checkout --quiet main   |
+      | main   | git push --tags             |
     And the initial branches and lineage exist now
     And the initial commits exist now
 

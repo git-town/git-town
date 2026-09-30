@@ -33,13 +33,13 @@ Feature: sync all feature branches
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                   |
       | alpha        | git fetch --prune --tags                                  |
-      |              | git checkout beta                                         |
-      | beta         | git checkout contribution                                 |
+      |              | git checkout --quiet beta                                 |
+      | beta         | git checkout --quiet contribution                         |
       | contribution | git -c rebase.updateRefs=false rebase origin/contribution |
       |              | git push                                                  |
-      |              | git checkout observed                                     |
+      |              | git checkout --quiet observed                             |
       | observed     | git -c rebase.updateRefs=false rebase origin/observed     |
-      |              | git checkout alpha                                        |
+      |              | git checkout --quiet alpha                                |
       | alpha        | git push --tags                                           |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
@@ -61,11 +61,11 @@ Feature: sync all feature branches
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                                          |
-      | alpha        | git checkout contribution                                                                        |
+      | alpha        | git checkout --quiet contribution                                                                |
       | contribution | git reset --hard {{ sha 'local contribution commit' }}                                           |
       |              | git push --force-with-lease origin {{ sha-in-origin 'origin contribution commit' }}:contribution |
-      |              | git checkout observed                                                                            |
+      |              | git checkout --quiet observed                                                                    |
       | observed     | git reset --hard {{ sha 'local observed commit' }}                                               |
-      |              | git checkout alpha                                                                               |
+      |              | git checkout --quiet alpha                                                                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

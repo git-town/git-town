@@ -20,7 +20,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | BRANCH | COMMAND                                       |
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push --no-verify -u origin current        |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial branches and lineage exist now
     And the initial commits exist now
 
@@ -32,6 +32,6 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | BRANCH | COMMAND                                       |
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

@@ -23,20 +23,20 @@ Feature: sync a grandchild feature branch using the "compress" strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
-      |        | git checkout parent                               |
+      |        | git checkout --quiet parent                       |
       | parent | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parent            |
       |        | git reset --soft main --                          |
-      |        | git commit -m "local parent commit"               |
+      |        | git commit --quiet -m "local parent commit"       |
       |        | git push --force-with-lease                       |
-      |        | git checkout child                                |
+      |        | git checkout --quiet child                        |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
       |        | git reset --soft parent --                        |
-      |        | git commit -m "local child commit"                |
+      |        | git commit --quiet -m "local child commit"        |
       |        | git push --force-with-lease                       |
     And all branches are now synchronized
     And these commits exist now
@@ -52,10 +52,10 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | BRANCH | COMMAND                                                                                      |
       | child  | git reset --hard {{ sha-initial 'local child commit' }}                                      |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                          |
+      |        | git checkout --quiet parent                                                                  |
       | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                           |
+      |        | git checkout --quiet child                                                                   |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

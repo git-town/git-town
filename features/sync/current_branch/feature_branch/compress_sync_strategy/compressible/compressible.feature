@@ -19,17 +19,17 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                        |
-      | beta   | git fetch --prune --tags       |
-      |        | git checkout alpha             |
-      | alpha  | git reset --soft main --       |
-      |        | git commit -m "alpha commit 1" |
-      |        | git push --force-with-lease    |
-      |        | git checkout beta              |
-      | beta   | git merge --no-edit --ff alpha |
-      |        | git reset --soft alpha --      |
-      |        | git commit -m "beta commit 1"  |
-      |        | git push --force-with-lease    |
+      | BRANCH | COMMAND                                |
+      | beta   | git fetch --prune --tags               |
+      |        | git checkout --quiet alpha             |
+      | alpha  | git reset --soft main --               |
+      |        | git commit --quiet -m "alpha commit 1" |
+      |        | git push --force-with-lease            |
+      |        | git checkout --quiet beta              |
+      | beta   | git merge --no-edit --ff alpha         |
+      |        | git reset --soft alpha --              |
+      |        | git commit --quiet -m "beta commit 1"  |
+      |        | git push --force-with-lease            |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME  | FILE CONTENT |
       | alpha  | local, origin | alpha commit 1 | alpha_file | content 2    |
@@ -39,10 +39,10 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                             |
-      | beta   | git checkout alpha                                  |
+      | beta   | git checkout --quiet alpha                          |
       | alpha  | git reset --hard {{ sha-initial 'alpha commit 2' }} |
       |        | git push --force-with-lease --force-if-includes     |
-      |        | git checkout beta                                   |
+      |        | git checkout --quiet beta                           |
       | beta   | git reset --hard {{ sha-initial 'beta commit 2' }}  |
       |        | git push --force-with-lease --force-if-includes     |
     And the initial branches and lineage exist now

@@ -15,11 +15,11 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | feature | git checkout main               |
-      | main    | git merge --squash --ff feature |
-      |         | git commit -m "feature done"    |
-      |         | git branch -D feature           |
+      | BRANCH  | COMMAND                              |
+      | feature | git checkout --quiet main            |
+      | main    | git merge --squash --ff feature      |
+      |         | git commit --quiet -m "feature done" |
+      |         | git branch -D feature                |
     And no lineage exists now
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE        |
@@ -32,6 +32,6 @@ Feature: offline mode
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

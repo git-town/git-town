@@ -13,9 +13,9 @@ Feature: prepend a branch to a feature branch in detached mode when there are no
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | branch | git fetch --prune --tags    |
-      |        | git checkout -b parent main |
+      | BRANCH | COMMAND                             |
+      | branch | git fetch --prune --tags            |
+      |        | git checkout --quiet -b parent main |
     And this lineage exists now
       """
       main
@@ -27,8 +27,8 @@ Feature: prepend a branch to a feature branch in detached mode when there are no
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout branch  |
-      | branch | git branch -D parent |
+      | BRANCH | COMMAND                     |
+      | parent | git checkout --quiet branch |
+      | branch | git branch -D parent        |
     And the initial lineage exists now
     And the initial commits exist now

@@ -16,10 +16,10 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                  |
-      | prototype | git fetch --prune --tags |
-      |           | git checkout main        |
-      | main      | git branch -D prototype  |
+      | BRANCH    | COMMAND                   |
+      | prototype | git fetch --prune --tags  |
+      |           | git checkout --quiet main |
+      | main      | git branch -D prototype   |
     And Git Town prints:
       """
       deleted branch prototype
@@ -33,6 +33,6 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
     Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
       | main   | git branch prototype {{ sha-initial 'local commit' }} |
-      |        | git checkout prototype                                |
+      |        | git checkout --quiet prototype                        |
     And the initial branches and lineage exist now
     And the initial commits exist now

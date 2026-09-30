@@ -18,7 +18,7 @@ Feature: rename the current branch
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
-      |        | git checkout new          |
+      |        | git checkout --quiet new  |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
     And these commits exist now
@@ -32,7 +32,7 @@ Feature: rename the current branch
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git push -u origin old                |
-      |        | git checkout old                      |
+      |        | git checkout --quiet old              |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
     And the initial branches and lineage exist now

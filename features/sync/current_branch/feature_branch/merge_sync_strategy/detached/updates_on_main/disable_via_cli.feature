@@ -17,10 +17,10 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | beta   | git fetch --prune --tags       |
-      |        | git checkout alpha             |
+      |        | git checkout --quiet alpha     |
       | alpha  | git merge --no-edit --ff main  |
       |        | git push                       |
-      |        | git checkout beta              |
+      |        | git checkout --quiet beta      |
       | beta   | git merge --no-edit --ff alpha |
       |        | git push                       |
     And the initial commits exist now
@@ -29,10 +29,10 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | beta   | git checkout alpha                              |
+      | beta   | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'initial commit` }}     |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'initial commit` }}     |
       |        | git push --force-with-lease --force-if-includes |
     And the initial branches and lineage exist now

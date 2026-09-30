@@ -17,9 +17,9 @@ Feature: enter the commit message interactively via the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
+      |         | git checkout --quiet main       |
       | main    | git merge --squash --ff feature |
-      |         | git commit                      |
+      |         | git commit --quiet              |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
     And the initial branches and lineage exist now

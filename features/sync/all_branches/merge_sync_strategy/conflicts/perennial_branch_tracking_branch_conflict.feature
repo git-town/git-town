@@ -22,7 +22,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
       | beta   | git -c rebase.updateRefs=false rebase origin/beta |
     And Git Town prints the error:
       """
@@ -33,9 +33,9 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | beta   | git rebase --abort |
-      |        | git checkout main  |
+      | BRANCH | COMMAND                   |
+      | beta   | git rebase --abort        |
+      |        | git checkout --quiet main |
     And the initial branches and lineage exist now
     And the initial commits exist now
 
@@ -44,7 +44,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | beta   | git rebase --abort                                |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push --tags                                   |
     And these commits exist now
@@ -71,7 +71,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND                                           |
       | beta   | GIT_EDITOR=true git rebase --continue             |
       |        | git push                                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push --tags                                   |
     And no rebase is now in progress
@@ -84,6 +84,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | beta   | git push                                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push --tags                                   |

@@ -22,15 +22,15 @@ Feature: stacked changes where each branch makes independent changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                        |
       | child  | git fetch --prune --tags                                                       |
-      |        | git checkout main                                                              |
+      |        | git checkout --quiet main                                                      |
       | main   | git -c rebase.updateRefs=false rebase origin/main                              |
       |        | git push                                                                       |
-      |        | git checkout parent                                                            |
+      |        | git checkout --quiet parent                                                    |
       | parent | git push --force-with-lease --force-if-includes                                |
       |        | git -c rebase.updateRefs=false rebase origin/parent                            |
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                |
-      |        | git checkout child                                                             |
+      |        | git checkout --quiet child                                                     |
       | child  | git push --force-with-lease --force-if-includes                                |
       |        | git -c rebase.updateRefs=false rebase origin/child                             |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
@@ -51,10 +51,10 @@ Feature: stacked changes where each branch makes independent changes
       | BRANCH | COMMAND                                                                                      |
       | child  | git reset --hard {{ sha-initial 'local child commit' }}                                      |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                          |
+      |        | git checkout --quiet parent                                                                  |
       | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                           |
+      |        | git checkout --quiet child                                                                   |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

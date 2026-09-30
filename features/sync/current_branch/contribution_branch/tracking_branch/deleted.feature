@@ -17,7 +17,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     Then Git Town runs the commands
       | BRANCH       | COMMAND                    |
       | contribution | git fetch --prune --tags   |
-      |              | git checkout main          |
+      |              | git checkout --quiet main  |
       | main         | git branch -D contribution |
     And Git Town prints:
       """
@@ -32,6 +32,6 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                  |
       | main   | git branch contribution {{ sha-initial 'local commit' }} |
-      |        | git checkout contribution                                |
+      |        | git checkout --quiet contribution                        |
     And the initial branches and lineage exist now
     And the initial commits exist now

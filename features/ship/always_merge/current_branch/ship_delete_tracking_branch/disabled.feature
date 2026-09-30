@@ -18,7 +18,7 @@ Feature: ship-delete-tracking-branch disabled when using the always-merge strate
     Then Git Town runs the commands
       | BRANCH  | COMMAND                             |
       | feature | git fetch --prune --tags            |
-      |         | git checkout main                   |
+      |         | git checkout --quiet main           |
       | main    | git merge --no-ff --edit -- feature |
       |         | git push                            |
       |         | git branch -D feature               |
@@ -36,7 +36,7 @@ Feature: ship-delete-tracking-branch disabled when using the always-merge strate
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

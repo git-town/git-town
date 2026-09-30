@@ -22,7 +22,7 @@ Feature: combine a branch in a stack that is fully in sync
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git fetch --prune --tags                        |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'beta commit' }}        |
       |        | git push origin :beta                           |
       |        | git branch -D beta                              |
@@ -45,6 +45,6 @@ Feature: combine a branch in a stack that is fully in sync
       |        | git push --force-with-lease --force-if-includes   |
       |        | git branch beta {{ sha 'beta commit' }}           |
       |        | git push -u origin beta                           |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
     And the initial lineage exists now
     And the initial commits exist now

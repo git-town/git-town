@@ -24,13 +24,13 @@ Feature: compresses active parked branches
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git reset --soft main --                        |
-      |        | git commit -m "parked 1"                        |
+      |        | git commit --quiet -m "parked 1"                |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout child                              |
+      |        | git checkout --quiet child                      |
       | child  | git reset --soft parked --                      |
-      |        | git commit -m "child 1"                         |
+      |        | git commit --quiet -m "child 1"                 |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout parked                             |
+      |        | git checkout --quiet parked                     |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
@@ -43,10 +43,10 @@ Feature: compresses active parked branches
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | parked | git checkout child                              |
+      | parked | git checkout --quiet child                      |
       | child  | git reset --hard {{ sha 'child 2' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout parked                             |
+      |        | git checkout --quiet parked                     |
       | parked | git reset --hard {{ sha 'parked 2' }}           |
       |        | git push --force-with-lease --force-if-includes |
     And the initial branches and lineage exist now

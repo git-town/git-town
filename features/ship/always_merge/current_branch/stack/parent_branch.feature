@@ -18,7 +18,7 @@ Feature: ship a parent branch using the always-merge strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                            |
       | parent | git fetch --prune --tags           |
-      |        | git checkout main                  |
+      |        | git checkout --quiet main          |
       | main   | git merge --no-ff --edit -- parent |
       |        | git push                           |
       |        | git push origin :parent            |
@@ -44,7 +44,7 @@ Feature: ship a parent branch using the always-merge strategy
       | BRANCH | COMMAND                                     |
       | main   | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
-      |        | git checkout parent                         |
+      |        | git checkout --quiet parent                 |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |

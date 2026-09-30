@@ -18,10 +18,10 @@ Feature: syncing a branch whose parent was shipped
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git branch -D parent                              |
-      |        | git checkout child                                |
+      |        | git checkout --quiet child                        |
       | child  | git merge --no-edit --ff main                     |
       |        | git push                                          |
     And Git Town prints:
@@ -43,8 +43,8 @@ Feature: syncing a branch whose parent was shipped
       | BRANCH | COMMAND                                             |
       | child  | git reset --hard {{ sha 'child commit' }}           |
       |        | git push --force-with-lease --force-if-includes     |
-      |        | git checkout main                                   |
+      |        | git checkout --quiet main                           |
       | main   | git reset --hard {{ sha 'initial commit' }}         |
       |        | git branch parent {{ sha-initial 'parent commit' }} |
-      |        | git checkout child                                  |
+      |        | git checkout --quiet child                          |
     And the initial branches and lineage exist now

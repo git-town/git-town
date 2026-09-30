@@ -18,13 +18,13 @@ Feature: sync a branch when main is active in another worktree and has updates
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main --                |
-      |         | git commit -m "local feature commit"    |
-      |         | git push --force-with-lease             |
+      | BRANCH  | COMMAND                                      |
+      | feature | git fetch --prune --tags                     |
+      |         | git merge --no-edit --ff main                |
+      |         | git merge --no-edit --ff origin/feature      |
+      |         | git reset --soft main --                     |
+      |         | git commit --quiet -m "local feature commit" |
+      |         | git push --force-with-lease                  |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | origin        | origin main commit   |

@@ -33,17 +33,17 @@ Feature: compress the commits on an entire stack when at the stack root
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | gamma  | git fetch --prune --tags                        |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git reset --soft main --                        |
-      |        | git commit -m "alpha 1"                         |
+      |        | git commit --quiet -m "alpha 1"                 |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --soft alpha --                       |
-      |        | git commit -m "beta 1"                          |
+      |        | git commit --quiet -m "beta 1"                  |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
+      |        | git checkout --quiet gamma                      |
       | gamma  | git reset --soft beta --                        |
-      |        | git commit -m "gamma 1"                         |
+      |        | git commit --quiet -m "gamma 1"                 |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -65,13 +65,13 @@ Feature: compress the commits on an entire stack when at the stack root
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | gamma  | git checkout alpha                              |
+      | gamma  | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'alpha 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'beta 3' }}             |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
+      |        | git checkout --quiet gamma                      |
       | gamma  | git reset --hard {{ sha 'gamma 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
     And the initial branches and lineage exist now

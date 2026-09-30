@@ -14,10 +14,10 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
 
   Scenario: undo
     When I run "git-town undo"

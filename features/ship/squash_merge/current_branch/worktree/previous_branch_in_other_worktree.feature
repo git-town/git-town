@@ -16,11 +16,11 @@ Feature: ship a feature branch in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | current | git checkout main               |
-      | main    | git merge --squash --ff current |
-      |         | git commit -m "feature done"    |
-      |         | git branch -D current           |
+      | BRANCH  | COMMAND                              |
+      | current | git checkout --quiet main            |
+      | main    | git merge --squash --ff current      |
+      |         | git commit --quiet -m "feature done" |
+      |         | git branch -D current                |
     And the previous Git branch is now "main"
 
   Scenario: undo
@@ -29,7 +29,7 @@ Feature: ship a feature branch in a local repo
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch current {{ sha 'current commit' }} |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the previous Git branch is now "main"
     And the initial branches and lineage exist now
     And the initial commits exist now

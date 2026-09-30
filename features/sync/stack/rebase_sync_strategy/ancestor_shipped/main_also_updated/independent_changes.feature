@@ -29,10 +29,10 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-2 | git fetch --prune --tags                                   |
-      |          | git checkout main                                          |
+      |          | git checkout --quiet main                                  |
       | main     | git -c rebase.updateRefs=false rebase origin/main          |
       |          | git push                                                   |
-      |          | git checkout branch-2                                      |
+      |          | git checkout --quiet branch-2                              |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |

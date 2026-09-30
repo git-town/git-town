@@ -19,12 +19,12 @@ Feature: proposing uncommitted changes via a child branch and enter commit messa
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                   |
-      | existing | git checkout -b new                                                       |
-      | new      | git commit                                                                |
+      | existing | git checkout --quiet -b new                                               |
+      | new      | git commit --quiet                                                        |
       |          | git push -u origin new                                                    |
       |          | Finding proposal from new into existing ... none                          |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1 |
-      |          | git checkout existing                                                     |
+      |          | git checkout --quiet existing                                             |
     And this lineage exists now
       """
       main
