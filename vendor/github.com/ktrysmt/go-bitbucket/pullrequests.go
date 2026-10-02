@@ -218,15 +218,15 @@ func (p *PullRequests) Statuses(po *PullRequestsOptions) (interface{}, error) {
 
 func (p *PullRequests) buildPullRequestBody(po *PullRequestsOptions) (string, error) {
 	body := map[string]interface{}{}
-	if n := len(po.ReviewerAccountIDs); n > 0 {
-		body["reviewers"] = make([]map[string]string, n)
-		for i, accountID := range po.ReviewerAccountIDs {
-			body["reviewers"].([]map[string]string)[i] = map[string]string{
-				"type":       "user",
-				"account_id": accountID,
-			}
-		}
-	} else if n := len(po.Reviewers); n > 0 {
+	body["source"] = map[string]interface{}{}
+	body["destination"] = map[string]interface{}{}
+	body["reviewers"] = []map[string]string{}
+	body["title"] = ""
+	body["description"] = ""
+	body["message"] = ""
+	body["close_source_branch"] = false
+
+	if n := len(po.Reviewers); n > 0 {
 		body["reviewers"] = make([]map[string]string, n)
 		for i, uuid := range po.Reviewers {
 			body["reviewers"].([]map[string]string)[i] = map[string]string{"uuid": uuid}
@@ -234,33 +234,19 @@ func (p *PullRequests) buildPullRequestBody(po *PullRequestsOptions) (string, er
 	}
 
 	if po.SourceBranch != "" {
-		body["source"] = map[string]interface{}{
-			"branch": map[string]string{"name": po.SourceBranch},
-		}
+		body["source"].(map[string]interface{})["branch"] = map[string]string{"name": po.SourceBranch}
 	}
 
 	if po.SourceRepository != "" {
-		source, hasSource := body["source"].(map[string]interface{})
-		if !hasSource {
-			source = map[string]interface{}{}
-			body["source"] = source
-		}
-		source["repository"] = map[string]interface{}{"full_name": po.SourceRepository}
+		body["source"].(map[string]interface{})["repository"] = map[string]interface{}{"full_name": po.SourceRepository}
 	}
 
 	if po.DestinationBranch != "" {
-		body["destination"] = map[string]interface{}{
-			"branch": map[string]interface{}{"name": po.DestinationBranch},
-		}
+		body["destination"].(map[string]interface{})["branch"] = map[string]interface{}{"name": po.DestinationBranch}
 	}
 
 	if po.DestinationCommit != "" {
-		destination, hasDestination := body["destination"].(map[string]interface{})
-		if !hasDestination {
-			destination = map[string]interface{}{}
-			body["destination"] = destination
-		}
-		destination["commit"] = map[string]interface{}{"hash": po.DestinationCommit}
+		body["destination"].(map[string]interface{})["commit"] = map[string]interface{}{"hash": po.DestinationCommit}
 	}
 
 	if po.Title != "" {
@@ -275,7 +261,7 @@ func (p *PullRequests) buildPullRequestBody(po *PullRequestsOptions) (string, er
 		body["message"] = po.Message
 	}
 
-	if po.CloseSourceBranch {
+	if po.CloseSourceBranch || !po.CloseSourceBranch {
 		body["close_source_branch"] = po.CloseSourceBranch
 	}
 

@@ -135,7 +135,7 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 	if !ok {
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	reviewers, reviewerAccountIDs, err := parseReviewers(pullRequest)
+	reviewers, err := parseReviewers(pullRequest)
 	if err != nil {
 		return emptyResult, err
 	}
@@ -150,46 +150,37 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 			Body:         gitdomain.NewProposalBodyOpt(body2),
 			URL:          url6,
 		},
-		CloseSourceBranch:  closeSourceBranch2,
-		Draft:              draft2,
-		Reviewers:          reviewers,
-		ReviewerAccountIDs: reviewerAccountIDs,
+		CloseSourceBranch: closeSourceBranch2,
+		Draft:             draft2,
+		Reviewers:         reviewers,
 	}, nil
 }
 
-func parseReviewers(pullRequest map[string]any) ([]string, []string, error) {
+// parseReviewers provides the UUIDs of the reviewers of the given pull request.
+func parseReviewers(pullRequest map[string]any) ([]string, error) {
 	reviewers1, has := pullRequest["reviewers"]
 	if !has {
-		return []string{}, []string{}, nil
+		return []string{}, nil
 	}
 	reviewers2, ok := reviewers1.([]any)
 	if !ok {
-		return nil, nil, errors.New(messages.APIUnexpectedResultDataStructure)
+		return nil, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	reviewerUUIDs := make([]string, 0, len(reviewers2))
-	reviewerAccountIDs := make([]string, 0, len(reviewers2))
 	for _, reviewer1 := range reviewers2 {
 		reviewer2, ok := reviewer1.(map[string]any)
 		if !ok {
-			return nil, nil, errors.New(messages.APIUnexpectedResultDataStructure)
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
 		}
 		uuid1, has := reviewer2["uuid"]
 		if !has {
-			return nil, nil, errors.New(messages.APIUnexpectedResultDataStructure)
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
 		}
 		uuid2, ok := uuid1.(string)
 		if !ok {
-			return nil, nil, errors.New(messages.APIUnexpectedResultDataStructure)
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
 		}
 		reviewerUUIDs = append(reviewerUUIDs, uuid2)
-		accountID1, has := reviewer2["account_id"]
-		if has {
-			accountID2, ok := accountID1.(string)
-			if !ok {
-				return nil, nil, errors.New(messages.APIUnexpectedResultDataStructure)
-			}
-			reviewerAccountIDs = append(reviewerAccountIDs, accountID2)
-		}
 	}
-	return reviewerUUIDs, reviewerAccountIDs, nil
+	return reviewerUUIDs, nil
 }

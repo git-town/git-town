@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestProposalBodyUpdateOptions(t *testing.T) {
+func TestProposalUpdateOptions(t *testing.T) {
 	t.Parallel()
 
 	connector := APIConnector{
@@ -19,25 +19,50 @@ func TestProposalBodyUpdateOptions(t *testing.T) {
 			},
 		},
 	}
-	proposalData := forgedomain.ProposalData{
-		Number: 123,
-		Source: "feature",
-		Target: "main",
-		Title:  "title",
-		Body:   gitdomain.NewProposalBodyOpt("existing body"),
-	}
 
-	have := connector.proposalBodyUpdateOptions(proposalData, gitdomain.ProposalBody("updated body"))
+	t.Run("no body", func(t *testing.T) {
+		t.Parallel()
+		data := forgedomain.BitbucketCloudProposalData{
+			ProposalData: forgedomain.ProposalData{
+				Number: 123,
+				Source: "feature",
+				Target: "main",
+				Title:  "title",
+				Body:   gitdomain.NewProposalBodyOpt(""),
+			},
+			CloseSourceBranch: false,
+			Draft:             false,
+			Reviewers:         []string{},
+		}
+		have := connector.proposalUpdateOptions(data)
+		must.EqOp(t, "", have.Description)
+		must.Len(t, 0, have.Reviewers)
+	})
 
-	must.EqOp(t, "123", have.ID)
-	must.EqOp(t, "org", have.Owner)
-	must.EqOp(t, "repo", have.RepoSlug)
-	must.EqOp(t, "title", have.Title)
-	must.EqOp(t, "updated body", have.Description)
-	must.EqOp(t, "", have.SourceBranch)
-	must.EqOp(t, "", have.DestinationBranch)
-	must.False(t, have.Draft)
-	must.False(t, have.CloseSourceBranch)
-	must.Len(t, 0, have.Reviewers)
-	must.Len(t, 0, have.ReviewerAccountIDs)
+	t.Run("sends the complete state of the proposal", func(t *testing.T) {
+		t.Parallel()
+		data := forgedomain.BitbucketCloudProposalData{
+			ProposalData: forgedomain.ProposalData{
+				Number: 123,
+				Source: "feature",
+				Target: "main",
+				Title:  "title",
+				Body:   gitdomain.NewProposalBodyOpt("body"),
+			},
+			CloseSourceBranch: true,
+			Draft:             true,
+			Reviewers:         []string{"{reviewer-1}", "{reviewer-2}"},
+		}
+		have := connector.proposalUpdateOptions(data)
+		must.EqOp(t, "123", have.ID)
+		must.EqOp(t, "org", have.Owner)
+		must.EqOp(t, "repo", have.RepoSlug)
+		must.EqOp(t, "feature", have.SourceBranch)
+		must.EqOp(t, "main", have.DestinationBranch)
+		must.EqOp(t, "title", have.Title)
+		must.EqOp(t, "body", have.Description)
+		must.True(t, have.Draft)
+		must.True(t, have.CloseSourceBranch)
+		must.Eq(t, []string{"{reviewer-1}", "{reviewer-2}"}, have.Reviewers)
+	})
 }

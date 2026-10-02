@@ -22,10 +22,9 @@ func (self ProposalData) Data() ProposalData {
 
 type BitbucketCloudProposalData struct {
 	ProposalData
-	CloseSourceBranch  bool
-	Draft              bool
-	Reviewers          []string `json:",omitempty"`
-	ReviewerAccountIDs []string `json:",omitempty"`
+	CloseSourceBranch bool
+	Draft             bool
+	Reviewers         []string `json:",omitempty"` // UUIDs of the reviewers
 }
 
 func (self BitbucketCloudProposalData) Data() ProposalData {
