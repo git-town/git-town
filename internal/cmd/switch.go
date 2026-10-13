@@ -142,9 +142,10 @@ Start:
 	}
 	cursor := entriesLocal.IndexOf(data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
-		CurrentBranch:      Some(data.initialBranch),
-		Cursor:             cursor,
-		DisplayBranchTypes: repo.UnvalidatedConfig.NormalConfig.DisplayTypes,
+		CurrentBranch:                   Some(data.initialBranch),
+		Cursor:                          cursor,
+		DisableBranchesInOtherWorktrees: true,
+		DisplayBranchTypes:              repo.UnvalidatedConfig.NormalConfig.DisplayTypes,
 		EntryData: dialog.EntryData{
 			EntriesAll:      entriesAll,
 			EntriesLocal:    entriesLocal,
