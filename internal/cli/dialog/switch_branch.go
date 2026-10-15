@@ -72,11 +72,12 @@ func (entries *EntryData) toggle() {
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
-	DisplayBranchTypes configdomain.DisplayTypes
-	EntryData          EntryData
-	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
-	Title              Option[string] // optional title to display above the branch tree
-	UncommittedChanges bool           // whether the workspace has uncommitted changes
+	DisableBranchesInOtherWorktrees bool // whether branches that are active in other worktrees cannot be selected
+	DisplayBranchTypes              configdomain.DisplayTypes
+	EntryData                       EntryData
+	InitialBranchPos                Option[int]    // position of the currently checked out branch in the list
+	Title                           Option[string] // optional title to display above the branch tree
+	UncommittedChanges              bool           // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -101,7 +102,7 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	}
 	if keyMsg.String() == "a" {
 		self.EntryData.toggle()
-		self.List = list.NewList(newSwitchBranchListEntries(self.EntryData.entries()), min(self.Cursor, len(self.EntryData.EntriesLocal)-1))
+		self.List = list.NewList(newSwitchBranchListEntries(self.EntryData.entries(), self.DisableBranchesInOtherWorktrees), min(self.Cursor, len(self.EntryData.EntriesLocal)-1))
 		return self, nil
 	}
 	return self, nil
@@ -286,12 +287,13 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		initialBranchPos = Some(entries.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: args.DisplayBranchTypes,
-		EntryData:          args.EntryData,
-		InitialBranchPos:   initialBranchPos,
-		List:               list.NewList(newSwitchBranchListEntries(entries), args.Cursor),
-		Title:              args.Title,
-		UncommittedChanges: args.UncommittedChanges,
+		DisableBranchesInOtherWorktrees: args.DisableBranchesInOtherWorktrees,
+		DisplayBranchTypes:              args.DisplayBranchTypes,
+		EntryData:                       args.EntryData,
+		InitialBranchPos:                initialBranchPos,
+		List:                            list.NewList(newSwitchBranchListEntries(entries, args.DisableBranchesInOtherWorktrees), args.Cursor),
+		Title:                           args.Title,
+		UncommittedChanges:              args.UncommittedChanges,
 	})
 	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
 	dialogResult, err := dialogProgram.Run()
@@ -301,15 +303,16 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 }
 
 type SwitchBranchArgs struct {
-	CurrentBranch      Option[gitdomain.LocalBranchName]
-	Cursor             int
-	DisplayBranchTypes configdomain.DisplayTypes
-	EntryData          EntryData
-	InputName          string
-	Inputs             dialogcomponents.Inputs
-	Interactive        configdomain.Interactive
-	Title              Option[string]
-	UncommittedChanges bool
+	CurrentBranch                   Option[gitdomain.LocalBranchName]
+	Cursor                          int
+	DisableBranchesInOtherWorktrees bool
+	DisplayBranchTypes              configdomain.DisplayTypes
+	EntryData                       EntryData
+	InputName                       string
+	Inputs                          dialogcomponents.Inputs
+	Interactive                     configdomain.Interactive
+	Title                           Option[string]
+	UncommittedChanges              bool
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
@@ -369,12 +372,12 @@ type layoutBranchesArgs struct {
 	unknownBranchType configdomain.UnknownBranchType
 }
 
-func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
+func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry, disableBranchesInOtherWorktrees bool) list.Entries[SwitchBranchEntry] {
 	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
 	for e, entry := range switchBranchEntries {
 		result[e] = list.Entry[SwitchBranchEntry]{
 			Data:     entry,
-			Disabled: entry.OtherWorktree,
+			Disabled: disableBranchesInOtherWorktrees && entry.OtherWorktree,
 			Text:     entry.String(),
 		}
 	}
