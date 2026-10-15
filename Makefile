@@ -1,5 +1,5 @@
-RTA_VERSION = 0.40.0  # run-that-app version to use
-TRICORDER_VERSION = 0.1.0  # tricorder version to use
+RTA_VERSION = 0.40.0
+TRIDENT_VERSION = 0.1.0
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -7,7 +7,7 @@ RELEASE_VERSION := "24.1.0"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
-TRICORDER    = tools/tricorder@$(TRICORDER_VERSION)
+TRIDENT    = tools/trident@$(TRIDENT_VERSION)
 ACTIONLINT   = $(RTA) actionlint
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
@@ -81,7 +81,7 @@ dependencies: ${RTA}  # prints the dependencies between the internal Go packages
 doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
-fix: ${TRICORDER}  # runs all linters and auto-fixes
+fix: ${TRIDENT}  # runs all linters and auto-fixes
 	$(DPRINT) fmt
 	$(DPRINT) fmt --config dprint-changelog.json
 	$(TAPLO) format
@@ -317,10 +317,10 @@ ${RTA}:
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RTA_VERSION} --name rta@${RTA_VERSION})
 	@ln -s rta@${RTA_VERSION} tools/rta
 
-${TRICORDER}:
-	@rm -f tools/tricorder*
-	@(cd tools && curl https://raw.githubusercontent.com/kevgo/tricorder/main/download.sh | sh -s -- --version ${TRICORDER_VERSION} --name tricorder@${TRICORDER_VERSION})
-	@ln -s tricorder@${TRICORDER_VERSION} tools/tricorder
+${TRIDENT}:
+	@rm -f tools/trident*
+	@(cd tools && curl https://raw.githubusercontent.com/kevgo/trident/main/download.sh | sh -s -- --version ${TRIDENT_VERSION} --name trident@${TRIDENT_VERSION})
+	@ln -s trident@${TRIDENT_VERSION} tools/trident
 
 node_modules: package-lock.json ${RTA}
 	@echo "Installing Node based tools"
