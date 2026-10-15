@@ -1,7 +1,7 @@
 {
-  "$schema": "https://github.com/kevgo/tricorder/raw/refs/heads/main/docs/schema.json",
+  "$schema": "https://github.com/kevgo/trident/raw/refs/heads/main/docs/schema.json",
 
-  "ignore-files": [],
+  "ignore-files": ["dist/", "node_modules/", "vendor/", ".rumdl_cache/"],
 
   "global-lints": [],
   "global-fixes": [],
