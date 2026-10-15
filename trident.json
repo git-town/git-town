@@ -4,7 +4,12 @@
   "ignore-files": ["dist/", "node_modules/", "vendor/", ".rumdl_cache/"],
 
   "global-lints": [],
-  "global-fixes": [],
+  "global-fixes": [
+    {
+      "name": "generate opcodes",
+      "command": "tools/generate_opcodes_all.sh"
+    }
+  ],
 
   "stacks": {
     "go": {
@@ -39,6 +44,10 @@
           {
             "name": "generate JSON schema",
             "command": "make --no-print-directory generate-json-schema"
+          },
+          {
+            "name": "format changelog",
+            "command": "dprint fmt --config dprint-changelog.json"
           }
         ]
       }

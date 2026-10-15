@@ -7,7 +7,7 @@ RELEASE_VERSION := "24.1.0"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
-TRIDENT    = tools/trident@$(TRIDENT_VERSION)
+TRIDENT      = tools/trident@$(TRIDENT_VERSION)
 ACTIONLINT   = $(RTA) actionlint
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
@@ -82,13 +82,11 @@ doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
 fix: ${TRIDENT}  # runs all linters and auto-fixes
-	$(DPRINT) fmt
+	$(TRIDENT) fix --show=verbose
 	$(DPRINT) fmt --config dprint-changelog.json
-	$(TAPLO) format
 	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
-	make --no-print-directory ghokin
-	tools/generate_opcodes_all.sh
-	$(CUCUMBERSORT) format
+# 	make --no-print-directory ghokin
+# 	$(CUCUMBERSORT) format
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...
