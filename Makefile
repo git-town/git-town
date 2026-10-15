@@ -82,7 +82,7 @@ doc: install node_modules ${RTA}  # tests the documentation
 	@$(TEXTRUNNER) --offline
 
 fix: ${TRIDENT}  # runs all linters and auto-fixes
-	$(TRIDENT) fix --show=verbose
+	$(TRIDENT) fix --show=names --scope=all
 	$(DPRINT) fmt --config dprint-changelog.json
 	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
 # 	make --no-print-directory ghokin
