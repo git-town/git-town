@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"testing"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
@@ -455,6 +456,50 @@ func TestSwitchBranch(t *testing.T) {
 			for give, want := range tests {
 				must.EqOp(t, want, entries.IndexOf(give))
 			}
+		})
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		t.Parallel()
+		t.Run("toggle all branches", func(t *testing.T) {
+			t.Parallel()
+			entries := dialog.SwitchBranchEntries{
+				{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+				{Branch: "alpha", Indentation: "  ", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
+				{Branch: "beta", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+			}
+			t.Run("allow branches in other worktrees", func(t *testing.T) {
+				t.Parallel()
+				model := dialog.SwitchModel{
+					DisableBranchesInOtherWorktrees: false,
+					EntryData: dialog.EntryData{
+						EntriesAll:      entries,
+						EntriesLocal:    entries,
+						ShowAllBranches: false,
+					},
+				}
+				toggledModel, _ := model.Update(tea.KeyMsg{Runes: []rune{'a'}, Type: tea.KeyRunes})
+				movedModel, _ := toggledModel.Update(tea.KeyMsg{Type: tea.KeyDown})
+				have := movedModel.(dialog.SwitchModel).List.SelectedData().Branch
+				want := gitdomain.LocalBranchName("alpha")
+				must.EqOp(t, want, have)
+			})
+			t.Run("disable branches in other worktrees", func(t *testing.T) {
+				t.Parallel()
+				model := dialog.SwitchModel{
+					DisableBranchesInOtherWorktrees: true,
+					EntryData: dialog.EntryData{
+						EntriesAll:      entries,
+						EntriesLocal:    entries,
+						ShowAllBranches: false,
+					},
+				}
+				toggledModel, _ := model.Update(tea.KeyMsg{Runes: []rune{'a'}, Type: tea.KeyRunes})
+				movedModel, _ := toggledModel.Update(tea.KeyMsg{Type: tea.KeyDown})
+				have := movedModel.(dialog.SwitchModel).List.SelectedData().Branch
+				want := gitdomain.LocalBranchName("beta")
+				must.EqOp(t, want, have)
+			})
 		})
 	})
 
