@@ -347,9 +347,10 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (appendFeatur
 		entriesArgs.ShowAllBranches = false
 		entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(entriesArgs)...)
 		newParent, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
-			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
-			DisplayBranchTypes: validatedConfig.NormalConfig.DisplayTypes,
+			CurrentBranch:                   None[gitdomain.LocalBranchName](),
+			Cursor:                          1, // select the "main branch" entry, below the "make perennial" entry
+			DisableBranchesInOtherWorktrees: false,
+			DisplayBranchTypes:              validatedConfig.NormalConfig.DisplayTypes,
 			EntryData: dialog.EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,
