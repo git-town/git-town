@@ -17,11 +17,11 @@ Feature: ship the supplied feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                             |
       | other  | git fetch --prune --tags            |
-      |        | git checkout main                   |
+      |        | git checkout --quiet main           |
       | main   | git merge --no-ff --edit -- feature |
       |        | git push                            |
       |        | git push origin :feature            |
-      |        | git checkout other                  |
+      |        | git checkout --quiet other          |
       | other  | git branch -D feature               |
     And this lineage exists now
       """

@@ -16,10 +16,10 @@ Feature: delete the current observed branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | observed | git fetch --prune --tags |
-      |          | git checkout feature     |
-      | feature  | git branch -D observed   |
+      | BRANCH   | COMMAND                      |
+      | observed | git fetch --prune --tags     |
+      |          | git checkout --quiet feature |
+      | feature  | git branch -D observed       |
     And this lineage exists now
       """
       main
@@ -40,7 +40,7 @@ Feature: delete the current observed branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git branch observed {{ sha 'observed commit' }} |
-      |         | git checkout observed                           |
+      |         | git checkout --quiet observed                   |
     And the initial branches and lineage exist now
     And branch "observed" now has type "observed"
     And the initial commits exist now

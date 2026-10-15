@@ -28,10 +28,10 @@ Feature: sync stacked changes and update proposals
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                |
       | child  | git fetch --prune --tags                                                               |
-      |        | git checkout parent                                                                    |
+      |        | git checkout --quiet parent                                                            |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'initial commit' }}   |
       |        | git push --force-with-lease --force-if-includes                                        |
-      |        | git checkout child                                                                     |
+      |        | git checkout --quiet child                                                             |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha-initial 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                        |
       |        | Finding all proposals for child ... parent                                             |
@@ -93,10 +93,10 @@ Feature: sync stacked changes and update proposals
       | BRANCH | COMMAND                                                         |
       | child  | git reset --hard {{ sha-initial 'child commit' }}               |
       |        | git push --force-with-lease --force-if-includes                 |
-      |        | git checkout parent                                             |
+      |        | git checkout --quiet parent                                     |
       | parent | git reset --hard {{ sha-initial 'parent commit' }}              |
       |        | git push --force-with-lease --force-if-includes                 |
-      |        | git checkout child                                              |
+      |        | git checkout --quiet child                                      |
       |        | Finding all proposals for child ... parent                      |
       |        | Finding proposal from parent into main ... #1 (parent proposal) |
       |        | Finding proposal from child into parent ... #2 (child proposal) |

@@ -35,7 +35,7 @@ Feature: GitLab support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                                               |
       | child  | git fetch --prune --tags                                                                                                              |
-      |        | git checkout parent                                                                                                                   |
-      | parent | git checkout child                                                                                                                    |
+      |        | git checkout --quiet parent                                                                                                           |
+      | parent | git checkout --quiet child                                                                                                            |
       |        | Finding proposal from child into parent ... none                                                                                      |
       | child  | open https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent |

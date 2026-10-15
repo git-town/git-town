@@ -23,13 +23,13 @@ Feature: does not compress non-active prototype branches in the stack
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | child     | git fetch --prune --tags                        |
-      |           | git checkout prototype                          |
+      |           | git checkout --quiet prototype                  |
       | prototype | git reset --soft main --                        |
-      |           | git commit -m "prototype 1"                     |
+      |           | git commit --quiet -m "prototype 1"             |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout child                              |
+      |           | git checkout --quiet child                      |
       | child     | git reset --soft prototype --                   |
-      |           | git commit -m "child 1"                         |
+      |           | git commit --quiet -m "child 1"                 |
       |           | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -45,9 +45,9 @@ Feature: does not compress non-active prototype branches in the stack
       | BRANCH    | COMMAND                                         |
       | child     | git reset --hard {{ sha 'child 2' }}            |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout prototype                          |
+      |           | git checkout --quiet prototype                  |
       | prototype | git reset --hard {{ sha 'prototype 2' }}        |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout child                              |
+      |           | git checkout --quiet child                      |
     And the initial branches and lineage exist now
     And the initial commits exist now

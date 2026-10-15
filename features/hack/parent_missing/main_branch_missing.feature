@@ -15,9 +15,9 @@ Feature: on a feature branch but without main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                    |
-      | existing | git fetch --prune --tags                   |
-      |          | git checkout -b new origin/main --no-track |
+      | BRANCH   | COMMAND                                            |
+      | existing | git fetch --prune --tags                           |
+      |          | git checkout --quiet -b new origin/main --no-track |
     And this lineage exists now
       """
       main
@@ -29,9 +29,9 @@ Feature: on a feature branch but without main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES       |

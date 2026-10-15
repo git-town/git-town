@@ -18,10 +18,10 @@ Feature: sync the current prototype branch that has a tracking branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                      |
       | prototype | git fetch --prune --tags                                                     |
-      |           | git checkout main                                                            |
+      |           | git checkout --quiet main                                                    |
       | main      | git -c rebase.updateRefs=false rebase origin/main                            |
       |           | git push                                                                     |
-      |           | git checkout prototype                                                       |
+      |           | git checkout --quiet prototype                                               |
       | prototype | git push --force-with-lease --force-if-includes                              |
       |           | git -c rebase.updateRefs=false rebase origin/prototype                       |
       |           | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |

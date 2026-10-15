@@ -12,10 +12,10 @@ Feature: previous branch is checked out in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                    |
-      | current | git fetch --prune --tags   |
-      |         | git push -u origin current |
-      |         | git checkout -b new main   |
+      | BRANCH  | COMMAND                          |
+      | current | git fetch --prune --tags         |
+      |         | git push -u origin current       |
+      |         | git checkout --quiet -b new main |
     And the previous Git branch is now "new"
     And this lineage exists now
       """
@@ -28,10 +28,10 @@ Feature: previous branch is checked out in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | new     | git checkout current     |
-      | current | git branch -D new        |
-      |         | git push origin :current |
+      | BRANCH  | COMMAND                      |
+      | new     | git checkout --quiet current |
+      | current | git branch -D new            |
+      |         | git push origin :current     |
     And the initial lineage exists now
     And there is now no previous Git branch
     And the initial commits exist now

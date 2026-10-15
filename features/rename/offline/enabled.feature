@@ -17,7 +17,7 @@ Feature: offline mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | old    | git branch --move old new |
-      |        | git checkout new          |
+      |        | git checkout --quiet new  |
     And this lineage exists now
       """
       main
@@ -34,6 +34,6 @@ Feature: offline mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | new    | git branch --move new old |
-      |        | git checkout old          |
+      |        | git checkout --quiet old  |
     And the initial branches and lineage exist now
     And the initial commits exist now

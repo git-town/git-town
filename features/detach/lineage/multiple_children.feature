@@ -28,19 +28,19 @@ Feature: detach a branch branch with multiple children
       |        | Finding proposal from beta into alpha ... none           |
       |        | Finding proposal from gamma1 into beta ... none          |
       |        | Finding proposal from gamma2 into beta ... none          |
-      |        | git checkout gamma1                                      |
+      |        | git checkout --quiet gamma1                              |
       | gamma1 | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta  |
       |        | git push --force-with-lease                              |
-      |        | git checkout gamma2                                      |
+      |        | git checkout --quiet gamma2                              |
       | gamma2 | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta  |
       |        | git push --force-with-lease                              |
-      |        | git checkout delta                                       |
+      |        | git checkout --quiet delta                               |
       | delta  | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta |
       |        | git push --force-with-lease                              |
-      |        | git checkout beta                                        |
+      |        | git checkout --quiet beta                                |
       | beta   | git -c rebase.updateRefs=false rebase --onto main alpha  |
       |        | git push --force-with-lease --force-if-includes          |
     And this lineage exists now
@@ -63,15 +63,15 @@ Feature: detach a branch branch with multiple children
       | BRANCH | COMMAND                                         |
       | beta   | git reset --hard {{ sha 'beta commit' }}        |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout delta                              |
+      |        | git checkout --quiet delta                      |
       | delta  | git reset --hard {{ sha 'delta commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma1                             |
+      |        | git checkout --quiet gamma1                     |
       | gamma1 | git reset --hard {{ sha 'gamma1 commit' }}      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma2                             |
+      |        | git checkout --quiet gamma2                     |
       | gamma2 | git reset --hard {{ sha 'gamma2 commit' }}      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

@@ -35,14 +35,14 @@ Feature: sync a stack making independent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git checkout alpha       |
-      | alpha  | git checkout beta        |
-      | beta   | git checkout gamma       |
-      | gamma  | git checkout delta       |
-      | delta  | git checkout main        |
-      | main   | git push --tags          |
+      | BRANCH | COMMAND                    |
+      | main   | git fetch --prune --tags   |
+      |        | git checkout --quiet alpha |
+      | alpha  | git checkout --quiet beta  |
+      | beta   | git checkout --quiet gamma |
+      | gamma  | git checkout --quiet delta |
+      | delta  | git checkout --quiet main  |
+      | main   | git push --tags            |
     And the initial branches and lineage exist now
     And the initial commits exist now
 

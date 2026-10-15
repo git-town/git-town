@@ -15,11 +15,11 @@ Feature: swapping empty branches
       | BRANCH   | COMMAND                                                                                  |
       | branch-2 | git fetch --prune --tags                                                                 |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1                               |
-      |          | git checkout branch-1                                                                    |
+      |          | git checkout --quiet branch-1                                                            |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main                               |
-      |          | git checkout branch-3                                                                    |
+      |          | git checkout --quiet branch-3                                                            |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'initial commit' }} |
-      |          | git checkout branch-2                                                                    |
+      |          | git checkout --quiet branch-2                                                            |
     And this lineage exists now
       """
       main

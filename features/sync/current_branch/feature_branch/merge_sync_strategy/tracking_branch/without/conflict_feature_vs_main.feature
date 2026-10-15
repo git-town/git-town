@@ -16,10 +16,10 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
@@ -70,7 +70,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
-      | feature | git commit --no-edit                    |
+      | feature | git commit --quiet --no-edit            |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
@@ -85,7 +85,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
-      | feature | git commit --no-edit                    |
+      | feature | git commit --quiet --no-edit            |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
@@ -117,14 +117,14 @@ Feature: handle conflicts between the current feature branch and the main branch
       | DIALOG              | KEYS    |
       | unfinished runstate | 5 enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git commit --no-edit                            |
-      |         | git merge --no-edit --ff origin/feature         |
-      |         | git push                                        |
-      |         | git fetch --prune --tags                        |
-      |         | git reset --soft main --                        |
-      |         | git commit -m "conflicting feature commit"      |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                            |
+      | feature | git commit --quiet --no-edit                       |
+      |         | git merge --no-edit --ff origin/feature            |
+      |         | git push                                           |
+      |         | git fetch --prune --tags                           |
+      |         | git reset --soft main --                           |
+      |         | git commit --quiet -m "conflicting feature commit" |
+      |         | git push --force-with-lease --force-if-includes    |
     And Git Town prints:
       """
       Handle unfinished command: both

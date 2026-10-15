@@ -21,11 +21,11 @@ Feature: sync only branches whose remote is gone
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | alpha  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git branch -D alpha                               |
       |        | git branch -D beta                                |
-      |        | git checkout gamma                                |
+      |        | git checkout --quiet gamma                        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | alpha commit |
@@ -36,10 +36,10 @@ Feature: sync only branches whose remote is gone
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
-      | gamma  | git checkout main                                 |
+      | gamma  | git checkout --quiet main                         |
       | main   | git reset --hard {{ sha 'initial commit' }}       |
       |        | git branch alpha {{ sha-initial 'alpha commit' }} |
       |        | git branch beta {{ sha-initial 'beta commit' }}   |
-      |        | git checkout alpha                                |
+      |        | git checkout --quiet alpha                        |
     And the initial lineage exists now
     And the initial commits exist now

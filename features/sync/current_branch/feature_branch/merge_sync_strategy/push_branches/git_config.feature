@@ -22,12 +22,12 @@ Feature: disable pushing through Git metadata
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout parent                               |
+      |        | git checkout --quiet parent                       |
       | parent | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parent            |
-      |        | git checkout child                                |
+      |        | git checkout --quiet child                        |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
     And the initial branches and lineage exist now
@@ -49,10 +49,10 @@ Feature: disable pushing through Git metadata
     Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | child  | git reset --hard {{ sha 'local child commit' }}  |
-      |        | git checkout main                                |
+      |        | git checkout --quiet main                        |
       | main   | git reset --hard {{ sha 'local main commit' }}   |
-      |        | git checkout parent                              |
+      |        | git checkout --quiet parent                      |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
-      |        | git checkout child                               |
+      |        | git checkout --quiet child                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

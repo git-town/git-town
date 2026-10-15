@@ -11,12 +11,12 @@ Feature: no TTY
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git checkout -b new |
+      | BRANCH   | COMMAND                     |
+      | existing | git checkout --quiet -b new |
 
   Scenario: undo
     When I run "git-town undo" in a non-TTY shell
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |

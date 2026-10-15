@@ -12,10 +12,10 @@ Feature: previous Git branch is in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git branch -D current    |
+      | BRANCH  | COMMAND                   |
+      | current | git fetch --prune --tags  |
+      |         | git checkout --quiet main |
+      | main    | git branch -D current     |
     And the previous Git branch is now "main"
 
   Scenario: undo
@@ -23,7 +23,7 @@ Feature: previous Git branch is in another worktree
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'initial commit' }} |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the previous Git branch is now "main"
     And the initial branches and lineage exist now
     And the initial commits exist now

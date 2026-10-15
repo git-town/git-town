@@ -19,9 +19,9 @@ Feature: offline mode
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
-      | feature | git checkout main                                                            |
+      | feature | git checkout --quiet main                                                    |
       | main    | git -c rebase.updateRefs=false rebase origin/main                            |
-      |         | git checkout feature                                                         |
+      |         | git checkout --quiet feature                                                 |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And the initial commits exist now
 

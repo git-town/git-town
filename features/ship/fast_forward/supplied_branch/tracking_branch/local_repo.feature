@@ -16,9 +16,9 @@ Feature: ship the supplied feature branch in a local repo using the fast-forward
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | other  | git checkout main           |
+      | other  | git checkout --quiet main   |
       | main   | git merge --ff-only feature |
-      |        | git checkout other          |
+      |        | git checkout --quiet other  |
       | other  | git branch -D feature       |
     And this lineage exists now
       """
@@ -36,9 +36,9 @@ Feature: ship the supplied feature branch in a local repo using the fast-forward
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git checkout main                             |
+      | other  | git checkout --quiet main                     |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout other                            |
+      |        | git checkout --quiet other                    |
     And the initial branches and lineage exist now
     And the initial commits exist now

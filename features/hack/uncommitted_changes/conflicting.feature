@@ -14,13 +14,13 @@ Feature: unmergeable conflict between uncommitted changes and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | existing | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout -b new main    |
-      | new      | git stash pop               |
-      |          | git stash drop              |
-      |          | git restore --staged .      |
+      | BRANCH   | COMMAND                          |
+      | existing | git add -A                       |
+      |          | git stash -m "Git Town WIP"      |
+      |          | git checkout --quiet -b new main |
+      | new      | git stash pop                    |
+      |          | git stash drop                   |
+      |          | git restore --staged .           |
     And Git Town prints:
       """
       conflicts between your uncommmitted changes and the main branch
@@ -37,14 +37,14 @@ Feature: unmergeable conflict between uncommitted changes and the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | new      | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout existing       |
-      | existing | git branch -D new           |
-      |          | git stash pop               |
-      |          | git stash drop              |
-      |          | git restore --staged .      |
+      | BRANCH   | COMMAND                       |
+      | new      | git add -A                    |
+      |          | git stash -m "Git Town WIP"   |
+      |          | git checkout --quiet existing |
+      | existing | git branch -D new             |
+      |          | git stash pop                 |
+      |          | git stash drop                |
+      |          | git restore --staged .        |
     And file "conflicting_file" still has content:
       """
       <<<<<<< Updated upstream

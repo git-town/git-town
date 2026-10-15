@@ -19,9 +19,9 @@ Feature: ship to a custom dev remote
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
+      |         | git checkout --quiet main       |
       | main    | git merge --squash --ff feature |
-      |         | git commit                      |
+      |         | git commit --quiet              |
       |         | git push                        |
       |         | git push fork :feature          |
       |         | git branch -D feature           |
@@ -41,7 +41,7 @@ Feature: ship to a custom dev remote
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u fork feature                      |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY  | BRANCHES      |

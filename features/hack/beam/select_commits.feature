@@ -21,14 +21,14 @@ Feature: beam multiple commits onto a new feature branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
-      | existing | git checkout -b new main                                                                                |
+      | existing | git checkout --quiet -b new main                                                                        |
       | new      | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
       |          | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
-      |          | git checkout existing                                                                                   |
+      |          | git checkout --quiet existing                                                                           |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
-      |          | git checkout new                                                                                        |
+      |          | git checkout --quiet new                                                                                |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -48,7 +48,7 @@ Feature: beam multiple commits onto a new feature branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                |
-      | new      | git checkout existing                                                  |
+      | new      | git checkout --quiet existing                                          |
       | existing | git reset --hard {{ sha-initial 'commit 4' }}                          |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
       |          | git branch -D new                                                      |
@@ -64,9 +64,9 @@ Feature: beam multiple commits onto a new feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | new    | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout new                                  |
+      |        | git checkout --quiet new                          |
       | new    | git merge --no-edit --ff main                     |
       |        | git push -u origin new                            |
     And these commits exist now

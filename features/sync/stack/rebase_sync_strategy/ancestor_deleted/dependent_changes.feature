@@ -26,7 +26,7 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-1 | git fetch --prune --tags                                   |
-      |          | git checkout branch-2                                      |
+      |          | git checkout --quiet branch-2                              |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
     And Git Town prints the error:

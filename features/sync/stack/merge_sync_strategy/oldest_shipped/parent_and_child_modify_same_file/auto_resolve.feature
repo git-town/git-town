@@ -26,14 +26,14 @@ Feature: auto-resolve phantom merge conflicts when parent and child modify the s
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
       | branch-2 | git fetch --prune --tags                          |
-      |          | git checkout main                                 |
+      |          | git checkout --quiet main                         |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git branch -D branch-1                            |
-      |          | git checkout branch-2                             |
+      |          | git checkout --quiet branch-2                     |
       | branch-2 | git merge --no-edit --ff main                     |
-      |          | git checkout --ours file                          |
+      |          | git checkout --quiet --ours file                  |
       |          | git add file                                      |
-      |          | git commit --no-edit                              |
+      |          | git commit --quiet --no-edit                      |
       |          | git merge --no-edit --ff origin/branch-2          |
       |          | git push                                          |
     And no merge is now in progress
@@ -51,9 +51,9 @@ Feature: auto-resolve phantom merge conflicts when parent and child modify the s
       | BRANCH   | COMMAND                                                                         |
       | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                            |
       |          | git push --force-with-lease origin {{ sha-initial 'branch-1 commit' }}:branch-2 |
-      |          | git checkout main                                                               |
+      |          | git checkout --quiet main                                                       |
       | main     | git reset --hard {{ sha 'main commit' }}                                        |
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }}                         |
-      |          | git checkout branch-2                                                           |
+      |          | git checkout --quiet branch-2                                                   |
     And no merge is now in progress
     And the initial commits exist now

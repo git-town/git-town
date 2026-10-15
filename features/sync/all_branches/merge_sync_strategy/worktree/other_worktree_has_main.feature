@@ -17,11 +17,11 @@ Feature: sync a branch whose tracking branch was shipped
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                  |
-      | feature-1 | git fetch --prune --tags |
-      |           | git checkout feature-2   |
-      | feature-2 | git branch -D feature-1  |
-      |           | git push --tags          |
+      | BRANCH    | COMMAND                        |
+      | feature-1 | git fetch --prune --tags       |
+      |           | git checkout --quiet feature-2 |
+      | feature-2 | git branch -D feature-1        |
+      |           | git push --tags                |
     And Git Town prints:
       """
       deleted branch feature-1
@@ -40,5 +40,5 @@ Feature: sync a branch whose tracking branch was shipped
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-2 | git branch feature-1 {{ sha 'feature-1 commit' }} |
-      |           | git checkout feature-1                            |
+      |           | git checkout --quiet feature-1                    |
     And the initial branches and lineage exist now

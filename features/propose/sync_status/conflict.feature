@@ -48,7 +48,7 @@ Feature: merge conflict
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
-      | feature | git commit --no-edit                                               |
+      | feature | git commit --quiet --no-edit                                       |
       |         | git push                                                           |
       |         | Finding proposal from feature into main ... none                   |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |

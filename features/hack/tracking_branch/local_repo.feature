@@ -13,8 +13,8 @@ Feature: local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git checkout -b new main |
+      | BRANCH   | COMMAND                          |
+      | existing | git checkout --quiet -b new main |
     And this lineage exists now
       """
       main
@@ -26,9 +26,9 @@ Feature: local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |
     And this lineage exists now
       """
       main

@@ -28,7 +28,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND              |
-      | feature-1 | git commit --no-edit |
-      |           | git push             |
+      | BRANCH    | COMMAND                      |
+      | feature-1 | git commit --quiet --no-edit |
+      |           | git push                     |
     And all branches are now synchronized

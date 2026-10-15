@@ -44,19 +44,19 @@ Feature: detaching a feature branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
       | branch-2 | git fetch --prune --tags                                       |
-      |          | git checkout branch-3                                          |
+      |          | git checkout --quiet branch-3                                  |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
       |          | git push --force-with-lease                                    |
-      |          | git checkout branch-4                                          |
+      |          | git checkout --quiet branch-4                                  |
       | branch-4 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
       |          | git push --force-with-lease                                    |
-      |          | git checkout branch-5                                          |
+      |          | git checkout --quiet branch-5                                  |
       | branch-5 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-4 branch-2 |
       |          | git push --force-with-lease                                    |
-      |          | git checkout branch-2                                          |
+      |          | git checkout --quiet branch-2                                  |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git push --force-with-lease --force-if-includes                |
     And this lineage exists now
@@ -87,15 +87,15 @@ Feature: detaching a feature branch
       | BRANCH   | COMMAND                                         |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }}          |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
+      |          | git checkout --quiet branch-3                   |
       | branch-3 | git reset --hard {{ sha 'commit 3b' }}          |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-4                           |
+      |          | git checkout --quiet branch-4                   |
       | branch-4 | git reset --hard {{ sha 'commit 4b' }}          |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-5                           |
+      |          | git checkout --quiet branch-5                   |
       | branch-5 | git reset --hard {{ sha 'commit 5b' }}          |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      |          | git checkout --quiet branch-2                   |
     And the initial lineage exists now
     And the initial commits exist now

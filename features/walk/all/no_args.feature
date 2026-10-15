@@ -13,8 +13,8 @@ Feature: walk all local branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-1 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-1 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -24,8 +24,8 @@ Feature: walk all local branches
   Scenario: continue through all remaining branches
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -33,8 +33,8 @@ Feature: walk all local branches
     And the current branch is now "branch-2"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-3 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -42,8 +42,8 @@ Feature: walk all local branches
     And the current branch is now "branch-3"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-A |
+      | BRANCH   | COMMAND                       |
+      | branch-3 | git checkout --quiet branch-A |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -51,8 +51,8 @@ Feature: walk all local branches
     And the current branch is now "branch-A"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-A | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-A | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Branch walk done.
@@ -61,8 +61,8 @@ Feature: walk all local branches
   Scenario: skip all remaining branches
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -70,8 +70,8 @@ Feature: walk all local branches
     And the current branch is now "branch-2"
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-3 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -79,8 +79,8 @@ Feature: walk all local branches
     And the current branch is now "branch-3"
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-A |
+      | BRANCH   | COMMAND                       |
+      | branch-3 | git checkout --quiet branch-A |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
@@ -88,8 +88,8 @@ Feature: walk all local branches
     And the current branch is now "branch-A"
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-A | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-A | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Branch walk done.

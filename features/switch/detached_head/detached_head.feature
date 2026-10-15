@@ -18,5 +18,5 @@ Feature: switch branches from detached head
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH               | COMMAND            |
-      | {{ sha 'commit 1' }} | git checkout alpha |
+      | BRANCH               | COMMAND                    |
+      | {{ sha 'commit 1' }} | git checkout --quiet alpha |

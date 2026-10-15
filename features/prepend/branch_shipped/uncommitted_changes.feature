@@ -17,12 +17,12 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | child  | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new parent  |
-      | new    | git stash pop               |
-      |        | git restore --staged .      |
+      | BRANCH | COMMAND                            |
+      | child  | git add -A                         |
+      |        | git stash -m "Git Town WIP"        |
+      |        | git checkout --quiet -b new parent |
+      | new    | git stash pop                      |
+      |        | git restore --staged .             |
     And Git Town prints:
       """
       branch new is now a child of parent
@@ -50,7 +50,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout child          |
+      |        | git checkout --quiet child  |
       | child  | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

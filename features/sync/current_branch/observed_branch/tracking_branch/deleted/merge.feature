@@ -17,10 +17,10 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | observed | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git branch -D observed   |
+      | BRANCH   | COMMAND                   |
+      | observed | git fetch --prune --tags  |
+      |          | git checkout --quiet main |
+      | main     | git branch -D observed    |
     And Git Town prints:
       """
       deleted branch observed
@@ -34,6 +34,6 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
     Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | main   | git branch observed {{ sha-initial 'local commit' }} |
-      |        | git checkout observed                                |
+      |        | git checkout --quiet observed                        |
     And the initial branches and lineage exist now
     And the initial commits exist now

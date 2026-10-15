@@ -11,8 +11,8 @@ Feature: disable stashing via CLI flag
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git checkout -b new main |
+      | BRANCH | COMMAND                          |
+      | old    | git checkout --quiet -b new main |
     And this lineage exists now
       """
       main
@@ -26,7 +26,7 @@ Feature: disable stashing via CLI flag
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
+      |        | git checkout --quiet old    |
       | old    | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

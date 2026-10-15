@@ -19,7 +19,7 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And Git Town prints:
       """
       cannot reset branch main

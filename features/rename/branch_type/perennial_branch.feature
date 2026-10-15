@@ -28,7 +28,7 @@ Feature: rename a perennial branch
       | BRANCH     | COMMAND                          |
       | production | git fetch --prune --tags         |
       |            | git branch --move production new |
-      |            | git checkout new                 |
+      |            | git checkout --quiet new         |
       | new        | git push -u origin new           |
       |            | git push origin :production      |
     And this lineage exists now
@@ -49,7 +49,7 @@ Feature: rename a perennial branch
       | BRANCH     | COMMAND                                             |
       | new        | git branch production {{ sha 'production commit' }} |
       |            | git push -u origin production                       |
-      |            | git checkout production                             |
+      |            | git checkout --quiet production                     |
       | production | git branch -D new                                   |
       |            | git push origin :new                                |
     And the initial branches and lineage exist now

@@ -26,7 +26,7 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-1 | git fetch --prune --tags                                   |
-      |          | git checkout branch-2                                      |
+      |          | git checkout --quiet branch-2                              |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
@@ -45,5 +45,5 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
       | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}                            |
       |          | git push --force-with-lease origin {{ sha 'branch-1 commit' }}:branch-2 |
       |          | git branch branch-1 {{ sha 'branch-1 commit' }}                         |
-      |          | git checkout branch-1                                                   |
+      |          | git checkout --quiet branch-1                                           |
     And the initial branches and lineage exist now

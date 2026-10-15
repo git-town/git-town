@@ -19,16 +19,16 @@ Feature: switch branches using multiple types
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                |
-      | observed-2 | git checkout prototype |
+      | BRANCH     | COMMAND                        |
+      | observed-2 | git checkout --quiet prototype |
 
   Scenario: short form
     When I run "git-town switch -to+pr" and enter into the dialogs:
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                |
-      | observed-2 | git checkout prototype |
+      | BRANCH     | COMMAND                        |
+      | observed-2 | git checkout --quiet prototype |
 
   Scenario: undo
     Given I ran "git-town switch -to+pr" and enter into the dialogs:

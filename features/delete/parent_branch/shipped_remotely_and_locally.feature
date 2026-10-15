@@ -17,11 +17,11 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | child  | git fetch --prune --tags |
-      |        | git push origin :child   |
-      |        | git checkout main        |
-      | main   | git branch -D child      |
+      | BRANCH | COMMAND                   |
+      | child  | git fetch --prune --tags  |
+      |        | git push origin :child    |
+      |        | git checkout --quiet main |
+      | main   | git branch -D child       |
     And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
@@ -33,7 +33,7 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
       | BRANCH | COMMAND                                   |
       | main   | git branch child {{ sha 'child commit' }} |
       |        | git push -u origin child                  |
-      |        | git checkout child                        |
+      |        | git checkout --quiet child                |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |

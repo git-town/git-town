@@ -23,16 +23,16 @@ Feature: shipped the head branch of a synced stack with dependent changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | beta   | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git branch -D alpha                               |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
       | beta   | git merge --no-edit --ff main                     |
-      |        | git checkout --ours file                          |
+      |        | git checkout --quiet --ours file                  |
       |        | git add file                                      |
-      |        | git commit --no-edit                              |
+      |        | git commit --quiet --no-edit                      |
       |        | git reset --soft main --                          |
-      |        | git commit -m "beta commit"                       |
+      |        | git commit --quiet -m "beta commit"               |
       |        | git push --force-with-lease                       |
     And all branches are now synchronized
     And these commits exist now
@@ -46,9 +46,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | BRANCH | COMMAND                                           |
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes   |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git reset --hard {{ sha 'initial commit' }}       |
       |        | git branch alpha {{ sha-initial 'alpha commit' }} |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
     And the initial branches and lineage exist now
     And the initial commits exist now

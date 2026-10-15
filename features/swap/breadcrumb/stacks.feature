@@ -34,14 +34,14 @@ Feature: swap a feature branch and update proposals
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1                         |
       |          | git push --force-with-lease --force-if-includes                                    |
       |          | Updating target branch of proposal #1 to branch-2 ... ok                           |
-      |          | git checkout branch-1                                                              |
+      |          | git checkout --quiet branch-1                                                      |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main                         |
       |          | git push --force-with-lease --force-if-includes                                    |
       |          | Updating target branch of proposal #3 to branch-1 ... ok                           |
-      |          | git checkout branch-3                                                              |
+      |          | git checkout --quiet branch-3                                                      |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'commit 2' }} |
       |          | git push --force-with-lease --force-if-includes                                    |
-      |          | git checkout branch-2                                                              |
+      |          | git checkout --quiet branch-2                                                      |
       |          | Finding all proposals for branch-1 ... branch-2                                    |
       |          | Finding proposal from branch-2 into main ... #2 (branch-2 proposal)                |
       |          | Finding proposal from branch-1 into branch-2 ... #1 (branch-1 proposal)            |
@@ -130,19 +130,19 @@ Feature: swap a feature branch and update proposals
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                  |
-      | branch-2 | git checkout branch-1                                    |
+      | branch-2 | git checkout --quiet branch-1                            |
       | branch-1 | git reset --hard {{ sha 'commit 1' }}                    |
       |          | git push --force-with-lease --force-if-includes          |
-      |          | git checkout branch-2                                    |
+      |          | git checkout --quiet branch-2                            |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}                    |
       |          | git push --force-with-lease --force-if-includes          |
-      |          | git checkout branch-3                                    |
+      |          | git checkout --quiet branch-3                            |
       | branch-3 | git reset --hard {{ sha 'commit 3' }}                    |
       |          | git push --force-with-lease --force-if-includes          |
       |          | Updating target branch of proposal #2 to branch-1 ... ok |
       |          | Updating target branch of proposal #1 to main ... ok     |
       |          | Updating target branch of proposal #3 to branch-2 ... ok |
-      |          | git checkout branch-2                                    |
+      |          | git checkout --quiet branch-2                            |
       |          | Finding all proposals for branch-1 ... main              |
       |          | Finding proposal from branch-2 into main ... none        |
       |          | Finding proposal from branch-1 into branch-2 ... none    |

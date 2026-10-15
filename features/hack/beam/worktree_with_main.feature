@@ -23,12 +23,12 @@ Feature: beam commits from a branch on the same worktree as main
   Scenario: result
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                                                                   |
-      | existing-1 | git checkout -b new main                                                                                  |
+      | existing-1 | git checkout --quiet -b new main                                                                          |
       | new        | git cherry-pick {{ sha-initial 'commit 1b' }}                                                             |
-      |            | git checkout existing-1                                                                                   |
+      |            | git checkout --quiet existing-1                                                                           |
       | existing-1 | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1b' }}^ {{ sha-initial 'commit 1b' }} |
       |            | git push --force-with-lease --force-if-includes                                                           |
-      |            | git checkout new                                                                                          |
+      |            | git checkout --quiet new                                                                                  |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -48,7 +48,7 @@ Feature: beam commits from a branch on the same worktree as main
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                                  |
-      | new        | git checkout existing-1                                                  |
+      | new        | git checkout --quiet existing-1                                          |
       | existing-1 | git reset --hard {{ sha-initial 'commit 1b' }}                           |
       |            | git push --force-with-lease origin {{ sha 'initial commit' }}:existing-1 |
       |            | git branch -D new                                                        |

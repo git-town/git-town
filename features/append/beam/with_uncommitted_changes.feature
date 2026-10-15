@@ -24,15 +24,15 @@ Feature: beam a commit and uncommitted changes onto a new child branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
-      | existing | git checkout -b new                                                                                     |
-      | new      | git commit -m uncommitted                                                                               |
-      |          | git checkout existing                                                                                   |
+      | existing | git checkout --quiet -b new                                                                             |
+      | new      | git commit --quiet -m uncommitted                                                                       |
+      |          | git checkout --quiet existing                                                                           |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
-      |          | git checkout new                                                                                        |
+      |          | git checkout --quiet new                                                                                |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
-      |          | git checkout existing                                                                                   |
+      |          | git checkout --quiet existing                                                                           |
     And no rebase is now in progress
     And this lineage exists now
       """
