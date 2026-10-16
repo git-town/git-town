@@ -1,4 +1,4 @@
 {
-  "semicolons": false,
-  "trailingComma": "none"
+  "trailingComma": "none",
+  "semi": false
 }
