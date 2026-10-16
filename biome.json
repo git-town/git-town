@@ -7,7 +7,7 @@
     "formatter": {
       "trailingCommas": "none",
       "semicolons": "asNeeded",
-      "arrowParens": "asNeeded"
+      "arrowParentheses": "asNeeded"
     }
   }
 }
