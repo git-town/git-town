@@ -55,6 +55,7 @@
   },
 
   "applications": {
-    "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] }
+    "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] },
+    "prettier": { "enabled": false }
   }
 }
