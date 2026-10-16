@@ -1,14 +1,19 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { isNegatable, splitNegation, splitNegations, SummarySection, variationName } from "./summary_section.ts"
+import {
+  isNegatable,
+  splitNegation,
+  splitNegations,
+  SummarySection,
+  variationName
+} from "./summary_section.ts"
 
 suite("SummarySection", () => {
   suite(".args()", () => {
     const tests = [
       {
         desc: "append command",
-        give:
-          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(--non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
+        give: "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(--non)-interactive] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
         want: [
           ["--auto-resolve", "--no-auto-resolve"],
           ["-b", "--beam"],
@@ -23,22 +28,22 @@ suite("SummarySection", () => {
           ["--push", "--no-push"],
           ["--stash", "--no-stash"],
           ["--sync", "--no-sync"],
-          ["-v", "--verbose"],
-        ],
+          ["-v", "--verbose"]
+        ]
       },
       {
         desc: "completions command",
         give: "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]",
-        want: [["--no-descriptions"], ["-h", "--help"]],
+        want: [["--no-descriptions"], ["-h", "--help"]]
       },
       {
         desc: "config get-parent command",
         give: "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]",
         want: [
           ["-v", "--verbose"],
-          ["-h", "--help"],
-        ],
-      },
+          ["-h", "--help"]
+        ]
+      }
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {
@@ -58,8 +63,10 @@ suite("SummarySection", () => {
       "git town append <branch-name> [-p | --prototype]": "append",
       "git town sync --all": "sync",
       "git town ship --all": "ship",
-      "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": "completions",
-      "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": "config get-parent",
+      "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]":
+        "completions",
+      "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]":
+        "config get-parent"
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -76,7 +83,7 @@ suite("negations", () => {
     const tests = {
       "--(no)-detach": true,
       "--(non)-interactive": true,
-      "--beam": false,
+      "--beam": false
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -89,7 +96,7 @@ suite("negations", () => {
   suite("variationName", () => {
     const tests = {
       "--(no)-detach": "detach",
-      "--(non)-interactive": "interactive",
+      "--(non)-interactive": "interactive"
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -115,13 +122,13 @@ suite("negations", () => {
       {
         desc: "negatable",
         give: ["-d", "--(no)-detach"],
-        want: ["-d", "--detach", "--no-detach"],
+        want: ["-d", "--detach", "--no-detach"]
       },
       {
         desc: "not negatable",
         give: ["-b", "--beam"],
-        want: ["-b", "--beam"],
-      },
+        want: ["-b", "--beam"]
+      }
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {

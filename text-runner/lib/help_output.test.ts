@@ -8,7 +8,7 @@ import {
   isNegatedFlagsGroup,
   matchesFlag,
   mergeFlags,
-  replaceValueNotation,
+  replaceValueNotation
 } from "./help_output.ts"
 
 const appendHelpOutput = `
@@ -82,7 +82,7 @@ suite("HelpOutput", () => {
         ["--push", "--no-push"],
         ["--stash", "--no-stash"],
         ["--sync", "--no-sync"],
-        ["-v", "--verbose"],
+        ["-v", "--verbose"]
       ]
       deepEqual(have, want)
     })
@@ -107,7 +107,7 @@ Flags:
         ["-d", "--display-types string"],
         ["-h", "--help"],
         ["-o", "--order string"],
-        ["-v", "--verbose"],
+        ["-v", "--verbose"]
       ]
       deepEqual(have, want)
     })
@@ -163,7 +163,7 @@ Flags:
         ["-m", "--message string"],
         ["--no-verify"],
         ["-s", "--stack"],
-        ["-v", "--verbose"],
+        ["-v", "--verbose"]
       ]
       deepEqual(have, want)
     })
@@ -194,7 +194,7 @@ Flags:
         ["--interactive", "--non-interactive"],
         ["-m", "--message string"],
         ["-u", "--up int"],
-        ["-v", "--verbose"],
+        ["-v", "--verbose"]
       ]
       deepEqual(have, want)
     })
@@ -208,19 +208,19 @@ suite("Lines", () => {
       const have = output.lines().flagLines()
       const want = [
         new FlagLine(
-          "      --auto-resolve      auto-resolve phantom merge conflicts",
+          "      --auto-resolve      auto-resolve phantom merge conflicts"
         ),
         new FlagLine(
-          "  -b, --beam              beam some commits from this branch to the new branch",
+          "  -b, --beam              beam some commits from this branch to the new branch"
         ),
         new FlagLine(
-          "  -c, --commit            commit the stashed changes into the new branch",
+          "  -c, --commit            commit the stashed changes into the new branch"
         ),
         new FlagLine(
-          "  -d, --detached          don't update the perennial root branch",
+          "  -d, --detached          don't update the perennial root branch"
         ),
         new FlagLine(
-          "      --dry-run           print but do not run the Git commands",
+          "      --dry-run           print but do not run the Git commands"
         ),
         new FlagLine("  -h, --help              help for append"),
         new FlagLine("      --interactive       enable interactive mode"),
@@ -230,19 +230,19 @@ suite("Lines", () => {
         new FlagLine("      --non-interactive   disable interactive mode"),
         new FlagLine("      --no-push           don't push branches"),
         new FlagLine(
-          "      --no-stash          don't stash uncommitted changes",
+          "      --no-stash          don't stash uncommitted changes"
         ),
         new FlagLine("      --no-sync           don't sync branches"),
         new FlagLine("      --propose           propose the new branch"),
         new FlagLine("  -p, --prototype         create a prototype branch"),
         new FlagLine("      --push              push local branches"),
         new FlagLine(
-          "      --stash             stash uncommitted changes when creating branches",
+          "      --stash             stash uncommitted changes when creating branches"
         ),
         new FlagLine("      --sync              sync branches (default true)"),
         new FlagLine(
-          "  -v, --verbose           display all Git commands run under the hood",
-        ),
+          "  -v, --verbose           display all Git commands run under the hood"
+        )
       ]
       deepEqual(have, want)
     })
@@ -253,10 +253,10 @@ suite("FlagLine", () => {
   suite(".flags()", () => {
     const tests = {
       "  -b, --beam             description": ["-b", "--beam"],
-      "  -d, --display-types string[=\"all\"]   display the branch types": [
+      '  -d, --display-types string[="all"]   display the branch types': [
         "-d",
-        "--display-types string",
-      ],
+        "--display-types string"
+      ]
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
@@ -270,8 +270,8 @@ suite("FlagLine", () => {
 
 suite("replaceValueNotation()", () => {
   const tests = {
-    "string[=\"all\"]": "string",
-    string: "string",
+    'string[="all"]': "string",
+    string: "string"
   }
   for (const [give, want] of Object.entries(tests)) {
     test(give, () => {
@@ -286,7 +286,7 @@ suite("mergeFlags()", () => {
     const give = [["-b", "--beam"], ["-d", "--detached"], ["--no-detached"]]
     const want = [
       ["-b", "--beam"],
-      ["-d", "--detached", "--no-detached"],
+      ["-d", "--detached", "--no-detached"]
     ]
     const have = mergeFlags(give)
     deepEqual(have, want)
@@ -299,7 +299,7 @@ suite("isNegatedFlagsGroup()", () => {
     { give: ["--no-push"], want: true },
     { give: ["--no-push", "--no-sync"], want: true },
     { give: ["--push"], want: false },
-    { give: ["--push", "--no-push"], want: false },
+    { give: ["--push", "--no-push"], want: false }
   ]
   for (const { give, want } of tests) {
     test(JSON.stringify(give), () => {
@@ -313,7 +313,7 @@ suite("getPositiveFlagName()", () => {
   const tests = {
     "--no-push": "--push",
     "--no-detached string": "--detached",
-    "--no-auto-resolve": "--auto-resolve",
+    "--no-auto-resolve": "--auto-resolve"
   }
   for (const [give, want] of Object.entries(tests)) {
     test(give, () => {
@@ -346,7 +346,7 @@ suite("findGroupWithPositiveFlag()", () => {
     const groups = [
       ["-b", "--beam"],
       ["-d", "--detached"],
-      ["-p", "--push"],
+      ["-p", "--push"]
     ]
     const have = findGroupWithPositiveFlag(groups, "--detached")
     deepEqual(have, ["-d", "--detached"])
@@ -355,7 +355,7 @@ suite("findGroupWithPositiveFlag()", () => {
   test("finds group with flag with value", () => {
     const groups = [
       ["-m", "--message string"],
-      ["-p", "--push"],
+      ["-p", "--push"]
     ]
     const have = findGroupWithPositiveFlag(groups, "--message")
     deepEqual(have, ["-m", "--message string"])
@@ -364,7 +364,7 @@ suite("findGroupWithPositiveFlag()", () => {
   test("no matching group", () => {
     const groups = [
       ["-b", "--beam"],
-      ["-d", "--detached"],
+      ["-d", "--detached"]
     ]
     const have = findGroupWithPositiveFlag(groups, "--push")
     deepEqual(have, undefined)

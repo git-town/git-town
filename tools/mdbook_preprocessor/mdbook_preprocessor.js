@@ -147,24 +147,21 @@ function processContent(content) {
  * @returns {string}
  */
 function processCommandSummary(code) {
-  return `<pre><code>${
-    code
-      .split("\n")
-      .map((line) => {
-        const tokens = tokenize(line)
-        const { command, otherTokens } = extractCommand(tokens)
+  return `<pre><code>${code
+    .split("\n")
+    .map(line => {
+      const tokens = tokenize(line)
+      const { command, otherTokens } = extractCommand(tokens)
 
-        const indent = command.length + 1
-        return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
-          otherTokens
-            .map(
-              (token) => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`,
-            )
-            .join(" ")
-        }</div>`
-      })
-      .join("")
-  }</pre></code>`
+      const indent = command.length + 1
+      return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${otherTokens
+        .map(
+          token =>
+            `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`
+        )
+        .join(" ")}</div>`
+    })
+    .join("")}</pre></code>`
 }
 
 /**
@@ -208,20 +205,17 @@ function processCommandSummary(code) {
  * @returns {string}
  */
 function processCodeWrap(code, indent) {
-  return `${indent}<pre><code>${
-    code
-      .split("\n")
-      .map((line) => {
-        const tokens = tokenize(line.slice(indent.length))
+  return `${indent}<pre><code>${code
+    .split("\n")
+    .map(line => {
+      const tokens = tokenize(line.slice(indent.length))
 
-        return `<div class="gt-code-wrap">${
-          tokens
-            .map(
-              (token) => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`,
-            )
-            .join(" ")
-        }</div>`
-      })
-      .join("")
-  }</pre></code>`
+      return `<div class="gt-code-wrap">${tokens
+        .map(
+          token =>
+            `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`
+        )
+        .join(" ")}</div>`
+    })
+    .join("")}</pre></code>`
 }

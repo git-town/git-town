@@ -8,18 +8,18 @@ suite("Document", () => {
       {
         desc: "string argument",
         give: ["-m <msg>", "--message <msg>"],
-        want: ["-m", "--message string"],
+        want: ["-m", "--message string"]
       },
       {
         desc: "int argument",
         give: ["-u int", "--up int"],
-        want: ["-u", "--up int"],
+        want: ["-u", "--up int"]
       },
       {
         desc: "no argument",
         give: ["-p", "--prototype"],
-        want: ["-p", "--prototype"],
-      },
+        want: ["-p", "--prototype"]
+      }
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {

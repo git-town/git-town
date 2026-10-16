@@ -84,7 +84,7 @@ export class FlagLine {
     const match = this.text.match(/^\s+(.+?)\s{2,}/)
     if (!match) {
       throw new Error(
-        `This flag line doesn't seem to contain flags: ${this.text}`,
+        `This flag line doesn't seem to contain flags: ${this.text}`
       )
     }
     const flagsPart = match[1].trim()
@@ -99,8 +99,8 @@ export function replaceValueNotation(flag: string): string {
 
 export function isNegatedFlagsGroup(flags: string[]): boolean {
   return (
-    flags.length > 0
-    && flags.every((flag) => flag.startsWith("--no-") || flag.startsWith("--non-"))
+    flags.length > 0 &&
+    flags.every(flag => flag.startsWith("--no-") || flag.startsWith("--non-"))
   )
 }
 
@@ -121,9 +121,11 @@ export function matchesFlag(flag: string, positiveFlag: string): boolean {
 
 export function findGroupWithPositiveFlag(
   result: string[][],
-  positiveFlag: string,
+  positiveFlag: string
 ): string[] | undefined {
-  return result.find((group) => group.some((flag) => matchesFlag(flag, positiveFlag)))
+  return result.find(group =>
+    group.some(flag => matchesFlag(flag, positiveFlag))
+  )
 }
 
 function extractNegated(flags: string[][]): {
@@ -165,7 +167,7 @@ export function mergeFlags(flags: string[][]): string[][] {
 
 function getSortKey(flags: string[]): string {
   // Prefer long flag (--xxx) over short flag (-x) for sorting
-  const longFlag = flags.find((flag) => flag.startsWith("--"))
+  const longFlag = flags.find(flag => flag.startsWith("--"))
   const flagToUse = longFlag || flags[0]
   // Remove leading dashes and extract the flag name (without value type)
   return flagToUse.replace(/^-+/, "").split(" ")[0].toLowerCase()
