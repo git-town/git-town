@@ -49,13 +49,13 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And I run "git-town continue" in the "new_folder" folder
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
-      | current | git commit --no-edit                    |
+      | current | git commit --quiet --no-edit            |
       |         | git merge --no-edit --ff origin/current |
       |         | git push                                |
-      |         | git checkout other                      |
+      |         | git checkout --quiet other              |
       | other   | git merge --no-edit --ff main           |
       |         | git push                                |
-      |         | git checkout current                    |
+      |         | git checkout --quiet current            |
       | current | git push --tags                         |
     And no merge is now in progress
     And all branches are now synchronized

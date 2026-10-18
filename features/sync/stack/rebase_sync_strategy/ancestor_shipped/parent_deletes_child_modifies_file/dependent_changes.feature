@@ -24,9 +24,9 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-2 | git fetch --prune --tags                                   |
-      |          | git checkout main                                          |
+      |          | git checkout --quiet main                                  |
       | main     | git -c rebase.updateRefs=false rebase origin/main          |
-      |          | git checkout branch-2                                      |
+      |          | git checkout --quiet branch-2                              |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
@@ -40,9 +40,9 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       | BRANCH   | COMMAND                                                                         |
       | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                            |
       |          | git push --force-with-lease origin {{ sha-initial 'branch-1-commit' }}:branch-2 |
-      |          | git checkout main                                                               |
+      |          | git checkout --quiet main                                                       |
       | main     | git reset --hard {{ sha 'main commit' }}                                        |
       |          | git branch branch-1 {{ sha-initial 'branch-1-commit' }}                         |
-      |          | git checkout branch-2                                                           |
+      |          | git checkout --quiet branch-2                                                   |
     And no merge is now in progress
     And the initial commits exist now

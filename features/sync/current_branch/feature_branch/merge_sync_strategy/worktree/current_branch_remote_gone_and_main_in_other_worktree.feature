@@ -14,11 +14,11 @@ Feature: sync a branch whose remote branch is gone while main is active in anoth
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                  |
-      | feature-1  | git fetch --prune --tags |
-      |            | git checkout feature-1A  |
-      | feature-1A | git branch -D feature-1  |
-      |            | git checkout feature-2   |
+      | BRANCH     | COMMAND                         |
+      | feature-1  | git fetch --prune --tags        |
+      |            | git checkout --quiet feature-1A |
+      | feature-1A | git branch -D feature-1         |
+      |            | git checkout --quiet feature-2  |
     And this lineage exists now
       """
       main
@@ -32,7 +32,7 @@ Feature: sync a branch whose remote branch is gone while main is active in anoth
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | feature-2 | git branch feature-1 {{ sha 'initial commit' }} |
-      |           | git checkout feature-1                          |
+      |           | git checkout --quiet feature-1                  |
     And this lineage exists now
       """
       main

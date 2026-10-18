@@ -17,9 +17,9 @@ Feature: shipping a parked branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | parked | git fetch --prune --tags       |
-      |        | git checkout main              |
+      |        | git checkout --quiet main      |
       | main   | git merge --squash --ff parked |
-      |        | git commit                     |
+      |        | git commit --quiet             |
       |        | git push                       |
       |        | git push origin :parked        |
       |        | git branch -D parked           |
@@ -39,7 +39,7 @@ Feature: shipping a parked branch
       |        | git push                                    |
       |        | git branch parked {{ sha 'parked commit' }} |
       |        | git push -u origin parked                   |
-      |        | git checkout parked                         |
+      |        | git checkout --quiet parked                 |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

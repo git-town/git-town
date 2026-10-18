@@ -22,9 +22,9 @@ Feature: detached syncing a stacked feature branch using --no-push
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                       |
       | beta   | git fetch --prune --tags                                                      |
-      |        | git checkout alpha                                                            |
+      |        | git checkout --quiet alpha                                                    |
       | alpha  | git -c rebase.updateRefs=false rebase origin/alpha                            |
-      |        | git checkout beta                                                             |
+      |        | git checkout --quiet beta                                                     |
       | beta   | git -c rebase.updateRefs=false rebase origin/beta                             |
       |        | git -c rebase.updateRefs=false rebase --onto alpha {{ sha 'initial commit' }} |
     And the initial branches and lineage exist now
@@ -42,9 +42,9 @@ Feature: detached syncing a stacked feature branch using --no-push
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | beta   | git checkout alpha                              |
+      | beta   | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'local alpha commit' }} |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
     And the initial branches and lineage exist now
     And the initial commits exist now

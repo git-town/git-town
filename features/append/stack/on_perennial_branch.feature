@@ -17,7 +17,7 @@ Feature: append to a perennial branch
       | BRANCH     | COMMAND                                                 |
       | production | git fetch --prune --tags                                |
       |            | git -c rebase.updateRefs=false rebase origin/production |
-      |            | git checkout -b new                                     |
+      |            | git checkout --quiet -b new                             |
     And this lineage exists now
       """
       production
@@ -31,7 +31,7 @@ Feature: append to a perennial branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
-      | new        | git checkout production                     |
+      | new        | git checkout --quiet production             |
       | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
     And the initial lineage exists now

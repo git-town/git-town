@@ -18,11 +18,11 @@ Feature: with upstream repo
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
-      |         | git checkout main                                                            |
+      |         | git checkout --quiet main                                                    |
       | main    | git fetch upstream main                                                      |
       |         | git -c rebase.updateRefs=false rebase upstream/main                          |
       |         | git push                                                                     |
-      |         | git checkout feature                                                         |
+      |         | git checkout --quiet feature                                                 |
       | feature | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |

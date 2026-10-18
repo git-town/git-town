@@ -23,9 +23,9 @@ Feature: rebase a branch that contains amended commits
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                              |
       | feature-2 | git fetch --prune --tags                                                             |
-      |           | git checkout feature-1                                                               |
+      |           | git checkout --quiet feature-1                                                       |
       | feature-1 | git push --force-with-lease --force-if-includes                                      |
-      |           | git checkout feature-2                                                               |
+      |           | git checkout --quiet feature-2                                                       |
       | feature-2 | git -c rebase.updateRefs=false rebase --onto feature-1 {{ sha-initial 'commit 1a' }} |
       |           | git push --force-with-lease --force-if-includes                                      |
     And these commits exist now

@@ -21,7 +21,7 @@ Feature: combining a branch in offline mode
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
-      | beta   | git checkout alpha                       |
+      | beta   | git checkout --quiet alpha               |
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git branch -D beta                       |
     And this lineage exists now
@@ -42,6 +42,6 @@ Feature: combining a branch in offline mode
       | BRANCH | COMMAND                                   |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git branch beta {{ sha 'beta commit' }}   |
-      |        | git checkout beta                         |
+      |        | git checkout --quiet beta                 |
     And the initial lineage exists now
     And the initial commits exist now

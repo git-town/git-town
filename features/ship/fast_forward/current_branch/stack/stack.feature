@@ -28,7 +28,7 @@ Feature: ship a parent branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | feature-1 | git fetch --prune --tags      |
-      |           | git checkout main             |
+      |           | git checkout --quiet main     |
       | main      | git merge --ff-only feature-1 |
       |           | git push                      |
       |           | git push origin :feature-1    |
@@ -55,7 +55,7 @@ Feature: ship a parent branch using the fast-forward strategy
       | BRANCH | COMMAND                                           |
       | main   | git branch feature-1 {{ sha 'feature-1 commit' }} |
       |        | git push -u origin feature-1                      |
-      |        | git checkout feature-1                            |
+      |        | git checkout --quiet feature-1                    |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
@@ -69,7 +69,7 @@ Feature: ship a parent branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | feature-2 | git fetch --prune --tags      |
-      |           | git checkout main             |
+      |           | git checkout --quiet main     |
       | main      | git merge --ff-only feature-2 |
       |           | git push                      |
       |           | git push origin :feature-2    |
@@ -97,7 +97,7 @@ Feature: ship a parent branch using the fast-forward strategy
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | feature-3 | git fetch --prune --tags      |
-      |           | git checkout main             |
+      |           | git checkout --quiet main     |
       | main      | git merge --ff-only feature-3 |
       |           | git push                      |
       |           | git push origin :feature-3    |

@@ -20,7 +20,7 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       | BRANCH | COMMAND                     |
       | child  | git fetch --prune --tags    |
       |        | git branch --move child new |
-      |        | git checkout new            |
+      |        | git checkout --quiet new    |
       | new    | git push -u origin new      |
       |        | git push origin :child      |
     And this lineage exists now
@@ -38,7 +38,7 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       | BRANCH | COMMAND                                   |
       | new    | git branch child {{ sha 'child commit' }} |
       |        | git push -u origin child                  |
-      |        | git checkout child                        |
+      |        | git checkout --quiet child                |
       | child  | git branch -D new                         |
       |        | git push origin :new                      |
     And the initial lineage exists now

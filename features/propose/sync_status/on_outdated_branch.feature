@@ -24,10 +24,10 @@ Feature: sync before proposing
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      |        | git checkout parent                                                       |
+      |        | git checkout --quiet parent                                               |
       | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
-      |        | git checkout child                                                        |
+      |        | git checkout --quiet child                                                |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |

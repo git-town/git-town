@@ -16,13 +16,13 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git merge --no-edit --ff main      |
-      |         | git reset --soft main --           |
-      |         | git commit -m "already compressed" |
-      |         | git push --force-with-lease        |
-      |         | git checkout -b new                |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git merge --no-edit --ff main              |
+      |         | git reset --soft main --                   |
+      |         | git commit --quiet -m "already compressed" |
+      |         | git push --force-with-lease                |
+      |         | git checkout --quiet -b new                |
     And this lineage exists now
       """
       main
@@ -35,7 +35,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                 |
-      | new     | git checkout feature                                    |
+      | new     | git checkout --quiet feature                            |
       | feature | git reset --hard {{ sha-initial 'already compressed' }} |
       |         | git push --force-with-lease --force-if-includes         |
       |         | git branch -D new                                       |

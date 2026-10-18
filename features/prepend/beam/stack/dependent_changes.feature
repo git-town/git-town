@@ -21,7 +21,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       | commits to beam | down space enter | select commit 2 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
-      | old    | git checkout -b new main                     |
+      | old    | git checkout --quiet -b new main             |
       | new    | git cherry-pick {{ sha-initial 'commit 2' }} |
     And Git Town prints the error:
       """
@@ -48,7 +48,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
       | new    | GIT_EDITOR=true git cherry-pick --continue                                                              |
-      |        | git checkout old                                                                                        |
+      |        | git checkout --quiet old                                                                                |
       | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
     And Git Town prints the error:
       """
@@ -136,7 +136,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       | BRANCH | COMMAND                                         |
       | old    | GIT_EDITOR=true git rebase --continue           |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout new                                |
+      |        | git checkout --quiet new                        |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                                                 |
@@ -156,7 +156,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | new    | git checkout old                                |
+      | new    | git checkout --quiet old                        |
       | old    | git reset --hard {{ sha 'commit 3' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D new                               |
@@ -186,9 +186,9 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                          |
       | old    | git fetch --prune --tags                                                         |
-      |        | git checkout new                                                                 |
+      |        | git checkout --quiet new                                                         |
       | new    | git push -u origin new                                                           |
-      |        | git checkout old                                                                 |
+      |        | git checkout --quiet old                                                         |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
     And Git Town prints the error:
       """

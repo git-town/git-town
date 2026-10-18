@@ -17,11 +17,11 @@ Feature: sync while the previous branch is checked out in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                    |
-      | current | git fetch --prune --tags   |
-      |         | git reset --soft main --   |
-      |         | git commit -m "current 1"  |
-      |         | git push -u origin current |
+      | BRANCH  | COMMAND                           |
+      | current | git fetch --prune --tags          |
+      |         | git reset --soft main --          |
+      |         | git commit --quiet -m "current 1" |
+      |         | git push -u origin current        |
     And the previous Git branch is still "previous"
 
   Scenario: undo

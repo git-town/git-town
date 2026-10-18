@@ -10,10 +10,10 @@ Feature: prune a freshly created branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git branch -D feature    |
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git checkout --quiet main |
+      | main    | git branch -D feature     |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -24,6 +24,6 @@ Feature: prune a freshly created branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'initial commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

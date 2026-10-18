@@ -88,7 +88,7 @@ Feature: Gitea support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                         |
       | child  | git fetch --prune --tags                                        |
-      |        | git checkout parent                                             |
-      | parent | git checkout child                                              |
+      |        | git checkout --quiet parent                                     |
+      | parent | git checkout --quiet child                                      |
       |        | Finding proposal from child into parent ... none                |
       | child  | open https://gitea.com/git-town/git-town/compare/parent...child |

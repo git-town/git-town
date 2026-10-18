@@ -228,7 +228,7 @@ func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomai
 }
 
 func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
-	args := []string{"checkout", name.String()}
+	args := []string{"checkout", "--quiet", name.String()}
 	if merge {
 		args = append(args, "-m")
 	}
@@ -284,7 +284,7 @@ var (
 )
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
-	args := []string{"commit"}
+	args := []string{"commit", "--quiet"}
 	switch {
 	case useMessage.IsCustomMessage():
 		message := useMessage.GetCustomMessageOrPanic()
@@ -313,7 +313,7 @@ func (self *Commands) CommitMessage(querier subshelldomain.Querier, sha gitdomai
 }
 
 func (self *Commands) CommitStart(runner subshelldomain.Runner) error {
-	return runner.Run("git", "commit")
+	return runner.Run("git", "commit", "--quiet")
 }
 
 func (self *Commands) CommitsInBranch(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
@@ -384,7 +384,7 @@ func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
-	err := runner.Run("git", "checkout", "-b", name.String())
+	err := runner.Run("git", "checkout", "--quiet", "-b", name.String())
 	if err == nil {
 		self.CurrentBranchCache.Set(name)
 	}
@@ -395,7 +395,7 @@ func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranchWithParent(runner subshelldomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
-	args := []string{"checkout", "-b", name.String(), parent.String()}
+	args := []string{"checkout", "--quiet", "-b", name.String(), parent.String()}
 	if parent.IsRemoteBranchName() {
 		args = append(args, "--no-track")
 	}
@@ -820,7 +820,7 @@ func (self *Commands) ResetRemoteBranchToSHA(runner subshelldomain.Runner, branc
 }
 
 func (self *Commands) ResolveConflict(runner subshelldomain.Runner, file string, resolution gitdomain.ConflictResolution) error {
-	return runner.Run("git", "checkout", resolution.GitFlag(), file)
+	return runner.Run("git", "checkout", "--quiet", resolution.GitFlag(), file)
 }
 
 func (self *Commands) RevertCommit(runner subshelldomain.Runner, sha gitdomain.SHA) error {

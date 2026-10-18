@@ -16,11 +16,11 @@ Feature: delete the current feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git push origin :current |
-      |         | git checkout other       |
-      | other   | git branch -D current    |
+      | BRANCH  | COMMAND                    |
+      | current | git fetch --prune --tags   |
+      |         | git push origin :current   |
+      |         | git checkout --quiet other |
+      | other   | git branch -D current      |
     And this lineage exists now
       """
       main
@@ -40,6 +40,6 @@ Feature: delete the current feature branch
       | BRANCH | COMMAND                                       |
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

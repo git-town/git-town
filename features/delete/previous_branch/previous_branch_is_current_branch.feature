@@ -16,10 +16,10 @@ Feature: deleting a branch without a useful previous branch setting
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git branch -D current    |
+      | BRANCH  | COMMAND                   |
+      | current | git fetch --prune --tags  |
+      |         | git checkout --quiet main |
+      | main    | git branch -D current     |
     And this lineage exists now
       """
       main
@@ -39,6 +39,6 @@ Feature: deleting a branch without a useful previous branch setting
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'current commit' }} |
-      |        | git checkout current                          |
+      |        | git checkout --quiet current                  |
     And the initial branches and lineage exist now
     And the initial commits exist now

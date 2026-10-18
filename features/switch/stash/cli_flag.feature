@@ -15,16 +15,16 @@ Feature: enable stashing via CLI flag
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | local-1 | git add -A                  |
-      |         | git stash -m "Git Town WIP" |
-      |         | git checkout local-2        |
-      | local-2 | git stash pop               |
+      | BRANCH  | COMMAND                      |
+      | local-1 | git add -A                   |
+      |         | git stash -m "Git Town WIP"  |
+      |         | git checkout --quiet local-2 |
+      | local-2 | git stash pop                |
 
   Scenario: without open changes
     When I run "git-town switch --stash" and enter into the dialogs:
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | local-1 | git checkout local-2 |
+      | BRANCH  | COMMAND                      |
+      | local-1 | git checkout --quiet local-2 |

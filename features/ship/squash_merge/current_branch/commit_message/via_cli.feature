@@ -15,14 +15,14 @@ Feature: ship the current feature branch with a tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
-      | main    | git merge --squash --ff feature |
-      |         | git commit -m "feature done"    |
-      |         | git push                        |
-      |         | git push origin :feature        |
-      |         | git branch -D feature           |
+      | BRANCH  | COMMAND                              |
+      | feature | git fetch --prune --tags             |
+      |         | git checkout --quiet main            |
+      | main    | git merge --squash --ff feature      |
+      |         | git commit --quiet -m "feature done" |
+      |         | git push                             |
+      |         | git push origin :feature             |
+      |         | git branch -D feature                |
     And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
@@ -39,7 +39,7 @@ Feature: ship the current feature branch with a tracking branch
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

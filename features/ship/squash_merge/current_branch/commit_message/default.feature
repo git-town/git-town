@@ -16,11 +16,11 @@ Feature: must provide a commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
+      |         | git checkout --quiet main       |
       | main    | git merge --squash --ff feature |
-      |         | git commit                      |
+      |         | git commit --quiet              |
       |         | git reset --hard                |
-      |         | git checkout feature            |
+      |         | git checkout --quiet feature    |
     And Git Town prints the error:
       """
       aborted because merge exited with error

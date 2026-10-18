@@ -37,7 +37,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main --                |
-      |         | git commit -m "my first commit"         |
+      |         | git commit --quiet -m "my first commit" |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME        | FILE CONTENT |
@@ -61,11 +61,11 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     When the coworker resolves the conflict in "conflicting_file" with "my content 1 and coworker content 1"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                               |
-      | feature | git commit --no-edit                  |
-      |         | git reset --soft main --              |
-      |         | git commit -m "coworker first commit" |
-      |         | git push --force-with-lease           |
+      | BRANCH  | COMMAND                                       |
+      | feature | git commit --quiet --no-edit                  |
+      |         | git reset --soft main --                      |
+      |         | git commit --quiet -m "coworker first commit" |
+      |         | git push --force-with-lease                   |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME        | FILE CONTENT                        |
@@ -89,11 +89,11 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     When I resolve the conflict in "conflicting_file" with "my content 2 and coworker content 1"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | feature | git commit --no-edit            |
-      |         | git reset --soft main --        |
-      |         | git commit -m "my first commit" |
-      |         | git push --force-with-lease     |
+      | BRANCH  | COMMAND                                 |
+      | feature | git commit --quiet --no-edit            |
+      |         | git reset --soft main --                |
+      |         | git commit --quiet -m "my first commit" |
+      |         | git push --force-with-lease             |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME        | FILE CONTENT                        |
@@ -117,11 +117,11 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     When the coworker resolves the conflict in "conflicting_file" with "my content 2 and coworker content 2"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                               |
-      | feature | git commit --no-edit                  |
-      |         | git reset --soft main --              |
-      |         | git commit -m "coworker first commit" |
-      |         | git push --force-with-lease           |
+      | BRANCH  | COMMAND                                       |
+      | feature | git commit --quiet --no-edit                  |
+      |         | git reset --soft main --                      |
+      |         | git commit --quiet -m "coworker first commit" |
+      |         | git push --force-with-lease                   |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME        | FILE CONTENT                        |

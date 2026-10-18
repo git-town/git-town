@@ -18,7 +18,7 @@ Feature: don't sync tags while renaming branches
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --no-tags |
       |        | git branch --move old new   |
-      |        | git checkout new            |
+      |        | git checkout --quiet new    |
       | new    | git push -u origin new      |
       |        | git push origin :old        |
     And the initial tags exist now
@@ -29,7 +29,7 @@ Feature: don't sync tags while renaming branches
       | BRANCH | COMMAND                                   |
       | new    | git branch old {{ sha 'initial commit' }} |
       |        | git push -u origin old                    |
-      |        | git checkout old                          |
+      |        | git checkout --quiet old                  |
       | old    | git branch -D new                         |
       |        | git push origin :new                      |
     And the initial lineage exists now

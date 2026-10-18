@@ -59,9 +59,9 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git commit --no-edit |
-      |         | git push             |
+      | BRANCH  | COMMAND                      |
+      | feature | git commit --quiet --no-edit |
+      |         | git push                     |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                     |

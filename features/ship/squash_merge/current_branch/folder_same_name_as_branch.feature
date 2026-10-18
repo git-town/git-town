@@ -17,14 +17,14 @@ Feature: ship a branch that has the same name as a folder in the codebase
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                      |
-      | test   | git fetch --prune --tags     |
-      |        | git checkout main            |
-      | main   | git merge --squash --ff test |
-      |        | git commit -m testing        |
-      |        | git push                     |
-      |        | git push origin :test        |
-      |        | git branch -D test           |
+      | BRANCH | COMMAND                       |
+      | test   | git fetch --prune --tags      |
+      |        | git checkout --quiet main     |
+      | main   | git merge --squash --ff test  |
+      |        | git commit --quiet -m testing |
+      |        | git push                      |
+      |        | git push origin :test         |
+      |        | git branch -D test            |
     And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
@@ -42,7 +42,7 @@ Feature: ship a branch that has the same name as a folder in the codebase
       |        | git push                             |
       |        | git branch test {{ sha 'commit 1' }} |
       |        | git push -u origin test              |
-      |        | git checkout test                    |
+      |        | git checkout --quiet test            |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE          |

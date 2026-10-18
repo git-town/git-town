@@ -37,9 +37,9 @@ Feature: undo sync conflict does not pop pre-existing stash
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git commit --no-edit |
-      |         | git push             |
+      | BRANCH  | COMMAND                      |
+      | feature | git commit --quiet --no-edit |
+      |         | git push                     |
     And no merge is now in progress
     And all branches are now synchronized
     And these committed files exist now

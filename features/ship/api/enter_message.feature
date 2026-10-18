@@ -21,7 +21,7 @@ Feature: choosing the commit message when shipping via the forge API
       | BRANCH  | COMMAND                                                           |
       | feature | git fetch --prune --tags                                          |
       |         | Finding proposal from feature into main ... #1 (feature proposal) |
-      |         | git checkout main                                                 |
+      |         | git checkout --quiet main                                         |
       |         | GitHub API: merging PR #1 ... ok                                  |
       | main    | git push origin :feature                                          |
       |         | git branch -D feature                                             |
@@ -37,9 +37,9 @@ Feature: choosing the commit message when shipping via the forge API
       | BRANCH  | COMMAND                                                           |
       | feature | git fetch --prune --tags                                          |
       |         | Finding proposal from feature into main ... #1 (feature proposal) |
-      |         | git checkout main                                                 |
+      |         | git checkout --quiet main                                         |
       | main    | git merge --squash --ff feature                                   |
-      |         | git commit                                                        |
+      |         | git commit --quiet                                                |
       |         | git reset --hard HEAD~1                                           |
       |         | GitHub API: merging PR #1 ... ok                                  |
       |         | git push origin :feature                                          |

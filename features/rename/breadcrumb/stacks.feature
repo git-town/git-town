@@ -38,7 +38,7 @@ Feature: rename the current feature branch and update proposals
       |        | Finding proposal from beta into alpha ... #2 (beta proposal)  |
       |        | Finding proposal from gamma into beta ... #3 (gamma proposal) |
       |        | git branch --move beta new                                    |
-      |        | git checkout new                                              |
+      |        | git checkout --quiet new                                      |
       | new    | git push -u origin new                                        |
       |        | Updating target branch of proposal #3 to new ... ok           |
       |        | git push origin :beta                                         |
@@ -112,7 +112,7 @@ Feature: rename the current feature branch and update proposals
       | BRANCH | COMMAND                                                       |
       | new    | git branch beta {{ sha 'beta commit' }}                       |
       |        | git push -u origin beta                                       |
-      |        | git checkout beta                                             |
+      |        | git checkout --quiet beta                                     |
       | beta   | git branch -D new                                             |
       |        | Updating target branch of proposal #3 to beta ... ok          |
       |        | git push origin :new                                          |

@@ -21,13 +21,13 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
-      | feature | git checkout main                                 |
+      | feature | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
       |         | git merge --no-edit --ff origin/feature           |
       |         | git reset --soft main --                          |
-      |         | git commit -m "local feature commit 1"            |
+      |         | git commit --quiet -m "local feature commit 1"    |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | local main commit      |

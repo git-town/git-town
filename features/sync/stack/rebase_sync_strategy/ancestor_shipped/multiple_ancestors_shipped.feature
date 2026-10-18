@@ -36,13 +36,13 @@ Feature: shipped parent branches in a stacked change
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                                     |
       | feature-4 | git fetch --prune --tags                                                                    |
-      |           | git checkout main                                                                           |
+      |           | git checkout --quiet main                                                                   |
       | main      | git -c rebase.updateRefs=false rebase origin/main                                           |
-      |           | git checkout feature-3                                                                      |
+      |           | git checkout --quiet feature-3                                                              |
       | feature-3 | git pull                                                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2                                 |
       |           | git push --force-with-lease                                                                 |
-      |           | git checkout feature-4                                                                      |
+      |           | git checkout --quiet feature-4                                                              |
       | feature-4 | git pull                                                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto feature-3 feature-2                            |
       |           | git push --force-with-lease                                                                 |
@@ -77,15 +77,15 @@ Feature: shipped parent branches in a stacked change
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                   |
-      | feature-4 | git checkout feature-3                                    |
+      | feature-4 | git checkout --quiet feature-3                            |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}             |
       |           | git push --force-with-lease --force-if-includes           |
-      |           | git checkout feature-4                                    |
+      |           | git checkout --quiet feature-4                            |
       | feature-4 | git reset --hard {{ sha 'feature-4 commit' }}             |
       |           | git push --force-with-lease --force-if-includes           |
-      |           | git checkout main                                         |
+      |           | git checkout --quiet main                                 |
       | main      | git reset --hard {{ sha 'initial commit' }}               |
       |           | git branch feature-1 {{ sha-initial 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-initial 'feature-2 commit' }} |
-      |           | git checkout feature-4                                    |
+      |           | git checkout --quiet feature-4                            |
     And the initial branches and lineage exist now

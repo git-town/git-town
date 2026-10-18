@@ -18,10 +18,10 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
-      |         | git checkout main                                                            |
+      |         | git checkout --quiet main                                                    |
       | main    | git -c rebase.updateRefs=false rebase origin/main                            |
       |         | git push                                                                     |
-      |         | git checkout feature                                                         |
+      |         | git checkout --quiet feature                                                 |
       | feature | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And Git Town prints the error:

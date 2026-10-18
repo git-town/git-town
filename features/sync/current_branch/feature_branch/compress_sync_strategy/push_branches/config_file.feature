@@ -29,13 +29,13 @@ Feature: disable pushing through the config file
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
       |         | git merge --no-edit --ff origin/feature           |
       |         | git reset --soft main --                          |
-      |         | git commit -m "local feature commit 1"            |
+      |         | git commit --quiet -m "local feature commit 1"    |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
@@ -48,8 +48,8 @@ Feature: disable pushing through the config file
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                     |
       | feature | git reset --hard {{ sha-initial 'local feature commit 2' }} |
-      |         | git checkout main                                           |
+      |         | git checkout --quiet main                                   |
       | main    | git reset --hard {{ sha 'local main commit' }}              |
-      |         | git checkout feature                                        |
+      |         | git checkout --quiet feature                                |
     And the initial branches and lineage exist now
     And the initial commits exist now

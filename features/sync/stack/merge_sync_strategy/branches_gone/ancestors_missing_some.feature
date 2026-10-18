@@ -24,11 +24,11 @@ Feature: stacked changes where an ancestor branch isn't local
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
+      |        | git checkout --quiet alpha            |
       | alpha  | git merge --no-edit --ff origin/main  |
       |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
-      |        | git checkout gamma                    |
+      |        | git checkout --quiet gamma            |
       | gamma  | git merge --no-edit --ff origin/beta  |
       |        | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/gamma |
@@ -57,10 +57,10 @@ Feature: stacked changes where an ancestor branch isn't local
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                    |
-      | gamma  | git checkout alpha                                                                         |
+      | gamma  | git checkout --quiet alpha                                                                 |
       | alpha  | git reset --hard {{ sha-initial 'local alpha commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin alpha commit' }}:alpha |
-      |        | git checkout gamma                                                                         |
+      |        | git checkout --quiet gamma                                                                 |
       | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
     And the initial lineage exists now

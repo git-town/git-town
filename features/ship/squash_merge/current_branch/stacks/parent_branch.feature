@@ -16,14 +16,14 @@ Feature: ship a parent branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                        |
-      | parent | git fetch --prune --tags       |
-      |        | git checkout main              |
-      | main   | git merge --squash --ff parent |
-      |        | git commit -m "parent done"    |
-      |        | git push                       |
-      |        | git push origin :parent        |
-      |        | git branch -D parent           |
+      | BRANCH | COMMAND                             |
+      | parent | git fetch --prune --tags            |
+      |        | git checkout --quiet main           |
+      | main   | git merge --squash --ff parent      |
+      |        | git commit --quiet -m "parent done" |
+      |        | git push                            |
+      |        | git push origin :parent             |
+      |        | git branch -D parent                |
     And Git Town prints:
       """
       branch child is now a child of main
@@ -46,7 +46,7 @@ Feature: ship a parent branch
       |        | git push                                    |
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
-      |        | git checkout parent                         |
+      |        | git checkout --quiet parent                 |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

@@ -15,10 +15,10 @@ Feature: push using hooks
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git checkout -b new main |
-      | new    | git push -u origin new   |
+      | BRANCH | COMMAND                          |
+      | old    | git fetch --prune --tags         |
+      |        | git checkout --quiet -b new main |
+      | new    | git push -u origin new           |
     And this lineage exists now
       """
       main
@@ -30,9 +30,9 @@ Feature: push using hooks
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | new    | git checkout old     |
-      | old    | git branch -D new    |
-      |        | git push origin :new |
+      | BRANCH | COMMAND                  |
+      | new    | git checkout --quiet old |
+      | old    | git branch -D new        |
+      |        | git push origin :new     |
     And the initial lineage exists now
     And the initial commits exist now
