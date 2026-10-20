@@ -24,6 +24,29 @@ func TestWebConnector(t *testing.T) {
 		BrowserExecutable: None[browserdomain.BrowserExecutable](),
 	}
 
+	t.Run("HTTPS remote", func(t *testing.T) {
+		t.Parallel()
+		url := giturl.Parse("https://kevingoslar@dev.azure.com/kevingoslar/tikibase/_git/tikibase").GetOrPanic()
+		connector := azuredevops.WebConnector{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
+				Hostname:     url.Host,
+				Organization: url.Org,
+				Repository:   url.Repo,
+			},
+			BrowserExecutable: None[browserdomain.BrowserExecutable](),
+		}
+		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
+			Branch:         "feature",
+			FrontendRunner: nil,
+			MainBranch:     "main",
+			ParentBranch:   "parent",
+			ProposalBody:   gitdomain.NewProposalBodyOpt("body"),
+			ProposalTitle:  Some(gitdomain.ProposalTitle("title")),
+		})
+		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=feature&targetRef=parent"
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
