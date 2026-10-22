@@ -3,18 +3,10 @@
 
   "ignore-files": ["dist/", "node_modules/", "vendor/", ".rumdl_cache/"],
 
-  "global-lints": [],
-  "global-fixes": [
-    {
-      "name": "generate opcodes",
-      "command": "tools/generate_opcodes_all.sh"
-    }
-  ],
-
   "stacks": {
     "go": {
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "optioncompare in tests",
             "command": "make --no-print-directory fix-optioncompare-in-tests"
@@ -34,17 +26,21 @@
           {
             "name": "sync RTA version",
             "command": "go run tools/sync_rta_version/sync_rta_version.go"
-          }
-        ]
-      }
-    },
-    "json": {
-      "fix": {
-        "add": [
+          },
           {
             "name": "generate JSON schema",
             "command": "make --no-print-directory generate-json-schema"
           },
+          {
+            "name": "generate opcodes",
+            "command": "tools/generate_opcodes_all.sh"
+          }
+        ]
+      }
+    },
+    "markdown": {
+      "fix": {
+        "before": [
           {
             "name": "format changelog",
             "command": "dprint fmt --config dprint-changelog.json"
@@ -55,7 +51,6 @@
   },
 
   "applications": {
-    "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] },
-    "prettier": { "enabled": false }
+    "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] }
   }
 }
