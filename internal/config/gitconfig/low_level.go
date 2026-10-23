@@ -99,8 +99,7 @@ func RemoveConfigValue(runner subshelldomain.Runner, scope configdomain.ConfigSc
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func RemoveLocalGitConfiguration(runner subshelldomain.Runner, localSnapshot configdomain.SingleSnapshot) error {
 	if err := runner.Run("git", "config", "--remove-section", "git-town"); err != nil {
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			if exitErr.ExitCode() == 128 {
 				// Git returns exit code 128 when trying to delete a non-existing config section.
 				// This is not an error condition in this workflow so we can ignore it here.
