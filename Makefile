@@ -9,12 +9,12 @@ GO_TEST_ARGS = LANG=C GOGC=off
 RTA          = tools/rta@$(RTA_VERSION)
 TRIDENT      = tools/trident@$(TRIDENT_VERSION)
 ACTIONLINT   = $(RTA) actionlint
+BIOME        = $(RTA) biome
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
 DEADCODE     = $(RTA) deadcode
 DEPTH        = $(RTA) depth
-DPRINT       = $(RTA) dprint
 EXHAUSTRUCT  = $(RTA) exhaustruct
 GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
@@ -83,9 +83,7 @@ doc: install node_modules ${RTA}  # tests the documentation
 
 fix: ${TRIDENT}  # runs all linters and auto-fixes
 	$(TRIDENT) fix --show=names --scope=all
-	$(DPRINT) fmt --config dprint-changelog.json
 	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
-# 	make --no-print-directory ghokin
 # 	$(CUCUMBERSORT) format
 
 fix-optioncompare-in-tests:
