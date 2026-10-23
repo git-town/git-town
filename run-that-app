@@ -17,7 +17,7 @@ govulncheck 1.1.4
 ireturn 0.4.1
 keep-sorted 0.10.0
 lefthook 2.2.2
-mdbook 0.5.4
+mdbook 0.4.52
 mdbook-linkcheck 0.7.7
 node 26.12.1
 npm 26.12.1
