@@ -24,7 +24,8 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-You can configure the browser which Git Town opens using the
+You can configure the browser
+which Git Town opens using the
 [BROWSER environment variable](../preferences/browser.md).
 
 ## Options
