@@ -254,8 +254,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	exitCode := 0
 	if err != nil {
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
