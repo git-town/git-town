@@ -160,7 +160,7 @@ function processCommandSummary(code) {
         }</div>`
       })
       .join("")
-  }</pre></code>`
+  }</code></pre>`
 }
 
 /**
@@ -217,5 +217,5 @@ function processCodeWrap(code, indent) {
         }</div>`
       })
       .join("")
-  }</pre></code>`
+  }</code></pre>`
 }
