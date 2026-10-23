@@ -165,8 +165,7 @@ Start:
 	}
 	if err := performSwitch(branchToCheckout, args.cliConfig.Stash.GetOr(false), data.hasOpenChanges, args.merge, repo); err != nil {
 		exitCode := 1
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			exitCode = exitErr.ExitCode()
 		}
 		os.Exit(exitCode)

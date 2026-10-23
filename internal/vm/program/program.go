@@ -13,7 +13,7 @@ import (
 )
 
 // Program is a mutable collection of Opcodes.
-type Program []shared.Opcode
+type Program []shared.Opcode //nolint: recvcheck // MarshalJSON and UnmarshalJSON require different receiver types
 
 // Append adds the given opcode to the end of this program.
 func (self *Program) Add(opcode ...shared.Opcode) {
