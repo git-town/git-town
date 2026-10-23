@@ -29,8 +29,8 @@ func main() {
 		}
 		feature := ReadGherkinFile(path)
 		scenarios := FindScenarios(feature, dialogStepRegex)
-		for _, error := range AnalyzeScenarios(path, scenarios) {
-			fmt.Println(error)
+		for _, err2 := range AnalyzeScenarios(path, scenarios) {
+			fmt.Println(err2)
 			errors += 1
 		}
 		return nil
