@@ -9,6 +9,7 @@ linters:
     - dupl # too many false positives
     - err113 # this leads to lots of unnecessary allocations and boilerplate
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
+    - exhaustruct_v5 # we call this separately from golangci-lint via "make lint-smoke"
     - forbidigo # Git Town prints a lot to the CLI
     - forcetypeassert
     - funlen # we keep track of this via code reviews
@@ -102,7 +103,7 @@ linters:
         path: internal/gohacks/slice/first_element_or.go
       - linters:
           - predeclared
-        text: package name print has same name as predeclared identifier
+        text: 'print: shadows predeclared identifier'
       - linters:
           - revive
         text: receiver name should be a reflection of its identity
