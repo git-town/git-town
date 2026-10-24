@@ -128,5 +128,20 @@
 
   "applications": {
     "keep-sorted": { "enabled": true, "ignore-files": ["Makefile"] }
-  }
+  },
+
+  "tests": [
+    {
+      "name": "documentation",
+      "command": "make --no-print-directory doc"
+    },
+    {
+      "name": "unit",
+      "command": "make --no-print-directory unit"
+    },
+    {
+      "name": "cuke",
+      "command": "make --no-print-directory cuke"
+    }
+  ]
 }

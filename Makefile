@@ -198,11 +198,7 @@ stats-release:  # displays statistics about the changes since the last release
 
 .PHONY: test
 test: install node_modules ${RTA}  # runs all the tests
-	@$(CONC) --show=names \
-		"make --no-print-directory cuke" \
-		"make --no-print-directory doc" \
-		"make --no-print-directory lint" \
-		"make --no-print-directory unit"
+	@$(TRIDENT) pitstop --tests="documentation,unit,cuke"
 
 test-go: ${RTA}  # smoke tests while working on the Go code
 	@$(CONC) --show=names \
