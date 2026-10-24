@@ -99,7 +99,7 @@ help:  # prints all available targets
 install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
-lint: node_modules ${RTA}  # lints the main codebase concurrently
+lint: node_modules ${TRIDENT} ${RTA}  # lints the main codebase concurrently
 	$(GOLANGCILINT) cache clean
 	$(TRIDENT) lint --show=names --scope=all
 
