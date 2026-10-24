@@ -31,5 +31,4 @@ shellcheck system@* 0.11.0
 shfmt 3.14.1
 staticcheck 2026.2.2
 taplo 0.10.0
-text-runner 7.5.1
 yamlfmt 0.21.0
