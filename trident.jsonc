@@ -34,6 +34,82 @@
           {
             "name": "generate opcodes",
             "command": "tools/generate_opcodes_all.sh"
+          },
+          {
+            "name": "shfmt",
+            "command": "tools/generate_opcodes_all.sh"
+          }
+        ]
+      },
+      "lint": {
+        "add": [
+          {
+            "name": "lint-smoke",
+            "command": "make --no-print-directory lint-smoke"
+          },
+          {
+            "name": "alphavet",
+            "command": "make --no-print-directory alphavet"
+          },
+          {
+            "name": "deadcode",
+            "command": "make --no-print-directory deadcode"
+          },
+          {
+            "name": "staticcheck",
+            "command": "tools/rta --from-source staticcheck ./..."
+          },
+          {
+            "name": "cached connectors",
+            "command": "make --no-print-directory lint-cached-connectors"
+          },
+          {
+            "name": "collector addf",
+            "command": "make --no-print-directory lint-collector-addf"
+          },
+          {
+            "name": "iterate map",
+            "command": "make --no-print-directory lint-iterate-map"
+          },
+          {
+            "name": "messages sorted",
+            "command": "make --no-print-directory lint-messages-sorted"
+          },
+          {
+            "name": "messy output",
+            "command": "make --no-print-directory lint-messy-output"
+          },
+          {
+            "name": "optioncompare",
+            "command": "make --no-print-directory lint-optioncompare"
+          },
+          {
+            "name": "print config",
+            "command": "make --no-print-directory lint-print-config"
+          },
+          {
+            "name": "structs sorted",
+            "command": "make --no-print-directory lint-structs-sorted"
+          },
+          {
+            "name": "tests sorted",
+            "command": "make --no-print-directory lint-tests-sorted"
+          },
+          {
+            "name": "use equal",
+            "command": "make --no-print-directory lint-use-equal"
+          },
+          {
+            "name": "lint steps",
+            "command": "make --no-print-directory lint-steps"
+          },
+          {
+            "name": "no files with dashes",
+            "command": "tools/ensure_no_files_with_dashes.sh"
+          },
+          {
+            "name": "configfile",
+            "command": "make --no-print-directory lint-configfile"
           }
         ]
       }

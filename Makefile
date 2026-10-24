@@ -83,8 +83,6 @@ doc: install node_modules ${RTA}  # tests the documentation
 
 fix: ${TRIDENT}  # runs all linters and auto-fixes
 	$(TRIDENT) fix --show=names --scope=all
-	$(SHFMT) -f . | grep -v node_modules | grep -v '^vendor/' | xargs $(SHFMT) --write
-# 	$(CUCUMBERSORT) format
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...
@@ -102,31 +100,8 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules ${RTA}  # lints the main codebase concurrently
-	@$(CONC) --show=names \
-		"make --no-print-directory lint-smoke" \
-		"make --no-print-directory alphavet" \
-		"make --no-print-directory deadcode" \
-		"make --no-print-directory lint-cached-connectors" \
-		"make --no-print-directory lint-collector-addf" \
-		"make --no-print-directory lint-iterate-map" \
-		"make --no-print-directory lint-messages-sorted" \
-		"make --no-print-directory lint-messy-output" \
-		"make --no-print-directory lint-optioncompare" \
-		"make --no-print-directory lint-print-config" \
-		"make --no-print-directory lint-structs-sorted" \
-		"make --no-print-directory lint-tests-sorted" \
-		"make --no-print-directory lint-use-equal" \
-		"git diff --check" \
-		"cd tools/lint_steps && go build && ./lint_steps" \
-		"$(ACTIONLINT) " \
-		"$(STATICCHECK) ./..." \
-		"tools/ensure_no_files_with_dashes.sh" \
-		"$(RUMDL) check" \
-		"$(SHFMT) -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs $(SHELLCHECK)" \
-		"$(GOLANGCILINT) cache clean && $(GOLANGCILINT) run" \
-		"$(GHERKINLINT)" \
-		"$(CUCUMBERSORT) check" \
-		"make --no-print-directory lint-configfile"
+	$(GOLANGCILINT) cache clean
+	$(TRIDENT) lint --show=names --scope=all
 
 lint-all: lint ${RTA}  # runs all linters
 	(cd website && make test)
@@ -194,6 +169,9 @@ lint-optioncompare:
 lint-smoke: ${RTA}  # runs only the essential linters
 	@$(EXHAUSTRUCT) -test=false -explicit "-enforce-rx=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 # @$(RTA) ireturn --reject="github.com/git-town/git-town/v24/pkg/prelude.Option" github.com/git-town/git-town/...
+
+lint-steps:
+	@(cd tools/lint_steps && go build && ./lint_steps)
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
