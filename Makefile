@@ -198,7 +198,7 @@ stats-release:  # displays statistics about the changes since the last release
 
 .PHONY: test
 test: install node_modules ${RTA}  # runs all the tests
-	@$(TRIDENT) pitstop --tests="documentation,unit,cuke"
+	@$(TRIDENT) pitstop --test="documentation,unit,cuke"
 
 test-go: ${RTA}  # smoke tests while working on the Go code
 	@$(CONC) --show=names \
