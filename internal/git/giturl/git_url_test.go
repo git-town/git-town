@@ -40,6 +40,10 @@ func TestParse(t *testing.T) {
 		"ssh://git@git.example.com:4022/a/b.git":               {User: Some("git"), Host: "git.example.com", Org: "a", Repo: "b"},
 		"ssh://git@git.example.com:4022/a/b":                   {User: Some("git"), Host: "git.example.com", Org: "a", Repo: "b"},
 		"git@ssh.dev.azure.com:v3/project/org/repo":            {User: Some("git"), Host: "ssh.dev.azure.com", Org: "project/org", Repo: "repo"},
+		"https://org@dev.azure.com/org/project/_git/repo.git":  {User: Some("org"), Host: "dev.azure.com", Org: "org/project", Repo: "repo"},
+		"https://org@dev.azure.com/org/project/_git/repo":      {User: Some("org"), Host: "dev.azure.com", Org: "org/project", Repo: "repo"},
+		"https://dev.azure.com/org/project/_git/repo.git":      {User: None[string](), Host: "dev.azure.com", Org: "org/project", Repo: "repo"},
+		"https://dev.azure.com/org/project/_git/repo":          {User: None[string](), Host: "dev.azure.com", Org: "org/project", Repo: "repo"},
 	}
 	for give, want := range tests {
 		have, has := giturl.Parse(give).Get()

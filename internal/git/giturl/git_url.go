@@ -3,6 +3,7 @@ package giturl
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 	"sync"
 
@@ -104,9 +105,14 @@ func finalize(userMatch, host, path string) Option[Parts] {
 	var org string
 	var repo string
 
-	// Special case for Azure DevOps URLs: remove "v3" prefix from path
+	// Special case for Azure DevOps SSH URLs: remove "v3" prefix from path
 	if host == "ssh.dev.azure.com" && len(parts) >= 3 && parts[0] == "v3" {
 		parts = parts[1:] // remove the "v3" prefix
+	}
+
+	// Special case for Azure DevOps HTTPS URLs: remove the "_git" element in front of the repo name
+	if host == "dev.azure.com" && len(parts) >= 3 && parts[len(parts)-2] == "_git" {
+		parts = slices.Delete(parts, len(parts)-2, len(parts)-1)
 	}
 
 	org = strings.Join(parts[:len(parts)-1], "/") // all but the last part are org, last part is repo
