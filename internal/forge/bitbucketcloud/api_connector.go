@@ -158,16 +158,22 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 
 var _ forgedomain.ProposalMerger = apiConnector // type check
 
-func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
-	if number <= 0 {
+func (self APIConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, message Option[gitdomain.CommitMessage]) error {
+	if proposalData.Number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
+	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+proposalData.Number.String()))
+	// When no commit message is given, use the proposal title and number
+	// as the squash commit message.
+	commitMessage := message.GetOrZero().String()
+	if commitMessage == "" {
+		commitMessage = DefaultMergeCommitTitle(proposalData)
+	}
 	options := &bitbucket.PullRequestsOptions{
-		ID:       number.String(),
+		ID:       proposalData.Number.String(),
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
-		Message:  message.GetOrZero().String(),
+		Message:  commitMessage,
 	}
 	_, err := self.client.Value.Repositories.PullRequests.Merge(options)
 	self.log.Finished(err)

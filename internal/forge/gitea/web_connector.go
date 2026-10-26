@@ -34,7 +34,21 @@ func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) err
 }
 
 func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+	return DefaultProposalMessage(data)
+}
+
+// DefaultMergeCommitTitle provides the title of the squash commit
+// created when merging the given proposal.
+// It mimics the default commit title used when squash-merging via the Gitea UI.
+func DefaultMergeCommitTitle(data forgedomain.ProposalData) string {
+	if data.Title.String() == "" {
+		return ""
+	}
+	return fmt.Sprintf("%s (#%d)", data.Title, data.Number)
+}
+
+func DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(data, DefaultMergeCommitTitle(data))
 }
 
 func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {

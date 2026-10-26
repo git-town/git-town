@@ -66,8 +66,17 @@ func (self WebConnector) projectPath() string {
 	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
 }
 
+// DefaultMergeCommitTitle provides the title of the squash commit
+// created when merging the given proposal.
+func DefaultMergeCommitTitle(data forgedomain.ProposalData) string {
+	if data.Title.String() == "" {
+		return ""
+	}
+	return fmt.Sprintf("%s (!%d)", data.Title, data.Number)
+}
+
 func DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
+	return forgedomain.CommitBody(data, DefaultMergeCommitTitle(data))
 }
 
 func ProposalReference(data forgedomain.ProposalData) string {

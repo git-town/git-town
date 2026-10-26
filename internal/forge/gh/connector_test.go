@@ -21,7 +21,11 @@ func TestConnectorSquashMergeProposal(t *testing.T) {
 		t.Parallel()
 		runner := &recordingRunner{}
 		connector := gh.Connector{Frontend: runner}
-		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), Some(gitdomain.CommitMessage("my title\n\nmy body")))
+		proposalData := forgedomain.ProposalData{
+			Number: forgedomain.ProposalNumber(1),
+			Title:  gitdomain.ProposalTitle("proposal title"),
+		}
+		err := connector.SquashMergeProposal(proposalData, Some(gitdomain.CommitMessage("my title\n\nmy body")))
 		must.NoError(t, err)
 		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--subject=my title", "--body=my body", "1"}}, runner.calls)
 	})
@@ -30,18 +34,26 @@ func TestConnectorSquashMergeProposal(t *testing.T) {
 		t.Parallel()
 		runner := &recordingRunner{}
 		connector := gh.Connector{Frontend: runner}
-		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), Some(gitdomain.CommitMessage("my title")))
+		proposalData := forgedomain.ProposalData{
+			Number: forgedomain.ProposalNumber(1),
+			Title:  gitdomain.ProposalTitle("proposal title"),
+		}
+		err := connector.SquashMergeProposal(proposalData, Some(gitdomain.CommitMessage("my title")))
 		must.NoError(t, err)
 		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--subject=my title", "1"}}, runner.calls)
 	})
 
-	t.Run("without a commit message lets the forge choose it", func(t *testing.T) {
+	t.Run("without a commit message uses the proposal title and number as the subject", func(t *testing.T) {
 		t.Parallel()
 		runner := &recordingRunner{}
 		connector := gh.Connector{Frontend: runner}
-		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), None[gitdomain.CommitMessage]())
+		proposalData := forgedomain.ProposalData{
+			Number: forgedomain.ProposalNumber(1),
+			Title:  gitdomain.ProposalTitle("proposal title"),
+		}
+		err := connector.SquashMergeProposal(proposalData, None[gitdomain.CommitMessage]())
 		must.NoError(t, err)
-		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "1"}}, runner.calls)
+		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "--subject=proposal title (#1)", "1"}}, runner.calls)
 	})
 }
 

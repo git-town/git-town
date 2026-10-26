@@ -78,11 +78,11 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 
 var _ forgedomain.ProposalMerger = &mockAPIConnector // type check
 
-func (self *MockConnector) SquashMergeProposal(number forgedomain.ProposalNumber, _ Option[gitdomain.CommitMessage]) error {
-	self.cache.Clear(number)
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
-	if _, hasProposal := self.Proposals.FindByID(number).Get(); !hasProposal {
-		err := fmt.Errorf("proposal with id %d not found", number)
+func (self *MockConnector) SquashMergeProposal(proposalData forgedomain.ProposalData, _ Option[gitdomain.CommitMessage]) error {
+	self.cache.Clear(proposalData.Number)
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+proposalData.Number.String()))
+	if _, hasProposal := self.Proposals.FindByID(proposalData.Number).Get(); !hasProposal {
+		err := fmt.Errorf("proposal with id %d not found", proposalData.Number)
 		self.log.Finished(err)
 		return err
 	}

@@ -262,3 +262,27 @@ func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdo
 	}
 	return proposal
 }
+
+// ProposalCommitMessage provides the default commit message for shipping a branch
+// that has a proposal, mimicking the message the forge would use when
+// squash-merging the proposal via its API: the proposal title and number as
+// the subject and the proposal body as the body.
+func ProposalCommitMessage(sharedData sharedShipData) Option[gitdomain.CommitMessage] {
+	if sharedData.config.NormalConfig.Offline.IsOffline() {
+		return None[gitdomain.CommitMessage]()
+	}
+	connector, hasConnector := sharedData.connector.Get()
+	if !hasConnector {
+		return None[gitdomain.CommitMessage]()
+	}
+	proposalOpt := FindProposal(sharedData.connector, sharedData.branchToShip, Some(sharedData.targetBranchName))
+	proposal, hasProposal := proposalOpt.Get()
+	if !hasProposal {
+		return None[gitdomain.CommitMessage]()
+	}
+	proposalData := proposal.Data.Data()
+	if proposalData.Title.String() == "" {
+		return None[gitdomain.CommitMessage]()
+	}
+	return Some(gitdomain.CommitMessage(connector.DefaultProposalMessage(proposalData)))
+}

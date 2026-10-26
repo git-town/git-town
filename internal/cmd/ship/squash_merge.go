@@ -35,7 +35,19 @@ func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepo
 	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
-	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
+	var commitMessagePrefix Option[string]
+	if commitMessage.IsNone() {
+		if proposalMessage, hasProposalMessage := ProposalCommitMessage(sharedData).Get(); hasProposalMessage {
+			if sharedData.config.NormalConfig.ShipEnterMessage.ShouldEnterMessage() {
+				// show the proposal's default message as context
+				// while the user enters the commit message
+				commitMessagePrefix = Some(proposalMessage.String() + "\n\n")
+			} else {
+				commitMessage = Some(proposalMessage)
+			}
+		}
+	}
+	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchToShip, CommitMessage: commitMessage, CommitMessagePrefix: commitMessagePrefix, Parent: localTargetBranch})
 	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		if trackingBranch, hasTrackingBranch := sharedData.targetBranch.RemoteName.Get(); hasTrackingBranch {
 			prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName, TrackingBranch: trackingBranch})

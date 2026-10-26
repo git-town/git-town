@@ -63,10 +63,10 @@ type ProposalFinder interface {
 // ProposalMerger describes methods that connectors need to implement
 // to enable Git Town to merge for proposals at the active forge.
 type ProposalMerger interface {
-	// Merges the proposal with the given number.
+	// Merges the given proposal.
 	// When a commit message is given, it is used as the squash commit message;
-	// otherwise the forge determines the commit message.
-	SquashMergeProposal(number ProposalNumber, message Option[gitdomain.CommitMessage]) error
+	// otherwise the squash commit title contains the proposal title and number.
+	SquashMergeProposal(proposalData ProposalData, message Option[gitdomain.CommitMessage]) error
 }
 
 // ProposalSearcher describes methods that connectors need to implement
