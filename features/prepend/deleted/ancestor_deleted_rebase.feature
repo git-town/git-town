@@ -23,7 +23,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
-      |          | git checkout -b new main                                   |
+      |          | git checkout --quiet -b new main                           |
     And Git Town prints:
       """
       deleted branch branch-1
@@ -48,6 +48,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | new      | git branch branch-1 {{ sha 'commit 1' }} |
-      |          | git checkout branch-2                    |
+      |          | git checkout --quiet branch-2            |
       | branch-2 | git branch -D new                        |
     And the initial branches and lineage exist now

@@ -14,13 +14,9 @@ Feature: prepend a branch in Spanish
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git fetch --prune --tags    |
-      |        | git checkout -b parent main |
-    And Git Town prints:
-      """
-      Cambiado a nueva rama 'parent'
-      """
+      | BRANCH | COMMAND                             |
+      | old    | git fetch --prune --tags            |
+      |        | git checkout --quiet -b parent main |
     And this lineage exists now
       """
       main
@@ -33,9 +29,9 @@ Feature: prepend a branch in Spanish
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                  |
+      | parent | git checkout --quiet old |
+      | old    | git branch -D parent     |
     And Git Town prints:
       """
       Eliminada la rama parent

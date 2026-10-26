@@ -14,7 +14,7 @@ Feature: skip and park a perennial branch with conflicts
     And Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | main   | git fetch --prune --tags                        |
-      |        | git checkout qa                                 |
+      |        | git checkout --quiet qa                         |
       | qa     | git -c rebase.updateRefs=false rebase origin/qa |
     And Git Town prints the error:
       """

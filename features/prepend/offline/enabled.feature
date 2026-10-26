@@ -14,8 +14,8 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git checkout -b new main |
+      | BRANCH | COMMAND                          |
+      | old    | git checkout --quiet -b new main |
     And this lineage exists now
       """
       main
@@ -27,8 +27,8 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git checkout old  |
-      | old    | git branch -D new |
+      | BRANCH | COMMAND                  |
+      | new    | git checkout --quiet old |
+      | old    | git branch -D new        |
     And the initial lineage exists now
     And the initial commits exist now

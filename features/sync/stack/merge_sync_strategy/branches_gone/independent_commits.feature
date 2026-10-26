@@ -21,14 +21,14 @@ Feature: stacked changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
-      |        | git checkout parent                               |
+      |        | git checkout --quiet parent                       |
       | parent | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parent            |
       |        | git push                                          |
-      |        | git checkout child                                |
+      |        | git checkout --quiet child                        |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
@@ -52,7 +52,7 @@ Feature: stacked changes
       | BRANCH | COMMAND                                                                                      |
       | child  | git reset --hard {{ sha-initial 'local child commit' }}                                      |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                          |
+      |        | git checkout --quiet parent                                                                  |
       | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                           |
+      |        | git checkout --quiet child                                                                   |

@@ -16,9 +16,9 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                       |
       | prototype | git fetch --prune --tags                                                      |
-      |           | git checkout parent                                                           |
+      |           | git checkout --quiet parent                                                   |
       | parent    | git push -u origin parent                                                     |
-      |           | git checkout prototype                                                        |
+      |           | git checkout --quiet prototype                                                |
       | prototype | git push -u origin prototype                                                  |
       |           | Finding proposal from prototype into parent ... none                          |
       |           | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |

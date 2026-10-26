@@ -22,9 +22,9 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                   |
       | branch-2 | git fetch --prune --tags                                                  |
-      |          | git checkout main                                                         |
+      |          | git checkout --quiet main                                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main                         |
-      |          | git checkout branch-2                                                     |
+      |          | git checkout --quiet branch-2                                             |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }} |
     And Git Town prints the error:
       """
@@ -72,7 +72,7 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git rebase --abort                       |
-      |          | git checkout main                        |
+      |          | git checkout --quiet main                |
       | main     | git reset --hard {{ sha 'main commit' }} |
-      |          | git checkout branch-2                    |
+      |          | git checkout --quiet branch-2            |
     And the initial branches and lineage exist now

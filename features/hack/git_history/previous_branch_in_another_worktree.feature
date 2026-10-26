@@ -12,16 +12,16 @@ Feature: previous branch is checked out in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout main        |
-      | main    | git checkout -b new      |
+      | BRANCH  | COMMAND                     |
+      | current | git fetch --prune --tags    |
+      |         | git checkout --quiet main   |
+      | main    | git checkout --quiet -b new |
     And the previous Git branch is now "current"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | new     | git checkout current |
-      | current | git branch -D new    |
+      | BRANCH  | COMMAND                      |
+      | new     | git checkout --quiet current |
+      | current | git branch -D new            |
     And there is now no previous Git branch

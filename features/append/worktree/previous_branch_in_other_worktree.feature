@@ -12,17 +12,17 @@ Feature: append a branch when the previous branch is active in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git fetch --prune --tags |
-      |         | git checkout -b new      |
+      | BRANCH  | COMMAND                     |
+      | current | git fetch --prune --tags    |
+      |         | git checkout --quiet -b new |
     And the previous Git branch is now "current"
     And no commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | new     | git checkout current |
-      | current | git branch -D new    |
+      | BRANCH  | COMMAND                      |
+      | new     | git checkout --quiet current |
+      | current | git branch -D new            |
     And the initial branches and lineage exist now
     And there is now no previous Git branch

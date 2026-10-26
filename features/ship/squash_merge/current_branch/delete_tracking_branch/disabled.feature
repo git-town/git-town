@@ -16,13 +16,13 @@ Feature: ship-delete-tracking-branch disabled
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
-      | main    | git merge --squash --ff feature |
-      |         | git commit -m "feature done"    |
-      |         | git push                        |
-      |         | git branch -D feature           |
+      | BRANCH  | COMMAND                              |
+      | feature | git fetch --prune --tags             |
+      |         | git checkout --quiet main            |
+      | main    | git merge --squash --ff feature      |
+      |         | git commit --quiet -m "feature done" |
+      |         | git push                             |
+      |         | git branch -D feature                |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -38,7 +38,7 @@ Feature: ship-delete-tracking-branch disabled
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

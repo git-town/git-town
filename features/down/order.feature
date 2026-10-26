@@ -13,8 +13,8 @@ Feature: change the display order
   Scenario: CLI ascending
     When I run "git-town down --order=asc"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main
@@ -27,8 +27,8 @@ Feature: change the display order
   Scenario: CLI descending
     When I run "git-town down --order=desc"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main
@@ -42,8 +42,8 @@ Feature: change the display order
     Given global Git setting "git-town.order" is "desc"
     When I run "git-town down"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main
@@ -57,8 +57,8 @@ Feature: change the display order
     Given local Git setting "git-town.order" is "desc"
     When I run "git-town down"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main
@@ -72,8 +72,8 @@ Feature: change the display order
     When I run "git-town down" with these environment variables
       | GIT_TOWN_ORDER | desc |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main
@@ -91,8 +91,8 @@ Feature: change the display order
       """
     When I run "git-town down"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                 |
-      | 2025-06 | git checkout 2025-06-01 |
+      | BRANCH  | COMMAND                         |
+      | 2025-06 | git checkout --quiet 2025-06-01 |
     And Git Town prints:
       """
         main

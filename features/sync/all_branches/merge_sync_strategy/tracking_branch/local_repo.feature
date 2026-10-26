@@ -18,7 +18,7 @@ Feature: syncs all feature branches (in a local repo)
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | alpha  | git merge --no-edit --ff main |
-      |        | git checkout beta             |
+      |        | git checkout --quiet beta     |
       | beta   | git merge --no-edit --ff main |
-      |        | git checkout alpha            |
+      |        | git checkout --quiet alpha    |
     And all branches are now synchronized

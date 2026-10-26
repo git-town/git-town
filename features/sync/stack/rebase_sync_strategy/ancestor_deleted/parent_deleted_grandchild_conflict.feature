@@ -20,10 +20,10 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-1 | git fetch --prune --tags                                   |
-      |          | git checkout main                                          |
+      |          | git checkout --quiet main                                  |
       | main     | git -c rebase.updateRefs=false rebase origin/main          |
       |          | git push                                                   |
-      |          | git checkout branch-2                                      |
+      |          | git checkout --quiet branch-2                              |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
     And Git Town prints the error:
@@ -46,9 +46,9 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git rebase --abort    |
-      |          | git checkout branch-1 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git rebase --abort            |
+      |          | git checkout --quiet branch-1 |
     And the initial branches and lineage exist now
 
   Scenario: resolve and continue

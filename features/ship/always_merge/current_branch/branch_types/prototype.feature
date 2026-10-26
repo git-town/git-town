@@ -17,7 +17,7 @@ Feature: shipping a prototype branch using the always-merge strategy
     Then Git Town runs the commands
       | BRANCH    | COMMAND                               |
       | prototype | git fetch --prune --tags              |
-      |           | git checkout main                     |
+      |           | git checkout --quiet main             |
       | main      | git merge --no-ff --edit -- prototype |
       |           | git push                              |
       |           | git push origin :prototype            |
@@ -37,7 +37,7 @@ Feature: shipping a prototype branch using the always-merge strategy
       | BRANCH | COMMAND                                           |
       | main   | git branch prototype {{ sha 'prototype commit' }} |
       |        | git push -u origin prototype                      |
-      |        | git checkout prototype                            |
+      |        | git checkout --quiet prototype                    |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                  |

@@ -19,11 +19,11 @@ Feature: beam from a branch without parent
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
-      | branch-1 | git checkout -b branch-2 main                                                                           |
+      | branch-1 | git checkout --quiet -b branch-2 main                                                                   |
       | branch-2 | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
-      |          | git checkout branch-1                                                                                   |
+      |          | git checkout --quiet branch-1                                                                           |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
-      |          | git checkout branch-2                                                                                   |
+      |          | git checkout --quiet branch-2                                                                           |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -40,7 +40,7 @@ Feature: beam from a branch without parent
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                       |
-      | branch-2 | git checkout branch-1                         |
+      | branch-2 | git checkout --quiet branch-1                 |
       | branch-1 | git reset --hard {{ sha-initial 'commit 2' }} |
       |          | git branch -D branch-2                        |
     And the initial branches and lineage exist now

@@ -13,10 +13,10 @@ Feature: inside a committed subfolder that exists only on the current feature br
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git checkout -b new      |
+      | BRANCH   | COMMAND                     |
+      | existing | git fetch --prune --tags    |
+      |          | git checkout --quiet main   |
+      | main     | git checkout --quiet -b new |
     And this lineage exists now
       """
       main
@@ -28,8 +28,8 @@ Feature: inside a committed subfolder that exists only on the current feature br
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |
     And the initial lineage exists now
     And the initial commits exist now

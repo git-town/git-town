@@ -12,12 +12,12 @@ Feature: enforce stashing via CLI flag
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new main    |
-      | new    | git stash pop               |
-      |        | git restore --staged .      |
+      | BRANCH | COMMAND                          |
+      | old    | git add -A                       |
+      |        | git stash -m "Git Town WIP"      |
+      |        | git checkout --quiet -b new main |
+      | new    | git stash pop                    |
+      |        | git restore --staged .           |
     And this lineage exists now
       """
       main
@@ -31,7 +31,7 @@ Feature: enforce stashing via CLI flag
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
+      |        | git checkout --quiet old    |
       | old    | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

@@ -15,10 +15,10 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | parked | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git branch -D parked     |
+      | BRANCH | COMMAND                   |
+      | parked | git fetch --prune --tags  |
+      |        | git checkout --quiet main |
+      | main   | git branch -D parked      |
     And Git Town prints:
       """
       deleted branch parked
@@ -32,6 +32,6 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     Then Git Town runs the commands
       | BRANCH | COMMAND                                            |
       | main   | git branch parked {{ sha-initial 'local commit' }} |
-      |        | git checkout parked                                |
+      |        | git checkout --quiet parked                        |
     And the initial branches and lineage exist now
     And the initial commits exist now

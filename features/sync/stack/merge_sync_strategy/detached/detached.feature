@@ -23,11 +23,11 @@ Feature: detached sync of the entire stack
       | alpha  | git fetch --prune --tags              |
       |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
-      |        | git checkout beta                     |
+      |        | git checkout --quiet beta             |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
-      |        | git checkout alpha                    |
+      |        | git checkout --quiet alpha            |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | local         | local main commit                                      |
@@ -46,7 +46,7 @@ Feature: detached sync of the entire stack
       | BRANCH | COMMAND                                                                                    |
       | alpha  | git reset --hard {{ sha-initial 'local alpha commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin alpha commit' }}:alpha |
-      |        | git checkout beta                                                                          |
+      |        | git checkout --quiet beta                                                                  |
       | beta   | git reset --hard {{ sha-initial 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin beta commit' }}:beta   |
-      |        | git checkout alpha                                                                         |
+      |        | git checkout --quiet alpha                                                                 |

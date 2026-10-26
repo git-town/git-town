@@ -9,8 +9,8 @@ Feature: permanently disable stashing via Git metadata
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git checkout -b new |
+      | BRANCH | COMMAND                     |
+      | main   | git checkout --quiet -b new |
     And this lineage exists now
       """
       main
@@ -23,7 +23,7 @@ Feature: permanently disable stashing via Git metadata
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
+      |        | git checkout --quiet main   |
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |

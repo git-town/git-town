@@ -17,10 +17,10 @@ Feature: sync the current feature branch without a tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
+      |         | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
       |         | git push -u origin feature                        |
     And the branches are now

@@ -18,10 +18,10 @@ Feature: active parked branches get synced like normal feature branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | parked | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
-      |        | git checkout parked                               |
+      |        | git checkout --quiet parked                       |
       | parked | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parked            |
       |        | git push                                          |

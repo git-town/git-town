@@ -14,14 +14,14 @@ Feature: ship a coworker's feature branch
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                 |
-      | feature | git fetch --prune --tags                                                |
-      |         | git checkout main                                                       |
-      | main    | git merge --squash --ff feature                                         |
-      |         | git commit -m "feature done" --author "coworker <coworker@example.com>" |
-      |         | git push                                                                |
-      |         | git push origin :feature                                                |
-      |         | git branch -D feature                                                   |
+      | BRANCH  | COMMAND                                                                         |
+      | feature | git fetch --prune --tags                                                        |
+      |         | git checkout --quiet main                                                       |
+      | main    | git merge --squash --ff feature                                                 |
+      |         | git commit --quiet -m "feature done" --author "coworker <coworker@example.com>" |
+      |         | git push                                                                        |
+      |         | git push origin :feature                                                        |
+      |         | git branch -D feature                                                           |
     And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
@@ -31,14 +31,14 @@ Feature: ship a coworker's feature branch
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                               |
-      | feature | git fetch --prune --tags                              |
-      |         | git checkout main                                     |
-      | main    | git merge --squash --ff feature                       |
-      |         | git commit --author "coworker <coworker@example.com>" |
-      |         | git push                                              |
-      |         | git push origin :feature                              |
-      |         | git branch -D feature                                 |
+      | BRANCH  | COMMAND                                                       |
+      | feature | git fetch --prune --tags                                      |
+      |         | git checkout --quiet main                                     |
+      | main    | git merge --squash --ff feature                               |
+      |         | git commit --quiet --author "coworker <coworker@example.com>" |
+      |         | git push                                                      |
+      |         | git push origin :feature                                      |
+      |         | git branch -D feature                                         |
     And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
@@ -53,7 +53,7 @@ Feature: ship a coworker's feature branch
       |        | git push                                       |
       |        | git branch feature {{ sha 'coworker commit' }} |
       |        | git push -u origin feature                     |
-      |        | git checkout feature                           |
+      |        | git checkout --quiet feature                   |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

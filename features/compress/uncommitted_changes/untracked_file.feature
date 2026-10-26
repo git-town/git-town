@@ -27,13 +27,13 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git add -A                                      |
       |        | git stash -m "Git Town WIP"                     |
       |        | git reset --soft main --                        |
-      |        | git commit -m "alpha 1"                         |
+      |        | git commit --quiet -m "alpha 1"                 |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --soft alpha --                       |
-      |        | git commit -m "beta 1"                          |
+      |        | git commit --quiet -m "beta 1"                  |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git stash pop                                   |
       |        | git restore --staged .                          |
     And all branches are now synchronized
@@ -53,10 +53,10 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git stash -m "Git Town WIP"                     |
       |        | git reset --hard {{ sha 'alpha 2' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'beta 2' }}             |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git stash pop                                   |
       |        | git restore --staged .                          |
     And the initial branches and lineage exist now

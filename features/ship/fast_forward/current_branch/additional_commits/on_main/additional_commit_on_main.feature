@@ -15,12 +15,12 @@ Feature: cannot ship not-up-to-date feature branches using the fast-forward stra
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git fetch --prune --tags    |
-      |         | git checkout main           |
-      | main    | git merge --ff-only feature |
-      |         | git merge --abort           |
-      |         | git checkout feature        |
+      | BRANCH  | COMMAND                      |
+      | feature | git fetch --prune --tags     |
+      |         | git checkout --quiet main    |
+      | main    | git merge --ff-only feature  |
+      |         | git merge --abort            |
+      |         | git checkout --quiet feature |
     And Git Town prints the error:
       """
       aborted because merge exited with error

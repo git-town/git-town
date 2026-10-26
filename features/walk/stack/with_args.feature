@@ -11,14 +11,14 @@ Feature: walk each branch of a stack with arguments
     And the current branch is "branch-2"
     When I run "git-town walk --stack echo hello"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-1 |
-      | branch-1 | echo hello            |
-      |          | git checkout branch-2 |
-      | branch-2 | echo hello            |
-      |          | git checkout branch-3 |
-      | branch-3 | echo hello            |
-      |          | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-1 |
+      | branch-1 | echo hello                    |
+      |          | git checkout --quiet branch-2 |
+      | branch-2 | echo hello                    |
+      |          | git checkout --quiet branch-3 |
+      | branch-3 | echo hello                    |
+      |          | git checkout --quiet branch-2 |
     And Git Town prints:
       """
       Branch walk done.

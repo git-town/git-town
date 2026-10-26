@@ -17,9 +17,9 @@ Feature: handle created uncommitted changes created during the walk
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-1 |
-      | branch-1 | format                |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git checkout --quiet branch-1 |
+      | branch-1 | format                        |
     And Git Town prints the error:
       """
       uncommitted changes detected
@@ -50,9 +50,9 @@ Feature: handle created uncommitted changes created during the walk
     And I ran "git commit -m changes"
     When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
-      | branch-2 | format                |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout --quiet branch-2 |
+      | branch-2 | format                        |
     And Git Town prints the error:
       """
       uncommitted changes detected
@@ -75,8 +75,8 @@ Feature: handle created uncommitted changes created during the walk
   Scenario: keep the changes and skip to the next branch
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout --quiet branch-2 |
     And Git Town prints the error:
       """
       Your local changes to the following files would be overwritten by checkout:

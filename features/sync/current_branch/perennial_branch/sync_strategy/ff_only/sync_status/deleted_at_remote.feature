@@ -15,11 +15,11 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                  |
-      | production | git fetch --prune --tags |
-      |            | git checkout main        |
-      | main       | git branch -D production |
-      |            | git push --tags          |
+      | BRANCH     | COMMAND                   |
+      | production | git fetch --prune --tags  |
+      |            | git checkout --quiet main |
+      | main       | git branch -D production  |
+      |            | git push --tags           |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -29,6 +29,6 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
     Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch production {{ sha 'first commit' }} |
-      |        | git checkout production                        |
+      |        | git checkout --quiet production                |
     And the initial branches and lineage exist now
     And the initial commits exist now

@@ -16,7 +16,7 @@ Feature: rename a parked branch
       | BRANCH | COMMAND                      |
       | parked | git fetch --prune --tags     |
       |        | git branch --move parked new |
-      |        | git checkout new             |
+      |        | git checkout --quiet new     |
       | new    | git push -u origin new       |
       |        | git push origin :parked      |
     And this lineage exists now
@@ -35,7 +35,7 @@ Feature: rename a parked branch
       | BRANCH | COMMAND                                           |
       | new    | git branch parked {{ sha 'low-priority commit' }} |
       |        | git push -u origin parked                         |
-      |        | git checkout parked                               |
+      |        | git checkout --quiet parked                       |
       | parked | git branch -D new                                 |
       |        | git push origin :new                              |
     And the initial branches and lineage exist now

@@ -11,10 +11,10 @@ Feature: hack with configured branch-prefix via environment variable
     When I run "git-town hack <BRANCH_NAME>" with these environment variables
       | GIT_TOWN_BRANCH_PREFIX | kg- |
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                      |
-      | feature-1 | git fetch --prune --tags     |
-      |           | git checkout main            |
-      | main      | git checkout -b kg-feature-2 |
+      | BRANCH    | COMMAND                              |
+      | feature-1 | git fetch --prune --tags             |
+      |           | git checkout --quiet main            |
+      | main      | git checkout --quiet -b kg-feature-2 |
     And the current branch is now "kg-feature-2"
     And this lineage exists now
       """
@@ -33,9 +33,9 @@ Feature: hack with configured branch-prefix via environment variable
       | GIT_TOWN_BRANCH_PREFIX | kg- |
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                    |
-      | kg-feature-2 | git checkout feature-1     |
-      | feature-1    | git branch -D kg-feature-2 |
+      | BRANCH       | COMMAND                        |
+      | kg-feature-2 | git checkout --quiet feature-1 |
+      | feature-1    | git branch -D kg-feature-2     |
     And the current branch is now "feature-1"
     And this lineage exists now
       """

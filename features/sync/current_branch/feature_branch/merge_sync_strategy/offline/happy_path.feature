@@ -18,9 +18,9 @@ Feature: offline mode
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
-      | feature | git checkout main                                 |
+      | feature | git checkout --quiet main                         |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout feature                              |
+      |         | git checkout --quiet feature                      |
       | feature | git merge --no-edit --ff main                     |
       |         | git merge --no-edit --ff origin/feature           |
     And these commits exist now

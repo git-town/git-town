@@ -32,7 +32,7 @@ Feature: deleting a branch from a stack with dependent changes
       | BRANCH   | COMMAND                                                        |
       | branch-2 | git fetch --prune --tags                                       |
       |          | git push origin :branch-2                                      |
-      |          | git checkout branch-3                                          |
+      |          | git checkout --quiet branch-3                                  |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
     And Git Town prints the error:
@@ -63,7 +63,7 @@ Feature: deleting a branch from a stack with dependent changes
       | BRANCH   | COMMAND                                                                 |
       | branch-3 | git rebase --abort                                                      |
       |          | git push origin {{ sha-initial 'branch-2 commit' }}:refs/heads/branch-2 |
-      |          | git checkout branch-2                                                   |
+      |          | git checkout --quiet branch-2                                           |
     And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES                           |

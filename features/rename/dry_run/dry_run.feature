@@ -17,7 +17,7 @@ Feature: rename the current branch
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
-      |        | git checkout new          |
+      |        | git checkout --quiet new  |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
     And the initial branches and lineage exist now

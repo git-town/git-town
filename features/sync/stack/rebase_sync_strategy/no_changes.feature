@@ -20,10 +20,10 @@ Feature: syncing an already synced stack
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-2 | git fetch --prune --tags |
-      |          | git checkout branch-1    |
-      | branch-1 | git checkout branch-2    |
+      | BRANCH   | COMMAND                       |
+      | branch-2 | git fetch --prune --tags      |
+      |          | git checkout --quiet branch-1 |
+      | branch-1 | git checkout --quiet branch-2 |
     And no rebase is now in progress
     And all branches are now synchronized
     And the initial commits exist now

@@ -17,9 +17,9 @@ Feature: enter the commit message interactively via the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
+      |         | git checkout --quiet main       |
       | main    | git merge --squash --ff feature |
-      |         | git commit                      |
+      |         | git commit --quiet              |
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
@@ -39,7 +39,7 @@ Feature: enter the commit message interactively via the editor
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

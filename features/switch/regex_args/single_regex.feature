@@ -14,5 +14,5 @@ Feature: switch to branches described by a regex
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | alpha  | git checkout aloha |
+      | BRANCH | COMMAND                    |
+      | alpha  | git checkout --quiet aloha |

@@ -16,7 +16,7 @@ Feature: default merge message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                             |
       | feature | git fetch --prune --tags            |
-      |         | git checkout main                   |
+      |         | git checkout --quiet main           |
       | main    | git merge --no-ff --edit -- feature |
       |         | git push                            |
       |         | git push origin :feature            |
@@ -36,7 +36,7 @@ Feature: default merge message
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |

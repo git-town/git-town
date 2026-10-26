@@ -24,13 +24,13 @@ Feature: compresses active prototype branches
       | BRANCH    | COMMAND                                         |
       | prototype | git fetch --prune --tags                        |
       |           | git reset --soft main --                        |
-      |           | git commit -m "prototype 1"                     |
+      |           | git commit --quiet -m "prototype 1"             |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout child                              |
+      |           | git checkout --quiet child                      |
       | child     | git reset --soft prototype --                   |
-      |           | git commit -m "child 1"                         |
+      |           | git commit --quiet -m "child 1"                 |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout prototype                          |
+      |           | git checkout --quiet prototype                  |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE     |
@@ -43,10 +43,10 @@ Feature: compresses active prototype branches
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | prototype | git checkout child                              |
+      | prototype | git checkout --quiet child                      |
       | child     | git reset --hard {{ sha 'child 2' }}            |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout prototype                          |
+      |           | git checkout --quiet prototype                  |
       | prototype | git reset --hard {{ sha 'prototype 2' }}        |
       |           | git push --force-with-lease --force-if-includes |
     And the initial branches and lineage exist now

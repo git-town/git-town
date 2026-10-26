@@ -15,7 +15,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout -b new                               |
+      |        | git checkout --quiet -b new                       |
       | new    | git push -u origin new                            |
     And this lineage exists now
       """
@@ -30,7 +30,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
-      | new    | git checkout main                           |
+      | new    | git checkout --quiet main                   |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
       |        | git push origin :new                        |

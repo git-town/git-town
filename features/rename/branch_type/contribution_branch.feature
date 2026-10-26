@@ -16,7 +16,7 @@ Feature: rename a contribution branch
       | BRANCH       | COMMAND                            |
       | contribution | git fetch --prune --tags           |
       |              | git branch --move contribution new |
-      |              | git checkout new                   |
+      |              | git checkout --quiet new           |
       | new          | git push -u origin new             |
       |              | git push origin :contribution      |
     And this lineage exists now
@@ -35,7 +35,7 @@ Feature: rename a contribution branch
       | BRANCH       | COMMAND                                                   |
       | new          | git branch contribution {{ sha 'somebody elses commit' }} |
       |              | git push -u origin contribution                           |
-      |              | git checkout contribution                                 |
+      |              | git checkout --quiet contribution                         |
       | contribution | git branch -D new                                         |
       |              | git push origin :new                                      |
     And the initial branches and lineage exist now

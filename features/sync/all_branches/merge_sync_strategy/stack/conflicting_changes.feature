@@ -16,9 +16,9 @@ Feature: sync a stack that makes conflicting changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | alpha  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout alpha                                |
+      |        | git checkout --quiet alpha                        |
       | alpha  | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
@@ -28,9 +28,9 @@ Feature: sync a stack that makes conflicting changes
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                        |
-      | alpha  | git commit --no-edit           |
+      | alpha  | git commit --quiet --no-edit   |
       |        | git push                       |
-      |        | git checkout beta              |
+      |        | git checkout --quiet beta      |
       | beta   | git merge --no-edit --ff alpha |
     And Git Town prints the error:
       """
@@ -40,11 +40,11 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | beta   | git commit --no-edit |
-      |        | git push             |
-      |        | git checkout alpha   |
-      | alpha  | git push --tags      |
+      | BRANCH | COMMAND                      |
+      | beta   | git commit --quiet --no-edit |
+      |        | git push                     |
+      |        | git checkout --quiet alpha   |
+      | alpha  | git push --tags              |
     And no merge is now in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT           |
@@ -58,11 +58,11 @@ Feature: sync a stack that makes conflicting changes
       | BRANCH | COMMAND                                               |
       | alpha  | git reset --hard {{ sha-initial 'alpha commit' }}     |
       |        | git push --force-with-lease --force-if-includes       |
-      |        | git checkout beta                                     |
+      |        | git checkout --quiet beta                             |
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}      |
       |        | git push --force-with-lease --force-if-includes       |
-      |        | git checkout main                                     |
+      |        | git checkout --quiet main                             |
       | main   | git reset --hard {{ sha-in-origin 'initial commit' }} |
-      |        | git checkout alpha                                    |
+      |        | git checkout --quiet alpha                            |
     And the initial commits exist now
     And the initial branches and lineage exist now

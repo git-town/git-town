@@ -21,10 +21,10 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-1 | git fetch --prune --tags                          |
-      |           | git checkout main                                 |
+      |           | git checkout --quiet main                         |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
       |           | git branch -D feature-1                           |
-      |           | git checkout feature-2                            |
+      |           | git checkout --quiet feature-2                    |
     And Git Town prints:
       """
       deleted branch feature-1
@@ -42,8 +42,8 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                             |
-      | feature-2 | git checkout main                                   |
+      | feature-2 | git checkout --quiet main                           |
       | main      | git reset --hard {{ sha 'initial commit' }}         |
       |           | git branch feature-1 {{ sha 'feature-1 commit B' }} |
-      |           | git checkout feature-1                              |
+      |           | git checkout --quiet feature-1                      |
     And the initial branches and lineage exist now

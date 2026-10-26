@@ -14,9 +14,9 @@ Feature: append a new branch when prototype branches are configured via a deprec
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git fetch --prune --tags |
-      |          | git checkout -b new      |
+      | BRANCH   | COMMAND                     |
+      | existing | git fetch --prune --tags    |
+      |          | git checkout --quiet -b new |
     And Git Town prints:
       """
       Upgrading deprecated local setting git-town.create-prototype-branches to git-town.new-branch-type
@@ -35,9 +35,9 @@ Feature: append a new branch when prototype branches are configured via a deprec
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                       |
+      | new      | git checkout --quiet existing |
+      | existing | git branch -D new             |
     And Git setting "git-town.create-prototype-branches" still doesn't exist
     And Git setting "git-town.new-branch-type" is still "prototype"
     And the initial lineage exists now

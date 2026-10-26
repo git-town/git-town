@@ -17,10 +17,10 @@ Feature: the branch to delete has a deleted tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git checkout other       |
-      | other  | git branch -D old        |
+      | BRANCH | COMMAND                    |
+      | old    | git fetch --prune --tags   |
+      |        | git checkout --quiet other |
+      | other  | git branch -D old          |
     And this lineage exists now
       """
       main
@@ -39,6 +39,6 @@ Feature: the branch to delete has a deleted tracking branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | other  | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
+      |        | git checkout --quiet old              |
     And the initial branches and lineage exist now
     And the initial commits exist now

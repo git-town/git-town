@@ -19,10 +19,10 @@ Feature: does not sync branches that exist only on remotes
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout mine                                 |
+      |        | git checkout --quiet mine                         |
       | mine   | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git push --tags                                   |
     And all branches are now synchronized
     And these commits exist now

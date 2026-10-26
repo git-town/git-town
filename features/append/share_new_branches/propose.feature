@@ -16,7 +16,7 @@ Feature: auto-propose new branches
       | BRANCH | COMMAND                                                        |
       | main   | git fetch --prune --tags                                       |
       |        | git -c rebase.updateRefs=false rebase origin/main              |
-      |        | git checkout -b new                                            |
+      |        | git checkout --quiet -b new                                    |
       | new    | git push -u origin new                                         |
       |        | Finding proposal from new into main ... none                   |
       |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
@@ -33,7 +33,7 @@ Feature: auto-propose new branches
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
-      | new    | git checkout main                           |
+      | new    | git checkout --quiet main                   |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
       |        | git push origin :new                        |

@@ -12,10 +12,10 @@ Feature: combining with missing lineage
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git checkout alpha       |
-      | alpha  | git branch -D beta       |
+      | BRANCH | COMMAND                    |
+      | beta   | git fetch --prune --tags   |
+      |        | git checkout --quiet alpha |
+      | alpha  | git branch -D beta         |
     And this lineage exists now
       """
       main
@@ -28,6 +28,6 @@ Feature: combining with missing lineage
     Then Git Town runs the commands
       | BRANCH | COMMAND                                    |
       | alpha  | git branch beta {{ sha 'initial commit' }} |
-      |        | git checkout beta                          |
+      |        | git checkout --quiet beta                  |
     And the initial lineage exists now
     And the initial commits exist now

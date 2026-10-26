@@ -15,7 +15,7 @@ Feature: rename the current branch to a branch that is active in another worktre
       | BRANCH  | COMMAND                       |
       | current | git fetch --prune --tags      |
       |         | git branch --move current new |
-      |         | git checkout new              |
+      |         | git checkout --quiet new      |
     And the previous Git branch is now "new"
 
   Scenario: undo
@@ -23,6 +23,6 @@ Feature: rename the current branch to a branch that is active in another worktre
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       | new     | git branch current {{ sha 'initial commit' }} |
-      |         | git checkout current                          |
+      |         | git checkout --quiet current                  |
       | current | git branch -D new                             |
     And there is now no previous Git branch

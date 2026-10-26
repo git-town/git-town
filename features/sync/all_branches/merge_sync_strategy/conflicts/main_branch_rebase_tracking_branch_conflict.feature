@@ -47,11 +47,11 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | BRANCH  | COMMAND                                 |
       | main    | GIT_EDITOR=true git rebase --continue   |
       |         | git push                                |
-      |         | git checkout feature                    |
+      |         | git checkout --quiet feature            |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git checkout main                       |
+      |         | git checkout --quiet main               |
       | main    | git push --tags                         |
     And no rebase is now in progress
     And all branches are now synchronized
@@ -68,9 +68,9 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | main    | git push                                |
-      |         | git checkout feature                    |
+      |         | git checkout --quiet feature            |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git checkout main                       |
+      |         | git checkout --quiet main               |
       | main    | git push --tags                         |

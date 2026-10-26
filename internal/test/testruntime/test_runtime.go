@@ -61,7 +61,7 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func Initialize(workingDir, homeDir, binDir string) commands.TestCommands {
 	runtime := InitializeNoInitialCommit(workingDir, homeDir, binDir)
-	runtime.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
+	runtime.MustRun("git", "commit", "--quiet", "--allow-empty", "-m", "initial commit")
 	return runtime
 }
 

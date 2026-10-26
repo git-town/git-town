@@ -21,10 +21,10 @@ Feature: a unknown branch type is set, the feature-regex matches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | my-branch | git fetch --prune --tags                          |
-      |           | git checkout main                                 |
+      |           | git checkout --quiet main                         |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
       |           | git push                                          |
-      |           | git checkout my-branch                            |
+      |           | git checkout --quiet my-branch                    |
       | my-branch | git merge --no-edit --ff main                     |
       |           | git merge --no-edit --ff origin/my-branch         |
       |           | git push                                          |

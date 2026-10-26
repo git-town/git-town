@@ -18,10 +18,10 @@ Feature: swapping a branch with its parked parent
       | BRANCH  | COMMAND                                                   |
       | current | git fetch --prune --tags                                  |
       |         | git -c rebase.updateRefs=false rebase --onto main parent  |
-      |         | git checkout parent                                       |
+      |         | git checkout --quiet parent                               |
       | parent  | git -c rebase.updateRefs=false rebase --onto current main |
       |         | git push --force-with-lease --force-if-includes           |
-      |         | git checkout current                                      |
+      |         | git checkout --quiet current                              |
     And this lineage exists now
       """
       main
@@ -37,9 +37,9 @@ Feature: swapping a branch with its parked parent
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | current | git checkout parent                             |
+      | current | git checkout --quiet parent                     |
       | parent  | git reset --hard {{ sha 'parent commit' }}      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git checkout current                            |
+      |         | git checkout --quiet current                    |
     And the initial lineage exists now
     And the initial commits exist now

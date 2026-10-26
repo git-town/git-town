@@ -12,11 +12,11 @@ Feature: the parent of the branch to delete was deleted remotely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git push origin :beta    |
-      |        | git checkout alpha       |
-      | alpha  | git branch -D beta       |
+      | BRANCH | COMMAND                    |
+      | beta   | git fetch --prune --tags   |
+      |        | git push origin :beta      |
+      |        | git checkout --quiet alpha |
+      | alpha  | git branch -D beta         |
     And this lineage exists now
       """
       main
@@ -33,5 +33,5 @@ Feature: the parent of the branch to delete was deleted remotely
       | BRANCH | COMMAND                                    |
       | alpha  | git branch beta {{ sha 'initial commit' }} |
       |        | git push -u origin beta                    |
-      |        | git checkout beta                          |
+      |        | git checkout --quiet beta                  |
     And the initial branches and lineage exist now

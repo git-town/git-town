@@ -19,10 +19,10 @@ Feature: skip and park a feature branch with conflicts
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout alpha                                |
+      |        | git checkout --quiet alpha                        |
       | alpha  | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
       | beta   | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
@@ -34,10 +34,10 @@ Feature: skip and park a feature branch with conflicts
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git merge --abort             |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |
     And Git Town prints:
       """

@@ -14,5 +14,5 @@ Feature: switch to a new remote branch while enabling to show all branches at ru
       | DIALOG        | KEYS              |
       | switch-branch | a down down enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | local-2 | git checkout remote-1 |
+      | BRANCH  | COMMAND                       |
+      | local-2 | git checkout --quiet remote-1 |

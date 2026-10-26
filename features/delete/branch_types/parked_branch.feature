@@ -16,11 +16,11 @@ Feature: delete the current parked branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | parked  | git fetch --prune --tags |
-      |         | git push origin :parked  |
-      |         | git checkout feature     |
-      | feature | git branch -D parked     |
+      | BRANCH  | COMMAND                      |
+      | parked  | git fetch --prune --tags     |
+      |         | git push origin :parked      |
+      |         | git checkout --quiet feature |
+      | feature | git branch -D parked         |
     And this lineage exists now
       """
       main
@@ -40,7 +40,7 @@ Feature: delete the current parked branch
       | BRANCH  | COMMAND                                     |
       | feature | git branch parked {{ sha 'parked commit' }} |
       |         | git push -u origin parked                   |
-      |         | git checkout parked                         |
+      |         | git checkout --quiet parked                 |
     And the initial branches and lineage exist now
     And branch "parked" now has type "parked"
     And the initial commits exist now

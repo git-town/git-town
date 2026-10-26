@@ -10,8 +10,8 @@ Feature: prototype another remote branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | main   | git checkout remote-feature |
+      | BRANCH | COMMAND                             |
+      | main   | git checkout --quiet remote-feature |
     And Git Town prints:
       """
       branch remote-feature is now a prototype branch
@@ -22,7 +22,7 @@ Feature: prototype another remote branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
-      | remote-feature | git checkout main            |
+      | remote-feature | git checkout --quiet main    |
       | main           | git branch -D remote-feature |
     And branch "remote-feature" now has type "feature"
     And the initial branches exist now

@@ -19,7 +19,7 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH       | COMMAND                       |
       | contribution | git fetch --prune --tags      |
       |              | git push origin :contribution |
-      |              | git checkout other            |
+      |              | git checkout --quiet other    |
       | other        | git branch -D contribution    |
     And Git setting "git-town-branch.contribution.branchtype" now doesn't exist
     And this lineage exists now
@@ -40,7 +40,7 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH | COMMAND                                                 |
       | other  | git branch contribution {{ sha 'contribution commit' }} |
       |        | git push -u origin contribution                         |
-      |        | git checkout contribution                               |
+      |        | git checkout --quiet contribution                       |
     And Git setting "git-town-branch.contribution.branchtype" is now "feature"
     And the initial branches and lineage exist now
     And the initial commits exist now

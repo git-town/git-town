@@ -18,8 +18,8 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | beta   | git fetch --prune --tags       |
-      |        | git checkout alpha             |
-      | alpha  | git checkout beta              |
+      |        | git checkout --quiet alpha     |
+      | alpha  | git checkout --quiet beta      |
       | beta   | git merge --no-edit --ff alpha |
       |        | git push                       |
     And the initial commits exist now

@@ -19,7 +19,7 @@ Feature: auto-propose new branches
       | BRANCH | COMMAND                                                        |
       | old    | git fetch --prune --tags                                       |
       |        | Finding proposal from old into main ... none                   |
-      |        | git checkout -b new main                                       |
+      |        | git checkout --quiet -b new main                               |
       | new    | git push -u origin new                                         |
       |        | Finding proposal from new into main ... none                   |
       |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
@@ -34,9 +34,9 @@ Feature: auto-propose new branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | new    | git checkout old     |
-      | old    | git branch -D new    |
-      |        | git push origin :new |
+      | BRANCH | COMMAND                  |
+      | new    | git checkout --quiet old |
+      | old    | git branch -D new        |
+      |        | git push origin :new     |
     And the initial lineage exists now
     And the initial commits exist now

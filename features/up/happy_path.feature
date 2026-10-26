@@ -11,8 +11,8 @@ Feature: move up one position in the current stack
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | beta   | git checkout alpha |
+      | BRANCH | COMMAND                    |
+      | beta   | git checkout --quiet alpha |
     And Git Town prints:
       """
         main

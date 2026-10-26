@@ -21,13 +21,13 @@ Feature: beam a commit from a stack with independent changes into a prepended br
       | commits to beam | down space enter | select commit 2 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
-      | old    | git checkout -b new main                                                                                |
+      | old    | git checkout --quiet -b new main                                                                        |
       | new    | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
-      |        | git checkout old                                                                                        |
+      |        | git checkout --quiet old                                                                                |
       | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
       |        | git -c rebase.updateRefs=false rebase new                                                               |
       |        | git push --force-with-lease --force-if-includes                                                         |
-      |        | git checkout new                                                                                        |
+      |        | git checkout --quiet new                                                                                |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -47,7 +47,7 @@ Feature: beam a commit from a stack with independent changes into a prepended br
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | new    | git checkout old                                |
+      | new    | git checkout --quiet old                        |
       | old    | git reset --hard {{ sha 'commit 3' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D new                               |
@@ -77,9 +77,9 @@ Feature: beam a commit from a stack with independent changes into a prepended br
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                          |
       | old    | git fetch --prune --tags                                                         |
-      |        | git checkout new                                                                 |
+      |        | git checkout --quiet new                                                         |
       | new    | git push -u origin new                                                           |
-      |        | git checkout old                                                                 |
+      |        | git checkout --quiet old                                                         |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
       |        | git push --force-with-lease --force-if-includes                                  |
     And these commits exist now

@@ -29,15 +29,15 @@ Feature: sync all branches and update proposals
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                       |
       | main     | git fetch --prune --tags                                      |
-      |          | git checkout alpha                                            |
-      | alpha    | git checkout beta                                             |
+      |          | git checkout --quiet alpha                                    |
+      | alpha    | git checkout --quiet beta                                     |
       | beta     | git merge --no-edit --ff alpha                                |
       |          | git push                                                      |
-      |          | git checkout gamma                                            |
+      |          | git checkout --quiet gamma                                    |
       | gamma    | git merge --no-edit --ff beta                                 |
       |          | git push                                                      |
-      |          | git checkout branch-1                                         |
-      | branch-1 | git checkout main                                             |
+      |          | git checkout --quiet branch-1                                 |
+      | branch-1 | git checkout --quiet main                                     |
       | main     | git push --tags                                               |
       |          | Finding all proposals for alpha ... main                      |
       |          | Finding proposal from alpha into main ... #1 (alpha proposal) |

@@ -19,7 +19,7 @@ Feature: partially undo an online ship using the always-merge strategy after add
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
+      |        | git checkout --quiet feature                  |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |

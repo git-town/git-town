@@ -16,7 +16,7 @@ Feature: rename a prototype branch
       | BRANCH    | COMMAND                         |
       | prototype | git fetch --prune --tags        |
       |           | git branch --move prototype new |
-      |           | git checkout new                |
+      |           | git checkout --quiet new        |
       | new       | git push -u origin new          |
       |           | git push origin :prototype      |
     And this lineage exists now
@@ -35,7 +35,7 @@ Feature: rename a prototype branch
       | BRANCH    | COMMAND                                              |
       | new       | git branch prototype {{ sha 'experimental commit' }} |
       |           | git push -u origin prototype                         |
-      |           | git checkout prototype                               |
+      |           | git checkout --quiet prototype                       |
       | prototype | git branch -D new                                    |
       |           | git push origin :new                                 |
     And the initial branches and lineage exist now

@@ -18,13 +18,13 @@ Feature: prepend a branch to a branch that was shipped at the remote
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
+      |        | git checkout --quiet main                         |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout parent                               |
+      |        | git checkout --quiet parent                       |
       | parent | git merge --no-edit --ff main                     |
       |        | git push                                          |
       |        | git branch -D child                               |
-      |        | git checkout -b new                               |
+      |        | git checkout --quiet -b new                       |
     And Git Town prints:
       """
       deleted branch child
@@ -48,13 +48,13 @@ Feature: prepend a branch to a branch that was shipped at the remote
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | new    | git checkout parent                             |
+      | new    | git checkout --quiet parent                     |
       | parent | git reset --hard {{ sha 'parent commit' }}      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
+      |        | git checkout --quiet main                       |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git branch child {{ sha 'child commit' }}       |
-      |        | git checkout child                              |
+      |        | git checkout --quiet child                      |
       | child  | git branch -D new                               |
     And the initial lineage exists now
     And the branches are now

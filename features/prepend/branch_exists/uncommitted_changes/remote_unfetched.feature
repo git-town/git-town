@@ -12,12 +12,12 @@ Feature: already existing remote branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                       |
-      | old      | git add -A                    |
-      |          | git stash -m "Git Town WIP"   |
-      |          | git checkout -b existing main |
-      | existing | git stash pop                 |
-      |          | git restore --staged .        |
+      | BRANCH   | COMMAND                               |
+      | old      | git add -A                            |
+      |          | git stash -m "Git Town WIP"           |
+      |          | git checkout --quiet -b existing main |
+      | existing | git stash pop                         |
+      |          | git restore --staged .                |
     And this lineage exists now
       """
       main
@@ -33,7 +33,7 @@ Feature: already existing remote branch
       | BRANCH   | COMMAND                     |
       | existing | git add -A                  |
       |          | git stash -m "Git Town WIP" |
-      |          | git checkout old            |
+      |          | git checkout --quiet old    |
       | old      | git branch -D existing      |
       |          | git stash pop               |
       |          | git restore --staged .      |

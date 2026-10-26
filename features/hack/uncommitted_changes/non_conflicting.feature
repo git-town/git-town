@@ -14,12 +14,12 @@ Feature: non-conflicting uncommitted changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | existing | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout -b new main    |
-      | new      | git stash pop               |
-      |          | git restore --staged .      |
+      | BRANCH   | COMMAND                          |
+      | existing | git add -A                       |
+      |          | git stash -m "Git Town WIP"      |
+      |          | git checkout --quiet -b new main |
+      | new      | git stash pop                    |
+      |          | git restore --staged .           |
     And file "conflicting_file" now has content:
       """
       conflicting content
@@ -28,13 +28,13 @@ Feature: non-conflicting uncommitted changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | new      | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout existing       |
-      | existing | git branch -D new           |
-      |          | git stash pop               |
-      |          | git restore --staged .      |
+      | BRANCH   | COMMAND                       |
+      | new      | git add -A                    |
+      |          | git stash -m "Git Town WIP"   |
+      |          | git checkout --quiet existing |
+      | existing | git branch -D new             |
+      |          | git stash pop                 |
+      |          | git restore --staged .        |
     And file "conflicting_file" still has content:
       """
       conflicting content

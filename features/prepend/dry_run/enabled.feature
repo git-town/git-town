@@ -13,9 +13,9 @@ Feature: dry-run prepending a branch to a feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git fetch --prune --tags    |
-      |        | git checkout -b parent main |
+      | BRANCH | COMMAND                             |
+      | old    | git fetch --prune --tags            |
+      |        | git checkout --quiet -b parent main |
     And the initial branches and lineage exist now
     And the initial commits exist now
   #

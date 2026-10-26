@@ -15,7 +15,7 @@ Feature: no TTY
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
-      | branch-2 | git checkout branch-1             |
-      | branch-1 | git commit -m commit-1b           |
-      |          | git checkout branch-2             |
+      | branch-2 | git checkout --quiet branch-1     |
+      | branch-1 | git commit --quiet -m commit-1b   |
+      |          | git checkout --quiet branch-2     |
       | branch-2 | git merge --no-edit --ff branch-1 |

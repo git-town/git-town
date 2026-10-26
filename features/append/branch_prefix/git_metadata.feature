@@ -11,9 +11,9 @@ Feature: append with configured branch-prefix via Git metadata
   Scenario Outline:
     When I run "git-town append <BRANCH_NAME>"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                      |
-      | feature-1 | git fetch --prune --tags     |
-      |           | git checkout -b kg-feature-2 |
+      | BRANCH    | COMMAND                              |
+      | feature-1 | git fetch --prune --tags             |
+      |           | git checkout --quiet -b kg-feature-2 |
     And the current branch is now "kg-feature-2"
     And this lineage exists now
       """
@@ -31,9 +31,9 @@ Feature: append with configured branch-prefix via Git metadata
     Given I ran "git-town append feature-2"
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                    |
-      | kg-feature-2 | git checkout feature-1     |
-      | feature-1    | git branch -D kg-feature-2 |
+      | BRANCH       | COMMAND                        |
+      | kg-feature-2 | git checkout --quiet feature-1 |
+      | feature-1    | git branch -D kg-feature-2     |
     And the current branch is now "feature-1"
     And this lineage exists now
       """

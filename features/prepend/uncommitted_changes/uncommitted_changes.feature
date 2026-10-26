@@ -15,12 +15,12 @@ Feature: prepend a branch to a feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b parent main |
-      | parent | git stash pop               |
-      |        | git restore --staged .      |
+      | BRANCH | COMMAND                             |
+      | old    | git add -A                          |
+      |        | git stash -m "Git Town WIP"         |
+      |        | git checkout --quiet -b parent main |
+      | parent | git stash pop                       |
+      |        | git restore --staged .              |
     And this lineage exists now
       """
       main
@@ -36,7 +36,7 @@ Feature: prepend a branch to a feature branch
       | BRANCH | COMMAND                     |
       | parent | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
+      |        | git checkout --quiet old    |
       | old    | git branch -D parent        |
       |        | git stash pop               |
       |        | git restore --staged .      |

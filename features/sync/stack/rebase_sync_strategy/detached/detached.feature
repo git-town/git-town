@@ -37,25 +37,25 @@ Feature: sync the entire stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                       |
       | alpha  | git fetch --prune --tags                                                      |
-      |        | git checkout beta                                                             |
+      |        | git checkout --quiet beta                                                     |
       | beta   | git -c rebase.updateRefs=false rebase --onto alpha {{ sha 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                               |
-      |        | git checkout gamma                                                            |
+      |        | git checkout --quiet gamma                                                    |
       | gamma  | git -c rebase.updateRefs=false rebase --onto beta {{ sha 'initial commit' }}  |
       |        | git push --force-with-lease --force-if-includes                               |
-      |        | git checkout alpha                                                            |
+      |        | git checkout --quiet alpha                                                    |
     And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | alpha  | git checkout beta                               |
+      | alpha  | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'beta commit' }}        |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
+      |        | git checkout --quiet gamma                      |
       | gamma  | git reset --hard {{ sha 'gamma commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
     And the initial branches and lineage exist now
     And the initial commits exist now

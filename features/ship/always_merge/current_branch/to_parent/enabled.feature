@@ -24,7 +24,7 @@ Feature: allowing shipping into a feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                          |
       | beta   | git fetch --prune --tags         |
-      |        | git checkout alpha               |
+      |        | git checkout --quiet alpha       |
       | alpha  | git merge --no-ff --edit -- beta |
       |        | git push                         |
       |        | git push origin :beta            |
@@ -53,6 +53,6 @@ Feature: allowing shipping into a feature branch
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch beta {{ sha 'beta 2' }}              |
       |        | git push -u origin beta                         |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
     And the initial branches and lineage exist now
     And the initial commits exist now

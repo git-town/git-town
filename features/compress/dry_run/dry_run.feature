@@ -15,10 +15,10 @@ Feature: dry-run compressing the commits on a feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git reset --soft main -- |
-      |         | git commit -m "commit 1" |
+      | BRANCH  | COMMAND                          |
+      | feature | git fetch --prune --tags         |
+      |         | git reset --soft main --         |
+      |         | git commit --quiet -m "commit 1" |
     And all branches are now synchronized
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"

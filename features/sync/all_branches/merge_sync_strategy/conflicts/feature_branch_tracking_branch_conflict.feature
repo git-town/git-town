@@ -22,10 +22,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | BRANCH | COMMAND                                           |
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout alpha                                |
+      |        | git checkout --quiet alpha                        |
       | alpha  | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout beta                                 |
+      |        | git checkout --quiet beta                         |
       | beta   | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/beta              |
     And Git Town prints the error:
@@ -39,12 +39,12 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git merge --abort                               |
-      |        | git checkout alpha                              |
+      |        | git checkout --quiet alpha                      |
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      |        | git checkout --quiet beta                       |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
-      |        | git checkout main                               |
+      |        | git checkout --quiet main                       |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
     And the initial branches and lineage exist now
     And the initial commits exist now
@@ -55,10 +55,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
       |        | git reset --hard {{ sha 'local beta commit' }} |
-      |        | git checkout gamma                             |
+      |        | git checkout --quiet gamma                     |
       | gamma  | git merge --no-edit --ff main                  |
       |        | git push                                       |
-      |        | git checkout main                              |
+      |        | git checkout --quiet main                      |
       | main   | git push --tags                                |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
@@ -92,12 +92,12 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | beta   | git commit --no-edit          |
+      | beta   | git commit --quiet --no-edit  |
       |        | git push                      |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |
     And no merge is now in progress
     And all branches are now synchronized
@@ -118,8 +118,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git push                      |
-      |        | git checkout gamma            |
+      |        | git checkout --quiet gamma    |
       | gamma  | git merge --no-edit --ff main |
       |        | git push                      |
-      |        | git checkout main             |
+      |        | git checkout --quiet main     |
       | main   | git push --tags               |

@@ -21,7 +21,7 @@ Feature: dry-run combining branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | beta   | git fetch --prune --tags                 |
-      |        | git checkout alpha                       |
+      |        | git checkout --quiet alpha               |
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git push origin :beta                    |
       |        | git branch -D beta                       |

@@ -22,9 +22,9 @@ Feature: ignore uncommitted changes using the config file
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
+      |         | git checkout --quiet main       |
       | main    | git merge --squash --ff feature |
-      |         | git commit -m shipped           |
+      |         | git commit --quiet -m shipped   |
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
@@ -44,7 +44,7 @@ Feature: ignore uncommitted changes using the config file
       |         | git push                                      |
       |         | git branch feature {{ sha 'feature commit' }} |
       |         | git push -u origin feature                    |
-      |         | git checkout feature                          |
+      |         | git checkout --quiet feature                  |
       | feature | git stash pop                                 |
       |         | git restore --staged .                        |
     And the initial lineage exists now

@@ -21,19 +21,19 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft main --              |
-      |        | git commit -m "local alpha commit"    |
-      |        | git push --force-with-lease           |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/beta  |
-      |        | git reset --soft alpha --             |
-      |        | git commit -m "local beta commit"     |
-      |        | git push --force-with-lease           |
+      | BRANCH | COMMAND                                    |
+      | beta   | git fetch --prune --tags                   |
+      |        | git checkout --quiet alpha                 |
+      | alpha  | git merge --no-edit --ff origin/alpha      |
+      |        | git reset --soft main --                   |
+      |        | git commit --quiet -m "local alpha commit" |
+      |        | git push --force-with-lease                |
+      |        | git checkout --quiet beta                  |
+      | beta   | git merge --no-edit --ff alpha             |
+      |        | git merge --no-edit --ff origin/beta       |
+      |        | git reset --soft alpha --                  |
+      |        | git commit --quiet -m "local beta commit"  |
+      |        | git push --force-with-lease                |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local         | local main commit  |
@@ -46,10 +46,10 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                    |
-      | beta   | git checkout alpha                                                                         |
+      | beta   | git checkout --quiet alpha                                                                 |
       | alpha  | git reset --hard {{ sha-initial 'local alpha commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin alpha commit' }}:alpha |
-      |        | git checkout beta                                                                          |
+      |        | git checkout --quiet beta                                                                  |
       | beta   | git reset --hard {{ sha-initial 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin beta commit' }}:beta   |
     And the initial branches and lineage exist now
