@@ -27,6 +27,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 			},
 			CloseSourceBranch: true,
 			Draft:             true,
+			Reviewers:         []string{"{reviewer-1}", "{reviewer-2}"},
 		}
 		serialized, err := json.MarshalIndent(data, "", "  ")
 		must.NoError(t, err)
@@ -41,7 +42,11 @@ func TestBitbucketCloudProposalData(t *testing.T) {
   "Title": "title",
   "URL": "url",
   "CloseSourceBranch": true,
-  "Draft": true
+  "Draft": true,
+  "Reviewers": [
+    "{reviewer-1}",
+    "{reviewer-2}"
+  ]
 }`[1:]
 		must.EqOp(t, want, string(serialized))
 
@@ -50,5 +55,6 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		must.Eq(t, data, data2)
 		must.True(t, data2.CloseSourceBranch)
 		must.True(t, data2.Draft)
+		must.Eq(t, []string{"{reviewer-1}", "{reviewer-2}"}, data2.Reviewers)
 	})
 }
