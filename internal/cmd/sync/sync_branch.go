@@ -37,12 +37,16 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		args.BranchesToDelete.Value.Add(localName)
 	case hasAncestorToRemove && ancestorToRemove == parentName:
 		if usesRebaseSyncStrategy {
+			rebaseOnto, hasRebaseOnto := args.Config.NormalConfig.Lineage.YoungestAncestorWithout(localName, args.BranchesToDelete.Value.Values()).Get()
+			if !hasRebaseOnto {
+				rebaseOnto = args.Config.ValidatedConfigData.MainBranch
+			}
 			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 				Ancestor:          ancestorToRemove.BranchName(),
 				Branch:            localName,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           args.Program,
-				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+				RebaseOnto:        rebaseOnto,
 			})
 		}
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
