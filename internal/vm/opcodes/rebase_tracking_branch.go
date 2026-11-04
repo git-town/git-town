@@ -1,25 +1,21 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/vm/shared"
 )
 
 // RebaseTrackingBranch rebases the current feature branch against its tracking branch.
 type RebaseTrackingBranch struct {
-	PushBranches configdomain.PushBranches
+	Branch       gitdomain.LocalBranchName
 	RemoteBranch gitdomain.RemoteBranchName
 }
 
 func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
-	if self.PushBranches {
-		// force-push-with-lease-if-includes here first, this avoids phantom merge conflicts from amended local commits
-		err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.PushHook, true)
-		if err == nil {
-			// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
-			return nil
-		}
+	if args.Git.RemoteTipInReflog(args.Backend, self.Branch, self.RemoteBranch) {
+		// The remote branch only has commits that the local branch used to have, i.e. the local branch was rewritten.
+		// Rebasing onto it would replay the rewritten commits on top of their old versions.
+		return nil
 	}
 	args.PrependOpcodes(
 		&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
