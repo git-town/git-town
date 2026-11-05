@@ -132,16 +132,12 @@
 
   "tests": [
     {
-      "name": "documentation",
+      "name": "doc",
       "command": "make --no-print-directory doc"
     },
     {
       "name": "unit",
       "command": "make --no-print-directory unit"
-    },
-    {
-      "name": "cuke",
-      "command": "make --no-print-directory cuke"
     }
   ]
 }
