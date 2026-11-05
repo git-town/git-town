@@ -13,13 +13,13 @@ Feature: the parent branch was added manually
       | unrelated | local, origin | unrelated commit | unrelated_file | unrelated content |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
-    And I ran "git-town sync"
     And I ran "git branch branch-1 branch-2~1"
     And I ran "git config git-town-branch.branch-1.parent main"
     And I ran "git config git-town-branch.branch-2.parent branch-1"
     And origin ships the "unrelated" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --stack"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                      |
