@@ -1,4 +1,3 @@
-@this
 Feature: the parent branch was added manually
 
   Background:
@@ -19,24 +18,33 @@ Feature: the parent branch was added manually
     And I ran "git branch branch-1 branch-2~1"
     And I ran "git config git-town-branch.branch-1.parent main"
     And I ran "git config git-town-branch.branch-2.parent branch-1"
+    When I run "git-town sync --stack"
 
   Scenario: result
-    When I run "git-town sync --stack"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                 |
-      | branch-2 | git fetch --prune --tags                                                                |
-      |          | git checkout main                                                                       |
-      | main     | git -c rebase.updateRefs=false rebase origin/main                                       |
-      |          | git checkout branch-1                                                                   |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto main {{ sha-before-run 'initial commit' }} |
-      |          | git push -u origin branch-1                                                             |
-      |          | git checkout branch-2                                                                   |
-      | branch-2 | git -c rebase.updateRefs=false rebase branch-1                                          |
-      |          | git push --force-with-lease --force-if-includes                                         |
+      | BRANCH   | COMMAND                                                                      |
+      | branch-2 | git fetch --prune --tags                                                     |
+      |          | git checkout main                                                            |
+      | main     | git -c rebase.updateRefs=false rebase origin/main                            |
+      |          | git checkout branch-1                                                        |
+      | branch-1 | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |          | git push -u origin branch-1                                                  |
+      |          | git checkout branch-2                                                        |
+      | branch-2 | git -c rebase.updateRefs=false rebase branch-1                               |
+      |          | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-1                           |
+      | branch-1 | git reset --hard {{ sha 'commit 1' }}           |
+      |          | git checkout main                               |
+      | main     | git reset --hard {{ sha 'initial commit' }}     |
+      |          | git push origin :branch-1                       |
+      |          | git checkout branch-2                           |
     And the initial branches and lineage exist now
     And the initial commits exist now
