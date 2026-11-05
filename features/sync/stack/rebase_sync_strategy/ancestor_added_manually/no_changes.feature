@@ -20,7 +20,6 @@ Feature: the parent branch was added manually
       | main   | origin   | main commit | main_file | main         |
     When I run "git-town sync --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                      |
