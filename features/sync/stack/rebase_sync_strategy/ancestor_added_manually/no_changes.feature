@@ -3,23 +3,24 @@ Feature: the parent branch was added manually
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | branch-2 | feature | main   | local, origin |
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | branch-2  | feature | main   | local, origin |
+      | unrelated | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | branch-2 | local, origin | commit 1 | file_1    | content 1    |
-      | branch-2 | local, origin | commit 2 | file_2    | content 2    |
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
+      | branch-2  | local, origin | commit 1         | file_1         | content 1         |
+      | branch-2  | local, origin | commit 2         | file_2         | content 2         |
+      | unrelated | local, origin | unrelated commit | unrelated_file | unrelated content |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     And I ran "git-town sync"
     And I ran "git branch branch-1 branch-2~1"
     And I ran "git config git-town-branch.branch-1.parent main"
     And I ran "git config git-town-branch.branch-2.parent branch-1"
-    And the commits
-      | BRANCH | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
-      | main   | origin   | main commit | main_file | main         |
+    And origin ships the "unrelated" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --stack"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                      |
