@@ -20,7 +20,6 @@ Feature: the parent branch was added manually
     And origin ships the "unrelated" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                      |
