@@ -27,6 +27,7 @@ const (
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
+	ghPromptDisabled            = "GH_PROMPT_DISABLED"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
 	gitCommitterEmail           = "GIT_COMMITTER_EMAIL"

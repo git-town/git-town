@@ -908,13 +908,16 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		ForgeType:           Some(detectedForgeType.ForgeType()),
 		ForgejoToken:        args.forgejoToken,
 		Frontend:            args.backend,
+		GhPrompt:            false, // this connector only verifies credentials
 		GiteaToken:          args.giteaToken,
 		GithubConnectorType: args.githubConnectorType,
 		GithubToken:         args.githubToken,
 		GitlabConnectorType: args.gitlabConnectorType,
 		GitlabToken:         args.gitlabToken,
+		Interactive:         args.interactive,
 		Log:                 print.Logger{},
 		RemoteURL:           args.devURL,
+		StdioIsTerminal:     false, // this connector only verifies credentials
 	})
 	if err != nil {
 		return configdomain.ProgramFlowExit, false, err

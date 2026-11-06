@@ -91,10 +91,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
-					Backend:        args.Backend,
-					BrowserEnabled: args.BrowserEnabled,
-					Frontend:       args.Frontend,
-					Log:            args.Log,
+					Backend:         args.Backend,
+					BrowserEnabled:  args.BrowserEnabled,
+					Frontend:        args.Frontend,
+					GhPrompt:        args.GhPrompt,
+					Interactive:     args.Interactive,
+					Log:             args.Log,
+					StdioIsTerminal: args.StdioIsTerminal,
 				},
 				Cache: forgedomain.APICache{},
 			}
@@ -135,11 +138,14 @@ type NewConnectorArgs struct {
 	ForgeType           Option[forgedomain.ForgeType]
 	ForgejoToken        Option[forgedomain.ForgejoToken]
 	Frontend            subshelldomain.Runner
+	GhPrompt            forgedomain.GhPrompt
 	GiteaToken          Option[forgedomain.GiteaToken]
 	GithubConnectorType Option[forgedomain.GithubConnectorType]
 	GithubToken         Option[forgedomain.GithubToken]
 	GitlabConnectorType Option[forgedomain.GitlabConnectorType]
 	GitlabToken         Option[forgedomain.GitlabToken]
+	Interactive         configdomain.Interactive
 	Log                 print.Logger
 	RemoteURL           Option[giturl.Parts]
+	StdioIsTerminal     configdomain.StdioIsTerminal
 }
