@@ -34,11 +34,11 @@ Feature: shipped branch with multiple descendents
       |            | git checkout feature-1a                                     |
       | feature-1a | git pull                                                    |
       |            | git -c rebase.updateRefs=false rebase --onto main feature-1 |
-      |            | git push --force-with-lease                                 |
+      |            | git push --force-with-lease --force-if-includes             |
       |            | git checkout feature-1b                                     |
       | feature-1b | git pull                                                    |
       |            | git -c rebase.updateRefs=false rebase --onto main feature-1 |
-      |            | git push --force-with-lease                                 |
+      |            | git push --force-with-lease --force-if-includes             |
       |            | git branch -D feature-1                                     |
       |            | git push --tags                                             |
     And Git Town prints:
