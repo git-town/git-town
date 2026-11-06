@@ -2,7 +2,7 @@ RTA_VERSION = 0.40.0
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "24.1.0"
+RELEASE_VERSION := "24.1.1"
 GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
