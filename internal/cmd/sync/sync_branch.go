@@ -37,12 +37,20 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		args.BranchesToDelete.Value.Add(localName)
 	case hasAncestorToRemove && ancestorToRemove == parentName:
 		if usesRebaseSyncStrategy {
+			rebaseOnto, hasRebaseOnto := args.Config.NormalConfig.Lineage.YoungestAncestorWithout(localName, args.BranchesToDelete.Value.Values()).Get()
+			if !hasRebaseOnto {
+				rebaseOnto = args.Config.ValidatedConfigData.MainBranch
+			}
+			rebaseOntoLocation := rebaseOnto.BranchName()
+			if rebaseOntoInfo, has := args.BranchInfos.FindLocalOrRemote(rebaseOnto).Get(); has {
+				rebaseOntoLocation = rebaseOntoInfo.GetLocalOrRemoteName()
+			}
 			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 				Ancestor:          ancestorToRemove.BranchName(),
 				Branch:            localName,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           args.Program,
-				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+				RebaseOnto:        rebaseOntoLocation,
 			})
 		}
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
@@ -52,15 +60,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		if hasAncestorToRemove && usesRebaseSyncStrategy {
-			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
-				Ancestor:          ancestorToRemove.BranchName(),
-				Branch:            localName,
-				HasTrackingBranch: branchInfo.HasTrackingBranch(),
-				Program:           args.Program,
-				RebaseOnto:        parentName,
-			})
-		}
 		localBranchProgram(localBranchProgramArgs{
 			BranchProgramArgs:  args,
 			branchInfo:         branchInfo,
@@ -227,7 +226,7 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 	}
 	args.Program.Value.Add(
 		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: args.RebaseOnto.BranchName(),
+			BranchToRebaseOnto: args.RebaseOnto,
 			CommitsToRemove:    args.Ancestor.Location(),
 		},
 	)
@@ -243,7 +242,7 @@ type RemoveAncestorCommitsArgs struct {
 	Branch            gitdomain.LocalBranchName
 	HasTrackingBranch bool
 	Program           Mutable[program.Program]
-	RebaseOnto        gitdomain.LocalBranchName
+	RebaseOnto        gitdomain.BranchName
 }
 
 func shouldPushPerennialBranch(syncStatus gitdomain.SyncStatus) bool {
