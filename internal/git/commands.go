@@ -494,6 +494,25 @@ func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gi
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
+// RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
+// This is the check of "git push --force-if-includes", done without pushing.
+func (self *Commands) RemoteTipInReflog(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
+	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
+	if err != nil {
+		return false
+	}
+	output, err := querier.QueryTrim("git", "rev-list", "-g", "-n", "100", branch.String())
+	if err != nil {
+		return false
+	}
+	for _, state := range strings.Fields(output.String()) {
+		if _, err := querier.Query("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
+			return true
+		}
+	}
+	return false
+}
+
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName, diffFilterOpt Option[configdomain.DiffFilter], nameOnly configdomain.NameOnly) error {
 	args := []string{"diff"}
