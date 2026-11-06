@@ -1,5 +1,15 @@
 # Git Town Changelog
 
+## 24.1.1 (2026-11-06)
+
+#### Bug Fixes
+
+- set-parent: allow selecting a parent that is checked out in another worktree ([#6298](https://github.com/git-town/git-town/pull/6298)).
+
+#### Contributors
+
+Shoutout to @JaredSharplin, @WhosNickDoglio, @efim0v, @genx7up, @hamzahamidi, @kevgo, @mrmarufpro for contributing ideas, feedback, and code to 6 shipped pull requests and 3 resolved issues!
+
 ## 24.1.0 (2026-09-26)
 
 #### New Features
