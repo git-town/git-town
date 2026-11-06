@@ -908,6 +908,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		ForgeType:           Some(detectedForgeType.ForgeType()),
 		ForgejoToken:        args.forgejoToken,
 		Frontend:            args.backend,
+		GhPrompt:            false, // this connector only verifies credentials
 		GiteaToken:          args.giteaToken,
 		GithubConnectorType: args.githubConnectorType,
 		GithubToken:         args.githubToken,

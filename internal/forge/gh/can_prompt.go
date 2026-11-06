@@ -1,9 +1,8 @@
 package gh
 
 import (
-	"os"
-
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 )
 
 // CanPrompt indicates whether gh may prompt the user for missing data.
@@ -13,11 +12,11 @@ import (
 // It ignores the "prompt" setting in the gh config.
 type CanPrompt bool
 
-func NewCanPrompt(interactive configdomain.Interactive, stdioIsTerminal configdomain.StdioIsTerminal) CanPrompt {
+func NewCanPrompt(interactive configdomain.Interactive, stdioIsTerminal configdomain.StdioIsTerminal, ghPrompt forgedomain.GhPrompt) CanPrompt {
 	if !interactive.IsEnabled() {
 		return false
 	}
-	if _, disabled := os.LookupEnv("GH_PROMPT_DISABLED"); disabled {
+	if !ghPrompt.CanPrompt() {
 		return false
 	}
 	return CanPrompt(stdioIsTerminal.IsTerminal())

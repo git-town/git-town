@@ -93,7 +93,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 				Connector: gh.Connector{
 					Backend:        args.Backend,
 					BrowserEnabled: args.BrowserEnabled,
-					CanPrompt:      gh.NewCanPrompt(args.Interactive, args.StdioIsTerminal),
+					CanPrompt:      gh.NewCanPrompt(args.Interactive, args.StdioIsTerminal, args.GhPrompt),
 					Frontend:       args.Frontend,
 					Log:            args.Log,
 				},
@@ -136,6 +136,7 @@ type NewConnectorArgs struct {
 	ForgeType           Option[forgedomain.ForgeType]
 	ForgejoToken        Option[forgedomain.ForgejoToken]
 	Frontend            subshelldomain.Runner
+	GhPrompt            forgedomain.GhPrompt
 	GiteaToken          Option[forgedomain.GiteaToken]
 	GithubConnectorType Option[forgedomain.GithubConnectorType]
 	GithubToken         Option[forgedomain.GithubToken]

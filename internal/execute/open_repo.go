@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v24/internal/config/envconfig"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/config/systemconfig"
+	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks"
@@ -28,7 +29,8 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	defaultConfig := config.DefaultNormalConfig()
-	envConfig, err := envconfig.Load(envconfig.NewEnvVars(os.Environ()))
+	envVars := envconfig.NewEnvVars(os.Environ())
+	envConfig, err := envconfig.Load(envVars)
 	if err != nil {
 		return emptyOpenRepoResult(), fmt.Errorf("error loading configuration from environment variables: %w", err)
 	}
@@ -165,6 +167,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		ConfigSnapshot:    configSnapshot,
 		FinalMessages:     finalMessages,
 		Frontend:          frontEndRunner,
+		GhPrompt:          envconfig.GhPrompt(envVars),
 		Git:               gitCommands,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
@@ -189,6 +192,7 @@ type OpenRepoResult struct {
 	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
+	GhPrompt          forgedomain.GhPrompt
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
