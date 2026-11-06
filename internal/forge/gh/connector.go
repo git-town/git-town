@@ -10,6 +10,7 @@ import (
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/forge/github"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -28,11 +29,13 @@ var (
 
 // Connector talks to the GitHub API through the "gh" executable.
 type Connector struct {
-	Backend        subshelldomain.Querier
-	BrowserEnabled browserdomain.BrowserEnabled
-	CanPrompt      CanPrompt
-	Frontend       subshelldomain.Runner
-	Log            print.Logger
+	Backend         subshelldomain.Querier
+	BrowserEnabled  browserdomain.BrowserEnabled
+	Frontend        subshelldomain.Runner
+	GhPrompt        forgedomain.GhPrompt
+	Interactive     configdomain.Interactive
+	Log             print.Logger
+	StdioIsTerminal configdomain.StdioIsTerminal
 }
 
 // ============================================================================
@@ -58,7 +61,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		args = append(args, "--body="+body.String())
 	}
 	// let gh prompt for the missing title and body if it can
-	if (!hasTitle || !hasBody) && !bool(self.CanPrompt) {
+	if (!hasTitle || !hasBody) && !self.canPrompt() {
 		args = append(args, "--fill")
 	}
 	if err := self.Frontend.Run("gh", args...); err != nil {
@@ -204,6 +207,16 @@ func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 		}
 	}
 	return ParsePermissionsOutput(output)
+}
+
+// canPrompt indicates whether Git Town runs interactively
+// and if gh can prompt (mirrors IOStreams.CanPrompt in gh).
+func (self Connector) canPrompt() bool {
+	if !self.Interactive.IsEnabled() || !self.StdioIsTerminal.IsTerminal() || !self.GhPrompt.CanPrompt() {
+		return false
+	}
+	setting, err := self.Backend.QueryTrim("gh", "config", "get", "prompt")
+	return err == nil && setting != "disabled"
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {

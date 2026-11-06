@@ -91,11 +91,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
 				Connector: gh.Connector{
-					Backend:        args.Backend,
-					BrowserEnabled: args.BrowserEnabled,
-					CanPrompt:      gh.NewCanPrompt(args.Interactive, args.StdioIsTerminal, args.GhPrompt),
-					Frontend:       args.Frontend,
-					Log:            args.Log,
+					Backend:         args.Backend,
+					BrowserEnabled:  args.BrowserEnabled,
+					Frontend:        args.Frontend,
+					GhPrompt:        args.GhPrompt,
+					Interactive:     args.Interactive,
+					Log:             args.Log,
+					StdioIsTerminal: args.StdioIsTerminal,
 				},
 				Cache: forgedomain.APICache{},
 			}

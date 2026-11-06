@@ -2,10 +2,13 @@ package gh_test
 
 import (
 	"errors"
+	"slices"
+	"sync/atomic"
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v24/internal/cli/print"
+	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/forge/gh"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -48,6 +51,38 @@ func TestConnectorSquashMergeProposal(t *testing.T) {
 func TestConnectorCreateProposal(t *testing.T) {
 	t.Parallel()
 
+	t.Run("adds --fill when any prompt condition fails", func(t *testing.T) {
+		t.Parallel()
+		notInteractive := newTestConnector(true)
+		notInteractive.Interactive = configdomain.Interactive("disabled in test")
+		noTerminal := newTestConnector(true)
+		noTerminal.StdioIsTerminal = false
+		ghPromptDisabled := newTestConnector(true)
+		ghPromptDisabled.GhPrompt = false
+		promptSettingDisabled := newTestConnector(true)
+		promptSettingDisabled.Backend = proposalQuerier{promptQueried: nil, promptSetting: Some(stringss.Trimmed("disabled"))}
+		promptSettingUnreadable := newTestConnector(true)
+		promptSettingUnreadable.Backend = proposalQuerier{promptQueried: nil, promptSetting: None[stringss.Trimmed]()}
+		connectors := map[string]gh.Connector{
+			"GH_PROMPT_DISABLED is set":         ghPromptDisabled,
+			"gh's prompt setting can't be read": promptSettingUnreadable,
+			"gh's prompt setting is disabled":   promptSettingDisabled,
+			"no terminal":                       noTerminal,
+			"not interactive":                   notInteractive,
+		}
+		for name, connector := range connectors {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+				have := createProposalCalls(t, connector, None[gitdomain.ProposalTitle](), None[gitdomain.ProposalBody]())
+				want := [][]string{
+					{"gh", "pr", "create", "--head=feature", "--base=main", "--fill"},
+					{"gh", "pr", "view"},
+				}
+				must.Eq(t, want, have)
+			})
+		}
+	})
+
 	t.Run("adds --fill when gh cannot prompt", func(t *testing.T) {
 		t.Parallel()
 		connector := newTestConnector(false)
@@ -81,6 +116,15 @@ func TestConnectorCreateProposal(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("doesn't read gh's prompt setting when title and body are provided", func(t *testing.T) {
+		t.Parallel()
+		querier := proposalQuerier{promptQueried: &atomic.Bool{}, promptSetting: None[stringss.Trimmed]()}
+		connector := newTestConnector(true)
+		connector.Backend = querier
+		createProposalCalls(t, connector, Some(gitdomain.ProposalTitle("my title")), Some(gitdomain.ProposalBody("my body")))
+		must.False(t, querier.promptQueried.Load())
 	})
 
 	t.Run("lets gh prompt when it can", func(t *testing.T) {
@@ -207,24 +251,43 @@ func createProposalCalls(t *testing.T, connector gh.Connector, title Option[gitd
 	return frontend.calls
 }
 
-func newTestConnector(canPrompt gh.CanPrompt) gh.Connector {
+func newTestConnector(canPrompt bool) gh.Connector {
+	interactive := configdomain.InteractiveEnabled
+	if !canPrompt {
+		interactive = configdomain.Interactive("disabled in test")
+	}
 	return gh.Connector{
-		Backend:        proposalQuerier{},
-		BrowserEnabled: browserdomain.BrowserEnabled(false),
-		CanPrompt:      canPrompt,
-		Frontend:       nil,
-		Log:            print.Logger{},
+		Backend:         proposalQuerier{promptQueried: nil, promptSetting: Some(stringss.Trimmed("enabled"))},
+		BrowserEnabled:  browserdomain.BrowserEnabled(false),
+		Frontend:        nil,
+		GhPrompt:        forgedomain.GhPrompt(canPrompt),
+		Interactive:     interactive,
+		Log:             print.Logger{},
+		StdioIsTerminal: configdomain.StdioIsTerminal(canPrompt),
 	}
 }
 
-type proposalQuerier struct{}
+type proposalQuerier struct {
+	promptQueried *atomic.Bool             // records whether "gh config get prompt" ran
+	promptSetting Option[stringss.Trimmed] // None makes "gh config get prompt" fail
+}
 
 func (self proposalQuerier) Query(_ string, _ ...string) (string, error) {
 	return `[{"baseRefName":"main","body":"body","headRefName":"feature","mergeable":"MERGEABLE","number":123,"title":"title","url":"https://github.com/git-town/git-town/pull/123"}]`, nil
 }
 
-func (self proposalQuerier) QueryTrim(_ string, _ ...string) (stringss.Trimmed, error) {
-	return stringss.Trimmed(""), nil
+func (self proposalQuerier) QueryTrim(_ string, args ...string) (stringss.Trimmed, error) {
+	if !slices.Equal(args, []string{"config", "get", "prompt"}) {
+		return stringss.Trimmed(""), nil
+	}
+	if self.promptQueried != nil {
+		self.promptQueried.Store(true)
+	}
+	setting, hasSetting := self.promptSetting.Get()
+	if !hasSetting {
+		return stringss.Trimmed(""), errors.New("cannot read gh config")
+	}
+	return setting, nil
 }
 
 func (self proposalQuerier) QueryZ(_ string, _ ...string) (stringss.ZeroDelineated, error) {
