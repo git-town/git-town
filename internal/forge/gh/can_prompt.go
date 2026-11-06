@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
-	"github.com/mattn/go-isatty"
 )
 
 // CanPrompt indicates whether gh may prompt the user for missing data.
@@ -14,18 +13,12 @@ import (
 // It ignores the "prompt" setting in the gh config.
 type CanPrompt bool
 
-// DetectCanPrompt determines whether gh may prompt the user in the current environment.
-func DetectCanPrompt(interactive configdomain.Interactive) CanPrompt {
+func NewCanPrompt(interactive configdomain.Interactive, stdioIsTerminal configdomain.StdioIsTerminal) CanPrompt {
 	if !interactive.IsEnabled() {
 		return false
 	}
 	if _, disabled := os.LookupEnv("GH_PROMPT_DISABLED"); disabled {
 		return false
 	}
-	return CanPrompt(isTerminal(os.Stdin) && isTerminal(os.Stdout))
-}
-
-func isTerminal(file *os.File) bool {
-	fd := file.Fd()
-	return isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd)
+	return CanPrompt(stdioIsTerminal.IsTerminal())
 }

@@ -29,5 +29,6 @@ func (self OpenRepoResult) NewConnector(remoteURL Option[giturl.Parts]) (Option[
 		Interactive:         config.Interactive,
 		Log:                 print.Logger{},
 		RemoteURL:           remoteURL,
+		StdioIsTerminal:     self.StdioIsTerminal,
 	})
 }

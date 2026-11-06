@@ -916,6 +916,7 @@ func testForgeAuth(args testForgeAuthArgs) (configdomain.ProgramFlow, dialogdoma
 		Interactive:         args.interactive,
 		Log:                 print.Logger{},
 		RemoteURL:           args.devURL,
+		StdioIsTerminal:     false, // this connector only verifies credentials
 	})
 	if err != nil {
 		return configdomain.ProgramFlowExit, false, err

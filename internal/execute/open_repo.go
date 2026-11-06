@@ -168,6 +168,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Git:               gitCommands,
 		IsOffline:         isOffline,
 		RootDir:           rootDir,
+		StdioIsTerminal:   systemconfig.DetermineStdioIsTerminal(),
 		UnvalidatedConfig: unvalidatedConfig,
 	}, nil
 }
@@ -191,6 +192,7 @@ type OpenRepoResult struct {
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
+	StdioIsTerminal   configdomain.StdioIsTerminal
 	UnvalidatedConfig config.UnvalidatedConfig
 }
 

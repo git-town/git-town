@@ -93,7 +93,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 				Connector: gh.Connector{
 					Backend:        args.Backend,
 					BrowserEnabled: args.BrowserEnabled,
-					CanPrompt:      gh.DetectCanPrompt(args.Interactive),
+					CanPrompt:      gh.NewCanPrompt(args.Interactive, args.StdioIsTerminal),
 					Frontend:       args.Frontend,
 					Log:            args.Log,
 				},
@@ -144,4 +144,5 @@ type NewConnectorArgs struct {
 	Interactive         configdomain.Interactive
 	Log                 print.Logger
 	RemoteURL           Option[giturl.Parts]
+	StdioIsTerminal     configdomain.StdioIsTerminal
 }
