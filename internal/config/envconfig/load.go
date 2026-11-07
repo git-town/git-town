@@ -50,6 +50,7 @@ const (
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
+	remoteForTesting            = "GIT_TOWN_REMOTE"
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	shipEnterMessage            = "GIT_TOWN_SHIP_ENTER_MESSAGE"
@@ -94,6 +95,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
+	remoteForTesting, errRemoteForTesting := load(env, remoteForTesting, configdomain.ParseRemoteForTesting)
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
 	shipEnterMessage, errShipEnterMessage := load(env, shipEnterMessage, gohacks.ParseBoolOpt[configdomain.ShipEnterMessage])
@@ -131,6 +133,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errProposalBreadcrumbDirection,
 		errPushBranches,
 		errPushHook,
+		errRemoteForTesting,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
 		errShipEnterMessage,
@@ -184,6 +187,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		RemoteForTesting:            remoteForTesting,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,

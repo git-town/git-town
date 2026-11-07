@@ -19,6 +19,7 @@ var whiteList = []string{
 	"BranchTypeOverrides",
 	"DryRun",
 	"Interactive",
+	"RemoteForTesting",
 	"Verbose",
 }
 
