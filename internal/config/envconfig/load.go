@@ -4,6 +4,7 @@ import (
 	"cmp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -88,7 +89,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	interactive1, errInteractive1 := load(env, interactive, gohacks.ParseBoolOpt[bool])
-	interactive2 := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
+	interactive2 := clidomain.NewInteractiveFromEnv(env.Get(term), interactive1)
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])

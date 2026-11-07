@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
@@ -57,7 +58,7 @@ type NormalConfig struct {
 	GitlabToken                 Option[forgedomain.GitlabToken]
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
-	Interactive                 configdomain.Interactive
+	Interactive                 clidomain.Interactive
 	Lineage                     configdomain.Lineage
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
@@ -293,7 +294,7 @@ func DefaultNormalConfig() NormalConfig {
 		GitlabToken:                 None[forgedomain.GitlabToken](),
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
-		Interactive:                 configdomain.InteractiveEnabled,
+		Interactive:                 clidomain.InteractiveEnabled,
 		Lineage:                     configdomain.NewLineage(),
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
