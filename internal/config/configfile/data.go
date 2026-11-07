@@ -48,6 +48,7 @@ type Hosting struct {
 	Browser         *string `toml:"browser"`
 	DevRemote       *string `toml:"dev-remote"`
 	ForgeType       *string `toml:"forge-type"`
+	GhPrompt        *bool   `toml:"gh-prompt"`
 	GithubConnector *string `toml:"github-connector"`
 	GitlabConnector *string `toml:"gitlab-connector"`
 	OriginHostname  *string `toml:"origin-hostname"`

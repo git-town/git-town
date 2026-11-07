@@ -60,6 +60,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		displayTypes                Option[configdomain.DisplayTypes]
 		featureRegex                Option[configdomain.FeatureRegex]
 		forgeType                   Option[forgedomain.ForgeType]
+		ghPrompt                    Option[configdomain.GhPrompt]
 		githubConnectorType         Option[forgedomain.GithubConnectorType]
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
@@ -205,6 +206,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			forgeType, err = forgedomain.ParseForgeType(stringss.Trim(*data.Hosting.ForgeType), messages.ConfigFile)
 			ec.Check(err)
 		}
+		if data.Hosting.GhPrompt != nil {
+			ghPrompt = Some(configdomain.GhPrompt(*data.Hosting.GhPrompt))
+		}
 		if data.Hosting.GithubConnector != nil {
 			githubConnectorType, err = forgedomain.ParseGithubConnectorType(stringss.Trim(*data.Hosting.GithubConnector), messages.ConfigFile)
 			ec.Check(err)
@@ -313,6 +317,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		DevRemote:                   devRemote,
 		FeatureRegex:                featureRegex,
 		ForgeType:                   forgeType,
+		GhPrompt:                    ghPrompt,
 		GithubConnectorType:         githubConnectorType,
 		GithubToken:                 None[forgedomain.GithubToken](),
 		GitlabConnectorType:         gitlabConnectorType,
