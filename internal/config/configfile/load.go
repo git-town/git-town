@@ -335,6 +335,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		RemoteForTesting:            None[configdomain.RemoteForTesting](),
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,
