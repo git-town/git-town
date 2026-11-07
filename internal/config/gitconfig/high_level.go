@@ -3,6 +3,7 @@ package gitconfig
 import (
 	"strconv"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -273,7 +274,7 @@ func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.Ignor
 	return SetConfigValue(runner, scope, configdomain.KeyIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
 }
 
-func SetInteractive(runner subshelldomain.Runner, value configdomain.Interactive, scope configdomain.ConfigScope) error {
+func SetInteractive(runner subshelldomain.Runner, value clidomain.Interactive, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyInteractive, strconv.FormatBool(value.IsEnabled()))
 }
 
