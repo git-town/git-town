@@ -13,7 +13,7 @@ func (self ForgeURL) String() string {
 	return string(self)
 }
 
-func ParseRemoteForTesting(value stringss.Trimmed, _ string) (Option[ForgeURL], error) {
+func ParseForgeType(value stringss.Trimmed, _ string) (Option[ForgeURL], error) {
 	if value == "" {
 		return None[ForgeURL](), nil
 	}

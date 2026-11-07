@@ -95,7 +95,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
-	remoteForTesting, errRemoteForTesting := load(env, remoteForTesting, configdomain.ParseRemoteForTesting)
+	remoteForTesting, errRemoteForTesting := load(env, remoteForTesting, configdomain.ParseForgeType)
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
 	shipEnterMessage, errShipEnterMessage := load(env, shipEnterMessage, gohacks.ParseBoolOpt[configdomain.ShipEnterMessage])
