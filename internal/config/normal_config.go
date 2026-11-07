@@ -377,9 +377,9 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 
 // remoteURLString provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, remoteForTesting Option[configdomain.ForgeURL]) Option[string] {
-	if remoteForTesting, hasRemoteForTesting := remoteForTesting.Get(); hasRemoteForTesting {
-		return Some(remoteForTesting.String())
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, forgeURL Option[configdomain.ForgeURL]) Option[string] {
+	if forgeURL, hasForgeURL := forgeURL.Get(); hasForgeURL {
+		return Some(forgeURL.String())
 	}
 	return gitconfig.RemoteURL(querier, remote)
 }
