@@ -23,10 +23,3 @@ func ParseGhPromptFromConfigFile(value stringss.Trimmed, _ string) (Option[GhPro
 	}
 	return Some(GhPrompt(false)), nil
 }
-
-func ParseGhPromptOpt(value stringss.Trimmed, _ string) (Option[GhPrompt], error) {
-	if value == "" {
-		return None[GhPrompt](), nil
-	}
-	return Some(GhPrompt(false)), nil
-}
