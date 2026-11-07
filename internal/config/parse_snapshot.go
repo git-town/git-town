@@ -94,6 +94,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	displayTypes, errDisplayTypes := loadErr(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
 	featureRegex, errFeatureRegex := loadErr(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex, ignoreUnknown)
 	forgeType, errForgeType := loadErr(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
+	forgeURL, errForgeURL := loadErr(snapshot, configdomain.KeyForgeURL, configdomain.ParseForgeType, ignoreUnknown)
 	githubConnectorType, errGithubConnectorType := loadErr(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitlabConnectorType := loadErr(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := loadErr(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
@@ -133,6 +134,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errDisplayTypes,
 		errFeatureRegex,
 		errForgeType,
+		errForgeURL,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -199,6 +201,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		ForgeURL:                    forgeURL,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,
