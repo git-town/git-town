@@ -26,7 +26,7 @@ const (
 	dryRun                      = "GIT_TOWN_DRY_RUN"
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
-	forgeURL                    = "GIT_TOWN_REMOTE" // TODO: rename to GIT_TOWN_FORGE_URL
+	forgeURL                    = "GIT_TOWN_FORGE_URL"
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"

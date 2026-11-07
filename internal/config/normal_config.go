@@ -93,7 +93,7 @@ func (self *NormalConfig) Author() Option[gitdomain.Author] {
 }
 
 // DevURL provides the URL for the development remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.Parts] {
 	return self.RemoteURL(querier, self.DevRemote)
@@ -205,7 +205,7 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 }
 
 // RemoteURL provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
 	urlStr, hasURLStr := remoteURLString(querier, remote, self.ForgeURL).Get()
@@ -376,7 +376,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 }
 
 // remoteURLString provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, forgeURL Option[configdomain.ForgeURL]) Option[string] {
 	if forgeURL, hasForgeURL := forgeURL.Get(); hasForgeURL {
 		return Some(forgeURL.String())
