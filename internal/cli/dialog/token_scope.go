@@ -3,6 +3,7 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -21,7 +22,7 @@ or for all Git repos on this machine?
 )
 
 // TokenScope lets the user enter the GitHub API token.
-func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Inputs, interactive clidomain.Interactive) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ConfigScope]{
 		{
 			Data: configdomain.ConfigScopeGlobal,

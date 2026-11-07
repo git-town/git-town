@@ -3,6 +3,7 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -21,7 +22,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, interactive clidomain.Interactive) (configdomain.ProgramFlow, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
