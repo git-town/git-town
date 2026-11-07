@@ -5,7 +5,8 @@ import (
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
-// URL that Git Town should assume for Git server, used only to simulate a forge in tests
+// URL that Git Town should assume for forge.
+// Used only to simulate a specific forge type in tests that don't use actual forges.
 type ForgeURL string
 
 func (self ForgeURL) String() string {
