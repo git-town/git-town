@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -31,7 +32,7 @@ You can always adjust later.
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, interactive configdomain.Interactive, inputs dialogcomponents.Inputs) (configdomain.Aliases, dialogdomain.Exit, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, interactive clidomain.Interactive, inputs dialogcomponents.Inputs) (configdomain.Aliases, dialogdomain.Exit, error) {
 	if err := interactive.Check(); err != nil {
 		return configdomain.Aliases{}, true, err
 	}

@@ -8,6 +8,7 @@ import (
 	"regexp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
@@ -60,7 +61,7 @@ func switchCmd() *cobra.Command {
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             order,
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             stash,
