@@ -1,10 +1,10 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 )
 
@@ -20,7 +20,7 @@ Please select which child branch to switch to.
 type ChildBranchArgs struct {
 	ChildBranches gitdomain.LocalBranchNames
 	Inputs        dialogcomponents.Inputs
-	Interactive   configdomain.Interactive
+	Interactive   clidomain.Interactive
 }
 
 // ChildBranch lets the user select which child branch to switch to.

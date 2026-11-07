@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/configfile"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
@@ -174,7 +175,7 @@ upstream = true
 				GiteaToken:                  None[forgedomain.GiteaToken](),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
-				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
+				Interactive:                 Some(clidomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),
 				MainBranch:                  Some(gitdomain.LocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
