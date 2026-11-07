@@ -26,6 +26,7 @@ const (
 	dryRun                      = "GIT_TOWN_DRY_RUN"
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
+	forgeURL                    = "GIT_TOWN_REMOTE" // TODO: rename to GIT_TOWN_FORGE_URL
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
@@ -50,7 +51,6 @@ const (
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
-	remoteForTesting            = "GIT_TOWN_REMOTE" // TODO: rename to GIT_TOWN_FORGE_URL
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	shipEnterMessage            = "GIT_TOWN_SHIP_ENTER_MESSAGE"
@@ -79,6 +79,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
+	forgeURL, errForgeURL := load(env, forgeURL, configdomain.ParseForgeType)
 	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
 	gitUserName := gitdomain.GitUserNameOptFromStringOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
@@ -95,7 +96,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := load(env, proposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
-	remoteForTesting, errRemoteForTesting := load(env, remoteForTesting, configdomain.ParseForgeType)
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
 	shipEnterMessage, errShipEnterMessage := load(env, shipEnterMessage, gohacks.ParseBoolOpt[configdomain.ShipEnterMessage])
@@ -120,6 +120,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
+		errForgeURL,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -133,7 +134,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errProposalBreadcrumbDirection,
 		errPushBranches,
 		errPushHook,
-		errRemoteForTesting,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
 		errShipEnterMessage,
@@ -187,7 +187,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
-		ForgeURL:                    remoteForTesting,
+		ForgeURL:                    forgeURL,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,
