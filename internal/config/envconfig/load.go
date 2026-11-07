@@ -50,7 +50,7 @@ const (
 	proposalBreadcrumbDirection = "GIT_TOWN_PROPOSAL_BREADCRUMB_DIRECTION"
 	pushBranches                = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                    = "GIT_TOWN_PUSH_HOOK"
-	remoteForTesting            = "GIT_TOWN_REMOTE"
+	remoteForTesting            = "GIT_TOWN_REMOTE" // TODO: rename to GIT_TOWN_FORGE_URL
 	shareNewBranches            = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch    = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	shipEnterMessage            = "GIT_TOWN_SHIP_ENTER_MESSAGE"
