@@ -56,7 +56,8 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	if !hasTitle || !hasBody {
+	infoMissing := !hasTitle || !hasBody
+	if infoMissing && data.Interactive.IsDisabled() {
 		args = append(args, "--fill")
 	}
 	if err := self.Frontend.Run("gh", args...); err != nil {
