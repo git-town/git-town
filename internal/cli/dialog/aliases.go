@@ -163,9 +163,11 @@ func (self AliasesModel) View() string {
 		case highlighted && selection == AliasSelectionGT:
 			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.Text))
 		case !highlighted && selection == AliasSelectionNone:
-			s.WriteString("  [ ] " + branch.Text)
+			s.WriteString("  [ ] ")
+			s.WriteString(branch.Text)
 		case !highlighted && selection == AliasSelectionOther:
-			s.WriteString("  [o] " + branch.Text)
+			s.WriteString("  [o] ")
+			s.WriteString(branch.Text)
 		case !highlighted && selection == AliasSelectionGT:
 			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
 		}
