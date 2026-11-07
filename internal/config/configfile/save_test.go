@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/configfile"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
@@ -67,7 +68,7 @@ func TestSave(t *testing.T) {
 				GitlabConnectorType:         Some(forgedomain.GitlabConnectorTypeGlab),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("forge"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
-				Interactive:                 Some(configdomain.InteractiveEnabled),
+				Interactive:                 Some(clidomain.InteractiveEnabled),
 				MainBranch:                  Some(gitdomain.LocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:               observedRegex,

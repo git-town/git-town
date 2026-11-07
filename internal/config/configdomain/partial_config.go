@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/mapstools"
@@ -44,7 +45,7 @@ type PartialConfig struct {
 	GitlabToken                 Option[forgedomain.GitlabToken]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
-	Interactive                 Option[Interactive]
+	Interactive                 Option[clidomain.Interactive]
 	Lineage                     Lineage
 	MainBranch                  Option[gitdomain.LocalBranchName]
 	NewBranchType               Option[NewBranchType]
