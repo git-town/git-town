@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -310,7 +311,7 @@ type SwitchBranchArgs struct {
 	EntryData                       EntryData
 	InputName                       string
 	Inputs                          dialogcomponents.Inputs
-	Interactive                     configdomain.Interactive
+	Interactive                     clidomain.Interactive
 	Title                           Option[string]
 	UncommittedChanges              bool
 }
