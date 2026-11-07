@@ -90,6 +90,7 @@ const (
 	KeyDisplayTypes                        = Key("git-town.display-types")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyForgeType                           = Key("git-town.forge-type")
+	KeyForgeURL                            = Key("git-town.forge-url")
 	KeyForgejoToken                        = Key("git-town.forgejo-token")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
@@ -164,6 +165,7 @@ var keys = []Key{
 	KeyDisplayTypes,
 	KeyFeatureRegex,
 	KeyForgeType,
+	KeyForgeURL,
 	KeyForgejoToken,
 	KeyGitUserEmail,
 	KeyGitUserName,
