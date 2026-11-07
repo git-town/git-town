@@ -495,6 +495,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			},
 			&opcodes.ProposalCreate{
 				Branch:        data.targetBranch,
+				Interactive:   data.config.NormalConfig.Interactive,
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
 				ProposalBody:  data.proposalBody,
 				ProposalTitle: data.proposalTitle,
