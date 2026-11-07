@@ -125,6 +125,9 @@
         "forge-type": {
           "type": "string"
         },
+        "gh-prompt": {
+          "type": "boolean"
+        },
         "github-connector": {
           "type": "string"
         },

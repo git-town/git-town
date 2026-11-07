@@ -12,12 +12,15 @@ func Load() configdomain.PartialConfig {
 	hasTTY := DetermineTTY()
 	var interactive Option[configdomain.Interactive]
 	var browserEnabled Option[browserdomain.BrowserEnabled]
+	var ghPrompt Option[configdomain.GhPrompt]
 	if hasTTY {
 		interactive = None[configdomain.Interactive]()
 		browserEnabled = None[browserdomain.BrowserEnabled]()
+		ghPrompt = None[configdomain.GhPrompt]()
 	} else {
 		interactive = Some(configdomain.Interactive("no interactive terminal available"))
 		browserEnabled = Some(browserdomain.BrowserEnabled(false))
+		ghPrompt = Some(configdomain.GhPrompt(false))
 	}
 	return configdomain.PartialConfig{
 		Aliases:                     configdomain.Aliases{},
@@ -38,6 +41,7 @@ func Load() configdomain.PartialConfig {
 		FeatureRegex:                None[configdomain.FeatureRegex](),
 		ForgeType:                   None[forgedomain.ForgeType](),
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
+		GhPrompt:                    ghPrompt,
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
 		GiteaToken:                  None[forgedomain.GiteaToken](),
