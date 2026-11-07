@@ -129,7 +129,8 @@ func (self CheckListModel[S]) View() string {
 		case !selected && checked:
 			s.WriteString(self.Colors.Initial.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
-			s.WriteString("  [ ] " + branch.Text)
+			s.WriteString("  [ ] ")
+			s.WriteString(branch.Text)
 		}
 		s.WriteRune('\n')
 	}
