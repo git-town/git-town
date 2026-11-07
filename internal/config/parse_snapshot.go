@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
@@ -98,7 +99,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	githubConnectorType, errGithubConnectorType := loadErr(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitlabConnectorType := loadErr(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := loadErr(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
-	interactive, errInteractive := loadErr(snapshot, configdomain.KeyInteractive, configdomain.NewInteractiveFromSnapshot, ignoreUnknown)
+	interactive, errInteractive := loadErr(snapshot, configdomain.KeyInteractive, clidomain.NewInteractiveFromSnapshot, ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchType1, errNewBranchType := loadErr(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	newBranchType2 := configdomain.NewBranchTypeOpt(newBranchType1)

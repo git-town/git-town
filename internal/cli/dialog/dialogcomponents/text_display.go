@@ -4,13 +4,13 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 )
 
-func TextDisplay(title, text string, inputs Inputs, interactive configdomain.Interactive, dialogName string) (dialogdomain.Exit, error) {
+func TextDisplay(title, text string, inputs Inputs, interactive clidomain.Interactive, dialogName string) (dialogdomain.Exit, error) {
 	if err := interactive.Check(); err != nil {
 		return true, err
 	}
