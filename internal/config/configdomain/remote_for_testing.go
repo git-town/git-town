@@ -5,6 +5,7 @@ import (
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
+// overrides the URL of the Git remote to use, used only for testing
 type RemoteForTesting string
 
 func (self RemoteForTesting) String() string {
