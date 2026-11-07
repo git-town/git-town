@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 	"github.com/git-town/git-town/v24/internal/messages"
@@ -67,7 +67,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 type PerennialBranchesArgs struct {
 	ImmutableGitPerennials gitdomain.LocalBranchNames // perennial branches defined in the config file and the global Git metadata
 	Inputs                 dialogcomponents.Inputs
-	Interactive            configdomain.Interactive
+	Interactive            clidomain.Interactive
 	LocalBranches          gitdomain.LocalBranchNames
 	LocalGitPerennials     gitdomain.LocalBranchNames
 	MainBranch             gitdomain.LocalBranchName
