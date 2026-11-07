@@ -79,7 +79,8 @@ func (self radioListModel[S]) View() string {
 		if i == self.Cursor {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.Text))
 		} else {
-			s.WriteString("  " + branch.Text)
+			s.WriteString("  ")
+			s.WriteString(branch.Text)
 		}
 		s.WriteRune('\n')
 	}
