@@ -50,6 +50,7 @@ Feature: show the configuration when using an alternative config file
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: none

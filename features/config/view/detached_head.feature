@@ -74,6 +74,7 @@ Feature: display configuration from Git metadata in detached head state
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: branches

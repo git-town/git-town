@@ -94,6 +94,7 @@ Feature: display configuration defined in environment variables
         GitHub token: (configured)
         GitLab connector: glab
         GitLab token: (configured)
+        gh prompt: yes
 
       Propose:
         breadcrumb: stacks

@@ -125,6 +125,7 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: stacks

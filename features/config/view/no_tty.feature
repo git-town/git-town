@@ -44,6 +44,7 @@ Feature: display configuration inside a non-TTY environment
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: none

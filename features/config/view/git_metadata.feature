@@ -74,6 +74,7 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: stacks
@@ -149,6 +150,7 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: none

@@ -90,6 +90,7 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: none

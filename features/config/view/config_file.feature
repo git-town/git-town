@@ -101,6 +101,7 @@ Feature: display information from config file
         GitHub token: (not set)
         GitLab connector: (not set)
         GitLab token: (not set)
+        gh prompt: yes
 
       Propose:
         breadcrumb: stacks
