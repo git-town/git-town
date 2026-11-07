@@ -120,6 +120,7 @@ func printConfig(config config.UnvalidatedConfig, showSecrets configdomain.ShowS
 	print.Entry("GitHub token", format.Secret(config.NormalConfig.GithubToken, showSecrets))
 	print.Entry("GitLab connector", format.OptionalStringerSetting(config.NormalConfig.GitlabConnectorType))
 	print.Entry("GitLab token", format.Secret(config.NormalConfig.GitlabToken, showSecrets))
+	print.Entry("gh prompt", format.Bool(config.NormalConfig.GhPrompt.Enabled()))
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("breadcrumb", format.StringsSetting(config.NormalConfig.ProposalBreadcrumb.String()))
