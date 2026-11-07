@@ -28,6 +28,7 @@ const (
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
 	forgeURL                    = "GIT_TOWN_FORGE_URL"
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
+	ghPromptDisabled            = "GH_PROMPT_DISABLED"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
 	gitCommitterEmail           = "GIT_COMMITTER_EMAIL"
@@ -80,6 +81,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
 	forgeURL, errForgeURL := load(env, forgeURL, configdomain.ParseForgeType)
+	ghPrompt, errGhPrompt := load(env, ghPromptDisabled, gohacks.ParseBoolOpt[configdomain.GhPrompt])
 	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
 	gitUserName := gitdomain.GitUserNameOptFromStringOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
@@ -121,6 +123,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errFeatureRegex,
 		errForgeType,
 		errForgeURL,
+		errGhPrompt,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -165,6 +168,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		DryRun:                      dryRun,
 		FeatureRegex:                featureRegex,
 		ForgeType:                   forgeType,
+		GhPrompt:                    ghPrompt,
 		GithubConnectorType:         githubConnectorType,
 		GithubToken:                 forgedomain.ParseGithubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitlabConnectorType:         gitlabConnectorType,

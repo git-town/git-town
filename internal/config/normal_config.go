@@ -47,6 +47,7 @@ type NormalConfig struct {
 	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
 	ForgeURL                    Option[configdomain.ForgeURL]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
+	GhPrompt                    configdomain.GhPrompt
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]
 	GiteaToken                  Option[forgedomain.GiteaToken]
@@ -121,6 +122,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
 		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
+		GhPrompt:                    other.GhPrompt.GetOr(self.GhPrompt),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
 		GiteaToken:                  other.GiteaToken.Or(self.GiteaToken),
@@ -288,6 +290,7 @@ func DefaultNormalConfig() NormalConfig {
 		GithubToken:                 None[forgedomain.GithubToken](),
 		GitlabConnectorType:         None[forgedomain.GitlabConnectorType](),
 		GitlabToken:                 None[forgedomain.GitlabToken](),
+		GhPrompt:                    true,
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
 		Interactive:                 configdomain.InteractiveEnabled,
@@ -339,6 +342,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ForgeType:                   partial.ForgeType,
 		ForgeURL:                    partial.ForgeURL.Or(defaults.ForgeURL),
 		ForgejoToken:                partial.ForgejoToken,
+		GhPrompt:                    partial.GhPrompt.GetOr(defaults.GhPrompt),
 		GitUserEmail:                partial.GitUserEmail,
 		GitUserName:                 partial.GitUserName,
 		GiteaToken:                  partial.GiteaToken,

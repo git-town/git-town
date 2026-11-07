@@ -95,6 +95,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	featureRegex, errFeatureRegex := loadErr(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex, ignoreUnknown)
 	forgeType, errForgeType := loadErr(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType, ignoreUnknown)
 	forgeURL, errForgeURL := loadErr(snapshot, configdomain.KeyForgeURL, configdomain.ParseForgeType, ignoreUnknown)
+	ghPrompt, errGhPrompt := loadErr(snapshot, configdomain.KeyGhPrompt, configdomain.ParseGhPromptFromConfigFile, ignoreUnknown)
 	githubConnectorType, errGithubConnectorType := loadErr(snapshot, configdomain.KeyGithubConnectorType, forgedomain.ParseGithubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitlabConnectorType := loadErr(snapshot, configdomain.KeyGitlabConnectorType, forgedomain.ParseGitlabConnectorType, ignoreUnknown)
 	ignoreUncommitted, errIgnoreUncommitted := loadErr(snapshot, configdomain.KeyIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted], ignoreUnknown)
@@ -135,6 +136,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errFeatureRegex,
 		errForgeType,
 		errForgeURL,
+		errGhPrompt,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -179,6 +181,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		DryRun:                      None[configdomain.DryRun](),
 		FeatureRegex:                featureRegex,
 		ForgeType:                   forgeType,
+		GhPrompt:                    ghPrompt,
 		GithubConnectorType:         githubConnectorType,
 		GithubToken:                 load(snapshot, configdomain.KeyGithubToken, forgedomain.ParseGithubToken),
 		GitlabConnectorType:         gitlabConnectorType,

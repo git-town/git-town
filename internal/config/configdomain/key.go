@@ -92,6 +92,7 @@ const (
 	KeyForgeType                           = Key("git-town.forge-type")
 	KeyForgeURL                            = Key("git-town.forge-url")
 	KeyForgejoToken                        = Key("git-town.forgejo-token")
+	KeyGhPrompt                            = Key("git-town.gh-prompt")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
@@ -167,6 +168,7 @@ var keys = []Key{
 	KeyForgeType,
 	KeyForgeURL,
 	KeyForgejoToken,
+	KeyGhPrompt,
 	KeyGitUserEmail,
 	KeyGitUserName,
 	KeyGiteaToken,

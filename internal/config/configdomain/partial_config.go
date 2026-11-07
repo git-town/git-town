@@ -35,6 +35,7 @@ type PartialConfig struct {
 	ForgeType                   Option[forgedomain.ForgeType]
 	ForgeURL                    Option[ForgeURL]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
+	GhPrompt                    Option[GhPrompt]
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]
 	GiteaToken                  Option[forgedomain.GiteaToken]
@@ -100,6 +101,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
 		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
+		GhPrompt:                    other.GhPrompt.Or(self.GhPrompt),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
 		GiteaToken:                  other.GiteaToken.Or(self.GiteaToken),
