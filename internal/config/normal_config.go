@@ -68,6 +68,7 @@ type NormalConfig struct {
 	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
+	RemoteForTesting            Option[configdomain.RemoteForTesting]
 	ShareNewBranches            configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch    configdomain.ShipDeleteTrackingBranch
 	ShipEnterMessage            configdomain.ShipEnterMessage
@@ -141,6 +142,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.GetOr(self.ProposalBreadcrumbDirection),
 		PushBranches:                other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                    other.PushHook.GetOr(self.PushHook),
+		RemoteForTesting:            other.RemoteForTesting.Or(self.RemoteForTesting),
 		ShareNewBranches:            other.ShareNewBranches.GetOr(self.ShareNewBranches),
 		ShipDeleteTrackingBranch:    other.ShipDeleteTrackingBranch.GetOr(self.ShipDeleteTrackingBranch),
 		ShipEnterMessage:            other.ShipEnterMessage.GetOr(self.ShipEnterMessage),

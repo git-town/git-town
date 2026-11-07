@@ -56,6 +56,7 @@ type PartialConfig struct {
 	ProposalBreadcrumbDirection Option[ProposalBreadcrumbDirection]
 	PushBranches                Option[PushBranches]
 	PushHook                    Option[PushHook]
+	RemoteForTesting            Option[RemoteForTesting]
 	ShareNewBranches            Option[ShareNewBranches]
 	ShipDeleteTrackingBranch    Option[ShipDeleteTrackingBranch]
 	ShipEnterMessage            Option[ShipEnterMessage]
@@ -120,6 +121,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.Or(self.ProposalBreadcrumbDirection),
 		PushBranches:                other.PushBranches.Or(self.PushBranches),
 		PushHook:                    other.PushHook.Or(self.PushHook),
+		RemoteForTesting:            other.RemoteForTesting.Or(self.RemoteForTesting),
 		ShareNewBranches:            other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch:    other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
 		ShipEnterMessage:            other.ShipEnterMessage.Or(self.ShipEnterMessage),
