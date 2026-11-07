@@ -11,7 +11,7 @@ func (self RemoteForTesting) String() string {
 	return string(self)
 }
 
-func ParseRemoteForTesting(value stringss.Trimmed, source string) (Option[RemoteForTesting], error) {
+func ParseRemoteForTesting(value stringss.Trimmed, _ string) (Option[RemoteForTesting], error) {
 	if value == "" {
 		return None[RemoteForTesting](), nil
 	}
