@@ -45,6 +45,7 @@ type NormalConfig struct {
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
 	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
+	ForgeURL                    Option[configdomain.ForgeURL]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]
@@ -67,7 +68,6 @@ type NormalConfig struct {
 	ProposalBreadcrumbDirection configdomain.ProposalBreadcrumbDirection
 	PushBranches                configdomain.PushBranches
 	PushHook                    configdomain.PushHook
-	RemoteForTesting            Option[configdomain.RemoteForTesting]
 	ShareNewBranches            configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch    configdomain.ShipDeleteTrackingBranch
 	ShipEnterMessage            configdomain.ShipEnterMessage
@@ -141,7 +141,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ProposalBreadcrumbDirection: other.ProposalBreadcrumbDirection.GetOr(self.ProposalBreadcrumbDirection),
 		PushBranches:                other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                    other.PushHook.GetOr(self.PushHook),
-		RemoteForTesting:            other.RemoteForTesting.Or(self.RemoteForTesting),
+		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ShareNewBranches:            other.ShareNewBranches.GetOr(self.ShareNewBranches),
 		ShipDeleteTrackingBranch:    other.ShipDeleteTrackingBranch.GetOr(self.ShipDeleteTrackingBranch),
 		ShipEnterMessage:            other.ShipEnterMessage.GetOr(self.ShipEnterMessage),
@@ -208,7 +208,7 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
-	urlStr, hasURLStr := remoteURLString(querier, remote, self.RemoteForTesting).Get()
+	urlStr, hasURLStr := remoteURLString(querier, remote, self.ForgeURL).Get()
 	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
@@ -301,7 +301,7 @@ func DefaultNormalConfig() NormalConfig {
 		ProposalBreadcrumbDirection: configdomain.ProposalBreadcrumbDirectionDown,
 		PushBranches:                true,
 		PushHook:                    true,
-		RemoteForTesting:            None[configdomain.RemoteForTesting](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch:    true,
 		ShipEnterMessage:            false,
@@ -359,7 +359,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
-		RemoteForTesting:            partial.RemoteForTesting.Or(defaults.RemoteForTesting),
+		ForgeURL:                    partial.ForgeURL.Or(defaults.ForgeURL),
 		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch:    partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),
 		ShipEnterMessage:            partial.ShipEnterMessage.GetOr(defaults.ShipEnterMessage),
@@ -377,7 +377,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 
 // remoteURLString provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, remoteForTesting Option[configdomain.RemoteForTesting]) Option[string] {
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, remoteForTesting Option[configdomain.ForgeURL]) Option[string] {
 	if remoteForTesting, hasRemoteForTesting := remoteForTesting.Get(); hasRemoteForTesting {
 		return Some(remoteForTesting.String())
 	}

@@ -201,7 +201,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
-		RemoteForTesting:            remoteForTesting,
+		ForgeURL:                    remoteForTesting,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,

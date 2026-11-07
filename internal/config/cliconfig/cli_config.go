@@ -63,7 +63,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
 		PushHook:                    None[configdomain.PushHook](),
-		RemoteForTesting:            None[configdomain.RemoteForTesting](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),

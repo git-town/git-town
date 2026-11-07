@@ -59,7 +59,7 @@ func Load() configdomain.PartialConfig {
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
 		PushBranches:                None[configdomain.PushBranches](),
 		PushHook:                    None[configdomain.PushHook](),
-		RemoteForTesting:            None[configdomain.RemoteForTesting](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),

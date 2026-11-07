@@ -187,7 +187,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
-		RemoteForTesting:            remoteForTesting,
+		ForgeURL:                    remoteForTesting,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,

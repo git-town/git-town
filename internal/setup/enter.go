@@ -333,7 +333,7 @@ EnterForgeData:
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
-		RemoteForTesting:            None[configdomain.RemoteForTesting](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),
