@@ -90,6 +90,7 @@ const (
 	KeyDisplayTypes                        = Key("git-town.display-types")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyForgeType                           = Key("git-town.forge-type")
+	KeyForgeURL                            = Key("git-town.forge-url")
 	KeyForgejoToken                        = Key("git-town.forgejo-token")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
@@ -113,7 +114,6 @@ const (
 	KeyProposalBreadcrumbDirection         = Key("git-town.proposal-breadcrumb-direction")
 	KeyPushBranches                        = Key("git-town.push-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
-	KeyRemoteForTesting                    = Key("git-town.remote-for-testing")
 	KeyShareNewBranches                    = Key("git-town.share-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
 	KeyShipEnterMessage                    = Key("git-town.ship-enter-message")
@@ -165,6 +165,7 @@ var keys = []Key{
 	KeyDisplayTypes,
 	KeyFeatureRegex,
 	KeyForgeType,
+	KeyForgeURL,
 	KeyForgejoToken,
 	KeyGitUserEmail,
 	KeyGitUserName,
@@ -188,7 +189,6 @@ var keys = []Key{
 	KeyProposalBreadcrumbDirection,
 	KeyPushBranches,
 	KeyPushHook,
-	KeyRemoteForTesting,
 	KeyShareNewBranches,
 	KeyShipDeleteTrackingBranch,
 	KeyShipEnterMessage,

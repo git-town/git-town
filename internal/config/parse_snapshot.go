@@ -109,7 +109,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	proposalBreadcrumbDirection, errProposalBreadcrumbDirection := loadErr(snapshot, configdomain.KeyProposalBreadcrumbDirection, configdomain.ParseProposalBreadcrumbDirection, ignoreUnknown)
 	pushBranches, errPushBranches := loadErr(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
 	pushHook, errPushHook := loadErr(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
-	remoteForTesting, errRemoteForTesting := loadErr(snapshot, configdomain.KeyRemoteForTesting, configdomain.ParseForgeType, ignoreUnknown)
+	forgeURL, errForgeURL := loadErr(snapshot, configdomain.KeyForgeURL, configdomain.ParseForgeType, ignoreUnknown)
 	shareNewBranches, errShareNewBranches := loadErr(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := loadErr(snapshot, configdomain.KeyShipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch], ignoreUnknown)
 	shipEnterMessage, errShipEnterMessage := loadErr(snapshot, configdomain.KeyShipEnterMessage, gohacks.ParseBoolOpt[configdomain.ShipEnterMessage], ignoreUnknown)
@@ -148,7 +148,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errProposalBreadcrumbDirection,
 		errPushBranches,
 		errPushHook,
-		errRemoteForTesting,
+		errForgeURL,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
 		errShipEnterMessage,
@@ -201,7 +201,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
-		ForgeURL:                    remoteForTesting,
+		ForgeURL:                    forgeURL,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,
