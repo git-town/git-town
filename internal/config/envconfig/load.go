@@ -26,6 +26,7 @@ const (
 	dryRun                      = "GIT_TOWN_DRY_RUN"
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
+	forgeURL                    = "GIT_TOWN_FORGE_URL"
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
@@ -78,6 +79,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := load(env, dryRun, gohacks.StrOpt2BoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegexOpt)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeTypeOpt)
+	forgeURL, errForgeURL := load(env, forgeURL, configdomain.ParseForgeType)
 	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
 	gitUserName := gitdomain.ParseGitUserNameOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorTypeOpt)
@@ -117,6 +119,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
+		errForgeURL,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -183,6 +186,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		ForgeURL:                    forgeURL,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,

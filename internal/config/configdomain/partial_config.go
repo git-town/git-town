@@ -33,6 +33,7 @@ type PartialConfig struct {
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
 	ForgeType                   Option[forgedomain.ForgeType]
+	ForgeURL                    Option[ForgeURL]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
 	GitUserEmail                Option[gitdomain.GitUserEmail]
 	GitUserName                 Option[gitdomain.GitUserName]
@@ -97,6 +98,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		DryRun:                      other.DryRun.Or(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
+		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
