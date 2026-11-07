@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
-	"github.com/git-town/git-town/v24/internal/config/envconfig"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -209,7 +208,7 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
-	urlStr, hasURLStr := remoteURLString(querier, remote).Get()
+	urlStr, hasURLStr := remoteURLString(querier, remote, self.RemoteForTesting).Get()
 	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
@@ -376,10 +375,9 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 
 // remoteURLString provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	remoteOverride := envconfig.RemoteURLOverride()
-	if remoteOverride.IsSome() {
-		return remoteOverride
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, remoteForTesting Option[configdomain.RemoteForTesting]) Option[string] {
+	if remoteForTesting, hasRemoteForTesting := remoteForTesting.Get(); hasRemoteForTesting {
+		return Some(remoteForTesting.String())
 	}
 	return gitconfig.RemoteURL(querier, remote)
 }
