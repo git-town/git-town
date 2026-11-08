@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -101,7 +102,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
-				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
+				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main", Interactive: clidomain.Interactive("reason")},
 				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitlab}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: None[gitdomain.ProposalBody](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}, NewBranch: "new-target", OldBranch: "old-target"},
@@ -593,6 +594,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
+        "Interactive": "reason",
         "MainBranch": "main",
         "ProposalBody": null,
         "ProposalTitle": null
