@@ -28,6 +28,11 @@ func (self Interactive) Check() error {
 }
 
 // IsEnabled indicates whether interactive mode is enabled.
+func (self Interactive) IsDisabled() bool {
+	return !self.IsEnabled()
+}
+
+// IsEnabled indicates whether interactive mode is enabled.
 func (self Interactive) IsEnabled() bool {
 	return self == InteractiveEnabled
 }
