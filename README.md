@@ -27,8 +27,8 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
   branches, remove shipped branches
 - [switch](https://www.git-town.com/commands/switch.html) - switch between
   branches via text UI
-- [propose](https://www.git-town.com/commands/propose.html) - create a pull or
-  merge request for a feature branch
+- [propose](https://www.git-town.com/commands/propose.html) - create a pull
+  or merge request for a feature branch
 
 #### Stacked changes
 
@@ -55,8 +55,8 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
   feature branch without contributing to it
 - [park](https://www.git-town.com/commands/park) - stop syncing one of your
   feature branches
-- [prototype](https://www.git-town.com/commands/prototype) - sync but don't push
-  a branch
+- [prototype](https://www.git-town.com/commands/prototype) - sync
+  but don't push a branch
 
 #### Dealing with errors
 
@@ -66,19 +66,19 @@ Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
   state before and after previous Git Town commands
 - [skip](https://www.git-town.com/commands/skip.html) - resume the last run Git
   Town command by skipping the current branch
-- [status](https://www.git-town.com/commands/status.html) - displays or resets
-  the current suspended Git Town command
+- [status](https://www.git-town.com/commands/status.html) - displays
+  or resets the current suspended Git Town command
 - [undo](https://www.git-town.com/commands/undo.html) - undo the most recent Git
   Town command
 
 #### Setup and configuration
 
-- [config](https://www.git-town.com/commands/config.html) - display or update
-  your Git Town configuration
+- [config](https://www.git-town.com/commands/config.html) - display
+  or update your Git Town configuration
 - [init](https://www.git-town.com/commands/init) - run the visual setup
   assistant
-- [offline](https://www.git-town.com/commands/offline.html) - start or stop
-  running in offline mode
+- [offline](https://www.git-town.com/commands/offline.html) - start
+  or stop running in offline mode
 - [completions](https://www.git-town.com/commands/completions) -
   auto-completions for bash, zsh, fish, and PowerShell
 
