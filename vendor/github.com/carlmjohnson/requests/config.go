@@ -40,9 +40,12 @@ func GzipConfig(level int, h func(gw *gzip.Writer) error) Config {
 // Deprecated: Use reqtest.Server.
 func TestServerConfig(s *httptest.Server) Config {
 	return func(rb *Builder) {
+		// In memory servers don't set s.URL until after s.Client is called,
+		// so call that first.
+		cl := s.Client()
 		rb.
 			BaseURL(s.URL).
-			Client(s.Client())
+			Client(cl)
 	}
 }
 

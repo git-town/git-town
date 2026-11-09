@@ -2,7 +2,7 @@
 
 actionlint 1.7.12
 alphavet 0.1.0
-conc 0.10.2
+conc 0.11.0
 contest 0.5.0
 cucumber-sort 0.2.0
 deadcode 0.52.0
@@ -19,11 +19,11 @@ keep-sorted 0.10.0
 lefthook 2.2.2
 mdbook 0.4.52
 mdbook-linkcheck 0.7.7
-node 26.12.1
-npm 26.12.1
-npx 26.12.1
+node 26.13.0
+npm 26.13.0
+npx 26.13.0
 ripgrep 15.2.0
-rumdl 0.3.0
+rumdl 0.3.2
 scc 4.1.0
 shellcheck system@* 0.11.0
 shfmt 3.14.1

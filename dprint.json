@@ -7,17 +7,17 @@
   "toml": {
   },
   "typescript": {
-    "semiColons": "asi"
+    "semicolons": "asi"
   },
   "yaml": {
   },
   "includes": ["**/*.{js,ts,json}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
   "plugins": [
-    "https://plugins.dprint.dev/dockerfile-0.4.1.wasm",
-    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
-    "https://plugins.dprint.dev/json-0.23.0.wasm",
-    "https://plugins.dprint.dev/toml-0.7.0.wasm",
-    "https://plugins.dprint.dev/typescript-0.96.1.wasm"
+    "npm:@dprint/dockerfile@0.8.0",
+    "npm:dprint-plugin-yaml@0.6.0",
+    "npm:@dprint/json@0.26.0",
+    "npm:@dprint/toml@0.10.0",
+    "npm:@dprint/typescript@0.99.1"
   ]
 }
