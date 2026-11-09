@@ -5,6 +5,18 @@ code.gitea.io/sdk/gitea
 # codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.2.0
 ## explicit; go 1.23.0
 codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2
+# dev.gaijin.team/go/exhaustruct/v5 v5.2.0
+## explicit; go 1.26.0
+dev.gaijin.team/go/exhaustruct/v5/analyzer
+dev.gaijin.team/go/exhaustruct/v5/internal/astutil
+dev.gaijin.team/go/exhaustruct/v5/internal/cache
+dev.gaijin.team/go/exhaustruct/v5/internal/directive
+dev.gaijin.team/go/exhaustruct/v5/internal/pattern
+dev.gaijin.team/go/exhaustruct/v5/internal/structure
+# dev.gaijin.team/go/golib v0.8.1
+## explicit; go 1.24
+dev.gaijin.team/go/golib/e
+dev.gaijin.team/go/golib/fields
 # github.com/42wim/httpsig v1.3.0
 ## explicit; go 1.26.0
 github.com/42wim/httpsig
@@ -80,9 +92,6 @@ github.com/cucumber/godog/internal/parser
 github.com/cucumber/godog/internal/storage
 github.com/cucumber/godog/internal/tags
 github.com/cucumber/godog/internal/utils
-# github.com/cucumber/messages/go/v21 v21.0.1
-## explicit; go 1.19
-github.com/cucumber/messages/go/v21
 # github.com/cucumber/messages/go/v34 v34.2.1
 ## explicit; go 1.19
 github.com/cucumber/messages/go/v34
@@ -103,9 +112,6 @@ github.com/erikgeiser/coninput
 # github.com/go-fed/httpsig v1.1.0
 ## explicit; go 1.13
 github.com/go-fed/httpsig
-# github.com/gofrs/uuid v4.4.0+incompatible
-## explicit
-github.com/gofrs/uuid
 # github.com/google/go-cmp v0.7.0
 ## explicit; go 1.21
 github.com/google/go-cmp/cmp

@@ -8,6 +8,7 @@ rta.exe
 tools/alphavet*
 tools/collector_addf/collector_addf*
 tools/depth*
+tools/exhaustruct/exhaustruct
 tools/generate_json_schema/generate_json_schema
 tools/generate_json_schema/generate_json_schema.exe
 tools/gofumpt*
