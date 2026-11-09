@@ -13,7 +13,6 @@ CUCUMBERSORT = $(RTA) cucumber-sort
 DEADCODE     = $(RTA) deadcode
 DEPTH        = $(RTA) depth
 DPRINT       = $(RTA) dprint
-EXHAUSTRUCT  = $(RTA) exhaustruct
 GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
@@ -207,7 +206,7 @@ lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v24/...
 
 lint-smoke: ${RTA}  # runs only the essential linters
-	@$(EXHAUSTRUCT) -test=false -explicit "-enforce-rx=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+	@$(GOLANGCILINT) run --enable-only=exhaustruct_v5 --tests=false
 # @$(RTA) ireturn --reject="github.com/git-town/git-town/v24/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:

@@ -8,7 +8,6 @@ cucumber-sort 0.2.0
 deadcode 0.52.0
 depth 1.2.1
 dprint 0.64.3
-exhaustruct 5.2.0
 ghokin 3.10.0
 gofumpt 0.12.0
 golangci-lint 2.15.0
