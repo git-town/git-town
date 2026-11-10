@@ -20,7 +20,6 @@ tools/optioncompare/optioncompare
 tools/optioncompare_in_tests/optioncompare_in_tests
 tools/print_config_exhaustive/print_config_exhaustive
 tools/stats_release/stats_release
-tools/structs_sorted/structs_sorted
 tools/tests_sorted/tests_sorted
 tools/use_equal/use_equal
 tools/rta*

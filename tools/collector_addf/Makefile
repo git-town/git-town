@@ -16,7 +16,6 @@ help:  # prints all available targets
 lint: $(RTA) # runs all linters
 	$(RTA) golangci-lint run
 	$(RTA) deadcode github.com/git-town/git-town/tools/collector_addf
-	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
 	$(RTA) golangci-lint cache clean
 	$(RTA) golangci-lint run
