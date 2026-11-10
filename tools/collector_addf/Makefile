@@ -1,11 +1,10 @@
-.DEFAULT_GOAL := help
-
 RTA_VERSION = 0.43.3
 
 RTA       = ../rta@$(RTA_VERSION)
 ALPHASORT = $(RTA) alphasort
 
 fix: ${RTA} # runs all linters and auto-fixes
+  $(ALPHASORT) fix
 	$(RTA) gofumpt -l -w .
 	go run ../format_self/format_self.go
 
@@ -16,9 +15,10 @@ lint: $(RTA) # runs all linters
 	$(RTA) golangci-lint run
 	$(RTA) deadcode github.com/git-town/git-town/tools/collector_addf
 	@$(ALPHASORT) fix
-	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
 	$(RTA) golangci-lint cache clean
 	$(RTA) golangci-lint run
 
 test: lint  # runs all tests
+
+.DEFAULT_GOAL := help
