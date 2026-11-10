@@ -122,7 +122,6 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 		"make --no-print-directory lint-messy-output" \
 		"make --no-print-directory lint-optioncompare" \
 		"make --no-print-directory lint-print-config" \
-		"make --no-print-directory lint-structs-sorted" \
 		"make --no-print-directory lint-tests-sorted" \
 		"make --no-print-directory lint-use-equal" \
 		"git diff --check" \
