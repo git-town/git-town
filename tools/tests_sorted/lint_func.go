@@ -20,8 +20,8 @@ func isTestFunc(funcType *ast.FuncType) bool {
 		Name: "t",
 		TypeMatcher: &matcher.PointerMatcher{
 			InnerMatcher: &matcher.IdentSelectorMatcher{
-				Namespace: "testing",
 				Name:      "T",
+				Namespace: "testing",
 			},
 		},
 	}
@@ -68,8 +68,8 @@ func tRunSubtestNames(statements []ast.Stmt) ([]string, error) {
 	var subtests []string
 	testNameExtractor := &matcher.FirstStringArgFromFuncCallExtractor{
 		FuncMatcher: &matcher.IdentSelectorMatcher{
-			Namespace: "t",
 			Name:      "Run",
+			Namespace: "t",
 		},
 	}
 	for _, stmt := range statements {

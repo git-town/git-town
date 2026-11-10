@@ -20,8 +20,8 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 		return zero, true, err
 	}
 	program := tea.NewProgram(radioListModel[S]{
-		List:  list.NewList(entries, cursor),
 		help:  help,
+		List:  list.NewList(entries, cursor),
 		title: title,
 	})
 	SendInputs(dialogName, inputs.Next(), program)
@@ -31,8 +31,8 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 }
 
 type radioListModel[S any] struct {
+	help string // help text to display before the radio list
 	list.List[S]
-	help  string // help text to display before the radio list
 	title string // title to display before the help text
 }
 

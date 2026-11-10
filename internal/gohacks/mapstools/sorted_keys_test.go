@@ -14,8 +14,8 @@ func TestSortedKeys(t *testing.T) {
 		t.Parallel()
 		give := map[string]string{
 			"one":   "1",
-			"two":   "2",
 			"three": "3",
+			"two":   "2",
 		}
 		keys := []string{}
 		for key := range mapstools.SortedKeys(give) {

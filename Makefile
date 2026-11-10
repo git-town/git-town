@@ -1,4 +1,4 @@
-RTA_VERSION = 0.40.0
+RTA_VERSION = 0.43.3
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -7,6 +7,7 @@ GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
 ACTIONLINT   = $(RTA) actionlint
+ALPHASORT    = $(RTA) alphasort
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
@@ -86,6 +87,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	go run tools/sync_rta_version/sync_rta_version.go
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
+	$(ALPHASORT) fix
 	$(GOFUMPT) -l -w .
 	$(RUMDL) fmt
 	$(DPRINT) fmt
@@ -109,9 +111,9 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules ${RTA}  # lints the main codebase concurrently
+	$(GOLANGCILINT) cache clean
 	@$(CONC) --show=names \
 		"make --no-print-directory lint-smoke" \
-		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
 		"make --no-print-directory lint-cached-connectors" \
 		"make --no-print-directory lint-collector-addf" \
@@ -130,7 +132,7 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 		"tools/ensure_no_files_with_dashes.sh" \
 		"$(RUMDL) check" \
 		"$(SHFMT) -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs $(SHELLCHECK)" \
-		"$(GOLANGCILINT) cache clean && $(GOLANGCILINT) run" \
+		"$(GOLANGCILINT) run" \
 		"$(GHERKINLINT)" \
 		"$(CUCUMBERSORT) check" \
 		"make --no-print-directory lint-configfile"
@@ -170,9 +172,6 @@ lint-all: lint ${RTA}  # runs all linters
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/use_equal
 	@(cd tools/use_equal && make test)
-
-alphavet: ${RTA}
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...

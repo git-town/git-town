@@ -16,12 +16,12 @@ func TestWebConnector(t *testing.T) {
 	t.Parallel()
 	url := giturl.Parse("git@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").GetOrPanic()
 	connector := azuredevops.WebConnector{
+		BrowserExecutable: None[browserdomain.BrowserExecutable](),
 		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     url.Host,
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
-		BrowserExecutable: None[browserdomain.BrowserExecutable](),
 	}
 
 	t.Run("NewProposalURL", func(t *testing.T) {

@@ -11,18 +11,6 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
-// ConfigSetting contains a key-value pair for a configuration setting.
-type ConfigSetting struct {
-	Key   Key
-	Value string
-}
-
-// ConfigUpdate contains the before and after values of a configuration setting.
-type ConfigUpdate struct {
-	After  ConfigSetting
-	Before ConfigSetting
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
@@ -36,6 +24,18 @@ func (self *Key) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &value)
 	*self = Key(value)
 	return err
+}
+
+// ConfigSetting contains a key-value pair for a configuration setting.
+type ConfigSetting struct {
+	Key   Key
+	Value string
+}
+
+// ConfigUpdate contains the before and after values of a configuration setting.
+type ConfigUpdate struct {
+	After  ConfigSetting
+	Before ConfigSetting
 }
 
 const (
@@ -226,10 +226,10 @@ func ParseKey(name string) Option[Key] {
 var DeprecatedKeys = map[Key]Key{
 	// keep-sorted start
 	KeyDeprecatedBitbucketAppPassword:      KeyBitbucketAPIToken,
+	KeyDeprecatedCodebergToken:             KeyForgejoToken,
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,
-	KeyDeprecatedCodebergToken:             KeyForgejoToken,
 	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
 	KeyDeprecatedHostingPlatform:           KeyForgeType,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
@@ -260,83 +260,83 @@ var ObsoleteBranchLists = map[Key]BranchType{
 // ConfigUpdates defines the config that should have its keys and values to be updated
 var ConfigUpdates = []ConfigUpdate{
 	{
-		Before: ConfigSetting{
-			Key:   KeyProposalBreadcrumb,
-			Value: "cli",
-		},
 		After: ConfigSetting{
 			Key:   KeyProposalBreadcrumb,
 			Value: string(ProposalBreadcrumbBranches),
 		},
+		Before: ConfigSetting{
+			Key:   KeyProposalBreadcrumb,
+			Value: "cli",
+		},
 	},
 	{
-		Before: ConfigSetting{
-			Key:   KeyDeprecatedAliasKill,
-			Value: "town kill",
-		},
 		After: ConfigSetting{
 			Key:   KeyAliasDelete,
 			Value: "town delete",
 		},
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedAliasKill,
+			Value: "town kill",
+		},
 	},
 	{
-		Before: ConfigSetting{
-			Key:   KeyDeprecatedAliasRenameBranch,
-			Value: "town rename-branch",
-		},
 		After: ConfigSetting{
 			Key:   KeyAliasRename,
 			Value: "town rename",
 		},
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedAliasRenameBranch,
+			Value: "town rename-branch",
+		},
 	},
 	{
-		Before: ConfigSetting{
-			Key:   KeyForgeType,
-			Value: "codeberg",
-		},
 		After: ConfigSetting{
 			Key:   KeyForgeType,
 			Value: "forgejo",
 		},
+		Before: ConfigSetting{
+			Key:   KeyForgeType,
+			Value: "codeberg",
+		},
 	},
 	{
-		Before: ConfigSetting{
-			Key:   KeyDeprecatedCreatePrototypeBranches,
-			Value: "true",
-		},
 		After: ConfigSetting{
 			Key:   KeyNewBranchType,
 			Value: "prototype",
 		},
-	},
-	{
 		Before: ConfigSetting{
 			Key:   KeyDeprecatedCreatePrototypeBranches,
-			Value: "false",
+			Value: "true",
 		},
+	},
+	{
 		After: ConfigSetting{
 			Key:   KeyNewBranchType,
 			Value: "feature",
 		},
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "false",
+		},
 	},
 	{
-		Before: ConfigSetting{
-			Key:   KeyDeprecatedPushNewBranches,
-			Value: "true",
-		},
 		After: ConfigSetting{
 			Key:   KeyShareNewBranches,
 			Value: ShareNewBranchesPush.String(),
 		},
-	},
-	{
 		Before: ConfigSetting{
 			Key:   KeyDeprecatedPushNewBranches,
-			Value: "false",
+			Value: "true",
 		},
+	},
+	{
 		After: ConfigSetting{
 			Key:   KeyShareNewBranches,
 			Value: ShareNewBranchesNone.String(),
+		},
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedPushNewBranches,
+			Value: "false",
 		},
 	},
 }
