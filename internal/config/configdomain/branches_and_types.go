@@ -12,10 +12,6 @@ import (
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
 
-type domainUnvalidatedConfig interface {
-	BranchType(gitdomain.LocalBranchName) BranchType
-}
-
 func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, branchType BranchType) {
 	(*self)[branch] = branchType
 }
@@ -51,4 +47,8 @@ func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
 	result := slices.Collect(maps.Keys(*self))
 	slice.NaturalSort(result)
 	return result
+}
+
+type domainUnvalidatedConfig interface {
+	BranchType(gitdomain.LocalBranchName) BranchType
 }

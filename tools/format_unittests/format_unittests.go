@@ -8,26 +8,6 @@ import (
 	"strings"
 )
 
-func main() {
-	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
-		if err != nil || dirEntry.IsDir() || !IsGoTestFile(path) || shouldIgnorePath(path) {
-			return err
-		}
-		fmt.Print(".")
-		content, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		newContent := FormatFileContent(string(content))
-		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
-	})
-	fmt.Println()
-	if err != nil {
-		fmt.Printf("ERROR: %s\n", err)
-		os.Exit(1)
-	}
-}
-
 func FormatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
 	newLines := make([]string, 0, len(lines))
@@ -52,6 +32,26 @@ func IsTopLevelRunLine(line string) bool {
 
 func isEmptyLine(line string) bool {
 	return line == ""
+}
+
+func main() {
+	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
+		if err != nil || dirEntry.IsDir() || !IsGoTestFile(path) || shouldIgnorePath(path) {
+			return err
+		}
+		fmt.Print(".")
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		newContent := FormatFileContent(string(content))
+		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
+	})
+	fmt.Println()
+	if err != nil {
+		fmt.Printf("ERROR: %s\n", err)
+		os.Exit(1)
+	}
 }
 
 // shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).

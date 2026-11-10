@@ -23,16 +23,10 @@ var (
 
 // APIConnector provides access to the GitHub API.
 type APIConnector struct {
-	WebConnector
 	client Mutable[github.Client]
 	log    print.Logger
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
@@ -57,12 +51,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGithub}
 	return Some(proposal), nil
 }
-
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
@@ -90,12 +78,6 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	return result, nil
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector // type check
-
 func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
@@ -104,18 +86,12 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	// When no commit message is given, GitHub determines the squash commit message.
 	commitMessageParts := message.GetOrZero().Parts()
 	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number.Int(), commitMessageParts.Body, &github.PullRequestOptions{
-		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Title.String(),
+		MergeMethod: "squash",
 	})
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
@@ -126,12 +102,6 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
@@ -145,12 +115,6 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = apiConnector // type check
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Value.Users.Get(context.Background(), "")
@@ -172,3 +136,39 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		AuthorizationError:  err,
 	}
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = apiConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = apiConnector // type check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = apiConnector // type check

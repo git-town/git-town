@@ -16,10 +16,10 @@ import (
 type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
-	EnterMessage              configdomain.ShipEnterMessage
-	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
+	EnterMessage              configdomain.ShipEnterMessage
 	mergeError                error
+	Proposal                  forgedomain.Proposal
 }
 
 func (self *ConnectorProposalMerge) Abort() []shared.Opcode {

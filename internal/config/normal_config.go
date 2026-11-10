@@ -45,16 +45,16 @@ type NormalConfig struct {
 	DisplayTypes                configdomain.DisplayTypes
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
+	ForgejoToken                Option[forgedomain.ForgejoToken]
 	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
 	ForgeURL                    Option[configdomain.ForgeURL]
-	ForgejoToken                Option[forgedomain.ForgejoToken]
-	GitUserEmail                Option[gitdomain.GitUserEmail]
-	GitUserName                 Option[gitdomain.GitUserName]
 	GiteaToken                  Option[forgedomain.GiteaToken]
 	GithubConnectorType         Option[forgedomain.GithubConnectorType]
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	GitUserEmail                Option[gitdomain.GitUserEmail]
+	GitUserName                 Option[gitdomain.GitUserName]
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
 	Interactive                 clidomain.Interactive
@@ -274,8 +274,8 @@ func DefaultNormalConfig() NormalConfig {
 		Detached:            false,
 		DevRemote:           gitdomain.RemoteOrigin,
 		DisplayTypes: configdomain.DisplayTypes{
-			Quantifier:  configdomain.QuantifierNo,
 			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
+			Quantifier:  configdomain.QuantifierNo,
 		},
 		DryRun:                      false,
 		FeatureRegex:                None[configdomain.FeatureRegex](),

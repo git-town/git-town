@@ -13,21 +13,6 @@ type APICache struct {
 	results []Result // the cached items
 }
 
-type Result any
-
-// the result of a find operation
-type lookupResult struct {
-	proposal Option[Proposal]
-	source   gitdomain.LocalBranchName
-	target   gitdomain.LocalBranchName
-}
-
-// the result of a search operation
-type searchResult struct {
-	proposals []Proposal
-	source    gitdomain.LocalBranchName
-}
-
 func (self *APICache) Clear(proposalID ProposalNumber) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
 		if proposalResult, ok := result.(lookupResult); ok {
@@ -122,4 +107,19 @@ func (self *APICache) removeSearchResult(source gitdomain.LocalBranchName) {
 		}
 		return false
 	})
+}
+
+type Result any
+
+// the result of a find operation
+type lookupResult struct {
+	proposal Option[Proposal]
+	source   gitdomain.LocalBranchName
+	target   gitdomain.LocalBranchName
+}
+
+// the result of a search operation
+type searchResult struct {
+	proposals []Proposal
+	source    gitdomain.LocalBranchName
 }

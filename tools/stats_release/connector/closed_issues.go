@@ -17,12 +17,12 @@ func (gh Connector) ClosedIssues(date string) ClosedResult {
 	pullRequests := []*github.Issue{}
 	for page := 1; ; page++ {
 		results, response := asserts.NoError2(gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
-			Sort:  "closed",
-			Order: "asc",
 			ListOptions: github.ListOptions{
 				Page:    page,
 				PerPage: pageSize,
 			},
+			Order: "asc",
+			Sort:  "closed",
 		}))
 		fmt.Print(".")
 		for _, issue := range results.Issues {

@@ -18,6 +18,27 @@ func NewSHA(id stringss.Trimmed) (SHA, error) {
 	return SHA(id), nil
 }
 
+// Location widens the type of this SHA to a more generic Location.
+func (self SHA) Location() Location {
+	return Location(string(self))
+}
+
+func (self SHA) String() string {
+	return string(self)
+}
+
+// TrimmedString provides the content of this SHA as a trimmed string.
+func (self SHA) TrimmedString() stringss.Trimmed {
+	return stringss.Trimmed(self)
+}
+
+// Truncate reduces the length of this SHA to the given length.
+// This is only for test code.
+// Please use git.Commands.ShortenSHA in production code.
+func (self SHA) Truncate(newLen int) SHA {
+	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
+}
+
 // NewSHAOrPanic creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHAOrPanic(id stringss.Trimmed) SHA {
@@ -39,25 +60,4 @@ func validateSHA(content stringss.Trimmed) bool {
 		return false
 	}
 	return true
-}
-
-// Location widens the type of this SHA to a more generic Location.
-func (self SHA) Location() Location {
-	return Location(string(self))
-}
-
-func (self SHA) String() string {
-	return string(self)
-}
-
-// TrimmedString provides the content of this SHA as a trimmed string.
-func (self SHA) TrimmedString() stringss.Trimmed {
-	return stringss.Trimmed(self)
-}
-
-// Truncate reduces the length of this SHA to the given length.
-// This is only for test code.
-// Please use git.Commands.ShortenSHA in production code.
-func (self SHA) Truncate(newLen int) SHA {
-	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
 }

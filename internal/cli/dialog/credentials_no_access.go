@@ -34,11 +34,6 @@ func CredentialsNoAccess(connectorError error, inputs dialogcomponents.Inputs, i
 
 type CredentialsNoAccessChoice string
 
-const (
-	CredentialsNoAccessChoiceRetry  CredentialsNoAccessChoice = "enter the credentials again"
-	CredentialsNoAccessChoiceIgnore CredentialsNoAccessChoice = "store these credentials and continue"
-)
-
 func (self CredentialsNoAccessChoice) Repeat() configdomain.ProgramFlow {
 	switch self {
 	case CredentialsNoAccessChoiceRetry:
@@ -52,3 +47,8 @@ func (self CredentialsNoAccessChoice) Repeat() configdomain.ProgramFlow {
 func (self CredentialsNoAccessChoice) String() string {
 	return string(self)
 }
+
+const (
+	CredentialsNoAccessChoiceRetry  CredentialsNoAccessChoice = "enter the credentials again"
+	CredentialsNoAccessChoiceIgnore CredentialsNoAccessChoice = "store these credentials and continue"
+)

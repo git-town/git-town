@@ -34,10 +34,10 @@ const (
 
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
-	*subshell.TestRunner
 	Config    config.UnvalidatedConfig
 	Git       *prodgit.Commands
 	SnapShots configdomain.BeginConfigSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
+	*subshell.TestRunner
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -469,11 +469,6 @@ func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 	}, nil
 }
 
-type LocalBranchesResult struct {
-	AllBranches              gitdomain.LocalBranchNames
-	BranchesInOtherWorktrees gitdomain.LocalBranchNames
-}
-
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
 func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (LocalBranchesResult, error) {
 	branches, err := self.LocalBranches()
@@ -617,4 +612,9 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		}
 	}
 	return nil
+}
+
+type LocalBranchesResult struct {
+	AllBranches              gitdomain.LocalBranchNames
+	BranchesInOtherWorktrees gitdomain.LocalBranchNames
 }

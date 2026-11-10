@@ -22,17 +22,11 @@ var (
 
 // APIConnector provides access to the Bitbucket DataCenter API.
 type APIConnector struct {
-	WebConnector
 	log      print.Logger
 	token    string
 	username string
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
@@ -69,12 +63,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
 	return Some(proposal), nil
 }
-
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch)
@@ -115,3 +103,15 @@ func (self APIConnector) apiBaseURL() string {
 		self.Repository,
 	)
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = apiConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = apiConnector // type check

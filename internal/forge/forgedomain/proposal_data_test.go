@@ -15,6 +15,8 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		data := forgedomain.BitbucketCloudProposalData{
+			CloseSourceBranch: true,
+			Draft:             true,
 			ProposalData: forgedomain.ProposalData{
 				Active:       true,
 				Body:         gitdomain.NewProposalBodyOpt("body"),
@@ -25,8 +27,6 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 				Title:        "title",
 				URL:          "url",
 			},
-			CloseSourceBranch: true,
-			Draft:             true,
 		}
 		serialized, err := json.MarshalIndent(data, "", "  ")
 		must.NoError(t, err)

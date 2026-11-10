@@ -32,25 +32,6 @@ var (
 	}
 )
 
-func main() {
-	issues := Issues{}
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
-			return err
-		}
-		issues = append(issues, LintFile(path)...)
-		return nil
-	})
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if len(issues) > 0 {
-		fmt.Println(issues)
-	}
-	os.Exit(len(issues))
-}
-
 func LintFile(path string) Issues {
 	result := Issues{}
 	fileSet := token.NewFileSet()
@@ -79,4 +60,23 @@ func isIgnoredPath(path string) bool {
 		}
 	}
 	return false
+}
+
+func main() {
+	issues := Issues{}
+	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
+			return err
+		}
+		issues = append(issues, LintFile(path)...)
+		return nil
+	})
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if len(issues) > 0 {
+		fmt.Println(issues)
+	}
+	os.Exit(len(issues))
 }

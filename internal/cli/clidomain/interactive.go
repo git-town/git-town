@@ -46,17 +46,6 @@ func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
 	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
 }
 
-func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
-	boolValue, err := gohacks.ParseBool[bool](value, source)
-	if err != nil {
-		return None[Interactive](), err
-	}
-	if boolValue {
-		return Some(InteractiveEnabled), nil
-	}
-	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
-}
-
 func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) Option[Interactive] {
 	envConfig, hasEnvConfig := envConfigOpt.Get()
 	if hasEnvConfig {
@@ -69,6 +58,17 @@ func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) 
 		return Some(Interactive("only a dumb terminal available"))
 	}
 	return None[Interactive]()
+}
+
+func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
+	boolValue, err := gohacks.ParseBool[bool](value, source)
+	if err != nil {
+		return None[Interactive](), err
+	}
+	if boolValue {
+		return Some(InteractiveEnabled), nil
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
 }
 
 // ------------------------------------------------------------------------------

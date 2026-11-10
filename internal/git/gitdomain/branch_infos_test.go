@@ -43,8 +43,8 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			branchInfos := gitdomain.BranchInfos{
 				{
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/branch-1")),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				},
 			}
 			have := branchInfos.BranchIsActiveInAnotherWorktree("branch-1")
@@ -54,8 +54,8 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			branchInfos := gitdomain.BranchInfos{
 				{
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/branch-1")),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				},
 			}
 			have := branchInfos.BranchIsActiveInAnotherWorktree("zonk")

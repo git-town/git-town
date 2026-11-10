@@ -18,9 +18,9 @@ func CheckList[S any](entries list.Entries[S], selections []int, title, help str
 	}
 	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{
+		help:       help,
 		List:       list.NewList(entries, cursor),
 		Selections: selections,
-		help:       help,
 		title:      title,
 	})
 	SendInputs(dialogName, inputs.Next(), program)
@@ -30,9 +30,9 @@ func CheckList[S any](entries list.Entries[S], selections []int, title, help str
 }
 
 type CheckListModel[S any] struct {
+	help string // help text to display before the checklist
 	list.List[S]
 	Selections []int
-	help       string // help text to display before the checklist
 	title      string // title to display before the help text
 }
 
