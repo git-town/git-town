@@ -8,8 +8,8 @@ Feature: a rewritten local branch is not rebased onto its old tracking branch wh
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
       | parent | local, origin | old     |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And Git setting "git-town.push-branches" is "false"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "parent"
     And I ran "git commit --amend -m new"
     When I run "git-town sync"
@@ -22,4 +22,5 @@ Feature: a rewritten local branch is not rebased onto its old tracking branch wh
 
   Scenario: undo
     When I run "git-town undo"
-    Then the initial commits exist now
+    Then Git Town runs no commands
+    And the initial commits exist now

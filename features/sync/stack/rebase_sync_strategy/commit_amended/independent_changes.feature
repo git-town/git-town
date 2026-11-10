@@ -44,8 +44,7 @@ Feature: syncing a branch with independent changes where a commit was amended
       |          | git checkout branch-1                                                               |
       | branch-1 | git push --force-with-lease --force-if-includes                                     |
       |          | git checkout branch-2                                                               |
-      | branch-2 | git push --force-with-lease --force-if-includes                                     |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
+      | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
     And no rebase is now in progress
     And these commits exist now
