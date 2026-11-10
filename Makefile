@@ -1,4 +1,4 @@
-RTA_VERSION = 0.40.0
+RTA_VERSION = 0.43.3
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -7,6 +7,7 @@ GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
 ACTIONLINT   = $(RTA) actionlint
+ALPHASORT    = $(RTA) alphasort
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
@@ -87,6 +88,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	go run tools/sync_rta_version/sync_rta_version.go
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
+	$(ALPHASORT) fix
 	$(GOFUMPT) -l -w .
 	$(RUMDL) fmt
 	$(DPRINT) fmt
@@ -112,7 +114,6 @@ install:  # builds for the current platform
 lint: node_modules ${RTA}  # lints the main codebase concurrently
 	@$(CONC) --show=names \
 		"make --no-print-directory lint-smoke" \
-		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
 		"make --no-print-directory lint-cached-connectors" \
 		"make --no-print-directory lint-collector-addf" \
@@ -171,9 +172,6 @@ lint-all: lint ${RTA}  # runs all linters
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/use_equal
 	@(cd tools/use_equal && make test)
-
-alphavet: ${RTA}
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...

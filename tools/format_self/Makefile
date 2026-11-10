@@ -1,7 +1,7 @@
-.DEFAULT_GOAL := help
+RTA_VERSION = 0.43.3
 
-RTA_VERSION = 0.40.0
-RTA = ../rta@$(RTA_VERSION)
+RTA       = ../rta@$(RTA_VERSION)
+ALPHASORT = $(RTA) alphasort
 
 fix:  # runs all linters and auto-fixes
 	$(RTA) gofumpt -l -w .
@@ -14,7 +14,6 @@ help:  # prints all available targets
 lint:  # runs all linters
 	$(RTA) golangci-lint run
 	$(RTA) deadcode github.com/git-town/git-town/tools/structs_sorted
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
 	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
 	$(RTA) golangci-lint cache clean
@@ -24,3 +23,5 @@ test: unit lint  # runs all tests
 
 unit:  # runs only the unit tests
 	go test ./...
+
+.DEFAULT_GOAL := help
