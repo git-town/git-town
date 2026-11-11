@@ -1,5 +1,3 @@
-.DEFAULT_GOAL := help
-
 RTA_VERSION = 0.40.0
 
 RTA = ../rta@$(RTA_VERSION)
@@ -21,3 +19,5 @@ lint: $(RTA) # runs all linters
 	$(RTA) golangci-lint run
 
 test: lint  # runs all tests
+
+.DEFAULT_GOAL := help

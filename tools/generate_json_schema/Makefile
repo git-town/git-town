@@ -1,6 +1,5 @@
-.DEFAULT_GOAL := help
-
 RTA_VERSION = 0.40.0
+
 RTA = ../rta@$(RTA_VERSION)
 
 fix:  # runs all linters and auto-fixes
@@ -23,3 +22,5 @@ test: unit lint  # runs all tests
 
 unit:  # runs only the unit tests
 	go test ./...
+
+.DEFAULT_GOAL := help
