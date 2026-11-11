@@ -18,6 +18,12 @@ func NewSHA(id stringss.Trimmed) (SHA, error) {
 	return SHA(id), nil
 }
 
+// NewSHAOrPanic creates a new SHA instance with the given value.
+// The value is verified for correctness.
+func NewSHAOrPanic(id stringss.Trimmed) SHA {
+	return asserts.NoError1(NewSHA(id))
+}
+
 // Location widens the type of this SHA to a more generic Location.
 func (self SHA) Location() Location {
 	return Location(string(self))
@@ -37,12 +43,6 @@ func (self SHA) TrimmedString() stringss.Trimmed {
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {
 	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
-}
-
-// NewSHAOrPanic creates a new SHA instance with the given value.
-// The value is verified for correctness.
-func NewSHAOrPanic(id stringss.Trimmed) SHA {
-	return asserts.NoError1(NewSHA(id))
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.

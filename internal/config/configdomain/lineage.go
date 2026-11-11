@@ -25,6 +25,12 @@ func NewLineage() Lineage {
 	}
 }
 
+func NewLineageWith(data LineageData) Lineage {
+	return Lineage{
+		data: data,
+	}
+}
+
 // provides the nth ancestor of the given branch
 func (self Lineage) Ancestor(branch gitdomain.LocalBranchName, nth uint) Option[gitdomain.LocalBranchName] {
 	current := branch
@@ -290,12 +296,6 @@ func (self Lineage) initializeIfNeeded() Lineage {
 		self.data = make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
 	}
 	return self
-}
-
-func NewLineageWith(data LineageData) Lineage {
-	return Lineage{
-		data: data,
-	}
 }
 
 type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
