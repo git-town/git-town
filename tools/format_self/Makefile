@@ -1,8 +1,8 @@
 RTA_VERSION = 0.40.0
 
-RTA      = ../rta@$(RTA_VERSION)
-DEADCODE = $(RTA) deadcode
-GOFUMPT  = $(RTA) gofumpt
+RTA          = ../rta@$(RTA_VERSION)
+DEADCODE     = $(RTA) deadcode
+GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
 
 fix:  # runs all linters and auto-fixes
