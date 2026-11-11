@@ -33,6 +33,70 @@ func (sbe SwitchBranchEntry) String() string {
 
 type SwitchBranchEntries []SwitchBranchEntry
 
+// NewSwitchBranchEntries provides the entries for the "switch branch" components.
+func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
+	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
+	roots := args.Lineage.Roots()
+	switch args.Order {
+	case configdomain.OrderAsc:
+		slice.NaturalSort(roots)
+	case configdomain.OrderDesc:
+		slice.NaturalSortReverse(roots)
+	}
+	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
+		if !roots.Contains(mainBranch) {
+			roots = append(roots, mainBranch)
+		}
+		roots = roots.Hoist(mainBranch)
+	}
+	// add all entries from the lineage
+	for _, root := range roots {
+		layoutBranches(layoutBranchesArgs{
+			branch:            root,
+			branchesAndTypes:  args.BranchesAndTypes,
+			branchInfos:       args.BranchInfos,
+			branchTypes:       args.BranchTypes,
+			excludeBranches:   args.ExcludeBranches,
+			indentation:       "",
+			lineage:           args.Lineage,
+			order:             args.Order,
+			regexes:           args.Regexes,
+			result:            &entries,
+			showAllBranches:   args.ShowAllBranches,
+			unknownBranchType: args.UnknownBranchType,
+		})
+	}
+	// add branches not in the lineage
+	branchesInLineage := args.Lineage.BranchesWithParents()
+	for _, branchInfo := range args.BranchInfos {
+		localBranch := branchInfo.LocalBranchName()
+		if slices.Contains(roots, localBranch) {
+			continue
+		}
+		if slices.Contains(branchesInLineage, localBranch) {
+			continue
+		}
+		if entries.ContainsBranch(localBranch) {
+			continue
+		}
+		layoutBranches(layoutBranchesArgs{
+			branch:            localBranch,
+			branchesAndTypes:  args.BranchesAndTypes,
+			branchInfos:       args.BranchInfos,
+			branchTypes:       args.BranchTypes,
+			excludeBranches:   args.ExcludeBranches,
+			indentation:       "",
+			lineage:           args.Lineage,
+			order:             args.Order,
+			regexes:           args.Regexes,
+			result:            &entries,
+			showAllBranches:   args.ShowAllBranches,
+			unknownBranchType: args.UnknownBranchType,
+		})
+	}
+	return entries
+}
+
 func (sbes SwitchBranchEntries) ContainsBranch(branch gitdomain.LocalBranchName) bool {
 	for _, entry := range sbes {
 		if entry.Branch == branch {
@@ -72,13 +136,13 @@ func (entries *EntryData) toggle() {
 }
 
 type SwitchModel struct {
-	list.List[SwitchBranchEntry]
 	DisableBranchesInOtherWorktrees bool // whether branches that are active in other worktrees cannot be selected
 	DisplayBranchTypes              configdomain.DisplayTypes
 	EntryData                       EntryData
-	InitialBranchPos                Option[int]    // position of the currently checked out branch in the list
-	Title                           Option[string] // optional title to display above the branch tree
-	UncommittedChanges              bool           // whether the workspace has uncommitted changes
+	InitialBranchPos                Option[int] // position of the currently checked out branch in the list
+	list.List[SwitchBranchEntry]
+	Title              Option[string] // optional title to display above the branch tree
+	UncommittedChanges bool           // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -201,74 +265,10 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-// NewSwitchBranchEntries provides the entries for the "switch branch" components.
-func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
-	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
-	roots := args.Lineage.Roots()
-	switch args.Order {
-	case configdomain.OrderAsc:
-		slice.NaturalSort(roots)
-	case configdomain.OrderDesc:
-		slice.NaturalSortReverse(roots)
-	}
-	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
-		if !roots.Contains(mainBranch) {
-			roots = append(roots, mainBranch)
-		}
-		roots = roots.Hoist(mainBranch)
-	}
-	// add all entries from the lineage
-	for _, root := range roots {
-		layoutBranches(layoutBranchesArgs{
-			branch:            root,
-			branchInfos:       args.BranchInfos,
-			branchTypes:       args.BranchTypes,
-			branchesAndTypes:  args.BranchesAndTypes,
-			excludeBranches:   args.ExcludeBranches,
-			indentation:       "",
-			lineage:           args.Lineage,
-			order:             args.Order,
-			regexes:           args.Regexes,
-			result:            &entries,
-			showAllBranches:   args.ShowAllBranches,
-			unknownBranchType: args.UnknownBranchType,
-		})
-	}
-	// add branches not in the lineage
-	branchesInLineage := args.Lineage.BranchesWithParents()
-	for _, branchInfo := range args.BranchInfos {
-		localBranch := branchInfo.LocalBranchName()
-		if slices.Contains(roots, localBranch) {
-			continue
-		}
-		if slices.Contains(branchesInLineage, localBranch) {
-			continue
-		}
-		if entries.ContainsBranch(localBranch) {
-			continue
-		}
-		layoutBranches(layoutBranchesArgs{
-			branch:            localBranch,
-			branchInfos:       args.BranchInfos,
-			branchTypes:       args.BranchTypes,
-			branchesAndTypes:  args.BranchesAndTypes,
-			excludeBranches:   args.ExcludeBranches,
-			indentation:       "",
-			lineage:           args.Lineage,
-			order:             args.Order,
-			regexes:           args.Regexes,
-			result:            &entries,
-			showAllBranches:   args.ShowAllBranches,
-			unknownBranchType: args.UnknownBranchType,
-		})
-	}
-	return entries
-}
-
 type NewSwitchBranchEntriesArgs struct {
+	BranchesAndTypes  configdomain.BranchesAndTypes
 	BranchInfos       gitdomain.BranchInfos
 	BranchTypes       []configdomain.BranchType
-	BranchesAndTypes  configdomain.BranchesAndTypes
 	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
 	MainBranch        Option[gitdomain.LocalBranchName]
@@ -343,9 +343,9 @@ func layoutBranches(args layoutBranchesArgs) {
 	for _, child := range args.lineage.Children(args.branch, args.order) {
 		layoutBranches(layoutBranchesArgs{
 			branch:            child,
+			branchesAndTypes:  args.branchesAndTypes,
 			branchInfos:       args.branchInfos,
 			branchTypes:       args.branchTypes,
-			branchesAndTypes:  args.branchesAndTypes,
 			excludeBranches:   args.excludeBranches,
 			indentation:       args.indentation + "  ",
 			lineage:           args.lineage,
@@ -360,9 +360,9 @@ func layoutBranches(args layoutBranchesArgs) {
 
 type layoutBranchesArgs struct {
 	branch            gitdomain.LocalBranchName
+	branchesAndTypes  configdomain.BranchesAndTypes
 	branchInfos       gitdomain.BranchInfos
 	branchTypes       []configdomain.BranchType
-	branchesAndTypes  configdomain.BranchesAndTypes
 	excludeBranches   gitdomain.LocalBranchNames
 	indentation       string
 	lineage           configdomain.Lineage

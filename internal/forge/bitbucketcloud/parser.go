@@ -136,6 +136,8 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	return forgedomain.BitbucketCloudProposalData{
+		CloseSourceBranch: closeSourceBranch2,
+		Draft:             draft2,
 		ProposalData: forgedomain.ProposalData{
 			Active:       isActive,
 			MergeWithAPI: false,
@@ -146,7 +148,5 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 			Body:         gitdomain.NewProposalBodyOpt(body2),
 			URL:          url6,
 		},
-		CloseSourceBranch: closeSourceBranch2,
-		Draft:             draft2,
 	}, nil
 }

@@ -20,18 +20,12 @@ var (
 
 // MockConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockConnector struct {
-	WebConnector
-	Proposals     mockproposals.MockProposals
-	ProposalsPath mockproposals.MockProposalPath
 	cache         forgedomain.APICache
 	log           print.Logger
+	Proposals     mockproposals.MockProposals
+	ProposalsPath mockproposals.MockProposalPath
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
 
 func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal, has := self.cache.Lookup(source, target); has {
@@ -50,12 +44,6 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 	return Some(proposal), nil
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
-
 func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
@@ -72,12 +60,6 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 	return result, nil
 }
 
-// ============================================================================
-// merge proposal
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = &mockAPIConnector // type check
-
 func (self *MockConnector) SquashMergeProposal(number forgedomain.ProposalNumber, _ Option[gitdomain.CommitMessage]) error {
 	self.cache.Clear(number)
 	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+number.String()))
@@ -89,12 +71,6 @@ func (self *MockConnector) SquashMergeProposal(number forgedomain.ProposalNumber
 	self.log.Finished(nil)
 	return nil
 }
-
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	self.cache.Clear(proposalData.Data().Number)
@@ -110,12 +86,6 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	return nil
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check
-
 func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	self.cache.Clear(proposalData.Data().Number)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()), colors.BoldCyan().Styled(target.String()))
@@ -129,3 +99,33 @@ func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	self.log.Finished(nil)
 	return nil
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
+
+// ============================================================================
+// merge proposal
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = &mockAPIConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check

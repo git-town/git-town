@@ -1702,8 +1702,8 @@ func runCommand(args runCommandArgs) {
 		subProcess.Dir = args.scenarioState.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
-			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
+			Output:   string(outputBytes),
 		}
 	}
 	args.scenarioState.runResult = Some(runResult)

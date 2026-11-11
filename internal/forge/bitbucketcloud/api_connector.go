@@ -21,24 +21,18 @@ var (
 
 // APIConnector provides access to the Bitbucket Cloud API.
 type APIConnector struct {
-	WebConnector
 	client Mutable[bitbucket.Client]
 	log    print.Logger
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
-		RepoSlug: self.Repository,
 		Query:    query,
+		RepoSlug: self.Repository,
 		States:   []string{"open", "new"},
 	})
 	if err != nil {
@@ -94,18 +88,12 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	}
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = apiConnector // type check
-
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
-		RepoSlug: self.Repository,
 		Query:    fmt.Sprintf("source.branch.name = %q", branch),
+		RepoSlug: self.Repository,
 		States:   []string{"open", "new"},
 	})
 	if err != nil {
@@ -152,12 +140,6 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	return result, nil
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector // type check
-
 func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
@@ -173,12 +155,6 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -198,12 +174,6 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	return err
 }
 
-// ============================================================================
-// udpate proposal source
-// ============================================================================
-
-var _ forgedomain.ProposalSourceUpdater = apiConnector // type check
-
 func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(source.String()))
@@ -221,12 +191,6 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -246,12 +210,6 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	return err
 }
 
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = apiConnector // type check
-
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, err := self.client.Value.User.Profile()
 	if err != nil {
@@ -263,8 +221,8 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 	}
 	_, err = self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
-		RepoSlug: self.Repository,
 		Query:    "",
+		RepoSlug: self.Repository,
 		States:   []string{},
 	})
 	return forgedomain.VerifyCredentialsResult{
@@ -273,3 +231,45 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		AuthorizationError:  err,
 	}
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = apiConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = apiConnector // type check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
+
+// ============================================================================
+// udpate proposal source
+// ============================================================================
+
+var _ forgedomain.ProposalSourceUpdater = apiConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = apiConnector // type check

@@ -24,18 +24,12 @@ var (
 
 // APIConnector provides access to the Forgejo API.
 type APIConnector struct {
-	WebConnector
-	APIToken  Option[forgedomain.ForgejoToken]
 	_client   OptionalMutable[forgejo.Client] // don't use directly, call .getClient()
+	APIToken  Option[forgedomain.ForgejoToken]
 	log       print.Logger
 	remoteURL giturl.Parts
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
@@ -67,12 +61,6 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposalDatas), branch, target)
 	}
 }
-
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
 func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
@@ -107,12 +95,6 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 	return result, nil
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = &apiConnector // type check
-
 func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
@@ -125,9 +107,9 @@ func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber,
 		return err
 	}
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), forgejo.MergePullRequestOption{
+		Message: commitMessageParts.Body,
 		Style:   forgejo.MergeStyleSquash,
 		Title:   commitMessageParts.Title.String(),
-		Message: commitMessageParts.Body,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -136,12 +118,6 @@ func (self *APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber,
 	self.log.Ok()
 	return nil
 }
-
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
 
 func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
@@ -157,12 +133,6 @@ func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	return err
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = &apiConnector // type check
-
 func (self *APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	client, err := self.getClient()
@@ -177,12 +147,6 @@ func (self *APIConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = &apiConnector // type check
 
 func (self *APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	client, err := self.getClient()
@@ -224,6 +188,42 @@ func (self *APIConnector) getClient() (*forgejo.Client, error) {
 	self._client = MutableSome(forgejoClient)
 	return forgejoClient, nil
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = &apiConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &apiConnector // type check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = &apiConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = &apiConnector // type check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = &apiConnector // type check
 
 func FilterPullRequests(pullRequests []*forgejo.PullRequest, branch, target gitdomain.LocalBranchName) []*forgejo.PullRequest {
 	result := []*forgejo.PullRequest{}

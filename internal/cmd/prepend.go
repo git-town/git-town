@@ -65,6 +65,338 @@ main
 `
 )
 
+// provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
+func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config config.NormalConfig) Option[configdomain.SyncStrategy] {
+	switch branchType {
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
+		return None[configdomain.SyncStrategy]()
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch:
+		return Some(config.SyncFeatureStrategy.SyncStrategy())
+	case configdomain.BranchTypePrototypeBranch:
+		return Some(config.SyncPrototypeStrategy.SyncStrategy())
+	}
+	panic("unhandled branch type: " + branchType.String())
+}
+
+type prependArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     configdomain.PartialConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	proposalBody  Option[gitdomain.ProposalBody]
+	proposalTitle Option[gitdomain.ProposalTitle]
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
+func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prependData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult prependData
+	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync.ShouldSync() {
+		fetch = false
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 fetch,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	if branchesSnapshot.DetachedHead {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.PrependDetachedHead)
+	}
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	targetBranch := gitdomain.LocalBranchNameOrPanic(stringss.Trim(args.argv[0]))
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
+	}
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+	}
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
+	ancestor, hasAncestor := ancestorOpt.Get()
+	if !hasAncestor {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
+	}
+	commitsToBeam := []gitdomain.Commit{}
+	if args.beam {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
+		if err != nil {
+			return emptyResult, configdomain.ProgramFlowExit, err
+		}
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactive)
+		if err != nil || exit {
+			return emptyResult, configdomain.ProgramFlowExit, err
+		}
+	}
+	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
+	if repo.UnvalidatedConfig.NormalConfig.Detached {
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
+	}
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
+	slices.Reverse(parentAndAncestors)
+	proposalOpt := None[forgedomain.Proposal]()
+	if !repo.IsOffline {
+		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
+	}
+	propose := args.propose
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
+	return prependData{
+		beam:                args.beam,
+		branchesSnapshot:    branchesSnapshot,
+		branchesToSync:      branchesToSync,
+		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
+		commit:              args.commit,
+		commitMessage:       args.commitMessage,
+		commitsToBeam:       commitsToBeam,
+		config:              validatedConfig,
+		connector:           connector,
+		detectedForgeType:   detectedForgeType,
+		existingParent:      ancestor,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		initialBranchInfo:   *initialBranchInfo,
+		inputs:              inputs,
+		newParentCandidates: parentAndAncestors,
+		nonExistingBranches: nonExistingBranches,
+		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
+		previousBranch:      previousBranch,
+		proposal:            proposalOpt,
+		proposalBody:        args.proposalBody,
+		proposalTitle:       args.proposalTitle,
+		propose:             propose,
+		prototype:           args.prototype,
+		remotes:             remotes,
+		stashSize:           stashSize,
+		targetBranch:        targetBranch,
+	}, configdomain.ProgramFlowContinue, nil
+}
+
+type prependData struct {
+	beam                configdomain.Beam
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToSync      configdomain.BranchesToSync
+	branchInfos         gitdomain.BranchInfos
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
+	commit              configdomain.Commit
+	commitMessage       Option[gitdomain.CommitMessage]
+	commitsToBeam       gitdomain.Commits
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	detectedForgeType   Option[forgedomain.DetectedForgeType]
+	existingParent      gitdomain.LocalBranchName
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	initialBranchInfo   gitdomain.BranchInfo
+	inputs              dialogcomponents.Inputs
+	newParentCandidates gitdomain.LocalBranchNames
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	preFetchBranchInfos gitdomain.BranchInfos
+	previousBranch      Option[gitdomain.LocalBranchName]
+	proposal            Option[forgedomain.Proposal]
+	proposalBody        Option[gitdomain.ProposalBody]
+	proposalTitle       Option[gitdomain.ProposalTitle]
+	propose             configdomain.Propose
+	prototype           configdomain.Prototype
+	remotes             gitdomain.Remotes
+	stashSize           gitdomain.StashSize
+	targetBranch        gitdomain.LocalBranchName
+}
+
+func executePrepend(args prependArgs) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        args.cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, flow, err := determinePrependData(args, repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	runProgram := prependProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		Command:               "prepend",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
+}
+
+// provides the name of the youngest ancestor branch of the given branch that actually exists,
+// either locally or remotely.
+func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+	for {
+		parent, hasParent := lineage.Parent(branch).Get()
+		if !hasParent {
+			return None[gitdomain.LocalBranchName]()
+		}
+		if branchInfos.HasBranch(parent) {
+			return Some(parent)
+		}
+		branch = parent
+	}
+}
+
+func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependData) {
+	if len(data.commitsToBeam) == 0 {
+		return
+	}
+	// cherry-pick the commits into the new branch
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
+		)
+	}
+	// manually delete the beamed commits from the old branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.initialBranch},
+	)
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CommitRemove{SHA: commitToBeam.SHA},
+		)
+	}
+	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	initialBranchType := data.config.BranchType(data.initialBranch)
+	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig)
+	// go back to the target branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.targetBranch},
+	)
+}
+
 func prependCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
@@ -158,285 +490,15 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-type prependArgs struct {
-	argv          []string
-	beam          configdomain.Beam
-	cliConfig     configdomain.PartialConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	proposalBody  Option[gitdomain.ProposalBody]
-	proposalTitle Option[gitdomain.ProposalTitle]
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
-}
-
-func executePrepend(args prependArgs) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        args.cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determinePrependData(args, repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	runProgram := prependProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               "prepend",
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
-type prependData struct {
-	beam                configdomain.Beam
-	branchInfos         gitdomain.BranchInfos
-	branchInfosLastRun  Option[gitdomain.BranchInfos]
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      configdomain.BranchesToSync
-	commit              configdomain.Commit
-	commitMessage       Option[gitdomain.CommitMessage]
-	commitsToBeam       gitdomain.Commits
-	config              config.ValidatedConfig
-	connector           Option[forgedomain.Connector]
-	detectedForgeType   Option[forgedomain.DetectedForgeType]
-	existingParent      gitdomain.LocalBranchName
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	initialBranchInfo   gitdomain.BranchInfo
-	inputs              dialogcomponents.Inputs
-	newParentCandidates gitdomain.LocalBranchNames
-	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	preFetchBranchInfos gitdomain.BranchInfos
-	previousBranch      Option[gitdomain.LocalBranchName]
-	proposal            Option[forgedomain.Proposal]
-	proposalBody        Option[gitdomain.ProposalBody]
-	proposalTitle       Option[gitdomain.ProposalTitle]
-	propose             configdomain.Propose
-	prototype           configdomain.Prototype
-	remotes             gitdomain.Remotes
-	stashSize           gitdomain.StashSize
-	targetBranch        gitdomain.LocalBranchName
-}
-
-func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (prependData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult prependData
-	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	fetch := true
-	if repoStatus.OpenChanges {
-		fetch = false
-	}
-	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
-		fetch = false
-	}
-	if !config.AutoSync.ShouldSync() {
-		fetch = false
-	}
-	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connector,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 fetch,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	if branchesSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.PrependDetachedHead)
-	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	targetBranch := gitdomain.LocalBranchNameOrPanic(stringss.Trim(args.argv[0]))
-	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
-		targetBranch = prefix.Apply(targetBranch)
-	}
-	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
-	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch, config.DevRemote)
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
-	if !hasInitialBranchInfo {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
-	ancestor, hasAncestor := ancestorOpt.Get()
-	if !hasAncestor {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
-	}
-	commitsToBeam := []gitdomain.Commit{}
-	if args.beam {
-		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
-		if err != nil {
-			return emptyResult, configdomain.ProgramFlowExit, err
-		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs, validatedConfig.NormalConfig.Interactive)
-		if err != nil || exit {
-			return emptyResult, configdomain.ProgramFlowExit, err
-		}
-	}
-	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
-	if repo.UnvalidatedConfig.NormalConfig.Detached {
-		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
-	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
-	slices.Reverse(parentAndAncestors)
-	proposalOpt := None[forgedomain.Proposal]()
-	if !repo.IsOffline {
-		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
-	}
-	propose := args.propose
-	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
-		propose = true
-	}
-	return prependData{
-		beam:                args.beam,
-		branchInfos:         branchesSnapshot.Branches,
-		branchInfosLastRun:  branchInfosLastRun,
-		branchesSnapshot:    branchesSnapshot,
-		branchesToSync:      branchesToSync,
-		commit:              args.commit,
-		commitMessage:       args.commitMessage,
-		commitsToBeam:       commitsToBeam,
-		config:              validatedConfig,
-		connector:           connector,
-		detectedForgeType:   detectedForgeType,
-		existingParent:      ancestor,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		initialBranchInfo:   *initialBranchInfo,
-		inputs:              inputs,
-		newParentCandidates: parentAndAncestors,
-		nonExistingBranches: nonExistingBranches,
-		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
-		previousBranch:      previousBranch,
-		proposal:            proposalOpt,
-		proposalBody:        args.proposalBody,
-		proposalTitle:       args.proposalTitle,
-		propose:             propose,
-		prototype:           args.prototype,
-		remotes:             remotes,
-		stashSize:           stashSize,
-		targetBranch:        targetBranch,
-	}, configdomain.ProgramFlowContinue, nil
-}
-
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+			BranchesToDelete:    NewMutable(&branchesToDelete),
 			BranchInfos:         data.branchInfos,
 			BranchInfosPrevious: data.branchInfosLastRun,
-			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
@@ -452,8 +514,8 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 	})
 	// set the parent of the newly created branch
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
-		Branch:    data.targetBranch,
 		Ancestors: data.newParentCandidates,
+		Branch:    data.targetBranch,
 	})
 	// set the parent of the branch prepended to
 	prog.Value.Add(&opcodes.LineageParentSetIfExists{
@@ -511,9 +573,9 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
+			PreviousBranchCandidates: previousBranchCandidates,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
-			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
 	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
@@ -526,68 +588,6 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		})
 	}
 	return optimizer.Optimize(prog.Immutable())
-}
-
-// provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
-func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config config.NormalConfig) Option[configdomain.SyncStrategy] {
-	switch branchType {
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypePerennialBranch:
-		return None[configdomain.SyncStrategy]()
-	case
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch:
-		return Some(config.SyncFeatureStrategy.SyncStrategy())
-	case configdomain.BranchTypePrototypeBranch:
-		return Some(config.SyncPrototypeStrategy.SyncStrategy())
-	}
-	panic("unhandled branch type: " + branchType.String())
-}
-
-// provides the name of the youngest ancestor branch of the given branch that actually exists,
-// either locally or remotely.
-func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
-	for {
-		parent, hasParent := lineage.Parent(branch).Get()
-		if !hasParent {
-			return None[gitdomain.LocalBranchName]()
-		}
-		if branchInfos.HasBranch(parent) {
-			return Some(parent)
-		}
-		branch = parent
-	}
-}
-
-func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependData) {
-	if len(data.commitsToBeam) == 0 {
-		return
-	}
-	// cherry-pick the commits into the new branch
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CherryPick{SHA: commitToBeam.SHA},
-		)
-	}
-	// manually delete the beamed commits from the old branch
-	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.initialBranch},
-	)
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CommitRemove{SHA: commitToBeam.SHA},
-		)
-	}
-	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
-	initialBranchType := data.config.BranchType(data.initialBranch)
-	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig)
-	// go back to the target branch
-	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.targetBranch},
-	)
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent

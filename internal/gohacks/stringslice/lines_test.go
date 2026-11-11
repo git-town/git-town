@@ -11,8 +11,8 @@ func TestSlice(t *testing.T) {
 	t.Parallel()
 	tests := map[string][]string{
 		"":                {},
-		"single line":     {"single line"},
 		"multiple\nlines": {"multiple", "lines"},
+		"single line":     {"single line"},
 	}
 	for give, want := range tests {
 		have := stringslice.Lines(give)

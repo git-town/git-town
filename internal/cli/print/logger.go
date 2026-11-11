@@ -54,11 +54,11 @@ func (self Logger) Start(template string, data ...any) {
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
 }
 
+func (self Logger) Success(message string) {
+	self.Log(colors.BoldGreen().Styled(message))
+}
+
 var (
 	logStartOnce  sync.Once
 	logStartRegex *regexp.Regexp
 )
-
-func (self Logger) Success(message string) {
-	self.Log(colors.BoldGreen().Styled(message))
-}

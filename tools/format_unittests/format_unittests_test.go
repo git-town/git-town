@@ -164,8 +164,8 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("IsGoTestFile", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]bool{
-			"/one/two/three_test.go": true,
 			"/one/two/three.go":      false,
+			"/one/two/three_test.go": true,
 			"/one/two_test/three.go": false,
 		}
 		for give, want := range tests {
@@ -177,8 +177,8 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("IsTopLevelRunLine", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]bool{
-			"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
 			"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
+			"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
 		}
 		for give, want := range tests {
 			have := formatUnittests.IsTopLevelRunLine(give)

@@ -13,24 +13,24 @@ import (
 func TestParseGithubConnectorType(t *testing.T) {
 	t.Parallel()
 	tests := map[stringss.Trimmed]struct {
-		val Option[forgedomain.GithubConnectorType]
 		err error
+		val Option[forgedomain.GithubConnectorType]
 	}{
 		"api": {
-			val: Some(forgedomain.GithubConnectorTypeAPI),
 			err: nil,
+			val: Some(forgedomain.GithubConnectorTypeAPI),
 		},
 		"gh": {
-			val: Some(forgedomain.GithubConnectorTypeGh),
 			err: nil,
+			val: Some(forgedomain.GithubConnectorTypeGh),
 		},
 		"invalid": {
 			val: None[forgedomain.GithubConnectorType](),
 			err: errors.New(`unknown GithubConnectorType defined in test: "invalid"`),
 		},
 		"": {
-			val: None[forgedomain.GithubConnectorType](),
 			err: nil,
+			val: None[forgedomain.GithubConnectorType](),
 		},
 	}
 	for give, want := range tests {

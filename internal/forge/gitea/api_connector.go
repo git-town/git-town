@@ -25,18 +25,12 @@ var (
 
 // AuthConnector provides access to the gitea API.
 type AuthConnector struct {
-	WebConnector
-	APIToken  forgedomain.GiteaToken
-	RemoteURL giturl.Parts
 	_client   OptionalMutable[gitea.Client] // don't use directly, call .getClient()
+	APIToken  forgedomain.GiteaToken
 	log       print.Logger
+	RemoteURL giturl.Parts
+	WebConnector
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	client, err := self.getClient()
@@ -67,12 +61,6 @@ func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 }
-
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
 func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	client, err := self.getClient()
@@ -107,12 +95,6 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 	return result, nil
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = &apiConnector // type check
-
 func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	client, err := self.getClient()
 	if err != nil {
@@ -125,9 +107,9 @@ func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber
 	commitMessageParts := message.GetOrZero().Parts()
 	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(number.String()))
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, number.Int64(), gitea.MergePullRequestOption{
+		Message: commitMessageParts.Body,
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Title.String(),
-		Message: commitMessageParts.Body,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -136,12 +118,6 @@ func (self *AuthConnector) SquashMergeProposal(number forgedomain.ProposalNumber
 	self.log.Ok()
 	return nil
 }
-
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
 
 func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	client, err := self.getClient()
@@ -157,12 +133,6 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	return err
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = &apiConnector // type check
-
 func (self *AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	client, err := self.getClient()
 	if err != nil {
@@ -177,12 +147,6 @@ func (self *AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = &apiConnector
 
 func (self *AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	client, err := self.getClient()
@@ -226,3 +190,39 @@ func (self *AuthConnector) getClient() (*gitea.Client, error) {
 	self._client = MutableSome(giteaClient)
 	return giteaClient, err
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = &apiConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &apiConnector // type check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = &apiConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = &apiConnector // type check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = &apiConnector

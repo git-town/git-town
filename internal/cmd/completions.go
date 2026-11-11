@@ -44,6 +44,16 @@ To load completions for each session, add the above line to your PowerShell prof
 `
 )
 
+// completionTypes provides all CompletionType values.
+func completionTypes() []CompletionType {
+	return []CompletionType{
+		CompletionTypeBash,
+		CompletionTypeZsh,
+		CompletionTypeFish,
+		CompletionTypePowershell,
+	}
+}
+
 func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsNoDescFlag := false
 	completionsCmd := cobra.Command{
@@ -60,6 +70,29 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
 }
+
+// CompletionType defines the valid shells for which Git Town can create auto-completions.
+// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
+type CompletionType string
+
+func NewCompletionType(text string) (CompletionType, error) {
+	text = strings.ToLower(text)
+	for _, completionType := range completionTypes() {
+		if text == completionType.String() {
+			return completionType, nil
+		}
+	}
+	return CompletionTypeBash, fmt.Errorf(messages.CompletionTypeUnknown, text)
+}
+
+func (self CompletionType) String() string { return string(self) }
+
+const (
+	CompletionTypeBash       = CompletionType("bash")
+	CompletionTypeZsh        = CompletionType("zsh")
+	CompletionTypeFish       = CompletionType("fish")
+	CompletionTypePowershell = CompletionType("powershell")
+)
 
 func executeCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
 	completionType, err := NewCompletionType(args[0])
@@ -80,37 +113,4 @@ func executeCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobr
 		return rootCmd.GenPowerShellCompletion(os.Stdout)
 	}
 	return fmt.Errorf(messages.ArgumentUnknown, args[0])
-}
-
-// CompletionType defines the valid shells for which Git Town can create auto-completions.
-// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
-type CompletionType string
-
-func (self CompletionType) String() string { return string(self) }
-
-const (
-	CompletionTypeBash       = CompletionType("bash")
-	CompletionTypeZsh        = CompletionType("zsh")
-	CompletionTypeFish       = CompletionType("fish")
-	CompletionTypePowershell = CompletionType("powershell")
-)
-
-// completionTypes provides all CompletionType values.
-func completionTypes() []CompletionType {
-	return []CompletionType{
-		CompletionTypeBash,
-		CompletionTypeZsh,
-		CompletionTypeFish,
-		CompletionTypePowershell,
-	}
-}
-
-func NewCompletionType(text string) (CompletionType, error) {
-	text = strings.ToLower(text)
-	for _, completionType := range completionTypes() {
-		if text == completionType.String() {
-			return completionType, nil
-		}
-	}
-	return CompletionTypeBash, fmt.Errorf(messages.CompletionTypeUnknown, text)
 }

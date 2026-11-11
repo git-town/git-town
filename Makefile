@@ -1,4 +1,4 @@
-RTA_VERSION = 0.40.0
+RTA_VERSION = 0.43.3
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -7,6 +7,7 @@ GO_TEST_ARGS = LANG=C GOGC=off
 
 RTA          = tools/rta@$(RTA_VERSION)
 ACTIONLINT   = $(RTA) actionlint
+ALPHASORT    = $(RTA) alphasort
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
@@ -86,6 +87,7 @@ fix: ${RTA}  # runs all linters and auto-fixes
 	go run tools/sync_rta_version/sync_rta_version.go
 	make --no-print-directory keep-sorted
 	make --no-print-directory generate-json-schema
+	$(ALPHASORT) fix
 	$(GOFUMPT) -l -w .
 	$(RUMDL) fmt
 	$(DPRINT) fmt
@@ -109,9 +111,9 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: node_modules ${RTA}  # lints the main codebase concurrently
+	$(GOLANGCILINT) cache clean
 	@$(CONC) --show=names \
 		"make --no-print-directory lint-smoke" \
-		"make --no-print-directory alphavet" \
 		"make --no-print-directory deadcode" \
 		"make --no-print-directory lint-cached-connectors" \
 		"make --no-print-directory lint-collector-addf" \
@@ -120,7 +122,6 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 		"make --no-print-directory lint-messy-output" \
 		"make --no-print-directory lint-optioncompare" \
 		"make --no-print-directory lint-print-config" \
-		"make --no-print-directory lint-structs-sorted" \
 		"make --no-print-directory lint-tests-sorted" \
 		"make --no-print-directory lint-use-equal" \
 		"git diff --check" \
@@ -130,7 +131,7 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 		"tools/ensure_no_files_with_dashes.sh" \
 		"$(RUMDL) check" \
 		"$(SHFMT) -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs $(SHELLCHECK)" \
-		"$(GOLANGCILINT) cache clean && $(GOLANGCILINT) run" \
+		"$(GOLANGCILINT) run" \
 		"$(GHERKINLINT)" \
 		"$(CUCUMBERSORT) check" \
 		"make --no-print-directory lint-configfile"
@@ -162,17 +163,12 @@ lint-all: lint ${RTA}  # runs all linters
 	@(cd tools/print_config_exhaustive && make test)
 	@echo lint tools/stats_release
 	@(cd tools/stats_release && make test)
-	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && make test)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/use_equal
 	@(cd tools/use_equal && make test)
-
-alphavet: ${RTA}
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v24/...
@@ -206,11 +202,8 @@ lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v24/...
 
 lint-smoke: ${RTA}  # runs only the essential linters
-	@(cd tools/exhaustruct && go build) && ./tools/exhaustruct/exhaustruct -test=false -explicit "-enforce-rx=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+	@$(GOLANGCILINT) run --enable-only=exhaustruct_v5 --tests=false
 # @$(RTA) ireturn --reject="github.com/git-town/git-town/v24/pkg/prelude.Option" github.com/git-town/git-town/...
-
-lint-structs-sorted:
-	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
 
 lint-tests-sorted:
 	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
@@ -260,7 +253,6 @@ UNIT_TEST_DIRS = \
 	./tools/messages_sorted/... \
 	./tools/messy_output/... \
 	./tools/stats_release/... \
-	./tools/structs_sorted/... \
 	./tools/tests_sorted/...
 
 unit: install  # runs only the unit tests for changed code
@@ -297,7 +289,6 @@ deadcode: ${RTA}
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_self" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_unittests" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/stats_release" \
-		"$(DEADCODE) github.com/git-town/git-town/tools/structs_sorted" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/lint_steps" \
 		"$(DEADCODE) -test github.com/git-town/git-town/v24 \
 			| grep -v BranchExists \

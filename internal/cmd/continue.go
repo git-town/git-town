@@ -31,10 +31,8 @@ const continueDesc = "Resume the last run Git Town command after having resolved
 func continueCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "continue",
-		GroupID: cmdhelpers.GroupIDErrors,
 		Args:    cobra.NoArgs,
-		Short:   continueDesc,
+		GroupID: cmdhelpers.GroupIDErrors,
 		Long:    cmdhelpers.Long(continueDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
@@ -58,9 +56,128 @@ func continueCmd() *cobra.Command {
 			})
 			return executeContinue(cliConfig)
 		},
+		Short: continueDesc,
+		Use:   "continue",
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+func determineContinueData(repo execute.OpenRepoResult) (continueData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult continueData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: false,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	if repoStatus.Conflicts {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
+	}
+	if repoStatus.UntrackedChanges {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
+	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
+		if err != nil {
+			return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			initialBranch = currentBranch
+		}
+	}
+	return continueData{
+		branchesSnapshot:  branchesSnapshot,
+		config:            validatedConfig,
+		connector:         connector,
+		detectedForgeType: detectedForgeType,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     initialBranch,
+		inputs:            inputs,
+		stashSize:         stashSize,
+	}, configdomain.ProgramFlowContinue, err
+}
+
+func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {
+	runstatePath := runstate.NewRunstatePath(repo.ConfigDir)
+	runStateOpt, err := runstate.Load(runstatePath)
+	if err != nil {
+		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	runState, hasRunState := runStateOpt.Get()
+	if !hasRunState || runState.IsFinished() {
+		fmt.Println(messages.ContinueNothingToDo)
+		return runstate.EmptyRunState(), true, nil
+	}
+	runState.AbortProgram = program.Program{}
+	return runState, false, nil
+}
+
+type continueData struct {
+	branchesSnapshot  gitdomain.BranchesSnapshot
+	config            config.ValidatedConfig
+	connector         Option[forgedomain.Connector]
+	detectedForgeType Option[forgedomain.DetectedForgeType]
+	hasOpenChanges    bool
+	initialBranch     gitdomain.LocalBranchName
+	inputs            dialogcomponents.Inputs
+	stashSize         gitdomain.StashSize
 }
 
 func executeContinue(cliConfig configdomain.PartialConfig) error {
@@ -111,121 +228,4 @@ Start:
 		PendingCommand:          None[string](),
 		RunState:                runState,
 	})
-}
-
-func determineContinueData(repo execute.OpenRepoResult) (continueData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult continueData
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connector,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: false,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	if repoStatus.Conflicts {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
-	}
-	if repoStatus.UntrackedChanges {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
-	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
-		if err != nil {
-			return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		if currentBranch, has := currentBranchOpt.Get(); has {
-			initialBranch = currentBranch
-		}
-	}
-	return continueData{
-		branchesSnapshot:  branchesSnapshot,
-		config:            validatedConfig,
-		connector:         connector,
-		detectedForgeType: detectedForgeType,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     initialBranch,
-		inputs:            inputs,
-		stashSize:         stashSize,
-	}, configdomain.ProgramFlowContinue, err
-}
-
-type continueData struct {
-	branchesSnapshot  gitdomain.BranchesSnapshot
-	config            config.ValidatedConfig
-	connector         Option[forgedomain.Connector]
-	detectedForgeType Option[forgedomain.DetectedForgeType]
-	hasOpenChanges    bool
-	initialBranch     gitdomain.LocalBranchName
-	inputs            dialogcomponents.Inputs
-	stashSize         gitdomain.StashSize
-}
-
-func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {
-	runstatePath := runstate.NewRunstatePath(repo.ConfigDir)
-	runStateOpt, err := runstate.Load(runstatePath)
-	if err != nil {
-		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	runState, hasRunState := runStateOpt.Get()
-	if !hasRunState || runState.IsFinished() {
-		fmt.Println(messages.ContinueNothingToDo)
-		return runstate.EmptyRunState(), true, nil
-	}
-	runState.AbortProgram = program.Program{}
-	return runState, false, nil
 }
