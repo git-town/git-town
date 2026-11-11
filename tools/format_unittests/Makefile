@@ -1,6 +1,5 @@
-.DEFAULT_GOAL := help
-
 RTA_VERSION = 0.43.3
+
 RTA = ../rta@$(RTA_VERSION)
 
 
@@ -23,3 +22,5 @@ test: unit lint  # runs all tests
 
 unit:  # runs only the unit tests
 	go test ./...
+
+.DEFAULT_GOAL := help
