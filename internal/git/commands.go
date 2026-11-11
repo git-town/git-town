@@ -496,7 +496,7 @@ func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gi
 
 // RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
 // This is the check of "git push --force-if-includes", done without pushing.
-func (self *Commands) RemoteTipInReflog(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
+func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
 	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
 	if err != nil {
 		return false
@@ -506,7 +506,7 @@ func (self *Commands) RemoteTipInReflog(querier subshelldomain.Querier, branch g
 		return false
 	}
 	for _, state := range strings.Fields(output.String()) {
-		if _, err := querier.Query("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
+		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
 			return true
 		}
 	}
