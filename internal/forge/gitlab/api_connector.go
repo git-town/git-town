@@ -22,9 +22,9 @@ var (
 
 // APIConnector provides access to the GitLab API.
 type APIConnector struct {
+	WebConnector
 	client *gitlab.Client
 	log    print.Logger
-	WebConnector
 }
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

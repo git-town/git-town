@@ -25,11 +25,11 @@ var (
 
 // AuthConnector provides access to the gitea API.
 type AuthConnector struct {
+	WebConnector
 	_client   OptionalMutable[gitea.Client] // don't use directly, call .getClient()
 	APIToken  forgedomain.GiteaToken
 	log       print.Logger
 	RemoteURL giturl.Parts
-	WebConnector
 }
 
 func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

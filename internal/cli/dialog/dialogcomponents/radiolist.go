@@ -31,8 +31,8 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 }
 
 type radioListModel[S any] struct {
-	help string // help text to display before the radio list
 	list.List[S]
+	help string // help text to display before the radio list
 	title string // title to display before the help text
 }
 

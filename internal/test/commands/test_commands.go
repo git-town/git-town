@@ -34,10 +34,10 @@ const (
 
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
+	*subshell.TestRunner
 	Config    config.UnvalidatedConfig
 	Git       *prodgit.Commands
 	SnapShots configdomain.BeginConfigSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
-	*subshell.TestRunner
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

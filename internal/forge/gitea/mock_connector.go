@@ -20,11 +20,11 @@ var (
 
 // MockConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockConnector struct {
+	WebConnector
 	cache         forgedomain.APICache
 	log           print.Logger
 	Proposals     mockproposals.MockProposals
 	ProposalsPath mockproposals.MockProposalPath
-	WebConnector
 }
 
 func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
