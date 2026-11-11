@@ -14,7 +14,7 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint:  # runs all linters
-	$(DEADCODE) deadcode github.com/git-town/git-town/tools/format_self
+	$(DEADCODE) github.com/git-town/git-town/tools/format_self
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
 	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
 	../ensure_no_files_with_dashes.sh
