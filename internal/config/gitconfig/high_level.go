@@ -130,7 +130,7 @@ func RemoveOriginHostname(runner subshelldomain.Runner) error {
 }
 
 func RemoveParent(runner subshelldomain.Runner, child gitdomain.LocalBranchName) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child))
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewKeyForParent(child))
 }
 
 func RemovePerennialBranches(runner subshelldomain.Runner) error {
@@ -303,7 +303,7 @@ func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.Hosti
 }
 
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewKeyForParent(child), parent.String())
 }
 
 func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames, scope configdomain.ConfigScope) error {

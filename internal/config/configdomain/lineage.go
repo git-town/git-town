@@ -292,10 +292,10 @@ func (self Lineage) initializeIfNeeded() Lineage {
 	return self
 }
 
-type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
-
 func NewLineageWith(data LineageData) Lineage {
 	return Lineage{
 		data: data,
 	}
 }
+
+type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName

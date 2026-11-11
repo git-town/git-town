@@ -19,15 +19,15 @@ func (self SyncPrototypeStrategy) SyncStrategy() SyncStrategy {
 	return SyncStrategy(self)
 }
 
+func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
+	return SyncPrototypeStrategy(syncFeatureStrategy)
+}
+
 const (
 	SyncPrototypeStrategyMerge    = SyncPrototypeStrategy(SyncStrategyMerge)
 	SyncPrototypeStrategyRebase   = SyncPrototypeStrategy(SyncStrategyRebase)
 	SyncPrototypeStrategyCompress = SyncPrototypeStrategy(SyncStrategyCompress)
 )
-
-func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
-	return SyncPrototypeStrategy(syncFeatureStrategy)
-}
 
 func ParseSyncPrototypeStrategy(value stringss.Trimmed, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
