@@ -14,6 +14,7 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	$(RTA) golangci-lint run
+	$(RTA) deadcode github.com/git-town/git-town/tools/format_self
 	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
 	../ensure_no_files_with_dashes.sh
 	$(RTA) golangci-lint cache clean
