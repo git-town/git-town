@@ -1,6 +1,7 @@
 RTA_VERSION = 0.40.0
 
-RTA = ../rta@$(RTA_VERSION)
+RTA      = ../rta@$(RTA_VERSION)
+DEADCODE = $(RTA) deadcode
 
 fix:  # runs all linters and auto-fixes
 	$(RTA) gofumpt -l -w .
@@ -11,7 +12,7 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	$(RTA) golangci-lint run
-	$(RTA) deadcode github.com/git-town/git-town/tools/format_cmp_or
+	$(DEADCODE) github.com/git-town/git-town/tools/format_cmp_or
 	../ensure_no_files_with_dashes.sh
 
 test: unit lint  # runs all tests
