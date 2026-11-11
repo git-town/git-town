@@ -26,6 +26,10 @@ func (self *Key) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+func NewParentKey(branch gitdomain.LocalBranchName) Key {
+	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
+}
+
 // ConfigSetting contains a key-value pair for a configuration setting.
 type ConfigSetting struct {
 	Key   Key
@@ -201,10 +205,6 @@ var keys = []Key{
 	KeySyncUpstream,
 	KeyUnknownBranchType,
 	// keep-sorted end
-}
-
-func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {
