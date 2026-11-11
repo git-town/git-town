@@ -4,20 +4,22 @@ Feature: a rewritten local branch is not rebased onto its old tracking branch wh
     Given a Git repo with origin
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
-      | parent | feature | main   | local, origin |
+      | branch | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE |
-      | parent | local, origin | old     |
+      | branch | local, origin | old     |
     And Git setting "git-town.push-branches" is "false"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "parent"
-    And I ran "git commit --amend -m new"
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE |
+      | branch | local    | new     |
+    And the current branch is "branch"
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
-      | parent | git fetch --prune --tags |
+      | branch | git fetch --prune --tags |
     And the initial commits exist now
 
   Scenario: undo
