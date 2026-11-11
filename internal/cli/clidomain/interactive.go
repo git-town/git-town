@@ -17,33 +17,6 @@ const InteractiveEnabled = Interactive("")
 // If it is not an empty string, interactive mode is disabled and the string contains the reason why.
 type Interactive string
 
-// Check indicates via an error if interactive mode is enabled.
-// No error: interactive mode is enabled.
-// Error: interactive mode is disabled.
-func (self Interactive) Check() error {
-	if self.IsEnabled() {
-		return nil
-	}
-	return &InteractivityError{Reason: string(self)}
-}
-
-// IsEnabled indicates whether interactive mode is enabled.
-func (self Interactive) IsDisabled() bool {
-	return !self.IsEnabled()
-}
-
-// IsEnabled indicates whether interactive mode is enabled.
-func (self Interactive) IsEnabled() bool {
-	return self == InteractiveEnabled
-}
-
-func (self Interactive) String() string {
-	if err := self.Check(); err != nil {
-		return "disabled: " + string(self)
-	}
-	return "enabled"
-}
-
 func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
 	if value {
 		return Some(InteractiveEnabled)
@@ -74,6 +47,33 @@ func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[I
 		return Some(InteractiveEnabled), nil
 	}
 	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
+}
+
+// Check indicates via an error if interactive mode is enabled.
+// No error: interactive mode is enabled.
+// Error: interactive mode is disabled.
+func (self Interactive) Check() error {
+	if self.IsEnabled() {
+		return nil
+	}
+	return &InteractivityError{Reason: string(self)}
+}
+
+// IsEnabled indicates whether interactive mode is enabled.
+func (self Interactive) IsDisabled() bool {
+	return !self.IsEnabled()
+}
+
+// IsEnabled indicates whether interactive mode is enabled.
+func (self Interactive) IsEnabled() bool {
+	return self == InteractiveEnabled
+}
+
+func (self Interactive) String() string {
+	if err := self.Check(); err != nil {
+		return "disabled: " + string(self)
+	}
+	return "enabled"
 }
 
 // ------------------------------------------------------------------------------

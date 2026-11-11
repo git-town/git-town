@@ -39,6 +39,15 @@ func NewOption[T any](value T) Option[T] {
 	return Some(value)
 }
 
+// NewOptionIfExists converts the optional value expressed in Go convention (value, has)
+// into a proper Option instance.
+func NewOptionIfExists[T any](value T, has bool) Option[T] {
+	if has {
+		return Some(value)
+	}
+	return None[T]()
+}
+
 // Equal indicates whether the given other Option has the same value as this Option
 func (self Option[T]) Equal(other Option[T]) bool {
 	selfValue, hasSelfValue := self.Get()
@@ -152,15 +161,6 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 	var value T
 	self.value = &value
 	return json.Unmarshal(b, &self.value)
-}
-
-// NewOptionIfExists converts the optional value expressed in Go convention (value, has)
-// into a proper Option instance.
-func NewOptionIfExists[T any](value T, has bool) Option[T] {
-	if has {
-		return Some(value)
-	}
-	return None[T]()
 }
 
 // None instantiates an empty Option of the given type.

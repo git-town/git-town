@@ -11,16 +11,16 @@ import (
 // SyncPrototypeStrategy defines legal values for the "sync-prototype-strategy" configuration setting.
 type SyncPrototypeStrategy SyncStrategy
 
+func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
+	return SyncPrototypeStrategy(syncFeatureStrategy)
+}
+
 func (self SyncPrototypeStrategy) String() string {
 	return self.SyncStrategy().String()
 }
 
 func (self SyncPrototypeStrategy) SyncStrategy() SyncStrategy {
 	return SyncStrategy(self)
-}
-
-func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
-	return SyncPrototypeStrategy(syncFeatureStrategy)
 }
 
 const (
