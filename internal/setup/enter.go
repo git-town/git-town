@@ -590,8 +590,8 @@ func enterInteractive(data Data) (Option[clidomain.Interactive], dialogdomain.Ex
 func enterMainBranch(data Data) (dialog.MainBranchResult, dialogdomain.Exit, error) {
 	if configFileMainBranch, hasMain := data.Config.File.MainBranch.Get(); hasMain {
 		return dialog.MainBranchResult{
-			UserChoice:       Some(configFileMainBranch),
 			ActualMainBranch: configFileMainBranch,
+			UserChoice:       Some(configFileMainBranch),
 		}, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
@@ -947,8 +947,8 @@ type testForgeAuthArgs struct {
 	bitbucketUsername   Option[forgedomain.BitbucketUsername]
 	configDir           configdomain.RepoConfigDir
 	devURL              Option[giturl.Parts]
-	forgeTypeOpt        Option[forgedomain.DetectedForgeType]
 	forgejoToken        Option[forgedomain.ForgejoToken]
+	forgeTypeOpt        Option[forgedomain.DetectedForgeType]
 	giteaToken          Option[forgedomain.GiteaToken]
 	githubConnectorType Option[forgedomain.GithubConnectorType]
 	githubToken         Option[forgedomain.GithubToken]

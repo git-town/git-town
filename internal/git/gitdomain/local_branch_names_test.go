@@ -94,10 +94,10 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("ParseLocalBranchNames", func(t *testing.T) {
 		t.Parallel()
 		tests := map[stringss.Trimmed]gitdomain.LocalBranchNames{
-			"one two":      {"one", "two"},
-			" one   two  ": {"one", "two"},
-			"   ":          {},
 			"":             {},
+			"   ":          {},
+			" one   two  ": {"one", "two"},
+			"one two":      {"one", "two"},
 		}
 		for give, want := range tests {
 			have := gitdomain.ParseLocalBranchNames(give)

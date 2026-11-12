@@ -35,39 +35,21 @@ with the --prototype option.
 `
 )
 
-func prototypeCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "prototype [branches]",
-		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GroupIDTypes,
-		Short:   prototypeDesc,
-		Long:    cmdhelpers.Long(prototypeDesc, prototypeHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[clidomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executePrototype(args, cliConfig)
-		},
+func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototypeData, error) {
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return prototypeData{}, err
 	}
-	addVerboseFlag(&cmd)
-	return &cmd
+	if branchesSnapshot.DetachedHead {
+		return prototypeData{}, errors.New(messages.PrototypeDetachedHead)
+	}
+	branchesToPrototype, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	return prototypeData{
+		branchesSnapshot:    branchesSnapshot,
+		branchesToPrototype: branchesToPrototype.BranchesToMark,
+		branchInfos:         branchesSnapshot.Branches,
+		checkout:            branchesToPrototype.BranchToCheckout,
+	}, err
 }
 
 func executePrototype(args []string, cliConfig configdomain.PartialConfig) error {
@@ -114,9 +96,9 @@ func executePrototype(args []string, cliConfig configdomain.PartialConfig) error
 }
 
 type prototypeData struct {
-	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPrototype configdomain.BranchesAndTypes
+	branchInfos         gitdomain.BranchInfos
 	checkout            Option[gitdomain.LocalBranchName]
 }
 
@@ -126,21 +108,39 @@ func printPrototypeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototypeData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return prototypeData{}, err
+func prototypeCmd() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.ArbitraryArgs,
+		GroupID: cmdhelpers.GroupIDTypes,
+		Long:    cmdhelpers.Long(prototypeDesc, prototypeHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executePrototype(args, cliConfig)
+		},
+		Short: prototypeDesc,
+		Use:   "prototype [branches]",
 	}
-	if branchesSnapshot.DetachedHead {
-		return prototypeData{}, errors.New(messages.PrototypeDetachedHead)
-	}
-	branchesToPrototype, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return prototypeData{
-		branchInfos:         branchesSnapshot.Branches,
-		branchesSnapshot:    branchesSnapshot,
-		branchesToPrototype: branchesToPrototype.BranchesToMark,
-		checkout:            branchesToPrototype.BranchToCheckout,
-	}, err
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {

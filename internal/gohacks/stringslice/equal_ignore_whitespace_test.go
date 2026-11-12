@@ -11,33 +11,33 @@ func TestEqualIgnoreWhitespace(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name  string
 		give1 []string
 		give2 []string
+		name  string
 		want  bool
 	}{
 		{
-			name:  "exact match",
 			give1: []string{"one", "two"},
 			give2: []string{"one", "two"},
+			name:  "exact match",
 			want:  true,
 		},
 		{
-			name:  "match with different indentation",
 			give1: []string{"    one", "    two"},
 			give2: []string{"  one", "  two"},
+			name:  "match with different indentation",
 			want:  true,
 		},
 		{
-			name:  "no match - different content",
 			give1: []string{"one", "three"},
 			give2: []string{"one", "two"},
+			name:  "no match - different content",
 			want:  false,
 		},
 		{
-			name:  "no match - different length",
 			give1: []string{"one"},
 			give2: []string{"one", "two"},
+			name:  "no match - different length",
 			want:  false,
 		},
 	}

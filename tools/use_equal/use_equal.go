@@ -60,18 +60,6 @@ func lintFile(filePath string) error {
 	return nil
 }
 
-// indicates whether a given path should be skipped
-func shouldSkipPath(path string) bool {
-	cleanedPath := filepath.Clean(path) // resolve any ".." or "." components and get a canonical path.
-	if strings.HasPrefix(cleanedPath, "vendor"+string(filepath.Separator)) {
-		return true
-	}
-	if strings.HasPrefix(cleanedPath, "pkg"+string(filepath.Separator)+"equal"+string(filepath.Separator)) {
-		return true
-	}
-	return false
-}
-
 func main() {
 	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
 		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") {
@@ -85,4 +73,16 @@ func main() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error walking current directory: %v\n", err)
 	}
+}
+
+// indicates whether a given path should be skipped
+func shouldSkipPath(path string) bool {
+	cleanedPath := filepath.Clean(path) // resolve any ".." or "." components and get a canonical path.
+	if strings.HasPrefix(cleanedPath, "vendor"+string(filepath.Separator)) {
+		return true
+	}
+	if strings.HasPrefix(cleanedPath, "pkg"+string(filepath.Separator)+"equal"+string(filepath.Separator)) {
+		return true
+	}
+	return false
 }

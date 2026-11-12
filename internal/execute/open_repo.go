@@ -203,19 +203,19 @@ func newFrontendRunner(args newFrontendRunnerArgs) subshelldomain.Runner { //nol
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
 			Backend:          args.backend,
+			CommandsCounter:  args.counter,
 			GetCurrentBranch: args.getCurrentBranch,
 			PrintBranchNames: args.printBranchNames,
 			PrintCommands:    args.printCommands,
-			CommandsCounter:  args.counter,
 		}
 	}
 	return &subshell.FrontendRunner{
 		Backend:          args.backend,
+		CommandsCounter:  args.counter,
 		GetCurrentBranch: args.getCurrentBranch,
 		GetCurrentSHA:    args.getCurrentSHA,
 		PrintBranchNames: args.printBranchNames,
 		PrintCommands:    args.printCommands,
-		CommandsCounter:  args.counter,
 	}
 }
 

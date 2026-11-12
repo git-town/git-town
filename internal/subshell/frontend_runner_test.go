@@ -11,14 +11,14 @@ import (
 func TestFormat(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		branch      gitdomain.Location
-		printBranch bool
-		executable  string
 		args        []string
+		branch      gitdomain.Location
+		executable  string
+		printBranch bool
 	}{
-		"[branch] git checkout foo":        {printBranch: true, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
-		"git checkout foo":                 {printBranch: false, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
-		`git config perennial-branches ""`: {printBranch: false, branch: "branch", executable: "git", args: []string{"config", "perennial-branches", ""}},
+		"[branch] git checkout foo":        {args: []string{"checkout", "foo"}, branch: "branch", executable: "git", printBranch: true},
+		"git checkout foo":                 {args: []string{"checkout", "foo"}, branch: "branch", executable: "git", printBranch: false},
+		`git config perennial-branches ""`: {args: []string{"config", "perennial-branches", ""}, branch: "branch", executable: "git", printBranch: false},
 	}
 	for want, give := range tests {
 		have := subshell.FormatCommand(give.branch, give.printBranch, []string{}, give.executable, give.args...)
