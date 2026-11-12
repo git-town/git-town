@@ -203,7 +203,8 @@ type SSHSigner interface {
 }
 
 // NewwSSHSigner creates a new Signer using the specified ssh.Signer
-// At the moment only ed25519 ssh keys are supported.
+// At the moment only ed25519, rsa and ecdsa-sha2-nistp256 ssh keys
+// (including their OpenSSH certificate variants) are supported.
 // The headers specified will be included into the HTTP signatures.
 //
 // The Digest will also be calculated on a request's body using the provided
@@ -231,6 +232,10 @@ func getSSHAlgorithm(pkType string) Algorithm {
 		return ED25519
 	case strings.HasPrefix(pkType, sshPrefix+"-"+rsaPrefix):
 		return RSA_SHA256
+	// Covers both ecdsa-sha2-nistp256 and
+	// ecdsa-sha2-nistp256-cert-v01@openssh.com.
+	case strings.HasPrefix(pkType, ssh.KeyAlgoECDSA256):
+		return ECDSA_SHA256
 	}
 
 	return ""
