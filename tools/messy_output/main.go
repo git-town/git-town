@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	gherkin "github.com/cucumber/gherkin/go/v26"
+	gherkin "github.com/cucumber/gherkin/go/v42"
 	messages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v24/pkg/asserts"
 )
