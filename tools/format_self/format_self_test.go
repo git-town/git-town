@@ -80,9 +80,9 @@ func (self *WithPrevious[T]) Initialized() bool {
 	t.Run("FormatLine", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
+			"	if err != nil {": "	if err != nil {",
 			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
 			"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
-			"	if err != nil {":                                                                 "	if err != nil {",
 		}
 		for give, want := range tests {
 			have := formatSelf.FormatLine(give)
@@ -94,9 +94,9 @@ func (self *WithPrevious[T]) Initialized() bool {
 		t.Parallel()
 		tests := map[string]bool{
 			"/foo/bar.go":      true,
-			"/foo/bar_test.go": false,
-			"/foo/bar.md":      false,
 			"/foo/bar.go.md":   false,
+			"/foo/bar.md":      false,
+			"/foo/bar_test.go": false,
 		}
 		for give, want := range tests {
 			have := formatSelf.IsGoFile(give)

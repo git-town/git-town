@@ -10,39 +10,39 @@ import (
 func TestIndentNonEmpty(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name       string
-		giveLines  []string
 		giveIndent string
+		giveLines  []string
+		name       string
 		wantLines  []string
 	}{
 		{
-			name:       "add spaces",
-			giveLines:  []string{"one", "two"},
 			giveIndent: "    ",
+			giveLines:  []string{"one", "two"},
+			name:       "add spaces",
 			wantLines:  []string{"    one", "    two"},
 		},
 		{
-			name:       "add tabs",
-			giveLines:  []string{"one", "two"},
 			giveIndent: "\t\t",
+			giveLines:  []string{"one", "two"},
+			name:       "add tabs",
 			wantLines:  []string{"\t\tone", "\t\ttwo"},
 		},
 		{
-			name:       "no indentation",
-			giveLines:  []string{"one", "two"},
 			giveIndent: "",
+			giveLines:  []string{"one", "two"},
+			name:       "no indentation",
 			wantLines:  []string{"one", "two"},
 		},
 		{
-			name:       "preserve empty lines",
-			giveLines:  []string{"one", "", "two"},
 			giveIndent: "  ",
+			giveLines:  []string{"one", "", "two"},
+			name:       "preserve empty lines",
 			wantLines:  []string{"  one", "", "  two"},
 		},
 		{
-			name:       "remove existing indentation and add new",
-			giveLines:  []string{"  one", "    two"},
 			giveIndent: "\t",
+			giveLines:  []string{"  one", "    two"},
+			name:       "remove existing indentation and add new",
 			wantLines:  []string{"\tone", "\ttwo"},
 		},
 	}

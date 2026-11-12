@@ -30,17 +30,9 @@ type Connector struct {
 	Log            print.Logger
 }
 
-// ============================================================================
-// browse the repo
-// ============================================================================
-
 func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	return runner.Run("glab", "repo", "view", "--web")
 }
-
-// ============================================================================
-// create proposals
-// ============================================================================
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"mr", "create", "--source-branch=" + data.Branch.String(), "--target-branch=" + data.ParentBranch.String()}
@@ -66,12 +58,6 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return gitlab.DefaultProposalMessage(data)
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = glabConnector // type check
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.Log.Start(messages.APIProposalFindStart, branch, target)
@@ -103,12 +89,6 @@ func (self Connector) ProposalReference(data forgedomain.ProposalData) string {
 	return gitlab.ProposalReference(data)
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = glabConnector // type check
-
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.Log.Start(messages.APIProposalSearchStart, branch.String())
 	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--output=json")
@@ -133,12 +113,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 	return proposals, err
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = glabConnector // type check
-
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	args := []string{"mr", "merge", "--squash"}
 	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
@@ -148,31 +122,13 @@ func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, mes
 	return self.Frontend.Run("glab", args...)
 }
 
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
-
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	return self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--description="+updatedDescription.String())
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
-
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("glab", "mr", "update", proposalData.Data().Number.String(), "--target-branch="+target.String())
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = glabConnector
 
 func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("glab", "auth", "status")
@@ -185,3 +141,47 @@ func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	}
 	return ParsePermissionsOutput(output)
 }
+
+// ============================================================================
+// browse the repo
+// ============================================================================
+
+// ============================================================================
+// create proposals
+// ============================================================================
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = glabConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = glabConnector // type check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = glabConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = glabConnector

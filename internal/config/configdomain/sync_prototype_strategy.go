@@ -11,6 +11,10 @@ import (
 // SyncPrototypeStrategy defines legal values for the "sync-prototype-strategy" configuration setting.
 type SyncPrototypeStrategy SyncStrategy
 
+func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
+	return SyncPrototypeStrategy(syncFeatureStrategy)
+}
+
 func (self SyncPrototypeStrategy) String() string {
 	return self.SyncStrategy().String()
 }
@@ -24,10 +28,6 @@ const (
 	SyncPrototypeStrategyRebase   = SyncPrototypeStrategy(SyncStrategyRebase)
 	SyncPrototypeStrategyCompress = SyncPrototypeStrategy(SyncStrategyCompress)
 )
-
-func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {
-	return SyncPrototypeStrategy(syncFeatureStrategy)
-}
 
 func ParseSyncPrototypeStrategy(value stringss.Trimmed, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)

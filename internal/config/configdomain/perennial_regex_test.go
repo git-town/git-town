@@ -18,10 +18,10 @@ func TestPerennialRegex(t *testing.T) {
 		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{
 			"":                false,
-			"release":         true,
-			"release-1":       true,
 			"another-release": true,
 			"main":            false,
+			"release":         true,
+			"release-1":       true,
 		}
 		for give, want := range tests {
 			have := perennialRegex.MatchesBranch(gitdomain.LocalBranchName(give))
@@ -36,12 +36,12 @@ func TestPerennialRegex(t *testing.T) {
 		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{
 			"":                false,
+			"another-release": false,
+			"main":            false,
 			"release":         false,
 			"release-1":       true,
 			"release-2":       true,
 			"release-30":      true,
-			"another-release": false,
-			"main":            false,
 		}
 		for give, want := range tests {
 			have := perennialRegex.MatchesBranch(gitdomain.LocalBranchName(give))
