@@ -1288,7 +1288,7 @@ echo "new line" >> file
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		actualContent := coworkerRepo.FileContent(file)
 		if expectedContent.Content != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent.Content, actualContent)
+			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent.Content, actualContent)
 		}
 		return nil
 	})
