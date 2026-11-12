@@ -33,11 +33,9 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 		connector = azuredevops.WebConnector{
 			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     remoteURL.Host,
-				Organization: remoteURL.Org,
-				Repository:   remoteURL.Repo,
-			},
+			Hostname:          remoteURL.Host,
+			Organization:      remoteURL.Org,
+			Repository:        remoteURL.Repo,
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector, err = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
