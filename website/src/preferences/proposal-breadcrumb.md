@@ -13,8 +13,8 @@ This setting accepts the following values:
 
 - **none:** do not embed breadcrumbs into proposals
 - **branches:** embed breadcrumbs into proposals for all branches
-- **stacks:** emded breadcrumbs only for proposals that are part of a stack with
-  2 or more branches
+- **stacks:** emded breadcrumbs only for proposals
+  that are part of a stack with 2 or more branches
 
 ## config file
 
