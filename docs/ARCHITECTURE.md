@@ -15,8 +15,8 @@ design objectives:
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
    then resume execution.
-3. **Reliable undo:** Be able to reliably undo everything that Git Town has
-   done.
+3. **Reliable undo:** Be able to reliably undo everything
+   that Git Town has done.
 
 ### General structure
 
@@ -60,8 +60,8 @@ the interpreter:
 - Persists the current interpreter state (called "runstate") to disk.
 - Exits Git Town to give the user access to the shell to resolve the encountered
   problems.
-- Prints a human-friendly explanation of the problem and what the user needs to
-  do.
+- Prints a human-friendly explanation of the problem
+  and what the user needs to do.
 
 After resolving the problems and restarting Git Town,
 the interpreter loads the persisted runstate from disk and resumes executing it.
@@ -70,8 +70,8 @@ the interpreter loads the persisted runstate from disk and resumes executing it.
 
 To undo a previously run Git Town command (requirement 3), Git Town:
 
-- compares snapshots of the affected Git repository before and after the command
-  ran
+- compares snapshots of the affected Git repository before and
+  after the command ran
 - determines the changes that the Git Town command made to the Git repo
 - creates a program that reverses these changes
 - starts the interpreter to execute this program
@@ -244,13 +244,14 @@ We sort most things in this codebase alphabetically, for example:
 While not ideal, this approach has several benefits:
 
 - It helps locate things efficiently.
-- It prevents conflicts when two branches add something to the same file because
-  both additions no longer happen at the end of the file.
+- It prevents conflicts when two branches add something to the same file
+  because both additions no longer happen at the end of the file.
 - It prevents bikeshed debates about how to order things.
-- It is the only ordering method for which everybody has the exact same
-  expectation how the end result should look like.
-- It allows automated sorting, freeing humans from manually moving things
-  around.
+- It is the only ordering method for
+  which everybody has the exact same expectation how the end result should look
+  like.
+- It allows automated sorting,
+  freeing humans from manually moving things around.
 
 #### All struct fields are required by default
 
