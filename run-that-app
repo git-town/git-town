@@ -23,7 +23,7 @@ node 26.12.1
 npm 26.12.1
 npx 26.12.1
 ripgrep 15.2.0
-rumdl 0.3.0
+rumdl 0.3.3
 scc 4.1.0
 shellcheck system@* 0.11.0
 shfmt 3.14.1

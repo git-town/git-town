@@ -140,8 +140,8 @@ git town sync --all
 [git town sync](commands/sync.md) updates all branches:
 
 1. Pulls updates made by other people into our local `main` branch
-2. Deletes branch `1-refactor` from our local Git workspace because it was
-   shipped at the remote
+2. Deletes branch `1-refactor` from our local Git workspace
+   because it was shipped at the remote
 3. Pulls updates from `main` into `2-rename-foo`
 4. Pulls updates from `2-rename-foo` into `3-rename-bar`
 
@@ -202,26 +202,26 @@ Git Town provides powerful commands to organize the branches in your stack:
   stack
 - [git town prepend](commands/prepend.md) inserts a new branch between the
   current branch and its parent
-- [git town detach](commands/detach.md) extracts a branch from a stack and makes
-  its own independent stack
+- [git town detach](commands/detach.md) extracts a branch from a stack
+  and makes its own independent stack
 - [git town swap](commands/swap.md) switches the position of the current branch
   and its parent in the stack
-- [git town set-parent](commands/set-parent.md) changes the parent for the
-  current branch and all its descendents
+- [git town set-parent](commands/set-parent.md) changes the parent
+  for the current branch and all its descendents
 
 ### Navigate your stack efficiently
 
 To help commit the right changes to the right branch,
 Git Town provides powerful commands to navigate stacks:
 
-- [git town branch](commands/branch.md) shows you where you are in the stack
-  hierarchy
+- [git town branch](commands/branch.md) shows you
+  where you are in the stack hierarchy
 - [git town switch](commands/switch.md) allows you to jump to any branch using a
   visual dialog with VIM motions
 - [git town down](commands/up.md) switches to the parent branch
 - [git town up](commands/up.md) switches to the child branch
-- [git town walk](commands/walk.md) executes a CLI command or opens an
-  interactive shell on each branch of the stack
+- [git town walk](commands/walk.md) executes a CLI command
+  or opens an interactive shell on each branch of the stack
 
 ### Embed the stack lineage into pull requests
 

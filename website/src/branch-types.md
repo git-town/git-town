@@ -110,12 +110,12 @@ that incorporates updates from its parent branch
 but is not pushed to the remote repository unless it has a tracking branch.
 Prototype branches are useful when:
 
-- the branch contains sensitive information, such as secrets, or potentially
-  problematic code or data that could trigger alerts
+- the branch contains sensitive information, such as secrets,
+  or potentially problematic code or data that could trigger alerts
 - the developer prefers to keep their work private from the rest of the team
   during the initial stages of development
-- you want to reduce CI pressure in the early phases of feature development when
-  there isn't anything to test
+- you want to reduce CI pressure in the early phases of feature development
+  when there isn't anything to test
 
 Syncing prototype branches follows the
 [sync-prototype-strategy](preferences/sync-prototype-strategy.md) or - if this
