@@ -14,8 +14,8 @@ that you don't have to run Git configuration commands manually:
 
 <!-- keep-sorted start by_regex=["[^]]+"] -->
 - [git town completions](commands/completions.md) - set up shell autocomplete
-- [git town config](commands/config.md) - display or update your Git Town
-  configuration
+- [git town config](commands/config.md) - display
+  or update your Git Town configuration
 - [git town config get-parent](commands/config-get-parent.md) - display the name
   of the parent branch
 - [git town config remove](commands/config-remove.md) - remove the Git Town
