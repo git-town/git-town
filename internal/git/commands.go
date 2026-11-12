@@ -747,7 +747,7 @@ func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, br
 	if err != nil {
 		return false
 	}
-	for _, state := range strings.Fields(output.String()) {
+	for state := range strings.FieldsSeq(output.String()) {
 		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
 			return true
 		}
