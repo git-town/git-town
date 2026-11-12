@@ -46,5 +46,5 @@ Feature: the parent of a branch was deleted remotely but a grandparent remains
       | child  | git reset --hard {{ sha 'child commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch parent {{ sha 'parent commit' }}     |
-    Then the initial branches and lineage exist now
+    And the initial branches and lineage exist now
     And the initial commits exist now

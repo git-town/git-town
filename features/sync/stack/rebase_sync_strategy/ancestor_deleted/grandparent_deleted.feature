@@ -53,5 +53,5 @@ Feature: a grandparent was deleted remotely while the parent and the child remai
       | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch branch-1 {{ sha 'branch-1 commit' }} |
-    Then the initial branches and lineage exist now
+    And the initial branches and lineage exist now
     And the initial commits exist now
