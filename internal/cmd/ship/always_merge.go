@@ -49,8 +49,8 @@ func shipProgramAlwaysMerge(repo execute.OpenRepoResult, args shipProgramAlwaysM
 	cmdhelpers.Wrap(args.prog, cmdhelpers.WrapOptions{
 		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         args.sharedData.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !args.sharedData.isShippingInitialBranch && args.sharedData.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 }

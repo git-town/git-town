@@ -12,18 +12,18 @@ import (
 func TestParseProposalBreadcrumbDirection(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
+		err  bool
 		give stringss.Trimmed
 		want Option[configdomain.ProposalBreadcrumbDirection]
-		err  bool
 	}{
-		{give: "", want: None[configdomain.ProposalBreadcrumbDirection](), err: false},
-		{give: "down", want: Some(configdomain.ProposalBreadcrumbDirectionDown), err: false},
-		{give: "DOWN", want: Some(configdomain.ProposalBreadcrumbDirectionDown), err: false},
-		{give: "Down", want: Some(configdomain.ProposalBreadcrumbDirectionDown), err: false},
-		{give: "up", want: Some(configdomain.ProposalBreadcrumbDirectionUp), err: false},
-		{give: "UP", want: Some(configdomain.ProposalBreadcrumbDirectionUp), err: false},
-		{give: "Up", want: Some(configdomain.ProposalBreadcrumbDirectionUp), err: false},
-		{give: "zonk", want: None[configdomain.ProposalBreadcrumbDirection](), err: true},
+		{err: false, give: "", want: None[configdomain.ProposalBreadcrumbDirection]()},
+		{err: false, give: "down", want: Some(configdomain.ProposalBreadcrumbDirectionDown)},
+		{err: false, give: "DOWN", want: Some(configdomain.ProposalBreadcrumbDirectionDown)},
+		{err: false, give: "Down", want: Some(configdomain.ProposalBreadcrumbDirectionDown)},
+		{err: false, give: "up", want: Some(configdomain.ProposalBreadcrumbDirectionUp)},
+		{err: false, give: "UP", want: Some(configdomain.ProposalBreadcrumbDirectionUp)},
+		{err: false, give: "Up", want: Some(configdomain.ProposalBreadcrumbDirectionUp)},
+		{err: true, give: "zonk", want: None[configdomain.ProposalBreadcrumbDirection]()},
 	}
 	for _, tt := range tests {
 		have, err := configdomain.ParseProposalBreadcrumbDirection(tt.give, "test")

@@ -66,9 +66,7 @@ func Cmd() *cobra.Command {
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     swapCommandName,
 		Args:    cobra.NoArgs,
-		Short:   swapDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(swapDesc, swapHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -96,107 +94,14 @@ func Cmd() *cobra.Command {
 			})
 			return executeSwap(cliConfig)
 		},
+		Short: swapDesc,
+		Use:   swapCommandName,
 	}
 	addAutoResolveFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeSwap(cliConfig configdomain.PartialConfig) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineSwapData(repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateSwapData(data)
-	if err != nil {
-		return err
-	}
-	runProgram := swapProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               swapCommandName,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
-type swapData struct {
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	branchesSnapshot      gitdomain.BranchesSnapshot
-	children              []swapBranch
-	config                config.ValidatedConfig
-	connector             Option[forgedomain.Connector]
-	currentBranchInfo     gitdomain.BranchInfo
-	currentBranchName     gitdomain.LocalBranchName
-	currentBranchProposal Option[forgedomain.Proposal]
-	currentBranchType     configdomain.BranchType
-	detectedForgeType     Option[forgedomain.DetectedForgeType]
-	grandParentBranch     gitdomain.LocalBranchName
-	hasOpenChanges        bool
-	initialBranch         gitdomain.LocalBranchName
-	inputs                dialogcomponents.Inputs
-	nonExistingBranches   gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch          gitdomain.LocalBranchName
-	parentBranchInfo      gitdomain.BranchInfo
-	parentBranchProposal  Option[forgedomain.Proposal]
-	parentBranchType      configdomain.BranchType
-	previousBranch        Option[gitdomain.LocalBranchName]
-	stashSize             gitdomain.StashSize
-}
-
-type swapBranch struct {
-	info     gitdomain.BranchInfo
-	name     gitdomain.LocalBranchName
-	proposal Option[forgedomain.Proposal]
 }
 
 func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.ProgramFlow, error) {
@@ -259,9 +164,9 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -349,8 +254,8 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return swapData{
-		branchInfosLastRun:    branchInfosLastRun,
 		branchesSnapshot:      branchesSnapshot,
+		branchInfosLastRun:    branchInfosLastRun,
 		children:              children,
 		config:                validatedConfig,
 		connector:             connector,
@@ -371,6 +276,101 @@ func determineSwapData(repo execute.OpenRepoResult) (swapData, configdomain.Prog
 		previousBranch:        previousBranchOpt,
 		stashSize:             stashSize,
 	}, configdomain.ProgramFlowContinue, nil
+}
+
+type swapData struct {
+	branchesSnapshot      gitdomain.BranchesSnapshot
+	branchInfosLastRun    Option[gitdomain.BranchInfos]
+	children              []swapBranch
+	config                config.ValidatedConfig
+	connector             Option[forgedomain.Connector]
+	currentBranchInfo     gitdomain.BranchInfo
+	currentBranchName     gitdomain.LocalBranchName
+	currentBranchProposal Option[forgedomain.Proposal]
+	currentBranchType     configdomain.BranchType
+	detectedForgeType     Option[forgedomain.DetectedForgeType]
+	grandParentBranch     gitdomain.LocalBranchName
+	hasOpenChanges        bool
+	initialBranch         gitdomain.LocalBranchName
+	inputs                dialogcomponents.Inputs
+	nonExistingBranches   gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch          gitdomain.LocalBranchName
+	parentBranchInfo      gitdomain.BranchInfo
+	parentBranchProposal  Option[forgedomain.Proposal]
+	parentBranchType      configdomain.BranchType
+	previousBranch        Option[gitdomain.LocalBranchName]
+	stashSize             gitdomain.StashSize
+}
+
+type swapBranch struct {
+	info     gitdomain.BranchInfo
+	name     gitdomain.LocalBranchName
+	proposal Option[forgedomain.Proposal]
+}
+
+func executeSwap(cliConfig configdomain.PartialConfig) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, flow, err := determineSwapData(repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	err = validateSwapData(data)
+	if err != nil {
+		return err
+	}
+	runProgram := swapProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		Command:               swapCommandName,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
@@ -412,9 +412,9 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 		RunInGitRoot:             true,
 		StashOpenChanges:         false, // TODO: stash if open changes here?
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()
 }

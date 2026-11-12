@@ -9,8 +9,8 @@ import (
 
 // BranchSpan represents changes of a branch over time.
 type BranchSpan struct {
-	Before Option[gitdomain.BranchInfo] // the status of the branch before Git Town ran
 	After  Option[gitdomain.BranchInfo] // the status of the branch after Git Town ran
+	Before Option[gitdomain.BranchInfo] // the status of the branch before Git Town ran
 }
 
 func (self BranchSpan) BranchNames() []gitdomain.BranchName {
@@ -82,8 +82,8 @@ func (self BranchSpan) LocalChange() Option[LocalBranchChange] {
 	}
 	return Some(LocalBranchChange{
 		beforeLocal.Name: undodomain.Change[gitdomain.SHA]{
-			Before: beforeLocal.SHA,
 			After:  afterLocal.SHA,
+			Before: beforeLocal.SHA,
 		},
 	})
 }
@@ -149,8 +149,8 @@ func (self BranchSpan) OmniChange() Option[LocalBranchChange] {
 	}
 	return Some(LocalBranchChange{
 		beforeOmni.Name: undodomain.Change[gitdomain.SHA]{
-			Before: beforeOmni.SHA,
 			After:  afterOmni.SHA,
+			Before: beforeOmni.SHA,
 		},
 	})
 }
@@ -205,8 +205,8 @@ func (self BranchSpan) RemoteChange() Option[RemoteBranchChange] {
 	}
 	return Some(RemoteBranchChange{
 		beforeRemoteBranchName: undodomain.Change[gitdomain.SHA]{
-			Before: beforeRemoteBranchSHA,
 			After:  afterRemoteBranchSHA,
+			Before: beforeRemoteBranchSHA,
 		},
 	})
 }

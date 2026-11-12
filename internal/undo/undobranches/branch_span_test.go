@@ -195,8 +195,8 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, has)
 			want := undobranches.LocalBranchChange{
 				branch1: undodomain.Change[gitdomain.SHA]{
-					Before: sha1,
 					After:  sha2,
+					Before: sha1,
 				},
 			}
 			must.Eq(t, want, have)
@@ -343,8 +343,8 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, has)
 			want := undobranches.LocalBranchChange{
 				branch1: undodomain.Change[gitdomain.SHA]{
-					Before: sha1,
 					After:  sha2,
+					Before: sha1,
 				},
 			}
 			must.Eq(t, want, have)
@@ -372,8 +372,8 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, has)
 			want := undobranches.LocalBranchChange{
 				branch1: undodomain.Change[gitdomain.SHA]{
-					Before: sha1,
 					After:  sha2,
+					Before: sha1,
 				},
 			}
 			must.Eq(t, want, have)
@@ -554,8 +554,8 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, has)
 			want := undobranches.RemoteBranchChange{
 				branch1: undodomain.Change[gitdomain.SHA]{
-					Before: sha1,
 					After:  sha2,
+					Before: sha1,
 				},
 			}
 			must.Eq(t, want, have)
@@ -583,8 +583,8 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, has)
 			want := undobranches.RemoteBranchChange{
 				branch1: undodomain.Change[gitdomain.SHA]{
-					Before: sha1,
 					After:  sha2,
+					Before: sha1,
 				},
 			}
 			must.Eq(t, want, have)

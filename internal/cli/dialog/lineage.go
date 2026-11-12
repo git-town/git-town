@@ -67,9 +67,9 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entriesArgs := NewSwitchBranchEntriesArgs{
+			BranchesAndTypes:  args.BranchesAndTypes,
 			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  args.BranchesAndTypes,
 			ExcludeBranches:   excludeBranches,
 			Lineage:           args.Config.NormalConfig.Lineage,
 			MainBranch:        Some(args.MainBranch),
@@ -120,9 +120,9 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 }
 
 type LineageArgs struct {
-	BranchInfos      gitdomain.BranchInfos
 	BranchesAndTypes configdomain.BranchesAndTypes
 	BranchesToVerify gitdomain.LocalBranchNames
+	BranchInfos      gitdomain.BranchInfos
 	Config           config.UnvalidatedConfig
 	Connector        Option[forgedomain.Connector]
 	DefaultChoice    gitdomain.LocalBranchName

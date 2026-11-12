@@ -31,12 +31,6 @@ func (self *CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.
 	return self.api.DefaultProposalMessage(proposalData)
 }
 
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = &cachedAPIConnector // type check
-
 func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal, has := self.cache.Lookup(source, target); has {
 		return cachedProposal, nil
@@ -52,12 +46,6 @@ func (self *CachedAPIConnector) ProposalReference(proposalData forgedomain.Propo
 	return self.api.ProposalReference(proposalData)
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = &cachedAPIConnector // type check
-
 func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
@@ -69,16 +57,47 @@ func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName
 	return loadedSearchResult, err
 }
 
+func (self *CachedAPIConnector) SquashMergeProposal(proposalNumber forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
+	self.cache.Clear(proposalNumber)
+	return self.api.SquashMergeProposal(proposalNumber, message)
+}
+
+func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
+	self.cache.Clear(proposalData.Data().Number)
+	return self.api.UpdateProposalBody(proposalData, newBody)
+}
+
+func (self *CachedAPIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
+	self.cache.Clear(proposalData.Data().Number)
+	return self.api.UpdateProposalSource(proposalData, source)
+}
+
+func (self *CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	self.cache.Clear(proposalData.Data().Number)
+	return self.api.UpdateProposalTarget(proposalData, target)
+}
+
+func (self *CachedAPIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+	return self.api.VerifyCredentials()
+}
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = &cachedAPIConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &cachedAPIConnector // type check
+
 // ============================================================================
 // squash-merge proposals
 // ============================================================================
 
 var _ forgedomain.ProposalMerger = &cachedAPIConnector // type check
-
-func (self *CachedAPIConnector) SquashMergeProposal(proposalNumber forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
-	self.cache.Clear(proposalNumber)
-	return self.api.SquashMergeProposal(proposalNumber, message)
-}
 
 // ============================================================================
 // update proposal body
@@ -86,21 +105,11 @@ func (self *CachedAPIConnector) SquashMergeProposal(proposalNumber forgedomain.P
 
 var _ forgedomain.ProposalBodyUpdater = &cachedAPIConnector // type check
 
-func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
-	self.cache.Clear(proposalData.Data().Number)
-	return self.api.UpdateProposalBody(proposalData, newBody)
-}
-
 // ============================================================================
 // udpate proposal source
 // ============================================================================
 
 var _ forgedomain.ProposalSourceUpdater = &cachedAPIConnector // type check
-
-func (self *CachedAPIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
-	self.cache.Clear(proposalData.Data().Number)
-	return self.api.UpdateProposalSource(proposalData, source)
-}
 
 // ============================================================================
 // update proposal target
@@ -108,17 +117,8 @@ func (self *CachedAPIConnector) UpdateProposalSource(proposalData forgedomain.Pr
 
 var _ forgedomain.ProposalTargetUpdater = &cachedAPIConnector // type check
 
-func (self *CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	self.cache.Clear(proposalData.Data().Number)
-	return self.api.UpdateProposalTarget(proposalData, target)
-}
-
 // ============================================================================
 // verify credentials
 // ============================================================================
 
 var _ forgedomain.CredentialVerifier = &cachedAPIConnector // type check
-
-func (self *CachedAPIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
-	return self.api.VerifyCredentials()
-}
