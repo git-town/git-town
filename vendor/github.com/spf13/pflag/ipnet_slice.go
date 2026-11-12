@@ -28,7 +28,7 @@ func (s *ipNetSliceValue) Set(val string) error {
 
 	// read flag arguments with CSV parser
 	ipNetStrSlice, err := readAsCSV(rmQuote.Replace(val))
-	if err != nil && err != io.EOF {
+	if err != nil && err != io.EOF { //nolint:errorlint // not using errors.Is for compatibility with go1.12
 		return err
 	}
 

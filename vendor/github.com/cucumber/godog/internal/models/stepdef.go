@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strconv"
 
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 
 	"github.com/cucumber/godog/formatters"
 )
