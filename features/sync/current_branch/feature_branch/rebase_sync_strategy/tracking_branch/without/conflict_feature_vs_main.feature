@@ -22,8 +22,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | git -c rebase.updateRefs=false rebase origin/main                            |
       |         | git push                                                                     |
       |         | git checkout feature                                                         |
-      | feature | git push --force-with-lease --force-if-includes                              |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -33,9 +32,8 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                               |
-      | feature | git rebase --abort                                                    |
-      |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
+      | BRANCH  | COMMAND            |
+      | feature | git rebase --abort |
     And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
