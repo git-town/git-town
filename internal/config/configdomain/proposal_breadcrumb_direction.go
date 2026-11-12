@@ -11,14 +11,14 @@ import (
 
 type ProposalBreadcrumbDirection string
 
+func (self ProposalBreadcrumbDirection) String() string {
+	return string(self)
+}
+
 const (
 	ProposalBreadcrumbDirectionDown ProposalBreadcrumbDirection = "down"
 	ProposalBreadcrumbDirectionUp   ProposalBreadcrumbDirection = "up"
 )
-
-func (self ProposalBreadcrumbDirection) String() string {
-	return string(self)
-}
 
 func ParseProposalBreadcrumbDirection(value stringss.Trimmed, source string) (Option[ProposalBreadcrumbDirection], error) {
 	switch strings.ToLower(value.String()) {

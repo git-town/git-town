@@ -13,12 +13,6 @@ import (
 // ProposalBreadcrumb indicates whether and how proposals should display the stack lineage of the respective branch.
 type ProposalBreadcrumb string
 
-const (
-	ProposalBreadcrumbNone     ProposalBreadcrumb = "none"     // don't display lineage in proposals
-	ProposalBreadcrumbStacks   ProposalBreadcrumb = "stacks"   // the Git Town CLI should embed breadcrumbs into proposals for stacks with more than one branch
-	ProposalBreadcrumbBranches ProposalBreadcrumb = "branches" // the Git Town CLI should embed breadcrumbs into proposals for all branches
-)
-
 // EmbedBreadcrumb indicates whether the user has configured to embed breadcrumbs into proposals.
 func (self ProposalBreadcrumb) DisplayBreadcrumb(stackSize int) bool {
 	switch self {
@@ -46,6 +40,12 @@ func (self ProposalBreadcrumb) Enabled() bool {
 func (self ProposalBreadcrumb) String() string {
 	return string(self)
 }
+
+const (
+	ProposalBreadcrumbNone     ProposalBreadcrumb = "none"     // don't display lineage in proposals
+	ProposalBreadcrumbStacks   ProposalBreadcrumb = "stacks"   // the Git Town CLI should embed breadcrumbs into proposals for stacks with more than one branch
+	ProposalBreadcrumbBranches ProposalBreadcrumb = "branches" // the Git Town CLI should embed breadcrumbs into proposals for all branches
+)
 
 func ParseProposalBreadcrumb(value stringss.Trimmed, source string) (Option[ProposalBreadcrumb], error) {
 	switch strings.ToLower(value.String()) {

@@ -77,8 +77,8 @@ func TestPersistence(t *testing.T) {
 			give := mockproposals.MockProposals{
 				{
 					Body:   gitdomain.NewProposalBodyOpt("test body"),
-					Source: "feature-branch",
 					Number: 123,
+					Source: "feature-branch",
 					Target: "main",
 					Title:  "Test Proposal",
 					URL:    "https://example.com/pr/123",

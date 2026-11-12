@@ -18,15 +18,6 @@ type DisplayTypes struct {
 	Quantifier  Quantifier   // whether to include or exclude the listed branches
 }
 
-// Quantifier specifies whether to display or not display branches
-type Quantifier string
-
-const (
-	QuantifierAll  = "all" // display all branches
-	QuantifierNo   = "no"  // display no or all except the specified branches
-	QuantifierOnly = ""    // display only the specified branches
-)
-
 // Serialize provides the serialized version to be used in configuration data.
 func (self DisplayTypes) Serialize(delimiter string) string {
 	switch self.Quantifier {
@@ -74,6 +65,15 @@ func (self DisplayTypes) String() string {
 	}
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
+
+// Quantifier specifies whether to display or not display branches
+type Quantifier string
+
+const (
+	QuantifierAll  = "all" // display all branches
+	QuantifierNo   = "no"  // display no or all except the specified branches
+	QuantifierOnly = ""    // display only the specified branches
+)
 
 func ParseDisplayTypes(text stringss.Trimmed, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {

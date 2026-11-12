@@ -29,9 +29,9 @@ func TestNewCompletionType(t *testing.T) {
 		t.Parallel()
 		tests := map[string]cmd.CompletionType{
 			"bash":       cmd.CompletionTypeBash,
-			"zsh":        cmd.CompletionTypeZsh,
 			"fish":       cmd.CompletionTypeFish,
 			"powershell": cmd.CompletionTypePowershell,
+			"zsh":        cmd.CompletionTypeZsh,
 		}
 		for give, want := range tests {
 			have, err := cmd.NewCompletionType(give)

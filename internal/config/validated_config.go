@@ -15,10 +15,6 @@ type ValidatedConfig struct {
 	ValidatedConfigData configdomain.ValidatedConfigData
 }
 
-func EmptyValidatedConfig() ValidatedConfig {
-	return ValidatedConfig{} //exhaustruct:ignore
-}
-
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	if self.ValidatedConfigData.IsMainBranch(branch) {
 		return configdomain.BranchTypeMainBranch
@@ -107,4 +103,8 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 		}
 	}
 	return result
+}
+
+func EmptyValidatedConfig() ValidatedConfig {
+	return ValidatedConfig{} //exhaustruct:ignore
 }

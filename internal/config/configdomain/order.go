@@ -12,6 +12,10 @@ import (
 // Order describes the sort order for displaying branch lists.
 type Order string
 
+func (self Order) String() string {
+	return string(self)
+}
+
 const (
 	OrderAsc  Order = "asc"
 	OrderDesc Order = "desc"
@@ -20,10 +24,6 @@ const (
 var OrderValues = []Order{
 	OrderAsc,
 	OrderDesc,
-}
-
-func (self Order) String() string {
-	return string(self)
 }
 
 func ParseOrder(value stringss.Trimmed, source string) (Option[Order], error) {
