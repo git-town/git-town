@@ -9,7 +9,7 @@ linters:
     - dupl # too many false positives
     - err113 # this leads to lots of unnecessary allocations and boilerplate
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
-    - exhaustruct_v5 # we call this separately from golangci-lint via "make lint-smoke"
+    # - exhaustruct_v5 # we call this separately from golangci-lint via "make lint-smoke" # TODO: re-enable when exhaustruct supports Go 1.27
     - forbidigo # Git Town prints a lot to the CLI
     - forcetypeassert
     - funlen # we keep track of this via code reviews
@@ -44,6 +44,10 @@ linters:
     embeddedstructfieldcheck:
       empty-line: false
       forbid-mutex: true
+    exhaustruct_v5:
+      enforce-patterns:
+        - github.com/git-town/git-town.*
+      explicit-mode: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
       constructor: true
@@ -76,6 +80,9 @@ linters:
       - linters:
           - err113
         text: do not define dynamic errors
+      - linters:
+          - exhaustruct_v5
+        path: _test\.go$
       - linters:
           - gocritic
         text: 'appendAssign: append result not assigned to the same slice'
