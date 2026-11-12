@@ -146,8 +146,8 @@ creates a branch with the given [type](../branch-types.md).
 
 <!-- keep-sorted start -->
 
-- [hack](hack.md) creates the new branch as a child of the
-  [main branch](../preferences/main-branch.md)
+- [hack](hack.md) creates the new branch
+  as a child of the [main branch](../preferences/main-branch.md)
 - [prepend](prepend.md) creates the new branch as a parent of the current branch
 
 <!-- keep-sorted end -->
