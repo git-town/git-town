@@ -2,6 +2,7 @@ package godog
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -183,9 +184,9 @@ func (dt *testingT) isFailed() error {
 	}
 	switch len(dt.failMessages) {
 	case 0:
-		return fmt.Errorf("fail called on TestingT")
+		return errors.New("fail called on TestingT")
 	case 1:
-		return fmt.Errorf(dt.failMessages[0])
+		return errors.New(dt.failMessages[0])
 	default:
 		return fmt.Errorf("checks failed:\n* %s", strings.Join(dt.failMessages, "\n* "))
 	}
