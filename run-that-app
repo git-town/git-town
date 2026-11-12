@@ -18,9 +18,9 @@ keep-sorted 0.10.0
 lefthook 2.2.2
 mdbook 0.4.52
 mdbook-linkcheck 0.7.7
-node 26.13.0
-npm 26.13.0
-npx 26.13.0
+node 26.13.1
+npm 26.13.1
+npx 26.13.1
 ripgrep 15.2.0
 rumdl 0.3.3
 scc 4.1.0
