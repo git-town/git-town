@@ -129,9 +129,7 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionNone,
 				},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
-				},
+				Cursor:          0,
 				OriginalAliases: configdomain.Aliases{},
 			}
 			// rotate the first time to set to "checked"
@@ -156,9 +154,7 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionGT,
 				},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
-				},
+				Cursor: 0,
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
@@ -185,9 +181,7 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionOther,
 				},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
-				},
+				Cursor: 0,
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},

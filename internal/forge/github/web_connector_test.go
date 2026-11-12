@@ -96,11 +96,9 @@ func TestWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := github.WebConnector{
-					HostedRepoInfo: forgedomain.HostedRepoInfo{
-						Hostname:     "github.com",
-						Organization: "organization",
-						Repository:   "repo",
-					},
+					Hostname:     "github.com",
+					Organization: "organization",
+					Repository:   "repo",
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
@@ -117,11 +115,9 @@ func TestWebConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     "github.com",
-				Organization: "organization",
-				Repository:   "repo",
-			},
+			Hostname:     "github.com",
+			Organization: "organization",
+			Repository:   "repo",
 		}
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"
