@@ -44,6 +44,10 @@ linters:
     embeddedstructfieldcheck:
       empty-line: false
       forbid-mutex: true
+    exhaustruct_v5:
+      enforce-patterns:
+        - github.com/git-town/git-town.*
+      explicit-mode: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
       constructor: true
