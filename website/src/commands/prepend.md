@@ -156,7 +156,7 @@ creates a branch with the given [type](../branch-types.md).
 <!-- keep-sorted start -->
 
 - [append](append.md) creates the new branch as a child of the current branch
-- [hack](hack.md) creates the new branch as a child of the
-  [main branch](../preferences/main-branch.md)
+- [hack](hack.md) creates the new branch
+  as a child of the [main branch](../preferences/main-branch.md)
 
 <!-- keep-sorted end -->

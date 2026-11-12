@@ -158,8 +158,8 @@ get notifications about new releases.
 
 To remove Git Town from your system:
 
-1. Remove the Git Town configuration from your repositories: in each repo, run
-   `git town config remove`
+1. Remove the Git Town configuration from your repositories: in each repo,
+   run `git town config remove`
 2. If your operating system or package manager provides an uninstaller
    for Git Town, run it.
    If you installed Git Town manually, delete the binary.
