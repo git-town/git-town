@@ -1684,8 +1684,8 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("lastBranchInRef", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
-			"refs/remotes/origin/main": "main",
 			"":                         "",
+			"refs/remotes/origin/main": "main",
 		}
 		for give, want := range tests {
 			have := git.LastBranchInRef(give)

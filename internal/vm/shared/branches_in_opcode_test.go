@@ -41,8 +41,8 @@ func TestBranchesInOpcode(t *testing.T) {
 	t.Run("LocalBranchNames", func(t *testing.T) {
 		t.Parallel()
 		opcode := opcodes.LineageParentSetFirstExisting{
-			Branch:    "branch",
 			Ancestors: gitdomain.NewLocalBranchNames("ancestor-1", "ancestor-2"),
+			Branch:    "branch",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{

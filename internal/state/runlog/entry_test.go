@@ -19,10 +19,10 @@ func TestEntry(t *testing.T) {
 		t.Parallel()
 		entry := runlog.Entry{
 			Branches: map[gitdomain.BranchName]gitdomain.SHA{
-				"main":            "111111",
-				"origin/main":     "111111",
 				"branch-1":        "222222",
+				"main":            "111111",
 				"origin/branch-1": "222222",
+				"origin/main":     "111111",
 			},
 			Command:        "git town sync",
 			Event:          runlog.EventStart,

@@ -29,32 +29,32 @@ type NewConnectorArgs struct {
 // NewConnector provides a connector instance that talks to the gitea API.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
+		browserEnabled:    args.BrowserEnabled,
+		browserExecutable: args.BrowserExecutable,
 		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		browserEnabled:    args.BrowserEnabled,
-		browserExecutable: args.BrowserExecutable,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
 		proposals := mockproposals.Load(proposalsPath)
 		return &MockConnector{
+			cache:         forgedomain.APICache{},
+			log:           args.Log,
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
 			WebConnector:  webConnector,
-			cache:         forgedomain.APICache{},
-			log:           args.Log,
 		}
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
 		authConnector := AuthConnector{
+			_client:      MutableNone[gitea.Client](),
 			APIToken:     apiToken,
+			log:          args.Log,
 			RemoteURL:    args.RemoteURL,
 			WebConnector: webConnector,
-			_client:      MutableNone[gitea.Client](),
-			log:          args.Log,
 		}
 		return &CachedAPIConnector{
 			api:   authConnector,

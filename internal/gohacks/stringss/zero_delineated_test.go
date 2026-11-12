@@ -11,13 +11,13 @@ func TestZeroDelineated(t *testing.T) {
 	t.Parallel()
 	tests := map[stringss.ZeroDelineated][]string{
 		"":                    {""},
-		"single":              {"single"},
+		"\x00leading":         {"", "leading"},
+		"a\x00\x00double":     {"a", "", "double"},
 		"a\x00b":              {"a", "b"},
 		"a\x00b\x00c":         {"a", "b", "c"},
-		"\x00leading":         {"", "leading"},
-		"trailing\x00":        {"trailing", ""},
-		"a\x00\x00double":     {"a", "", "double"},
 		"mixed\r\nchars\x001": {"mixed\r\nchars", "1"},
+		"single":              {"single"},
+		"trailing\x00":        {"trailing", ""},
 	}
 	for give, want := range tests {
 		t.Run(give.String(), func(t *testing.T) {
