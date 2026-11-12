@@ -1,4 +1,4 @@
-RTA_VERSION = 0.40.0
+RTA_VERSION = 0.43.3
 TRIDENT_VERSION = 0.1.0
 
 # internal data and state
@@ -9,7 +9,7 @@ GO_TEST_ARGS = LANG=C GOGC=off
 RTA          = tools/rta@$(RTA_VERSION)
 TRIDENT      = tools/trident@$(TRIDENT_VERSION)
 ACTIONLINT   = $(RTA) actionlint
-BIOME        = $(RTA) biome
+ALPHASORT    = $(RTA) alphasort
 CONC         = $(RTA) conc
 CONTEST      = $(RTA) contest
 CUCUMBERSORT = $(RTA) cucumber-sort
@@ -130,17 +130,12 @@ lint-all: lint ${RTA}  # runs all linters
 	@(cd tools/print_config_exhaustive && make test)
 	@echo lint tools/stats_release
 	@(cd tools/stats_release && make test)
-	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && make test)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && make test)
 	@echo lint tools/use_equal
 	@(cd tools/use_equal && make test)
-
-alphavet: ${RTA}
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
@@ -172,9 +167,6 @@ lint-smoke: ${RTA}  # runs only the essential linters
 
 lint-steps:
 	@(cd tools/lint_steps && go build && ./lint_steps)
-
-lint-structs-sorted:
-	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
 
 lint-tests-sorted:
 	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
@@ -224,7 +216,6 @@ UNIT_TEST_DIRS = \
 	./tools/messages_sorted/... \
 	./tools/messy_output/... \
 	./tools/stats_release/... \
-	./tools/structs_sorted/... \
 	./tools/tests_sorted/...
 
 unit: install  # runs only the unit tests for changed code
@@ -261,7 +252,6 @@ deadcode: ${RTA}
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_self" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/format_unittests" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/stats_release" \
-		"$(DEADCODE) github.com/git-town/git-town/tools/structs_sorted" \
 		"$(DEADCODE) github.com/git-town/git-town/tools/lint_steps" \
 		"$(DEADCODE) -test github.com/git-town/git-town/v24 \
 			| grep -v BranchExists \

@@ -11,18 +11,18 @@ func TestAn(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]string{
+		"":         "a",
 		"apple":    "an",
-		"elephant": "an",
-		"igloo":    "an",
-		"orange":   "an",
-		"umbrella": "an",
 		"book":     "a",
 		"car":      "a",
 		"dog":      "a",
+		"elephant": "an",
 		"house":    "a",
+		"igloo":    "an",
+		"orange":   "an",
 		"tree":     "a",
+		"umbrella": "an",
 		"zebra":    "a",
-		"":         "a",
 	}
 
 	for give, want := range tests {

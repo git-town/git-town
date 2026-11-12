@@ -1,4 +1,4 @@
-RTA_VERSION = 0.40.0
+RTA_VERSION = 0.43.3
 
 .DEFAULT_GOAL := help
 

@@ -18,8 +18,8 @@ func SingleCacheDiff(before, after configdomain.SingleSnapshot) ConfigDiff {
 		if afterContains {
 			if beforeValue != afterValue {
 				result.Changed[key] = undodomain.Change[string]{
-					Before: beforeValue,
 					After:  afterValue,
+					Before: beforeValue,
 				}
 			}
 		} else {

@@ -69,12 +69,6 @@ func (self BranchInfo) GetSHAs() BranchInfoSHAs {
 	}
 }
 
-type BranchInfoSHAs struct {
-	HasBothSHA bool
-	LocalSHA   SHA
-	RemoteSHA  SHA
-}
-
 func (self BranchInfo) HasOnlyLocalBranch() bool {
 	_, hasLocal := self.Local.Get()
 	hasRemoteBranch, _, _ := self.GetRemote()
@@ -145,4 +139,10 @@ func (self BranchInfo) String() string {
 		return fmt.Sprintf("BranchInfo local: %s (%s) remote: %s (%s) %s", local.Name, local.SHA, self.RemoteName, self.RemoteSHA, self.SyncStatus)
 	}
 	return fmt.Sprintf("BranchInfo local: (none) remote: %s (%s) %s", self.RemoteName, self.RemoteSHA, self.SyncStatus)
+}
+
+type BranchInfoSHAs struct {
+	HasBothSHA bool
+	LocalSHA   SHA
+	RemoteSHA  SHA
 }
