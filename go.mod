@@ -11,7 +11,7 @@ require (
 	github.com/charmbracelet/bubbles v1.0.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/cucumber/godog v0.16.0
-	github.com/cucumber/messages/go/v21 v21.0.1
+	github.com/cucumber/messages/go/v34 v34.2.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dustin/go-humanize v1.1.0
 	github.com/google/go-cmp v0.7.0
