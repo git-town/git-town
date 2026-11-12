@@ -736,6 +736,25 @@ func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnt
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String(), commitsToRemove.String())
 }
 
+// RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
+// This is the check of "git push --force-if-includes", done without pushing.
+func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
+	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
+	if err != nil {
+		return false
+	}
+	output, err := querier.QueryTrim("git", "rev-list", "--walk-reflogs", "--max-count=100", branch.String())
+	if err != nil {
+		return false
+	}
+	for state := range strings.FieldsSeq(output.String()) {
+		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
+			return true
+		}
+	}
+	return false
+}
+
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
 	if cachedRemotes, hasCachedRemotes := self.RemotesCache.Get(); hasCachedRemotes {
 		return cachedRemotes, nil
