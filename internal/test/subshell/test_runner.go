@@ -31,23 +31,23 @@ type TestRunner struct {
 	// the directory that contains mock executables, ignored if empty
 	BinDir string
 
-	// the directory that contains the global Git configuration
-	HomeDir string
-
-	// whether to log the output of subshell commands
-	Verbose configdomain.Verbose
-
-	// the directory in which this runner executes shell commands
-	WorkingDir string
-
 	// name of the binary to use as the custom editor during "git commit"
 	gitEditor Option[string]
+
+	// the directory that contains the global Git configuration
+	HomeDir string
 
 	// content of the GIT_TOWN_REMOTE environment variable
 	testOrigin Option[string]
 
 	// indicates whether the current test has created the binDir
 	usesBinDir bool
+
+	// whether to log the output of subshell commands
+	Verbose configdomain.Verbose
+
+	// the directory in which this runner executes shell commands
+	WorkingDir string
 }
 
 // CreateMockBinary creates an executable with the given name and content in ms.binDir.

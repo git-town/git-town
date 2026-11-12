@@ -44,10 +44,8 @@ func commitCmd() *cobra.Command {
 	addUpFlag, readUpFlag := flags.Up()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "commit",
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
-		Short:   commitDesc,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -75,6 +73,8 @@ func commitCmd() *cobra.Command {
 			})
 			return executeCommit(cliConfig, message, up)
 		},
+		Short:   commitDesc,
+		Use:     "commit",
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
@@ -84,79 +84,45 @@ func commitCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
+func commitProgram(data commitData) program.Program {
+	prog := NewMutable(&program.Program{})
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.branchToCommitInto},
+		&opcodes.Commit{
+			AuthorOverride:                 None[gitdomain.Author](),
+			FallbackToDefaultCommitMessage: false,
+			Message:                        data.commitMessage,
+		},
+	)
+	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+		BranchesToDelete:    NewMutable(&set.Set[gitdomain.LocalBranchName]{}),
+		BranchInfos:         data.branchInfosToSync,
+		BranchInfosPrevious: data.branchInfosLastRun,
+		Config:              data.config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
+		Program:             prog,
+		Prune:               false,
+		PushBranches:        false,
+		Remotes:             data.remotes,
 	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineCommitData(repo, commitMessage, up)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateCommitData(data)
-	if err != nil {
-		return err
-	}
-	runProgram := commitProgram(data)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               "commit",
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		FinalUndoProgram:      program.Program{},
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
+		RunInGitRoot:             true,
+		StashOpenChanges:         false,
 	})
+	return optimizer.Optimize(prog.Immutable())
 }
 
 type commitData struct {
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchesToSync           configdomain.BranchesToSync
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchInfosToSync        gitdomain.BranchInfos
 	branchToCommitInto       gitdomain.LocalBranchName
 	branchTypeToCommitInto   configdomain.BranchType
-	branchesSnapshot         gitdomain.BranchesSnapshot
-	branchesToSync           configdomain.BranchesToSync
 	commitMessage            Option[gitdomain.CommitMessage]
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
@@ -228,9 +194,9 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -269,12 +235,12 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		return emptyCommitData, configdomain.ProgramFlowExit, err
 	}
 	return commitData{
+		branchesSnapshot:         branchesSnapshot,
+		branchesToSync:           branchesToSync,
 		branchInfosLastRun:       branchInfosLastRun,
 		branchInfosToSync:        branchInfosToSync,
 		branchToCommitInto:       branchToCommitInto,
 		branchTypeToCommitInto:   branchTypeToCommitInto,
-		branchesSnapshot:         branchesSnapshot,
-		branchesToSync:           branchesToSync,
 		commitMessage:            commitMessage,
 		config:                   validatedConfig,
 		connector:                connector,
@@ -289,36 +255,70 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func commitProgram(data commitData) program.Program {
-	prog := NewMutable(&program.Program{})
-	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.branchToCommitInto},
-		&opcodes.Commit{
-			AuthorOverride:                 None[gitdomain.Author](),
-			FallbackToDefaultCommitMessage: false,
-			Message:                        data.commitMessage,
-		},
-	)
-	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-		BranchInfos:         data.branchInfosToSync,
-		BranchInfosPrevious: data.branchInfosLastRun,
-		BranchesToDelete:    NewMutable(&set.Set[gitdomain.LocalBranchName]{}),
-		Config:              data.config,
-		InitialBranch:       data.initialBranch,
-		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Program:             prog,
-		Prune:               false,
-		PushBranches:        false,
-		Remotes:             data.remotes,
+func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.branchToCommitInto)},
+	if err != nil {
+		return err
+	}
+	data, flow, err := determineCommitData(repo, commitMessage, up)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	err = validateCommitData(data)
+	if err != nil {
+		return err
+	}
+	runProgram := commitProgram(data)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               "commit",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		FinalUndoProgram:      program.Program{},
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
 	})
-	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateCommitData(data commitData) error {

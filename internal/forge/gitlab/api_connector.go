@@ -27,12 +27,6 @@ type APIConnector struct {
 	log    print.Logger
 }
 
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = apiConnector
-
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalFindStart, branch, target)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
@@ -58,17 +52,11 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	}
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = apiConnector
-
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
-		State:        new("opened"),
 		SourceBranch: new(branch.String()),
+		State:        new("opened"),
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
@@ -91,21 +79,15 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	return result, nil
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector
-
 func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	options := &gitlab.AcceptMergeRequestOptions{
-		Squash: new(true),
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: new(false),
+		Squash: new(true),
 	}
 	// When no commit message is given, GitLab determines the squash commit message.
 	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
@@ -118,12 +100,6 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	return err
 }
 
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = apiConnector
-
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
@@ -134,12 +110,6 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	return err
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = apiConnector
-
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, data.Number, target)
@@ -149,12 +119,6 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	self.log.Finished(err)
 	return err
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = apiConnector
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Users.CurrentUser()
@@ -176,3 +140,39 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		AuthorizationError:  err,
 	}
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = apiConnector
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = apiConnector
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = apiConnector
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = apiConnector

@@ -20,8 +20,8 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 		return zero, true, err
 	}
 	program := tea.NewProgram(radioListModel[S]{
-		List:  list.NewList(entries, cursor),
 		help:  help,
+		List:  list.NewList(entries, cursor),
 		title: title,
 	})
 	SendInputs(dialogName, inputs.Next(), program)

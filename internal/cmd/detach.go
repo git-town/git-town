@@ -71,9 +71,7 @@ func detachCommand() *cobra.Command {
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     detachCommandName,
 		Args:    cobra.NoArgs,
-		Short:   detachDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -100,268 +98,13 @@ func detachCommand() *cobra.Command {
 			})
 			return executeDetach(cliConfig)
 		},
+		Short:   detachDesc,
+		Use:     detachCommandName,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeDetach(cliConfig configdomain.PartialConfig) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineDetachData(repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateDetachData(data)
-	if err != nil {
-		return err
-	}
-	runProgram := detachProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               detachCommandName,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
-type detachData struct {
-	branchInfosLastRun     Option[gitdomain.BranchInfos]
-	branchToDetachInfo     gitdomain.BranchInfo
-	branchToDetachName     gitdomain.LocalBranchName
-	branchToDetachProposal Option[forgedomain.Proposal]
-	branchToDetachType     configdomain.BranchType
-	branchesSnapshot       gitdomain.BranchesSnapshot
-	children               []detachChildBranch
-	config                 config.ValidatedConfig
-	connector              Option[forgedomain.Connector]
-	descendents            []detachChildBranch
-	detectedForgeType      Option[forgedomain.DetectedForgeType]
-	hasOpenChanges         bool
-	initialBranch          gitdomain.LocalBranchName
-	inputs                 dialogcomponents.Inputs
-	nonExistingBranches    gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch           gitdomain.LocalBranchName
-	previousBranch         Option[gitdomain.LocalBranchName]
-	stashSize              gitdomain.StashSize
-}
-
-type detachChildBranch struct {
-	info     *gitdomain.BranchInfo
-	name     gitdomain.LocalBranchName
-	proposal Option[forgedomain.Proposal]
-}
-
-func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult detachData
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connector,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 true,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	if branchesSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
-	}
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	branchNameToDetach := currentBranch
-	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
-	if !hasBranchToDetachInfo {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
-	}
-	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
-	if !hasParentBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
-	}
-	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	if branchHasMergeCommits {
-		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
-	}
-
-	connectorProposalFinder := None[forgedomain.ProposalFinder]()
-	branchToDetachProposal := None[forgedomain.Proposal]()
-	if connector, hasConnector := connector.Get(); hasConnector {
-		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			connectorProposalFinder = Some(proposalFinder)
-			branchToDetachProposal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
-			if err != nil {
-				return emptyResult, configdomain.ProgramFlowExit, err
-			}
-		}
-	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach, validatedConfig.NormalConfig.Order)
-	children := make([]detachChildBranch, len(childBranches))
-	proposalFinder, hasProposalFinder := connectorProposalFinder.Get()
-	for c, childBranch := range childBranches {
-		proposal := None[forgedomain.Proposal]()
-		if hasProposalFinder {
-			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
-			if err != nil {
-				return emptyResult, configdomain.ProgramFlowExit, err
-			}
-		}
-		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
-		if !has {
-			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
-		}
-		children[c] = detachChildBranch{
-			info:     childInfo,
-			name:     childBranch,
-			proposal: proposal,
-		}
-	}
-	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach, validatedConfig.NormalConfig.Order)
-	descendents := make([]detachChildBranch, len(descendentNames))
-	for d, descendentName := range descendentNames {
-		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
-		if !has {
-			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
-		}
-		descendents[d] = detachChildBranch{
-			info:     info,
-			name:     descendentName,
-			proposal: None[forgedomain.Proposal](),
-		}
-	}
-	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
-	return detachData{
-		branchInfosLastRun:     branchInfosLastRun,
-		branchToDetachInfo:     *branchToDetachInfo,
-		branchToDetachName:     branchNameToDetach,
-		branchToDetachProposal: branchToDetachProposal,
-		branchToDetachType:     branchTypeToDetach,
-		branchesSnapshot:       branchesSnapshot,
-		children:               children,
-		config:                 validatedConfig,
-		connector:              connector,
-		descendents:            descendents,
-		detectedForgeType:      detectedForgeType,
-		hasOpenChanges:         repoStatus.OpenChanges,
-		initialBranch:          initialBranch,
-		inputs:                 inputs,
-		nonExistingBranches:    nonExistingBranches,
-		parentBranch:           parentBranch,
-		previousBranch:         previousBranchOpt,
-		stashSize:              stashSize,
-	}, configdomain.ProgramFlowContinue, nil
 }
 
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
@@ -464,11 +207,268 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()
+}
+
+type detachData struct {
+	branchesSnapshot       gitdomain.BranchesSnapshot
+	branchInfosLastRun     Option[gitdomain.BranchInfos]
+	branchToDetachInfo     gitdomain.BranchInfo
+	branchToDetachName     gitdomain.LocalBranchName
+	branchToDetachProposal Option[forgedomain.Proposal]
+	branchToDetachType     configdomain.BranchType
+	children               []detachChildBranch
+	config                 config.ValidatedConfig
+	connector              Option[forgedomain.Connector]
+	descendents            []detachChildBranch
+	detectedForgeType      Option[forgedomain.DetectedForgeType]
+	hasOpenChanges         bool
+	initialBranch          gitdomain.LocalBranchName
+	inputs                 dialogcomponents.Inputs
+	nonExistingBranches    gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch           gitdomain.LocalBranchName
+	previousBranch         Option[gitdomain.LocalBranchName]
+	stashSize              gitdomain.StashSize
+}
+
+type detachChildBranch struct {
+	info     *gitdomain.BranchInfo
+	name     gitdomain.LocalBranchName
+	proposal Option[forgedomain.Proposal]
+}
+
+func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult detachData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	if branchesSnapshot.DetachedHead {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachRepoHasDetachedHead)
+	}
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchNameToDetach := currentBranch
+	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
+	if !hasBranchToDetachInfo {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
+	}
+	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
+	if !hasParentBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.DetachNoParent)
+	}
+	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	if branchHasMergeCommits {
+		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
+	}
+
+	connectorProposalFinder := None[forgedomain.ProposalFinder]()
+	branchToDetachProposal := None[forgedomain.Proposal]()
+	if connector, hasConnector := connector.Get(); hasConnector {
+		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			connectorProposalFinder = Some(proposalFinder)
+			branchToDetachProposal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
+			if err != nil {
+				return emptyResult, configdomain.ProgramFlowExit, err
+			}
+		}
+	}
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach, validatedConfig.NormalConfig.Order)
+	children := make([]detachChildBranch, len(childBranches))
+	proposalFinder, hasProposalFinder := connectorProposalFinder.Get()
+	for c, childBranch := range childBranches {
+		proposal := None[forgedomain.Proposal]()
+		if hasProposalFinder {
+			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
+			if err != nil {
+				return emptyResult, configdomain.ProgramFlowExit, err
+			}
+		}
+		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
+		if !has {
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", childBranch)
+		}
+		children[c] = detachChildBranch{
+			info:     childInfo,
+			name:     childBranch,
+			proposal: proposal,
+		}
+	}
+	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach, validatedConfig.NormalConfig.Order)
+	descendents := make([]detachChildBranch, len(descendentNames))
+	for d, descendentName := range descendentNames {
+		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
+		if !has {
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf("cannot find branch info for %q", descendentName)
+		}
+		descendents[d] = detachChildBranch{
+			info:     info,
+			name:     descendentName,
+			proposal: None[forgedomain.Proposal](),
+		}
+	}
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	return detachData{
+		branchesSnapshot:       branchesSnapshot,
+		branchInfosLastRun:     branchInfosLastRun,
+		branchToDetachInfo:     *branchToDetachInfo,
+		branchToDetachName:     branchNameToDetach,
+		branchToDetachProposal: branchToDetachProposal,
+		branchToDetachType:     branchTypeToDetach,
+		children:               children,
+		config:                 validatedConfig,
+		connector:              connector,
+		descendents:            descendents,
+		detectedForgeType:      detectedForgeType,
+		hasOpenChanges:         repoStatus.OpenChanges,
+		initialBranch:          initialBranch,
+		inputs:                 inputs,
+		nonExistingBranches:    nonExistingBranches,
+		parentBranch:           parentBranch,
+		previousBranch:         previousBranchOpt,
+		stashSize:              stashSize,
+	}, configdomain.ProgramFlowContinue, nil
+}
+
+func executeDetach(cliConfig configdomain.PartialConfig) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, flow, err := determineDetachData(repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	err = validateDetachData(data)
+	if err != nil {
+		return err
+	}
+	runProgram := detachProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               detachCommandName,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 func validateDetachData(data detachData) error {

@@ -37,39 +37,21 @@ On an observed branch, "git town sync"
 `
 )
 
-func observeCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "observe [branches]",
-		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GroupIDTypes,
-		Short:   observeDesc,
-		Long:    cmdhelpers.Long(observeDesc, observeHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeObserve(args, cliConfig)
-		},
+func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return observeData{}, err
 	}
-	addVerboseFlag(&cmd)
-	return &cmd
+	if branchesSnapshot.DetachedHead {
+		return observeData{}, errors.New(messages.ObserveDetachedHead)
+	}
+	branchesToObserve, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	return observeData{
+		branchesSnapshot:  branchesSnapshot,
+		branchesToObserve: branchesToObserve.BranchesToMark,
+		branchInfos:       branchesSnapshot.Branches,
+		checkout:          branchesToObserve.BranchToCheckout,
+	}, err
 }
 
 func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
@@ -117,33 +99,51 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 }
 
 type observeData struct {
-	branchInfos       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
 	branchesToObserve configdomain.BranchesAndTypes
+	branchInfos       gitdomain.BranchInfos
 	checkout          Option[gitdomain.LocalBranchName]
+}
+
+func observeCmd() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.ArbitraryArgs,
+		GroupID: cmdhelpers.GroupIDTypes,
+		Long:    cmdhelpers.Long(observeDesc, observeHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[configdomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeObserve(args, cliConfig)
+		},
+		Short:   observeDesc,
+		Use:     "observe [branches]",
+	}
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.BranchIsNowObserved, branch)
 	}
-}
-
-func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return observeData{}, err
-	}
-	if branchesSnapshot.DetachedHead {
-		return observeData{}, errors.New(messages.ObserveDetachedHead)
-	}
-	branchesToObserve, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return observeData{
-		branchInfos:       branchesSnapshot.Branches,
-		branchesSnapshot:  branchesSnapshot,
-		branchesToObserve: branchesToObserve.BranchesToMark,
-		checkout:          branchesToObserve.BranchToCheckout,
-	}, err
 }
 
 func validateObserveData(data observeData, repo execute.OpenRepoResult) error {

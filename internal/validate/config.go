@@ -51,9 +51,9 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	}
 	// enter and save missing parent branches
 	lineageResult, exit, err := dialog.Lineage(dialog.LineageArgs{
-		BranchInfos:      args.BranchInfos,
 		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
+		BranchInfos:      args.BranchInfos,
 		Config:           args.Unvalidated.Immutable(),
 		Connector:        args.Connector,
 		DefaultChoice:    mainBranch,
@@ -83,19 +83,19 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
 	}
 	validatedConfig := config.ValidatedConfig{
+		NormalConfig: args.Unvalidated.Value.NormalConfig,
 		ValidatedConfigData: configdomain.ValidatedConfigData{
 			MainBranch: mainBranch,
 		},
-		NormalConfig: args.Unvalidated.Value.NormalConfig,
 	}
 	return validatedConfig, false, err
 }
 
 type ConfigArgs struct {
 	Backend            subshelldomain.RunnerQuerier
-	BranchInfos        gitdomain.BranchInfos
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
+	BranchInfos        gitdomain.BranchInfos
 	ConfigDir          configdomain.RepoConfigDir
 	ConfigSnapshot     configdomain.BeginConfigSnapshot
 	Connector          Option[forgedomain.Connector]

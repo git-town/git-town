@@ -17,6 +17,38 @@ const InteractiveEnabled = Interactive("")
 // If it is not an empty string, interactive mode is disabled and the string contains the reason why.
 type Interactive string
 
+func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
+	if value {
+		return Some(InteractiveEnabled)
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
+}
+
+func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) Option[Interactive] {
+	envConfig, hasEnvConfig := envConfigOpt.Get()
+	if hasEnvConfig {
+		if envConfig {
+			return Some(InteractiveEnabled)
+		}
+		return Some(Interactive(messages.InteractivityDisabledViaEnv))
+	}
+	if strings.ToLower(envTerm.String()) == "dumb" {
+		return Some(Interactive("only a dumb terminal available"))
+	}
+	return None[Interactive]()
+}
+
+func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
+	boolValue, err := gohacks.ParseBool[bool](value, source)
+	if err != nil {
+		return None[Interactive](), err
+	}
+	if boolValue {
+		return Some(InteractiveEnabled), nil
+	}
+	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
+}
+
 // Check indicates via an error if interactive mode is enabled.
 // No error: interactive mode is enabled.
 // Error: interactive mode is disabled.
@@ -37,38 +69,6 @@ func (self Interactive) String() string {
 		return "disabled: " + string(self)
 	}
 	return "enabled"
-}
-
-func NewInteractiveFromConfigFile(value bool) Option[Interactive] {
-	if value {
-		return Some(InteractiveEnabled)
-	}
-	return Some(Interactive(messages.InteractivityDisabledViaConfigFile))
-}
-
-func NewInteractiveFromSnapshot(value stringss.Trimmed, source string) (Option[Interactive], error) {
-	boolValue, err := gohacks.ParseBool[bool](value, source)
-	if err != nil {
-		return None[Interactive](), err
-	}
-	if boolValue {
-		return Some(InteractiveEnabled), nil
-	}
-	return Some(Interactive(messages.InteractivityDisabledViaGit)), nil
-}
-
-func NewInteractiveFromEnv(envTerm stringss.Trimmed, envConfigOpt Option[bool]) Option[Interactive] {
-	envConfig, hasEnvConfig := envConfigOpt.Get()
-	if hasEnvConfig {
-		if envConfig {
-			return Some(InteractiveEnabled)
-		}
-		return Some(Interactive(messages.InteractivityDisabledViaEnv))
-	}
-	if strings.ToLower(envTerm.String()) == "dumb" {
-		return Some(Interactive("only a dumb terminal available"))
-	}
-	return None[Interactive]()
 }
 
 // ------------------------------------------------------------------------------

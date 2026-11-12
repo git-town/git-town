@@ -19,8 +19,6 @@ type Lineage struct {
 	data LineageData
 }
 
-type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
-
 func NewLineage() Lineage {
 	return Lineage{
 		data: make(LineageData),
@@ -313,3 +311,5 @@ func (self Lineage) initializeIfNeeded() Lineage {
 	}
 	return self
 }
+
+type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName

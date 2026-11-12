@@ -154,80 +154,94 @@ type executeAppendArgs struct {
 	prototype     configdomain.Prototype
 }
 
-func executeAppend(args executeAppendArgs) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        args.cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
+func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
+	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend, data.config.NormalConfig.Order)
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
+		branchesToDelete := set.New[gitdomain.LocalBranchName]()
+		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+			BranchesToDelete:    NewMutable(&branchesToDelete),
+			BranchInfos:         data.branchInfos,
+			BranchInfosPrevious: data.branchInfosLastRun,
+			Config:              data.config,
+			InitialBranch:       data.initialBranch,
+			PrefetchBranchInfos: data.preFetchBranchInfos,
+			Program:             prog,
+			Prune:               false,
+			PushBranches:        data.config.NormalConfig.PushBranches,
+			Remotes:             data.remotes,
+		})
+	}
+	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
+		Ancestors: data.newBranchParentCandidates,
+		Branch:    data.targetBranch,
 	})
-	if err != nil {
-		return err
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush && data.config.NormalConfig.Offline.IsOnline() {
+		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
-	data, flow, err := determineAppendData(determineAppendDataArgs{
-		beam:          args.beam,
-		commit:        args.commit,
-		commitMessage: args.commitMessage,
-		propose:       args.propose,
-		prototype:     args.prototype,
-		targetBranch:  gitdomain.LocalBranchNameOrPanic(args.arg),
-	}, repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               "append",
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
+	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
+		Ancestors: data.newBranchParentCandidates,
+		Branch:    data.targetBranch,
 	})
+	var branchType configdomain.BranchType
+	if data.prototype {
+		branchType = configdomain.BranchTypePrototypeBranch
+	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+		branchType = newBranchType.BranchType()
+	} else {
+		branchType = configdomain.BranchTypeFeatureBranch
+	}
+	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
+	if data.commit {
+		prog.Value.Add(
+			&opcodes.Commit{
+				AuthorOverride:                 None[gitdomain.Author](),
+				FallbackToDefaultCommitMessage: false,
+				Message:                        data.commitMessage,
+			},
+		)
+	}
+	moveCommitsToAppendedBranch(prog, data, beamCherryPick)
+	if data.propose {
+		title := None[gitdomain.ProposalTitle]()
+		if commitMessage, has := data.commitMessage.Get(); has {
+			title = Some(gitdomain.ProposalTitle(string(commitMessage)))
+		}
+		prog.Value.Add(
+			&opcodes.BranchTrackingCreate{
+				Branch: data.targetBranch,
+			},
+			&opcodes.ProposalCreate{
+				Branch:        data.targetBranch,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  None[gitdomain.ProposalBody](),
+				ProposalTitle: title,
+			},
+		)
+	}
+	if data.commit {
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+	} else {
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   data.config.NormalConfig.DryRun,
+			InitialStashSize:         data.stashSize,
+			PreviousBranchCandidates: previousBranchCandidates,
+			RunInGitRoot:             true,
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
+		})
+	}
+	return optimizer.Optimize(prog.Immutable())
 }
 
 type appendFeatureData struct {
 	beam                      configdomain.Beam
-	branchInfos               gitdomain.BranchInfos
-	branchInfosLastRun        Option[gitdomain.BranchInfos]
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
+	branchInfos               gitdomain.BranchInfos
+	branchInfosLastRun        Option[gitdomain.BranchInfos]
 	commit                    configdomain.Commit
 	commitMessage             Option[gitdomain.CommitMessage]
 	commitsToBeam             gitdomain.Commits
@@ -375,10 +389,10 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	}
 	return appendFeatureData{
 		beam:                      args.beam,
-		branchInfos:               branchesSnapshot.Branches,
-		branchInfosLastRun:        branchInfosLastRun,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
+		branchInfos:               branchesSnapshot.Branches,
+		branchInfosLastRun:        branchInfosLastRun,
 		commit:                    args.commit,
 		commitMessage:             args.commitMessage,
 		commitsToBeam:             commitsToBeam,
@@ -410,86 +424,72 @@ type determineAppendDataArgs struct {
 	targetBranch  gitdomain.LocalBranchName
 }
 
-func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
-	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend, data.config.NormalConfig.Order)
-	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
-		branchesToDelete := set.New[gitdomain.LocalBranchName]()
-		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
-			BranchInfos:         data.branchInfos,
-			BranchInfosPrevious: data.branchInfosLastRun,
-			BranchesToDelete:    NewMutable(&branchesToDelete),
-			Config:              data.config,
-			InitialBranch:       data.initialBranch,
-			PrefetchBranchInfos: data.preFetchBranchInfos,
-			Program:             prog,
-			Prune:               false,
-			Remotes:             data.remotes,
-			PushBranches:        data.config.NormalConfig.PushBranches,
-		})
-	}
-	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
-		Ancestors: data.newBranchParentCandidates,
-		Branch:    data.targetBranch,
+func executeAppend(args executeAppendArgs) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        args.cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush && data.config.NormalConfig.Offline.IsOnline() {
-		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
+	if err != nil {
+		return err
 	}
-	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
-		Branch:    data.targetBranch,
-		Ancestors: data.newBranchParentCandidates,
+	data, flow, err := determineAppendData(determineAppendDataArgs{
+		beam:          args.beam,
+		commit:        args.commit,
+		commitMessage: args.commitMessage,
+		propose:       args.propose,
+		prototype:     args.prototype,
+		targetBranch:  gitdomain.LocalBranchNameOrPanic(args.arg),
+	}, repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               "append",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
 	})
-	var branchType configdomain.BranchType
-	if data.prototype {
-		branchType = configdomain.BranchTypePrototypeBranch
-	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-		branchType = newBranchType.BranchType()
-	} else {
-		branchType = configdomain.BranchTypeFeatureBranch
-	}
-	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
-	if data.commit {
-		prog.Value.Add(
-			&opcodes.Commit{
-				AuthorOverride:                 None[gitdomain.Author](),
-				FallbackToDefaultCommitMessage: false,
-				Message:                        data.commitMessage,
-			},
-		)
-	}
-	moveCommitsToAppendedBranch(prog, data, beamCherryPick)
-	if data.propose {
-		title := None[gitdomain.ProposalTitle]()
-		if commitMessage, has := data.commitMessage.Get(); has {
-			title = Some(gitdomain.ProposalTitle(string(commitMessage)))
-		}
-		prog.Value.Add(
-			&opcodes.BranchTrackingCreate{
-				Branch: data.targetBranch,
-			},
-			&opcodes.ProposalCreate{
-				Branch:        data.targetBranch,
-				MainBranch:    data.config.ValidatedConfigData.MainBranch,
-				ProposalBody:  None[gitdomain.ProposalBody](),
-				ProposalTitle: title,
-			},
-		)
-	}
-	if data.commit {
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.initialBranch},
-		)
-	} else {
-		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
-		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.config.NormalConfig.DryRun,
-			InitialStashSize:         data.stashSize,
-			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
-			PreviousBranchCandidates: previousBranchCandidates,
-		})
-	}
-	return optimizer.Optimize(prog.Immutable())
 }
 
 func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData, performCherryPick bool) {

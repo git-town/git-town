@@ -16,13 +16,17 @@ Git Town helps create, sync, and ship changes
 efficiently and with minimal merge conflicts.`
 )
 
+func executeRoot(cmd *cobra.Command, showVersion bool) error {
+	if showVersion {
+		fmt.Println("Git Town " + config.GitTownVersion)
+		return nil
+	}
+	return cmd.Help()
+}
+
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()
 	rootCmd := cobra.Command{
-		Use:           "git-town",
-		SilenceErrors: true,
-		SilenceUsage:  true,
-		Short:         rootDesc,
 		Long:          cmdhelpers.Long(rootDesc, rootHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			version, err := readVersionFlag(cmd)
@@ -31,6 +35,10 @@ func rootCmd() cobra.Command {
 			}
 			return executeRoot(cmd, version)
 		},
+		Short:         rootDesc,
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		Use:           "git-town",
 	}
 	rootCmd.AddGroup(&cobra.Group{
 		ID:    cmdhelpers.GroupIDBasic,
@@ -54,12 +62,4 @@ func rootCmd() cobra.Command {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	addVersionFlag(&rootCmd)
 	return rootCmd
-}
-
-func executeRoot(cmd *cobra.Command, showVersion bool) error {
-	if showVersion {
-		fmt.Println("Git Town " + config.GitTownVersion)
-		return nil
-	}
-	return cmd.Help()
 }

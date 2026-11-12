@@ -69,10 +69,8 @@ func combineCommand() *cobra.Command {
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     combineCmd,
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
-		Short:   combineDesc,
 		Long:    cmdhelpers.Long(combineDesc, combineHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -98,6 +96,8 @@ func combineCommand() *cobra.Command {
 			})
 			return executeCombine(cliConfig)
 		},
+		Short:   combineDesc,
+		Use:     combineCmd,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
@@ -105,73 +105,69 @@ func combineCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeCombine(cliConfig configdomain.PartialConfig) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
+func combineProgram(repo execute.OpenRepoResult, data combineData) program.Program {
+	prog := NewMutable(&program.Program{})
+	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
+	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
+	if data.initialBranchSHA != data.parentBranchSHA {
+		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SHA: data.initialBranchSHA})
+	}
+	for _, child := range data.childBranches {
+		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+	}
+	prog.Value.Add(&opcodes.LineageParentRemove{
+		Branch: data.initialBranch,
 	})
-	if err != nil {
-		return err
+	// We need to delete the remote branch before updating the parent branch.
+	// This order will make sure that if there is a related proposal where
+	// the base is the branch being merged and the target is the parent branch
+	// then that proposal gets marked "closed" rather than "merged" by forges
+	// like GitHub.
+	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
+	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
+		prog.Value.Add(&opcodes.BranchTrackingDelete{
+			Branch: initialTrackingBranch,
+		})
 	}
-	data, flow, err := determineCombineData(repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	if err = validateCombineData(repo, data); err != nil {
-		return err
-	}
-	runProgram := combineProgram(repo, data)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               combineCmd,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
+	prog.Value.Add(&opcodes.BranchLocalDelete{
+		Branch: data.initialBranch,
 	})
+	parentTracking, parentHasTracking := data.parentBranchInfo.RemoteName.Get()
+	if parentHasTracking && repo.IsOffline.IsOnline() {
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   data.parentBranch,
+			ForceIfIncludes: true,
+			TrackingBranch:  parentTracking,
+		})
+	}
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: data.initialBranch,
+		})
+	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateBreadcrumb && isOnline {
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
+			Config:          data.config,
+			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+		})
+	}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+	})
+	return optimizer.Optimize(prog.Immutable())
 }
 
 type combineData struct {
-	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
@@ -244,9 +240,9 @@ func determineCombineData(repo execute.OpenRepoResult) (combineData, configdomai
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -299,8 +295,8 @@ func determineCombineData(repo execute.OpenRepoResult) (combineData, configdomai
 		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	return combineData{
-		branchInfosLastRun:       branchInfosLastRun,
 		branchesSnapshot:         branchesSnapshot,
+		branchInfosLastRun:       branchInfosLastRun,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
@@ -321,64 +317,68 @@ func determineCombineData(repo execute.OpenRepoResult) (combineData, configdomai
 	}, configdomain.ProgramFlowContinue, err
 }
 
-func combineProgram(repo execute.OpenRepoResult, data combineData) program.Program {
-	prog := NewMutable(&program.Program{})
-	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
-	if data.initialBranchSHA != data.parentBranchSHA {
-		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SHA: data.initialBranchSHA})
-	}
-	for _, child := range data.childBranches {
-		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
-	}
-	prog.Value.Add(&opcodes.LineageParentRemove{
-		Branch: data.initialBranch,
+func executeCombine(cliConfig configdomain.PartialConfig) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	// We need to delete the remote branch before updating the parent branch.
-	// This order will make sure that if there is a related proposal where
-	// the base is the branch being merged and the target is the parent branch
-	// then that proposal gets marked "closed" rather than "merged" by forges
-	// like GitHub.
-	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
-	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
-		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: initialTrackingBranch,
-		})
+	if err != nil {
+		return err
 	}
-	prog.Value.Add(&opcodes.BranchLocalDelete{
-		Branch: data.initialBranch,
+	data, flow, err := determineCombineData(repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	if err = validateCombineData(repo, data); err != nil {
+		return err
+	}
+	runProgram := combineProgram(repo, data)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		Command:               combineCmd,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
 	})
-	parentTracking, parentHasTracking := data.parentBranchInfo.RemoteName.Get()
-	if parentHasTracking && repo.IsOffline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
-			CurrentBranch:   data.parentBranch,
-			ForceIfIncludes: true,
-			TrackingBranch:  parentTracking,
-		})
-	}
-	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
-			Branch: data.initialBranch,
-		})
-	}
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
-	isOnline := data.config.NormalConfig.Offline.IsOnline()
-	if updateBreadcrumb && isOnline {
-		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
-			Config:          data.config,
-			Program:         prog,
-			TouchedBranches: gitdomain.LocalBranchNames{data.initialBranch},
-		})
-	}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
-	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateCombineData(repo execute.OpenRepoResult, data combineData) error {

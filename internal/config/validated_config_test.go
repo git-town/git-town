@@ -21,22 +21,22 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		tests := map[stringss.Trimmed]bool{
 			"feature":     false,
 			"main":        true,
+			"observed":    false,
+			"parked":      false,
 			"perennial-1": true,
 			"perennial-2": true,
 			"perennial-3": false,
-			"observed":    false,
-			"parked":      false,
 		}
 		for give, want := range tests {
 			have := config.IsMainOrPerennialBranch(gitdomain.LocalBranchNameOrPanic(give))
@@ -62,11 +62,11 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := config.MainAndPerennials()
@@ -106,13 +106,13 @@ func TestValidatedConfig(t *testing.T) {
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*", "test")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
-				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.LocalBranchNames{perennial1},
 				PerennialRegex:    perennialRegexOpt,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{

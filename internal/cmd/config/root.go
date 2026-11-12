@@ -25,10 +25,8 @@ func RootCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addShowSecretsFlag, readShowSecretsFlag := flags.ShowSecrets()
 	configCmd := cobra.Command{
-		Use:     "config",
-		GroupID: cmdhelpers.GroupIDConfig,
 		Args:    cobra.NoArgs,
-		Short:   configDesc,
+		GroupID: cmdhelpers.GroupIDConfig,
 		Long:    cmdhelpers.Long(configDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
@@ -54,6 +52,8 @@ func RootCmd() *cobra.Command {
 			})
 			return executeDisplayConfig(cliConfig, showSecrets)
 		},
+		Short:   configDesc,
+		Use:     "config",
 	}
 	addDisplayTypesFlag(&configCmd)
 	addVerboseFlag(&configCmd)

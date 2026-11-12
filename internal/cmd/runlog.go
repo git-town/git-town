@@ -30,13 +30,31 @@ if git town undo doesn't fully undo the last command.
 `
 )
 
+func executeRunLog(cliConfig configdomain.PartialConfig) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	filepath := runlog.NewRunlogPath(repo.ConfigDir)
+	if err = showRunLog(filepath); err != nil {
+		return err
+	}
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
+	return nil
+}
+
 func runLogCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "runlog",
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDErrors,
-		Short:   runLogDesc,
 		Long:    cmdhelpers.Long(runLogDesc, runLogHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
@@ -60,29 +78,11 @@ func runLogCommand() *cobra.Command {
 			})
 			return executeRunLog(cliConfig)
 		},
+		Short:   runLogDesc,
+		Use:     "runlog",
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeRunLog(cliConfig configdomain.PartialConfig) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    true,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	filepath := runlog.NewRunlogPath(repo.ConfigDir)
-	if err = showRunLog(filepath); err != nil {
-		return err
-	}
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
-	return nil
 }
 
 func showRunLog(filepath runlog.FilePath) error {

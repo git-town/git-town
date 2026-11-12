@@ -50,6 +50,50 @@ When run on the main branch or a perennial branch:
 If the repository contains an "upstream" remote, syncs the main branch with its upstream counterpart. You can disable this by running "git config %s false".`
 )
 
+func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitdomain.BranchInfos, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (configdomain.BranchesToSync, error) {
+	result := make(configdomain.BranchesToSync, len(branchInfosToSync))
+	for b, branchInfo := range branchInfosToSync {
+		branchNameToSync := branchInfo.GetLocalOrRemoteName()
+		if branchNameToSync.LocalName() == mainBranch {
+			result[b] = configdomain.BranchToSync{
+				BranchInfo:         branchInfo,
+				FirstCommitMessage: None[gitdomain.CommitMessage](),
+			}
+			continue
+		}
+		parentLocalName, hasParentName := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchNameToSync.LocalName()).Get()
+		if !hasParentName {
+			parentLocalName = mainBranch
+		}
+		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName).Get()
+		if !hasParentBranchInfo {
+			result[b] = configdomain.BranchToSync{
+				BranchInfo:         branchInfo,
+				FirstCommitMessage: None[gitdomain.CommitMessage](),
+			}
+			continue
+		}
+		parentBranchName := parentBranchInfo.GetLocalOrRemoteName()
+		firstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, parentBranchName)
+		if err != nil {
+			return result, err
+		}
+		result[b] = configdomain.BranchToSync{
+			BranchInfo:         branchInfo,
+			FirstCommitMessage: firstCommitMessage,
+		}
+	}
+	return result, nil
+}
+
+type executeSyncArgs struct {
+	cliConfig       configdomain.PartialConfig
+	gone            configdomain.Gone
+	prune           configdomain.Prune
+	stack           configdomain.FullStack
+	syncAllBranches configdomain.AllBranches
+}
+
 func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
@@ -62,10 +106,8 @@ func Cmd() *cobra.Command {
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     syncCommand,
-		GroupID: cmdhelpers.GroupIDBasic,
 		Args:    cobra.NoArgs,
-		Short:   syncDesc,
+		GroupID: cmdhelpers.GroupIDBasic,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
@@ -104,6 +146,8 @@ func Cmd() *cobra.Command {
 				syncAllBranches: allBranches,
 			})
 		},
+		Short:   syncDesc,
+		Use:     syncCommand,
 	}
 	addAllFlag(&cmd)
 	addAutoResolveFlag(&cmd)
@@ -118,135 +162,10 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-type executeSyncArgs struct {
-	cliConfig       configdomain.PartialConfig
-	gone            configdomain.Gone
-	prune           configdomain.Prune
-	stack           configdomain.FullStack
-	syncAllBranches configdomain.AllBranches
-}
-
-func executeSync(args executeSyncArgs) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        args.cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineSyncData(repo, determineSyncDataArgs{
-		gone:            args.gone,
-		syncAllBranches: args.syncAllBranches,
-		syncStack:       args.stack,
-	})
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	if err = validateSyncData(data); err != nil {
-		return err
-	}
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend, data.config.NormalConfig.Order)
-	runProgram := NewMutable(&program.Program{})
-	branchesToDelete := set.New[gitdomain.LocalBranchName]()
-	BranchesProgram(data.branchesToSync, BranchProgramArgs{
-		BranchInfos:         data.branchInfos,
-		BranchInfosPrevious: data.previousBranchInfos,
-		BranchesToDelete:    NewMutable(&branchesToDelete),
-		Config:              data.config,
-		InitialBranch:       data.initialBranch,
-		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Program:             runProgram,
-		Prune:               args.prune,
-		PushBranches:        data.config.NormalConfig.PushBranches,
-		Remotes:             data.remotes,
-	})
-	touchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
-	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
-	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
-		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
-	}
-	finalBranchCandidates = finalBranchCandidates.AppendAllMissing(data.branchInfos.NamesLocalBranches())
-	finalBranchCandidates = finalBranchCandidates.Remove(data.branchInfos.BranchesInOtherWorktrees()...)
-	runProgram.Value.Add(&opcodes.CheckoutFirstExisting{
-		Branches:   finalBranchCandidates,
-		MainBranch: data.config.ValidatedConfigData.MainBranch,
-	})
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
-		runProgram.Value.Add(&opcodes.PushTags{})
-	}
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
-	isOnline := data.config.NormalConfig.Offline.IsOnline()
-	if updateBreadcrumb && isOnline {
-		// Seed breadcrumb updates from branches the sync program actually changed,
-		// not every branch considered for syncing.
-		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
-			Config:          data.config,
-			Program:         runProgram,
-			TouchedBranches: touchedBranches,
-		})
-	}
-
-	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousbranchCandidates,
-	})
-	optimizedProgram := optimizer.Optimize(runProgram.Immutable())
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               syncCommand,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.previousBranchInfos,
-		RunProgram:            optimizedProgram,
-		TouchedBranches:       touchedBranches.BranchNames(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
 type syncData struct {
-	branchInfos              gitdomain.BranchInfos
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
+	branchInfos              gitdomain.BranchInfos
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	detectedForgeType        Option[forgedomain.DetectedForgeType]
@@ -347,9 +266,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -381,9 +300,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: branchNamesToSync,
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -417,9 +336,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
 	return syncData{
-		branchInfos:              branchesSnapshot.Branches,
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
+		branchInfos:              branchesSnapshot.Branches,
 		config:                   validatedConfig,
 		connector:                connector,
 		detectedForgeType:        detectedForgeType,
@@ -436,40 +355,121 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}, configdomain.ProgramFlowContinue, err
 }
 
-func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitdomain.BranchInfos, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (configdomain.BranchesToSync, error) {
-	result := make(configdomain.BranchesToSync, len(branchInfosToSync))
-	for b, branchInfo := range branchInfosToSync {
-		branchNameToSync := branchInfo.GetLocalOrRemoteName()
-		if branchNameToSync.LocalName() == mainBranch {
-			result[b] = configdomain.BranchToSync{
-				BranchInfo:         branchInfo,
-				FirstCommitMessage: None[gitdomain.CommitMessage](),
-			}
-			continue
-		}
-		parentLocalName, hasParentName := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchNameToSync.LocalName()).Get()
-		if !hasParentName {
-			parentLocalName = mainBranch
-		}
-		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName).Get()
-		if !hasParentBranchInfo {
-			result[b] = configdomain.BranchToSync{
-				BranchInfo:         branchInfo,
-				FirstCommitMessage: None[gitdomain.CommitMessage](),
-			}
-			continue
-		}
-		parentBranchName := parentBranchInfo.GetLocalOrRemoteName()
-		firstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, branchNameToSync, parentBranchName)
-		if err != nil {
-			return result, err
-		}
-		result[b] = configdomain.BranchToSync{
-			BranchInfo:         branchInfo,
-			FirstCommitMessage: firstCommitMessage,
-		}
+func executeSync(args executeSyncArgs) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        args.cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
 	}
-	return result, nil
+	data, flow, err := determineSyncData(repo, determineSyncDataArgs{
+		gone:            args.gone,
+		syncAllBranches: args.syncAllBranches,
+		syncStack:       args.stack,
+	})
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	if err = validateSyncData(data); err != nil {
+		return err
+	}
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend, data.config.NormalConfig.Order)
+	runProgram := NewMutable(&program.Program{})
+	branchesToDelete := set.New[gitdomain.LocalBranchName]()
+	BranchesProgram(data.branchesToSync, BranchProgramArgs{
+		BranchesToDelete:    NewMutable(&branchesToDelete),
+		BranchInfos:         data.branchInfos,
+		BranchInfosPrevious: data.previousBranchInfos,
+		Config:              data.config,
+		InitialBranch:       data.initialBranch,
+		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
+		Program:             runProgram,
+		Prune:               args.prune,
+		PushBranches:        data.config.NormalConfig.PushBranches,
+		Remotes:             data.remotes,
+	})
+	touchedBranches := gitdomain.BranchNames(runProgram.Value.TouchedBranches()).LocalBranchNames()
+	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
+	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
+		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
+	}
+	finalBranchCandidates = finalBranchCandidates.AppendAllMissing(data.branchInfos.NamesLocalBranches())
+	finalBranchCandidates = finalBranchCandidates.Remove(data.branchInfos.BranchesInOtherWorktrees()...)
+	runProgram.Value.Add(&opcodes.CheckoutFirstExisting{
+		Branches:   finalBranchCandidates,
+		MainBranch: data.config.ValidatedConfigData.MainBranch,
+	})
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
+		runProgram.Value.Add(&opcodes.PushTags{})
+	}
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateBreadcrumb && isOnline {
+		// Seed breadcrumb updates from branches the sync program actually changed,
+		// not every branch considered for syncing.
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
+			Config:          data.config,
+			Program:         runProgram,
+			TouchedBranches: touchedBranches,
+		})
+	}
+
+	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: previousbranchCandidates,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+	})
+	optimizedProgram := optimizer.Optimize(runProgram.Immutable())
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               syncCommand,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.previousBranchInfos,
+		RunProgram:            optimizedProgram,
+		TouchedBranches:       touchedBranches.BranchNames(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 func validateSyncData(data syncData) error {

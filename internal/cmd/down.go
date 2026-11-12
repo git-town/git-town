@@ -32,10 +32,8 @@ func downCmd() *cobra.Command {
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "down",
-		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.NoArgs,
-		Short:   downShort,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Long:    cmdhelpers.Long(downShort, downLong),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
@@ -65,6 +63,8 @@ func downCmd() *cobra.Command {
 				merge:     merge,
 			})
 		},
+		Short:   downShort,
+		Use:     "down",
 	}
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
@@ -143,9 +143,9 @@ Start:
 		goto Start
 	}
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+		BranchesAndTypes:  data.branchesAndTypes,
 		BranchInfos:       data.branchInfos,
 		BranchTypes:       []configdomain.BranchType{},
-		BranchesAndTypes:  data.branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,

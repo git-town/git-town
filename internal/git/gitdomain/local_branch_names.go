@@ -18,20 +18,6 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-// ParseLocalBranchNames constructs a LocalBranchNames instance
-// containing the branches listed in the given space-separated string.
-func ParseLocalBranchNames(names stringss.Trimmed) LocalBranchNames {
-	parts := strings.Split(names.String(), " ")
-	result := make(LocalBranchNames, 0, len(parts))
-	for _, part := range parts {
-		trimmedPart := stringss.Trim(part)
-		if len(trimmedPart) > 0 {
-			result = append(result, LocalBranchName(trimmedPart))
-		}
-	}
-	return result
-}
-
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
 func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
 	missing := slice.FindAllMissing(self, others)
@@ -99,6 +85,20 @@ func (self LocalBranchNames) Strings() []string {
 	result := make([]string, len(self))
 	for b, branch := range self {
 		result[b] = branch.String()
+	}
+	return result
+}
+
+// ParseLocalBranchNames constructs a LocalBranchNames instance
+// containing the branches listed in the given space-separated string.
+func ParseLocalBranchNames(names stringss.Trimmed) LocalBranchNames {
+	parts := strings.Split(names.String(), " ")
+	result := make(LocalBranchNames, 0, len(parts))
+	for _, part := range parts {
+		trimmedPart := stringss.Trim(part)
+		if len(trimmedPart) > 0 {
+			result = append(result, LocalBranchName(trimmedPart))
+		}
 	}
 	return result
 }

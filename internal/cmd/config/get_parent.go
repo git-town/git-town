@@ -18,6 +18,38 @@ import (
 
 const getParentDesc = "Displays the parent branch for the current or given branch"
 
+func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: false,
+		PrintCommands:    false,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	var childBranch gitdomain.LocalBranchName
+	if len(args) == 0 {
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
+		if err != nil {
+			return err
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			childBranch = currentBranch
+		}
+	} else {
+		childBranch = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
+	}
+	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		fmt.Print(parent)
+	}
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	return nil
+}
+
 func getParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -50,36 +82,4 @@ func getParentCommand() *cobra.Command {
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: false,
-		PrintCommands:    false,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	var childBranch gitdomain.LocalBranchName
-	if len(args) == 0 {
-		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
-		if err != nil {
-			return err
-		}
-		if currentBranch, has := currentBranchOpt.Get(); has {
-			childBranch = currentBranch
-		}
-	} else {
-		childBranch = gitdomain.LocalBranchNameOrPanic(stringss.Trim(args[0]))
-	}
-	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
-	if parent, hasParent := parentOpt.Get(); hasParent {
-		fmt.Print(parent)
-	}
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
-	return nil
 }

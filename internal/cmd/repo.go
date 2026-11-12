@@ -32,6 +32,52 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 )
 
+func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
+	var remoteOpt Option[gitdomain.Remote]
+	if len(args) > 0 {
+		remoteOpt = gitdomain.NewRemote(stringss.Trim(args[0]))
+	} else {
+		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
+	}
+	remote, hasRemote := remoteOpt.Get()
+	if !hasRemote {
+		return repoData{connector: nil}, nil
+	}
+	config := repo.UnvalidatedConfig.NormalConfig
+	connectorOpt, _, err := repo.NewConnector(config.RemoteURL(repo.Backend, remote))
+	if err != nil {
+		return repoData{}, err
+	}
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+		return repoData{}, forgedomain.UnsupportedServiceError()
+	}
+	return repoData{
+		connector: connector,
+	}, nil
+}
+
+func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: true,
+	})
+	if err != nil {
+		return err
+	}
+	data, err := determineRepoData(args, repo)
+	if err != nil {
+		return err
+	}
+	err = data.connector.BrowseRepository(repo.Frontend)
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	return err
+}
+
 func repoCommand() *cobra.Command {
 	addBrowserFlag, readBrowserFlag := flags.Browser()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -67,52 +113,6 @@ func repoCommand() *cobra.Command {
 	addBrowserFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: true,
-	})
-	if err != nil {
-		return err
-	}
-	data, err := determineRepoData(args, repo)
-	if err != nil {
-		return err
-	}
-	err = data.connector.BrowseRepository(repo.Frontend)
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
-	return err
-}
-
-func determineRepoData(args []string, repo execute.OpenRepoResult) (repoData, error) {
-	var remoteOpt Option[gitdomain.Remote]
-	if len(args) > 0 {
-		remoteOpt = gitdomain.NewRemote(stringss.Trim(args[0]))
-	} else {
-		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
-	}
-	remote, hasRemote := remoteOpt.Get()
-	if !hasRemote {
-		return repoData{connector: nil}, nil
-	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, _, err := repo.NewConnector(config.RemoteURL(repo.Backend, remote))
-	if err != nil {
-		return repoData{}, err
-	}
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
-		return repoData{}, forgedomain.UnsupportedServiceError()
-	}
-	return repoData{
-		connector: connector,
-	}, nil
 }
 
 type repoData struct {

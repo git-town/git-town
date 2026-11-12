@@ -159,10 +159,10 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		}
 	}
 	return config.ValidatedConfig{
+		NormalConfig: args.unvalidated.Value.NormalConfig,
 		ValidatedConfigData: configdomain.ValidatedConfigData{
 			MainBranch: mainBranch,
 		},
-		NormalConfig: args.unvalidated.Value.NormalConfig,
 	}, false, nil
 }
 

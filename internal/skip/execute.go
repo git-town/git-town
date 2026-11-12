@@ -125,8 +125,8 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		Config:                   args.Config,
 		EndBranch:                args.InitialBranch,
 		FinalMessages:            args.FinalMessages,
-		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
+		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:           args.Backend,

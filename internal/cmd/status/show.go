@@ -16,12 +16,31 @@ import (
 
 const statusShowDesc = "Displays the detailed information from the persisted runstate"
 
+func executeStatusShow(cliConfig configdomain.PartialConfig) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, err := loadDisplayStatusData(repo.RootDir)
+	if err != nil {
+		return err
+	}
+	showStatus(data)
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
+	return nil
+}
+
 func showRunstateCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "show",
 		Args:  cobra.NoArgs,
-		Short: statusShowDesc,
 		Long:  cmdhelpers.Long(statusShowDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
@@ -45,30 +64,11 @@ func showRunstateCommand() *cobra.Command {
 			})
 			return executeStatusShow(cliConfig)
 		},
+		Short: statusShowDesc,
+		Use:   "show",
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
-}
-
-func executeStatusShow(cliConfig configdomain.PartialConfig) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    true,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, err := loadDisplayStatusData(repo.RootDir)
-	if err != nil {
-		return err
-	}
-	showStatus(data)
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
-	return nil
 }
 
 func showStatus(data displayStatusData) {

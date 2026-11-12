@@ -25,47 +25,6 @@ import (
 
 const skipDesc = "Resume the last run Git Town command by skipping the current branch"
 
-func skipCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addParkFlag, readParkFlag := flags.Park()
-	cmd := cobra.Command{
-		Use:     "skip",
-		GroupID: cmdhelpers.GroupIDErrors,
-		Args:    cobra.NoArgs,
-		Short:   skipDesc,
-		Long:    cmdhelpers.Long(skipDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			park, err := readParkFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeSkip(cliConfig, park)
-		},
-	}
-	addParkFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
-}
-
 func executeSkip(cliConfig configdomain.PartialConfig, park configdomain.Park) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
@@ -169,9 +128,9 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: localBranches,
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -205,6 +164,47 @@ func loadSkipData(repo execute.OpenRepoResult, park configdomain.Park) (skipData
 		park:              park,
 		runState:          runState,
 	}, configdomain.ProgramFlowContinue, nil
+}
+
+func skipCmd() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addParkFlag, readParkFlag := flags.Park()
+	cmd := cobra.Command{
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDErrors,
+		Long:    cmdhelpers.Long(skipDesc),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			park, err := readParkFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[configdomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeSkip(cliConfig, park)
+		},
+		Short:   skipDesc,
+		Use:     "skip",
+	}
+	addParkFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 type skipData struct {
