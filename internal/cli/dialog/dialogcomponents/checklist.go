@@ -31,7 +31,7 @@ func CheckList[S any](entries list.Entries[S], selections []int, title, help str
 
 type CheckListModel[S any] struct {
 	list.List[S]
-	help string // help text to display before the checklist
+	help       string // help text to display before the checklist
 	Selections []int
 	title      string // title to display before the help text
 }

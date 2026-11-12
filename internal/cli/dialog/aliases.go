@@ -59,8 +59,8 @@ type AliasesModel struct {
 	list.List[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
-	OriginalAliases configdomain.Aliases // the Git Town aliases as they currently exist on disk
-	selectedColor   termenv.Style
+	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
+	selectedColor        termenv.Style
 }
 
 func (self AliasesModel) Checked() configdomain.AliasableCommands {
