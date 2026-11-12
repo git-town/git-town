@@ -290,7 +290,8 @@ var _ signer = &ecdsaAlgorithm{}
 
 type ecdsaAlgorithm struct {
 	hash.Hash
-	kind crypto.Hash
+	kind      crypto.Hash
+	sshSigner ssh.Signer
 }
 
 func (r *ecdsaAlgorithm) setSig(b []byte) error {
@@ -310,6 +311,22 @@ type ECDSASignature struct {
 }
 
 func (r *ecdsaAlgorithm) Sign(rand io.Reader, p crypto.PrivateKey, sig []byte) ([]byte, error) {
+	if r.sshSigner != nil {
+		sshsig, err := r.sshSigner.Sign(rand, sig)
+		if err != nil {
+			return nil, err
+		}
+		// SSH wraps the (r, s) pair as two mpints, convert it to the ASN.1
+		// encoding expected by Verify.
+		var blob struct {
+			R *big.Int
+			S *big.Int
+		}
+		if err := ssh.Unmarshal(sshsig.Blob, &blob); err != nil {
+			return nil, err
+		}
+		return asn1.Marshal(ECDSASignature{R: blob.R, S: blob.S})
+	}
 	defer r.Reset()
 	if err := r.setSig(sig); err != nil {
 		return nil, err
@@ -460,6 +477,16 @@ func newAlgorithm(algo string, key []byte) (hash.Hash, crypto.Hash, error) {
 
 func signerFromSSHSigner(sshSigner ssh.Signer, s string) (signer, error) {
 	switch {
+	case strings.HasPrefix(s, ecdsaPrefix):
+		hash, cHash, err := newAlgorithm(strings.TrimPrefix(s, ecdsaPrefix+"-"), nil)
+		if err != nil {
+			return nil, err
+		}
+		return &ecdsaAlgorithm{
+			Hash:      hash,
+			kind:      cHash,
+			sshSigner: sshSigner,
+		}, nil
 	case strings.HasPrefix(s, rsaPrefix):
 		return &rsaAlgorithm{
 			sshSigner: sshSigner,
