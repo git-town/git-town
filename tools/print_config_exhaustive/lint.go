@@ -23,16 +23,6 @@ var whiteList = []string{
 	"Verbose",
 }
 
-func main() {
-	definedFields := FindDefinedFields(readFile(normalConfigDataPath))
-	printFunction := FindPrintFunc(readFile(printConfigPath))
-	unprinted := FindUnprintedFields(definedFields, printFunction, whiteList)
-	if len(unprinted) > 0 {
-		printMissingFields(unprinted)
-		os.Exit(1)
-	}
-}
-
 func FindDefinedFields(text string) []string {
 	structRE := regexp.MustCompile(`type NormalConfig struct {([^}]*)}`)
 	match := structRE.FindStringSubmatch(text)
@@ -78,6 +68,16 @@ func isPrinted(field, text string) bool {
 
 func isWhitelisted(field string, whitelist []string) bool {
 	return slices.Contains(whitelist, field)
+}
+
+func main() {
+	definedFields := FindDefinedFields(readFile(normalConfigDataPath))
+	printFunction := FindPrintFunc(readFile(printConfigPath))
+	unprinted := FindUnprintedFields(definedFields, printFunction, whiteList)
+	if len(unprinted) > 0 {
+		printMissingFields(unprinted)
+		os.Exit(1)
+	}
 }
 
 func printMissingFields(unprinted []string) {

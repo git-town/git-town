@@ -14,9 +14,9 @@ func TestLocation(t *testing.T) {
 	t.Run("IsRemoteBranchName", func(t *testing.T) {
 		t.Parallel()
 		tests := map[gitdomain.Location]bool{
-			"origin/foo": true,
-			"foo":        false,
 			"123456":     false,
+			"foo":        false,
+			"origin/foo": true,
 		}
 		for give, want := range tests {
 			have := give.IsRemoteBranchName()

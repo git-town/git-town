@@ -81,7 +81,6 @@ upstream = true
 			haveData, err := configfile.Decode(giveTOML)
 			must.NoError(t, err)
 			wantData := configfile.Data{
-				Interactive: new(false),
 				Branches: &configfile.Branches{
 					ContributionRegex: new("^gittown-"),
 					DefaultType:       nil,
@@ -101,6 +100,7 @@ upstream = true
 					ShareNewBranches: new("push"),
 					Stash:            new(true),
 				},
+				CreatePrototypeBranches: nil,
 				Hosting: &configfile.Hosting{
 					Browser:         new("chrome"),
 					DevRemote:       new("origin"),
@@ -110,15 +110,20 @@ upstream = true
 					OriginHostname:  new("github.com"),
 					Platform:        nil,
 				},
+				Interactive: new(false),
 				Propose: &configfile.Propose{
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
 				},
+				PushHook:        nil,
+				PushNewBranches: nil,
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
 					IgnoreUncommitted:    new(true),
 					Strategy:             new("api"),
 				},
+				ShipDeleteTrackingBranch: nil,
+				ShipStrategy:             nil,
 				Sync: &configfile.Sync{
 					AutoResolve:       new(false),
 					AutoSync:          nil,
@@ -131,14 +136,9 @@ upstream = true
 					Tags:              new(false),
 					Upstream:          new(true),
 				},
-				SyncStrategy:             nil,
-				CreatePrototypeBranches:  nil,
-				PushHook:                 nil,
-				PushNewBranches:          nil,
-				ShipDeleteTrackingBranch: nil,
-				ShipStrategy:             nil,
-				SyncTags:                 nil,
-				SyncUpstream:             nil,
+				SyncStrategy: nil,
+				SyncTags:     nil,
+				SyncUpstream: nil,
 			}
 			must.Eq(t, wantData, *haveData)
 
@@ -219,14 +219,14 @@ main = "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
 					Main:           new("main"),
-					Perennials:     nil,
 					PerennialRegex: nil,
+					Perennials:     nil,
 				},
 				Create:                   nil,
 				Hosting:                  nil,
-				SyncStrategy:             nil,
 				PushHook:                 nil,
 				ShipDeleteTrackingBranch: nil,
+				SyncStrategy:             nil,
 				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)
@@ -301,18 +301,18 @@ prototype-branches = "compress"
 				Create: &configfile.Create{
 					PushNewBranches: new(true),
 				},
-				SyncStrategy: &configfile.SyncStrategy{
-					FeatureBranches:   new("merge"),
-					PerennialBranches: new("rebase"),
-					PrototypeBranches: new("compress"),
-				},
 				CreatePrototypeBranches:  new(true),
 				PushHook:                 new(true),
 				PushNewBranches:          new(true),
 				ShipDeleteTrackingBranch: new(false),
 				ShipStrategy:             new("api"),
-				SyncTags:                 new(false),
-				SyncUpstream:             new(true),
+				SyncStrategy: &configfile.SyncStrategy{
+					FeatureBranches:   new("merge"),
+					PerennialBranches: new("rebase"),
+					PrototypeBranches: new("compress"),
+				},
+				SyncTags:     new(false),
+				SyncUpstream: new(true),
 			}
 			must.Eq(t, wantData, *haveData)
 
