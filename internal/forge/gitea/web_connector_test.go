@@ -39,11 +39,9 @@ func TestGitea(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		connector := gitea.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     "gitea.com",
-				Organization: "org",
-				Repository:   "repo",
-			},
+			Hostname:     "gitea.com",
+			Organization: "org",
+			Repository:   "repo",
 		}
 		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 			Branch:        "feature",
@@ -57,11 +55,9 @@ func TestGitea(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		connector := gitea.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     "gitea.com",
-				Organization: "org",
-				Repository:   "repo",
-			},
+			Hostname:     "gitea.com",
+			Organization: "org",
+			Repository:   "repo",
 		}
 		have := connector.RepositoryURL()
 		must.EqOp(t, "https://gitea.com/org/repo", have)

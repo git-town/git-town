@@ -38,10 +38,8 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), err
 	}
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
-		ListOptions: forgejo.ListOptions{
-			PageSize: 50,
-		},
-		State: forgejo.StateOpen,
+		PageSize: 50,
+		State:    forgejo.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -69,10 +67,8 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 		return []forgedomain.Proposal{}, err
 	}
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
-		ListOptions: forgejo.ListOptions{
-			PageSize: 50,
-		},
-		State: forgejo.StateOpen,
+		PageSize: 50,
+		State:    forgejo.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -166,9 +162,7 @@ func (self *APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResul
 		}
 	}
 	_, _, err = client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
-		ListOptions: forgejo.ListOptions{
-			PageSize: 1,
-		},
+		PageSize: 1,
 	})
 	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(user.UserName),
