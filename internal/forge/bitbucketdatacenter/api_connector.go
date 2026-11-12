@@ -22,10 +22,10 @@ var (
 
 // APIConnector provides access to the Bitbucket DataCenter API.
 type APIConnector struct {
+	WebConnector
 	log      print.Logger
 	token    string
 	username string
-	WebConnector
 }
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

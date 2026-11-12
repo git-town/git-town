@@ -813,8 +813,8 @@ func TestLoadSave(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
-  "UndoAPIProgram": [],
   "UndoablePerennialCommits": [],
+  "UndoAPIProgram": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

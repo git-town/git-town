@@ -1,12 +1,14 @@
 RTA_VERSION = 0.43.3
 
 RTA          = ../rta@$(RTA_VERSION)
+ALPHASORT    = $(RTA) alphasort
 DEADCODE     = $(RTA) deadcode
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
 
 
 fix:  # runs all linters and auto-fixes
+	$(ALPHASORT) fix
 	$(GOFUMPT) -l -w .
 	go run ../format_unittests/format_unittests.go
 	go run ../format_self/format_self.go
@@ -16,7 +18,6 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	$(DEADCODE) github.com/git-town/git-town/tools/format_unittests
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
 	../ensure_no_files_with_dashes.sh
 	$(GOLANGCILINT) cache clean
 	$(GOLANGCILINT) run

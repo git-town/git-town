@@ -11,6 +11,10 @@ import (
 // Key contains all the keys used in Git Town's Git metadata configuration.
 type Key string
 
+func NewParentKey(branch gitdomain.LocalBranchName) Key {
+	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
+}
+
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
@@ -201,10 +205,6 @@ var keys = []Key{
 	KeySyncUpstream,
 	KeyUnknownBranchType,
 	// keep-sorted end
-}
-
-func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {

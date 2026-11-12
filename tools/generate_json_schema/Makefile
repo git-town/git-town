@@ -1,7 +1,7 @@
 RTA_VERSION = 0.43.3
 
 RTA          = ../rta@$(RTA_VERSION)
-ALPHASORT = $(RTA) alphasort
+ALPHASORT    = $(RTA) alphasort
 DEADCODE     = $(RTA) deadcode
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
@@ -16,7 +16,6 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	$(DEADCODE) github.com/git-town/git-town/v24/tools/generate_json_schema
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
 	../ensure_no_files_with_dashes.sh
 	$(GOLANGCILINT) cache clean
 	$(GOLANGCILINT) run

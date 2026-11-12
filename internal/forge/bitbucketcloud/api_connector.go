@@ -21,9 +21,9 @@ var (
 
 // APIConnector provides access to the Bitbucket Cloud API.
 type APIConnector struct {
+	WebConnector
 	client Mutable[bitbucket.Client]
 	log    print.Logger
-	WebConnector
 }
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

@@ -49,6 +49,7 @@ linters:
         - github.com/git-town/git-town.*
       explicit-mode: true
     funcorder:
+      # Checks that constructors are placed after the structure declaration.
       constructor: true
       # Checks if the exported methods of a structure are placed before the unexported ones.
       struct-method: true

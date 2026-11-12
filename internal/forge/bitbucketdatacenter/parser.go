@@ -84,8 +84,8 @@ type Ref struct {
 	ID           string `json:"id"`
 	LatestCommit string `json:"latestCommit"`
 	Repository   struct {
-		Origin Repository `json:"origin"`
 		Repository
+		Origin Repository `json:"origin"`
 	} `json:"repository"`
 	Type string `json:"type"`
 }

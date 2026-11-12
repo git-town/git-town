@@ -88,8 +88,8 @@ type BranchProgramArgs struct {
 }
 
 type localBranchProgramArgs struct {
-	branchInfo gitdomain.BranchInfo
 	BranchProgramArgs
+	branchInfo         gitdomain.BranchInfo
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
 	parentNameInitial  Option[gitdomain.LocalBranchName]

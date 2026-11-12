@@ -136,13 +136,13 @@ func (entries *EntryData) toggle() {
 }
 
 type SwitchModel struct {
+	list.List[SwitchBranchEntry]
 	DisableBranchesInOtherWorktrees bool // whether branches that are active in other worktrees cannot be selected
 	DisplayBranchTypes              configdomain.DisplayTypes
 	EntryData                       EntryData
-	InitialBranchPos                Option[int] // position of the currently checked out branch in the list
-	list.List[SwitchBranchEntry]
-	Title              Option[string] // optional title to display above the branch tree
-	UncommittedChanges bool           // whether the workspace has uncommitted changes
+	InitialBranchPos                Option[int]    // position of the currently checked out branch in the list
+	Title                           Option[string] // optional title to display above the branch tree
+	UncommittedChanges              bool           // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {

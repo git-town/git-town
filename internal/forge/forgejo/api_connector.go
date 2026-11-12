@@ -24,11 +24,11 @@ var (
 
 // APIConnector provides access to the Forgejo API.
 type APIConnector struct {
+	WebConnector
 	_client   OptionalMutable[forgejo.Client] // don't use directly, call .getClient()
 	APIToken  Option[forgedomain.ForgejoToken]
 	log       print.Logger
 	remoteURL giturl.Parts
-	WebConnector
 }
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

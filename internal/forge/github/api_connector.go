@@ -23,9 +23,9 @@ var (
 
 // APIConnector provides access to the GitHub API.
 type APIConnector struct {
+	WebConnector
 	client Mutable[github.Client]
 	log    print.Logger
-	WebConnector
 }
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
