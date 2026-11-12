@@ -39,10 +39,8 @@ func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName
 	}
 	self.log.Start(messages.APIProposalFindStart, branch, target)
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+		PageSize: 50,
+		State:    gitea.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -69,10 +67,8 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 	}
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+		PageSize: 50,
+		State:    gitea.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -166,9 +162,7 @@ func (self *AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResu
 		}
 	}
 	_, _, err = client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 1,
-		},
+		PageSize: 1,
 	})
 	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(user.UserName),
