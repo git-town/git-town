@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/print"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/forge/gh"
@@ -13,6 +14,138 @@ import (
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
+
+func TestConnectorCreateProposal(t *testing.T) {
+	t.Parallel()
+
+	t.Run("missing body (interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("")
+		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = None[gitdomain.ProposalBody]()
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("missing body (non-interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("disabled for testing")
+		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = None[gitdomain.ProposalBody]()
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--fill"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("missing title (interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("")
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
+		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--body=my body"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("missing title (non-interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("disabled for testing")
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
+		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--body=my body", "--fill"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("missing title and body (interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("")
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
+		args.ProposalBody = None[gitdomain.ProposalBody]()
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("missing title and body (non-interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("disabled for testing")
+		args.ProposalTitle = None[gitdomain.ProposalTitle]()
+		args.ProposalBody = None[gitdomain.ProposalBody]()
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--fill"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("with title and body (interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("")
+		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+
+	t.Run("with title and body (non-interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("disabled for testing")
+		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+		err := connector.CreateProposal(args)
+		must.NoError(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
+			{"gh", "pr", "view"},
+		}, frontend.calls)
+	})
+}
 
 func TestConnectorSquashMergeProposal(t *testing.T) {
 	t.Parallel()
@@ -42,78 +175,6 @@ func TestConnectorSquashMergeProposal(t *testing.T) {
 		err := connector.SquashMergeProposal(forgedomain.ProposalNumber(1), None[gitdomain.CommitMessage]())
 		must.NoError(t, err)
 		must.Eq(t, [][]string{{"gh", "pr", "merge", "--squash", "1"}}, runner.calls)
-	})
-}
-
-func TestConnectorCreateProposal(t *testing.T) {
-	t.Parallel()
-
-	t.Run("autofills missing body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
-		args.ProposalBody = None[gitdomain.ProposalBody]()
-
-		err := connector.CreateProposal(args)
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--fill"},
-			{"gh", "pr", "view"},
-		}, frontend.calls)
-	})
-
-	t.Run("autofills missing title", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-		args.ProposalTitle = None[gitdomain.ProposalTitle]()
-		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
-
-		err := connector.CreateProposal(args)
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--body=my body", "--fill"},
-			{"gh", "pr", "view"},
-		}, frontend.calls)
-	})
-
-	t.Run("autofills missing title and body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-		args.ProposalTitle = None[gitdomain.ProposalTitle]()
-		args.ProposalBody = None[gitdomain.ProposalBody]()
-
-		err := connector.CreateProposal(args)
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--fill"},
-			{"gh", "pr", "view"},
-		}, frontend.calls)
-	})
-
-	t.Run("uses provided title and body", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
-		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
-
-		err := connector.CreateProposal(args)
-
-		must.NoError(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
-			{"gh", "pr", "view"},
-		}, frontend.calls)
 	})
 }
 

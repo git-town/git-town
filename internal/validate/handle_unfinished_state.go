@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -145,7 +146,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
 		if err != nil {
-			if interactivityError, ok := errors.AsType[*configdomain.InteractivityError](err); ok {
+			if interactivityError, ok := errors.AsType[*clidomain.InteractivityError](err); ok {
 				return config.EmptyValidatedConfig(), true, fmt.Errorf(messages.NoTTYMainBranchMissing, interactivityError) //lint:ignore ST1005 This error contains user-visible guidance, and therefore needs to end with a period.
 			}
 			return config.EmptyValidatedConfig(), exit, err
@@ -159,10 +160,10 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		}
 	}
 	return config.ValidatedConfig{
+		NormalConfig: args.unvalidated.Value.NormalConfig,
 		ValidatedConfigData: configdomain.ValidatedConfigData{
 			MainBranch: mainBranch,
 		},
-		NormalConfig: args.unvalidated.Value.NormalConfig,
 	}, false, nil
 }
 

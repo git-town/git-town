@@ -1,4 +1,4 @@
-go 1.26.9
+go 1.27
 
 use (
 	.
@@ -16,7 +16,6 @@ use (
 	./tools/optioncompare_in_tests
 	./tools/print_config_exhaustive
 	./tools/stats_release
-	./tools/structs_sorted
 	./tools/sync_rta_version
 	./tools/tests_sorted
 	./tools/use_equal

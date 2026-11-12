@@ -30,9 +30,9 @@ func TestGitlabWebConnector(t *testing.T) {
 			t.Parallel()
 			connector := gitlab.WebConnector{}
 			give := forgedomain.ProposalData{
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 				Number: 123,
 				Title:  "my title",
-				Body:   gitdomain.NewProposalBodyOpt("body"),
 			}
 			have := connector.DefaultProposalMessage(give)
 			want := "my title (!123)\n\nbody"
@@ -43,10 +43,10 @@ func TestGitlabWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
+			body   Option[gitdomain.ProposalBody]
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
 			title  Option[gitdomain.ProposalTitle]
-			body   Option[gitdomain.ProposalBody]
 			want   string
 		}{
 			"top-level branch": {
@@ -90,11 +90,9 @@ func TestGitlabWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := gitlab.WebConnector{
-					HostedRepoInfo: forgedomain.HostedRepoInfo{
-						Hostname:     "gitlab.com",
-						Organization: "organization",
-						Repository:   "repo",
-					},
+					Hostname:     "gitlab.com",
+					Organization: "organization",
+					Repository:   "repo",
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,

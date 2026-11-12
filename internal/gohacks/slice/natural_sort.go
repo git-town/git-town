@@ -41,13 +41,6 @@ type cutter struct {
 	index   int    // where we are in the content right now
 }
 
-func newCutter(content string) cutter {
-	return cutter{
-		content: content,
-		index:   0,
-	}
-}
-
 // indicates whether the given index is inside the content this cutter disects
 func (c *cutter) hasContentAt(index int) bool {
 	return index < len(c.content)
@@ -73,6 +66,13 @@ func (c *cutter) nextPart() part {
 	result := part(c.content[c.index:index])
 	c.index = index
 	return result
+}
+
+func newCutter(content string) cutter {
+	return cutter{
+		content: content,
+		index:   0,
+	}
 }
 
 // a multi-rune part cut from text, either all numbers or all non-numbers

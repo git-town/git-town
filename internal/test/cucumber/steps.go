@@ -14,7 +14,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/format"
@@ -1288,7 +1288,7 @@ echo "new line" >> file
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		actualContent := coworkerRepo.FileContent(file)
 		if expectedContent.Content != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent.Content, actualContent)
 		}
 		return nil
 	})
@@ -1702,8 +1702,8 @@ func runCommand(args runCommandArgs) {
 		subProcess.Dir = args.scenarioState.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runResult = subshell.RunResult{
-			Output:   string(outputBytes),
 			ExitCode: subProcess.ProcessState.ExitCode(),
+			Output:   string(outputBytes),
 		}
 	}
 	args.scenarioState.runResult = Some(runResult)

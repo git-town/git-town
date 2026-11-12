@@ -30,23 +30,21 @@ type NewConnectorArgs struct {
 // NewConnector provides the correct connector for talking to Bitbucket Cloud.
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
 	webConnector := WebConnector{
-		HostedRepoInfo: forgedomain.HostedRepoInfo{
-			Hostname:     args.RemoteURL.Host,
-			Organization: args.RemoteURL.Org,
-			Repository:   args.RemoteURL.Repo,
-		},
 		browserEnabled:    args.BrowserEnabled,
 		browserExecutable: args.BrowserExecutable,
+		Hostname:          args.RemoteURL.Host,
+		Organization:      args.RemoteURL.Org,
+		Repository:        args.RemoteURL.Repo,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
 		proposals := mockproposals.Load(proposalsPath)
 		return &MockConnector{
+			cache:         forgedomain.APICache{},
+			log:           args.Log,
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
 			WebConnector:  webConnector,
-			cache:         forgedomain.APICache{},
-			log:           args.Log,
 		}, nil
 	}
 	userName, hasUserName := args.UserName.Get()
@@ -57,9 +55,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			return nil, err
 		}
 		apiConnector := APIConnector{
-			WebConnector: webConnector,
 			client:       NewMutable(client),
 			log:          args.Log,
+			WebConnector: webConnector,
 		}
 		return &CachedAPIConnector{
 			api:   apiConnector,

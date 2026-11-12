@@ -5,10 +5,10 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 )
 
@@ -39,7 +39,7 @@ type TextFieldArgs struct {
 	ExistingValue string
 	Help          string
 	Inputs        Inputs
-	Interactive   configdomain.Interactive
+	Interactive   clidomain.Interactive
 	Prompt        string
 	Title         string
 }

@@ -3,10 +3,10 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/messages"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
@@ -24,21 +24,21 @@ More details: https://www.git-town.com/preferences/interactive.
 `
 )
 
-func Interactive(args Args[configdomain.Interactive]) (Option[configdomain.Interactive], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[configdomain.Interactive]]{}
+func Interactive(args Args[clidomain.Interactive]) (Option[clidomain.Interactive], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[clidomain.Interactive]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
-		entries = append(entries, list.Entry[Option[configdomain.Interactive]]{
-			Data: None[configdomain.Interactive](),
+		entries = append(entries, list.Entry[Option[clidomain.Interactive]]{
+			Data: None[clidomain.Interactive](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
 	}
-	entries = append(entries, list.Entries[Option[configdomain.Interactive]]{
+	entries = append(entries, list.Entries[Option[clidomain.Interactive]]{
 		{
-			Data: Some(configdomain.InteractiveEnabled),
+			Data: Some(clidomain.InteractiveEnabled),
 			Text: "enabled: prompt for missing input",
 		},
 		{
-			Data: Some(configdomain.Interactive("disabled")),
+			Data: Some(clidomain.Interactive("disabled")),
 			Text: "disabled: enter all input via CLI flags",
 		},
 	}...)

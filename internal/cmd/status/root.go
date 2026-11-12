@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
 	"github.com/git-town/git-town/v24/internal/cli"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cli/print"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -26,10 +27,8 @@ func RootCommand() *cobra.Command {
 	addPendingFlag, readPendingFlag := flags.Pending()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "status",
-		GroupID: cmdhelpers.GroupIDErrors,
 		Args:    cobra.NoArgs,
-		Short:   statusDesc,
+		GroupID: cmdhelpers.GroupIDErrors,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			pending, errPending := readPendingFlag(cmd)
@@ -46,7 +45,7 @@ func RootCommand() *cobra.Command {
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -54,6 +53,8 @@ func RootCommand() *cobra.Command {
 			})
 			return executeStatus(cliConfig, pending)
 		},
+		Short: statusDesc,
+		Use:   "status",
 	}
 	addPendingFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -62,52 +63,16 @@ func RootCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pending) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    true,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		if pending {
-			return nil
-		}
-		return err
-	}
-	data, err := loadDisplayStatusData(repo.RootDir)
-	if err != nil {
-		return err
-	}
-	displayStatus(data, pending)
+func displayFinishedStatus(state runstate.RunState, pending configdomain.Pending) {
 	if !pending {
-		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
+		fmt.Printf(messages.PreviousCommandFinished, state.Command)
+		fmt.Println(messages.UndoMessage)
 	}
-	return nil
 }
 
 type displayStatusData struct {
 	filepath runstate.FilePath
 	state    Option[runstate.RunState] // content of the runstate file
-}
-
-func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
-	userConfigDir, err := cli.SystemUserConfigDir()
-	if err != nil {
-		return displayStatusData{}, err
-	}
-	configDirRepo := userConfigDir.RepoConfigDir(rootDir)
-	runstatePath := runstate.NewRunstatePath(configDirRepo)
-	state, err := runstate.Load(runstatePath)
-	if err != nil {
-		return displayStatusData{}, err
-	}
-	return displayStatusData{
-		filepath: runstatePath,
-		state:    state,
-	}, nil
 }
 
 func displayStatus(data displayStatusData, pending configdomain.Pending) {
@@ -148,9 +113,45 @@ func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pendi
 	}
 }
 
-func displayFinishedStatus(state runstate.RunState, pending configdomain.Pending) {
-	if !pending {
-		fmt.Printf(messages.PreviousCommandFinished, state.Command)
-		fmt.Println(messages.UndoMessage)
+func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pending) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		if pending {
+			return nil
+		}
+		return err
 	}
+	data, err := loadDisplayStatusData(repo.RootDir)
+	if err != nil {
+		return err
+	}
+	displayStatus(data, pending)
+	if !pending {
+		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
+	}
+	return nil
+}
+
+func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (displayStatusData, error) {
+	userConfigDir, err := cli.SystemUserConfigDir()
+	if err != nil {
+		return displayStatusData{}, err
+	}
+	configDirRepo := userConfigDir.RepoConfigDir(rootDir)
+	runstatePath := runstate.NewRunstatePath(configDirRepo)
+	state, err := runstate.Load(runstatePath)
+	if err != nil {
+		return displayStatusData{}, err
+	}
+	return displayStatusData{
+		filepath: runstatePath,
+		state:    state,
+	}, nil
 }

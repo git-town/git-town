@@ -209,8 +209,8 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Branches:     result,
 		Active:       currentBranchOpt,
+		Branches:     result,
 		DetachedHead: detachedHead,
 	}, nil
 }
@@ -277,11 +277,6 @@ func (self *Commands) CommentOutSquashCommitMessage(querier subshelldomain.Queri
 	content = commentOutSquashCommitMessageRegex.ReplaceAllString(content, "# ")
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
-
-var (
-	commentOutSquashCommitMessageOnce  sync.Once
-	commentOutSquashCommitMessageRegex *regexp.Regexp
-)
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
@@ -613,11 +608,6 @@ func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error
 	}, nil
 }
 
-var (
-	gitVersionOnce  sync.Once
-	gitVersionRegex *regexp.Regexp
-)
-
 func (self *Commands) HasMergeInProgress(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")
 	return err == nil
@@ -919,6 +909,22 @@ func (self *Commands) UnstageAll(runner subshelldomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
 }
 
+// provides the path of the `.git` directory of the current repository.
+func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.Trimmed, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
+	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
+}
+
+var (
+	commentOutSquashCommitMessageOnce  sync.Once
+	commentOutSquashCommitMessageRegex *regexp.Regexp
+)
+
+var (
+	gitVersionOnce  sync.Once
+	gitVersionRegex *regexp.Regexp
+)
+
 func LastBranchInRef(output string) string {
 	index := strings.LastIndex(output, "/")
 	return output[index+1:]
@@ -1009,13 +1015,6 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	return result, nil
 }
 
-// isBareWorktree reports whether the given worktree path is a bare repository.
-func isBareWorktree(path string) bool {
-	// Non-bare worktrees always contain either a file or folder .git; bare worktrees do not.
-	_, err := os.Stat(filepath.Join(path, ".git"))
-	return os.IsNotExist(err)
-}
-
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
 	gone := track == "gone"
 	ahead := strings.Contains(track, "ahead")
@@ -1039,10 +1038,11 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 	}
 }
 
-// provides the path of the `.git` directory of the current repository.
-func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.Trimmed, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
-	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
+// isBareWorktree reports whether the given worktree path is a bare repository.
+func isBareWorktree(path string) bool {
+	// Non-bare worktrees always contain either a file or folder .git; bare worktrees do not.
+	_, err := os.Stat(filepath.Join(path, ".git"))
+	return os.IsNotExist(err)
 }
 
 // indicates whether the ref is a local branch

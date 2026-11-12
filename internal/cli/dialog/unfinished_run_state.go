@@ -5,10 +5,10 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/messages"
 )
@@ -38,7 +38,7 @@ const (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs, interactive configdomain.Interactive) (Response, dialogdomain.Exit, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, input dialogcomponents.Inputs, interactive clidomain.Interactive) (Response, dialogdomain.Exit, error) {
 	entries := list.Entries[Response]{
 		{
 			Data: ResponseQuit,
