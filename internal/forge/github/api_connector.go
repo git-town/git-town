@@ -126,9 +126,7 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		}
 	}
 	_, _, err = self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
-		ListOptions: github.ListOptions{
-			PerPage: 1,
-		},
+		PerPage: 1,
 	})
 	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(*user.Login),
