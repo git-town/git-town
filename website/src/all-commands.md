@@ -13,10 +13,10 @@ and `git town help <command>` for help with individual commands.
 
 ### Dealing with errors
 
-- [git town continue](commands/continue.md) - continue after you resolved the
-  merge conflict
-- [git town skip](commands/skip.md) - when syncing all branches, ignore the
-  current branch and continue with the next one
+- [git town continue](commands/continue.md) - continue
+  after you resolved the merge conflict
+- [git town skip](commands/skip.md) - when syncing all branches,
+  ignore the current branch and continue with the next one
 - [git town status](commands/status.md) - display available commands
 - [git town undo](commands/undo.md) - undo the last completed Git Town command
 
@@ -45,22 +45,22 @@ and `git town help <command>` for help with individual commands.
   some feature branches
 - [git town park](commands/park.md) - suspend syncing some of your feature
   branches altogether
-- [git town prototype](commands/prototype.md) - sync but don't push a local
-  feature branch
+- [git town prototype](commands/prototype.md) - sync
+  but don't push a local feature branch
 
 ### Git Town setup
 
 - [git town completion](commands/completions.md) - generate completion scripts
   for Bash, zsh, fish & PowerShell.
-- [git town config](commands/config.md) - display or update your Git Town
-  configuration
+- [git town config](commands/config.md) - display
+  or update your Git Town configuration
 - [git town init](commands/init.md) - setup assistant
 - [git town offline](commands/offline.md) - enable/disable offline mode
 
 ### Additional commands
 
-- [git town branch](commands/branch.md) - display the local branch hierarchy and
-  types
+- [git town branch](commands/branch.md) - display the local branch hierarchy
+  and types
 - [git town compress](commands/compress.md) - squash all commits on a branch
   branches down to a single commit
 - [git town delete](commands/delete.md) - delete a feature branch

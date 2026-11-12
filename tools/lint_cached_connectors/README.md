@@ -7,10 +7,10 @@ same interfaces as their uncached counterparts.
 
 The codebase has pairs of connectors:
 
-- **Uncached connectors**: Direct API/CLI connectors (e.g., `APIConnector`,
-  `Connector`)
-- **Cached connectors**: Wrappers that add caching (e.g., `CachedAPIConnector`,
-  `CachedConnector`)
+- **Uncached connectors**: Direct API/CLI connectors
+  (e.g., `APIConnector`, `Connector`)
+- **Cached connectors**: Wrappers that add caching
+  (e.g., `CachedAPIConnector`, `CachedConnector`)
 
 Each cached connector should implement exactly the same interfaces
 as its uncached counterpart to ensure they are interchangeable.
@@ -20,8 +20,8 @@ as its uncached counterpart to ensure they are interchangeable.
 The linter:
 
 1. Parses Go source files for connector pairs
-2. Extracts interface implementations from type check comments (e.g.,
-   `var _ forgedomain.ProposalFinder = apiConnector`)
+2. Extracts interface implementations from type check comments
+   (e.g., `var _ forgedomain.ProposalFinder = apiConnector`)
 3. Compares interfaces between cached and uncached versions
 4. Reports any missing interface implementations
 

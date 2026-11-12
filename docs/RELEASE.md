@@ -6,16 +6,17 @@ This guide is for maintainers who make releases of Git Town.
   - Netlify deploy: <https://app.netlify.com/sites/git-town/deploys>
 - in a branch:
   - update CHANGELOG.md
-  - run `make stats-release` and copy the release stats and contributors into
-    CHANGELOG.md
-  - verify that all newly added Git Town commands are not hidden and listed in
-    the README file
+  - run `make stats-release` and copy the release stats
+    and contributors into CHANGELOG.md
+  - verify that all newly added Git Town commands are not hidden
+    and listed in the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `24.1.1`
     - double-digits: `24.1`
-    - its best to do this manually so that you don't change unrelated version
-      numbers in CHANGELOG.md, lockfiles, and data files
+    - its best to do this manually so
+      that you don't change unrelated version numbers in CHANGELOG.md,
+      lockfiles, and data files
   - if bumping the major version:
     - update `github.com/git-town/git-town/v24/` everywhere in this repo
     - update `github.com/git-town/git-town/v24` (without trailing slash)
@@ -71,8 +72,8 @@ If the release script fails in production and doesn't create the release,
 and/or you want to investigate some release code,
 you can perform the release manually on a Windows machine using PowerShell.
 
-- move the affected Git tag to HEAD but only locally, DON'T PUSH THE TAG TO
-  ORIGIN
+- move the affected Git tag to HEAD but only locally,
+  DON'T PUSH THE TAG TO ORIGIN
 
   ```sh
   git tag -d <tag>
