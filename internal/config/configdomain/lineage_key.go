@@ -15,9 +15,7 @@ type LineageKey struct {
 
 func NewLineageKey(key Key) LineageKey {
 	return LineageKey{
-		BranchSpecificKey: BranchSpecificKey{
-			Key: key,
-		},
+		Key: key,
 	}
 }
 
