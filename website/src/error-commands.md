@@ -7,8 +7,8 @@ When you have resolved the issue, you can either:
 
 - run `git town continue` to continue executing the interrupted command,
   starting with the operation that failed,
-- run `git town undo` to undo the Git Town command and go back to where you
-  started.
+- run `git town undo` to undo the Git Town command and go back to
+  where you started.
 
 You can also run `git town undo`
 after a Git Town command finished to undo the changes it made.

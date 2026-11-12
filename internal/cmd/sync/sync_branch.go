@@ -107,7 +107,7 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 	}
 	args.Program.Value.Add(
 		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: args.RebaseOnto,
+			BranchToRebaseOnto: args.RebaseOnto.BranchName(),
 			CommitsToRemove:    args.Ancestor.Location(),
 		},
 	)

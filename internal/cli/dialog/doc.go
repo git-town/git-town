@@ -2,8 +2,8 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
@@ -11,6 +11,6 @@ import (
 type Args[T any] struct {
 	Global      Option[T]
 	Inputs      dialogcomponents.Inputs
-	Interactive configdomain.Interactive
+	Interactive clidomain.Interactive
 	Local       Option[T]
 }

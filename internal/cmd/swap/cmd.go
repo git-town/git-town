@@ -94,8 +94,8 @@ func Cmd() *cobra.Command {
 			})
 			return executeSwap(cliConfig)
 		},
-		Short:   swapDesc,
-		Use:     swapCommandName,
+		Short: swapDesc,
+		Use:   swapCommandName,
 	}
 	addAutoResolveFlag(&cmd)
 	addDryRunFlag(&cmd)

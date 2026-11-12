@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/configfile"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
@@ -99,7 +100,7 @@ upstream = true
 					ShareNewBranches: new("push"),
 					Stash:            new(true),
 				},
-				CreatePrototypeBranches:  nil,
+				CreatePrototypeBranches: nil,
 				Hosting: &configfile.Hosting{
 					Browser:         new("chrome"),
 					DevRemote:       new("origin"),
@@ -114,8 +115,8 @@ upstream = true
 					Breadcrumb:          new("stacks"),
 					BreadcrumbDirection: new("up"),
 				},
-				PushHook:                 nil,
-				PushNewBranches:          nil,
+				PushHook:        nil,
+				PushNewBranches: nil,
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: new(false),
 					IgnoreUncommitted:    new(true),
@@ -135,9 +136,9 @@ upstream = true
 					Tags:              new(false),
 					Upstream:          new(true),
 				},
-				SyncStrategy:             nil,
-				SyncTags:                 nil,
-				SyncUpstream:             nil,
+				SyncStrategy: nil,
+				SyncTags:     nil,
+				SyncUpstream: nil,
 			}
 			must.Eq(t, wantData, *haveData)
 
@@ -174,7 +175,7 @@ upstream = true
 				GiteaToken:                  None[forgedomain.GiteaToken](),
 				HostingOriginHostname:       configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:           Some(configdomain.IgnoreUncommitted(true)),
-				Interactive:                 Some(configdomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
+				Interactive:                 Some(clidomain.Interactive(messages.InteractivityDisabledViaConfigFile)),
 				Lineage:                     configdomain.NewLineage(),
 				MainBranch:                  Some(gitdomain.LocalBranchName("main")),
 				NewBranchType:               Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
@@ -310,8 +311,8 @@ prototype-branches = "compress"
 					PerennialBranches: new("rebase"),
 					PrototypeBranches: new("compress"),
 				},
-				SyncTags:                 new(false),
-				SyncUpstream:             new(true),
+				SyncTags:     new(false),
+				SyncUpstream: new(true),
 			}
 			must.Eq(t, wantData, *haveData)
 

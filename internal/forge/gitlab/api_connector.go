@@ -87,7 +87,7 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 	options := &gitlab.AcceptMergeRequestOptions{
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: new(false),
-		Squash: new(true),
+		Squash:                   new(true),
 	}
 	// When no commit message is given, GitLab determines the squash commit message.
 	if commitMessage, hasCommitMessage := message.Get(); hasCommitMessage {
@@ -130,9 +130,7 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		}
 	}
 	_, _, err = self.client.MergeRequests.ListMergeRequests(&gitlab.ListMergeRequestsOptions{
-		ListOptions: gitlab.ListOptions{
-			PerPage: 1,
-		},
+		PerPage: 1,
 	})
 	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(user.Username),

@@ -5,7 +5,6 @@ git-town_*
 go.work.sum
 node_modules/
 rta.exe
-tools/alphavet*
 tools/collector_addf/collector_addf*
 tools/depth*
 tools/generate_json_schema/generate_json_schema
@@ -21,7 +20,6 @@ tools/optioncompare/optioncompare
 tools/optioncompare_in_tests/optioncompare_in_tests
 tools/print_config_exhaustive/print_config_exhaustive
 tools/stats_release/stats_release
-tools/structs_sorted/structs_sorted
 tools/tests_sorted/tests_sorted
 tools/use_equal/use_equal
 tools/rta*

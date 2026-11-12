@@ -98,8 +98,8 @@ func detachCommand() *cobra.Command {
 			})
 			return executeDetach(cliConfig)
 		},
-		Short:   detachDesc,
-		Use:     detachCommandName,
+		Short: detachDesc,
+		Use:   detachCommandName,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)

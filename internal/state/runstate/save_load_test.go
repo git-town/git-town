@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -101,7 +102,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
-				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
+				&opcodes.ProposalCreate{Branch: "branch", Interactive: clidomain.Interactive("reason"), MainBranch: "main"},
 				&opcodes.ProposalUpdateTarget{NewBranch: "new-target", OldBranch: "old-target", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitlab}},
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", OldTarget: "old-target", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}},
 				&opcodes.ProposalUpdateSource{NewBranch: "new-target", OldBranch: "old-target", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: None[gitdomain.ProposalBody](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}},
@@ -118,7 +119,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseAncestorsUntilLocal{Branch: "branch", CommitsToRemove: Some(gitdomain.SHA("123456"))},
-				&opcodes.RebaseTrackingBranch{PushBranches: true, RemoteBranch: "origin/branch"},
+				&opcodes.RebaseTrackingBranch{Branch: "branch", RemoteBranch: "origin/branch"},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
@@ -593,6 +594,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
+        "Interactive": "reason",
         "MainBranch": "main",
         "ProposalBody": null,
         "ProposalTitle": null
@@ -730,7 +732,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "PushBranches": true,
+        "Branch": "branch",
         "RemoteBranch": "origin/branch"
       },
       "type": "RebaseTrackingBranch"
@@ -811,8 +813,8 @@ func TestLoadSave(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
-  "UndoAPIProgram": [],
   "UndoablePerennialCommits": [],
+  "UndoAPIProgram": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

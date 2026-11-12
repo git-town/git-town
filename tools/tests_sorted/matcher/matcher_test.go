@@ -87,7 +87,7 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 			params  *ast.FieldList
 		}{
 			{
-				desc:   "EqualLenMatchers",
+				desc: "EqualLenMatchers",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},
@@ -97,13 +97,13 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 				},
 				params: funcParams(t, `func(a, b, c string)`),
 			}, {
-				desc:   "NoMatchersNoParams",
+				desc: "NoMatchersNoParams",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{},
 				},
 				params: funcParams(t, `func()`),
 			}, {
-				desc:   "SomeMatchers",
+				desc: "SomeMatchers",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},

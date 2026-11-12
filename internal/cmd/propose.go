@@ -331,8 +331,8 @@ func proposeCommand() *cobra.Command {
 				title:     title,
 			})
 		},
-		Short:   proposeDesc,
-		Use:     proposeCmd,
+		Short: proposeDesc,
+		Use:   proposeCmd,
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
@@ -400,6 +400,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		}
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
+			Interactive:   data.config.NormalConfig.Interactive,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
 			ProposalBody:  proposalBody,
 			ProposalTitle: data.proposalTitle,

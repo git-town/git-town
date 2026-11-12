@@ -2,16 +2,13 @@ package config_test
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/config"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
-	"github.com/git-town/git-town/v24/internal/git/giturl"
 	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v24/internal/test/testruntime"
-	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -72,26 +69,6 @@ func TestValidatedConfig(t *testing.T) {
 		have := config.MainAndPerennials()
 		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
 		must.Eq(t, want, have)
-	})
-
-	t.Run("RemoteURL", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]giturl.Parts{
-			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"http://github.com/organization/repository.git":                 {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://github.com/organization/repository":                    {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://github.com/organization/repository.git":                {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://sub.domain.customhost.com/organization/repository":     {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: None[string]()},
-		}
-		for give, want := range tests {
-			repo := testruntime.CreateGitTown(t)
-			os.Setenv("GIT_TOWN_REMOTE", give)
-			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.NormalConfig.RemoteURL(repo.TestRunner, gitdomain.RemoteOrigin).Get()
-			must.True(t, has)
-			must.EqOp(t, want, have)
-		}
 	})
 
 	t.Run("RemovePerennialRoot", func(t *testing.T) {

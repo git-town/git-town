@@ -2,6 +2,7 @@ package cliconfig
 
 import (
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -17,7 +18,7 @@ type NewArgs struct {
 	DisplayTypes      Option[configdomain.DisplayTypes]
 	DryRun            Option[configdomain.DryRun]
 	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
-	Interactive       Option[configdomain.Interactive]
+	Interactive       Option[clidomain.Interactive]
 	Order             Option[configdomain.Order]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
@@ -63,6 +64,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ProposalBreadcrumb:          None[configdomain.ProposalBreadcrumb](),
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
 		PushHook:                    None[configdomain.PushHook](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),

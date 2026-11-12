@@ -1,10 +1,10 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 )
 
 const (
@@ -18,7 +18,7 @@ You can re-run this assistant: git town init
 `
 )
 
-func EnterAll(inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (bool, dialogdomain.Exit, error) {
+func EnterAll(inputs dialogcomponents.Inputs, interactive clidomain.Interactive) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: false,

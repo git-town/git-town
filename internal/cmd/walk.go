@@ -271,8 +271,8 @@ func walkCommand() *cobra.Command {
 	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Args:  cobra.ArbitraryArgs,
-		Long:  cmdhelpers.Long(walkDesc, walkHelp),
+		Args: cobra.ArbitraryArgs,
+		Long: cmdhelpers.Long(walkDesc, walkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)

@@ -18,8 +18,8 @@ before continuing.
   branch
 - use [git town skip](skip.md) to move on to the next branch
 - use [git town undo](undo.md) to abort the iteration and undo all changes made
-- use [git town status reset](status-reset.md) to abort the iteration and keep
-  all changes made
+- use [git town status reset](status-reset.md) to abort the iteration
+  and keep all changes made
 
 If no shell command is provided,
 drops you into an interactive shell for each branch.
@@ -85,9 +85,9 @@ state.
 
 <!-- keep-sorted start -->
 
-- [branch](branch.md) displays the branch hierarchy and highlights the currently
-  checked out branch in it
-- [switch](switch.md) displays the branch hierarchy and lets you select a branch
-  to switch to
+- [branch](branch.md) displays the branch hierarchy
+  and highlights the currently checked out branch in it
+- [switch](switch.md) displays the branch hierarchy
+  and lets you select a branch to switch to
 
 <!-- keep-sorted end -->

@@ -80,7 +80,7 @@ func (self *WithPrevious[T]) Initialized() bool {
 	t.Run("FormatLine", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
-			"	if err != nil {":                                                                 "	if err != nil {",
+			"	if err != nil {": "	if err != nil {",
 			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
 			"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
 		}

@@ -88,8 +88,8 @@ func compressCmd() *cobra.Command {
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Args:  cobra.NoArgs,
-		Long:  cmdhelpers.Long(compressDesc, compressHelp),
+		Args: cobra.NoArgs,
+		Long: cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)

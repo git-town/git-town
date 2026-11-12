@@ -96,8 +96,8 @@ func combineCommand() *cobra.Command {
 			})
 			return executeCombine(cliConfig)
 		},
-		Short:   combineDesc,
-		Use:     combineCmd,
+		Short: combineDesc,
+		Use:   combineCmd,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)

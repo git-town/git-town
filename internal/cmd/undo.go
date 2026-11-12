@@ -192,8 +192,8 @@ func undoCmd() *cobra.Command {
 			})
 			return executeUndo(cliConfig)
 		},
-		Short:   undoDesc,
-		Use:     "undo",
+		Short: undoDesc,
+		Use:   "undo",
 	}
 	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)

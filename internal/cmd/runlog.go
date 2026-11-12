@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cli/print"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -70,7 +71,7 @@ func runLogCommand() *cobra.Command {
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -78,8 +79,8 @@ func runLogCommand() *cobra.Command {
 			})
 			return executeRunLog(cliConfig)
 		},
-		Short:   runLogDesc,
-		Use:     "runlog",
+		Short: runLogDesc,
+		Use:   "runlog",
 	}
 	addVerboseFlag(&cmd)
 	return &cmd

@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -121,7 +122,7 @@ func upCmd() *cobra.Command {
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             order,
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -132,8 +133,8 @@ func upCmd() *cobra.Command {
 				merge:     merge,
 			})
 		},
-		Short:   upShort,
-		Use:     "up",
+		Short: upShort,
+		Use:   "up",
 	}
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)

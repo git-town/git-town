@@ -146,8 +146,8 @@ func Cmd() *cobra.Command {
 				syncAllBranches: allBranches,
 			})
 		},
-		Short:   syncDesc,
-		Use:     syncCommand,
+		Short: syncDesc,
+		Use:   syncCommand,
 	}
 	addAllFlag(&cmd)
 	addAutoResolveFlag(&cmd)

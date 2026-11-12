@@ -1,9 +1,9 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 )
 
 const (
@@ -30,6 +30,6 @@ When you're ready, press ENTER or O to continue.
 `
 )
 
-func Welcome(inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (dialogdomain.Exit, error) {
+func Welcome(inputs dialogcomponents.Inputs, interactive clidomain.Interactive) (dialogdomain.Exit, error) {
 	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, interactive, "welcome")
 }

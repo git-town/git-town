@@ -73,8 +73,8 @@ func commitCmd() *cobra.Command {
 			})
 			return executeCommit(cliConfig, message, up)
 		},
-		Short:   commitDesc,
-		Use:     "commit",
+		Short: commitDesc,
+		Use:   "commit",
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)

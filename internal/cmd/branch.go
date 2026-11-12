@@ -63,8 +63,8 @@ func branchCmd() *cobra.Command {
 			})
 			return executeBranch(cliConfig)
 		},
-		Short:   branchDesc,
-		Use:     "branch",
+		Short: branchDesc,
+		Use:   "branch",
 	}
 	addDisplayTypesFlag(&cmd)
 	addInteractiveFlag(&cmd)

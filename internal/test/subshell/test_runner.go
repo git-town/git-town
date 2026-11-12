@@ -37,7 +37,7 @@ type TestRunner struct {
 	// the directory that contains the global Git configuration
 	HomeDir string
 
-	// content of the GIT_TOWN_REMOTE environment variable
+	// content of the GIT_TOWN_FORGE_URL environment variable
 	testOrigin Option[string]
 
 	// indicates whether the current test has created the binDir
@@ -199,7 +199,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
 	// add the custom origin
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
-		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_FORGE_URL", testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {

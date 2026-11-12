@@ -27,7 +27,7 @@ func executeRoot(cmd *cobra.Command, showVersion bool) error {
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()
 	rootCmd := cobra.Command{
-		Long:          cmdhelpers.Long(rootDesc, rootHelp),
+		Long: cmdhelpers.Long(rootDesc, rootHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			version, err := readVersionFlag(cmd)
 			if err != nil {

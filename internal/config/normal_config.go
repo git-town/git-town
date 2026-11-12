@@ -5,8 +5,8 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
-	"github.com/git-town/git-town/v24/internal/config/envconfig"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -47,6 +47,7 @@ type NormalConfig struct {
 	FeatureRegex                Option[configdomain.FeatureRegex]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
 	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
+	ForgeURL                    Option[configdomain.ForgeURL]
 	GiteaToken                  Option[forgedomain.GiteaToken]
 	GithubConnectorType         Option[forgedomain.GithubConnectorType]
 	GithubToken                 Option[forgedomain.GithubToken]
@@ -56,7 +57,7 @@ type NormalConfig struct {
 	GitUserName                 Option[gitdomain.GitUserName]
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
-	Interactive                 configdomain.Interactive
+	Interactive                 clidomain.Interactive
 	Lineage                     configdomain.Lineage
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
@@ -102,6 +103,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		DryRun:                      partial.DryRun.GetOr(defaults.DryRun),
 		FeatureRegex:                partial.FeatureRegex,
 		ForgeType:                   partial.ForgeType,
+		ForgeURL:                    partial.ForgeURL.Or(defaults.ForgeURL),
 		ForgejoToken:                partial.ForgejoToken,
 		GitUserEmail:                partial.GitUserEmail,
 		GitUserName:                 partial.GitUserName,
@@ -150,7 +152,7 @@ func (self *NormalConfig) Author() Option[gitdomain.Author] {
 }
 
 // DevURL provides the URL for the development remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.Parts] {
 	return self.RemoteURL(querier, self.DevRemote)
@@ -176,6 +178,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		DryRun:                      other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
+		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
@@ -261,10 +264,10 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 }
 
 // RemoteURL provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
-	urlStr, hasURLStr := remoteURLString(querier, remote).Get()
+	urlStr, hasURLStr := remoteURLString(querier, remote, self.ForgeURL).Get()
 	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
@@ -335,6 +338,7 @@ func DefaultNormalConfig() NormalConfig {
 		DryRun:                      false,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
 		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
@@ -345,7 +349,7 @@ func DefaultNormalConfig() NormalConfig {
 		GitlabToken:                 None[forgedomain.GitlabToken](),
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
-		Interactive:                 configdomain.InteractiveEnabled,
+		Interactive:                 clidomain.InteractiveEnabled,
 		Lineage:                     configdomain.NewLineage(),
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
@@ -373,11 +377,10 @@ func DefaultNormalConfig() NormalConfig {
 }
 
 // remoteURLString provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	remoteOverride := envconfig.RemoteURLOverride()
-	if remoteOverride.IsSome() {
-		return remoteOverride
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, forgeURL Option[configdomain.ForgeURL]) Option[string] {
+	if forgeURL, hasForgeURL := forgeURL.Get(); hasForgeURL {
+		return Some(forgeURL.String())
 	}
 	return gitconfig.RemoteURL(querier, remote)
 }
