@@ -501,7 +501,7 @@ func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, br
 	if err != nil {
 		return false
 	}
-	output, err := querier.QueryTrim("git", "rev-list", "-g", "-n", "100", branch.String())
+	output, err := querier.QueryTrim("git", "rev-list", "--walk-reflogs", "--max-count=100", branch.String())
 	if err != nil {
 		return false
 	}
