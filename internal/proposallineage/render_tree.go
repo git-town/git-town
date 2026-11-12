@@ -46,6 +46,16 @@ func AppendTree(builder *strings.Builder, tree TreeNodeWithProposal, currentBran
 	return builder.String()
 }
 
+func proposalReference(proposal forgedomain.Proposal, connector Option[forgedomain.Connector]) string {
+	proposalData := proposal.Data.Data()
+	if proposalConnector, hasConnector := connector.Get(); hasConnector {
+		if renderedReference := proposalConnector.ProposalReference(proposalData); renderedReference != "" {
+			return renderedReference
+		}
+	}
+	return forgedomain.ProposalReferenceFallback(proposalData)
+}
+
 func renderNodeDown(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool, connector Option[forgedomain.Connector], spacesPerIndent int) {
 	if node.BranchOrAncestorHasProposal() || !foundCurrent {
 		indent := depth * spacesPerIndent
@@ -110,14 +120,4 @@ func renderNodeUp(builder *strings.Builder, node TreeNodeWithProposal, currentBr
 		builder.WriteString("\n")
 	}
 	return onPathToRoot
-}
-
-func proposalReference(proposal forgedomain.Proposal, connector Option[forgedomain.Connector]) string {
-	proposalData := proposal.Data.Data()
-	if proposalConnector, hasConnector := connector.Get(); hasConnector {
-		if renderedReference := proposalConnector.ProposalReference(proposalData); renderedReference != "" {
-			return renderedReference
-		}
-	}
-	return forgedomain.ProposalReferenceFallback(proposalData)
 }

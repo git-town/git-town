@@ -7,6 +7,10 @@ import "strconv"
 // Example: https://github.com/git-town/git-town/pull/5977 has proposal number 5977.
 type ProposalNumber int
 
+func NewProposalNumberFromFloat64(number float64) ProposalNumber {
+	return ProposalNumber(int(number))
+}
+
 func (self ProposalNumber) Int() int {
 	return int(self)
 }
@@ -17,8 +21,4 @@ func (self ProposalNumber) Int64() int64 {
 
 func (self ProposalNumber) String() string {
 	return strconv.Itoa(self.Int())
-}
-
-func NewProposalNumberFromFloat64(number float64) ProposalNumber {
-	return ProposalNumber(int(number))
 }

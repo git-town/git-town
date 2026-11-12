@@ -33,16 +33,16 @@ type PartialConfig struct {
 	DisplayTypes                Option[DisplayTypes]
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
+	ForgejoToken                Option[forgedomain.ForgejoToken]
 	ForgeType                   Option[forgedomain.ForgeType]
 	ForgeURL                    Option[ForgeURL]
-	ForgejoToken                Option[forgedomain.ForgejoToken]
-	GitUserEmail                Option[gitdomain.GitUserEmail]
-	GitUserName                 Option[gitdomain.GitUserName]
 	GiteaToken                  Option[forgedomain.GiteaToken]
 	GithubConnectorType         Option[forgedomain.GithubConnectorType]
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	GitUserEmail                Option[gitdomain.GitUserEmail]
+	GitUserName                 Option[gitdomain.GitUserName]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
 	Interactive                 Option[clidomain.Interactive]
@@ -70,13 +70,6 @@ type PartialConfig struct {
 	SyncUpstream                Option[SyncUpstream]
 	UnknownBranchType           Option[UnknownBranchType]
 	Verbose                     Option[Verbose]
-}
-
-func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{
-		Aliases: Aliases{},
-		Lineage: NewLineage(),
-	} //exhaustruct:ignore
 }
 
 // Merge combines the data of the given PartialConfig with this PartialConfig,
@@ -144,4 +137,11 @@ func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfigData {
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
 	}
+}
+
+func EmptyPartialConfig() PartialConfig {
+	return PartialConfig{
+		Aliases: Aliases{},
+		Lineage: NewLineage(),
+	} //exhaustruct:ignore
 }

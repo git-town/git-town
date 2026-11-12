@@ -46,8 +46,7 @@ linters:
       forbid-mutex: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
-      # Enabling this is incompatible with alphavet.
-      constructor: false
+      constructor: true
       # Checks if the exported methods of a structure are placed before the unexported ones.
       struct-method: true
       # Checks if the constructors and/or structure methods are sorted alphabetically.

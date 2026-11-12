@@ -11,20 +11,6 @@ import (
 	"github.com/invopop/jsonschema"
 )
 
-func main() {
-	reflector := new(jsonschema.Reflector)
-	reflector.RequiredFromJSONSchemaTags = true
-	reflector.KeyNamer = CamelToKebab
-	schema := reflector.Reflect(&configfile.Data{}) //exhaustruct:ignore
-	schema.ID = "https://www.git-town.com/git-town.toml"
-	schemaJSON, err := json.MarshalIndent(schema, "", "  ")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error marshaling JSON schema: %v\n", err)
-		os.Exit(1)
-	}
-	fmt.Println(string(schemaJSON))
-}
-
 // CamelToKebab converts a CamelCase string to kebab-case.
 // For example, "SyncStrategy" becomes "sync-strategy".
 func CamelToKebab(s string) string {
@@ -40,4 +26,18 @@ func CamelToKebab(s string) string {
 		}
 	}
 	return result.String()
+}
+
+func main() {
+	reflector := new(jsonschema.Reflector)
+	reflector.RequiredFromJSONSchemaTags = true
+	reflector.KeyNamer = CamelToKebab
+	schema := reflector.Reflect(&configfile.Data{}) //exhaustruct:ignore
+	schema.ID = "https://www.git-town.com/git-town.toml"
+	schemaJSON, err := json.MarshalIndent(schema, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error marshaling JSON schema: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(string(schemaJSON))
 }

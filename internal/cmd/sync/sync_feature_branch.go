@@ -14,11 +14,11 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchCompress{
-				CurrentBranch:     args.localName,
 				CommitMessage:     args.firstCommitMessage,
-				Offline:           args.offline,
+				CurrentBranch:     args.localName,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
+				Offline:           args.offline,
 				PushBranches:      args.pushBranches,
 				TrackingBranch:    args.trackingBranch,
 			},

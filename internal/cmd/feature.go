@@ -31,39 +31,21 @@ Feauture branches are branches that you own and use to make code changes in.
 `
 )
 
-func featureCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "feature [branches]",
-		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GroupIDTypes,
-		Short:   featureDesc,
-		Long:    cmdhelpers.Long(featureDesc, featureHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[clidomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeFeature(args, cliConfig)
-		},
+func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureData, error) {
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return featureData{}, err
 	}
-	addVerboseFlag(&cmd)
-	return &cmd
+	if branchesSnapshot.DetachedHead {
+		return featureData{}, errors.New(messages.FeatureDetachedHead)
+	}
+	branchesToFeature, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	return featureData{
+		branchesSnapshot:  branchesSnapshot,
+		branchesToFeature: branchesToFeature.BranchesToMark,
+		branchInfos:       branchesSnapshot.Branches,
+		checkout:          branchesToFeature.BranchToCheckout,
+	}, err
 }
 
 func executeFeature(args []string, cliConfig configdomain.PartialConfig) error {
@@ -110,33 +92,51 @@ func executeFeature(args []string, cliConfig configdomain.PartialConfig) error {
 }
 
 type featureData struct {
-	branchInfos       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
 	branchesToFeature configdomain.BranchesAndTypes
+	branchInfos       gitdomain.BranchInfos
 	checkout          Option[gitdomain.LocalBranchName]
+}
+
+func featureCmd() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.ArbitraryArgs,
+		GroupID: cmdhelpers.GroupIDTypes,
+		Long:    cmdhelpers.Long(featureDesc, featureHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeFeature(args, cliConfig)
+		},
+		Short: featureDesc,
+		Use:   "feature [branches]",
+	}
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func printFeatureBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.BranchIsNowFeature, branch)
 	}
-}
-
-func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return featureData{}, err
-	}
-	if branchesSnapshot.DetachedHead {
-		return featureData{}, errors.New(messages.FeatureDetachedHead)
-	}
-	branchesToFeature, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return featureData{
-		branchInfos:       branchesSnapshot.Branches,
-		branchesSnapshot:  branchesSnapshot,
-		branchesToFeature: branchesToFeature.BranchesToMark,
-		checkout:          branchesToFeature.BranchToCheckout,
-	}, err
 }
 
 func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
