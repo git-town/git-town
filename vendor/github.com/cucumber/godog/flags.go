@@ -208,7 +208,7 @@ func usage(set *flag.FlagSet, w io.Writer) func() {
 
 		// --- GENERAL ---
 		fmt.Fprintln(w, colors.Yellow("Usage:"))
-		fmt.Fprintf(w, s(2)+"go test [options]\n\n")
+		fmt.Fprint(w, s(2)+"go test [options]\n\n")
 
 		// --- OPTIONS ---
 		fmt.Fprintln(w, colors.Yellow("Options:"))
