@@ -21,11 +21,9 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 	webConnector := WebConnector{
 		browserEnabled:    args.BrowserEnabled,
 		browserExecutable: args.BrowserExecutable,
-		HostedRepoInfo: forgedomain.HostedRepoInfo{
-			Hostname:     args.RemoteURL.Host,
-			Organization: args.RemoteURL.Org,
-			Repository:   args.RemoteURL.Repo,
-		},
+		Hostname:          args.RemoteURL.Host,
+		Organization:      args.RemoteURL.Org,
+		Repository:        args.RemoteURL.Repo,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)

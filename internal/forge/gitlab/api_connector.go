@@ -130,9 +130,7 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		}
 	}
 	_, _, err = self.client.MergeRequests.ListMergeRequests(&gitlab.ListMergeRequestsOptions{
-		ListOptions: gitlab.ListOptions{
-			PerPage: 1,
-		},
+		PerPage: 1,
 	})
 	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(user.Username),
