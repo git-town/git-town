@@ -489,25 +489,6 @@ func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gi
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
-// RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
-// This is the check of "git push --force-if-includes", done without pushing.
-func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
-	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
-	if err != nil {
-		return false
-	}
-	output, err := querier.QueryTrim("git", "rev-list", "--walk-reflogs", "--max-count=100", branch.String())
-	if err != nil {
-		return false
-	}
-	for _, state := range strings.Fields(output.String()) {
-		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
-			return true
-		}
-	}
-	return false
-}
-
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName, diffFilterOpt Option[configdomain.DiffFilter], nameOnly configdomain.NameOnly) error {
 	args := []string{"diff"}
@@ -753,6 +734,25 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 // RebaseOnto initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String(), commitsToRemove.String())
+}
+
+// RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
+// This is the check of "git push --force-if-includes", done without pushing.
+func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
+	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
+	if err != nil {
+		return false
+	}
+	output, err := querier.QueryTrim("git", "rev-list", "--walk-reflogs", "--max-count=100", branch.String())
+	if err != nil {
+		return false
+	}
+	for _, state := range strings.Fields(output.String()) {
+		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
+			return true
+		}
+	}
+	return false
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
