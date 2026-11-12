@@ -90,11 +90,9 @@ func TestGitlabWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := gitlab.WebConnector{
-					HostedRepoInfo: forgedomain.HostedRepoInfo{
-						Hostname:     "gitlab.com",
-						Organization: "organization",
-						Repository:   "repo",
-					},
+					Hostname:     "gitlab.com",
+					Organization: "organization",
+					Repository:   "repo",
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
