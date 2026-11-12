@@ -80,9 +80,6 @@ func (rb *requestBuilder) Request(ctx context.Context, u *url.URL) (req *http.Re
 
 	req, err = http.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
-		if closer, ok := body.(io.Closer); ok {
-			closer.Close()
-		}
 		return nil, err
 	}
 	req.GetBody = rb.getBody

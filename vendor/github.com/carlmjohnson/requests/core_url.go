@@ -67,8 +67,7 @@ func (ub *urlBuilder) URL() (u *url.URL, err error) {
 	)
 	u.Host = cmp.Or(ub.host, u.Host)
 	for _, p := range ub.paths {
-		resolved := u.ResolveReference(&url.URL{Path: p})
-		u.Path, u.RawPath = resolved.Path, resolved.RawPath
+		u.Path = u.ResolveReference(&url.URL{Path: p}).Path
 	}
 	if len(ub.params) > 0 {
 		q := u.Query()
