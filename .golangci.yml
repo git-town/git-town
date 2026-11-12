@@ -9,7 +9,7 @@ linters:
     - dupl # too many false positives
     - err113 # this leads to lots of unnecessary allocations and boilerplate
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
-    # - exhaustruct_v5 # we call this separately from golangci-lint via "make lint-smoke"
+    # - exhaustruct_v5 # we call this separately from golangci-lint via "make lint-smoke" # TODO: re-enable when exhaustruct supports Go 1.27
     - forbidigo # Git Town prints a lot to the CLI
     - forcetypeassert
     - funlen # we keep track of this via code reviews
