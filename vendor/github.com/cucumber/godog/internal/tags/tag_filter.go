@@ -3,7 +3,7 @@ package tags
 import (
 	"strings"
 
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 )
 
 // ApplyTagFilter will apply a filter string on the
@@ -25,28 +25,28 @@ func ApplyTagFilter(filter string, pickles []*messages.Pickle) []*messages.Pickl
 }
 
 // Based on http://behat.readthedocs.org/en/v2.5/guides/6.cli.html#gherkin-filters
-func match(filter string, tags []*messages.PickleTag) (ok bool) {
-	ok = true
-
-	for _, andTags := range strings.Split(filter, "&&") {
-		var okComma bool
-
-		for _, tag := range strings.Split(andTags, ",") {
-			tag = strings.TrimSpace(tag)
-			tag = strings.Replace(tag, "@", "", -1)
-
-			okComma = contains(tags, tag) || okComma
-
-			if tag[0] == '~' {
-				tag = tag[1:]
-				okComma = !contains(tags, tag) || okComma
-			}
-		}
-
-		ok = ok && okComma
+func match(filters string, tags []*messages.PickleTag) (ok bool) {
+	ok = false
+	for _, filter := range strings.Split(filters, ",") {
+		ok = matchAnd(filter, tags) || ok
 	}
 
 	return
+}
+
+func matchAnd(filter string, tags []*messages.PickleTag) bool {
+	and := len(filter) > 0
+	for _, tag := range strings.Split(filter, "&&") {
+		tag = strings.TrimSpace(tag)
+		tag = strings.Replace(tag, "@", "", -1)
+		if tag[0] == '~' {
+			tag = tag[1:]
+			and = !contains(tags, tag) && and
+		} else {
+			and = contains(tags, tag) && and
+		}
+	}
+	return and
 }
 
 func contains(tags []*messages.PickleTag, tag string) bool {
