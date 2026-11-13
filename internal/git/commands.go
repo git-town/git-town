@@ -59,23 +59,6 @@ func (self *Commands) BranchContainsMerges(querier subshelldomain.Querier, branc
 	return len(output) > 0, err
 }
 
-func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
-	return err == nil
-}
-
-func (self *Commands) BranchExistsAtRemote(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
-	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
-	return err == nil
-}
-
-// BranchHasUnmergedChanges indicates whether the branch with the given name
-// contains changes that were not merged into the main branch.
-func (self *Commands) BranchHasUnmergedChanges(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String(), "--")
-	return len(out) > 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
-}
-
 // BranchContentInParent indicates whether the files changed by the given branch have the same content in the parent branch.
 func (self *Commands) BranchContentInParent(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
 	mergeBase, err := querier.QueryTrim("git", "merge-base", parent.String(), branch.String())
@@ -95,22 +78,21 @@ func (self *Commands) BranchContentInParent(querier subshelldomain.Querier, bran
 	return len(out) == 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
 }
 
-// BranchSquashAppliedInParent indicates whether the combined changes of all commits of the given branch
-// exist as a single commit in the parent branch, which is how a squash-merge looks like.
-func (self *Commands) BranchSquashAppliedInParent(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	mergeBase, err := querier.QueryTrim("git", "merge-base", parent.String(), branch.String())
-	if err != nil {
-		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
-	}
-	squashed, err := querier.QueryTrim("git", "commit-tree", branch.String()+"^{tree}", "-p", mergeBase.String(), "-m", "squashed")
-	if err != nil {
-		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
-	}
-	cherry, err := querier.QueryTrim("git", "cherry", parent.String(), squashed.String())
-	if err != nil {
-		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
-	}
-	return strings.HasPrefix(cherry.String(), "- "), nil
+func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) bool {
+	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
+	return err == nil
+}
+
+func (self *Commands) BranchExistsAtRemote(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
+	return err == nil
+}
+
+// BranchHasUnmergedChanges indicates whether the branch with the given name
+// contains changes that were not merged into the main branch.
+func (self *Commands) BranchHasUnmergedChanges(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String(), "--")
+	return len(out) > 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
 }
 
 func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (bool, error) {
@@ -132,6 +114,24 @@ func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, l
 	branchSHA := strings.TrimSpace(lines[0])
 	trackingSHA := strings.TrimSpace(lines[1])
 	return branchSHA == trackingSHA, nil
+}
+
+// BranchSquashAppliedInParent indicates whether the combined changes of all commits of the given branch
+// exist as a single commit in the parent branch, which is how a squash-merge looks like.
+func (self *Commands) BranchSquashAppliedInParent(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	mergeBase, err := querier.QueryTrim("git", "merge-base", parent.String(), branch.String())
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	squashed, err := querier.QueryTrim("git", "commit-tree", branch.String()+"^{tree}", "-p", mergeBase.String(), "-m", "squashed")
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	cherry, err := querier.QueryTrim("git", "cherry", parent.String(), squashed.String())
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	return strings.HasPrefix(cherry.String(), "- "), nil
 }
 
 func (self *Commands) BranchesAvailableInCurrentWorktree(querier subshelldomain.Querier) (gitdomain.LocalBranchNames, error) {

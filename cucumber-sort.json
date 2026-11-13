@@ -50,6 +50,7 @@
     "features/sync/current_branch/feature_branch/mixed_sync_strategies/independent_changes.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/modified_commits/amended_commit.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/multiple_commands/multiple_commands.feature",
+    "features/sync/current_branch/feature_branch/rebase_sync_strategy/tracking_branch/deleted/shipped_with_different_local_commit_metadata_main_changed.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/happy_path.feature",

@@ -1,4 +1,4 @@
-Feature: delete a branch whose squashed changes are in the parent, which changed the same files afterwards
+Feature: sync a branch shipped at the remote, fully shipped, local commits have different metadata
 
   Background:
     Given a Git repo with origin
@@ -6,16 +6,13 @@ Feature: delete a branch whose squashed changes are in the parent, which changed
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME | FILE CONTENT   |
-      | shipped | local, origin | first commit   | file-a    | first version  |
-      | shipped | local, origin | second commit  | file-b    | second version |
+      | BRANCH  | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | shipped | local, origin | commit-1  | file      | content 1    |
+      | shipped | local, origin | commit-2A | file      | content 2    |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "shipped"
-    And I ran "git commit --amend --message 'second commit rewritten'"
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
-    And the commits
-      | BRANCH | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT  |
-      | main   | origin   | later change    | file-b    | third version |
+    And the current branch is "shipped"
+    And I ran "git commit --amend --message 'commit-2B'"
     When I run "git-town sync"
 
   Scenario: result
@@ -31,3 +28,16 @@ Feature: delete a branch whose squashed changes are in the parent, which changed
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE  |
+      | main   | local, origin | commit-1 |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                     |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
+      |        | git branch shipped {{ sha 'commit-2B' }}    |
+      |        | git checkout shipped                        |
+    And the initial branches and lineage exist now
+    And the initial commits exist now
