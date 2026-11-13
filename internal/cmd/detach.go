@@ -128,7 +128,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			Branch:            descendent.name,
 			HasTrackingBranch: descendent.info.HasTrackingBranch(),
 			Program:           prog,
-			RebaseOnto:        rebaseOnto,
+			RebaseOnto:        rebaseOnto.BranchName(),
 		})
 		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
 			prog.Value.Add(
