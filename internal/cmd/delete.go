@@ -172,7 +172,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 						Branch:            descendent,
 						HasTrackingBranch: branchInfo.HasTrackingBranch(),
 						Program:           prog,
-						RebaseOnto:        parent,
+						RebaseOnto:        parent.BranchName(),
 					})
 				}
 			}
