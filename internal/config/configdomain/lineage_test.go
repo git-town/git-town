@@ -914,4 +914,28 @@ func TestLineage(t *testing.T) {
 			must.True(t, have.IsNone())
 		})
 	})
+
+	t.Run("YoungestAncestorWithout", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			one:   main,
+			three: two,
+			two:   one,
+		})
+		t.Run("skips blacklisted ancestors", func(t *testing.T) {
+			t.Parallel()
+			have := lineage.YoungestAncestorWithout(three, gitdomain.LocalBranchNames{two})
+			must.True(t, have.EqualSome(one))
+		})
+		t.Run("reaches the root", func(t *testing.T) {
+			t.Parallel()
+			have := lineage.YoungestAncestorWithout(three, gitdomain.LocalBranchNames{one, two})
+			must.True(t, have.EqualSome(main))
+		})
+		t.Run("everything blacklisted", func(t *testing.T) {
+			t.Parallel()
+			have := lineage.YoungestAncestorWithout(three, gitdomain.LocalBranchNames{main, one, two})
+			must.True(t, have.IsNone())
+		})
+	})
 }
