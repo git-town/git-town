@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 )
 
@@ -14,14 +14,14 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.
-func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, interactive configdomain.Interactive, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
+func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs Inputs, interactive clidomain.Interactive, dialogName string) (S, dialogdomain.Exit, error) { //nolint:ireturn
 	if err := interactive.Check(); err != nil {
 		var zero S
 		return zero, true, err
 	}
 	program := tea.NewProgram(radioListModel[S]{
-		List:  list.NewList(entries, cursor),
 		help:  help,
+		List:  list.NewList(entries, cursor),
 		title: title,
 	})
 	SendInputs(dialogName, inputs.Next(), program)
@@ -79,7 +79,8 @@ func (self radioListModel[S]) View() string {
 		if i == self.Cursor {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.Text))
 		} else {
-			s.WriteString("  " + branch.Text)
+			s.WriteString("  ")
+			s.WriteString(branch.Text)
 		}
 		s.WriteRune('\n')
 	}

@@ -13,8 +13,8 @@ func TestEscapeNewLines(t *testing.T) {
 		"":                    "",
 		"no newlines":         "no newlines",
 		"one\nnewline":        "one\\nnewline",
-		"two\nnew\nlines":     "two\\nnew\\nlines",
 		"three\nnew\nlines\n": "three\\nnew\\nlines\\n",
+		"two\nnew\nlines":     "two\\nnew\\nlines",
 	}
 	for give, want := range tests {
 		have := stringss.EscapeNewLines(give)

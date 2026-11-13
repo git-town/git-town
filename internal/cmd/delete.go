@@ -104,78 +104,30 @@ func deleteCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDelete(args []string, cliConfig configdomain.PartialConfig) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
+func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
+	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
+	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.Offline.IsOnline() {
+		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
+		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
-	data, flow, err := determineDeleteData(args, repo)
-	if err != nil {
-		return err
+	deleteLocalBranch(prog, finalUndoProgram, data)
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateBreadcrumb && isOnline {
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
+			Config:          data.config,
+			Program:         prog,
+			TouchedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
+		})
 	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateDeleteData(data)
-	if err != nil {
-		return err
-	}
-	deletePrograms := deleteProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               "delete",
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		FinalUndoProgram:      deletePrograms.finalUndoProgram,
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            deletePrograms.runProgram,
-		TouchedBranches:       deletePrograms.runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
 }
 
 type deleteData struct {
+	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchToDeleteInfo       gitdomain.BranchInfo
 	branchToDeleteType       configdomain.BranchType
 	branchWhenDone           gitdomain.LocalBranchName
-	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	detectedForgeType        Option[forgedomain.DetectedForgeType]
@@ -187,6 +139,119 @@ type deleteData struct {
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
+}
+
+func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
+	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName().Get(); hasLocalBranchToDelete {
+		if data.initialBranch == localBranchToDelete {
+			if data.hasOpenChanges {
+				prog.Value.Add(&opcodes.ChangesStage{})
+				prog.Value.Add(&opcodes.CommitWithMessage{
+					AuthorOverride: None[gitdomain.Author](),
+					CommitHook:     configdomain.CommitHookEnabled,
+					Message:        "Committing open changes on deleted branch",
+				})
+				// update the registered initial SHA for this branch so that undo restores the just committed changes
+				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
+				// when undoing, manually undo the just committed changes so that they are uncommitted again
+				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
+				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
+			}
+		}
+		// delete the commits of this branch from all descendents
+		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
+			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete, data.config.NormalConfig.Order)
+			for _, descendent := range descendents {
+				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
+					parent := data.config.NormalConfig.Lineage.Parent(descendent).GetOr(data.config.ValidatedConfigData.MainBranch)
+					if parent == localBranchToDelete {
+						parent = data.config.NormalConfig.Lineage.Parent(parent).GetOr(data.config.ValidatedConfigData.MainBranch)
+					}
+					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+						Ancestor:          localBranchToDelete.BranchName(),
+						Branch:            descendent,
+						HasTrackingBranch: branchInfo.HasTrackingBranch(),
+						Program:           prog,
+						RebaseOnto:        parent.BranchName(),
+					})
+				}
+			}
+		}
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
+		prog.Value.Add(&opcodes.BranchLocalDelete{
+			Branch: localBranchToDelete,
+		})
+		if !data.config.NormalConfig.DryRun {
+			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
+				Branch:  localBranchToDelete,
+				Lineage: data.config.NormalConfig.Lineage,
+				Order:   data.config.NormalConfig.Order,
+				Program: prog,
+			})
+		}
+	}
+}
+
+func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) deletePrograms {
+	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
+	undoProg := NewMutable(&program.Program{})
+	switch data.branchToDeleteType {
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
+		deleteFeatureBranch(prog, undoProg, data)
+	case
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeContributionBranch:
+		deleteLocalBranch(prog, undoProg, data)
+	case
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
+		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToDeleteType))
+	}
+	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: localBranchNameToDelete,
+		})
+	}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
+		RunInGitRoot:             true,
+		StashOpenChanges:         false,
+	})
+	return deletePrograms{
+		finalUndoProgram: undoProg.Immutable(),
+		runProgram:       optimizer.Optimize(prog.Immutable()),
+	}
+}
+
+type deletePrograms struct {
+	finalUndoProgram program.Program
+	runProgram       program.Program
+}
+
+func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
+	if args.branchToDelete != args.initialBranch {
+		return args.initialBranch
+	}
+	// here we are deleting the initial branch
+	previousBranch, hasPreviousBranch := args.previousBranch.Get()
+	if !hasPreviousBranch || previousBranch == args.initialBranch {
+		return args.mainBranch
+	}
+	// here we could return the previous branch
+	if previousBranchInfo, hasPreviousBranchInfo := args.branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
+		if previousBranchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree {
+			return previousBranch
+		}
+	}
+	// here the previous branch is checked out in another worktree --> cannot return it
+	return args.mainBranch
 }
 
 func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData, configdomain.ProgramFlow, error) {
@@ -253,9 +318,9 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -277,8 +342,8 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{
-		branchToDelete: branchToDelete,
 		branches:       branchesSnapshot.Branches,
+		branchToDelete: branchToDelete,
 		initialBranch:  initialBranch,
 		mainBranch:     validatedConfig.ValidatedConfigData.MainBranch,
 		previousBranch: previousBranchOpt,
@@ -295,11 +360,11 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	oldClan := validatedConfig.NormalConfig.Lineage.Clan(gitdomain.LocalBranchNames{branchToDelete}, validatedConfig.MainAndPerennials())
 	return deleteData{
+		branchesSnapshot:         branchesSnapshot,
 		branchInfosLastRun:       branchInfosLastRun,
 		branchToDeleteInfo:       *branchToDeleteInfo,
 		branchToDeleteType:       branchTypeToDelete,
 		branchWhenDone:           branchWhenDone,
-		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
 		detectedForgeType:        detectedForgeType,
@@ -314,140 +379,75 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (deleteData
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) deletePrograms {
-	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
-	undoProg := NewMutable(&program.Program{})
-	switch data.branchToDeleteType {
-	case
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch:
-		deleteFeatureBranch(prog, undoProg, data)
-	case
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeContributionBranch:
-		deleteLocalBranch(prog, undoProg, data)
-	case
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypePerennialBranch:
-		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToDeleteType))
-	}
-	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
-	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
-			Branch: localBranchNameToDelete,
-		})
-	}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
+func executeDelete(args []string, cliConfig configdomain.PartialConfig) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	return deletePrograms{
-		finalUndoProgram: undoProg.Immutable(),
-		runProgram:       optimizer.Optimize(prog.Immutable()),
+	if err != nil {
+		return err
 	}
-}
-
-type deletePrograms struct {
-	finalUndoProgram program.Program
-	runProgram       program.Program
-}
-
-func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
-	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
-	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.Offline.IsOnline() {
-		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
+	data, flow, err := determineDeleteData(args, repo)
+	if err != nil {
+		return err
 	}
-	deleteLocalBranch(prog, finalUndoProgram, data)
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
-	isOnline := data.config.NormalConfig.Offline.IsOnline()
-	if updateBreadcrumb && isOnline {
-		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
-			Config:          data.config,
-			Program:         prog,
-			TouchedBranches: data.oldClan.Remove(data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()),
-		})
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
-}
-
-func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
-	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName().Get(); hasLocalBranchToDelete {
-		if data.initialBranch == localBranchToDelete {
-			if data.hasOpenChanges {
-				prog.Value.Add(&opcodes.ChangesStage{})
-				prog.Value.Add(&opcodes.CommitWithMessage{
-					AuthorOverride: None[gitdomain.Author](),
-					CommitHook:     configdomain.CommitHookEnabled,
-					Message:        "Committing open changes on deleted branch",
-				})
-				// update the registered initial SHA for this branch so that undo restores the just committed changes
-				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
-				// when undoing, manually undo the just committed changes so that they are uncommitted again
-				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
-				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
-			}
-		}
-		// delete the commits of this branch from all descendents
-		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
-			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete, data.config.NormalConfig.Order)
-			for _, descendent := range descendents {
-				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
-					parent := data.config.NormalConfig.Lineage.Parent(descendent).GetOr(data.config.ValidatedConfigData.MainBranch)
-					if parent == localBranchToDelete {
-						parent = data.config.NormalConfig.Lineage.Parent(parent).GetOr(data.config.ValidatedConfigData.MainBranch)
-					}
-					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-						Ancestor:          localBranchToDelete.BranchName(),
-						Branch:            descendent,
-						HasTrackingBranch: branchInfo.HasTrackingBranch(),
-						Program:           prog,
-						RebaseOnto:        parent,
-					})
-				}
-			}
-		}
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
-		prog.Value.Add(&opcodes.BranchLocalDelete{
-			Branch: localBranchToDelete,
-		})
-		if !data.config.NormalConfig.DryRun {
-			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
-				Branch:  localBranchToDelete,
-				Lineage: data.config.NormalConfig.Lineage,
-				Order:   data.config.NormalConfig.Order,
-				Program: prog,
-			})
-		}
+	err = validateDeleteData(data)
+	if err != nil {
+		return err
 	}
-}
-
-func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
-	if args.branchToDelete != args.initialBranch {
-		return args.initialBranch
+	deletePrograms := deleteProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               "delete",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		FinalUndoProgram:      deletePrograms.finalUndoProgram,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            deletePrograms.runProgram,
+		TouchedBranches:       deletePrograms.runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
-	// here we are deleting the initial branch
-	previousBranch, hasPreviousBranch := args.previousBranch.Get()
-	if !hasPreviousBranch || previousBranch == args.initialBranch {
-		return args.mainBranch
-	}
-	// here we could return the previous branch
-	if previousBranchInfo, hasPreviousBranchInfo := args.branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
-		if previousBranchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree {
-			return previousBranch
-		}
-	}
-	// here the previous branch is checked out in another worktree --> cannot return it
-	return args.mainBranch
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 type branchWhenDoneArgs struct {
-	branchToDelete gitdomain.LocalBranchName
 	branches       gitdomain.BranchInfos
+	branchToDelete gitdomain.LocalBranchName
 	initialBranch  gitdomain.LocalBranchName
 	mainBranch     gitdomain.LocalBranchName
 	previousBranch Option[gitdomain.LocalBranchName]

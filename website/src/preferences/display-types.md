@@ -8,17 +8,18 @@ to the branch name when showing a list of branches.
 
 - **all** - display the type for all branches
 - **no** - never display the branch type
-- **no &lt;branch types&gt;** - display the type of all branches unless the
-  branch has one of the listed types
-- **&lt;branch types&gt;** - display the type of the branch only if it matches
-  one of the listed branch types
+- **no &lt;branch types&gt;** - display the type of all branches
+  unless the branch has one of the listed types
+- **&lt;branch types&gt;** - display the type of the branch only
+  if it matches one of the listed branch types
 
 ## Examples
 
-- `no feature main` displays the type for all branches except for feature and
-  main branches. _(This is the default setting.)_
-- `prototype observed contribution parked` displays the type only for these four
-  branch types
+- `no feature main` displays the type for all branches except for feature
+  and main branches.
+  _(This is the default setting.)_
+- `prototype observed contribution parked` displays the type only
+  for these four branch types
 
 ## Config file
 
@@ -46,10 +47,10 @@ environment variable.
 
 You can override this setting per command using:
 
-- `--display-types` / `-d` / `--display-types=all`: display the type for all
-  branches
+- `--display-types` / `-d` / `--display-types=all`:
+  display the type for all branches
 - `--display-types=no`: never display the branch type
-- `--display-types=contribution+observed`: display the type only for
-  contribution and observed branches
-- `--display-types=no-main-feature` displays the type for all branches except
-  main and feature branches
+- `--display-types=contribution+observed`:
+  display the type only for contribution and observed branches
+- `--display-types=no-main-feature` displays the type
+  for all branches except main and feature branches

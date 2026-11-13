@@ -136,17 +136,15 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	return forgedomain.BitbucketCloudProposalData{
-		ProposalData: forgedomain.ProposalData{
-			Active:       isActive,
-			MergeWithAPI: false,
-			Number:       number,
-			Source:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(source6)),
-			Target:       gitdomain.LocalBranchNameOrPanic(stringss.Trim(destination6)),
-			Title:        gitdomain.ProposalTitle(title2),
-			Body:         gitdomain.NewProposalBodyOpt(body2),
-			URL:          url6,
-		},
 		CloseSourceBranch: closeSourceBranch2,
 		Draft:             draft2,
+		Active:            isActive,
+		MergeWithAPI:      false,
+		Number:            number,
+		Source:            gitdomain.LocalBranchNameOrPanic(stringss.Trim(source6)),
+		Target:            gitdomain.LocalBranchNameOrPanic(stringss.Trim(destination6)),
+		Title:             gitdomain.ProposalTitle(title2),
+		Body:              gitdomain.NewProposalBodyOpt(body2),
+		URL:               url6,
 	}, nil
 }

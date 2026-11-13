@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/mapstools"
@@ -32,18 +33,19 @@ type PartialConfig struct {
 	DisplayTypes                Option[DisplayTypes]
 	DryRun                      Option[DryRun]
 	FeatureRegex                Option[FeatureRegex]
-	ForgeType                   Option[forgedomain.ForgeType]
 	ForgejoToken                Option[forgedomain.ForgejoToken]
-	GitUserEmail                Option[gitdomain.GitUserEmail]
-	GitUserName                 Option[gitdomain.GitUserName]
+	ForgeType                   Option[forgedomain.ForgeType]
+	ForgeURL                    Option[ForgeURL]
 	GiteaToken                  Option[forgedomain.GiteaToken]
 	GithubConnectorType         Option[forgedomain.GithubConnectorType]
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	GitUserEmail                Option[gitdomain.GitUserEmail]
+	GitUserName                 Option[gitdomain.GitUserName]
 	HostingOriginHostname       Option[HostingOriginHostname]
 	IgnoreUncommitted           Option[IgnoreUncommitted]
-	Interactive                 Option[Interactive]
+	Interactive                 Option[clidomain.Interactive]
 	Lineage                     Lineage
 	MainBranch                  Option[gitdomain.LocalBranchName]
 	NewBranchType               Option[NewBranchType]
@@ -70,13 +72,6 @@ type PartialConfig struct {
 	Verbose                     Option[Verbose]
 }
 
-func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{
-		Aliases: Aliases{},
-		Lineage: NewLineage(),
-	} //exhaustruct:ignore
-}
-
 // Merge combines the data of the given PartialConfig with this PartialConfig,
 // favoring the data of the given PartialConfig.
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
@@ -97,6 +92,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		DryRun:                      other.DryRun.Or(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
+		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
@@ -141,4 +137,11 @@ func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfigData {
 		GitUserName:  self.GitUserName,
 		MainBranch:   self.MainBranch,
 	}
+}
+
+func EmptyPartialConfig() PartialConfig {
+	return PartialConfig{
+		Aliases: Aliases{},
+		Lineage: NewLineage(),
+	} //exhaustruct:ignore
 }

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v24/internal/config/cliconfig"
@@ -18,40 +19,6 @@ import (
 )
 
 const removeConfigDesc = "Removes the Git Town configuration"
-
-func removeConfigCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:   "remove",
-		Args:  cobra.NoArgs,
-		Short: removeConfigDesc,
-		Long:  cmdhelpers.Long(removeConfigDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeRemoveConfig(cliConfig)
-		},
-	}
-	addVerboseFlag(&cmd)
-	return &cmd
-}
 
 func executeRemoveConfig(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
@@ -78,4 +45,38 @@ func executeRemoveConfig(cliConfig configdomain.PartialConfig) error {
 		}
 	}
 	return nil
+}
+
+func removeConfigCommand() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args: cobra.NoArgs,
+		Long: cmdhelpers.Long(removeConfigDesc),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeRemoveConfig(cliConfig)
+		},
+		Short: removeConfigDesc,
+		Use:   "remove",
+	}
+	addVerboseFlag(&cmd)
+	return &cmd
 }

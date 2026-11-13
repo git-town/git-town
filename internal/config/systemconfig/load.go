@@ -2,6 +2,7 @@ package systemconfig
 
 import (
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -10,13 +11,13 @@ import (
 
 func Load() configdomain.PartialConfig {
 	hasTTY := DetermineTTY()
-	var interactive Option[configdomain.Interactive]
+	var interactive Option[clidomain.Interactive]
 	var browserEnabled Option[browserdomain.BrowserEnabled]
 	if hasTTY {
-		interactive = None[configdomain.Interactive]()
+		interactive = None[clidomain.Interactive]()
 		browserEnabled = None[browserdomain.BrowserEnabled]()
 	} else {
-		interactive = Some(configdomain.Interactive("no interactive terminal available"))
+		interactive = Some(clidomain.Interactive("no interactive terminal available"))
 		browserEnabled = Some(browserdomain.BrowserEnabled(false))
 	}
 	return configdomain.PartialConfig{
@@ -59,6 +60,7 @@ func Load() configdomain.PartialConfig {
 		ProposalBreadcrumbDirection: None[configdomain.ProposalBreadcrumbDirection](),
 		PushBranches:                None[configdomain.PushBranches](),
 		PushHook:                    None[configdomain.PushHook](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch:    None[configdomain.ShipDeleteTrackingBranch](),
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),

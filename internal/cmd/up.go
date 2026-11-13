@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -23,58 +24,6 @@ const (
 	upShort = "Switch to the parent branch"
 	upLong  = `Moves "up" in the stack by switching to the parent of the current branch.`
 )
-
-func upCmd() *cobra.Command {
-	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
-	addMergeFlag, readMergeFlag := flags.Merge()
-	addOrderFlag, readOrderFlag := flags.Order()
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "up",
-		GroupID: cmdhelpers.GroupIDNavigation,
-		Args:    cobra.NoArgs,
-		Short:   upShort,
-		Long:    cmdhelpers.Long(upShort, upLong),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
-			merge, errMerge := readMergeFlag(cmd)
-			order, errOrder := readOrderFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      displayTypes,
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             order,
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeUp(executeUpArgs{
-				cliConfig: cliConfig,
-				merge:     merge,
-			})
-		},
-	}
-	addDisplayTypesFlag(&cmd)
-	addMergeFlag(&cmd)
-	addOrderFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
-}
-
-type executeUpArgs struct {
-	cliConfig configdomain.PartialConfig
-	merge     configdomain.SwitchUsingMerge
-}
 
 func executeUp(args executeUpArgs) error {
 Start:
@@ -125,9 +74,9 @@ Start:
 		goto Start
 	}
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+		BranchesAndTypes:  data.branchesAndTypes,
 		BranchInfos:       data.branchInfos,
 		BranchTypes:       []configdomain.BranchType{},
-		BranchesAndTypes:  data.branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
@@ -140,4 +89,56 @@ Start:
 	fmt.Print(branchLayout(entries, data, repo.UnvalidatedConfig.NormalConfig.DisplayTypes))
 
 	return nil
+}
+
+type executeUpArgs struct {
+	cliConfig configdomain.PartialConfig
+	merge     configdomain.SwitchUsingMerge
+}
+
+func upCmd() *cobra.Command {
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
+	addMergeFlag, readMergeFlag := flags.Merge()
+	addOrderFlag, readOrderFlag := flags.Order()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDNavigation,
+		Long:    cmdhelpers.Long(upShort, upLong),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
+			merge, errMerge := readMergeFlag(cmd)
+			order, errOrder := readOrderFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             order,
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeUp(executeUpArgs{
+				cliConfig: cliConfig,
+				merge:     merge,
+			})
+		},
+		Short: upShort,
+		Use:   "up",
+	}
+	addDisplayTypesFlag(&cmd)
+	addMergeFlag(&cmd)
+	addOrderFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
 }

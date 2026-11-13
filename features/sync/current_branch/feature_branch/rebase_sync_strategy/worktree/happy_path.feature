@@ -27,8 +27,7 @@ Feature: sync a branch whose parent is active in another worktree
       | main   | git -c rebase.updateRefs=false rebase origin/main                              |
       |        | git push                                                                       |
       |        | git checkout child                                                             |
-      | child  | git push --force-with-lease --force-if-includes                                |
-      |        | git -c rebase.updateRefs=false rebase origin/child                             |
+      | child  | git -c rebase.updateRefs=false rebase origin/child                             |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                |
     And these commits exist now

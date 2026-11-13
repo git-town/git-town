@@ -17,6 +17,43 @@ type UseMessage struct {
 	editDefaultMessage bool
 }
 
+// GetCustomMessage returns a copy of the custom message and IsCustomMessage().
+func (self *UseMessage) GetCustomMessage() (gitdomain.CommitMessage, bool) {
+	// editDefaultMessage is irrelevant when a custom message is set.
+	return self.customMessage.Get()
+}
+
+// GetCustomMessageOrPanic returns a copy of the custom message if IsCustomMessage() or panics.
+func (self *UseMessage) GetCustomMessageOrPanic() gitdomain.CommitMessage {
+	// editDefaultMessage is irrelevant when a custom message is set.
+	if message, is := self.customMessage.Get(); is {
+		return message
+	}
+	panic("UseMessage is not UseCustomMessage")
+}
+
+// IsCustomMessage indicates that the custom message should be used as is without opening an editor.
+func (self *UseMessage) IsCustomMessage() bool {
+	// editDefaultMessage is irrelevant when a custom message is set.
+	return self.customMessage.IsSome()
+}
+
+// IsEditDefault indicates that the default message should be edited.
+func (self *UseMessage) IsEditDefault() bool {
+	if self.customMessage.IsSome() {
+		return false
+	}
+	return self.editDefaultMessage
+}
+
+// IsUseDefault indicates that the default message should be used as is without opening an editor.
+func (self *UseMessage) IsUseDefault() bool {
+	if self.customMessage.IsSome() {
+		return false
+	}
+	return !self.editDefaultMessage
+}
+
 // EditDefaultMessage indicates that the default message should be edited.
 func EditDefaultMessage() UseMessage {
 	return UseMessage{
@@ -58,41 +95,4 @@ func UseMessageWithFallbackToDefault(message Option[gitdomain.CommitMessage], fa
 		customMessage:      message,
 		editDefaultMessage: !fallbackToDefault,
 	}
-}
-
-// GetCustomMessage returns a copy of the custom message and IsCustomMessage().
-func (self *UseMessage) GetCustomMessage() (gitdomain.CommitMessage, bool) {
-	// editDefaultMessage is irrelevant when a custom message is set.
-	return self.customMessage.Get()
-}
-
-// GetCustomMessageOrPanic returns a copy of the custom message if IsCustomMessage() or panics.
-func (self *UseMessage) GetCustomMessageOrPanic() gitdomain.CommitMessage {
-	// editDefaultMessage is irrelevant when a custom message is set.
-	if message, is := self.customMessage.Get(); is {
-		return message
-	}
-	panic("UseMessage is not UseCustomMessage")
-}
-
-// IsCustomMessage indicates that the custom message should be used as is without opening an editor.
-func (self *UseMessage) IsCustomMessage() bool {
-	// editDefaultMessage is irrelevant when a custom message is set.
-	return self.customMessage.IsSome()
-}
-
-// IsEditDefault indicates that the default message should be edited.
-func (self *UseMessage) IsEditDefault() bool {
-	if self.customMessage.IsSome() {
-		return false
-	}
-	return self.editDefaultMessage
-}
-
-// IsUseDefault indicates that the default message should be used as is without opening an editor.
-func (self *UseMessage) IsUseDefault() bool {
-	if self.customMessage.IsSome() {
-		return false
-	}
-	return !self.editDefaultMessage
 }

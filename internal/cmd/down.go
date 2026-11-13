@@ -8,6 +8,7 @@ import (
 	"regexp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
@@ -32,10 +33,8 @@ func downCmd() *cobra.Command {
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "down",
-		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.NoArgs,
-		Short:   downShort,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Long:    cmdhelpers.Long(downShort, downLong),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
@@ -54,7 +53,7 @@ func downCmd() *cobra.Command {
 				DisplayTypes:      displayTypes,
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             order,
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -65,6 +64,8 @@ func downCmd() *cobra.Command {
 				merge:     merge,
 			})
 		},
+		Short: downShort,
+		Use:   "down",
 	}
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
@@ -143,9 +144,9 @@ Start:
 		goto Start
 	}
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+		BranchesAndTypes:  data.branchesAndTypes,
 		BranchInfos:       data.branchInfos,
 		BranchTypes:       []configdomain.BranchType{},
-		BranchesAndTypes:  data.branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,

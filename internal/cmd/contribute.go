@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v24/internal/config"
@@ -41,10 +42,8 @@ On a contribution branch, "git town sync"
 func contributeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "contribute [branches]",
 		Args:    cobra.ArbitraryArgs,
 		GroupID: cmdhelpers.GroupIDTypes,
-		Short:   contributeDesc,
 		Long:    cmdhelpers.Long(contributeDesc, contributeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verbose, err := readVerboseFlag(cmd)
@@ -60,7 +59,7 @@ func contributeCmd() *cobra.Command {
 				DisplayTypes:      None[configdomain.DisplayTypes](),
 				DryRun:            None[configdomain.DryRun](),
 				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
+				Interactive:       None[clidomain.Interactive](),
 				Order:             None[configdomain.Order](),
 				PushBranches:      None[configdomain.PushBranches](),
 				Stash:             None[configdomain.Stash](),
@@ -68,9 +67,35 @@ func contributeCmd() *cobra.Command {
 			})
 			return executeContribute(args, cliConfig)
 		},
+		Short: contributeDesc,
+		Use:   "contribute [branches]",
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
+	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return contributeData{}, err
+	}
+	if branchesSnapshot.DetachedHead {
+		return contributeData{}, errors.New(messages.ContributeDetachedHead)
+	}
+	branchesToMakeContribution, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	return contributeData{
+		beginBranchesSnapshot:      branchesSnapshot,
+		branchesToMakeContribution: branchesToMakeContribution.BranchesToMark,
+		branchInfos:                branchesSnapshot.Branches,
+		branchToCheckout:           branchesToMakeContribution.BranchToCheckout,
+	}, err
+}
+
+type contributeData struct {
+	beginBranchesSnapshot      gitdomain.BranchesSnapshot
+	branchesToMakeContribution configdomain.BranchesAndTypes
+	branchInfos                gitdomain.BranchInfos
+	branchToCheckout           Option[gitdomain.LocalBranchName]
 }
 
 func executeContribute(args []string, cliConfig configdomain.PartialConfig) error {
@@ -116,34 +141,10 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 	})
 }
 
-type contributeData struct {
-	beginBranchesSnapshot      gitdomain.BranchesSnapshot
-	branchInfos                gitdomain.BranchInfos
-	branchToCheckout           Option[gitdomain.LocalBranchName]
-	branchesToMakeContribution configdomain.BranchesAndTypes
-}
-
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.BranchIsNowContribution, branch)
 	}
-}
-
-func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
-	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return contributeData{}, err
-	}
-	if branchesSnapshot.DetachedHead {
-		return contributeData{}, errors.New(messages.ContributeDetachedHead)
-	}
-	branchesToMakeContribution, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return contributeData{
-		beginBranchesSnapshot:      branchesSnapshot,
-		branchInfos:                branchesSnapshot.Branches,
-		branchToCheckout:           branchesToMakeContribution.BranchToCheckout,
-		branchesToMakeContribution: branchesToMakeContribution.BranchesToMark,
-	}, err
 }
 
 func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {

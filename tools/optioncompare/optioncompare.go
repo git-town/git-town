@@ -17,16 +17,6 @@ const (
 	typeName    = "Option"
 )
 
-func main() {
-	singlechecker.Main(&analysis.Analyzer{
-		Name:     "optioncompare",
-		Doc:      "Ensures no == comparison between Option types",
-		Requires: []*analysis.Analyzer{inspect.Analyzer},
-		Run:      execute,
-		Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError),
-	})
-}
-
 func execute(pass *analysis.Pass) (any, error) { //nolint:ireturn
 	inspectorInstance := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	nodeFilter := []ast.Node{
@@ -106,4 +96,14 @@ func isOptionType(typ types.Type) bool {
 
 	// If all checks pass, it's an instantiation of our target Option[T] type.
 	return true
+}
+
+func main() {
+	singlechecker.Main(&analysis.Analyzer{
+		Doc:      "Ensures no == comparison between Option types",
+		Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError),
+		Name:     "optioncompare",
+		Requires: []*analysis.Analyzer{inspect.Analyzer},
+		Run:      execute,
+	})
 }

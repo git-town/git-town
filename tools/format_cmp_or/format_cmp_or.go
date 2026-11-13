@@ -12,38 +12,6 @@ import (
 	"strings"
 )
 
-func main() {
-	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
-		if err != nil || dirEntry.IsDir() || !isGoFile(path) || shouldIgnorePath(path) {
-			return err
-		}
-		changed, err := formatFile(path, dirEntry.Type().Perm())
-		if err != nil {
-			return err
-		}
-		if changed {
-			fmt.Println(path)
-		}
-		return nil
-	})
-	if err != nil {
-		fmt.Printf("ERROR: %s\n", err)
-		os.Exit(1)
-	}
-}
-
-func formatFile(path string, perm fs.FileMode) (bool, error) {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return false, err
-	}
-	newContent := FormatFileContent(path, content)
-	if string(newContent) == string(content) {
-		return false, nil
-	}
-	return true, os.WriteFile(path, newContent, perm)
-}
-
 // FormatFileContent sorts the arguments of all cmp.Or invocations in the given Go source.
 // Calls that already contain keep-sorted markers are skipped since they are managed by the keep-sorted tool.
 func FormatFileContent(path string, src []byte) []byte {
@@ -82,24 +50,6 @@ func FormatFileContent(path string, src []byte) []byte {
 		result = newResult
 	}
 	return result
-}
-
-type replacement struct {
-	end     int
-	newText string
-	start   int
-}
-
-func isCmpOr(callExpr *ast.CallExpr) bool {
-	selector, ok := callExpr.Fun.(*ast.SelectorExpr)
-	if !ok {
-		return false
-	}
-	pkg, ok := selector.X.(*ast.Ident)
-	if !ok {
-		return false
-	}
-	return pkg.Name == "cmp" && selector.Sel.Name == "Or"
 }
 
 func computeReplacements(fset *token.FileSet, file *ast.File, callExpr *ast.CallExpr) []replacement {
@@ -143,6 +93,24 @@ func computeReplacements(fset *token.FileSet, file *ast.File, callExpr *ast.Call
 	return reps
 }
 
+func formatFile(path string, perm fs.FileMode) (bool, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return false, err
+	}
+	newContent := FormatFileContent(path, content)
+	if string(newContent) == string(content) {
+		return false, nil
+	}
+	return true, os.WriteFile(path, newContent, perm)
+}
+
+type replacement struct {
+	end     int
+	newText string
+	start   int
+}
+
 // hasKeepSortedComment reports whether the call expression contains a keep-sorted comment.
 func hasKeepSortedComment(fset *token.FileSet, file *ast.File, callExpr *ast.CallExpr) bool {
 	callStart := fset.Position(callExpr.Pos()).Offset
@@ -161,8 +129,40 @@ func hasKeepSortedComment(fset *token.FileSet, file *ast.File, callExpr *ast.Cal
 	return false
 }
 
+func isCmpOr(callExpr *ast.CallExpr) bool {
+	selector, ok := callExpr.Fun.(*ast.SelectorExpr)
+	if !ok {
+		return false
+	}
+	pkg, ok := selector.X.(*ast.Ident)
+	if !ok {
+		return false
+	}
+	return pkg.Name == "cmp" && selector.Sel.Name == "Or"
+}
+
 func isGoFile(path string) bool {
 	return strings.HasSuffix(path, ".go")
+}
+
+func main() {
+	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
+		if err != nil || dirEntry.IsDir() || !isGoFile(path) || shouldIgnorePath(path) {
+			return err
+		}
+		changed, err := formatFile(path, dirEntry.Type().Perm())
+		if err != nil {
+			return err
+		}
+		if changed {
+			fmt.Println(path)
+		}
+		return nil
+	})
+	if err != nil {
+		fmt.Printf("ERROR: %s\n", err)
+		os.Exit(1)
+	}
 }
 
 func shouldIgnorePath(path string) bool {

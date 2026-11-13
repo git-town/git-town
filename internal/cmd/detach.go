@@ -71,9 +71,7 @@ func detachCommand() *cobra.Command {
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     detachCommandName,
 		Args:    cobra.NoArgs,
-		Short:   detachDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -100,6 +98,8 @@ func detachCommand() *cobra.Command {
 			})
 			return executeDetach(cliConfig)
 		},
+		Short: detachDesc,
+		Use:   detachCommandName,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
@@ -107,78 +107,120 @@ func detachCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDetach(cliConfig configdomain.PartialConfig) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
+func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
+	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
+	oldParent := data.parentBranch
+	// step 1: delete the commits of the branch to detach from all descendents,
+	// while that branch is still in the form it had inside the stack
+	for _, descendent := range data.descendents {
+		// Determine the correct parent to rebase onto.
+		// If the descendant's parent is the branch being detached, rebase onto that branch's parent.
+		// Otherwise, rebase onto the descendant's actual parent.
+		rebaseOnto := data.parentBranch
+		if descendentParent, hasParent := data.config.NormalConfig.Lineage.Parent(descendent.name).Get(); hasParent {
+			if descendentParent != data.branchToDetachName {
+				rebaseOnto = descendentParent
+			}
+		}
+		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+			Ancestor:          data.branchToDetachName.BranchName(),
+			Branch:            descendent.name,
+			HasTrackingBranch: descendent.info.HasTrackingBranch(),
+			Program:           prog,
+			RebaseOnto:        rebaseOnto.BranchName(),
+		})
+		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
+			prog.Value.Add(
+				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   descendent.name,
+					ForceIfIncludes: true,
+					TrackingBranch:  descendentTracking,
+				},
+			)
+		}
+	}
+	// step 2: delete the commits of parent branches from the detached branch
+	prog.Value.Add(
+		&opcodes.CheckoutIfNeeded{
+			Branch: data.branchToDetachName,
+		},
+		&opcodes.RebaseOnto{
+			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch.BranchName(),
+			CommitsToRemove:    data.parentBranch.BranchName().Location(),
+		},
+	)
+	if trackingBranch, hasTrackingBranch := data.branchToDetachInfo.RemoteName.Get(); hasTrackingBranch {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   data.branchToDetachName,
+				ForceIfIncludes: true,
+				TrackingBranch:  trackingBranch,
+			},
+		)
+	}
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	if !data.config.NormalConfig.DryRun {
+		prog.Value.Add(
+			&opcodes.LineageParentSet{
+				Branch: data.branchToDetachName,
+				Parent: data.config.ValidatedConfigData.MainBranch,
+			},
+		)
+	}
+	if proposal, hasProposal := data.branchToDetachProposal.Get(); hasProposal {
+		prog.Value.Add(
+			&opcodes.ProposalUpdateTarget{
+				NewBranch: data.config.ValidatedConfigData.MainBranch,
+				OldBranch: data.parentBranch,
+				Proposal:  proposal,
+			},
+		)
+	}
+	for _, child := range data.children {
+		prog.Value.Add(
+			&opcodes.LineageParentSet{
+				Branch: child.name,
+				Parent: data.parentBranch,
+			},
+		)
+
+		if proposal, hasProposal := child.proposal.Get(); hasProposal {
+			prog.Value.Add(
+				&opcodes.ProposalUpdateTarget{
+					NewBranch: data.parentBranch,
+					OldBranch: data.branchToDetachName,
+					Proposal:  proposal,
+				},
+			)
+		}
+	}
+	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
+	isOnline := data.config.NormalConfig.Offline.IsOnline()
+	if updateBreadcrumb && isOnline {
+		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
+			Config:          data.config,
+			Program:         prog,
+			TouchedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
+		})
+	}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
+		RunInGitRoot:             true,
+		StashOpenChanges:         false,
 	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineDetachData(repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateDetachData(data)
-	if err != nil {
-		return err
-	}
-	runProgram := detachProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               detachCommandName,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
+	return prog.Immutable()
 }
 
 type detachData struct {
+	branchesSnapshot       gitdomain.BranchesSnapshot
 	branchInfosLastRun     Option[gitdomain.BranchInfos]
 	branchToDetachInfo     gitdomain.BranchInfo
 	branchToDetachName     gitdomain.LocalBranchName
 	branchToDetachProposal Option[forgedomain.Proposal]
 	branchToDetachType     configdomain.BranchType
-	branchesSnapshot       gitdomain.BranchesSnapshot
 	children               []detachChildBranch
 	config                 config.ValidatedConfig
 	connector              Option[forgedomain.Connector]
@@ -260,9 +302,9 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -343,12 +385,12 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return detachData{
+		branchesSnapshot:       branchesSnapshot,
 		branchInfosLastRun:     branchInfosLastRun,
 		branchToDetachInfo:     *branchToDetachInfo,
 		branchToDetachName:     branchNameToDetach,
 		branchToDetachProposal: branchToDetachProposal,
 		branchToDetachType:     branchTypeToDetach,
-		branchesSnapshot:       branchesSnapshot,
 		children:               children,
 		config:                 validatedConfig,
 		connector:              connector,
@@ -364,111 +406,69 @@ func determineDetachData(repo execute.OpenRepoResult) (detachData, configdomain.
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
-	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
-	oldParent := data.parentBranch
-	// step 1: delete the commits of the branch to detach from all descendents,
-	// while that branch is still in the form it had inside the stack
-	for _, descendent := range data.descendents {
-		// Determine the correct parent to rebase onto.
-		// If the descendant's parent is the branch being detached, rebase onto that branch's parent.
-		// Otherwise, rebase onto the descendant's actual parent.
-		rebaseOnto := data.parentBranch
-		if descendentParent, hasParent := data.config.NormalConfig.Lineage.Parent(descendent.name).Get(); hasParent {
-			if descendentParent != data.branchToDetachName {
-				rebaseOnto = descendentParent
-			}
-		}
-		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-			Ancestor:          data.branchToDetachName.BranchName(),
-			Branch:            descendent.name,
-			HasTrackingBranch: descendent.info.HasTrackingBranch(),
-			Program:           prog,
-			RebaseOnto:        rebaseOnto,
-		})
-		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
-			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{
-					CurrentBranch:   descendent.name,
-					ForceIfIncludes: true,
-					TrackingBranch:  descendentTracking,
-				},
-			)
-		}
-	}
-	// step 2: delete the commits of parent branches from the detached branch
-	prog.Value.Add(
-		&opcodes.CheckoutIfNeeded{
-			Branch: data.branchToDetachName,
-		},
-		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch.BranchName(),
-			CommitsToRemove:    data.parentBranch.BranchName().Location(),
-		},
-	)
-	if trackingBranch, hasTrackingBranch := data.branchToDetachInfo.RemoteName.Get(); hasTrackingBranch {
-		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{
-				CurrentBranch:   data.branchToDetachName,
-				ForceIfIncludes: true,
-				TrackingBranch:  trackingBranch,
-			},
-		)
-	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
-	if !data.config.NormalConfig.DryRun {
-		prog.Value.Add(
-			&opcodes.LineageParentSet{
-				Branch: data.branchToDetachName,
-				Parent: data.config.ValidatedConfigData.MainBranch,
-			},
-		)
-	}
-	if proposal, hasProposal := data.branchToDetachProposal.Get(); hasProposal {
-		prog.Value.Add(
-			&opcodes.ProposalUpdateTarget{
-				NewBranch: data.config.ValidatedConfigData.MainBranch,
-				OldBranch: data.parentBranch,
-				Proposal:  proposal,
-			},
-		)
-	}
-	for _, child := range data.children {
-		prog.Value.Add(
-			&opcodes.LineageParentSet{
-				Branch: child.name,
-				Parent: data.parentBranch,
-			},
-		)
-
-		if proposal, hasProposal := child.proposal.Get(); hasProposal {
-			prog.Value.Add(
-				&opcodes.ProposalUpdateTarget{
-					NewBranch: data.parentBranch,
-					OldBranch: data.branchToDetachName,
-					Proposal:  proposal,
-				},
-			)
-		}
-	}
-	updateBreadcrumb := data.config.NormalConfig.ProposalBreadcrumb.Enabled()
-	isOnline := data.config.NormalConfig.Offline.IsOnline()
-	if updateBreadcrumb && isOnline {
-		programs.UpdateBreadcrumbsProgram(programs.UpdateBreadcrumbsArgs{
-			Config:          data.config,
-			Program:         prog,
-			TouchedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
-		})
-	}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         false,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
+func executeDetach(cliConfig configdomain.PartialConfig) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	return prog.Immutable()
+	if err != nil {
+		return err
+	}
+	data, flow, err := determineDetachData(repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	err = validateDetachData(data)
+	if err != nil {
+		return err
+	}
+	runProgram := detachProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               detachCommandName,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 func validateDetachData(data detachData) error {

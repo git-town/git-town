@@ -38,7 +38,6 @@ Feature: two people with rebase strategy sync changes made by them
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
       |         | git push --force-with-lease --force-if-includes      |
     And all branches are now synchronized
@@ -52,7 +51,6 @@ Feature: two people with rebase strategy sync changes made by them
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
     And no rebase is now in progress
     And all branches are now synchronized

@@ -13,10 +13,10 @@ func TestSortedKeyValues(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		t.Parallel()
 		data := map[string]int{
-			"one":   1,
-			"two":   2,
-			"three": 3,
 			"four":  4,
+			"one":   1,
+			"three": 3,
+			"two":   2,
 		}
 		keys := []string{}
 		values := []int{}

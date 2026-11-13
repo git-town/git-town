@@ -30,7 +30,7 @@ determine the repository state.
 
 <!-- keep-sorted start -->
 
-- [status show](status-show.md) displays the runstate, i.e. detailed information
-  for the current or last Git Town command
+- [status show](status-show.md) displays the runstate,
+  i.e. detailed information for the current or last Git Town command
 
 <!-- keep-sorted end -->

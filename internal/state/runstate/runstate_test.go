@@ -148,8 +148,8 @@ func TestRunState(t *testing.T) {
     "branch-1",
     "branch-2"
   ],
-  "UndoAPIProgram": [],
   "UndoablePerennialCommits": [],
+  "UndoAPIProgram": [],
   "UnfinishedDetails": null
 }`[1:]
 		must.EqOp(t, want, string(encoded))

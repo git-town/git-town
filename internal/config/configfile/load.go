@@ -8,6 +8,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -64,7 +65,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		gitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 		hostingOriginHostname       Option[configdomain.HostingOriginHostname]
 		ignoreUncommitted           Option[configdomain.IgnoreUncommitted]
-		interactive                 Option[configdomain.Interactive]
+		interactive                 Option[clidomain.Interactive]
 		mainBranch                  Option[gitdomain.LocalBranchName]
 		newBranchType               Option[configdomain.NewBranchType]
 		observedRegex               Option[configdomain.ObservedRegex]
@@ -95,7 +96,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.Interactive != nil {
-		interactive = configdomain.NewInteractiveFromConfigFile(*data.Interactive)
+		interactive = clidomain.NewInteractiveFromConfigFile(*data.Interactive)
 	}
 	if data.PushNewBranches != nil {
 		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewBranches))
@@ -335,6 +336,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,
