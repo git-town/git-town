@@ -489,6 +489,12 @@ func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gi
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
+// IsAncestor indicates whether the given ancestor commit is reachable from the given descendant.
+func (self *Commands) IsAncestor(querier subshelldomain.Querier, ancestor gitdomain.SHA, descendant gitdomain.BranchName) bool {
+	_, err := querier.Query("git", "merge-base", "--is-ancestor", ancestor.String(), descendant.String())
+	return err == nil
+}
+
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName, diffFilterOpt Option[configdomain.DiffFilter], nameOnly configdomain.NameOnly) error {
 	args := []string{"diff"}

@@ -30,6 +30,10 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			}
 		}
 	}
+	if parentSHAPrevious.IsNone() {
+		// The parent may have been rebased earlier in this run. Its SHA at the start of the run is then the commit this branch is based on.
+		parentSHAPrevious = parentSHAInitial
+	}
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	switch {
