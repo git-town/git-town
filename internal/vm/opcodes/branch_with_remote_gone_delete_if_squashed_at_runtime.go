@@ -28,7 +28,7 @@ func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) Run(args shared.RunAr
 			&CheckoutDescendentOrOther{Branch: self.Branch},
 			&BranchLocalDeleteContent{
 				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
+				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch, // TODO: use the actual parent branch here. The feature branch could have been shipped into any perennial branch.
 			},
 			&LineageBranchRemove{Branch: self.Branch},
 		)
