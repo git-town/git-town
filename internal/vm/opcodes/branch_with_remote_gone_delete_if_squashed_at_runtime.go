@@ -29,7 +29,7 @@ func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) Run(args shared.RunAr
 			&CheckoutDescendentOrOther{Branch: self.Branch},
 			&BranchLocalDeleteContent{
 				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch, // TODO: use the actual parent branch here. The feature branch could have been shipped into any perennial branch.
+				BranchToRebaseOnto: self.InitialParentName.GetOr(args.Config.Value.ValidatedConfigData.MainBranch),
 			},
 			&LineageBranchRemove{Branch: self.Branch},
 		)
@@ -53,13 +53,11 @@ func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) Run(args shared.RunAr
 	return nil
 }
 
-// isContentInParent first checks whether the files changed by the branch have the parent's content,
+// isContentInParent indicates whether the content of the given branch is already in its parent.
+// first checks whether the files changed by the branch have the parent's content,
 // then whether the parent contains the squashed changes of the branch as a single commit.
 func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) isContentInParent(args shared.RunArgs) (bool, error) {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
-	if !hasParent {
-		return false, nil
-	}
+	parent := self.InitialParentName.GetOr(args.Config.Value.ValidatedConfigData.MainBranch)
 	isSameContent, err := args.Git.BranchContentInParent(args.Backend, self.Branch, parent)
 	if err != nil || isSameContent {
 		return isSameContent, err
