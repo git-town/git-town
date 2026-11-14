@@ -80,6 +80,202 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchContentInParent", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch without commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("branch changes are not in the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("branch changes were squash-merged into the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file2",
+				Message:     "branch commit 2",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "-m", "squashed branch")
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("parent contains the branch changes plus unrelated changes in other files", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "squashed branch",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "other content",
+				FileName:    "file2",
+				Message:     "unrelated parent commit",
+			})
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("parent changed a file of the branch further after the squash-merge", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "squashed branch",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "newer content",
+				FileName:    "file1",
+				Message:     "further parent commit",
+			})
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("parent contains only some of the branch changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file2",
+				Message:     "branch commit 2",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "partial squash",
+			})
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("branch deletes a file", func(t *testing.T) {
+			t.Parallel()
+			t.Run("parent also deleted the file", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file1",
+					Message:     "add file",
+				})
+				branch := gitdomain.LocalBranchName("branch")
+				runtime.CreateBranch(branch, initial.BranchName())
+				runtime.CheckoutBranch(branch)
+				runtime.MustRun("git", "rm", "file1")
+				runtime.MustRun("git", "commit", "-m", "delete file on branch")
+				runtime.CheckoutBranch(initial)
+				runtime.MustRun("git", "rm", "file1")
+				runtime.MustRun("git", "commit", "-m", "delete file on parent")
+				have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+				must.True(t, have)
+			})
+			t.Run("parent still has the file", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file1",
+					Message:     "add file",
+				})
+				branch := gitdomain.LocalBranchName("branch")
+				runtime.CreateBranch(branch, initial.BranchName())
+				runtime.CheckoutBranch(branch)
+				runtime.MustRun("git", "rm", "file1")
+				runtime.MustRun("git", "commit", "-m", "delete file on branch")
+				have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+				must.False(t, have)
+			})
+		})
+		t.Run("branch with same name as folder", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "content 1",
+				FileName:    "test/file1",
+				Message:     "commit 1",
+			})
+			branch := gitdomain.LocalBranchName("test")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "content 2",
+				FileName:    "file2",
+				Message:     "commit 2",
+			})
+			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("parent branch does not exist", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			_, err := runtime.Git.BranchContentInParent(runtime.TestRunner, branch, "zonk")
+			must.Error(t, err)
+		})
+	})
+
 	t.Run("BranchExists", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
@@ -354,6 +550,228 @@ func TestBackendCommands(t *testing.T) {
 			local.Fetch()
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", "origin/branch"))
 			must.False(t, inSync)
+		})
+	})
+
+	t.Run("BranchSquashAppliedInParent", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch without commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("branch changes are not in the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("branch with one commit that was squash-merged into the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "--message=squash-commit")
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("branch with multiple commits that were squash-merged into the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file2",
+				Message:     "branch commit 2",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "--message=squash-commit")
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("branch commits modify the same file multiple times and were squash-merged into the parent", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file1",
+				Message:     "branch commit 2",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "--message=squash-commit")
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("parent received unrelated commits before the squash-merge", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "other content",
+				FileName:    "file2",
+				Message:     "unrelated parent commit",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "--message=squash-commit")
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("parent changed a file of the branch after the squash-merge via separate commit", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CheckoutBranch(initial)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
+			runtime.MustRun("git", "commit", "--message=squash-commit")
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "newer content",
+				FileName:    "file1",
+				Message:     "further parent commit",
+			})
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.True(t, have)
+		})
+		t.Run("parent contains only some of the branch changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file2",
+				Message:     "branch commit 2",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "partial squash",
+			})
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("parent contains the branch changes split across multiple commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 1",
+				FileName:    "file1",
+				Message:     "branch commit 1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content 2",
+				FileName:    "file2",
+				Message:     "branch commit 2",
+			})
+			runtime.CheckoutBranch(initial)
+			runtime.MustRun("git", "cherry-pick", branch.String()+"~1", branch.String())
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("parent contains a squash-merge with different content", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "branch content",
+				FileName:    "file1",
+				Message:     "branch commit",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "different content",
+				FileName:    "file1",
+				Message:     "squashed branch",
+			})
+			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
+			must.False(t, have)
+		})
+		t.Run("branch does not exist", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			_, err := runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, "zonk", initial)
+			must.Error(t, err)
+		})
+		t.Run("parent branch does not exist", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.LocalBranchName("branch")
+			runtime.CreateBranch(branch, initial.BranchName())
+			_, err := runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, "zonk")
+			must.Error(t, err)
 		})
 	})
 

@@ -70,17 +70,16 @@ func syncDeletedFeatureBranchProgram(branch gitdomain.LocalBranchName, initialPa
 		gitdomain.SyncStatusAhead,
 		gitdomain.SyncStatusDeletedAtRemote,
 		gitdomain.SyncStatusNotInSync:
-		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
-		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-			branch:            branch,
-			parentNameInitial: initialParentName,
-			parentSHAInitial:  initialParentSHA,
-			parentSHAPrevious: parentSHAPreviousRun,
-			program:           args.Program,
-			syncStrategy:      args.Config.NormalConfig.SyncFeatureStrategy,
-			// this function syncs a branch whose remote was deleted --> we know for sure there is no tracking branch
-			trackingBranch: None[gitdomain.RemoteBranchName](),
-		})
+		args.Program.Value.Add(
+			&opcodes.CheckoutIfNeeded{Branch: branch},
+			&opcodes.BranchWithRemoteGoneDeleteIfSquashedAtRuntime{
+				Branch:            branch,
+				CommitsToRemove:   parentSHAPreviousRun,
+				InitialParentName: initialParentName,
+				InitialParentSHA:  initialParentSHA,
+				SyncStrategy:      args.Config.NormalConfig.SyncFeatureStrategy,
+			},
+		)
 		args.Program.Value.Add(&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: branch})
 	}
 }

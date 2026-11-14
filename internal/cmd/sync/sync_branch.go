@@ -198,34 +198,6 @@ func localBranchProgram(args localBranchProgramArgs) {
 	}
 }
 
-type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
-	branch            gitdomain.LocalBranchName
-	parentNameInitial Option[gitdomain.LocalBranchName]
-	parentSHAInitial  Option[gitdomain.SHA]
-	parentSHAPrevious Option[gitdomain.SHA]
-	program           Mutable[program.Program]
-	syncStrategy      configdomain.SyncFeatureStrategy
-	trackingBranch    Option[gitdomain.RemoteBranchName]
-}
-
-// pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
-	switch args.syncStrategy {
-	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
-		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
-			Branch:            args.branch,
-			InitialParentName: args.parentNameInitial,
-			InitialParentSHA:  args.parentSHAInitial,
-			TrackingBranch:    args.trackingBranch,
-		})
-	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseAncestorsUntilLocal{
-			Branch:          args.branch,
-			CommitsToRemove: args.parentSHAPrevious,
-		})
-	}
-}
-
 func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
