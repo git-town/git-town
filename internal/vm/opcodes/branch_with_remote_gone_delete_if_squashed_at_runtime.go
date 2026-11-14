@@ -19,6 +19,7 @@ type BranchWithRemoteGoneDeleteIfSquashedAtRuntime struct {
 }
 
 func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) Run(args shared.RunArgs) error {
+	// if the content of the shipped branch is in the main branch --> delete it
 	isContentInParent, err := self.isContentInParent(args)
 	if err != nil {
 		return err
@@ -34,6 +35,7 @@ func (self *BranchWithRemoteGoneDeleteIfSquashedAtRuntime) Run(args shared.RunAr
 		)
 		return nil
 	}
+	// here the remote ship was incomplete, the local branch has changes that aren't in the main branch --> sync the local branch
 	switch self.SyncStrategy {
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.PrependOpcodes(&SyncFeatureBranchMerge{

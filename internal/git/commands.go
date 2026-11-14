@@ -72,7 +72,7 @@ func (self *Commands) BranchContentInParent(querier subshelldomain.Querier, bran
 	if len(changedFiles) == 0 {
 		return true, nil
 	}
-	args := []string{"diff", "--shortstat", parent.String(), branch.String(), "--"}
+	args := []string{"diff", "--shortstat", parent.String(), branch.String(), "--"} //nolint:prealloc
 	args = append(args, strings.Split(changedFiles.String(), "\n")...)
 	out, err := querier.QueryTrim("git", args...)
 	return len(out) == 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)

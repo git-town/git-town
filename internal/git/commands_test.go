@@ -122,7 +122,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "branch commit 2",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "-m", "squashed branch")
 			have := asserts.NoError1(runtime.Git.BranchContentInParent(runtime.TestRunner, branch, initial))
 			must.True(t, have)
@@ -588,7 +589,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "branch commit",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "--message=squash-commit")
 			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
 			must.True(t, have)
@@ -611,7 +613,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "branch commit 2",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "--message=squash-commit")
 			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
 			must.True(t, have)
@@ -634,7 +637,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "branch commit 2",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "--message=squash-commit")
 			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
 			must.True(t, have)
@@ -657,7 +661,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "unrelated parent commit",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "--message=squash-commit")
 			have := asserts.NoError1(runtime.Git.BranchSquashAppliedInParent(runtime.TestRunner, branch, initial))
 			must.True(t, have)
@@ -674,7 +679,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "branch commit",
 			})
 			runtime.CheckoutBranch(initial)
-			runtime.Git.SquashMerge(runtime, branch)
+			err := runtime.Git.SquashMerge(runtime, branch)
+			must.NoError(t, err)
 			runtime.MustRun("git", "commit", "--message=squash-commit")
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      initial,
