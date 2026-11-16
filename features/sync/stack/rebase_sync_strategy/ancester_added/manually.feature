@@ -1,4 +1,4 @@
-Feature: sync a stack whose parent branch did not exist during the previous Git Town run
+Feature: sync a stack whose parent branch was added manually since the previous Git Town run
 
   Background:
     Given a Git repo with origin
