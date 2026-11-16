@@ -79,10 +79,10 @@ Feature: deleting a branch from a stack with dependent changes
       """
     And I run "git town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                               |
-      | branch-3 | GIT_EDITOR=true git rebase --continue |
-      |          | git push --force-with-lease           |
-      |          | git branch -D branch-2                |
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | GIT_EDITOR=true git rebase --continue           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git branch -D branch-2                          |
     And this lineage exists now
       """
       main
@@ -109,9 +109,9 @@ Feature: deleting a branch from a stack with dependent changes
     And I run "git rebase --continue" and close the editor
     And I run "git town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | branch-3 | git push --force-with-lease |
-      |          | git branch -D branch-2      |
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | git push --force-with-lease --force-if-includes |
+      |          | git branch -D branch-2                          |
     And this lineage exists now
       """
       main

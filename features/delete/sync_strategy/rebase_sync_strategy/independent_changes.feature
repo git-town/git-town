@@ -35,7 +35,7 @@ Feature: deleting a branch from a stack with independent changes
       |          | git checkout branch-3                                          |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
-      |          | git push --force-with-lease                                    |
+      |          | git push --force-with-lease --force-if-includes                |
       |          | git branch -D branch-2                                         |
     And this lineage exists now
       """

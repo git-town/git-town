@@ -41,7 +41,7 @@ Feature: shipped parent branches in a stacked change
       |           | git checkout feature-3                                                                      |
       | feature-3 | git pull                                                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2                                 |
-      |           | git push --force-with-lease                                                                 |
+      |           | git push --force-with-lease --force-if-includes                                             |
       |           | git checkout feature-4                                                                      |
       | feature-4 | git -c rebase.updateRefs=false rebase --onto feature-3 {{ sha-initial 'feature-3 commit' }} |
       |           | git push --force-with-lease --force-if-includes                                             |
