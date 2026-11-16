@@ -43,10 +43,15 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
-				Branch:               args.localName,
-				ParentSHAPreviousRun: args.parentSHAPreviousRun,
-				PushBranches:         args.pushBranches,
-				TrackingBranch:       args.trackingBranch,
+				Branch: args.localName,
+				// The commits to remove.
+				// Typically those are the previous branch commits.
+				// If the parent branch was added manually since the last sync,
+				// args.parentSHAPreviousRun is None but args.initialParentSHA is Some.
+				// In that case, use args.initialParentSHA.
+				CommitsToRemove: args.parentSHAPreviousRun.Or(args.initialParentSHA),
+				PushBranches:    args.pushBranches,
+				TrackingBranch:  args.trackingBranch,
 			},
 		)
 	}
