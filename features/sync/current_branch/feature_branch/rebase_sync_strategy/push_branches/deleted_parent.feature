@@ -34,3 +34,15 @@ Feature: don't push when the parent branch was shipped and pushing is disabled
       | main   | local, origin | alpha commit |
       | beta   | local         | beta commit  |
       |        | origin        | beta commit  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                           |
+      | beta   | git reset --hard {{ sha 'beta commit' }}          |
+      |        | git checkout main                                 |
+      | main   | git reset --hard {{ sha 'initial commit' }}       |
+      |        | git branch alpha {{ sha-initial 'alpha commit' }} |
+      |        | git checkout beta                                 |
+    And the initial branches and lineage exist now
+    And the initial commits exist now
