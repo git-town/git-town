@@ -50,6 +50,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 				Branch:            localName,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           args.Program,
+				PushBranches:      args.PushBranches,
 				RebaseOnto:        rebaseOnto,
 			})
 		}
@@ -111,9 +112,9 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 			CommitsToRemove:    args.Ancestor.Location(),
 		},
 	)
-	if args.HasTrackingBranch {
+	if args.HasTrackingBranch && args.PushBranches.ShouldPush() {
 		args.Program.Value.Add(
-			&opcodes.PushCurrentBranchForce{ForceIfIncludes: false},
+			&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 		)
 	}
 }
@@ -214,6 +215,7 @@ type RemoveAncestorCommitsArgs struct {
 	Branch            gitdomain.LocalBranchName
 	HasTrackingBranch bool
 	Program           Mutable[program.Program]
+	PushBranches      configdomain.PushBranches
 	RebaseOnto        gitdomain.BranchName
 }
 

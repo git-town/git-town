@@ -25,7 +25,7 @@ Feature: a grandparent was deleted remotely while the parent and the child remai
       |          | git checkout branch-2                                                                        |
       | branch-2 | git pull                                                                                     |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1                                   |
-      |          | git push --force-with-lease                                                                  |
+      |          | git push --force-with-lease --force-if-includes                                              |
       |          | git checkout branch-3                                                                        |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-2 {{ sha-before-run 'branch-2 commit' }} |
       |          | git push --force-with-lease --force-if-includes                                              |
