@@ -12,13 +12,12 @@ func TestLocateSection(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name         string
 		giveHaystack []string
 		giveNeedle   []string
+		name         string
 		want         Option[int]
 	}{
 		{
-			name: "section at beginning",
 			giveHaystack: []string{
 				"one",
 				"two",
@@ -28,10 +27,10 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
+			name: "section at beginning",
 			want: Some(0),
 		},
 		{
-			name: "section in middle",
 			giveHaystack: []string{
 				"Some text",
 				"    one",
@@ -42,10 +41,10 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
+			name: "section in middle",
 			want: Some(1),
 		},
 		{
-			name: "section at end",
 			giveHaystack: []string{
 				"Some text",
 				"More text",
@@ -56,10 +55,10 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
+			name: "section at end",
 			want: Some(2),
 		},
 		{
-			name: "section not found",
 			giveHaystack: []string{
 				"one",
 				"three",
@@ -68,6 +67,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
+			name: "section not found",
 			want: None[int](),
 		},
 	}

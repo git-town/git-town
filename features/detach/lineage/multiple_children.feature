@@ -31,15 +31,15 @@ Feature: detach a branch branch with multiple children
       |        | git checkout gamma1                                      |
       | gamma1 | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta  |
-      |        | git push --force-with-lease                              |
+      |        | git push --force-with-lease --force-if-includes          |
       |        | git checkout gamma2                                      |
       | gamma2 | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta  |
-      |        | git push --force-with-lease                              |
+      |        | git push --force-with-lease --force-if-includes          |
       |        | git checkout delta                                       |
       | delta  | git pull                                                 |
       |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta |
-      |        | git push --force-with-lease                              |
+      |        | git push --force-with-lease --force-if-includes          |
       |        | git checkout beta                                        |
       | beta   | git -c rebase.updateRefs=false rebase --onto main alpha  |
       |        | git push --force-with-lease --force-if-includes          |

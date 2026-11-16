@@ -59,6 +59,27 @@ commit 1
 `
 )
 
+func compressBranchProgram(args compressBranchProgramArgs) {
+	if !shouldCompressBranch(args.data.name, args.data.branchType, args.initialBranch) {
+		return
+	}
+	args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
+	args.prog.Value.Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
+	args.prog.Value.Add(&opcodes.CommitWithMessage{
+		AuthorOverride: None[gitdomain.Author](),
+		CommitHook:     args.commitHook,
+		Message:        args.data.newCommitMessage,
+	})
+	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
+	if hasTrackingBranch && args.offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   args.data.name,
+			ForceIfIncludes: true,
+			TrackingBranch:  trackingBranch,
+		})
+	}
+}
+
 func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
@@ -67,10 +88,8 @@ func compressCmd() *cobra.Command {
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   compressCommand,
-		Args:  cobra.NoArgs,
-		Short: compressDesc,
-		Long:  cmdhelpers.Long(compressDesc, compressHelp),
+		Args: cobra.NoArgs,
+		Long: cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -98,6 +117,8 @@ func compressCmd() *cobra.Command {
 			})
 			return executeCompress(cliConfig, message, commitHook, stack)
 		},
+		Short: compressDesc,
+		Use:   compressCommand,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
@@ -108,75 +129,10 @@ func compressCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineCompressData(repo, message, compressEntireStack)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	err = validateCompressData(data, repo)
-	if err != nil {
-		return err
-	}
-	runProgram := compressProgram(data, commitHook)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		Command:               compressCommand,
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               None[forgedomain.Connector](),
-		DetectedForgeType:       None[forgedomain.DetectedForgeType](),
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
 type compressData struct {
-	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
+	branchInfosLastRun Option[gitdomain.BranchInfos]
 	config             config.ValidatedConfig
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
@@ -192,6 +148,29 @@ type compressBranchData struct {
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
 	trackingBranch   Option[gitdomain.RemoteBranchName]
+}
+
+func compressProgram(data compressData, commitHook configdomain.CommitHook) program.Program {
+	prog := NewMutable(&program.Program{})
+	for _, branchToCompress := range data.branchesToCompress {
+		compressBranchProgram(compressBranchProgramArgs{
+			commitHook:    commitHook,
+			data:          branchToCompress,
+			initialBranch: data.initialBranch,
+			offline:       data.config.NormalConfig.Offline,
+			prog:          prog,
+		})
+	}
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+	})
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (compressData, configdomain.ProgramFlow, error) {
@@ -248,9 +227,9 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -323,9 +302,9 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
 	return compressData{
-		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
+		branchInfosLastRun: branchInfosLastRun,
 		config:             validatedConfig,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
@@ -333,29 +312,6 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		previousBranch:     previousBranch,
 		stashSize:          stashSize,
 	}, configdomain.ProgramFlowContinue, nil
-}
-
-func compressProgram(data compressData, commitHook configdomain.CommitHook) program.Program {
-	prog := NewMutable(&program.Program{})
-	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(compressBranchProgramArgs{
-			commitHook:    commitHook,
-			data:          branchToCompress,
-			initialBranch: data.initialBranch,
-			offline:       data.config.NormalConfig.Offline,
-			prog:          prog,
-		})
-	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.config.NormalConfig.DryRun,
-		InitialStashSize:         data.stashSize,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
-	return optimizer.Optimize(prog.Immutable())
 }
 
 type compressBranchProgramArgs struct {
@@ -366,25 +322,69 @@ type compressBranchProgramArgs struct {
 	prog          Mutable[program.Program]
 }
 
-func compressBranchProgram(args compressBranchProgramArgs) {
-	if !shouldCompressBranch(args.data.name, args.data.branchType, args.initialBranch) {
-		return
-	}
-	args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
-	args.prog.Value.Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
-	args.prog.Value.Add(&opcodes.CommitWithMessage{
-		AuthorOverride: None[gitdomain.Author](),
-		CommitHook:     args.commitHook,
-		Message:        args.data.newCommitMessage,
+func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
 	})
-	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
-	if hasTrackingBranch && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
-			CurrentBranch:   args.data.name,
-			ForceIfIncludes: true,
-			TrackingBranch:  trackingBranch,
-		})
+	if err != nil {
+		return err
 	}
+	data, flow, err := determineCompressData(repo, message, compressEntireStack)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	err = validateCompressData(data, repo)
+	if err != nil {
+		return err
+	}
+	runProgram := compressProgram(data, commitHook)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		Command:               compressCommand,
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               None[forgedomain.Connector](),
+		DetectedForgeType:       None[forgedomain.DetectedForgeType](),
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
 }
 
 func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {
@@ -392,6 +392,24 @@ func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType confi
 		return true
 	}
 	return branchType != configdomain.BranchTypeParkedBranch
+}
+
+func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
+	switch syncStatus {
+	case
+		gitdomain.SyncStatusUpToDate,
+		gitdomain.SyncStatusLocalOnly:
+		return nil
+	case
+		gitdomain.SyncStatusNotInSync,
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusBehind,
+		gitdomain.SyncStatusDeletedAtRemote,
+		gitdomain.SyncStatusRemoteOnly,
+		gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.CompressUnsynced, branchName)
+	}
+	panic("unhandled syncstatus: " + syncStatus.String())
 }
 
 func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
@@ -411,24 +429,6 @@ func validateCanCompressBranchType(branchName gitdomain.LocalBranchName, branchT
 		return fmt.Errorf(messages.CompressContributionBranch, branchName)
 	}
 	return nil
-}
-
-func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus gitdomain.SyncStatus) error {
-	switch syncStatus {
-	case
-		gitdomain.SyncStatusUpToDate,
-		gitdomain.SyncStatusLocalOnly:
-		return nil
-	case
-		gitdomain.SyncStatusNotInSync,
-		gitdomain.SyncStatusAhead,
-		gitdomain.SyncStatusBehind,
-		gitdomain.SyncStatusDeletedAtRemote,
-		gitdomain.SyncStatusRemoteOnly,
-		gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.CompressUnsynced, branchName)
-	}
-	panic("unhandled syncstatus: " + syncStatus.String())
 }
 
 func validateCompressData(data compressData, repo execute.OpenRepoResult) error {

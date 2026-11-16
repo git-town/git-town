@@ -10,10 +10,10 @@ import (
 // FilePath is the path to the runstate file.
 type FilePath stringss.Trimmed
 
-func (self FilePath) String() string {
-	return string(self)
-}
-
 func NewRunstatePath(repoConfigDir configdomain.RepoConfigDir) FilePath {
 	return FilePath(filepath.Join(repoConfigDir.String(), "runstate.json"))
+}
+
+func (self FilePath) String() string {
+	return string(self)
 }

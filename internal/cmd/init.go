@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -27,39 +28,55 @@ const (
 	initDesc = "Set up Git Town on your computer"
 )
 
-func initCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     initCmd,
-		Args:    cobra.NoArgs,
-		GroupID: cmdhelpers.GroupIDConfig,
-		Short:   initDesc,
-		Long:    cmdhelpers.Long(initDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeConfigSetup(cliConfig)
-		},
+func LoadData(repo execute.OpenRepoResult) (setup.Data, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult setup.Data
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	addVerboseFlag(&cmd)
-	return &cmd
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             None[forgedomain.Connector](),
+		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	if len(remotes) == 0 {
+		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
+	}
+	return setup.Data{
+		Backend:       repo.Backend,
+		Config:        repo.UnvalidatedConfig,
+		Git:           repo.Git,
+		Inputs:        inputs,
+		LocalBranches: branchesSnapshot.Branches.LocalBranches().NamesLocalBranches(),
+		Remotes:       remotes,
+		Snapshot:      repo.ConfigSnapshot,
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
@@ -115,53 +132,37 @@ Start:
 	})
 }
 
-func LoadData(repo execute.OpenRepoResult) (setup.Data, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult setup.Data
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+func initCommand() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDConfig,
+		Long:    cmdhelpers.Long(initDesc),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeConfigSetup(cliConfig)
+		},
+		Short: initDesc,
+		Use:   initCmd,
 	}
-	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             None[forgedomain.Connector](),
-		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	if len(remotes) == 0 {
-		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
-	}
-	return setup.Data{
-		Backend:       repo.Backend,
-		Config:        repo.UnvalidatedConfig,
-		Git:           repo.Git,
-		Inputs:        inputs,
-		LocalBranches: branchesSnapshot.Branches.LocalBranches().NamesLocalBranches(),
-		Remotes:       remotes,
-		Snapshot:      repo.ConfigSnapshot,
-	}, configdomain.ProgramFlowContinue, nil
+	addVerboseFlag(&cmd)
+	return &cmd
 }

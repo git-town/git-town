@@ -11,43 +11,43 @@ func TestTrimEmptyLines(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name string
 		give []string
+		name string
 		want []string
 	}{
 		{
-			name: "no empty lines",
 			give: []string{"one", "two"},
+			name: "no empty lines",
 			want: []string{"one", "two"},
 		},
 		{
-			name: "trailing empty line",
 			give: []string{"one", "two", ""},
+			name: "trailing empty line",
 			want: []string{"one", "two"},
 		},
 		{
-			name: "multiple trailing empty lines",
 			give: []string{"one", "two", "", "", ""},
+			name: "multiple trailing empty lines",
 			want: []string{"one", "two"},
 		},
 		{
-			name: "leading empty lines",
 			give: []string{"", "", "one", "two"},
+			name: "leading empty lines",
 			want: []string{"one", "two"},
 		},
 		{
-			name: "empty lines before, middle, and after",
 			give: []string{"", "one", "", "two", ""},
+			name: "empty lines before, middle, and after",
 			want: []string{"one", "", "two"},
 		},
 		{
-			name: "empty string",
 			give: []string{},
+			name: "empty string",
 			want: []string{},
 		},
 		{
-			name: "only empty lines",
 			give: []string{"", "", ""},
+			name: "only empty lines",
 			want: []string{},
 		},
 	}

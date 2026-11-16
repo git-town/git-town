@@ -1,22 +1,25 @@
-.DEFAULT_GOAL := help
+RTA_VERSION = 0.43.3
 
-RTA_VERSION = 0.40.0
-RTA = ../rta@$(RTA_VERSION)
+RTA          = ../rta@$(RTA_VERSION)
+ALPHASORT    = $(RTA) alphasort
+DEADCODE     = $(RTA) deadcode
+GOFUMPT      = $(RTA) gofumpt
+GOLANGCILINT = $(RTA) golangci-lint
 
 fix:  # runs all linters and auto-fixes
-	$(RTA) gofumpt -l -w .
+	$(ALPHASORT) fix
+	$(GOFUMPT) -l -w .
 	go run ../format_self/format_self.go
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint:  # runs all linters
-	$(RTA) golangci-lint run
-	$(RTA) deadcode github.com/git-town/git-town/tools/structs_sorted
-	@$(RTA) --available alphavet && go vet "-vettool=$(shell $(RTA) --which alphavet)" $(shell go list ./...)
-	(cd ../structs_sorted && go build) && ../structs_sorted/structs_sorted
+	$(DEADCODE) github.com/git-town/git-town/tools/iterate_map
 	../ensure_no_files_with_dashes.sh
-	$(RTA) golangci-lint cache clean
-	$(RTA) golangci-lint run
+	$(GOLANGCILINT) cache clean
+	$(GOLANGCILINT) run
 
 test: lint  # runs all tests
+
+.DEFAULT_GOAL := help

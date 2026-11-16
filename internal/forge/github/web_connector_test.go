@@ -30,9 +30,9 @@ func TestWebConnector(t *testing.T) {
 			t.Parallel()
 			connector := github.WebConnector{}
 			give := forgedomain.ProposalData{
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 				Number: 123,
 				Title:  "my title",
-				Body:   gitdomain.NewProposalBodyOpt("body"),
 			}
 			have := connector.DefaultProposalMessage(give)
 			want := "my title (#123)\n\nbody"
@@ -43,10 +43,10 @@ func TestWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
+			body   Option[gitdomain.ProposalBody]
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
 			title  Option[gitdomain.ProposalTitle]
-			body   Option[gitdomain.ProposalBody]
 			want   string
 		}{
 			"top-level branch": {
@@ -96,11 +96,9 @@ func TestWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := github.WebConnector{
-					HostedRepoInfo: forgedomain.HostedRepoInfo{
-						Hostname:     "github.com",
-						Organization: "organization",
-						Repository:   "repo",
-					},
+					Hostname:     "github.com",
+					Organization: "organization",
+					Repository:   "repo",
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
@@ -117,11 +115,9 @@ func TestWebConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     "github.com",
-				Organization: "organization",
-				Repository:   "repo",
-			},
+			Hostname:     "github.com",
+			Organization: "organization",
+			Repository:   "repo",
 		}
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"

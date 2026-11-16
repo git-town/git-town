@@ -3,10 +3,10 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/messages"
 )
@@ -14,7 +14,7 @@ import (
 const squashCommitAuthorTitle = `Squash commit author`
 
 // SquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, inputs dialogcomponents.Inputs, interactive configdomain.Interactive) (gitdomain.Author, dialogdomain.Exit, error) {
+func SquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, inputs dialogcomponents.Inputs, interactive clidomain.Interactive) (gitdomain.Author, dialogdomain.Exit, error) {
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}

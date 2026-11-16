@@ -48,12 +48,12 @@ func TestCategorize(t *testing.T) {
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := undobranches.CategorizeInconsistentChanges(give, config)
@@ -97,35 +97,35 @@ func TestCategorize(t *testing.T) {
 		t.Parallel()
 		give := undobranches.LocalBranchChange{
 			"branch-1": {
-				Before: "111111",
 				After:  "222222",
+				Before: "111111",
 			},
 			"dev": {
-				Before: "333333",
 				After:  "444444",
+				Before: "333333",
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := undobranches.CategorizeLocalBranchChange(give, config)
 		wantPerennials := undobranches.LocalBranchChange{
 			"dev": {
-				Before: "333333",
 				After:  "444444",
+				Before: "333333",
 			},
 		}
 		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undobranches.LocalBranchChange{
 			"branch-1": {
-				Before: "111111",
 				After:  "222222",
+				Before: "111111",
 			},
 		}
 		must.Eq(t, wantFeatures, have.Features)
@@ -135,35 +135,35 @@ func TestCategorize(t *testing.T) {
 		t.Parallel()
 		give := undobranches.RemoteBranchChange{
 			"origin/branch-1": {
-				Before: "111111",
 				After:  "222222",
+				Before: "111111",
 			},
 			"origin/dev": {
-				Before: "333333",
 				After:  "444444",
+				Before: "333333",
 			},
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := undobranches.CategorizeRemoteBranchChange(give, config)
 		wantPerennials := undobranches.RemoteBranchChange{
 			"origin/dev": {
-				Before: "333333",
 				After:  "444444",
+				Before: "333333",
 			},
 		}
 		must.Eq(t, wantPerennials, have.Perennials)
 		wantFeatures := undobranches.RemoteBranchChange{
 			"origin/branch-1": {
-				Before: "111111",
 				After:  "222222",
+				Before: "111111",
 			},
 		}
 		must.Eq(t, wantFeatures, have.Features)
@@ -176,12 +176,12 @@ func TestCategorize(t *testing.T) {
 			"origin/perennial-branch": "222222",
 		}
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := undobranches.CategorizeRemoteBranchesSHAs(give, config)

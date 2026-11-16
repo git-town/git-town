@@ -10,10 +10,10 @@ import (
 // FilePath is the path to the runlog file.
 type FilePath stringss.Trimmed
 
-func (self FilePath) String() string {
-	return string(self)
-}
-
 func NewRunlogPath(repoConfigDir configdomain.RepoConfigDir) FilePath {
 	return FilePath(filepath.Join(repoConfigDir.String(), "runlog.json"))
+}
+
+func (self FilePath) String() string {
+	return string(self)
 }

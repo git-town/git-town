@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 
 	"github.com/cucumber/godog/formatters"
 	"github.com/cucumber/godog/internal/models"
@@ -304,7 +304,7 @@ func (s *suite) runBeforeStepHooks(ctx context.Context, step *Step, err error) (
 			if err == nil {
 				err = herr
 			} else {
-				err = fmt.Errorf("%v, %w", herr, err)
+				err = mergeErrors(herr, err)
 			}
 		}
 
@@ -329,7 +329,7 @@ func (s *suite) runAfterStepHooks(ctx context.Context, step *Step, status StepRe
 			if err == nil {
 				err = herr
 			} else {
-				err = fmt.Errorf("%v, %w", herr, err)
+				err = mergeErrors(herr, err)
 			}
 		}
 
@@ -351,7 +351,7 @@ func (s *suite) runBeforeScenarioHooks(ctx context.Context, pickle *messages.Pic
 			if err == nil {
 				err = herr
 			} else {
-				err = fmt.Errorf("%v, %w", herr, err)
+				err = mergeErrors(herr, err)
 			}
 		}
 
@@ -389,7 +389,7 @@ func (s *suite) runAfterScenarioHooks(ctx context.Context, pickle *messages.Pick
 					err = fmt.Errorf("step error: %w", err)
 					isStepErr = false
 				}
-				err = fmt.Errorf("%v, %w", herr, err)
+				err = mergeErrors(herr, err)
 			}
 		}
 
@@ -648,4 +648,35 @@ func (s *suite) runPickle(pickle *messages.Pickle) (err error) {
 	// so that error from handler can be added to step.
 
 	return err
+}
+
+type joinedError struct {
+	err1 error
+	err2 error
+}
+
+func (e *joinedError) Error() string {
+	return fmt.Sprintf("%v, %v", e.err1, e.err2)
+}
+
+func (e *joinedError) Unwrap() []error {
+	return []error{e.err1, e.err2}
+}
+
+func (e *joinedError) Is(target error) bool {
+	return errors.Is(e.err1, target) || errors.Is(e.err2, target)
+}
+
+func (e *joinedError) As(target interface{}) bool {
+	return errors.As(e.err1, target) || errors.As(e.err2, target)
+}
+
+func mergeErrors(err1, err2 error) error {
+	if err1 == nil {
+		return err2
+	}
+	if err2 == nil {
+		return err1
+	}
+	return &joinedError{err1: err1, err2: err2}
 }

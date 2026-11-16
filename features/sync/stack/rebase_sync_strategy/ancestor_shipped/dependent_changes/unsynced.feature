@@ -65,10 +65,10 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       """
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                               |
-      | branch-2 | GIT_EDITOR=true git rebase --continue |
-      |          | git push --force-with-lease           |
-      |          | git branch -D branch-1                |
+      | BRANCH   | COMMAND                                         |
+      | branch-2 | GIT_EDITOR=true git rebase --continue           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git branch -D branch-1                          |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now

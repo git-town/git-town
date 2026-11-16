@@ -19,8 +19,6 @@ type Lineage struct {
 	data LineageData
 }
 
-type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
-
 func NewLineage() Lineage {
 	return Lineage{
 		data: make(LineageData),
@@ -284,6 +282,20 @@ func (self Lineage) YoungestAncestorWithin(branch gitdomain.LocalBranchName, whi
 	}
 }
 
+// YoungestAncestorWithout provides the closest ancestor of the given branch that is not in the given blacklist.
+func (self Lineage) YoungestAncestorWithout(branch gitdomain.LocalBranchName, blacklist gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
+	for {
+		parent, hasParent := self.Parent(branch).Get()
+		if !hasParent {
+			return None[gitdomain.LocalBranchName]()
+		}
+		if !blacklist.Contains(parent) {
+			return Some(parent)
+		}
+		branch = parent
+	}
+}
+
 func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, order Order) {
 	if allBranches.Contains(currentBranch) {
 		*result = append(*result, currentBranch)
@@ -299,3 +311,5 @@ func (self Lineage) initializeIfNeeded() Lineage {
 	}
 	return self
 }
+
+type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName

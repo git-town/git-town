@@ -469,11 +469,6 @@ func (self *TestCommands) LocalBranches() (LocalBranchesResult, error) {
 	}, nil
 }
 
-type LocalBranchesResult struct {
-	AllBranches              gitdomain.LocalBranchNames
-	BranchesInOtherWorktrees gitdomain.LocalBranchNames
-}
-
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
 func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (LocalBranchesResult, error) {
 	branches, err := self.LocalBranches()
@@ -617,4 +612,9 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		}
 	}
 	return nil
+}
+
+type LocalBranchesResult struct {
+	AllBranches              gitdomain.LocalBranchNames
+	BranchesInOtherWorktrees gitdomain.LocalBranchNames
 }

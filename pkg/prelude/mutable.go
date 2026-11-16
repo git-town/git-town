@@ -7,11 +7,11 @@ type Mutable[T any] struct {
 	Value *T
 }
 
+func NewMutable[T any](value *T) Mutable[T] {
+	return Mutable[T]{value}
+}
+
 // Immutable provides an non-mutable copy of the contained mutable value.
 func (self Mutable[T]) Immutable() T { //nolint:ireturn
 	return *self.Value
-}
-
-func NewMutable[T any](value *T) Mutable[T] {
-	return Mutable[T]{value}
 }

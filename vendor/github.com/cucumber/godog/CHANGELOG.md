@@ -8,6 +8,15 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 
 ## Unreleased
 
+## [v0.16.0]
+
+### Changed
+- Upgrade `cucumber/messages` to v34 and `cucumber/gherkin` to v42 - ([764](https://github.com/cucumber/godog/pull/764) - [vearutop](https://github.com/vearutop))
+- Require Go 1.18, tidy example module - ([741](https://github.com/cucumber/godog/pull/741) - [vearutop](https://github.com/vearutop))
+
+### Fixed
+- fix(hooks): wrap errors to preserve sentinel values - ([760](https://github.com/cucumber/godog/pull/760) - [victoriacheng15](https://github.com/victoriacheng15))
+
 ## [v0.15.1]
 
 ### Added
@@ -27,6 +36,7 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 - fix: change bang to being in README by @nahomEagleLion in https://github.com/cucumber/godog/pull/687
 - Mark junit test cases as skipped if no pickle step results available by @mrsheepuk in https://github.com/cucumber/godog/pull/597
 - Print step declaration line instead of handler declaration line by @SpencerC in https://github.com/cucumber/godog/pull/668
+- fix(tags): the , operator was not working as an OR operator in the tags by @kcross-ctoken in https://github.com/cucumber/godog/pull/740
 
 ## [v0.15.0]
 
@@ -261,6 +271,7 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 ### Changed
 - Changed code references to DATA-DOG/godog to cucumber/godog to help get things building correctly. ([mxygem](https://github.com/mxygem))
 
+[v0.16.0]: https://github.com/cucumber/godog/compare/v0.15.1...v0.16.0
 [v0.15.1]: https://github.com/cucumber/godog/compare/v0.15.0...v0.15.1
 [v0.15.0]: https://github.com/cucumber/godog/compare/v0.14.1...v0.15.0
 [v0.14.1]: https://github.com/cucumber/godog/compare/v0.14.0...v0.14.1

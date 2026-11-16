@@ -55,11 +55,11 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     When I resolve the conflict in "conflicting_file" with "main and branch-2 content"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                               |
-      | branch-2 | GIT_EDITOR=true git rebase --continue |
-      |          | git push --force-with-lease           |
-      |          | git branch -D branch-1                |
-      |          | git push --tags                       |
+      | BRANCH   | COMMAND                                         |
+      | branch-2 | GIT_EDITOR=true git rebase --continue           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git branch -D branch-1                          |
+      |          | git push --tags                                 |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now

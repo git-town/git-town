@@ -41,8 +41,8 @@ type ExprMatcher interface {
 // `ast.Field.Names`. PositionalField represents a single logical `a string`
 // regardless of syntactic grouping.
 type PositionalField struct {
-	Name  *ast.Ident
 	Field *ast.Field
+	Name  *ast.Ident
 }
 
 // PositionalFieldMatcher matches a PositionalField.
@@ -67,7 +67,7 @@ func PositionalFields(fields *ast.FieldList) []PositionalField {
 	var posFields []PositionalField
 	for _, field := range fields.List {
 		for _, name := range field.Names {
-			posFields = append(posFields, PositionalField{Name: name, Field: field})
+			posFields = append(posFields, PositionalField{Field: field, Name: name})
 		}
 	}
 	return posFields
@@ -77,8 +77,8 @@ func PositionalFields(fields *ast.FieldList) []PositionalField {
 // expression (left of the `.`) and the selector itself (right of the `.`) are
 // given `Namespace.Name`.
 type IdentSelectorMatcher struct {
-	Namespace string
 	Name      string
+	Namespace string
 }
 
 func (ism *IdentSelectorMatcher) Match(expr ast.Expr) Result {

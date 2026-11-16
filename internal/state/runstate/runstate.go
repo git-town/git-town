@@ -31,13 +31,9 @@ type RunState struct {
 	FinalUndoProgram         program.Program                            //exhaustruct:optional — additional opcodes to run after this RunState was undone
 	RunProgram               program.Program                            // remaining opcodes of the Git Town command that this RunState is for
 	TouchedBranches          gitdomain.BranchNames                      // the branches that are touched by the Git Town command that this RunState is for
-	UndoAPIProgram           program.Program                            // opcodes to undo changes at external systems
 	UndoablePerennialCommits []gitdomain.SHA                            //exhaustruct:optional — contains the SHAs of commits on perennial branches that can safely be undone
+	UndoAPIProgram           program.Program                            // opcodes to undo changes at external systems
 	UnfinishedDetails        OptionalMutable[UnfinishedRunStateDetails] //exhaustruct:optional
-}
-
-func EmptyRunState() RunState {
-	return RunState{} //exhaustruct:ignore
 }
 
 func (self *RunState) HasAbortProgram() bool {
@@ -116,6 +112,10 @@ func (self *RunState) String() string {
 		result.WriteString(messages.DialogResultNone)
 	}
 	return result.String()
+}
+
+func EmptyRunState() RunState {
+	return RunState{} //exhaustruct:ignore
 }
 
 func writeBranchInfos(result *strings.Builder, branchInfos gitdomain.BranchInfos) {

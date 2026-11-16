@@ -32,33 +32,6 @@ type FrontendRunner struct {
 	PrintCommands    bool
 }
 
-type (
-	GetCurrentBranchFunc func(subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error)
-	GetCurrentSHAFunc    func(subshelldomain.Querier) (gitdomain.SHA, error)
-)
-
-func FormatCommand(location gitdomain.Location, printBranch bool, env []string, executable string, args ...string) string {
-	result := ""
-	if printBranch {
-		result += "[" + location.String() + "] "
-	}
-	if len(env) > 0 {
-		result += strings.Join(env, " ") + " "
-	}
-	result += executable + " "
-	quoted := stringslice.SurroundEmptyWith(args, `"`)
-	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
-	result += strings.Join(quoted, " ")
-	return result
-}
-
-// PrintCommand prints the given command-line operation on the console.
-func PrintCommand(location gitdomain.Location, printBranch bool, env []string, cmd string, args ...string) {
-	header := FormatCommand(location, printBranch, env, cmd, args...)
-	fmt.Println()
-	fmt.Println(colors.Bold().Styled(header))
-}
-
 func (self *FrontendRunner) Run(cmd string, args ...string) error {
 	return self.execute([]string{}, cmd, args...)
 }
@@ -132,4 +105,31 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) er
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	return err
+}
+
+type (
+	GetCurrentBranchFunc func(subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error)
+	GetCurrentSHAFunc    func(subshelldomain.Querier) (gitdomain.SHA, error)
+)
+
+func FormatCommand(location gitdomain.Location, printBranch bool, env []string, executable string, args ...string) string {
+	result := ""
+	if printBranch {
+		result += "[" + location.String() + "] "
+	}
+	if len(env) > 0 {
+		result += strings.Join(env, " ") + " "
+	}
+	result += executable + " "
+	quoted := stringslice.SurroundEmptyWith(args, `"`)
+	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
+	result += strings.Join(quoted, " ")
+	return result
+}
+
+// PrintCommand prints the given command-line operation on the console.
+func PrintCommand(location gitdomain.Location, printBranch bool, env []string, cmd string, args ...string) {
+	header := FormatCommand(location, printBranch, env, cmd, args...)
+	fmt.Println()
+	fmt.Println(colors.Bold().Styled(header))
 }

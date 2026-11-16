@@ -2,16 +2,13 @@ package config_test
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/config"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
-	"github.com/git-town/git-town/v24/internal/git/giturl"
 	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
 	"github.com/git-town/git-town/v24/internal/test/testruntime"
-	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -21,22 +18,22 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		tests := map[stringss.Trimmed]bool{
 			"feature":     false,
 			"main":        true,
+			"observed":    false,
+			"parked":      false,
 			"perennial-1": true,
 			"perennial-2": true,
 			"perennial-3": false,
-			"observed":    false,
-			"parked":      false,
 		}
 		for give, want := range tests {
 			have := config.IsMainOrPerennialBranch(gitdomain.LocalBranchNameOrPanic(give))
@@ -62,36 +59,16 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		have := config.MainAndPerennials()
 		want := gitdomain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
 		must.Eq(t, want, have)
-	})
-
-	t.Run("RemoteURL", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]giturl.Parts{
-			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"http://github.com/organization/repository.git":                 {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://github.com/organization/repository":                    {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://github.com/organization/repository.git":                {Host: "github.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://sub.domain.customhost.com/organization/repository":     {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: None[string]()},
-			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: None[string]()},
-		}
-		for give, want := range tests {
-			repo := testruntime.CreateGitTown(t)
-			os.Setenv("GIT_TOWN_REMOTE", give)
-			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.NormalConfig.RemoteURL(repo.TestRunner, gitdomain.RemoteOrigin).Get()
-			must.True(t, has)
-			must.EqOp(t, want, have)
-		}
 	})
 
 	t.Run("RemovePerennialRoot", func(t *testing.T) {
@@ -106,13 +83,13 @@ func TestValidatedConfig(t *testing.T) {
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*", "test")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
-			ValidatedConfigData: configdomain.ValidatedConfigData{
-				MainBranch: "main",
-			},
 			NormalConfig: config.NormalConfig{
-				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.LocalBranchNames{perennial1},
 				PerennialRegex:    perennialRegexOpt,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
+			},
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{

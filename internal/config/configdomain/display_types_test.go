@@ -19,8 +19,8 @@ func TestDisplayTypes(t *testing.T) {
 			have, err := configdomain.ParseDisplayTypes("all", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierAll,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierAll,
 			}
 			must.True(t, have.EqualSome(want))
 		})
@@ -29,8 +29,8 @@ func TestDisplayTypes(t *testing.T) {
 			have, err := configdomain.ParseDisplayTypes("no", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			must.True(t, have.EqualSome(want))
 		})
@@ -40,8 +40,8 @@ func TestDisplayTypes(t *testing.T) {
 			have, err := configdomain.ParseDisplayTypes("no feature prototype", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			must.True(t, have.EqualSome(want))
 		})
@@ -51,8 +51,8 @@ func TestDisplayTypes(t *testing.T) {
 			have, err := configdomain.ParseDisplayTypes("observed contribution", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch},
+				Quantifier:  configdomain.QuantifierOnly,
 			}
 			must.True(t, have.EqualSome(want))
 		})
@@ -76,8 +76,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("all", func(t *testing.T) {
 			t.Parallel()
 			displayTypes := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierAll,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierAll,
 			}
 			for _, branchType := range configdomain.AllBranchTypes() {
 				must.True(t, displayTypes.ShouldDisplayType(branchType))
@@ -86,8 +86,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("no", func(t *testing.T) {
 			t.Parallel()
 			displayTypes := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			for _, branchType := range configdomain.AllBranchTypes() {
 				t.Run(branchType.String(), func(t *testing.T) {
@@ -99,16 +99,16 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("exclude specific types", func(t *testing.T) {
 			t.Parallel()
 			displayTypes := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			tests := map[configdomain.BranchType]bool{
+				configdomain.BranchTypeContributionBranch: true,
 				configdomain.BranchTypeFeatureBranch:      false,
-				configdomain.BranchTypePrototypeBranch:    false,
-				configdomain.BranchTypePerennialBranch:    true,
 				configdomain.BranchTypeMainBranch:         true,
 				configdomain.BranchTypeObservedBranch:     true,
-				configdomain.BranchTypeContributionBranch: true,
+				configdomain.BranchTypePerennialBranch:    true,
+				configdomain.BranchTypePrototypeBranch:    false,
 			}
 			for give, want := range tests {
 				t.Run(fmt.Sprintf("%s ==> %t", give, want), func(t *testing.T) {
@@ -121,16 +121,16 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("only specific types", func(t *testing.T) {
 			t.Parallel()
 			displayTypes := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch},
+				Quantifier:  configdomain.QuantifierOnly,
 			}
 			tests := map[configdomain.BranchType]bool{
+				configdomain.BranchTypeContributionBranch: true,
 				configdomain.BranchTypeFeatureBranch:      false,
-				configdomain.BranchTypePrototypeBranch:    false,
-				configdomain.BranchTypePerennialBranch:    false,
 				configdomain.BranchTypeMainBranch:         false,
 				configdomain.BranchTypeObservedBranch:     true,
-				configdomain.BranchTypeContributionBranch: true,
+				configdomain.BranchTypePerennialBranch:    false,
+				configdomain.BranchTypePrototypeBranch:    false,
 			}
 			for give, want := range tests {
 				t.Run(fmt.Sprintf("%s ==> %t", give, want), func(t *testing.T) {
@@ -147,8 +147,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("all", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierAll,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierAll,
 			}
 			have := give.String()
 			want := "all branch types"
@@ -158,8 +158,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("no", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			have := give.String()
 			want := "no branch types"
@@ -169,8 +169,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("exclude specific branches", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeMainBranch},
+				Quantifier:  configdomain.QuantifierNo,
 			}
 			have := give.String()
 			want := `all branch types except "feature", "prototype", and "main"`
@@ -180,8 +180,8 @@ func TestDisplayTypes(t *testing.T) {
 		t.Run("only specific branches", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
+				Quantifier:  configdomain.QuantifierOnly,
 			}
 			have := give.String()
 			want := `only the branch types "feature" and "prototype"`

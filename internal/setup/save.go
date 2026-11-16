@@ -3,6 +3,7 @@ package setup
 import (
 	"slices"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/config"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
@@ -543,7 +544,7 @@ func saveIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitt
 	return gitconfig.RemoveIgnoreUncommitted(runner)
 }
 
-func saveInteractive(valueToWriteToGit Option[configdomain.Interactive], valueAlreadyInGit Option[configdomain.Interactive], runner subshelldomain.Runner) error {
+func saveInteractive(valueToWriteToGit Option[clidomain.Interactive], valueAlreadyInGit Option[clidomain.Interactive], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}

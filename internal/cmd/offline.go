@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
 	"github.com/git-town/git-town/v24/internal/cli/format"
 	"github.com/git-town/git-town/v24/internal/cmd/cmdhelpers"
@@ -28,39 +29,8 @@ const (
 Git Town avoids network operations in offline mode.`
 )
 
-func offlineCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "offline [(yes | no)]",
-		Args:    cobra.MaximumNArgs(1),
-		GroupID: cmdhelpers.GroupIDConfig,
-		Short:   offlineDesc,
-		Long:    cmdhelpers.Long(offlineDesc, offlineHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          None[configdomain.Detached](),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeOffline(args, cliConfig)
-		},
-	}
-	addVerboseFlag(&cmd)
-	return &cmd
+func displayOfflineStatus(config config.UnvalidatedConfig) {
+	fmt.Println(format.Bool(config.NormalConfig.Offline.IsOffline()))
 }
 
 func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
@@ -98,8 +68,39 @@ func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 	})
 }
 
-func displayOfflineStatus(config config.UnvalidatedConfig) {
-	fmt.Println(format.Bool(config.NormalConfig.Offline.IsOffline()))
+func offlineCmd() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Use:     "offline [(yes | no)]",
+		Args:    cobra.MaximumNArgs(1),
+		GroupID: cmdhelpers.GroupIDConfig,
+		Short:   offlineDesc,
+		Long:    cmdhelpers.Long(offlineDesc, offlineHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeOffline(args, cliConfig)
+		},
+	}
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func setOfflineStatus(text stringss.Trimmed, runner subshelldomain.Runner) error {

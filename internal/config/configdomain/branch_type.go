@@ -11,42 +11,6 @@ import (
 
 type BranchType string
 
-const (
-	// keep-sorted start
-	BranchTypeContributionBranch = BranchType("contribution")
-	BranchTypeFeatureBranch      = BranchType("feature")
-	BranchTypeMainBranch         = BranchType("main")
-	BranchTypeObservedBranch     = BranchType("observed")
-	BranchTypeParkedBranch       = BranchType("parked")
-	BranchTypePerennialBranch    = BranchType("perennial")
-	BranchTypePrototypeBranch    = BranchType("prototype")
-	// keep-sorted end
-)
-
-func AllBranchTypes() []BranchType {
-	return []BranchType{
-		BranchTypeMainBranch,
-		BranchTypePerennialBranch,
-		BranchTypeFeatureBranch,
-		BranchTypeParkedBranch,
-		BranchTypeContributionBranch,
-		BranchTypeObservedBranch,
-		BranchTypePrototypeBranch,
-	}
-}
-
-func ParseBranchType(text stringss.Trimmed, source string) (Option[BranchType], error) {
-	if text == "" || text == messages.DialogResultNone {
-		return None[BranchType](), nil
-	}
-	for _, branchType := range AllBranchTypes() {
-		if strings.HasPrefix(branchType.String(), text.String()) {
-			return Some(branchType), nil
-		}
-	}
-	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, source, text)
-}
-
 func (self BranchType) MustKnowParent() bool {
 	switch self {
 	case
@@ -106,4 +70,40 @@ func (self BranchType) ShouldUpdateProposals() bool {
 
 func (self BranchType) String() string {
 	return string(self)
+}
+
+const (
+	// keep-sorted start
+	BranchTypeContributionBranch = BranchType("contribution")
+	BranchTypeFeatureBranch      = BranchType("feature")
+	BranchTypeMainBranch         = BranchType("main")
+	BranchTypeObservedBranch     = BranchType("observed")
+	BranchTypeParkedBranch       = BranchType("parked")
+	BranchTypePerennialBranch    = BranchType("perennial")
+	BranchTypePrototypeBranch    = BranchType("prototype")
+	// keep-sorted end
+)
+
+func AllBranchTypes() []BranchType {
+	return []BranchType{
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypeContributionBranch,
+		BranchTypeObservedBranch,
+		BranchTypePrototypeBranch,
+	}
+}
+
+func ParseBranchType(text stringss.Trimmed, source string) (Option[BranchType], error) {
+	if text == "" || text == messages.DialogResultNone {
+		return None[BranchType](), nil
+	}
+	for _, branchType := range AllBranchTypes() {
+		if strings.HasPrefix(branchType.String(), text.String()) {
+			return Some(branchType), nil
+		}
+	}
+	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, source, text)
 }

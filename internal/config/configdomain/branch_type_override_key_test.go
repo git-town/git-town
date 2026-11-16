@@ -37,9 +37,7 @@ func TestBranchTypeOverrideKey(t *testing.T) {
 		t.Parallel()
 		have := configdomain.NewBranchTypeOverrideKeyForBranch("my-branch")
 		want := configdomain.BranchTypeOverrideKey{
-			BranchSpecificKey: configdomain.BranchSpecificKey{
-				Key: "git-town-branch.my-branch.branchtype",
-			},
+			Key: "git-town-branch.my-branch.branchtype",
 		}
 		must.EqOp(t, want, have)
 	})
@@ -50,9 +48,7 @@ func TestBranchTypeOverrideKey(t *testing.T) {
 			t.Parallel()
 			have := configdomain.ParseBranchTypeOverrideKey("git-town-branch.my-branch.branchtype")
 			want := Some(configdomain.BranchTypeOverrideKey{
-				BranchSpecificKey: configdomain.BranchSpecificKey{
-					Key: "git-town-branch.my-branch.branchtype",
-				},
+				Key: "git-town-branch.my-branch.branchtype",
 			})
 			must.Eq(t, want, have)
 		})

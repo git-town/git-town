@@ -50,16 +50,17 @@ These code packages exist:
 - `internal/vm/` - Virtual machine and opcodes
 - `internal/cli/` - Command-line interface components
 - `internal/cmd/` - Source code for the subcommands of the CLI app
-- `internal/gohacks/` - Helper functions that make programming in Go more
-  ergonomic
+- `internal/gohacks/` - Helper functions
+  that make programming in Go more ergonomic
 - `internal/messages` - strings shown in the UI
-- `internal/setup` - the setup assistant, a visual workflow letting the user
-  configure the application
+- `internal/setup` - the setup assistant,
+  a visual workflow letting the user configure the application
 - `internal/state` - manages persistent state between Git Town invocations
 - `internal/subshell` - implements calling CLI applications in a subshell
-- `internal/undo` - code used for the undo functionality, it calculates the
-  difference between snapshots of the Git repository and determines the Git
-  commands to move the repository from one snapshot to another
+- `internal/undo` - code used for the undo functionality,
+  it calculates the difference between snapshots of the Git repository
+  and determines the Git commands to move the repository from one snapshot to
+  another
 
 ## Additional information
 

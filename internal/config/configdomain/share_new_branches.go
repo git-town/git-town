@@ -11,6 +11,10 @@ import (
 // ShareNewBranches describes how newly created branches should be shared with the rest of the team.
 type ShareNewBranches string
 
+func (self ShareNewBranches) String() string {
+	return string(self)
+}
+
 const (
 	ShareNewBranchesNone    ShareNewBranches = "no"      // don't share new branches
 	ShareNewBranchesPush    ShareNewBranches = "push"    // push new branches to the dev remote
@@ -21,10 +25,6 @@ var ShareNewBranchValues = []ShareNewBranches{
 	ShareNewBranchesNone,
 	ShareNewBranchesPush,
 	ShareNewBranchesPropose,
-}
-
-func (self ShareNewBranches) String() string {
-	return string(self)
 }
 
 func ParseShareNewBranches(value stringss.Trimmed, source string) (Option[ShareNewBranches], error) {

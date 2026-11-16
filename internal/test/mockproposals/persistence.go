@@ -15,6 +15,10 @@ import (
 // MockProposalPath is the path to the mock proposals file.
 type MockProposalPath stringss.Trimmed
 
+func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
+	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
+}
+
 func (self MockProposalPath) String() string {
 	return string(self)
 }
@@ -38,10 +42,6 @@ func LoadBytes(path MockProposalPath) Option[[]byte] {
 		panic(err)
 	}
 	return Some(fileData)
-}
-
-func NewMockProposalPath(configDir configdomain.RepoConfigDir) MockProposalPath {
-	return MockProposalPath(filepath.Join(configDir.String(), "proposals.json"))
 }
 
 func Save(path MockProposalPath, proposals MockProposals) string {

@@ -16,10 +16,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git -c rebase.updateRefs=false rebase main      |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git -c rebase.updateRefs=false rebase main |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -30,9 +29,8 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
   Scenario: undo
     When I run "git-town undo" in the other worktree
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                       |
-      | feature | git rebase --abort                                                            |
-      |         | git push --force-with-lease origin {{ sha-initial 'initial commit' }}:feature |
+      | BRANCH  | COMMAND            |
+      | feature | git rebase --abort |
     And the current branch in the other worktree is still "feature"
     And the initial commits exist now
 

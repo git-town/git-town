@@ -11,7 +11,7 @@ import (
 	"sync"
 	"unicode"
 
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 
 	"github.com/cucumber/godog/colors"
 	"github.com/cucumber/godog/formatters"
@@ -204,6 +204,22 @@ func (f *Base) Summary() {
 	}
 }
 
+func asciiTitle(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+
+	newWord := true
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if ('a' <= c && c <= 'z') && newWord {
+			c -= 'a' - 'A'
+		}
+		b.WriteByte(c)
+		newWord = !('0' <= c && c <= '9' || 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
+	}
+	return b.String()
+}
+
 // Snippets returns code suggestions for undefined steps.
 func (f *Base) Snippets() string {
 	undefinedStepResults := f.Storage.MustGetPickleStepResultsByStatus(undefined)
@@ -236,7 +252,7 @@ func (f *Base) Snippets() string {
 			for i, w := range strings.Split(name, " ") {
 				switch {
 				case i != 0:
-					w = strings.Title(w)
+					w = asciiTitle(w)
 				case len(w) > 0:
 					w = string(unicode.ToLower(rune(w[0]))) + w[1:]
 				}

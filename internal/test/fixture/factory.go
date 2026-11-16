@@ -27,6 +27,17 @@ type Factory struct {
 	memoized Memoized
 }
 
+// CreateFixture provides a new Fixture for the scenario with the given name.
+func (self *Factory) CreateFixture(scenarioName string) Fixture {
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
+	envPath := filepath.Join(self.Dir, envDirName)
+	return self.memoized.CloneInto(envPath)
+}
+
+func (self *Factory) Remove() {
+	os.RemoveAll(self.Dir)
+}
+
 // creates a new FixtureFactory instance
 func CreateFactory() Factory {
 	baseDir, err := os.MkdirTemp("", "")
@@ -39,15 +50,4 @@ func CreateFactory() Factory {
 		Dir:      evalBaseDir,
 		memoized: NewMemoized(filepath.Join(evalBaseDir, "memoized")),
 	}
-}
-
-// CreateFixture provides a new Fixture for the scenario with the given name.
-func (self *Factory) CreateFixture(scenarioName string) Fixture {
-	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
-	envPath := filepath.Join(self.Dir, envDirName)
-	return self.memoized.CloneInto(envPath)
-}
-
-func (self *Factory) Remove() {
-	os.RemoveAll(self.Dir)
 }

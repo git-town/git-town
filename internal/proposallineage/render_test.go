@@ -138,9 +138,9 @@ func TestRender(t *testing.T) {
 	t.Run("some branches have proposals", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-c":     "no-proposal-b",
 			"no-proposal-a": "main",
 			"no-proposal-b": "no-proposal-a",
-			"feature-c":     "no-proposal-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
 		have := proposallineage.RenderSection(proposallineage.RenderSectionArgs{

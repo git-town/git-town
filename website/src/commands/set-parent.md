@@ -111,8 +111,8 @@ determine the repository state.
 
 <!-- keep-sorted start -->
 
-- [detach](detach.md) extract the current branch from a stack, leaving its
-  children in the stack.
+- [detach](detach.md) extract the current branch from a stack,
+  leaving its children in the stack.
 - [swap](swap.md) move the current branch up in the stack
 
 <!-- keep-sorted end -->

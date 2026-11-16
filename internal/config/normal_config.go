@@ -5,8 +5,8 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
-	"github.com/git-town/git-town/v24/internal/config/envconfig"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -45,18 +45,19 @@ type NormalConfig struct {
 	DisplayTypes                configdomain.DisplayTypes
 	DryRun                      configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex                Option[configdomain.FeatureRegex]
-	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
 	ForgejoToken                Option[forgedomain.ForgejoToken]
-	GitUserEmail                Option[gitdomain.GitUserEmail]
-	GitUserName                 Option[gitdomain.GitUserName]
+	ForgeType                   Option[forgedomain.ForgeType] // None = auto-detect
+	ForgeURL                    Option[configdomain.ForgeURL]
 	GiteaToken                  Option[forgedomain.GiteaToken]
 	GithubConnectorType         Option[forgedomain.GithubConnectorType]
 	GithubToken                 Option[forgedomain.GithubToken]
 	GitlabConnectorType         Option[forgedomain.GitlabConnectorType]
 	GitlabToken                 Option[forgedomain.GitlabToken]
+	GitUserEmail                Option[gitdomain.GitUserEmail]
+	GitUserName                 Option[gitdomain.GitUserName]
 	HostingOriginHostname       Option[configdomain.HostingOriginHostname]
 	IgnoreUncommitted           configdomain.IgnoreUncommitted
-	Interactive                 configdomain.Interactive
+	Interactive                 clidomain.Interactive
 	Lineage                     configdomain.Lineage
 	NewBranchType               Option[configdomain.NewBranchType]
 	ObservedRegex               Option[configdomain.ObservedRegex]
@@ -82,6 +83,64 @@ type NormalConfig struct {
 	Verbose                     configdomain.Verbose
 }
 
+func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults NormalConfig) NormalConfig {
+	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
+	proposalBreadcrumbDirection := partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection)
+	return NormalConfig{
+		Aliases:                     partial.Aliases,
+		AutoResolve:                 partial.AutoResolve.GetOr(defaults.AutoResolve),
+		AutoSync:                    partial.AutoSync.GetOr(defaults.AutoSync),
+		BitbucketAPIToken:           partial.BitbucketAPIToken,
+		BitbucketUsername:           partial.BitbucketUsername,
+		BranchPrefix:                partial.BranchPrefix,
+		BranchTypeOverrides:         partial.BranchTypeOverrides,
+		BrowserEnabled:              partial.BrowserEnabled.GetOr(defaults.BrowserEnabled),
+		BrowserExecutable:           partial.BrowserExecutable.Or(defaults.BrowserExecutable),
+		ContributionRegex:           partial.ContributionRegex,
+		Detached:                    partial.Detached.GetOr(defaults.Detached),
+		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),
+		DisplayTypes:                partial.DisplayTypes.GetOr(defaults.DisplayTypes),
+		DryRun:                      partial.DryRun.GetOr(defaults.DryRun),
+		FeatureRegex:                partial.FeatureRegex,
+		ForgeType:                   partial.ForgeType,
+		ForgeURL:                    partial.ForgeURL.Or(defaults.ForgeURL),
+		ForgejoToken:                partial.ForgejoToken,
+		GitUserEmail:                partial.GitUserEmail,
+		GitUserName:                 partial.GitUserName,
+		GiteaToken:                  partial.GiteaToken,
+		GithubConnectorType:         partial.GithubConnectorType,
+		GithubToken:                 partial.GithubToken,
+		GitlabConnectorType:         partial.GitlabConnectorType,
+		GitlabToken:                 partial.GitlabToken,
+		HostingOriginHostname:       partial.HostingOriginHostname,
+		IgnoreUncommitted:           partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
+		Interactive:                 partial.Interactive.GetOr(defaults.Interactive),
+		Lineage:                     partial.Lineage,
+		NewBranchType:               partial.NewBranchType.Or(defaults.NewBranchType),
+		ObservedRegex:               partial.ObservedRegex,
+		Offline:                     partial.Offline.GetOr(defaults.Offline),
+		Order:                       partial.Order.GetOr(defaults.Order),
+		PerennialBranches:           partial.PerennialBranches,
+		PerennialRegex:              partial.PerennialRegex,
+		ProposalBreadcrumb:          partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
+		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
+		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
+		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
+		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
+		ShipDeleteTrackingBranch:    partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),
+		ShipEnterMessage:            partial.ShipEnterMessage.GetOr(defaults.ShipEnterMessage),
+		ShipStrategy:                partial.ShipStrategy.GetOr(defaults.ShipStrategy),
+		Stash:                       partial.Stash.GetOr(defaults.Stash),
+		SyncFeatureStrategy:         syncFeatureStrategy,
+		SyncPerennialStrategy:       partial.SyncPerennialStrategy.GetOr(defaults.SyncPerennialStrategy),
+		SyncPrototypeStrategy:       partial.SyncPrototypeStrategy.GetOr(configdomain.NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
+		SyncTags:                    partial.SyncTags.GetOr(defaults.SyncTags),
+		SyncUpstream:                partial.SyncUpstream.GetOr(defaults.SyncUpstream),
+		UnknownBranchType:           partial.UnknownBranchType.GetOr(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)),
+		Verbose:                     partial.Verbose.GetOr(defaults.Verbose),
+	}
+}
+
 // Author provides the locally Git configured user.
 func (self *NormalConfig) Author() Option[gitdomain.Author] {
 	email, hasEmail := self.GitUserEmail.Get()
@@ -93,7 +152,7 @@ func (self *NormalConfig) Author() Option[gitdomain.Author] {
 }
 
 // DevURL provides the URL for the development remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.Parts] {
 	return self.RemoteURL(querier, self.DevRemote)
@@ -119,6 +178,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		DryRun:                      other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:                other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                   other.ForgeType.Or(self.ForgeType),
+		ForgeURL:                    other.ForgeURL.Or(self.ForgeURL),
 		ForgejoToken:                other.ForgejoToken.Or(self.ForgejoToken),
 		GitUserEmail:                other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:                 other.GitUserName.Or(self.GitUserName),
@@ -204,10 +264,10 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 }
 
 // RemoteURL provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
-	urlStr, hasURLStr := remoteURLString(querier, remote).Get()
+	urlStr, hasURLStr := remoteURLString(querier, remote, self.ForgeURL).Get()
 	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
@@ -272,12 +332,13 @@ func DefaultNormalConfig() NormalConfig {
 		Detached:            false,
 		DevRemote:           gitdomain.RemoteOrigin,
 		DisplayTypes: configdomain.DisplayTypes{
-			Quantifier:  configdomain.QuantifierNo,
 			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
+			Quantifier:  configdomain.QuantifierNo,
 		},
 		DryRun:                      false,
 		FeatureRegex:                None[configdomain.FeatureRegex](),
 		ForgeType:                   None[forgedomain.ForgeType](),
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ForgejoToken:                None[forgedomain.ForgejoToken](),
 		GitUserEmail:                None[gitdomain.GitUserEmail](),
 		GitUserName:                 None[gitdomain.GitUserName](),
@@ -288,7 +349,7 @@ func DefaultNormalConfig() NormalConfig {
 		GitlabToken:                 None[forgedomain.GitlabToken](),
 		HostingOriginHostname:       None[configdomain.HostingOriginHostname](),
 		IgnoreUncommitted:           false,
-		Interactive:                 configdomain.InteractiveEnabled,
+		Interactive:                 clidomain.InteractiveEnabled,
 		Lineage:                     configdomain.NewLineage(),
 		NewBranchType:               None[configdomain.NewBranchType](),
 		ObservedRegex:               None[configdomain.ObservedRegex](),
@@ -315,69 +376,11 @@ func DefaultNormalConfig() NormalConfig {
 	}
 }
 
-func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults NormalConfig) NormalConfig {
-	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
-	proposalBreadcrumbDirection := partial.ProposalBreadcrumbDirection.GetOr(defaults.ProposalBreadcrumbDirection)
-	return NormalConfig{
-		Aliases:                     partial.Aliases,
-		AutoResolve:                 partial.AutoResolve.GetOr(defaults.AutoResolve),
-		AutoSync:                    partial.AutoSync.GetOr(defaults.AutoSync),
-		BitbucketAPIToken:           partial.BitbucketAPIToken,
-		BitbucketUsername:           partial.BitbucketUsername,
-		BranchPrefix:                partial.BranchPrefix,
-		BranchTypeOverrides:         partial.BranchTypeOverrides,
-		BrowserEnabled:              partial.BrowserEnabled.GetOr(defaults.BrowserEnabled),
-		BrowserExecutable:           partial.BrowserExecutable.Or(defaults.BrowserExecutable),
-		ContributionRegex:           partial.ContributionRegex,
-		Detached:                    partial.Detached.GetOr(defaults.Detached),
-		DevRemote:                   partial.DevRemote.GetOr(defaults.DevRemote),
-		DisplayTypes:                partial.DisplayTypes.GetOr(defaults.DisplayTypes),
-		DryRun:                      partial.DryRun.GetOr(defaults.DryRun),
-		FeatureRegex:                partial.FeatureRegex,
-		ForgeType:                   partial.ForgeType,
-		ForgejoToken:                partial.ForgejoToken,
-		GitUserEmail:                partial.GitUserEmail,
-		GitUserName:                 partial.GitUserName,
-		GiteaToken:                  partial.GiteaToken,
-		GithubConnectorType:         partial.GithubConnectorType,
-		GithubToken:                 partial.GithubToken,
-		GitlabConnectorType:         partial.GitlabConnectorType,
-		GitlabToken:                 partial.GitlabToken,
-		HostingOriginHostname:       partial.HostingOriginHostname,
-		IgnoreUncommitted:           partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
-		Interactive:                 partial.Interactive.GetOr(defaults.Interactive),
-		Lineage:                     partial.Lineage,
-		NewBranchType:               partial.NewBranchType.Or(defaults.NewBranchType),
-		ObservedRegex:               partial.ObservedRegex,
-		Offline:                     partial.Offline.GetOr(defaults.Offline),
-		Order:                       partial.Order.GetOr(defaults.Order),
-		PerennialBranches:           partial.PerennialBranches,
-		PerennialRegex:              partial.PerennialRegex,
-		ProposalBreadcrumb:          partial.ProposalBreadcrumb.GetOr(defaults.ProposalBreadcrumb),
-		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
-		PushBranches:                partial.PushBranches.GetOr(defaults.PushBranches),
-		PushHook:                    partial.PushHook.GetOr(defaults.PushHook),
-		ShareNewBranches:            partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
-		ShipDeleteTrackingBranch:    partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),
-		ShipEnterMessage:            partial.ShipEnterMessage.GetOr(defaults.ShipEnterMessage),
-		ShipStrategy:                partial.ShipStrategy.GetOr(defaults.ShipStrategy),
-		Stash:                       partial.Stash.GetOr(defaults.Stash),
-		SyncFeatureStrategy:         syncFeatureStrategy,
-		SyncPerennialStrategy:       partial.SyncPerennialStrategy.GetOr(defaults.SyncPerennialStrategy),
-		SyncPrototypeStrategy:       partial.SyncPrototypeStrategy.GetOr(configdomain.NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
-		SyncTags:                    partial.SyncTags.GetOr(defaults.SyncTags),
-		SyncUpstream:                partial.SyncUpstream.GetOr(defaults.SyncUpstream),
-		UnknownBranchType:           partial.UnknownBranchType.GetOr(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)),
-		Verbose:                     partial.Verbose.GetOr(defaults.Verbose),
-	}
-}
-
 // remoteURLString provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	remoteOverride := envconfig.RemoteURLOverride()
-	if remoteOverride.IsSome() {
-		return remoteOverride
+// Tests can stub this through the GIT_TOWN_FORGE_URL environment variable.
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote, forgeURL Option[configdomain.ForgeURL]) Option[string] {
+	if forgeURL, hasForgeURL := forgeURL.Get(); hasForgeURL {
+		return Some(forgeURL.String())
 	}
 	return gitconfig.RemoteURL(querier, remote)
 }

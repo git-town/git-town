@@ -15,8 +15,8 @@ design objectives:
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
    then resume execution.
-3. **Reliable undo:** Be able to reliably undo everything that Git Town has
-   done.
+3. **Reliable undo:** Be able to reliably undo everything
+   that Git Town has done.
 
 ### General structure
 
@@ -60,8 +60,8 @@ the interpreter:
 - Persists the current interpreter state (called "runstate") to disk.
 - Exits Git Town to give the user access to the shell to resolve the encountered
   problems.
-- Prints a human-friendly explanation of the problem and what the user needs to
-  do.
+- Prints a human-friendly explanation of the problem
+  and what the user needs to do.
 
 After resolving the problems and restarting Git Town,
 the interpreter loads the persisted runstate from disk and resumes executing it.
@@ -70,8 +70,8 @@ the interpreter loads the persisted runstate from disk and resumes executing it.
 
 To undo a previously run Git Town command (requirement 3), Git Town:
 
-- compares snapshots of the affected Git repository before and after the command
-  ran
+- compares snapshots of the affected Git repository before and
+  after the command ran
 - determines the changes that the Git Town command made to the Git repo
 - creates a program that reverses these changes
 - starts the interpreter to execute this program
@@ -178,7 +178,7 @@ The `Option` type (taken from Rust) makes it explicit
 whether a type is optional.
 It enforces checking whether an optional value is present when accessing it.
 
-`Mutable` type to denote mutability.
+The `Mutable` type denotes mutability.
 Any variable not wrapped in a `Mutable` should be considered immutable.
 Any variable wrapped in `Mutable` is guaranteed
 (by convention) to exist, i.e. a `Mutable` is never `nil`.
@@ -197,15 +197,15 @@ as they have proven effective in that community.
 
 We don't say this is a pattern that every other Go codebase should adopt,
 but in this case it has served us surprisingly well,
-and the additional complexity has been well worth it.
+and the additional complexity has been well worth the cost.
 
 #### One type per file
 
 In the Git Town codebase each type is located in its own file.
 This makes it much easier to locate a type:
 just open the file with the corresponding name.
-It also keep files to often less than 100 lines of code,
-which makes it easy to get an overview what it does.
+This also helps keep most files to less than 100 lines of code,
+which makes it easier to reason about.
 
 #### Newtypes
 
@@ -222,12 +222,12 @@ even if they are represented by a simple `string` or `int` internally.
 This ensures that semantically correct data is used everywhere.
 
 This is another example where a concept adds complexity,
-but that complexity is well worth it
+but that complexity is well worth the cost
 because it eliminates an entire category of bugs (using the wrong data).
 
 #### Making invalid states unrepresentable
 
-Git Town's contains more
+Git Town's contains larger
 and higher-level data structures than in typical Go programs.
 This extra complexity exists to make invalid code result in compiler errors.
 This has proven so useful that it is worth the additional complexity,
@@ -241,16 +241,17 @@ We sort most things in this codebase alphabetically, for example:
 - function definitions
 - the order of unit tests
 
-While not ideal, this approach has several benefits:
+This approach has several benefits that outweigh its downsides:
 
 - It helps locate things efficiently.
-- It prevents conflicts when two branches add something to the same file because
-  both additions no longer happen at the end of the file.
+- It reduces merge conflicts when two branches add something to the same file
+  because both additions no longer happen at the end of the file.
 - It prevents bikeshed debates about how to order things.
-- It is the only ordering method for which everybody has the exact same
-  expectation how the end result should look like.
-- It allows automated sorting, freeing humans from manually moving things
-  around.
+- It is the only ordering method for
+  which everybody has the exact same expectation how the end result should look
+  like.
+- It allows automated sorting,
+  freeing humans from manually moving things around.
 
 #### All struct fields are required by default
 
@@ -259,7 +260,7 @@ all struct fields must be explicitly initialized when a struct is instantiated.
 This deviates from idiomatic Go, where fields can be left unset.
 
 This design choice ensures that every field gets deliberate attention,
-making it clear what value it should hold in any given context.
+making it clear what value it holds in any given context.
 This is especially beneficial when adding a new field to an existing struct,
 as it forces a thoughtful review of the required changes throughout the
 codebase.

@@ -53,81 +53,81 @@ func recognizeInput(input string) tea.Msg { //nolint:ireturn
 	case "esc":
 		return tea.KeyMsg{Type: tea.KeyEsc} //exhaustruct:ignore
 	case "0":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'0'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "1":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'1'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'1'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "2":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'2'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'2'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "3":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'3'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'3'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "4":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'4'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'4'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "5":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'5'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "6":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'6'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'6'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "7":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'7'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'7'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "8":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'8'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'8'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "9":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'9'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "a":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'a'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "b":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'b'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'b'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "c":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'c'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'c'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "d":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'d'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "e":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'e'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "f":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'f'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'f'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "g":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'g'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'g'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "h":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'h'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'h'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "i":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'i'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'i'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "j":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'j'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'j'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "k":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'k'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'k'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "l":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'l'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'l'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "m":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'m'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'m'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "n":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'n'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'n'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "o":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'o'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "p":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'p'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'p'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "q":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'q'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "r":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'r'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'r'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "s":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'s'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'s'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "t":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'t'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'t'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "u":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'u'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'u'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "v":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'v'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'v'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "w":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'w'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'w'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "x":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'x'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'x'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "y":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'y'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'y'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "z":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'z'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'z'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "^":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'^'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'^'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	case "-":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'-'}} //exhaustruct:ignore
+		return tea.KeyMsg{Runes: []rune{'-'}, Type: tea.KeyRunes} //exhaustruct:ignore
 	}
 	panic("unknown test input: " + input)
 }

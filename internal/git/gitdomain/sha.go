@@ -24,23 +24,6 @@ func NewSHAOrPanic(id stringss.Trimmed) SHA {
 	return asserts.NoError1(NewSHA(id))
 }
 
-// validateSHA indicates whether the given SHA content is a valid Git SHA.
-func validateSHA(content stringss.Trimmed) bool {
-	if len(content) < 6 {
-		return false
-	}
-	for _, c := range content {
-		if c >= '0' && c <= '9' {
-			continue
-		}
-		if c >= 'a' && c <= 'f' {
-			continue
-		}
-		return false
-	}
-	return true
-}
-
 // Location widens the type of this SHA to a more generic Location.
 func (self SHA) Location() Location {
 	return Location(string(self))
@@ -60,4 +43,21 @@ func (self SHA) TrimmedString() stringss.Trimmed {
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {
 	return NewSHAOrPanic(stringss.Trimmed(self.String()[:newLen]))
+}
+
+// validateSHA indicates whether the given SHA content is a valid Git SHA.
+func validateSHA(content stringss.Trimmed) bool {
+	if len(content) < 6 {
+		return false
+	}
+	for _, c := range content {
+		if c >= '0' && c <= '9' {
+			continue
+		}
+		if c >= 'a' && c <= 'f' {
+			continue
+		}
+		return false
+	}
+	return true
 }

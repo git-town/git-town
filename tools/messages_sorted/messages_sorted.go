@@ -13,16 +13,6 @@ import (
 	"github.com/cucumber/godog/colors"
 )
 
-func main() {
-	issues := findUnsortedConst("internal/messages/en.go")
-	if len(issues) > 0 {
-		for _, issue := range issues {
-			fmt.Println(issue)
-		}
-		os.Exit(1)
-	}
-}
-
 func findUnsortedConst(filePath string) []string {
 	var issues []string
 
@@ -139,4 +129,14 @@ func isSorted(names []string) bool {
 		}
 	}
 	return true
+}
+
+func main() {
+	issues := findUnsortedConst("internal/messages/en.go")
+	if len(issues) > 0 {
+		for _, issue := range issues {
+			fmt.Println(issue)
+		}
+		os.Exit(1)
+	}
 }

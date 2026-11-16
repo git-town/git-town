@@ -17,12 +17,12 @@ func TestStepDefUsage(t *testing.T) {
 			t.Parallel()
 			definedSteps := []lintSteps.StepDefinition{
 				{
-					Text: `branch "([^"]+)"`,
 					Line: 1,
+					Text: `branch "([^"]+)"`,
 				},
 				{
-					Text: `tag "([^"]+)"`,
 					Line: 2,
+					Text: `tag "([^"]+)"`,
 				},
 			}
 			usedSteps := []string{
@@ -37,16 +37,16 @@ func TestStepDefUsage(t *testing.T) {
 			t.Parallel()
 			definedSteps := []lintSteps.StepDefinition{
 				{
-					Text: `branch "([^"]+)"`,
 					Line: 1,
+					Text: `branch "([^"]+)"`,
 				},
 				{
-					Text: `tag "([^"]+)"`,
 					Line: 2,
+					Text: `tag "([^"]+)"`,
 				},
 				{
-					Text: `remote "([^"]+)"`,
 					Line: 3,
+					Text: `remote "([^"]+)"`,
 				},
 			}
 			usedSteps := []string{
@@ -55,12 +55,12 @@ func TestStepDefUsage(t *testing.T) {
 			have := lintSteps.FindUnusedStepDefs(definedSteps, usedSteps)
 			want := []lintSteps.StepDefinition{
 				{
-					Text: `tag "([^"]+)"`,
 					Line: 2,
+					Text: `tag "([^"]+)"`,
 				},
 				{
-					Text: `remote "([^"]+)"`,
 					Line: 3,
+					Text: `remote "([^"]+)"`,
 				},
 			}
 			must.Eq(t, want, have)

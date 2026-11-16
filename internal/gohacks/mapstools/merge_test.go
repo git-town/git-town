@@ -21,9 +21,9 @@ func TestMerge(t *testing.T) {
 	t.Run("both have values", func(t *testing.T) {
 		t.Parallel()
 		map1 := map[string]int{"one": 1, "two": 2}
-		map2 := map[string]int{"three": 3, "four": 4}
+		map2 := map[string]int{"four": 4, "three": 3}
 		have := mapstools.Merge(map1, map2)
-		want := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4}
+		want := map[string]int{"four": 4, "one": 1, "three": 3, "two": 2}
 		must.Eq(t, want, have)
 	})
 

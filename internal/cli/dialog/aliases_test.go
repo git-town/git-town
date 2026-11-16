@@ -129,10 +129,8 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionNone,
 				},
+				Cursor:          0,
 				OriginalAliases: configdomain.Aliases{},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
-				},
 			}
 			// rotate the first time to set to "checked"
 			model = model.RotateCurrentEntry()
@@ -156,11 +154,9 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionGT,
 				},
+				Cursor: 0,
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
-				},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
 				},
 			}
 			// rotate the first time to uncheck
@@ -185,11 +181,9 @@ func TestAliases(t *testing.T) {
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionOther,
 				},
+				Cursor: 0,
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
-				},
-				List: list.List[configdomain.AliasableCommand]{
-					Cursor: 0,
 				},
 			}
 			// rotate the first time to check
@@ -216,17 +210,17 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{
+			CurrentSelections: []dialog.AliasSelection{
+				dialog.AliasSelectionNone,
+				dialog.AliasSelectionNone,
+				dialog.AliasSelectionNone,
+			},
 			List: list.List[configdomain.AliasableCommand]{
 				Entries: list.NewEntries(
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandSync,
 				),
-			},
-			CurrentSelections: []dialog.AliasSelection{
-				dialog.AliasSelectionNone,
-				dialog.AliasSelectionNone,
-				dialog.AliasSelectionNone,
 			},
 		}
 		model = model.SelectAll()
@@ -241,17 +235,17 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{
+			CurrentSelections: []dialog.AliasSelection{
+				dialog.AliasSelectionGT,
+				dialog.AliasSelectionOther,
+				dialog.AliasSelectionGT,
+			},
 			List: list.List[configdomain.AliasableCommand]{
 				Entries: list.NewEntries(
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandDiffParent,
 				),
-			},
-			CurrentSelections: []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
-				dialog.AliasSelectionOther,
-				dialog.AliasSelectionGT,
 			},
 		}
 		model = model.SelectNone()

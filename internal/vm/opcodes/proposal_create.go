@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/messages"
@@ -11,6 +12,7 @@ import (
 // ProposalCreate creates a new proposal for the current branch.
 type ProposalCreate struct {
 	Branch        gitdomain.LocalBranchName
+	Interactive   clidomain.Interactive
 	MainBranch    gitdomain.LocalBranchName
 	ProposalBody  Option[gitdomain.ProposalBody]
 	ProposalTitle Option[gitdomain.ProposalTitle]
@@ -51,6 +53,7 @@ createProposal:
 	err := connector.CreateProposal(forgedomain.CreateProposalArgs{
 		Branch:         self.Branch,
 		FrontendRunner: args.Frontend,
+		Interactive:    self.Interactive,
 		MainBranch:     self.MainBranch,
 		ParentBranch:   parentBranch,
 		ProposalBody:   self.ProposalBody,

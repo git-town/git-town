@@ -17,6 +17,15 @@ type Inputs struct {
 	len    int          // the total number of inputs
 }
 
+func NewInputs(inputs ...Input) Inputs {
+	cursor := 0
+	return Inputs{
+		cursor: NewMutable(&cursor),
+		inputs: inputs,
+		len:    len(inputs),
+	}
+}
+
 func (self Inputs) IsEmpty() bool {
 	return self.cursor.Immutable() == self.len
 }
@@ -58,13 +67,4 @@ func LoadInputs(environmenttVariables []string) Inputs {
 		inputs = append(inputs, input)
 	}
 	return NewInputs(inputs...)
-}
-
-func NewInputs(inputs ...Input) Inputs {
-	cursor := 0
-	return Inputs{
-		cursor: NewMutable(&cursor),
-		inputs: inputs,
-		len:    len(inputs),
-	}
 }

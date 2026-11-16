@@ -11,35 +11,35 @@ func TestWindow(t *testing.T) {
 	t.Parallel()
 	tests := map[slice.WindowArgs]slice.WindowResult{
 		// no elements
-		{ElementCount: 0, CursorPos: 0, WindowSize: 5}: {StartRow: 0, EndRow: 0},
+		{CursorPos: 0, ElementCount: 0, WindowSize: 5}: {EndRow: 0, StartRow: 0},
 		// one element
-		{ElementCount: 1, CursorPos: 0, WindowSize: 5}: {StartRow: 0, EndRow: 1},
+		{CursorPos: 0, ElementCount: 1, WindowSize: 5}: {EndRow: 1, StartRow: 0},
 
 		// FEWER ELEMENTS THAN WINDOW SIZE
 
 		// cursor at first element
-		{ElementCount: 7, CursorPos: 0, WindowSize: 9}: {StartRow: 0, EndRow: 7},
+		{CursorPos: 0, ElementCount: 7, WindowSize: 9}: {EndRow: 7, StartRow: 0},
 		// fewer elements than window size, cursor at second element
-		{ElementCount: 7, CursorPos: 1, WindowSize: 9}: {StartRow: 0, EndRow: 7},
+		{CursorPos: 1, ElementCount: 7, WindowSize: 9}: {EndRow: 7, StartRow: 0},
 		// fewer elements than window size, cursor at middle element
-		{ElementCount: 7, CursorPos: 3, WindowSize: 9}: {StartRow: 0, EndRow: 7},
+		{CursorPos: 3, ElementCount: 7, WindowSize: 9}: {EndRow: 7, StartRow: 0},
 		// fewer elements than window size, cursor at second to last element
-		{ElementCount: 7, CursorPos: 5, WindowSize: 9}: {StartRow: 0, EndRow: 7},
+		{CursorPos: 5, ElementCount: 7, WindowSize: 9}: {EndRow: 7, StartRow: 0},
 		// fewer elements than window size, cursor at last element
-		{ElementCount: 7, CursorPos: 6, WindowSize: 9}: {StartRow: 0, EndRow: 7},
+		{CursorPos: 6, ElementCount: 7, WindowSize: 9}: {EndRow: 7, StartRow: 0},
 
 		// MORE ELEMENTS THAN WINDOW SIZE
 
 		// cursor at first element
-		{ElementCount: 20, CursorPos: 0, WindowSize: 9}: {StartRow: 0, EndRow: 9},
+		{CursorPos: 0, ElementCount: 20, WindowSize: 9}: {EndRow: 9, StartRow: 0},
 		// fewer elements than window size, cursor at second element
-		{ElementCount: 20, CursorPos: 1, WindowSize: 9}: {StartRow: 0, EndRow: 9},
+		{CursorPos: 1, ElementCount: 20, WindowSize: 9}: {EndRow: 9, StartRow: 0},
 		// fewer elements than window size, cursor at middle element
-		{ElementCount: 20, CursorPos: 10, WindowSize: 9}: {StartRow: 6, EndRow: 15},
+		{CursorPos: 10, ElementCount: 20, WindowSize: 9}: {EndRow: 15, StartRow: 6},
 		// fewer elements than window size, cursor at second to last element
-		{ElementCount: 20, CursorPos: 18, WindowSize: 9}: {StartRow: 11, EndRow: 20},
+		{CursorPos: 18, ElementCount: 20, WindowSize: 9}: {EndRow: 20, StartRow: 11},
 		// fewer elements than window size, cursor at last element
-		{ElementCount: 20, CursorPos: 19, WindowSize: 9}: {StartRow: 11, EndRow: 20},
+		{CursorPos: 19, ElementCount: 20, WindowSize: 9}: {EndRow: 20, StartRow: 11},
 	}
 	for give, want := range tests {
 		have := slice.Window(give)

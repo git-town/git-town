@@ -60,9 +60,9 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 	}
 	prog.Value.Add(&opcodes.ConnectorProposalMerge{
 		Branch:        branchToShipLocal,
-		Proposal:      apiData.proposal,
 		CommitMessage: commitMessage,
 		EnterMessage:  sharedData.config.NormalConfig.ShipEnterMessage,
+		Proposal:      apiData.proposal,
 	})
 	if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: apiData.branchToShipRemoteName})
@@ -80,9 +80,9 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         sharedData.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return nil
 }

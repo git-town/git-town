@@ -20,7 +20,6 @@ Feature: sync a branch when main is active in another worktree and has updates
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
-      |         | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase origin/feature                         |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |

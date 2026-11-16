@@ -20,9 +20,9 @@ func TestMockingRunner(t *testing.T) {
 		err := os.Mkdir(devDir, 0o744)
 		must.NoError(t, err)
 		runner := subshell.TestRunner{
-			WorkingDir: devDir,
-			HomeDir:    workDir,
 			BinDir:     filepath.Join(workDir, "bin"),
+			HomeDir:    workDir,
+			WorkingDir: devDir,
 		}
 		runner.MockCommand("foo")
 		// run a program that calls the mocked command
@@ -36,9 +36,9 @@ func TestMockingRunner(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		runner := subshell.TestRunner{
-			WorkingDir: dir,
-			HomeDir:    dir,
 			BinDir:     filepath.Join(dir, "bin"),
+			HomeDir:    dir,
+			WorkingDir: dir,
 		}
 		runner.MockCommitMessage("test commit message")
 		// Simulate Git calling the mock editor configured by MockCommitMessage and
@@ -58,9 +58,9 @@ func TestMockingRunner(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
 		runner := subshell.TestRunner{
-			WorkingDir: workDir,
-			HomeDir:    t.TempDir(),
 			BinDir:     "",
+			HomeDir:    t.TempDir(),
+			WorkingDir: workDir,
 		}
 		_, err := runner.QueryString("touch first")
 		must.NoError(t, err)
@@ -76,9 +76,9 @@ func TestMockingRunner(t *testing.T) {
 			err := os.Mkdir(dir2, 0o744)
 			must.NoError(t, err)
 			r := subshell.TestRunner{
-				WorkingDir: dir1,
-				HomeDir:    t.TempDir(),
 				BinDir:     "",
+				HomeDir:    t.TempDir(),
+				WorkingDir: dir1,
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			ostools.CreateLsTool(toolPath)
@@ -94,8 +94,8 @@ func TestMockingRunner(t *testing.T) {
 			t.Parallel()
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Verbose:    false,
 				HomeDir:    "",
+				Verbose:    false,
 				WorkingDir: "",
 			}
 			runResult, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
@@ -107,8 +107,8 @@ func TestMockingRunner(t *testing.T) {
 			t.Parallel()
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Verbose:    false,
 				HomeDir:    "",
+				Verbose:    false,
 				WorkingDir: "",
 			}
 			runResult, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")

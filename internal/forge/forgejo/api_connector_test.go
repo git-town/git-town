@@ -13,24 +13,24 @@ func TestFilterPullRequests(t *testing.T) {
 	give := []*forgejoSDK.PullRequest{
 		// matching branch
 		{
-			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 		},
 		// branch with different name
 		{
-			Head: &forgejoSDK.PRBranchInfo{Name: "other"},
 			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "other"},
 		},
 		// branch with different target
 		{
-			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 			Base: &forgejoSDK.PRBranchInfo{Name: "other"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 		},
 	}
 	want := []*forgejoSDK.PullRequest{
 		{
-			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
 		},
 	}
 	have := forgejo.FilterPullRequests(give, "branch", "target")

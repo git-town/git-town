@@ -15,9 +15,7 @@ func TestPerennialBranches(t *testing.T) {
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
 		model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-			List: list.List[gitdomain.LocalBranchName]{
-				Entries: list.NewEntries[gitdomain.LocalBranchName]("zero", "one", "two", "three"),
-			},
+			Entries:    list.NewEntries[gitdomain.LocalBranchName]("zero", "one", "two", "three"),
 			Selections: []int{1, 3},
 		}
 		have := model.CheckedEntries()
@@ -30,9 +28,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 2,
-				},
+				Cursor:     2,
 				Selections: []int{1, 2, 3},
 			}
 			model = model.DisableCurrentEntry()
@@ -42,9 +38,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 2,
-				},
+				Cursor:     2,
 				Selections: []int{1, 3},
 			}
 			model = model.DisableCurrentEntry()
@@ -58,9 +52,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 2,
-				},
+				Cursor:     2,
 				Selections: []int{1, 3},
 			}
 			model = model.EnableCurrentEntry()
@@ -70,9 +62,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 2,
-				},
+				Cursor:     2,
 				Selections: []int{1, 2, 3},
 			}
 			model = model.EnableCurrentEntry()
@@ -94,9 +84,7 @@ func TestPerennialBranches(t *testing.T) {
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
 		model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
-			List: list.List[gitdomain.LocalBranchName]{
-				Cursor: 2,
-			},
+			Cursor:     2,
 			Selections: []int{1, 3},
 		}
 		// enable the selected entry

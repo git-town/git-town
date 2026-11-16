@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	gherkin "github.com/cucumber/gherkin/go/v26"
-	messages "github.com/cucumber/messages/go/v21"
+	gherkin "github.com/cucumber/gherkin/go/v42"
+	messages "github.com/cucumber/messages/go/v34"
 
 	"github.com/cucumber/godog/internal/flags"
 	"github.com/cucumber/godog/internal/models"

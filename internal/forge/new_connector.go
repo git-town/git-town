@@ -31,13 +31,11 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 	switch detectedForgeType.ForgeType() {
 	case forgedomain.ForgeTypeAzuredevops:
 		connector = azuredevops.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     remoteURL.Host,
-				Organization: remoteURL.Org,
-				Repository:   remoteURL.Repo,
-			},
 			BrowserEnabled:    args.BrowserEnabled,
 			BrowserExecutable: args.BrowserExecutable,
+			Hostname:          remoteURL.Host,
+			Organization:      remoteURL.Org,
+			Repository:        remoteURL.Repo,
 		}
 	case forgedomain.ForgeTypeBitbucket:
 		connector, err = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
@@ -90,13 +88,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 			})
 		case forgedomain.GithubConnectorTypeGh:
 			connector = &gh.CachedConnector{
+				Cache: forgedomain.APICache{},
 				Connector: gh.Connector{
 					Backend:        args.Backend,
 					BrowserEnabled: args.BrowserEnabled,
 					Frontend:       args.Frontend,
 					Log:            args.Log,
 				},
-				Cache: forgedomain.APICache{},
 			}
 		}
 	case forgedomain.ForgeTypeGitlab:
@@ -112,13 +110,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], Option[
 			})
 		case forgedomain.GitlabConnectorTypeGlab:
 			connector = &glab.CachedConnector{
+				Cache: forgedomain.APICache{},
 				Connector: glab.Connector{
 					Backend:        args.Backend,
 					BrowserEnabled: args.BrowserEnabled,
 					Frontend:       args.Frontend,
 					Log:            args.Log,
 				},
-				Cache: forgedomain.APICache{},
 			}
 		}
 	}
@@ -132,8 +130,8 @@ type NewConnectorArgs struct {
 	BrowserEnabled      browserdomain.BrowserEnabled
 	BrowserExecutable   Option[browserdomain.BrowserExecutable]
 	ConfigDir           configdomain.RepoConfigDir
-	ForgeType           Option[forgedomain.ForgeType]
 	ForgejoToken        Option[forgedomain.ForgejoToken]
+	ForgeType           Option[forgedomain.ForgeType]
 	Frontend            subshelldomain.Runner
 	GiteaToken          Option[forgedomain.GiteaToken]
 	GithubConnectorType Option[forgedomain.GithubConnectorType]
