@@ -802,7 +802,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentSHAPreviousRun": "111111",
+        "CommitsToRemove": "111111",
         "PushBranches": true,
         "TrackingBranch": "origin/branch"
       },
