@@ -90,10 +90,10 @@ func (self *Fixture) AddBareRepoLinkedWorktree(branch gitdomain.LocalBranchName)
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
-		TestRunner: &runner,
-		Git:        &gitCommands,
 		Config:     devRepo.Config,
+		Git:        &gitCommands,
 		SnapShots:  devRepo.SnapShots,
+		TestRunner: &runner,
 	})
 }
 
@@ -120,10 +120,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
-		TestRunner: &runner,
-		Git:        &gitCommands,
 		Config:     devRepo.Config,
+		Git:        &gitCommands,
 		SnapShots:  devRepo.SnapShots,
+		TestRunner: &runner,
 	})
 }
 
@@ -270,13 +270,18 @@ func (self *Fixture) binPath() string {
 	return binPath(self.Dir)
 }
 
-func binPath(rootDir string) string {
-	return filepath.Join(rootDir, "bin")
-}
-
 // coworkerRepoPath provides the full path to the Git repository with the given name.
 func (self *Fixture) coworkerRepoPath() string {
 	return filepath.Join(self.Dir, "coworker")
+}
+
+// submoduleRepoPath provides the full path to the Git repository with the given name.
+func (self *Fixture) submoduleRepoPath() string {
+	return filepath.Join(self.Dir, "submodule")
+}
+
+func binPath(rootDir string) string {
+	return filepath.Join(rootDir, "bin")
 }
 
 func developerRepoPath(rootDir string) string {
@@ -294,9 +299,4 @@ func initializeWorkspace(repo *commands.TestCommands) {
 
 func originRepoPath(rootDir string) string {
 	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
-}
-
-// submoduleRepoPath provides the full path to the Git repository with the given name.
-func (self *Fixture) submoduleRepoPath() string {
-	return filepath.Join(self.Dir, "submodule")
 }

@@ -17,7 +17,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                |
       | prototype | git fetch --prune --tags                               |
-      |           | git push --force-with-lease --force-if-includes        |
       |           | git -c rebase.updateRefs=false rebase origin/prototype |
     And Git Town prints the error:
       """

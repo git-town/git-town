@@ -1,6 +1,7 @@
 package forgedomain
 
 import (
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
@@ -28,6 +29,7 @@ type Connector interface {
 type CreateProposalArgs struct {
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner subshelldomain.Runner
+	Interactive    clidomain.Interactive
 	MainBranch     gitdomain.LocalBranchName
 	ParentBranch   gitdomain.LocalBranchName
 	ProposalBody   Option[gitdomain.ProposalBody]

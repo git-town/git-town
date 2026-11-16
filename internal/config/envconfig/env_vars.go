@@ -14,6 +14,18 @@ type EnvVars struct {
 	data map[string]string
 }
 
+func NewEnvVars(entries []string) EnvVars {
+	result := EnvVars{
+		data: map[string]string{},
+	}
+	for _, entry := range entries {
+		if name, value, isValid := strings.Cut(entry, "="); isValid {
+			result.data[name] = value
+		}
+	}
+	return result
+}
+
 // Get provides the environment variable with the first matching given name.
 // TODO: delete this and use GetOpt everywhere instead. Rename GetOpt to Get.
 func (self EnvVars) Get(name string, alternatives ...string) stringss.Trimmed {
@@ -55,16 +67,4 @@ func (self EnvVars) GetOpt(name string, alternatives ...string) Option[string] {
 		}
 	}
 	return None[string]()
-}
-
-func NewEnvVars(entries []string) EnvVars {
-	result := EnvVars{
-		data: map[string]string{},
-	}
-	for _, entry := range entries {
-		if name, value, isValid := strings.Cut(entry, "="); isValid {
-			result.data[name] = value
-		}
-	}
-	return result
 }

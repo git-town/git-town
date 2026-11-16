@@ -33,8 +33,8 @@ set [proposal-breadcrumb](../preferences/proposal-breadcrumb.md) to one of the
 following values:
 
 - `branches` to display breadcrumbs for all branches
-- `stacks` to display breadcrumbs only for stacks that contain more than one
-  branch
+- `stacks` to display breadcrumbs only for stacks
+  that contain more than one branch
 - `none` to not display breadcrumbs
 
 You can also set

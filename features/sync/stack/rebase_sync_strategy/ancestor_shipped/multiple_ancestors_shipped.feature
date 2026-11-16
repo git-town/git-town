@@ -43,10 +43,8 @@ Feature: shipped parent branches in a stacked change
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2                                 |
       |           | git push --force-with-lease                                                                 |
       |           | git checkout feature-4                                                                      |
-      | feature-4 | git pull                                                                                    |
-      |           | git -c rebase.updateRefs=false rebase --onto feature-3 feature-2                            |
-      |           | git push --force-with-lease                                                                 |
-      |           | git -c rebase.updateRefs=false rebase --onto feature-3 {{ sha-initial 'feature-3 commit' }} |
+      | feature-4 | git -c rebase.updateRefs=false rebase --onto feature-3 {{ sha-initial 'feature-3 commit' }} |
+      |           | git push --force-with-lease --force-if-includes                                             |
       |           | git branch -D feature-1                                                                     |
       |           | git branch -D feature-2                                                                     |
     And Git Town prints:

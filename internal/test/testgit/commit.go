@@ -19,8 +19,6 @@ type Commit struct {
 	SHA         gitdomain.SHA //exhaustruct:optional
 }
 
-var counter helpers.AtomicCounter
-
 // Set assigns the given value to the property with the given Gherkin table name.
 func (self *Commit) Set(name, value string) {
 	switch name {
@@ -40,6 +38,8 @@ func (self *Commit) Set(name, value string) {
 		log.Fatalf("unknown Commit property: %s", name)
 	}
 }
+
+var counter helpers.AtomicCounter
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
 func DefaultCommit() Commit {

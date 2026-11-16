@@ -83,12 +83,11 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 		t.Parallel()
 		for _, tc := range []struct {
 			desc    string
-			params  *ast.FieldList
 			matcher *matcher.FieldListPrefixMatcher
+			params  *ast.FieldList
 		}{
 			{
-				desc:   "EqualLenMatchers",
-				params: funcParams(t, `func(a, b, c string)`),
+				desc: "EqualLenMatchers",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},
@@ -96,21 +95,22 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 						&trueFieldMatcher{},
 					},
 				},
+				params: funcParams(t, `func(a, b, c string)`),
 			}, {
-				desc:   "NoMatchersNoParams",
-				params: funcParams(t, `func()`),
+				desc: "NoMatchersNoParams",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{},
 				},
+				params: funcParams(t, `func()`),
 			}, {
-				desc:   "SomeMatchers",
-				params: funcParams(t, `func(a, b, c string)`),
+				desc: "SomeMatchers",
 				matcher: &matcher.FieldListPrefixMatcher{
 					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},
 						&trueFieldMatcher{},
 					},
 				},
+				params: funcParams(t, `func(a, b, c string)`),
 			},
 		} {
 			t.Run(tc.desc, func(t *testing.T) {
@@ -159,29 +159,29 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 
 	t.Run("Failure", func(t *testing.T) {
 		for _, tc := range []struct {
-			funcMatcher matcher.ExprMatcher
 			expr        string
+			funcMatcher matcher.ExprMatcher
 			wantReason  string
 		}{
 			{
-				funcMatcher: &trueMatcher{},
 				expr:        `struct{}`,
+				funcMatcher: &trueMatcher{},
 				wantReason:  "not an ast.CallExpr",
 			}, {
-				funcMatcher: &falseMatcher{},
 				expr:        `foo("arg1", "arg2")`,
+				funcMatcher: &falseMatcher{},
 				wantReason:  "call.Fun doesn't match: fake failure",
 			}, {
-				funcMatcher: &trueMatcher{},
 				expr:        `foo()`,
+				funcMatcher: &trueMatcher{},
 				wantReason:  "len(call.Args) == 0, want at least 1",
 			}, {
-				funcMatcher: &trueMatcher{},
 				expr:        `foo(""+"")`,
+				funcMatcher: &trueMatcher{},
 				wantReason:  "the first call argument is not an ast.BasicLit",
 			}, {
-				funcMatcher: &trueMatcher{},
 				expr:        `foo(1)`,
+				funcMatcher: &trueMatcher{},
 				wantReason:  "the first call argument is not a STRING ast.BasicLit",
 			},
 		} {
@@ -253,24 +253,24 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			{
 				expr: `foo().bar`,
 				matcher: &matcher.IdentSelectorMatcher{
-					Namespace: "foo",
 					Name:      "bar",
+					Namespace: "foo",
 				},
 				wantReason: "namespace is not an ast.Ident",
 			},
 			{
 				expr: `notFoo.bar`,
 				matcher: &matcher.IdentSelectorMatcher{
-					Namespace: "foo",
 					Name:      "bar",
+					Namespace: "foo",
 				},
 				wantReason: `namespace doesn't match: want "foo", got "notFoo"`,
 			},
 			{
 				expr: `foo.notBar`,
 				matcher: &matcher.IdentSelectorMatcher{
-					Namespace: "foo",
 					Name:      "bar",
+					Namespace: "foo",
 				},
 				wantReason: `name doesn't match: want "bar", got "notBar"`,
 			},
@@ -291,8 +291,8 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			expr, err := parser.ParseExpr(`foo.bar`)
 			must.NoError(t, err)
 			m := &matcher.IdentSelectorMatcher{
-				Namespace: "foo",
 				Name:      "bar",
+				Namespace: "foo",
 			}
 
 			r := m.Match(expr)

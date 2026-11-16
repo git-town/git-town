@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog/formatters"
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 )
 
 func init() {
@@ -42,7 +42,7 @@ func (f *Progress) Summary() {
 	left := math.Mod(float64(*f.Steps), float64(f.StepsPerRow))
 	if left != 0 {
 		if *f.Steps > f.StepsPerRow {
-			fmt.Fprintf(f.out, s(f.StepsPerRow-int(left))+fmt.Sprintf(" %d\n", *f.Steps))
+			fmt.Fprint(f.out, s(f.StepsPerRow-int(left))+fmt.Sprintf(" %d\n", *f.Steps))
 		} else {
 			fmt.Fprintf(f.out, " %d\n", *f.Steps)
 		}

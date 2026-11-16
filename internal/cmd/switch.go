@@ -8,6 +8,7 @@ import (
 	"regexp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/flags"
@@ -26,63 +27,57 @@ import (
 
 const switchDesc = "Switch branches visually"
 
-func switchCmd() *cobra.Command {
-	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
-	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
-	addMergeFlag, readMergeFlag := flags.Merge()
-	addOrderFlag, readOrderFlag := flags.Order()
-	addStashFlag, readStashFlag := flags.Stash()
-	addTypeFlag, readTypeFlag := flags.BranchType()
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "switch",
-		GroupID: cmdhelpers.GroupIDNavigation,
-		Args:    cobra.ArbitraryArgs,
-		Short:   switchDesc,
-		Long:    cmdhelpers.Long(switchDesc),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			branchTypes, errBranchTypes := readTypeFlag(cmd)
-			allBranches, errAllBranches := readAllFlag(cmd)
-			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
-			merge, errMerge := readMergeFlag(cmd)
-			order, errOrder := readOrderFlag(cmd)
-			stash, errStash := readStashFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errBranchTypes, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      displayTypes,
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       None[configdomain.Interactive](),
-				Order:             order,
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             stash,
-				Verbose:           verbose,
-			})
-			return executeSwitch(executeSwitchArgs{
-				allBranches: allBranches,
-				argv:        args,
-				branchTypes: branchTypes,
-				cliConfig:   cliConfig,
-				merge:       merge,
-			})
-		},
+func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult switchData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	addAllFlag(&cmd)
-	addDisplayTypesFlag(&cmd)
-	addMergeFlag(&cmd)
-	addOrderFlag(&cmd)
-	addStashFlag(&cmd)
-	addTypeFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             None[forgedomain.Connector](),
+		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	regexes, err := regexes.NewRegexes(args)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	return switchData{
+		branchesSnapshot:   branchesSnapshot,
+		config:             repo.UnvalidatedConfig,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		inputs:             inputs,
+		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
+		regexes:            regexes,
+		uncommittedChanges: repoStatus.OpenChanges,
+	}, configdomain.ProgramFlowContinue, err
 }
 
 type executeSwitchArgs struct {
@@ -120,9 +115,9 @@ Start:
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches())
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entriesArgs := dialog.NewSwitchBranchEntriesArgs{
+		BranchesAndTypes:  branchesAndTypes,
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       args.branchTypes,
-		BranchesAndTypes:  branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
@@ -191,6 +186,65 @@ func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomai
 	return repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
 }
 
+func switchCmd() *cobra.Command {
+	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
+	addMergeFlag, readMergeFlag := flags.Merge()
+	addOrderFlag, readOrderFlag := flags.Order()
+	addStashFlag, readStashFlag := flags.Stash()
+	addTypeFlag, readTypeFlag := flags.BranchType()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.ArbitraryArgs,
+		GroupID: cmdhelpers.GroupIDNavigation,
+		Long:    cmdhelpers.Long(switchDesc),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			branchTypes, errBranchTypes := readTypeFlag(cmd)
+			allBranches, errAllBranches := readAllFlag(cmd)
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
+			merge, errMerge := readMergeFlag(cmd)
+			order, errOrder := readOrderFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAllBranches, errBranchTypes, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       None[clidomain.Interactive](),
+				Order:             order,
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             stash,
+				Verbose:           verbose,
+			})
+			return executeSwitch(executeSwitchArgs{
+				allBranches: allBranches,
+				argv:        args,
+				branchTypes: branchTypes,
+				cliConfig:   cliConfig,
+				merge:       merge,
+			})
+		},
+		Short: switchDesc,
+		Use:   "switch",
+	}
+	addAllFlag(&cmd)
+	addDisplayTypesFlag(&cmd)
+	addMergeFlag(&cmd)
+	addOrderFlag(&cmd)
+	addStashFlag(&cmd)
+	addTypeFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
+}
+
 func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
 	if err := repo.Git.Stash(repo.Frontend); err != nil {
 		return err
@@ -198,57 +252,4 @@ func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdom
 	errCheckout := repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
 	errPop := repo.Git.PopStash(repo.Frontend)
 	return cmp.Or(errCheckout, errPop)
-}
-
-func determineSwitchData(args []string, repo execute.OpenRepoResult) (switchData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult switchData
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             None[forgedomain.Connector](),
-		DetectedForgeType:     None[forgedomain.DetectedForgeType](),
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	regexes, err := regexes.NewRegexes(args)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	return switchData{
-		branchesSnapshot:   branchesSnapshot,
-		config:             repo.UnvalidatedConfig,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		inputs:             inputs,
-		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
-		regexes:            regexes,
-		uncommittedChanges: repoStatus.OpenChanges,
-	}, configdomain.ProgramFlowContinue, err
 }

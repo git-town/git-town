@@ -3,10 +3,10 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/git-town/git-town/v24/internal/messages"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
@@ -68,7 +68,7 @@ func MainBranch(args MainBranchArgs) (MainBranchResult, dialogdomain.Exit, error
 
 type MainBranchArgs struct {
 	Inputs         dialogcomponents.Inputs
-	Interactive    configdomain.Interactive
+	Interactive    clidomain.Interactive
 	Local          Option[gitdomain.LocalBranchName]
 	LocalBranches  gitdomain.LocalBranchNames
 	StandardBranch Option[gitdomain.LocalBranchName]

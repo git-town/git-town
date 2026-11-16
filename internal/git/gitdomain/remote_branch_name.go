@@ -11,30 +11,6 @@ import (
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName stringss.Trimmed
 
-func RemoteBranchNameOrPanic(id string) RemoteBranchName {
-	if !isValidRemoteBranchName(id) {
-		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
-	}
-	return RemoteBranchName(id)
-}
-
-func RemoteBranchNameOpt(id string) Option[RemoteBranchName] {
-	if isValidRemoteBranchName(id) {
-		return Some(RemoteBranchNameOrPanic(id))
-	}
-	return None[RemoteBranchName]()
-}
-
-func isValidRemoteBranchName(value string) bool {
-	if len(value) < 3 {
-		return false
-	}
-	if !strings.Contains(value, "/") {
-		return false
-	}
-	return true
-}
-
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (self RemoteBranchName) BranchName() BranchName {
 	return BranchName(string(self))
@@ -58,4 +34,28 @@ func (self RemoteBranchName) Remote() Remote {
 
 func (self RemoteBranchName) String() string {
 	return string(self)
+}
+
+func RemoteBranchNameOpt(id string) Option[RemoteBranchName] {
+	if isValidRemoteBranchName(id) {
+		return Some(RemoteBranchNameOrPanic(id))
+	}
+	return None[RemoteBranchName]()
+}
+
+func RemoteBranchNameOrPanic(id string) RemoteBranchName {
+	if !isValidRemoteBranchName(id) {
+		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
+	}
+	return RemoteBranchName(id)
+}
+
+func isValidRemoteBranchName(value string) bool {
+	if len(value) < 3 {
+		return false
+	}
+	if !strings.Contains(value, "/") {
+		return false
+	}
+	return true
 }

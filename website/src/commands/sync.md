@@ -15,10 +15,10 @@ If a sync goes wrong, you can safely go back to the exact state you repo was in
 before the sync by running [git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
-- deletes branches whose tracking branch was deleted at the remote if they
-  contain no unshipped changes
-- removes commits of deleted branches from their descendent branches, unless
-  when using the
+- deletes branches whose tracking branch was deleted at the remote
+  if they contain no unshipped changes
+- removes commits of deleted branches from their descendent branches,
+  unless when using the
   [merge sync strategy](../preferences/sync-feature-strategy.md#merge).
 - safely stashes away uncommitted changes and restores them when done
 - does not pull, push, or merge depending on the configured
@@ -43,8 +43,8 @@ If you don't sync because:
 - you don't want to pull in new changes from the main branch:
   [sync detached](sync.md#-d--detached--no-detached).
 - you don't want to increase pressure on your CI server:
-  [sync without pushing](sync.md#--push--no-push) or indicate in your commit
-  messages to CI to skip test runs
+  [sync without pushing](sync.md#--push--no-push)
+  or indicate in your commit messages to CI to skip test runs
   - [BitBucket](https://support.atlassian.com/bitbucket-cloud/kb/how-to-skip-triggering-an-automatic-pipeline-build-using-skip-ci-label)
   - [Gitea](https://docs.gitea.com/administration/config-cheat-sheet#actions-actions)
   - [GitHub](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs)
@@ -166,8 +166,9 @@ When you run into merge conflicts:
   command
 - [skip](skip.md) ignores all remaining merge conflicts on the current branch
   and then continues the currently suspended Git Town command
-- [undo](undo.md) aborts the currently suspended Git Town command and undoes all
-  the changes it did, bringing your Git repository back to the state it was
+- [undo](undo.md) aborts the currently suspended Git Town command
+  and undoes all the changes it did,
+  bringing your Git repository back to the state it was
   before you ran the currently suspended Git Town command
 
 <!-- keep-sorted end -->

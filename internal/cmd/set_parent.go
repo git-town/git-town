@@ -61,48 +61,102 @@ main
 `
 )
 
-func setParentCommand() *cobra.Command {
-	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
-	addNoParentFlag, readNoParentFlag := flags.NoParent()
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     "set-parent [branch]",
-		GroupID: cmdhelpers.GroupIDStack,
-		Args:    cobra.MaximumNArgs(1),
-		Short:   setParentDesc,
-		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			interactive, errInteractive := readInteractiveFlag(cmd)
-			noParent, errNoParent := readNoParentFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       autoResolve,
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            None[configdomain.DryRun](),
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       interactive,
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeSetParent(args, cliConfig, noParent)
-		},
+func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult setParentData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	addAutoResolveFlag(&cmd)
-	addInteractiveFlag(&cmd)
-	addNoParentFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	if branchesSnapshot.DetachedHead {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
+	existingParent, hasParent := parentOpt.Get()
+	var defaultChoice gitdomain.LocalBranchName
+	if hasParent {
+		defaultChoice = existingParent
+	} else {
+		defaultChoice = mainBranch
+	}
+	proposalOpt := None[forgedomain.Proposal]()
+	if !repo.IsOffline {
+		proposalOpt = ship.FindProposal(connector, initialBranch, parentOpt)
+	}
+	return setParentData{
+		branchesSnapshot:   branchesSnapshot,
+		branchInfosLastRun: branchInfosLastRun,
+		config:             validatedConfig,
+		connector:          connector,
+		defaultChoice:      defaultChoice,
+		detectedForgeType:  detectedForgeType,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		inputs:             inputs,
+		proposal:           proposalOpt,
+		stashSize:          stashSize,
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 func executeSetParent(args []string, cliConfig configdomain.PartialConfig, noParent configdomain.NoParent) error {
@@ -151,9 +205,9 @@ Start:
 				Type:          configdomain.BranchTypeFeatureBranch,
 			}
 			args := dialog.NewSwitchBranchEntriesArgs{
+				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches()),
 				BranchInfos:       data.branchesSnapshot.Branches,
 				BranchTypes:       []configdomain.BranchType{},
-				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches()),
 				ExcludeBranches:   excludeBranches,
 				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
@@ -236,8 +290,8 @@ Start:
 }
 
 type setParentData struct {
-	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
+	branchInfosLastRun Option[gitdomain.BranchInfos]
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	defaultChoice      gitdomain.LocalBranchName
@@ -249,109 +303,48 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult) (setParentData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult setParentData
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+func setParentCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
+	addNoParentFlag, readNoParentFlag := flags.NoParent()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Use:     "set-parent [branch]",
+		GroupID: cmdhelpers.GroupIDStack,
+		Args:    cobra.MaximumNArgs(1),
+		Short:   setParentDesc,
+		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
+			noParent, errNoParent := readNoParentFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAutoResolve, errInteractive, errNoParent, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeSetParent(args, cliConfig, noParent)
+		},
 	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connector,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	if branchesSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	existingParent, hasParent := parentOpt.Get()
-	var defaultChoice gitdomain.LocalBranchName
-	if hasParent {
-		defaultChoice = existingParent
-	} else {
-		defaultChoice = mainBranch
-	}
-	proposalOpt := None[forgedomain.Proposal]()
-	if !repo.IsOffline {
-		proposalOpt = ship.FindProposal(connector, initialBranch, parentOpt)
-	}
-	return setParentData{
-		branchInfosLastRun: branchInfosLastRun,
-		branchesSnapshot:   branchesSnapshot,
-		config:             validatedConfig,
-		connector:          connector,
-		defaultChoice:      defaultChoice,
-		detectedForgeType:  detectedForgeType,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		inputs:             inputs,
-		proposal:           proposalOpt,
-		stashSize:          stashSize,
-	}, configdomain.ProgramFlowContinue, nil
-}
-
-func verifySetParentData(data setParentData) error {
-	if data.config.IsMainOrPerennialBranch(data.initialBranch) {
-		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.initialBranch)
-	}
-	return nil
+	addAutoResolveFlag(&cmd)
+	addInteractiveFlag(&cmd)
+	addNoParentFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setParentData) (program.Program, dialogdomain.Exit) {
@@ -488,4 +481,11 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		})
 	}
 	return optimizer.Optimize(prog), false
+}
+
+func verifySetParentData(data setParentData) error {
+	if data.config.IsMainOrPerennialBranch(data.initialBranch) {
+		return fmt.Errorf(messages.SetParentNoFeatureBranch, data.initialBranch)
+	}
+	return nil
 }

@@ -124,6 +124,33 @@ type executeShipArgs struct {
 	toParent     configdomain.ShipIntoNonperennialParent
 }
 
+func ReadFile[TEXT ~string, FILE FileFlag](inputText Option[TEXT], inputFileOpt Option[FILE]) (Option[TEXT], error) {
+	if inputText.IsSome() {
+		return inputText, nil
+	}
+	file, hasFile := inputFileOpt.Get()
+	if !hasFile {
+		return None[TEXT](), nil
+	}
+	if file.ShouldReadStdin() {
+		content, err := io.ReadAll(os.Stdin)
+		return NewOption(TEXT(string(content))), gohacks.WrapIfError(err, "cannot read STDIN: %w")
+	}
+	fileData, err := os.ReadFile(file.String())
+	return NewOption(TEXT(string(fileData))), err
+}
+
+func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []forgedomain.Proposal) {
+	for _, childProposal := range proposals {
+		data := childProposal.Data.Data()
+		prog.Add(&opcodes.ProposalUpdateTargetToGrandParent{
+			Branch:    data.Source,
+			OldTarget: data.Target,
+			Proposal:  childProposal,
+		})
+	}
+}
+
 func executeShip(args executeShipArgs) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
@@ -241,17 +268,6 @@ Start:
 	})
 }
 
-func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []forgedomain.Proposal) {
-	for _, childProposal := range proposals {
-		data := childProposal.Data.Data()
-		prog.Add(&opcodes.ProposalUpdateTargetToGrandParent{
-			Branch:    data.Source,
-			OldTarget: data.Target,
-			Proposal:  childProposal,
-		})
-	}
-}
-
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent, message Option[gitdomain.CommitMessage]) error {
 	if data.config.NormalConfig.ShipStrategy == configdomain.ShipStrategyFastForward && message.IsSome() {
 		return errors.New(messages.ShipMessageWithFastForward)
@@ -289,22 +305,6 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		}
 	}
 	return nil
-}
-
-func ReadFile[TEXT ~string, FILE FileFlag](inputText Option[TEXT], inputFileOpt Option[FILE]) (Option[TEXT], error) {
-	if inputText.IsSome() {
-		return inputText, nil
-	}
-	file, hasFile := inputFileOpt.Get()
-	if !hasFile {
-		return None[TEXT](), nil
-	}
-	if file.ShouldReadStdin() {
-		content, err := io.ReadAll(os.Stdin)
-		return NewOption(TEXT(string(content))), gohacks.WrapIfError(err, "cannot read STDIN: %w")
-	}
-	fileData, err := os.ReadFile(file.String())
-	return NewOption(TEXT(string(fileData))), err
 }
 
 type FileFlag interface {

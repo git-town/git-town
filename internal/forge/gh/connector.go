@@ -34,17 +34,9 @@ type Connector struct {
 	Log            print.Logger
 }
 
-// ============================================================================
-// browse the repo
-// ============================================================================
-
 func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	return runner.Run("gh", "browse")
 }
-
-// ============================================================================
-// create proposals
-// ============================================================================
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"pr", "create", "--head=" + data.Branch.String(), "--base=" + data.ParentBranch.String()}
@@ -56,7 +48,8 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	if !hasTitle || !hasBody {
+	infoMissing := !hasTitle || !hasBody
+	if infoMissing && data.Interactive.IsDisabled() {
 		args = append(args, "--fill")
 	}
 	if err := self.Frontend.Run("gh", args...); err != nil {
@@ -76,12 +69,6 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return github.DefaultProposalMessage(data)
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = ghConnector // type-check
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.Log.Start(messages.APIProposalFindStart, branch, target)
@@ -113,12 +100,6 @@ func (self Connector) ProposalReference(data forgedomain.ProposalData) string {
 	return github.ProposalReference(data)
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = ghConnector // type-check
-
 func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.Log.Start(messages.APIProposalSearchStart, branch.String())
 	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
@@ -143,12 +124,6 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forge
 	return proposals, err
 }
 
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = ghConnector // type-check
-
 func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, message Option[gitdomain.CommitMessage]) error {
 	args := []string{"pr", "merge", "--squash"}
 
@@ -166,31 +141,13 @@ func (self Connector) SquashMergeProposal(number forgedomain.ProposalNumber, mes
 	return self.Frontend.Run("gh", args...)
 }
 
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
-
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--body="+updatedBody.String())
 }
 
-// ============================================================================
-// update proposal target
-// ============================================================================
-
-var _ forgedomain.ProposalTargetUpdater = ghConnector // type-check
-
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("gh", "pr", "edit", proposalData.Data().Number.String(), "--base="+target.String())
 }
-
-// ============================================================================
-// verify credentials
-// ============================================================================
-
-var _ forgedomain.CredentialVerifier = ghConnector // type check
 
 func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("gh", "auth", "status", "--active")
@@ -203,6 +160,50 @@ func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	}
 	return ParsePermissionsOutput(output)
 }
+
+// ============================================================================
+// browse the repo
+// ============================================================================
+
+// ============================================================================
+// create proposals
+// ============================================================================
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = ghConnector // type-check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = ghConnector // type-check
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = ghConnector // type-check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = ghConnector // type-check
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = ghConnector // type check
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 	result := forgedomain.VerifyCredentialsResult{

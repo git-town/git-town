@@ -32,30 +32,6 @@ type BranchChanges struct {
 	RemoteRemoved RemoteBranchesSHAs
 }
 
-// uncomment when debugging the undo logic
-// func (self BranchChanges) String() string {
-// 	s := strings.Builder{}
-// 	s.WriteString("BranchChanges {")
-// 	s.WriteString("\n  LocalAdded: ")
-// 	s.WriteString(strings.Join(self.LocalAdded.Strings(), ", "))
-// 	s.WriteString("\n  LocalRemoved: ")
-// 	s.WriteString(strings.Join(self.LocalRemoved.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  LocalChanged: ")
-// 	s.WriteString(strings.Join(self.LocalChanged.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  RemoteAdded: ")
-// 	s.WriteString(strings.Join(self.RemoteAdded.Strings(), ", "))
-// 	s.WriteString("\n  RemoteRemoved: ")
-// 	s.WriteString(strings.Join(self.RemoteRemoved.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  RemoteChanged: ")
-// 	s.WriteString(strings.Join(self.RemoteChanged.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  OmniRemoved: ")
-// 	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
-// 	s.WriteString("\n  OmniChanged: ")
-// 	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
-// 	s.WriteRune('\n')
-// 	return s.String()
-// }
-
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
@@ -214,12 +190,36 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	return result
 }
 
+// uncomment when debugging the undo logic
+// func (self BranchChanges) String() string {
+// 	s := strings.Builder{}
+// 	s.WriteString("BranchChanges {")
+// 	s.WriteString("\n  LocalAdded: ")
+// 	s.WriteString(strings.Join(self.LocalAdded.Strings(), ", "))
+// 	s.WriteString("\n  LocalRemoved: ")
+// 	s.WriteString(strings.Join(self.LocalRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  LocalChanged: ")
+// 	s.WriteString(strings.Join(self.LocalChanged.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  RemoteAdded: ")
+// 	s.WriteString(strings.Join(self.RemoteAdded.Strings(), ", "))
+// 	s.WriteString("\n  RemoteRemoved: ")
+// 	s.WriteString(strings.Join(self.RemoteRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  RemoteChanged: ")
+// 	s.WriteString(strings.Join(self.RemoteChanged.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  OmniRemoved: ")
+// 	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  OmniChanged: ")
+// 	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
+// 	s.WriteRune('\n')
+// 	return s.String()
+// }
+
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	BranchInfos              gitdomain.BranchInfos
 	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
 	FinalMessages            stringslice.Collector
-	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA
+	UndoAPIProgram           program.Program
 }

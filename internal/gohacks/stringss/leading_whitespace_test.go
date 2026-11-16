@@ -10,12 +10,12 @@ import (
 func TestLeadingWhitespace(t *testing.T) {
 	t.Parallel()
 	tests := map[string]string{
-		"    text":   "    ",   // spaces
+		"":           "",       // empty string
 		"\t\ttext":   "\t\t",   // tabs
 		"  \t  text": "  \t  ", // mixed spaces and tabs
-		"text":       "",       // no indentation
-		"":           "",       // empty string
 		"    ":       "    ",   // only whitespace
+		"    text":   "    ",   // spaces
+		"text":       "",       // no indentation
 	}
 	for give, want := range tests {
 		have := stringss.LeadingWhitespace(give)

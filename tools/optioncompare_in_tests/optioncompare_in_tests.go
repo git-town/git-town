@@ -123,6 +123,21 @@ func lintFile(filePath string) error {
 	return nil
 }
 
+func main() {
+	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
+		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") || !isTestFile(path) {
+			return err
+		}
+		if err := lintFile(path); err != nil {
+			return fmt.Errorf("error linting file %s: %w", path, err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatalf("Error walking current directory: %v\n", err)
+	}
+}
+
 // indicates whether a given path should be skipped
 func shouldSkipPath(path string) bool {
 	cleanedPath := filepath.Clean(path) // resolve any ".." or "." components and get a canonical path.
@@ -140,33 +155,18 @@ func transformToEqualSome(mustEqCall *ast.CallExpr, someCall *ast.CallExpr, yArg
 
 	// Create y.EqualSome(x) where x is the argument to Some
 	equalSomeCall := &ast.CallExpr{
+		Args: someCall.Args, // Use the arguments from the Some() call
 		Fun: &ast.SelectorExpr{
-			X: yArg,
 			Sel: &ast.Ident{
 				Name: "EqualSome",
 			},
+			X: yArg,
 		},
-		Args: someCall.Args, // Use the arguments from the Some() call
 	}
 
 	// Replace the arguments: keep t (first arg), replace second and third with y.EqualSome(x)
 	mustEqCall.Args = []ast.Expr{
 		mustEqCall.Args[0], // keep t
 		equalSomeCall,      // y.EqualSome(x)
-	}
-}
-
-func main() {
-	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
-		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") || !isTestFile(path) {
-			return err
-		}
-		if err := lintFile(path); err != nil {
-			return fmt.Errorf("error linting file %s: %w", path, err)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Fatalf("Error walking current directory: %v\n", err)
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"cmp"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
@@ -26,6 +27,7 @@ const (
 	dryRun                      = "GIT_TOWN_DRY_RUN"
 	featureRegex                = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                   = "GIT_TOWN_FORGE_TYPE"
+	forgeURL                    = "GIT_TOWN_FORGE_URL"
 	forgejoToken                = "GIT_TOWN_FORGEJO_TOKEN"
 	gitAuthorEmail              = "GIT_AUTHOR_EMAIL"
 	gitAuthorName               = "GIT_AUTHOR_NAME"
@@ -78,13 +80,14 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
 	featureRegex, errFeatureRegex := load(env, featureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := load(env, forgeType, forgedomain.ParseForgeType)
+	forgeURL, errForgeURL := load(env, forgeURL, configdomain.ParseForgeType)
 	gitUserEmail := gitdomain.ParseGitUserEmailOpt(env.GetFirstNonEmpty(gitAuthorEmail, gitCommitterEmail))
 	gitUserName := gitdomain.GitUserNameOptFromStringOpt(env.GetFirstNonEmpty(gitAuthorName, gitCommitterName))
 	githubConnectorType, errGithubConnectorType := load(env, githubConnectorType, forgedomain.ParseGithubConnectorType)
 	gitlabConnectorType, errGitlabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitlabConnectorType)
 	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	interactive1, errInteractive1 := load(env, interactive, gohacks.ParseBoolOpt[bool])
-	interactive2 := configdomain.NewInteractiveFromEnv(env.Get(term), interactive1)
+	interactive2 := clidomain.NewInteractiveFromEnv(env.Get(term), interactive1)
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
@@ -118,6 +121,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
+		errForgeURL,
 		errGithubConnectorType,
 		errGitlabConnectorType,
 		errIgnoreUncommitted,
@@ -184,6 +188,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		ForgeURL:                    forgeURL,
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            shipEnterMessage,

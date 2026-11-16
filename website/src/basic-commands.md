@@ -9,6 +9,7 @@ The following four Git Town commands automate the typical development workflow:
   branch.
   This prevents your feature branch from deviating too much from the main code
   line.
-- If your team does pull requests, you can run
-  [git town propose](./commands/propose.md) to create a new pull request.
+- If your team does pull requests,
+  you can run [git town propose](./commands/propose.md) to create a new pull
+  request.
 - [git town ship](./commands/ship.md) delivers the feature branch.

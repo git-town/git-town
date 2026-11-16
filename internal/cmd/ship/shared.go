@@ -20,9 +20,9 @@ import (
 
 // data that all ship strategies use
 type sharedShipData struct {
+	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchToShip             gitdomain.LocalBranchName
 	branchToShipInfo         gitdomain.BranchInfo
-	branchesSnapshot         gitdomain.BranchesSnapshot
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
@@ -44,6 +44,68 @@ type determineSharedShipDataArgs struct {
 	enterMessageOverride Option[configdomain.ShipEnterMessage]
 	repo                 execute.OpenRepoResult
 	shipStrategyOverride Option[configdomain.ShipStrategy]
+}
+
+func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.Proposal] {
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+		return None[forgedomain.Proposal]()
+	}
+	target, hasTarget := targetBranch.Get()
+	if !hasTarget {
+		return None[forgedomain.Proposal]()
+	}
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
+		return None[forgedomain.Proposal]()
+	}
+	proposal, err := proposalFinder.FindProposal(sourceBranch, target)
+	if err != nil {
+		print.Error(err)
+		return None[forgedomain.Proposal]()
+	}
+	return proposal
+}
+
+func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.Proposal {
+	connector, hasConnector := args.ConnectorOpt.Get()
+	if !hasConnector {
+		return []forgedomain.Proposal{}
+	}
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
+		return []forgedomain.Proposal{}
+	}
+	if args.Offline.IsOffline() {
+		return []forgedomain.Proposal{}
+	}
+	if !args.OldBranchHasTrackingBranch {
+		return []forgedomain.Proposal{}
+	}
+	childBranches := args.Lineage.Children(args.OldBranch, args.Order)
+	result := make([]forgedomain.Proposal, 0, len(childBranches))
+	for _, childBranch := range childBranches {
+		childProposalOpt, err := proposalFinder.FindProposal(childBranch, args.OldBranch)
+		if err != nil {
+			print.Error(err)
+			continue
+		}
+		childProposal, hasChildProposal := childProposalOpt.Get()
+		if !hasChildProposal {
+			continue
+		}
+		result = append(result, childProposal)
+	}
+	return result
+}
+
+type LoadProposalsOfChildBranchesArgs struct {
+	ConnectorOpt               Option[forgedomain.Connector]
+	Lineage                    configdomain.Lineage
+	Offline                    configdomain.Offline
+	OldBranch                  gitdomain.LocalBranchName
+	OldBranchHasTrackingBranch bool
+	Order                      configdomain.Order
 }
 
 func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, configdomain.ProgramFlow, error) {
@@ -123,9 +185,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            args.repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          args.repo.ConfigDir,
 		ConfigSnapshot:     args.repo.ConfigSnapshot,
 		Connector:          connector,
@@ -181,9 +243,9 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	return sharedShipData{
+		branchesSnapshot:         branchesSnapshot,
 		branchToShip:             branchToShip,
 		branchToShipInfo:         *branchToShipInfo,
-		branchesSnapshot:         branchesSnapshot,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
@@ -199,66 +261,4 @@ func determineSharedShipData(args determineSharedShipDataArgs) (sharedShipData, 
 		targetBranch:             *targetBranch,
 		targetBranchName:         targetBranchName,
 	}, configdomain.ProgramFlowContinue, nil
-}
-
-func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.Proposal {
-	connector, hasConnector := args.ConnectorOpt.Get()
-	if !hasConnector {
-		return []forgedomain.Proposal{}
-	}
-	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	if !canFindProposals {
-		return []forgedomain.Proposal{}
-	}
-	if args.Offline.IsOffline() {
-		return []forgedomain.Proposal{}
-	}
-	if !args.OldBranchHasTrackingBranch {
-		return []forgedomain.Proposal{}
-	}
-	childBranches := args.Lineage.Children(args.OldBranch, args.Order)
-	result := make([]forgedomain.Proposal, 0, len(childBranches))
-	for _, childBranch := range childBranches {
-		childProposalOpt, err := proposalFinder.FindProposal(childBranch, args.OldBranch)
-		if err != nil {
-			print.Error(err)
-			continue
-		}
-		childProposal, hasChildProposal := childProposalOpt.Get()
-		if !hasChildProposal {
-			continue
-		}
-		result = append(result, childProposal)
-	}
-	return result
-}
-
-type LoadProposalsOfChildBranchesArgs struct {
-	ConnectorOpt               Option[forgedomain.Connector]
-	Lineage                    configdomain.Lineage
-	Offline                    configdomain.Offline
-	OldBranch                  gitdomain.LocalBranchName
-	OldBranchHasTrackingBranch bool
-	Order                      configdomain.Order
-}
-
-func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.Proposal] {
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
-		return None[forgedomain.Proposal]()
-	}
-	target, hasTarget := targetBranch.Get()
-	if !hasTarget {
-		return None[forgedomain.Proposal]()
-	}
-	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	if !canFindProposals {
-		return None[forgedomain.Proposal]()
-	}
-	proposal, err := proposalFinder.FindProposal(sourceBranch, target)
-	if err != nil {
-		print.Error(err)
-		return None[forgedomain.Proposal]()
-	}
-	return proposal
 }

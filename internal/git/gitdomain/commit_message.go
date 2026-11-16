@@ -9,12 +9,6 @@ import (
 // CommitMessage is the entire textual messages of a Git commit.
 type CommitMessage stringss.Trimmed
 
-// CommitMessageParts describes the parts of a Git commit message.
-type CommitMessageParts struct {
-	Body  string      // the commit message text minus the first line and empty lines separating it from the rest of the message
-	Title CommitTitle // the first line of the commit message
-}
-
 // Parts separates the parts of the given commit message.
 func (self CommitMessage) Parts() CommitMessageParts {
 	title, body, _ := strings.Cut(self.String(), "\n")
@@ -30,4 +24,10 @@ func (self CommitMessage) Parts() CommitMessageParts {
 // String implements the fmt.Stringer interface.
 func (self CommitMessage) String() string {
 	return string(self)
+}
+
+// CommitMessageParts describes the parts of a Git commit message.
+type CommitMessageParts struct {
+	Body  string      // the commit message text minus the first line and empty lines separating it from the rest of the message
+	Title CommitTitle // the first line of the commit message
 }

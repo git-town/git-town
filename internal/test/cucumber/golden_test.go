@@ -13,61 +13,61 @@ func TestNormalizeWhitespace(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name string
 		give []string
+		name string
 		want []string
 	}{
 		{
-			name: "multiple spaces",
 			give: []string{
 				"one    two",
 				"three     four",
 			},
+			name: "multiple spaces",
 			want: []string{
 				"one two",
 				"three four",
 			},
 		},
 		{
-			name: "tabs",
 			give: []string{
 				"one\t\t\t\ttwo",
 				"three\t\tfour",
 			},
+			name: "tabs",
 			want: []string{
 				"one two",
 				"three four",
 			},
 		},
 		{
-			name: "mixed whitespace",
 			give: []string{
 				"one \t  \t two",
 				"three\t \tfour",
 			},
+			name: "mixed whitespace",
 			want: []string{
 				"one two",
 				"three four",
 			},
 		},
 		{
-			name: "single spaces unchanged",
 			give: []string{
 				"one two",
 				"three four five",
 			},
+			name: "single spaces unchanged",
 			want: []string{
 				"one two",
 				"three four five",
 			},
 		},
 		{
-			name: "leading and trailing whitespace",
 			give: []string{
 				"  leading",
 				"trailing  ",
 				"  both  ",
 			},
+			name: "leading and trailing whitespace",
 			want: []string{
 				" leading",
 				"trailing ",
@@ -75,23 +75,23 @@ func TestNormalizeWhitespace(t *testing.T) {
 			},
 		},
 		{
+			give: []string{
+				"nowhitespace",
+				"stillnone",
+			},
 			name: "no whitespace",
-			give: []string{
-				"nowhitespace",
-				"stillnone",
-			},
 			want: []string{
 				"nowhitespace",
 				"stillnone",
 			},
 		},
 		{
+			give: []string{
+				"",
+				"not empty",
+				"",
+			},
 			name: "empty strings",
-			give: []string{
-				"",
-				"not empty",
-				"",
-			},
 			want: []string{
 				"",
 				"not empty",
@@ -99,17 +99,17 @@ func TestNormalizeWhitespace(t *testing.T) {
 			},
 		},
 		{
-			name: "empty slice",
 			give: []string{},
+			name: "empty slice",
 			want: []string{},
 		},
 		{
-			name: "newlines and other whitespace",
 			give: []string{
 				"one\n\n\ntwo",
 				"three\r\rfour",
 				"five\f\fsix",
 			},
+			name: "newlines and other whitespace",
 			want: []string{
 				"one two",
 				"three four",
@@ -117,11 +117,11 @@ func TestNormalizeWhitespace(t *testing.T) {
 			},
 		},
 		{
-			name: "real-world example with table formatting",
 			give: []string{
 				"      | BRANCH      | COMMAND   |",
 				"      | main   | git fetch |",
 			},
+			name: "real-world example with table formatting",
 			want: []string{
 				" | BRANCH | COMMAND |",
 				" | main | git fetch |",
@@ -183,14 +183,13 @@ func TestUpdateFeatureFileWithCommands(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name     string
 		file     string
-		oldTable string
+		name     string
 		newTable string
+		oldTable string
 		want     string
 	}{
 		{
-			name: "replace table with proper indentation",
 			file: `
 Feature: test
   Scenario: test
@@ -198,12 +197,13 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git fetch |
     And some other step`[1:],
-			oldTable: `
-      | BRANCH | COMMAND |
-      | main   | git fetch |`[1:],
+			name: "replace table with proper indentation",
 			newTable: `
 | BRANCH | COMMAND |
 | main   | git pull |`[1:],
+			oldTable: `
+      | BRANCH | COMMAND |
+      | main   | git fetch |`[1:],
 			want: `
 Feature: test
   Scenario: test
@@ -213,7 +213,6 @@ Feature: test
     And some other step`[1:],
 		},
 		{
-			name: "replace table with different number of rows",
 			file: `
 Feature: test
   Scenario: test
@@ -221,13 +220,14 @@ Feature: test
       | BRANCH      | COMMAND   |
       | development | git fetch |
     And done`[1:],
-			oldTable: `
-			| BRANCH      | COMMAND |
-			| development | git fetch |`[1:],
+			name: "replace table with different number of rows",
 			newTable: `
 			| BRANCH | COMMAND |
 			| main   | git init |
 			| main   | git pull |`[1:],
+			oldTable: `
+			| BRANCH      | COMMAND |
+			| development | git fetch |`[1:],
 			want: `
 Feature: test
   Scenario: test
@@ -238,7 +238,6 @@ Feature: test
     And done`[1:],
 		},
 		{
-			name: "old table has more empty lines",
 			file: `
 Feature: test
   Scenario: test
@@ -246,16 +245,17 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git fetch |
     And done`[1:],
+			name: "old table has more empty lines",
+			newTable: `
+			| BRANCH | COMMAND |
+			| main | git init |
+			| main | git pull |`[1:],
 			oldTable: `
 
 			| BRANCH | COMMAND |
 			| main | git fetch |
 
 `,
-			newTable: `
-			| BRANCH | COMMAND |
-			| main | git init |
-			| main | git pull |`[1:],
 			want: `
 Feature: test
   Scenario: test
@@ -266,7 +266,6 @@ Feature: test
     And done`[1:],
 		},
 		{
-			name: "newTable has more empty lines",
 			file: `
 Feature: test
   Scenario: test
@@ -274,9 +273,7 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git fetch |
     And done`[1:],
-			oldTable: `
-			| BRANCH | COMMAND |
-			| main | git fetch |`[1:],
+			name: "newTable has more empty lines",
 			newTable: `
 
 			| BRANCH | COMMAND |
@@ -284,6 +281,9 @@ Feature: test
 			| main | git pull |
 
 `,
+			oldTable: `
+			| BRANCH | COMMAND |
+			| main | git fetch |`[1:],
 			want: `
 Feature: test
   Scenario: test
@@ -294,7 +294,6 @@ Feature: test
     And done`[1:],
 		},
 		{
-			name: "SHA placeholders",
 			file: `
 Feature: test
   Scenario: test
@@ -302,12 +301,13 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git reset --hard {{ sha 'commit' }} |
     And done`[1:],
-			oldTable: `
-      | BRANCH | COMMAND                                                   |
-      | main | git reset --hard d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			name: "SHA placeholders",
 			newTable: `
 			| BRANCH | COMMAND                                                   |
 			| main | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			oldTable: `
+      | BRANCH | COMMAND                                                   |
+      | main | git reset --hard d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
 			want: `
 Feature: test
   Scenario: test

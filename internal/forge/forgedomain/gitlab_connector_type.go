@@ -11,14 +11,14 @@ import (
 // GitlabConnectorType describes the various ways in which Git Town can connect to the GitLab API.
 type GitlabConnectorType string
 
+func (self GitlabConnectorType) String() string {
+	return string(self)
+}
+
 const (
 	GitlabConnectorTypeAPI  GitlabConnectorType = "api"  // connect to the GitLab API using Git Town's built-in API connector
 	GitlabConnectorTypeGlab GitlabConnectorType = "glab" // connect to the GitLab API by calling GitLab's "glab" tool
 )
-
-func (self GitlabConnectorType) String() string {
-	return string(self)
-}
 
 // GitlabConnectorTypes provides all possible types that the GitlabConnectorTypes enum can have.
 func GitlabConnectorTypes() []GitlabConnectorType {

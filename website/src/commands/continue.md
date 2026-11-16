@@ -32,7 +32,7 @@ determine the repository state.
 
 - [skip](skip.md) ignores all remaining merge conflicts on the current branch
   and then continues the currently suspended Git Town command
-- [undo](undo.md) aborts the currently suspended Git Town command and returns
-  the repository to the state it was in before you ran that command
+- [undo](undo.md) aborts the currently suspended Git Town command
+  and returns the repository to the state it was in before you ran that command
 
 <!-- keep-sorted end -->

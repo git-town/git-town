@@ -25,6 +25,29 @@ type UnvalidatedConfig struct {
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
 
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
+	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
+		cli:      args.CliConfig,
+		defaults: args.Defaults,
+		env:      args.EnvConfig,
+		file:     args.ConfigFile,
+		git:      args.GitUnscoped,
+		system:   args.SystemConfig,
+	})
+	return UnvalidatedConfig{
+		CLI:               args.CliConfig,
+		Defaults:          args.Defaults,
+		Env:               args.EnvConfig,
+		File:              args.ConfigFile,
+		GitGlobal:         args.GitGlobal,
+		GitLocal:          args.GitLocal,
+		GitUnscoped:       args.GitUnscoped,
+		NormalConfig:      normalConfig,
+		SystemConfig:      args.SystemConfig,
+		UnvalidatedConfig: unvalidatedConfig,
+	}
+}
+
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	return self.UnvalidatedConfig.PartialBranchType(branch).GetOr(self.NormalConfig.PartialBranchType(branch))
 }
@@ -83,29 +106,6 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOr(self.NormalConfig.PartialBranchType(branch))
 	}
 	return result
-}
-
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
-	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
-		cli:      args.CliConfig,
-		defaults: args.Defaults,
-		env:      args.EnvConfig,
-		file:     args.ConfigFile,
-		git:      args.GitUnscoped,
-		system:   args.SystemConfig,
-	})
-	return UnvalidatedConfig{
-		CLI:               args.CliConfig,
-		Defaults:          args.Defaults,
-		Env:               args.EnvConfig,
-		File:              args.ConfigFile,
-		GitGlobal:         args.GitGlobal,
-		GitLocal:          args.GitLocal,
-		GitUnscoped:       args.GitUnscoped,
-		NormalConfig:      normalConfig,
-		SystemConfig:      args.SystemConfig,
-		UnvalidatedConfig: unvalidatedConfig,
-	}
 }
 
 type NewUnvalidatedConfigArgs struct {

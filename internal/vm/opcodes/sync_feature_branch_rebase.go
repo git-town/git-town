@@ -26,7 +26,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		program = append(
 			program,
 			&RebaseTrackingBranch{
-				PushBranches: self.PushBranches,
+				Branch:       self.Branch,
 				RemoteBranch: trackingBranch,
 			},
 		)

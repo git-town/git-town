@@ -12,11 +12,11 @@ import (
 func TestCommitTableBuilder(t *testing.T) {
 	t.Parallel()
 	builder := datatable.NewCommitTableBuilder()
-	commit1 := testgit.Commit{SHA: "111111", Branch: "branch1", Message: "commit1"}
-	commit2 := testgit.Commit{SHA: "222222", Branch: "main", Message: "commit2"}
-	commit3 := testgit.Commit{SHA: "333333", Branch: "main", Message: "commit3"}
-	commit4 := testgit.Commit{SHA: "444444", Branch: "branch2", Message: "commit4"}
-	commit5 := testgit.Commit{SHA: "555555", Branch: "branch3", Message: "commit5"}
+	commit1 := testgit.Commit{Branch: "branch1", Message: "commit1", SHA: "111111"}
+	commit2 := testgit.Commit{Branch: "main", Message: "commit2", SHA: "222222"}
+	commit3 := testgit.Commit{Branch: "main", Message: "commit3", SHA: "333333"}
+	commit4 := testgit.Commit{Branch: "branch2", Message: "commit4", SHA: "444444"}
+	commit5 := testgit.Commit{Branch: "branch3", Message: "commit5", SHA: "555555"}
 	builder.Add(commit1, "local")
 	builder.Add(commit1, "origin")
 	builder.Add(commit1, "worktree")

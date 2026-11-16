@@ -11,14 +11,14 @@ import (
 // GithubConnectorType describes the various ways in which Git Town can connect to the GitHub API.
 type GithubConnectorType string
 
+func (self GithubConnectorType) String() string {
+	return string(self)
+}
+
 const (
 	GithubConnectorTypeAPI GithubConnectorType = "api" // connect to the GitHub API using Git Town's built-in API connector
 	GithubConnectorTypeGh  GithubConnectorType = "gh"  // connect to the GitHub API by calling GitHub's "gh" tool
 )
-
-func (self GithubConnectorType) String() string {
-	return string(self)
-}
 
 // GithubConnectorTypes provides all possible types that the GithubConnectorTypes enum can have.
 func GithubConnectorTypes() []GithubConnectorType {

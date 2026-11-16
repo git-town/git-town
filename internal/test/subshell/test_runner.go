@@ -31,23 +31,23 @@ type TestRunner struct {
 	// the directory that contains mock executables, ignored if empty
 	BinDir string
 
+	// name of the binary to use as the custom editor during "git commit"
+	gitEditor Option[string]
+
 	// the directory that contains the global Git configuration
 	HomeDir string
+
+	// content of the GIT_TOWN_FORGE_URL environment variable
+	testOrigin Option[string]
+
+	// indicates whether the current test has created the binDir
+	usesBinDir bool
 
 	// whether to log the output of subshell commands
 	Verbose configdomain.Verbose
 
 	// the directory in which this runner executes shell commands
 	WorkingDir string
-
-	// name of the binary to use as the custom editor during "git commit"
-	gitEditor Option[string]
-
-	// content of the GIT_TOWN_REMOTE environment variable
-	testOrigin Option[string]
-
-	// indicates whether the current test has created the binDir
-	usesBinDir bool
 }
 
 // CreateMockBinary creates an executable with the given name and content in ms.binDir.
@@ -199,7 +199,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
 	// add the custom origin
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
-		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_FORGE_URL", testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if self.usesBinDir {

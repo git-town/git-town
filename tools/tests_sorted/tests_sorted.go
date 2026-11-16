@@ -15,29 +15,6 @@ var ignorePaths = []string{
 	"vendor/",
 }
 
-func main() {
-	issues := Issues{}
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
-			return err
-		}
-		fileIssues, err := LintFile(path, nil)
-		if err != nil {
-			return err
-		}
-		issues = append(issues, fileIssues...)
-		return nil
-	})
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if len(issues) > 0 {
-		fmt.Println(issues)
-	}
-	os.Exit(len(issues))
-}
-
 // LintFile lints file specified by a path.
 // If contents is not nil the path is only used for positional information.
 // If contents is nil the file is loaded from path.
@@ -76,4 +53,27 @@ func isIgnoredPath(path string) bool {
 		}
 	}
 	return false
+}
+
+func main() {
+	issues := Issues{}
+	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
+			return err
+		}
+		fileIssues, err := LintFile(path, nil)
+		if err != nil {
+			return err
+		}
+		issues = append(issues, fileIssues...)
+		return nil
+	})
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if len(issues) > 0 {
+		fmt.Println(issues)
+	}
+	os.Exit(len(issues))
 }
