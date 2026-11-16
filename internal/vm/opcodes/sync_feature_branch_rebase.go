@@ -9,10 +9,10 @@ import (
 
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchRebase struct {
-	Branch               gitdomain.LocalBranchName
-	ParentSHAPreviousRun Option[gitdomain.SHA]
-	PushBranches         configdomain.PushBranches
-	TrackingBranch       Option[gitdomain.RemoteBranchName]
+	Branch          gitdomain.LocalBranchName
+	CommitsToRemove Option[gitdomain.SHA]
+	PushBranches    configdomain.PushBranches
+	TrackingBranch  Option[gitdomain.RemoteBranchName]
 }
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
@@ -35,7 +35,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		program,
 		&RebaseAncestorsUntilLocal{
 			Branch:          self.Branch,
-			CommitsToRemove: self.ParentSHAPreviousRun,
+			CommitsToRemove: self.CommitsToRemove,
 		},
 	)
 	// update the tracking branch
