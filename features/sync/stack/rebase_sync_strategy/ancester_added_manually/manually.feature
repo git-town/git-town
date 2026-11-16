@@ -18,9 +18,9 @@ Feature: sync a stack whose parent branch did not exist during the previous Git 
     And the commits
       | BRANCH | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT |
       | main   | origin   | main commit | main_file | main         |
+    When I run "git-town sync --stack"
 
   Scenario: result
-    When I run "git-town sync --stack"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                 |
       | branch-2 | git fetch --prune --tags                                                                |
@@ -33,3 +33,18 @@ Feature: sync a stack whose parent branch did not exist during the previous Git 
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-before-run 'commit 1' }}   |
       |          | git push --force-with-lease --force-if-includes                                         |
     And no rebase is now in progress
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-1                           |
+      | branch-1 | git reset --hard {{ sha 'commit 1' }}           |
+      |          | git checkout main                               |
+      | main     | git reset --hard {{ sha 'initial commit' }}     |
+      |          | git push origin :branch-1                       |
+      |          | git checkout branch-2                           |
+    And the initial branches and lineage exist now
+    And the initial commits exist now
