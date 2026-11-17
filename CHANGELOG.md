@@ -14,6 +14,10 @@
 - `git town sync` now rebases correctly when the parent branch was shipped at the remote ([#6306](https://github.com/git-town/git-town/pull/6306)).
 - `git town sync` no longer rebases on an outdated tracking branch when the tip of `origin/<branch>` is found in the reflog of the local branch ([#6305](https://github.com/git-town/git-town/pull/6305)).
 
+#### Contributors
+
+Huge thanks to @CamilleCodes, @EdRW, @franckspike, @kevgo for contributing code and ideas to 26 shipped pull requests and 1 resolved issue!
+
 ## 24.1.1 (2026-11-06)
 
 #### Bug Fixes
