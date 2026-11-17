@@ -31,15 +31,15 @@ Feature: detach the current feature branch from a stack and update proposals
       |        | git checkout gamma1                                              |
       | gamma1 | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
-      |        | git push --force-with-lease                                      |
+      |        | git push --force-with-lease --force-if-includes                  |
       |        | git checkout gamma2                                              |
       | gamma2 | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto alpha beta          |
-      |        | git push --force-with-lease                                      |
+      |        | git push --force-with-lease --force-if-includes                  |
       |        | git checkout delta                                               |
       | delta  | git pull                                                         |
       |        | git -c rebase.updateRefs=false rebase --onto gamma2 beta         |
-      |        | git push --force-with-lease                                      |
+      |        | git push --force-with-lease --force-if-includes                  |
       |        | git checkout beta                                                |
       | beta   | git -c rebase.updateRefs=false rebase --onto main alpha          |
       |        | Updating target branch of proposal #2 to main ... ok             |

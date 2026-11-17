@@ -47,15 +47,15 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          | git checkout branch-3                                          |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
-      |          | git push --force-with-lease                                    |
+      |          | git push --force-with-lease --force-if-includes                |
       |          | git checkout branch-4                                          |
       | branch-4 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
-      |          | git push --force-with-lease                                    |
+      |          | git push --force-with-lease --force-if-includes                |
       |          | git checkout branch-5                                          |
       | branch-5 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-4 branch-2 |
-      |          | git push --force-with-lease                                    |
+      |          | git push --force-with-lease --force-if-includes                |
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git push --force-with-lease --force-if-includes                |
