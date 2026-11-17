@@ -65,7 +65,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return None[forgedomain.Proposal](), nil
 		}
-		proposal3, err := parsePullRequest(proposal2)
+		proposal3, err := ParsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return None[forgedomain.Proposal](), nil
@@ -85,6 +85,26 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		return Some(result[0]), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(result), branch, target)
+	}
+}
+
+// ProposalUpdateOptions provides the options to update the given proposal to the given state.
+// Bitbucket's update endpoint is a PUT, and the go-bitbucket library sends empty values
+// for all fields that aren't set, which Bitbucket then applies.
+// To not remove reviewers, clear the description, or reset "close source branch",
+// this always sends the complete state of the proposal.
+func (self APIConnector) ProposalUpdateOptions(data forgedomain.BitbucketCloudProposalData) *bitbucket.PullRequestsOptions {
+	return &bitbucket.PullRequestsOptions{
+		ID:                data.Number.String(),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      data.Source.String(),
+		DestinationBranch: data.Target.String(),
+		Title:             data.Title.String(),
+		Description:       data.Body.GetOrZero().String(),
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
+		Reviewers:         data.Reviewers,
 	}
 }
 
@@ -122,7 +142,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return []forgedomain.Proposal{}, nil
 		}
-		proposal3, err := parsePullRequest(proposal2)
+		proposal3, err := ParsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return []forgedomain.Proposal{}, nil
@@ -157,55 +177,43 @@ func (self APIConnector) SquashMergeProposal(number forgedomain.ProposalNumber, 
 }
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
-	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+data.Number.String()))
-	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                data.Number.String(),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		SourceBranch:      data.Source.String(),
-		DestinationBranch: data.Target.String(),
-		Title:             data.Title.String(),
-		Description:       newBody.String(),
-		Draft:             data.Draft,
-		CloseSourceBranch: data.CloseSourceBranch,
-	})
+	number := proposalData.Data().Number
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+number.String()))
+	data, err := self.proposalData(number)
+	if err != nil {
+		self.log.Finished(err)
+		return err
+	}
+	data.Body = Some(newBody)
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
 
 func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
-	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(source.String()))
-	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                data.Number.String(),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		SourceBranch:      source.String(),
-		DestinationBranch: data.Target.String(),
-		Title:             data.Title.String(),
-		Description:       data.Body.GetOrZero().String(),
-		Draft:             data.Draft,
-		CloseSourceBranch: data.CloseSourceBranch,
-	})
+	number := proposalData.Data().Number
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+number.String()), colors.BoldCyan().Styled(source.String()))
+	data, err := self.proposalData(number)
+	if err != nil {
+		self.log.Finished(err)
+		return err
+	}
+	data.Source = source
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+data.Number.String()), colors.BoldCyan().Styled(target.String()))
-	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                data.Number.String(),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		SourceBranch:      data.Source.String(),
-		DestinationBranch: target.String(),
-		Title:             data.Title.String(),
-		Description:       data.Body.GetOrZero().String(),
-		Draft:             data.Draft,
-		CloseSourceBranch: data.CloseSourceBranch,
-	})
+	number := proposalData.Data().Number
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+number.String()), colors.BoldCyan().Styled(target.String()))
+	data, err := self.proposalData(number)
+	if err != nil {
+		self.log.Finished(err)
+		return err
+	}
+	data.Target = target
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
@@ -230,6 +238,24 @@ func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult
 		AuthenticationError: nil,
 		AuthorizationError:  err,
 	}
+}
+
+// proposalData loads the current state of the given proposal from the Bitbucket API.
+func (self APIConnector) proposalData(number forgedomain.ProposalNumber) (forgedomain.BitbucketCloudProposalData, error) {
+	var emptyResult forgedomain.BitbucketCloudProposalData
+	response, err := self.client.Value.Repositories.PullRequests.Get(&bitbucket.PullRequestsOptions{
+		ID:       number.String(),
+		Owner:    self.Organization,
+		RepoSlug: self.Repository,
+	})
+	if err != nil {
+		return emptyResult, err
+	}
+	responseData, ok := response.(map[string]any)
+	if !ok {
+		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	return ParsePullRequest(responseData)
 }
 
 // ============================================================================
