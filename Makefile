@@ -18,6 +18,7 @@ GHERKINLINT  = $(RTA) node node_modules/.bin/gherkin-lint
 GHOKIN       = $(RTA) ghokin
 GOFUMPT      = $(RTA) gofumpt
 GOLANGCILINT = $(RTA) golangci-lint
+GOVULNCHECK  = $(RTA) govulncheck
 KEEPSORTED   = $(RTA) keep-sorted
 LEFTHOOK     = $(RTA) lefthook
 NPM          = $(RTA) npm
@@ -138,7 +139,7 @@ lint: node_modules ${RTA}  # lints the main codebase concurrently
 
 lint-all: lint ${RTA}  # runs all linters
 	(cd website && make test)
-# $(RTA) govulncheck ./...   TODO: enable when Go 1.24.11 is available widely
+	$(GOVULNCHECK) ./...
 	@echo lint tools/format_cmp_or
 	@(cd tools/format_cmp_or && make test)
 	@echo lint tools/format_self

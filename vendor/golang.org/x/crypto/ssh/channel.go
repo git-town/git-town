@@ -525,18 +525,17 @@ func (ch *channel) handlePacket(packet []byte) error {
 
 func (m *mux) newChannel(chanType string, direction channelDirection, extraData []byte) *channel {
 	ch := &channel{
-		remoteWin:          window{Cond: newCond()},
-		myWindow:           channelWindowSize,
-		maxIncomingPayload: channelMaxPacket,
-		pending:            newBuffer(),
-		extPending:         newBuffer(),
-		direction:          direction,
-		incomingRequests:   make(chan *Request, chanSize),
-		msg:                make(chan interface{}, chanSize),
-		chanType:           chanType,
-		extraData:          extraData,
-		mux:                m,
-		packetPool:         make(map[uint32][]byte),
+		remoteWin:        window{Cond: newCond()},
+		myWindow:         channelWindowSize,
+		pending:          newBuffer(),
+		extPending:       newBuffer(),
+		direction:        direction,
+		incomingRequests: make(chan *Request, chanSize),
+		msg:              make(chan interface{}, chanSize),
+		chanType:         chanType,
+		extraData:        extraData,
+		mux:              m,
+		packetPool:       make(map[uint32][]byte),
 	}
 	if !m.chanList.add(ch) {
 		// The mux has shut down and will not close the channel.

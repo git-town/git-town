@@ -7,7 +7,7 @@ require (
 	codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.2.0
 	github.com/BurntSushi/toml v1.6.0
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
-	github.com/carlmjohnson/requests v0.26.2
+	github.com/carlmjohnson/requests v0.26.3
 	github.com/charmbracelet/bubbles v1.0.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/cucumber/godog v0.16.0
@@ -21,7 +21,7 @@ require (
 	github.com/ktrysmt/go-bitbucket v0.10.0
 	github.com/mattn/go-isatty v0.0.24
 	github.com/muesli/termenv v0.16.0
-	github.com/sergi/go-diff v1.4.0
+	github.com/sergi/go-diff v1.4.5
 	github.com/shoenig/test v1.13.2
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.1.0

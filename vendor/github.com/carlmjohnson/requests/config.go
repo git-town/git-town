@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"mime"
 	"mime/multipart"
 	"net/http/httptest"
 )
@@ -62,7 +63,7 @@ func BodyMultipart(boundary string, h func(multi *multipart.Writer) error) Confi
 			boundary = multi.Boundary()
 		}
 		rb.
-			ContentType("multipart/form-data; boundary=" + boundary).
+			ContentType(mime.FormatMediaType("multipart/form-data", map[string]string{"boundary": boundary})).
 			BodyWriter(func(w io.Writer) error {
 				multi := multipart.NewWriter(w)
 				if err := multi.SetBoundary(boundary); err != nil {

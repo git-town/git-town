@@ -122,25 +122,6 @@ func dropCR(in []byte) []byte {
 	return bytes.TrimSuffix(in, []byte("\r"))
 }
 
-// trimSpace removes leading and trailing ASCII space and tab.
-func trimSpace(in []byte) []byte {
-	return bytes.Trim(in, " \t")
-}
-
-// asciiFields splits in around each run of ASCII space and tab.
-func asciiFields(in []byte) [][]byte {
-	return bytes.FieldsFunc(in, func(r rune) bool {
-		return r == ' ' || r == '\t'
-	})
-}
-
-// dropCR removes a single trailing carriage return, so that an entry written
-// with CRLF line endings is read like one written with LF endings. A carriage
-// return anywhere else belongs to the field that holds it.
-func dropCR(in []byte) []byte {
-	return bytes.TrimSuffix(in, []byte("\r"))
-}
-
 // parseAuthorizedKey parses a public key in OpenSSH authorized_keys format
 // (see sshd(8) manual page) once the options and key type fields have been
 // removed.
