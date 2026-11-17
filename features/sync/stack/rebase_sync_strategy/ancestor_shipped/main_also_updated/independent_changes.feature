@@ -35,7 +35,7 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
-      |          | git push --force-with-lease                                |
+      |          | git push --force-with-lease --force-if-includes            |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
     And all branches are now synchronized
