@@ -13,7 +13,7 @@ ghokin 3.10.0
 gofumpt 0.12.0
 golangci-lint 2.15.0
 goreleaser 1.26.2
-govulncheck 1.1.4
+govulncheck 1.9.0
 ireturn 0.4.1
 keep-sorted 0.10.0
 lefthook 2.2.2
