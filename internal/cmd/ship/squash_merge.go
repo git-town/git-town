@@ -62,8 +62,8 @@ func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepo
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         sharedData.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 }

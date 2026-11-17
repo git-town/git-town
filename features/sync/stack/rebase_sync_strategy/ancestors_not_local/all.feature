@@ -25,7 +25,6 @@ Feature: stacked changes where all ancestor branches aren't local
     Then Git Town runs the commands
       | BRANCH | COMMAND                                            |
       | gamma  | git fetch --prune --tags                           |
-      |        | git push --force-with-lease --force-if-includes    |
       |        | git -c rebase.updateRefs=false rebase origin/gamma |
       |        | git -c rebase.updateRefs=false rebase origin/beta  |
       |        | git -c rebase.updateRefs=false rebase origin/alpha |

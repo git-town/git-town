@@ -16,20 +16,7 @@ import (
 // The zero value is an empty DataTable.
 type DataTable struct {
 	// table data organized as rows and columns
-	Cells [][]string `exhaustruct:"optional"`
-}
-
-// FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
-func FromGherkin(table *godog.Table) DataTable {
-	result := DataTable{}
-	for _, tableRow := range table.Rows {
-		resultRow := make([]string, len(tableRow.Cells))
-		for t, tableCell := range tableRow.Cells {
-			resultRow[t] = tableCell.Value
-		}
-		result.AddRow(resultRow...)
-	}
-	return result
+	Cells [][]string //exhaustruct:optional
 }
 
 // AddRow adds the given row of table data to this table.
@@ -132,6 +119,19 @@ func (self *DataTable) widths() []int {
 	result := make([]int, len(columns))
 	for c, column := range columns {
 		result[c] = stringslice.Longest(column)
+	}
+	return result
+}
+
+// FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
+func FromGherkin(table *godog.Table) DataTable {
+	result := DataTable{}
+	for _, tableRow := range table.Rows {
+		resultRow := make([]string, len(tableRow.Cells))
+		for t, tableCell := range tableRow.Cells {
+			resultRow[t] = tableCell.Value
+		}
+		result.AddRow(resultRow...)
 	}
 	return result
 }

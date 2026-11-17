@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"regexp"
 
-	gherkin "github.com/cucumber/gherkin/go/v26"
-	messages "github.com/cucumber/messages/go/v21"
+	gherkin "github.com/cucumber/gherkin/go/v42"
+	messages "github.com/cucumber/messages/go/v34"
 	"github.com/git-town/git-town/v24/pkg/asserts"
 )
 
@@ -29,8 +29,8 @@ func main() {
 		}
 		feature := ReadGherkinFile(path)
 		scenarios := FindScenarios(feature, dialogStepRegex)
-		for _, error := range AnalyzeScenarios(path, scenarios) {
-			fmt.Println(error)
+		for _, err2 := range AnalyzeScenarios(path, scenarios) {
+			fmt.Println(err2)
 			errors += 1
 		}
 		return nil

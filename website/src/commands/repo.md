@@ -12,12 +12,14 @@ Git Town can display repositories hosted on [GitHub](https://github.com),
 [GitLab](https://gitlab.com), [Gitea](https://gitea.com),
 [Bitbucket](https://bitbucket.org), and [Forgejo](https://forgejo.org).
 
-You can configure the browser which Git Town opens using the
+You can configure the browser
+which Git Town opens using the
 [BROWSER environment variable](../preferences/browser.md).
 
 ## Positional arguments
 
-When called without arguments, the _repo_ command shows the repository at the
+When called without arguments,
+the _repo_ command shows the repository at the
 [development remote](../preferences/dev-remote.md).
 
 When called with an argument,
@@ -54,7 +56,7 @@ setting to tell Git Town about the hostname when using ssh identities.
 
 <!-- keep-sorted start -->
 
-- [propose](propose.md) opens the website displaying the pull request for the
-  current branch
+- [propose](propose.md) opens the website displaying the pull request
+  for the current branch
 
 <!-- keep-sorted end -->

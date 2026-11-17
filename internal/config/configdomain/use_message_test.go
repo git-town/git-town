@@ -97,37 +97,37 @@ func TestUseMessage(t *testing.T) {
 		t.Parallel()
 		for _, tc := range []struct {
 			desc              string
-			message           Option[gitdomain.CommitMessage]
 			fallbackToDefault bool
+			message           Option[gitdomain.CommitMessage]
 			wantIsCustom      bool
 			wantIsEditDefault bool
 			wantIsUseDefault  bool
 		}{
 			{
 				desc:              "No message, no fallback",
-				message:           None[gitdomain.CommitMessage](),
 				fallbackToDefault: false,
+				message:           None[gitdomain.CommitMessage](),
 				wantIsCustom:      false,
 				wantIsEditDefault: true,
 				wantIsUseDefault:  false,
 			}, {
 				desc:              "No message, with fallback",
-				message:           None[gitdomain.CommitMessage](),
 				fallbackToDefault: true,
+				message:           None[gitdomain.CommitMessage](),
 				wantIsCustom:      false,
 				wantIsEditDefault: false,
 				wantIsUseDefault:  true,
 			}, {
 				desc:              "With message, no fallback",
-				message:           Some(gitdomain.CommitMessage("foo")),
 				fallbackToDefault: false,
+				message:           Some(gitdomain.CommitMessage("foo")),
 				wantIsCustom:      true,
 				wantIsEditDefault: false,
 				wantIsUseDefault:  false,
 			}, {
 				desc:              "With message, with fallback",
-				message:           Some(gitdomain.CommitMessage("foo")),
 				fallbackToDefault: true,
+				message:           Some(gitdomain.CommitMessage("foo")),
 				wantIsCustom:      true,
 				wantIsEditDefault: false,
 				wantIsUseDefault:  false,

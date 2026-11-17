@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
@@ -167,7 +168,7 @@ EnterForgeData:
 	detached := None[configdomain.Detached]()
 	featureRegex := None[configdomain.FeatureRegex]()
 	ignoreUncommitted := None[configdomain.IgnoreUncommitted]()
-	interactive := None[configdomain.Interactive]()
+	interactive := None[clidomain.Interactive]()
 	newBranchType := None[configdomain.NewBranchType]()
 	observedRegex := None[configdomain.ObservedRegex]()
 	order := None[configdomain.Order]()
@@ -333,6 +334,7 @@ EnterForgeData:
 		ProposalBreadcrumbDirection: proposalBreadcrumbDirection,
 		PushBranches:                pushBranches,
 		PushHook:                    pushHook,
+		ForgeURL:                    None[configdomain.ForgeURL](),
 		ShareNewBranches:            shareNewBranches,
 		ShipDeleteTrackingBranch:    shipDeleteTrackingBranch,
 		ShipEnterMessage:            None[configdomain.ShipEnterMessage](),
@@ -573,11 +575,11 @@ func enterIgnoreUncommitted(data Data) (Option[configdomain.IgnoreUncommitted], 
 	})
 }
 
-func enterInteractive(data Data) (Option[configdomain.Interactive], dialogdomain.Exit, error) {
+func enterInteractive(data Data) (Option[clidomain.Interactive], dialogdomain.Exit, error) {
 	if data.Config.File.Interactive.IsSome() {
-		return None[configdomain.Interactive](), false, nil
+		return None[clidomain.Interactive](), false, nil
 	}
-	return dialog.Interactive(dialog.Args[configdomain.Interactive]{
+	return dialog.Interactive(dialog.Args[clidomain.Interactive]{
 		Global:      data.Config.GitGlobal.Interactive,
 		Inputs:      data.Inputs,
 		Interactive: data.Config.NormalConfig.Interactive,
@@ -588,8 +590,8 @@ func enterInteractive(data Data) (Option[configdomain.Interactive], dialogdomain
 func enterMainBranch(data Data) (dialog.MainBranchResult, dialogdomain.Exit, error) {
 	if configFileMainBranch, hasMain := data.Config.File.MainBranch.Get(); hasMain {
 		return dialog.MainBranchResult{
-			UserChoice:       Some(configFileMainBranch),
 			ActualMainBranch: configFileMainBranch,
+			UserChoice:       Some(configFileMainBranch),
 		}, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
@@ -945,15 +947,15 @@ type testForgeAuthArgs struct {
 	bitbucketUsername   Option[forgedomain.BitbucketUsername]
 	configDir           configdomain.RepoConfigDir
 	devURL              Option[giturl.Parts]
-	forgeTypeOpt        Option[forgedomain.DetectedForgeType]
 	forgejoToken        Option[forgedomain.ForgejoToken]
+	forgeTypeOpt        Option[forgedomain.DetectedForgeType]
 	giteaToken          Option[forgedomain.GiteaToken]
 	githubConnectorType Option[forgedomain.GithubConnectorType]
 	githubToken         Option[forgedomain.GithubToken]
 	gitlabConnectorType Option[forgedomain.GitlabConnectorType]
 	gitlabToken         Option[forgedomain.GitlabToken]
 	inputs              dialogcomponents.Inputs
-	interactive         configdomain.Interactive
+	interactive         clidomain.Interactive
 	remoteURL           Option[giturl.Parts]
 }
 

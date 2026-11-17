@@ -21,38 +21,38 @@ func TestBackendRunner_RetryOnIndexLock(t *testing.T) {
 		tmpDir := t.TempDir()
 
 		testCases := []struct {
-			name        string
 			errorMsg    string
+			name        string
 			shouldRetry bool
 		}{
 			{
-				name:        "exact match",
 				errorMsg:    "fatal: Unable to create '.git/index.lock': File exists.",
+				name:        "exact match",
 				shouldRetry: true,
 			},
 			{
-				name:        "with path variations",
 				errorMsg:    "fatal: Unable to create '/path/to/repo/.git/index.lock': File exists.",
+				name:        "with path variations",
 				shouldRetry: true,
 			},
 			{
-				name:        "missing 'fatal' prefix but has both patterns",
 				errorMsg:    "Unable to create '.git/index.lock': File exists.",
+				name:        "missing 'fatal' prefix but has both patterns",
 				shouldRetry: false, // doesn't match because "fatal: Unable to create" is required
 			},
 			{
-				name:        "only has 'Unable to create'",
 				errorMsg:    "fatal: Unable to create '.git/something'",
+				name:        "only has 'Unable to create'",
 				shouldRetry: false,
 			},
 			{
-				name:        "only has 'File exists'",
 				errorMsg:    "index.lock': File exists.",
+				name:        "only has 'File exists'",
 				shouldRetry: false,
 			},
 			{
-				name:        "completely different error",
 				errorMsg:    "fatal: not a git repository",
+				name:        "completely different error",
 				shouldRetry: false,
 			},
 		}
@@ -205,11 +205,11 @@ func TestFrontendRunner_RetryOnIndexLock(t *testing.T) {
 		backendRunner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 		runner := &subshell.FrontendRunner{
 			Backend:          backendRunner,
+			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 			GetCurrentBranch: nil,
 			GetCurrentSHA:    nil,
 			PrintBranchNames: false,
 			PrintCommands:    false,
-			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 		}
 
 		// Script that fails with a different error
@@ -237,11 +237,11 @@ exit 128
 		backendRunner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 		runner := &subshell.FrontendRunner{
 			Backend:          backendRunner,
+			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 			GetCurrentBranch: nil,
 			GetCurrentSHA:    nil,
 			PrintBranchNames: false,
 			PrintCommands:    false,
-			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 		}
 
 		// Create a script that always fails with lock error
@@ -269,11 +269,11 @@ exit 1
 		backendRunner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 		runner := &subshell.FrontendRunner{
 			Backend:          backendRunner,
+			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 			GetCurrentBranch: nil,
 			GetCurrentSHA:    nil,
 			PrintBranchNames: false,
 			PrintCommands:    false,
-			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 		}
 
 		// Create a script that fails once with lock error, then succeeds
@@ -312,11 +312,11 @@ fi
 		backendRunner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 		runner := &subshell.FrontendRunner{
 			Backend:          backendRunner,
+			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 			GetCurrentBranch: nil, // not needed for this test
 			GetCurrentSHA:    nil, // not needed for this test
 			PrintBranchNames: false,
 			PrintCommands:    false,
-			CommandsCounter:  NewMutable(new(gohacks.Counter)),
 		}
 
 		start := time.Now()

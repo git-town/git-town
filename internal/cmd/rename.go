@@ -40,128 +40,6 @@ Renaming perennial branches requires the --force flag.
 `
 )
 
-func renameCommand() *cobra.Command {
-	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
-	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:   "rename [<old_branch_name>] <new_branch_name>",
-		Args:  cobra.RangeArgs(1, 2),
-		Short: renameDesc,
-		Long:  cmdhelpers.Long(renameDesc, renameHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, errDryRun := readDryRunFlag(cmd)
-			force, errForce := readForceFlag(cmd)
-			interactive, errInteractive := readInteractiveFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errForce, errInteractive, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            dryRun,
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       interactive,
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeRename(args, cliConfig, force)
-		},
-	}
-	addDryRunFlag(&cmd)
-	addForceFlag(&cmd)
-	addInteractiveFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
-}
-
-func executeRename(args []string, cliConfig configdomain.PartialConfig, force configdomain.Force) error {
-Start:
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return err
-	}
-	data, flow, err := determineRenameData(args, force, repo)
-	if err != nil {
-		return err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit:
-		return nil
-	case configdomain.ProgramFlowRestart:
-		goto Start
-	}
-	runProgram := renameProgram(repo, data, repo.FinalMessages)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		BeginStashSize:        data.stashSize,
-		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               "rename",
-		DryRun:                data.config.NormalConfig.DryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
-		Config:                  data.config,
-		ConfigDir:               repo.ConfigDir,
-		Connector:               data.connector,
-		DetectedForgeType:       data.detectedForgeType,
-		DryRun:                  data.config.NormalConfig.DryRun,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
-		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch,
-		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        data.stashSize,
-		Inputs:                  data.inputs,
-		PendingCommand:          None[string](),
-		RunState:                runState,
-	})
-}
-
-type renameData struct {
-	branchInfosLastRun       Option[gitdomain.BranchInfos]
-	branchesSnapshot         gitdomain.BranchesSnapshot
-	config                   config.ValidatedConfig
-	connector                Option[forgedomain.Connector]
-	detectedForgeType        Option[forgedomain.DetectedForgeType]
-	hasOpenChanges           bool
-	initialBranch            gitdomain.LocalBranchName
-	inputs                   dialogcomponents.Inputs
-	newBranch                gitdomain.LocalBranchName
-	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	oldBranch                gitdomain.BranchInfo
-	previousBranch           Option[gitdomain.LocalBranchName]
-	proposal                 Option[forgedomain.Proposal]
-	proposalsOfChildBranches []forgedomain.Proposal
-	stashSize                gitdomain.StashSize
-}
-
 func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult) (renameData, configdomain.ProgramFlow, error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
@@ -232,9 +110,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
+		BranchInfos:        branchesSnapshot.Branches,
 		ConfigDir:          repo.ConfigDir,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -285,8 +163,8 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	return renameData{
-		branchInfosLastRun:       branchInfosLastRun,
 		branchesSnapshot:         branchesSnapshot,
+		branchInfosLastRun:       branchInfosLastRun,
 		config:                   validatedConfig,
 		connector:                connector,
 		detectedForgeType:        detectedForgeType,
@@ -303,6 +181,128 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}, configdomain.ProgramFlowContinue, err
 }
 
+func executeRename(args []string, cliConfig configdomain.PartialConfig, force configdomain.Force) error {
+Start:
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, flow, err := determineRenameData(args, force, repo)
+	if err != nil {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	runProgram := renameProgram(repo, data, repo.FinalMessages)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		Command:               "rename",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		ConfigDir:               repo.ConfigDir,
+		Connector:               data.connector,
+		DetectedForgeType:       data.detectedForgeType,
+		DryRun:                  data.config.NormalConfig.DryRun,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RunState:                runState,
+	})
+}
+
+type renameData struct {
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
+	config                   config.ValidatedConfig
+	connector                Option[forgedomain.Connector]
+	detectedForgeType        Option[forgedomain.DetectedForgeType]
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
+	newBranch                gitdomain.LocalBranchName
+	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	oldBranch                gitdomain.BranchInfo
+	previousBranch           Option[gitdomain.LocalBranchName]
+	proposal                 Option[forgedomain.Proposal]
+	proposalsOfChildBranches []forgedomain.Proposal
+	stashSize                gitdomain.StashSize
+}
+
+func renameCommand() *cobra.Command {
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addForceFlag, readForceFlag := flags.Force("force rename of perennial branch")
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Use:   "rename [<old_branch_name>] <new_branch_name>",
+		Args:  cobra.RangeArgs(1, 2),
+		Short: renameDesc,
+		Long:  cmdhelpers.Long(renameDesc, renameHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			force, errForce := readForceFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDryRun, errForce, errInteractive, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeRename(args, cliConfig, force)
+		},
+	}
+	addDryRunFlag(&cmd)
+	addForceFlag(&cmd)
+	addInteractiveFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
+}
+
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
@@ -310,7 +310,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	if !hasOldLocalBranch {
 		return prog.Immutable()
 	}
-	prog.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
+	prog.Value.Add(&opcodes.BranchLocalRename{NewName: data.newBranch, OldName: oldLocalBranch})
 	if data.initialBranch == oldLocalBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
@@ -364,9 +364,9 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return optimizer.Optimize(prog.Immutable())
 }

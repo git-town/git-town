@@ -82,7 +82,6 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
     And Git Town prints the error:
       """

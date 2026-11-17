@@ -5,22 +5,22 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v24/internal/cli/clidomain"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/gohacks/slice"
 )
 
 // CheckList lets the user select zero, one, or many of the given entries.
-func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, interactive configdomain.Interactive, dialogName string) ([]S, dialogdomain.Exit, error) {
+func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, interactive clidomain.Interactive, dialogName string) ([]S, dialogdomain.Exit, error) {
 	if err := interactive.Check(); err != nil {
 		return nil, true, err
 	}
 	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{
+		help:       help,
 		List:       list.NewList(entries, cursor),
 		Selections: selections,
-		help:       help,
 		title:      title,
 	})
 	SendInputs(dialogName, inputs.Next(), program)
@@ -31,8 +31,8 @@ func CheckList[S any](entries list.Entries[S], selections []int, title, help str
 
 type CheckListModel[S any] struct {
 	list.List[S]
-	Selections []int
 	help       string // help text to display before the checklist
+	Selections []int
 	title      string // title to display before the help text
 }
 
@@ -129,7 +129,8 @@ func (self CheckListModel[S]) View() string {
 		case !selected && checked:
 			s.WriteString(self.Colors.Initial.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
-			s.WriteString("  [ ] " + branch.Text)
+			s.WriteString("  [ ] ")
+			s.WriteString(branch.Text)
 		}
 		s.WriteRune('\n')
 	}

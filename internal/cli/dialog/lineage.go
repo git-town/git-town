@@ -67,9 +67,9 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entriesArgs := NewSwitchBranchEntriesArgs{
+			BranchesAndTypes:  args.BranchesAndTypes,
 			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  args.BranchesAndTypes,
 			ExcludeBranches:   excludeBranches,
 			Lineage:           args.Config.NormalConfig.Lineage,
 			MainBranch:        Some(args.MainBranch),
@@ -82,9 +82,10 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 		entriesArgs.ShowAllBranches = false
 		entriesLocal := append(SwitchBranchEntries{noneEntry}, NewSwitchBranchEntries(entriesArgs)...)
 		newParent, exit, err := SwitchBranch(SwitchBranchArgs{
-			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
-			DisplayBranchTypes: args.Config.NormalConfig.DisplayTypes,
+			CurrentBranch:                   None[gitdomain.LocalBranchName](),
+			Cursor:                          1, // select the "main branch" entry, below the "make perennial" entry
+			DisableBranchesInOtherWorktrees: false,
+			DisplayBranchTypes:              args.Config.NormalConfig.DisplayTypes,
 			EntryData: EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,
@@ -119,9 +120,9 @@ func Lineage(args LineageArgs) (LineageResult, dialogdomain.Exit, error) {
 }
 
 type LineageArgs struct {
-	BranchInfos      gitdomain.BranchInfos
 	BranchesAndTypes configdomain.BranchesAndTypes
 	BranchesToVerify gitdomain.LocalBranchNames
+	BranchInfos      gitdomain.BranchInfos
 	Config           config.UnvalidatedConfig
 	Connector        Option[forgedomain.Connector]
 	DefaultChoice    gitdomain.LocalBranchName

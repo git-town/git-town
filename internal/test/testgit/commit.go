@@ -10,16 +10,14 @@ import (
 
 // Commit describes a Git commit.
 type Commit struct {
-	Author      gitdomain.Author `exhaustruct:"optional"`
+	Author      gitdomain.Author //exhaustruct:optional
 	Branch      gitdomain.LocalBranchName
-	FileContent string    `exhaustruct:"optional"`
-	FileName    string    `exhaustruct:"optional"`
-	Locations   Locations `exhaustruct:"optional"`
+	FileContent string    //exhaustruct:optional
+	FileName    string    //exhaustruct:optional
+	Locations   Locations //exhaustruct:optional
 	Message     gitdomain.CommitMessage
-	SHA         gitdomain.SHA `exhaustruct:"optional"`
+	SHA         gitdomain.SHA //exhaustruct:optional
 }
-
-var counter helpers.AtomicCounter
 
 // Set assigns the given value to the property with the given Gherkin table name.
 func (self *Commit) Set(name, value string) {
@@ -40,6 +38,8 @@ func (self *Commit) Set(name, value string) {
 		log.Fatalf("unknown Commit property: %s", name)
 	}
 }
+
+var counter helpers.AtomicCounter
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
 func DefaultCommit() Commit {

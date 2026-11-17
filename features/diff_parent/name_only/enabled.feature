@@ -15,9 +15,7 @@ Feature: get only the names of changed files
       | feature-2 | local    | commit 2  | file-2.txt  |
     And the current branch is "feature-1"
     When I run "git-town diff-parent --name-only"
-    Then Git Town runs the commands
-      | BRANCH    | COMMAND                                          |
-      | feature-1 | git diff --name-only --merge-base main feature-1 |
+    Then Git Town runs no commands
     And Git Town prints:
       """
       file-1A.txt
@@ -37,9 +35,7 @@ Feature: get only the names of changed files
       | child  | local    | commit 2B | file-2B.txt |
     And the current branch is "child"
     When I run "git-town diff-parent --name-only"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                        |
-      | child  | git diff --name-only --merge-base parent child |
+    Then Git Town runs no commands
     And Git Town prints:
       """
       file-2A.txt

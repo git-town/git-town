@@ -12,8 +12,8 @@ import (
 func TestOptionalStringerSetting(t *testing.T) {
 	t.Parallel()
 	tests := map[stringss.Trimmed]string{
-		"my token": "my token",
 		"":         "(not set)",
+		"my token": "my token",
 	}
 	for give, want := range tests {
 		option := forgedomain.ParseGithubToken(give)

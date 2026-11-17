@@ -52,69 +52,137 @@ this command needs to be configured with
 where hostname matches what is in your ssh config file.`
 )
 
-func proposeCommand() *cobra.Command {
-	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
-	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
-	addBrowserFlag, readBrowserFlag := flags.Browser()
-	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
-	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
-	addTitleFlag, readTitleFlag := flags.ProposalTitle()
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:     proposeCmd,
-		GroupID: cmdhelpers.GroupIDBasic,
-		Args:    cobra.NoArgs,
-		Short:   proposeDesc,
-		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			bodyFile, errBodyFile := readBodyFileFlag(cmd)
-			bodyText, errBodyText := readBodyFlag(cmd)
-			browserExecutable, browserEnabled, errBrowser := readBrowserFlag(cmd)
-			dryRun, errDryRun := readDryRunFlag(cmd)
-			interactive, errInteractive := readInteractiveFlag(cmd)
-			stack, errStack := readStackFlag(cmd)
-			title, errTitle := readTitleFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errBrowser, errDryRun, errInteractive, errStack, errTitle, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       autoResolve,
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    browserEnabled,
-				BrowserExecutable: browserExecutable,
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            dryRun,
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       interactive,
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executePropose(proposeArgs{
-				body:      bodyText,
-				bodyFile:  bodyFile,
-				cliConfig: cliConfig,
-				stack:     stack,
-				title:     title,
-			})
-		},
+func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (proposeData, configdomain.ProgramFlow, error) {
+	var emptyResult proposeData
+	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	addBodyFlag(&cmd)
-	addBodyFileFlag(&cmd)
-	addBrowserFlag(&cmd)
-	addDryRunFlag(&cmd)
-	addAutoResolveFlag(&cmd)
-	addInteractiveFlag(&cmd)
-	addStackFlag(&cmd)
-	addTitleFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
+	if preFetchBranchSnapshot.DetachedHead {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ProposeDetached)
+	}
+	initialBranch, hasInitialBranch := preFetchBranchSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	config := repo.UnvalidatedConfig.NormalConfig
+	connectorOpt, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connectorOpt,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 true,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connectorOpt,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	var branchNamesToPropose gitdomain.LocalBranchNames
+	var branchNamesToSync gitdomain.LocalBranchNames
+	if args.stack {
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain, validatedConfig.NormalConfig.Order)
+		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
+		copy(branchNamesToPropose, branchNamesToSync)
+	} else {
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
+		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
+		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
+			return emptyResult, configdomain.ProgramFlowExit, err
+		}
+	}
+	branchesToPropose := []branchToProposeData{}
+	for _, branchNameToPropose := range branchNamesToPropose {
+		branchType, has := branchesAndTypes[branchNameToPropose]
+		if !has {
+			continue
+		}
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
+		if !hasBranchInfo {
+			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
+		}
+		branchesToPropose = append(branchesToPropose, branchToProposeData{
+			branchType: branchType,
+			name:       branchNameToPropose,
+			syncStatus: branchInfo.SyncStatus,
+		})
+	}
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
+	return proposeData{
+		branchesSnapshot:    branchesSnapshot,
+		branchesToPropose:   branchesToPropose,
+		branchesToSync:      branchesToSync,
+		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
+		config:              validatedConfig,
+		connector:           connectorOpt,
+		detectedForgeType:   detectedForgeType,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		inputs:              inputs,
+		nonExistingBranches: nonExistingBranches,
+		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
+		previousBranch:      previousBranch,
+		proposalBody:        bodyText,
+		proposalTitle:       args.title,
+		remotes:             remotes,
+		stashSize:           stashSize,
+	}, configdomain.ProgramFlowContinue, err
 }
 
 type proposeArgs struct {
@@ -187,11 +255,11 @@ Start:
 }
 
 type proposeData struct {
-	branchInfos         gitdomain.BranchInfos
-	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
+	branchInfos         gitdomain.BranchInfos
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	detectedForgeType   Option[forgedomain.DetectedForgeType]
@@ -213,137 +281,69 @@ type branchToProposeData struct {
 	syncStatus gitdomain.SyncStatus
 }
 
-func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (proposeData, configdomain.ProgramFlow, error) {
-	var emptyResult proposeData
-	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+func proposeCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
+	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addBrowserFlag, readBrowserFlag := flags.Browser()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
+	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDBasic,
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			bodyFile, errBodyFile := readBodyFileFlag(cmd)
+			bodyText, errBodyText := readBodyFlag(cmd)
+			browserExecutable, browserEnabled, errBrowser := readBrowserFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
+			stack, errStack := readStackFlag(cmd)
+			title, errTitle := readTitleFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAutoResolve, errBodyFile, errBodyText, errBrowser, errDryRun, errInteractive, errStack, errTitle, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    browserEnabled,
+				BrowserExecutable: browserExecutable,
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executePropose(proposeArgs{
+				body:      bodyText,
+				bodyFile:  bodyFile,
+				cliConfig: cliConfig,
+				stack:     stack,
+				title:     title,
+			})
+		},
+		Short: proposeDesc,
+		Use:   proposeCmd,
 	}
-	if preFetchBranchSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.ProposeDetached)
-	}
-	initialBranch, hasInitialBranch := preFetchBranchSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connectorOpt, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connectorOpt,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 true,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connectorOpt,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
-	var branchNamesToPropose gitdomain.LocalBranchNames
-	var branchNamesToSync gitdomain.LocalBranchNames
-	if args.stack {
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain, validatedConfig.NormalConfig.Order)
-		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
-		copy(branchNamesToPropose, branchNamesToSync)
-	} else {
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
-		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
-		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
-			return emptyResult, configdomain.ProgramFlowExit, err
-		}
-	}
-	branchesToPropose := []branchToProposeData{}
-	for _, branchNameToPropose := range branchNamesToPropose {
-		branchType, has := branchesAndTypes[branchNameToPropose]
-		if !has {
-			continue
-		}
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
-		if !hasBranchInfo {
-			return emptyResult, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
-		}
-		branchesToPropose = append(branchesToPropose, branchToProposeData{
-			branchType: branchType,
-			name:       branchNameToPropose,
-			syncStatus: branchInfo.SyncStatus,
-		})
-	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
-	return proposeData{
-		branchInfos:         branchesSnapshot.Branches,
-		branchInfosLastRun:  branchInfosLastRun,
-		branchesSnapshot:    branchesSnapshot,
-		branchesToPropose:   branchesToPropose,
-		branchesToSync:      branchesToSync,
-		config:              validatedConfig,
-		connector:           connectorOpt,
-		detectedForgeType:   detectedForgeType,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		inputs:              inputs,
-		nonExistingBranches: nonExistingBranches,
-		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
-		previousBranch:      previousBranch,
-		proposalBody:        bodyText,
-		proposalTitle:       args.title,
-		remotes:             remotes,
-		stashSize:           stashSize,
-	}, configdomain.ProgramFlowContinue, err
+	addBodyFlag(&cmd)
+	addBodyFileFlag(&cmd)
+	addBrowserFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
+	addInteractiveFlag(&cmd)
+	addStackFlag(&cmd)
+	addTitleFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
@@ -351,16 +351,16 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend, data.config.NormalConfig.Order)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+		BranchesToDelete:    NewMutable(&branchesToDelete),
 		BranchInfos:         data.branchInfos,
 		BranchInfosPrevious: data.branchInfosLastRun,
-		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.preFetchBranchInfos,
-		Remotes:             data.remotes,
 		Program:             prog,
 		Prune:               false,
 		PushBranches:        true,
+		Remotes:             data.remotes,
 	})
 	for _, branchToPropose := range data.branchesToPropose {
 		if branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
@@ -400,6 +400,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		}
 		prog.Value.Add(&opcodes.ProposalCreate{
 			Branch:        branchToPropose.name,
+			Interactive:   data.config.NormalConfig.Interactive,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
 			ProposalBody:  proposalBody,
 			ProposalTitle: data.proposalTitle,
@@ -410,9 +411,9 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return optimizer.Optimize(prog.Immutable())
 }

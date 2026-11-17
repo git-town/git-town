@@ -15,10 +15,14 @@ type LineageKey struct {
 
 func NewLineageKey(key Key) LineageKey {
 	return LineageKey{
-		BranchSpecificKey: BranchSpecificKey{
-			Key: key,
-		},
+		Key: key,
 	}
+}
+
+// ChildBranch provides the name of the child branch encoded in this LineageKey.
+func (self LineageKey) ChildBranch() gitdomain.LocalBranchName {
+	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
+	return gitdomain.LocalBranchNameOrPanic(stringss.Trim(text))
 }
 
 // ParseLineageKey indicates using the returned option whether this key is a lineage key.
@@ -27,12 +31,6 @@ func ParseLineageKey(key Key) Option[LineageKey] {
 		return Some(NewLineageKey(key))
 	}
 	return None[LineageKey]()
-}
-
-// ChildBranch provides the name of the child branch encoded in this LineageKey.
-func (self LineageKey) ChildBranch() gitdomain.LocalBranchName {
-	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
-	return gitdomain.LocalBranchNameOrPanic(stringss.Trim(text))
 }
 
 const LineageKeySuffix = ".parent"

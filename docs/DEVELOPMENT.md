@@ -9,8 +9,8 @@ refer to [ARCHITECTURE.md](ARCHITECTURE.md).
 This monorepo contains a number of codebases:
 
 1. **internal** and **pkg**: Git Town, a CLI application written in Go
-2. **website**: the Git Town website, an
-   [mdBook](https://rust-lang.github.io/mdBook) application
+2. **website**: the Git Town website,
+   an [mdBook](https://rust-lang.github.io/mdBook) application
 3. **features**: end-to-end tests for Git Town
 4. **installer**: the Windows installer for Git Town
 5. **tools**: custom-made linters for the Git Town codebase
@@ -27,9 +27,8 @@ This monorepo contains a number of codebases:
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
 3. If you want to use the Git Town executable compiled from source,
-   add `~/go/bin`
-   (or wherever `go install` puts executables on your machine)
-   to your $PATH environment variable.
+   add `~/go/bin` (or wherever `go install` puts executables on your machine) to
+   your $PATH environment variable.
 4. run all CI tests locally: <code type="make/command" dir="..">make test</code>
 5. faster smoke test during development: `make test-go`
 6. install Git Town locally into `~/go/bin`:
@@ -171,7 +170,7 @@ We want to avoid this, because it's slow, brittle,
 and stresses the external forges.
 
 To prevent this, keep the actual setting pointed to the local remote.
-Set an environment variable `GIT_TOWN_REMOTE` with the desired value of the
+Set an environment variable `GIT_TOWN_FORGE_URL` with the desired value of the
 [development remote](../website/src/preferences/dev-remote.md).
 Git Town will use that value for internal calculations,
 instead of what is configured in the repo.
@@ -317,8 +316,8 @@ add this to your `settings.json` file:
 This enables useful functionality:
 
 - auto-complete steps in `.feature` files
-- `go to definition` on a step in a feature file to see the code that runs when
-  this step executes
+- `go to definition` on a step in a feature file to see the code that runs
+  when this step executes
 
 ## Run linters
 

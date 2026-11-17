@@ -30,7 +30,7 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git checkout beta                                       |
       | beta   | git pull                                                |
       |        | git -c rebase.updateRefs=false rebase --onto main alpha |
-      |        | git push --force-with-lease                             |
+      |        | git push --force-with-lease --force-if-includes         |
       |        | git branch -D alpha                                     |
     And no rebase is now in progress
     And all branches are now synchronized

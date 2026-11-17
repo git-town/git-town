@@ -13,39 +13,39 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 	give := []*giteasdk.PullRequest{
 		// matching branch
 		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
+			},
+			Head: &giteasdk.PRBranchInfo{
+				Name: "branch",
 			},
 		},
 		// branch with different name
 		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "other",
-			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
+			},
+			Head: &giteasdk.PRBranchInfo{
+				Name: "other",
 			},
 		},
 		// branch with different target
 		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "other",
+			},
+			Head: &giteasdk.PRBranchInfo{
+				Name: "branch",
 			},
 		},
 	}
 	want := []*giteasdk.PullRequest{
 		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
 			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
+			},
+			Head: &giteasdk.PRBranchInfo{
+				Name: "branch",
 			},
 		},
 	}

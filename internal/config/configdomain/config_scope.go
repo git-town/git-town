@@ -10,11 +10,6 @@ import (
 // ConfigScope defines the type of Git configuration used.
 type ConfigScope string
 
-const (
-	ConfigScopeGlobal ConfigScope = "global"
-	ConfigScopeLocal  ConfigScope = "local"
-)
-
 // GitFlag provides the flag to use when storing configuration data with this scope in Git metadata.
 func (self ConfigScope) GitFlag() string {
 	switch self {
@@ -29,6 +24,11 @@ func (self ConfigScope) GitFlag() string {
 func (self ConfigScope) String() string {
 	return string(self)
 }
+
+const (
+	ConfigScopeGlobal ConfigScope = "global"
+	ConfigScopeLocal  ConfigScope = "local"
+)
 
 func ParseConfigScope(text string) (ConfigScope, error) {
 	switch strings.TrimSpace(text) {

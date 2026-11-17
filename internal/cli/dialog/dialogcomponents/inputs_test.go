@@ -100,7 +100,7 @@ func TestInputs(t *testing.T) {
 					tea.KeyMsg{Type: tea.KeySpace},
 					tea.KeyMsg{Type: tea.KeyDown},
 					tea.KeyMsg{Type: tea.KeySpace},
-					tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
+					tea.KeyMsg{Runes: []rune{'5'}, Type: tea.KeyRunes},
 					tea.KeyMsg{Type: tea.KeyEnter},
 				},
 				StepName: "perennial-branches",

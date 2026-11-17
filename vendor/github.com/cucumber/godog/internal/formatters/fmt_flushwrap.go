@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/godog/formatters"
-	messages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v34"
 )
 
 // WrapOnFlush wrap a `formatters.Formatter` in a `formatters.FlushFormatter`, which only

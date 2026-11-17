@@ -19,23 +19,21 @@ func Detect(_ giturl.Parts) bool {
 // NewConnector provides the Bitbucket connector instance to use.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
-		HostedRepoInfo: forgedomain.HostedRepoInfo{
-			Hostname:     args.RemoteURL.Host,
-			Organization: args.RemoteURL.Org,
-			Repository:   args.RemoteURL.Repo,
-		},
 		browserEnabled:    args.BrowserEnabled,
 		browserExecutable: args.BrowserExecutable,
+		Hostname:          args.RemoteURL.Host,
+		Organization:      args.RemoteURL.Org,
+		Repository:        args.RemoteURL.Repo,
 	}
 	if subshell.IsInTest() {
 		proposalsPath := mockproposals.NewMockProposalPath(args.ConfigDir)
 		proposals := mockproposals.Load(proposalsPath)
 		return &MockConnector{
+			cache:         forgedomain.APICache{},
+			log:           args.Log,
 			Proposals:     proposals,
 			ProposalsPath: proposalsPath,
 			WebConnector:  webConnector,
-			cache:         forgedomain.APICache{},
-			log:           args.Log,
 		}
 	}
 	if args.UserName.IsSome() && args.APIToken.IsSome() {

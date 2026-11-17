@@ -58,9 +58,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		InitialStashSize:         args.RunState.BeginStashSize,
+		PreviousBranchCandidates: previousBranchCandidates,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return result.Immutable()
 }

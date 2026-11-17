@@ -21,7 +21,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | branch-2 | git fetch --prune --tags                                   |
       |          | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
-      |          | git push --force-with-lease                                |
+      |          | git push --force-with-lease --force-if-includes            |
       |          | git branch -D branch-1                                     |
       |          | git checkout -b new main                                   |
     And Git Town prints:

@@ -12,64 +12,64 @@ import (
 func TestParseProposalBreadcrumb(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
+		err  bool
 		give stringss.Trimmed
 		want Option[configdomain.ProposalBreadcrumb]
-		err  bool
 	}{
 		{
+			err:  false,
 			give: "",
 			want: None[configdomain.ProposalBreadcrumb](),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "none",
 			want: Some(configdomain.ProposalBreadcrumbNone),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "branches",
 			want: Some(configdomain.ProposalBreadcrumbBranches),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "stacks",
 			want: Some(configdomain.ProposalBreadcrumbStacks),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "false",
 			want: Some(configdomain.ProposalBreadcrumbNone),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "true",
 			want: Some(configdomain.ProposalBreadcrumbBranches),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "no",
 			want: Some(configdomain.ProposalBreadcrumbNone),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "yes",
 			want: Some(configdomain.ProposalBreadcrumbBranches),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "0",
 			want: Some(configdomain.ProposalBreadcrumbNone),
-			err:  false,
 		},
 		{
+			err:  false,
 			give: "1",
 			want: Some(configdomain.ProposalBreadcrumbBranches),
-			err:  false,
 		},
 		{
+			err:  true,
 			give: "zonk",
 			want: None[configdomain.ProposalBreadcrumb](),
-			err:  true,
 		},
 	}
 	for _, tt := range tests {

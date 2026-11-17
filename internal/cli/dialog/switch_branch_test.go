@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"testing"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v24/internal/cli/dialog"
 	"github.com/git-town/git-town/v24/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
@@ -41,9 +42,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -72,9 +73,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -107,9 +108,9 @@ func TestNewSwitchBranch(t *testing.T) {
 			unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 			regexes := []*regexp.Regexp{}
 			have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+				BranchesAndTypes:  branchesAndTypes,
 				BranchInfos:       branchInfos,
 				BranchTypes:       branchTypes,
-				BranchesAndTypes:  branchesAndTypes,
 				Lineage:           lineage,
 				Regexes:           regexes,
 				ShowAllBranches:   false,
@@ -141,9 +142,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -175,9 +176,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -206,9 +207,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   true,
@@ -239,18 +240,18 @@ func TestNewSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{configdomain.BranchTypeObservedBranch}
 				branchesAndTypes := configdomain.BranchesAndTypes{
+					main:      configdomain.BranchTypeMainBranch,
 					observed1: configdomain.BranchTypeObservedBranch,
 					observed2: configdomain.BranchTypeObservedBranch,
-					prototype: configdomain.BranchTypePrototypeBranch,
 					perennial: configdomain.BranchTypePerennialBranch,
-					main:      configdomain.BranchTypeMainBranch,
+					prototype: configdomain.BranchTypePrototypeBranch,
 				}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -279,18 +280,18 @@ func TestNewSwitchBranch(t *testing.T) {
 					configdomain.BranchTypePerennialBranch,
 				}
 				branchesAndTypes := configdomain.BranchesAndTypes{
+					main:      configdomain.BranchTypeMainBranch,
 					observed1: configdomain.BranchTypeObservedBranch,
 					observed2: configdomain.BranchTypeObservedBranch,
-					prototype: configdomain.BranchTypePrototypeBranch,
 					perennial: configdomain.BranchTypePerennialBranch,
-					main:      configdomain.BranchTypeMainBranch,
+					prototype: configdomain.BranchTypePrototypeBranch,
 				}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -325,9 +326,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{})
 				must.NoError(t, err)
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -360,9 +361,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{"observed-"})
 				must.NoError(t, err)
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -392,9 +393,9 @@ func TestNewSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{"observed-", "main"})
 				must.NoError(t, err)
 				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+					BranchesAndTypes:  branchesAndTypes,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
-					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
 					ShowAllBranches:   false,
@@ -458,6 +459,50 @@ func TestSwitchBranch(t *testing.T) {
 		})
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		t.Parallel()
+		t.Run("toggle all branches", func(t *testing.T) {
+			t.Parallel()
+			entries := dialog.SwitchBranchEntries{
+				{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
+				{Branch: "alpha", Indentation: "  ", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
+				{Branch: "beta", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
+			}
+			t.Run("allow branches in other worktrees", func(t *testing.T) {
+				t.Parallel()
+				model := dialog.SwitchModel{
+					DisableBranchesInOtherWorktrees: false,
+					EntryData: dialog.EntryData{
+						EntriesAll:      entries,
+						EntriesLocal:    entries,
+						ShowAllBranches: false,
+					},
+				}
+				toggledModel, _ := model.Update(tea.KeyMsg{Runes: []rune{'a'}, Type: tea.KeyRunes})
+				movedModel, _ := toggledModel.Update(tea.KeyMsg{Type: tea.KeyDown})
+				have := movedModel.(dialog.SwitchModel).List.SelectedData().Branch
+				want := gitdomain.LocalBranchName("alpha")
+				must.EqOp(t, want, have)
+			})
+			t.Run("disable branches in other worktrees", func(t *testing.T) {
+				t.Parallel()
+				model := dialog.SwitchModel{
+					DisableBranchesInOtherWorktrees: true,
+					EntryData: dialog.EntryData{
+						EntriesAll:      entries,
+						EntriesLocal:    entries,
+						ShowAllBranches: false,
+					},
+				}
+				toggledModel, _ := model.Update(tea.KeyMsg{Runes: []rune{'a'}, Type: tea.KeyRunes})
+				movedModel, _ := toggledModel.Update(tea.KeyMsg{Type: tea.KeyDown})
+				have := movedModel.(dialog.SwitchModel).List.SelectedData().Branch
+				want := gitdomain.LocalBranchName("beta")
+				must.EqOp(t, want, have)
+			})
+		})
+	})
+
 	t.Run("View", func(t *testing.T) {
 		t.Parallel()
 		t.Run("only the main branch exists", func(t *testing.T) {
@@ -474,8 +519,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierNo,
 					BranchTypes: []configdomain.BranchType{},
+					Quantifier:  configdomain.QuantifierNo,
 				},
 			}
 			have := model.View()
@@ -503,8 +548,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierNo,
 					BranchTypes: []configdomain.BranchType{},
+					Quantifier:  configdomain.QuantifierNo,
 				},
 			}
 			have := model.View()
@@ -541,8 +586,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierNo,
 					BranchTypes: []configdomain.BranchType{},
+					Quantifier:  configdomain.QuantifierNo,
 				},
 			}
 			have := model.View()
@@ -583,8 +628,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierAll,
 					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
+					Quantifier:  configdomain.QuantifierAll,
 				},
 			}
 			have := model.View()
@@ -619,8 +664,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: true,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierNo,
 					BranchTypes: []configdomain.BranchType{},
+					Quantifier:  configdomain.QuantifierNo,
 				},
 			}
 			have := model.View()

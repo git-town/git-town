@@ -59,6 +59,25 @@ func (self *Commands) BranchContainsMerges(querier subshelldomain.Querier, branc
 	return len(output) > 0, err
 }
 
+// BranchContentInParent indicates whether the files changed by the given branch have the same content in the parent branch.
+func (self *Commands) BranchContentInParent(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	mergeBase, err := querier.QueryTrim("git", "merge-base", parent.String(), branch.String())
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	changedFiles, err := querier.QueryTrim("git", "diff", "--name-only", "--no-renames", mergeBase.String(), branch.String(), "--")
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	if len(changedFiles) == 0 {
+		return true, nil
+	}
+	args := []string{"diff", "--shortstat", parent.String(), branch.String(), "--"} //nolint:prealloc
+	args = append(args, strings.Split(changedFiles.String(), "\n")...)
+	out, err := querier.QueryTrim("git", args...)
+	return len(out) == 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+}
+
 func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
 	return err == nil
@@ -95,6 +114,24 @@ func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, l
 	branchSHA := strings.TrimSpace(lines[0])
 	trackingSHA := strings.TrimSpace(lines[1])
 	return branchSHA == trackingSHA, nil
+}
+
+// BranchSquashAppliedInParent indicates whether the combined changes of all commits of the given branch
+// exist as a single commit in the parent branch, which is how a squash-merge looks like.
+func (self *Commands) BranchSquashAppliedInParent(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	mergeBase, err := querier.QueryTrim("git", "merge-base", parent.String(), branch.String())
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	squashed, err := querier.QueryTrim("git", "commit-tree", branch.String()+"^{tree}", "-p", mergeBase.String(), "-m", "squashed")
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	cherry, err := querier.QueryTrim("git", "cherry", parent.String(), squashed.String())
+	if err != nil {
+		return false, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
+	}
+	return strings.HasPrefix(cherry.String(), "- "), nil
 }
 
 func (self *Commands) BranchesAvailableInCurrentWorktree(querier subshelldomain.Querier) (gitdomain.LocalBranchNames, error) {
@@ -209,8 +246,8 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Branches:     result,
 		Active:       currentBranchOpt,
+		Branches:     result,
 		DetachedHead: detachedHead,
 	}, nil
 }
@@ -277,11 +314,6 @@ func (self *Commands) CommentOutSquashCommitMessage(querier subshelldomain.Queri
 	content = commentOutSquashCommitMessageRegex.ReplaceAllString(content, "# ")
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
-
-var (
-	commentOutSquashCommitMessageOnce  sync.Once
-	commentOutSquashCommitMessageRegex *regexp.Regexp
-)
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
@@ -594,11 +626,6 @@ func (self *Commands) GitVersion(querier subshelldomain.Querier) (Version, error
 	}, nil
 }
 
-var (
-	gitVersionOnce  sync.Once
-	gitVersionRegex *regexp.Regexp
-)
-
 func (self *Commands) HasMergeInProgress(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")
 	return err == nil
@@ -617,6 +644,12 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 		}
 	}
 	return false, nil
+}
+
+// IsAncestor indicates whether the given ancestor commit is reachable from the given descendant.
+func (self *Commands) IsAncestor(querier subshelldomain.Querier, ancestor gitdomain.SHA, descendant gitdomain.BranchName) bool {
+	_, err := querier.Query("git", "merge-base", "--is-ancestor", ancestor.String(), descendant.String())
+	return err == nil
 }
 
 func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
@@ -744,6 +777,25 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 // RebaseOnto initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String(), commitsToRemove.String())
+}
+
+// RemoteTipInReflog indicates whether the tip of the given remote branch is contained in a past state of the given local branch.
+// This is the check of "git push --force-if-includes", done without pushing.
+func (self *Commands) RemoteTipInReflog(querier subshelldomain.RunnerQuerier, branch gitdomain.LocalBranchName, remoteBranch gitdomain.RemoteBranchName) bool {
+	tip, err := querier.QueryTrim("git", "rev-parse", remoteBranch.String())
+	if err != nil {
+		return false
+	}
+	output, err := querier.QueryTrim("git", "rev-list", "--walk-reflogs", "--max-count=100", branch.String())
+	if err != nil {
+		return false
+	}
+	for state := range strings.FieldsSeq(output.String()) {
+		if err := querier.Run("git", "merge-base", "--is-ancestor", tip.String(), state); err == nil {
+			return true
+		}
+	}
+	return false
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
@@ -900,6 +952,22 @@ func (self *Commands) UnstageAll(runner subshelldomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
 }
 
+// provides the path of the `.git` directory of the current repository.
+func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.Trimmed, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
+	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
+}
+
+var (
+	commentOutSquashCommitMessageOnce  sync.Once
+	commentOutSquashCommitMessageRegex *regexp.Regexp
+)
+
+var (
+	gitVersionOnce  sync.Once
+	gitVersionRegex *regexp.Regexp
+)
+
 func LastBranchInRef(output string) string {
 	index := strings.LastIndex(output, "/")
 	return output[index+1:]
@@ -990,13 +1058,6 @@ func branchesQuery(querier subshelldomain.Querier) (branchesQueryResults, error)
 	return result, nil
 }
 
-// isBareWorktree reports whether the given worktree path is a bare repository.
-func isBareWorktree(path string) bool {
-	// Non-bare worktrees always contain either a file or folder .git; bare worktrees do not.
-	_, err := os.Stat(filepath.Join(path, ".git"))
-	return os.IsNotExist(err)
-}
-
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
 	gone := track == "gone"
 	ahead := strings.Contains(track, "ahead")
@@ -1020,10 +1081,11 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 	}
 }
 
-// provides the path of the `.git` directory of the current repository.
-func (self *Commands) gitDirectory(querier subshelldomain.Querier) (stringss.Trimmed, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
-	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
+// isBareWorktree reports whether the given worktree path is a bare repository.
+func isBareWorktree(path string) bool {
+	// Non-bare worktrees always contain either a file or folder .git; bare worktrees do not.
+	_, err := os.Stat(filepath.Join(path, ".git"))
+	return os.IsNotExist(err)
 }
 
 // indicates whether the ref is a local branch

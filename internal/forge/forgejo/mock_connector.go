@@ -21,17 +21,11 @@ var (
 // MockConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockConnector struct {
 	WebConnector
-	Proposals     mockproposals.MockProposals
-	ProposalsPath mockproposals.MockProposalPath
 	cache         forgedomain.APICache
 	log           print.Logger
+	Proposals     mockproposals.MockProposals
+	ProposalsPath mockproposals.MockProposalPath
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
 
 func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal, has := self.cache.Lookup(source, target); has {
@@ -50,12 +44,6 @@ func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName
 	return Some(proposal), nil
 }
 
-// ============================================================================
-// search proposals
-// ============================================================================
-
-var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
-
 func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source).Get(); has {
 		return cachedSearchResult, nil
@@ -73,12 +61,6 @@ func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]
 	return result, nil
 }
 
-// ============================================================================
-// update proposal body
-// ============================================================================
-
-var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
-
 func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	self.cache.Clear(proposalData.Data().Number)
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+proposalData.Data().Number.String()))
@@ -92,3 +74,21 @@ func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	self.log.Finished(nil)
 	return nil
 }
+
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check

@@ -66,55 +66,100 @@ Running "git town walk --stack make lint" produces this output:
 `
 )
 
-func walkCommand() *cobra.Command {
-	addAllFlag, readAllFlag := flags.All("iterate all local branches")
-	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
-	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	cmd := cobra.Command{
-		Use:   walkCmd,
-		Args:  cobra.ArbitraryArgs,
-		Short: walkDesc,
-		Long:  cmdhelpers.Long(walkDesc, walkHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			allBranches, errAllBranches := readAllFlag(cmd)
-			dryRun, errDryRun := readDryRunFlag(cmd)
-			interactive, errInteractive := readInteractiveFlag(cmd)
-			stack, errStack := readStackFlag(cmd)
-			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDryRun, errInteractive, errStack, errVerbose); err != nil {
-				return err
-			}
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:       None[configdomain.AutoResolve](),
-				AutoSync:          None[configdomain.AutoSync](),
-				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
-				BrowserExecutable: None[browserdomain.BrowserExecutable](),
-				Detached:          Some(configdomain.Detached(true)),
-				DisplayTypes:      None[configdomain.DisplayTypes](),
-				DryRun:            dryRun,
-				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
-				Interactive:       interactive,
-				Order:             None[configdomain.Order](),
-				PushBranches:      None[configdomain.PushBranches](),
-				Stash:             None[configdomain.Stash](),
-				Verbose:           verbose,
-			})
-			return executeWalk(executeWalkArgs{
-				allBranches: allBranches,
-				argv:        args,
-				cliConfig:   cliConfig,
-				stack:       stack,
-			})
-		},
+func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, configdomain.ProgramFlow, error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	var emptyResult walkData
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	addAllFlag(&cmd)
-	addDryRunFlag(&cmd)
-	addInteractiveFlag(&cmd)
-	addStackFlag(&cmd)
-	addVerboseFlag(&cmd)
-	return &cmd
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
+		DetectedForgeType:     detectedForgeType,
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return emptyResult, flow, nil
+	}
+	if branchesSnapshot.DetachedHead {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.WalkDetachedHead)
+	}
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
+		Backend:            repo.Backend,
+		BranchesAndTypes:   branchesAndTypes,
+		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		BranchInfos:        branchesSnapshot.Branches,
+		ConfigDir:          repo.ConfigDir,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
+		Frontend:           repo.Frontend,
+		Git:                repo.Git,
+		Inputs:             inputs,
+		LocalBranches:      localBranches,
+		Remotes:            remotes,
+		RepoStatus:         repoStatus,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
+	})
+	if err != nil || exit {
+		return emptyResult, configdomain.ProgramFlowExit, err
+	}
+	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	branchesToWalk := gitdomain.LocalBranchNames{}
+	switch {
+	case all.Enabled():
+		branchesToWalk = localBranches.Remove(perennialBranchNames...)
+	case stack.Enabled():
+		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames, validatedConfig.NormalConfig.Order)
+	}
+	branchesInOtherWorktrees := branchesSnapshot.Branches.BranchesInOtherWorktrees()
+	branchesInCurrentWorktree := branchesToWalk.Remove(branchesInOtherWorktrees...)
+	return walkData{
+		branchesSnapshot:   branchesSnapshot,
+		branchesToWalk:     branchesInCurrentWorktree,
+		branchInfosLastRun: branchInfosLastRun,
+		config:             validatedConfig,
+		connector:          connector,
+		detectedForgeType:  detectedForgeType,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		inputs:             inputs,
+		previousBranch:     previousBranch,
+		stashSize:          stashSize,
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 type executeWalkArgs struct {
@@ -192,9 +237,9 @@ Start:
 }
 
 type walkData struct {
-	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToWalk     gitdomain.LocalBranchNames
+	branchInfosLastRun Option[gitdomain.BranchInfos]
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	detectedForgeType  Option[forgedomain.DetectedForgeType]
@@ -205,100 +250,69 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, configdomain.ProgramFlow, error) {
-	inputs := dialogcomponents.LoadInputs(os.Environ())
-	var emptyResult walkData
-	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+func parseArgs(args []string) (bool, string, []string) {
+	if len(args) == 0 {
+		return false, "", []string{}
 	}
-	config := repo.UnvalidatedConfig.NormalConfig
-	connector, detectedForgeType, err := repo.NewConnector(config.DevURL(repo.Backend))
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+	return true, args[0], args[1:]
+}
+
+func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
+	if all.Enabled() == stack.Enabled() {
+		return errors.New(messages.WalkAllOrStack)
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		Backend:               repo.Backend,
-		CommandsCounter:       repo.CommandsCounter,
-		ConfigSnapshot:        repo.ConfigSnapshot,
-		Connector:             connector,
-		DetectedForgeType:     detectedForgeType,
-		Fetch:                 false,
-		FinalMessages:         repo.FinalMessages,
-		Frontend:              repo.Frontend,
-		Git:                   repo.Git,
-		HandleUnfinishedState: true,
-		Inputs:                inputs,
-		Repo:                  repo,
-		RepoStatus:            repoStatus,
-		RootDir:               repo.RootDir,
-		UnvalidatedConfig:     repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
+	return nil
+}
+
+func walkCommand() *cobra.Command {
+	addAllFlag, readAllFlag := flags.All("iterate all local branches")
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
+	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Args: cobra.ArbitraryArgs,
+		Long: cmdhelpers.Long(walkDesc, walkHelp),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			allBranches, errAllBranches := readAllFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			interactive, errInteractive := readInteractiveFlag(cmd)
+			stack, errStack := readStackFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAllBranches, errDryRun, errInteractive, errStack, errVerbose); err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				BrowserEnabled:    None[browserdomain.BrowserEnabled](),
+				BrowserExecutable: None[browserdomain.BrowserExecutable](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Interactive:       interactive,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeWalk(executeWalkArgs{
+				allBranches: allBranches,
+				argv:        args,
+				cliConfig:   cliConfig,
+				stack:       stack,
+			})
+		},
+		Short: walkDesc,
+		Use:   walkCmd,
 	}
-	switch flow {
-	case configdomain.ProgramFlowContinue:
-	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return emptyResult, flow, nil
-	}
-	if branchesSnapshot.DetachedHead {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.WalkDetachedHead)
-	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return emptyResult, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
-	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchInfos:        branchesSnapshot.Branches,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		ConfigDir:          repo.ConfigDir,
-		ConfigSnapshot:     repo.ConfigSnapshot,
-		Connector:          connector,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		Inputs:             inputs,
-		LocalBranches:      localBranches,
-		Remotes:            remotes,
-		RepoStatus:         repoStatus,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return emptyResult, configdomain.ProgramFlowExit, err
-	}
-	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
-	branchesToWalk := gitdomain.LocalBranchNames{}
-	switch {
-	case all.Enabled():
-		branchesToWalk = localBranches.Remove(perennialBranchNames...)
-	case stack.Enabled():
-		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames, validatedConfig.NormalConfig.Order)
-	}
-	branchesInOtherWorktrees := branchesSnapshot.Branches.BranchesInOtherWorktrees()
-	branchesInCurrentWorktree := branchesToWalk.Remove(branchesInOtherWorktrees...)
-	return walkData{
-		branchInfosLastRun: branchInfosLastRun,
-		branchesSnapshot:   branchesSnapshot,
-		branchesToWalk:     branchesInCurrentWorktree,
-		config:             validatedConfig,
-		connector:          connector,
-		detectedForgeType:  detectedForgeType,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		inputs:             inputs,
-		previousBranch:     previousBranch,
-		stashSize:          stashSize,
-	}, configdomain.ProgramFlowContinue, nil
+	addAllFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addInteractiveFlag(&cmd)
+	addStackFlag(&cmd)
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func walkProgram(args []string, data walkData) program.Program {
@@ -309,8 +323,8 @@ func walkProgram(args []string, data walkData) program.Program {
 		if hasCall {
 			prog.Value.Add(
 				&opcodes.ExecuteShellCommand{
-					Executable: executable,
 					Args:       callArgs,
+					Executable: executable,
 				},
 				&opcodes.ExitToShellIfUncommittedChanges{},
 			)
@@ -334,23 +348,9 @@ func walkProgram(args []string, data walkData) program.Program {
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return optimizer.Optimize(prog.Immutable())
-}
-
-func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
-	if all.Enabled() == stack.Enabled() {
-		return errors.New(messages.WalkAllOrStack)
-	}
-	return nil
-}
-
-func parseArgs(args []string) (bool, string, []string) {
-	if len(args) == 0 {
-		return false, "", []string{}
-	}
-	return true, args[0], args[1:]
 }

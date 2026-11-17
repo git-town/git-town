@@ -19,7 +19,6 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
       |         | git push --force-with-lease --force-if-includes      |
     And these commits exist now

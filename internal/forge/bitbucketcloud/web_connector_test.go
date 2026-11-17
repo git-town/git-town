@@ -16,11 +16,9 @@ func TestWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector := bitbucketcloud.WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Hostname:     "bitbucket.org",
-				Organization: "org",
-				Repository:   "repo",
-			},
+			Hostname:     "bitbucket.org",
+			Organization: "org",
+			Repository:   "repo",
 		}
 		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 			Branch:        "branch",
