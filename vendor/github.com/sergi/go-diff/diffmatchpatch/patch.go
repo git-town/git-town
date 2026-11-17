@@ -16,7 +16,42 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
+
+// alignRuneStart backs up byte index idx to the nearest UTF-8 rune start byte.
+// idx <= 0 or idx >= len(s) is returned unchanged.
+//
+// Motivation: Google's reference JS diff-match-patch uses string.substring
+// (UTF-16 code unit) for all slicing — surrogate-pair-middle splits are
+// well-defined. This Go port slices by UTF-8 byte index (text[a:b]). When
+// MatchMain's Bitap returns a byte position that lands inside a multi-byte
+// character (CJK 3B / em dash 3B / emoji 4B), the resulting slice is invalid
+// UTF-8 — subsequent MatchMain calls miss anchors, and downstream byte slices
+// can panic with "slice bounds out of range" (issue #132).
+//
+// Fix: align every byte slice index back to the nearest valid rune boundary
+// before slicing. The operation costs at most 1-3 bytes of "shrinkage" per
+// slice point but guarantees the resulting string is always valid UTF-8 and
+// no MatchMain / DiffMain pass sees a continuation-byte-prefixed string.
+func alignRuneStart(s string, idx int) int {
+	if idx <= 0 || idx >= len(s) {
+		return idx
+	}
+	for idx > 0 && !utf8.RuneStart(s[idx]) {
+		idx--
+	}
+	return idx
+}
+
+// alignRuneEnd moves byte index idx forward to the next UTF-8 rune start.
+// idx <= 0 or idx >= len(s) is returned unchanged.
+func alignRuneEnd(s string, idx int) int {
+	for idx > 0 && idx < len(s) && !utf8.RuneStart(s[idx]) {
+		idx++
+	}
+	return idx
+}
 
 // Patch represents one patch operation.
 type Patch struct {
@@ -91,12 +126,20 @@ func (dmp *DiffMatchPatch) PatchAddContext(patch Patch, text string) Patch {
 	padding += dmp.PatchMargin
 
 	// Add the prefix.
-	prefix := text[max(0, patch.Start2-padding):patch.Start2]
+	// rune-safety: align prefix start to nearest rune boundary so the slice
+	// never produces an invalid-UTF-8 string when the surrounding text contains
+	// multi-byte characters.
+	prefixStart := alignRuneStart(text, max(0, patch.Start2-padding))
+	prefix := text[prefixStart:patch.Start2]
 	if len(prefix) != 0 {
 		patch.diffs = append([]Diff{Diff{DiffEqual, prefix}}, patch.diffs...)
 	}
 	// Add the suffix.
-	suffix := text[patch.Start2+patch.Length1 : min(len(text), patch.Start2+patch.Length1+padding)]
+	// rune-safety: round suffix end forward to the next rune boundary. Rounding
+	// back would shorten the context, and PatchAddPadding would then treat the
+	// patch as touching the end of the text.
+	suffixEnd := alignRuneEnd(text, min(len(text), patch.Start2+patch.Length1+padding))
+	suffix := text[patch.Start2+patch.Length1 : suffixEnd]
 	if len(suffix) != 0 {
 		patch.diffs = append(patch.diffs, Diff{DiffEqual, suffix})
 	}
@@ -143,6 +186,16 @@ func (dmp *DiffMatchPatch) patchMake2(text1 string, diffs []Diff) []Patch {
 	patches := []Patch{}
 	if len(diffs) == 0 {
 		return patches // Get rid of the null case.
+	}
+
+	// DiffMain replaces invalid UTF-8 with the Unicode replacement character.
+	// Use that normalized source when it is exactly what the diffs describe,
+	// while preserving raw bytes in caller-supplied byte-level diffs.
+	if !utf8.ValidString(text1) {
+		diffText1 := dmp.DiffText1(diffs)
+		if string([]rune(text1)) == diffText1 {
+			text1 = diffText1
+		}
 	}
 
 	patch := Patch{}
@@ -264,6 +317,13 @@ func (dmp *DiffMatchPatch) PatchApply(patches []Patch, text string) (string, []b
 		} else {
 			startLoc = dmp.MatchMain(text, text1, expectedLoc)
 		}
+		// rune-safety: Bitap-returned byte position may land in the middle of a
+		// multi-byte character. Back it up to the nearest rune start so the
+		// subsequent text[startLoc:...] / text[:startLoc] slices never produce
+		// invalid UTF-8 (root cause of issue #132 panic).
+		if startLoc != -1 {
+			startLoc = alignRuneStart(text, startLoc)
+		}
 		if startLoc == -1 {
 			// No match found.  :(
 			results[x] = false
@@ -274,14 +334,20 @@ func (dmp *DiffMatchPatch) PatchApply(patches []Patch, text string) (string, []b
 			results[x] = true
 			delta = startLoc - expectedLoc
 			var text2 string
+			var text2End int
+			// rune-safety: round the end of text2 forward so it keeps the whole
+			// last rune; rounding back would drop it and a deletion of that rune
+			// would then silently do nothing.
 			if endLoc == -1 {
-				text2 = text[startLoc:int(math.Min(float64(startLoc+len(text1)), float64(len(text))))]
+				text2End = alignRuneEnd(text, int(math.Min(float64(startLoc+len(text1)), float64(len(text)))))
 			} else {
-				text2 = text[startLoc:int(math.Min(float64(endLoc+dmp.MatchMaxBits), float64(len(text))))]
+				text2End = alignRuneEnd(text, int(math.Min(float64(endLoc+dmp.MatchMaxBits), float64(len(text)))))
 			}
+			text2 = text[startLoc:text2End]
 			if text1 == text2 {
 				// Perfect match, just shove the Replacement text in.
-				text = text[:startLoc] + dmp.DiffText2(aPatch.diffs) + text[startLoc+len(text1):]
+				replaceEnd := alignRuneStart(text, startLoc+len(text1))
+				text = text[:startLoc] + dmp.DiffText2(aPatch.diffs) + text[replaceEnd:]
 			} else {
 				// Imperfect match.  Run a diff to get a framework of equivalent indices.
 				diffs := dmp.DiffMain(text1, text2, false)
@@ -293,15 +359,22 @@ func (dmp *DiffMatchPatch) PatchApply(patches []Patch, text string) (string, []b
 					index1 := 0
 					for _, aDiff := range aPatch.diffs {
 						if aDiff.Type != DiffEqual {
+							// Indices come from text2, but earlier edits in this patch can
+							// leave text shorter than that. Clamp them to the end of text,
+							// as substring does in the reference implementation.
 							index2 := dmp.DiffXIndex(diffs, index1)
 							if aDiff.Type == DiffInsert {
 								// Insertion
-								text = text[:startLoc+index2] + aDiff.Text + text[startLoc+index2:]
+								insertAt := alignRuneStart(text, min(startLoc+index2, len(text)))
+								text = text[:insertAt] + aDiff.Text + text[insertAt:]
 							} else if aDiff.Type == DiffDelete {
 								// Deletion
-								startIndex := startLoc + index2
-								text = text[:startIndex] +
-									text[startIndex+dmp.DiffXIndex(diffs, index1+len(aDiff.Text))-index2:]
+								startIndex := alignRuneStart(text, min(startLoc+index2, len(text)))
+								endIndex := alignRuneStart(text, min(startLoc+dmp.DiffXIndex(diffs, index1+len(aDiff.Text)), len(text)))
+								if endIndex < startIndex {
+									endIndex = startIndex
+								}
+								text = text[:startIndex] + text[endIndex:]
 							}
 						}
 						if aDiff.Type != DiffDelete {
@@ -313,8 +386,12 @@ func (dmp *DiffMatchPatch) PatchApply(patches []Patch, text string) (string, []b
 		}
 		x++
 	}
-	// Strip the padding off.
-	text = text[len(nullPadding) : len(nullPadding)+(len(text)-2*len(nullPadding))]
+	// Strip the padding off. Deletions can eat into the padding, so clamp the
+	// cut points to the text. An insertion that landed in the padding can
+	// straddle a cut point; drop that rune so the result stays valid UTF-8.
+	start := alignRuneEnd(text, min(len(nullPadding), len(text)))
+	end := max(start, alignRuneStart(text, len(text)-len(nullPadding)))
+	text = text[start:end]
 	return text, results
 }
 
@@ -416,7 +493,19 @@ func (dmp *DiffMatchPatch) PatchSplitMax(patches []Patch) []Patch {
 					bigpatch.diffs = bigpatch.diffs[1:]
 				} else {
 					// Deletion or equality.  Only take as much as we can stomach.
-					diffText = diffText[:min(len(diffText), patchSize-patch.Length1-dmp.PatchMargin)]
+					// rune-safety: align cutAt to nearest rune boundary so we never
+					// slice diffText through a multi-byte character (the resulting
+					// invalid UTF-8 is the root cause of issue #132 panic).
+					cutAt := min(len(diffText), patchSize-patch.Length1-dmp.PatchMargin)
+					cutAt = alignRuneStart(diffText, cutAt)
+					// Loop-progress guard: when alignment collapses cutAt to 0 but
+					// diffText is non-empty, advance by exactly one rune so the
+					// outer for-loop is guaranteed to consume input each iteration.
+					if cutAt == 0 && len(diffText) > 0 {
+						_, size := utf8.DecodeRuneInString(diffText)
+						cutAt = size
+					}
+					diffText = diffText[:cutAt]
 
 					patch.Length1 += len(diffText)
 					Start1 += len(diffText)
@@ -430,22 +519,20 @@ func (dmp *DiffMatchPatch) PatchSplitMax(patches []Patch) []Patch {
 					if diffText == bigpatch.diffs[0].Text {
 						bigpatch.diffs = bigpatch.diffs[1:]
 					} else {
-						bigpatch.diffs[0].Text =
-							bigpatch.diffs[0].Text[len(diffText):]
+						// rune-safety: len(diffText) was already rune-aligned above,
+						// but align once more defensively for cutAt == 0 etc.
+						remStart := alignRuneStart(bigpatch.diffs[0].Text, len(diffText))
+						bigpatch.diffs[0].Text = bigpatch.diffs[0].Text[remStart:]
 					}
 				}
 			}
 			// Compute the head context for the next patch.
 			precontext = dmp.DiffText2(patch.diffs)
-			precontext = precontext[max(0, len(precontext)-dmp.PatchMargin):]
+			// rune-safety: align precontext start to nearest rune boundary.
+			precontext = precontext[alignRuneStart(precontext, max(0, len(precontext)-dmp.PatchMargin)):]
 
-			postcontext := ""
 			// Append the end context for this patch.
-			if len(dmp.DiffText1(bigpatch.diffs)) > dmp.PatchMargin {
-				postcontext = dmp.DiffText1(bigpatch.diffs)[:dmp.PatchMargin]
-			} else {
-				postcontext = dmp.DiffText1(bigpatch.diffs)
-			}
+			postcontext := diffText1Prefix(bigpatch.diffs, dmp.PatchMargin)
 
 			if len(postcontext) != 0 {
 				patch.Length1 += len(postcontext)
@@ -465,6 +552,31 @@ func (dmp *DiffMatchPatch) PatchSplitMax(patches []Patch) []Patch {
 	return patches
 }
 
+// diffText1Prefix returns the first n bytes of DiffText1(diffs) without building the whole text.
+// If byte n falls inside a multi-byte rune, the prefix stops before that rune.
+func diffText1Prefix(diffs []Diff, n int) string {
+	var text strings.Builder
+	for _, aDiff := range diffs {
+		if aDiff.Type == DiffInsert {
+			continue
+		}
+		remaining := n - text.Len()
+		if remaining <= 0 {
+			break
+		}
+		if len(aDiff.Text) >= remaining {
+			cut := alignRuneStart(aDiff.Text, remaining)
+			if text.Len() == 0 {
+				return aDiff.Text[:cut]
+			}
+			_, _ = text.WriteString(aDiff.Text[:cut])
+			break
+		}
+		_, _ = text.WriteString(aDiff.Text)
+	}
+	return text.String()
+}
+
 // PatchToText takes a list of patches and returns a textual representation.
 func (dmp *DiffMatchPatch) PatchToText(patches []Patch) string {
 	var text bytes.Buffer
@@ -474,6 +586,8 @@ func (dmp *DiffMatchPatch) PatchToText(patches []Patch) string {
 	return text.String()
 }
 
+var patchHeaderRegex = regexp.MustCompile("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$")
+
 // PatchFromText parses a textual representation of patches and returns a List of Patch objects.
 func (dmp *DiffMatchPatch) PatchFromText(textline string) ([]Patch, error) {
 	patches := []Patch{}
@@ -482,41 +596,58 @@ func (dmp *DiffMatchPatch) PatchFromText(textline string) ([]Patch, error) {
 	}
 	text := strings.Split(textline, "\n")
 	textPointer := 0
-	patchHeader := regexp.MustCompile("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$")
 
 	var patch Patch
 	var sign uint8
 	var line string
 	for textPointer < len(text) {
-
-		if !patchHeader.MatchString(text[textPointer]) {
+		m := patchHeaderRegex.FindStringSubmatch(text[textPointer])
+		if m == nil {
 			return patches, errors.New("Invalid patch string: " + text[textPointer])
 		}
 
 		patch = Patch{}
-		m := patchHeader.FindStringSubmatch(text[textPointer])
 
-		patch.Start1, _ = strconv.Atoi(m[1])
+		// Coordinates are parsed as 32-bit integers, like the reference Java
+		// and C# implementations. Out-of-range values are invalid rather
+		// than clamped: accepting them made hostile patches apply at wrong
+		// locations and leak internal padding into the result.
+		start1, err := strconv.ParseInt(m[1], 10, 32)
+		if err != nil {
+			return patches, errors.New("Invalid patch string: " + text[textPointer])
+		}
+		patch.Start1 = int(start1)
 		if len(m[2]) == 0 {
 			patch.Start1--
 			patch.Length1 = 1
 		} else if m[2] == "0" {
 			patch.Length1 = 0
 		} else {
+			length1, err := strconv.ParseInt(m[2], 10, 32)
+			if err != nil {
+				return patches, errors.New("Invalid patch string: " + text[textPointer])
+			}
 			patch.Start1--
-			patch.Length1, _ = strconv.Atoi(m[2])
+			patch.Length1 = int(length1)
 		}
 
-		patch.Start2, _ = strconv.Atoi(m[3])
-
+		start2, err := strconv.ParseInt(m[3], 10, 32)
+		if err != nil {
+			return patches, errors.New("Invalid patch string: " + text[textPointer])
+		}
+		patch.Start2 = int(start2)
 		if len(m[4]) == 0 {
 			patch.Start2--
 			patch.Length2 = 1
 		} else if m[4] == "0" {
 			patch.Length2 = 0
 		} else {
+			length2, err := strconv.ParseInt(m[4], 10, 32)
+			if err != nil {
+				return patches, errors.New("Invalid patch string: " + text[textPointer])
+			}
 			patch.Start2--
-			patch.Length2, _ = strconv.Atoi(m[4])
+			patch.Length2 = int(length2)
 		}
 		textPointer++
 
@@ -530,7 +661,11 @@ func (dmp *DiffMatchPatch) PatchFromText(textline string) ([]Patch, error) {
 
 			line = text[textPointer][1:]
 			line = strings.Replace(line, "+", "%2b", -1)
-			line, _ = url.QueryUnescape(line)
+			var err error
+			line, err = url.QueryUnescape(line)
+			if err != nil {
+				return patches, err
+			}
 			if sign == '-' {
 				// Deletion.
 				patch.diffs = append(patch.diffs, Diff{DiffDelete, line})
