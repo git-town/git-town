@@ -25,7 +25,7 @@ Feature: the parent of a branch was deleted remotely but a grandparent remains
       | grandparent | git checkout child                                              |
       | child       | git pull                                                        |
       |             | git -c rebase.updateRefs=false rebase --onto grandparent parent |
-      |             | git push --force-with-lease                                     |
+      |             | git push --force-with-lease --force-if-includes                 |
       |             | git branch -D parent                                            |
     And no rebase is now in progress
     And this lineage exists now

@@ -6,7 +6,8 @@
 // Original library is Copyright (c) 2006 Google Inc.
 // http://code.google.com/p/google-diff-match-patch/
 
-// Package diffmatchpatch offers robust algorithms to perform the operations required for synchronizing plain text.
+// Package diffmatchpatch offers robust algorithms to perform the operations required for synchronizing plain text:
+// comparing two texts and returning their differences, performing fuzzy matching of text, and applying patches onto text.
 package diffmatchpatch
 
 import (
