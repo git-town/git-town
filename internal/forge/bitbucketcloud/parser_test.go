@@ -13,13 +13,18 @@ func TestParsePullRequest(t *testing.T) {
 
 	newPullRequest := func() map[string]any {
 		return map[string]any{
-			"id":          float64(123),
-			"title":       "title",
-			"description": "body",
-			"state":       "OPEN",
+			"close_source_branch": true,
+			"description":         "body",
 			"destination": map[string]any{
 				"branch": map[string]any{
 					"name": "main",
+				},
+			},
+			"draft": false,
+			"id":    float64(123),
+			"links": map[string]any{
+				"html": map[string]any{
+					"href": "https://bitbucket.org/org/repo/pull-requests/123",
 				},
 			},
 			"source": map[string]any{
@@ -27,13 +32,8 @@ func TestParsePullRequest(t *testing.T) {
 					"name": "feature",
 				},
 			},
-			"links": map[string]any{
-				"html": map[string]any{
-					"href": "https://bitbucket.org/org/repo/pull-requests/123",
-				},
-			},
-			"close_source_branch": true,
-			"draft":               false,
+			"state": "OPEN",
+			"title": "title",
 		}
 	}
 
@@ -59,12 +59,14 @@ func TestParsePullRequest(t *testing.T) {
 		t.Parallel()
 		give := newPullRequest()
 		give["reviewers"] = []any{
-			map[string]any{"uuid": "{reviewer-1}", "account_id": "account-1"},
+			map[string]any{"account_id": "account-1", "uuid": "{reviewer-1}"},
 			map[string]any{"uuid": "{reviewer-2}"},
 		}
 		have, err := parsePullRequest(give)
 		must.NoError(t, err)
 		want := forgedomain.BitbucketCloudProposalData{
+			CloseSourceBranch: true,
+			Draft:             false,
 			ProposalData: forgedomain.ProposalData{
 				Active:       true,
 				Body:         gitdomain.NewProposalBodyOpt("body"),
@@ -75,9 +77,7 @@ func TestParsePullRequest(t *testing.T) {
 				Title:        "title",
 				URL:          "https://bitbucket.org/org/repo/pull-requests/123",
 			},
-			CloseSourceBranch: true,
-			Draft:             false,
-			Reviewers:         []string{"{reviewer-1}", "{reviewer-2}"},
+			Reviewers: []string{"{reviewer-1}", "{reviewer-2}"},
 		}
 		must.Eq(t, want, have)
 	})

@@ -198,6 +198,28 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	return err
 }
 
+func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+	user, err := self.client.Value.User.Profile()
+	if err != nil {
+		return forgedomain.VerifyCredentialsResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
+	}
+	_, err = self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+		Owner:    self.Organization,
+		Query:    "",
+		RepoSlug: self.Repository,
+		States:   []string{},
+	})
+	return forgedomain.VerifyCredentialsResult{
+		AuthenticatedUser:   NewOption(user.Username),
+		AuthenticationError: nil,
+		AuthorizationError:  err,
+	}
+}
+
 // proposalData loads the current state of the given proposal from the Bitbucket API.
 func (self APIConnector) proposalData(number forgedomain.ProposalNumber) (forgedomain.BitbucketCloudProposalData, error) {
 	var emptyResult forgedomain.BitbucketCloudProposalData
@@ -233,28 +255,6 @@ func (self APIConnector) proposalUpdateOptions(data forgedomain.BitbucketCloudPr
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 		Reviewers:         data.Reviewers,
-	}
-}
-
-func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
-	user, err := self.client.Value.User.Profile()
-	if err != nil {
-		return forgedomain.VerifyCredentialsResult{
-			AuthenticatedUser:   None[string](),
-			AuthenticationError: err,
-			AuthorizationError:  nil,
-		}
-	}
-	_, err = self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:    self.Organization,
-		Query:    "",
-		RepoSlug: self.Repository,
-		States:   []string{},
-	})
-	return forgedomain.VerifyCredentialsResult{
-		AuthenticatedUser:   NewOption(user.Username),
-		AuthenticationError: nil,
-		AuthorizationError:  err,
 	}
 }
 
