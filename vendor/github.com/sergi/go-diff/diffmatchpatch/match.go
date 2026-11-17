@@ -36,7 +36,11 @@ func (dmp *DiffMatchPatch) MatchMain(text, pattern string, loc int) int {
 // Returns -1 if no match was found.
 func (dmp *DiffMatchPatch) MatchBitap(text, pattern string, loc int) int {
 	// Initialise the alphabet.
-	s := dmp.MatchAlphabet(pattern)
+	// Same contents as MatchAlphabet, but an array is much faster to index than a map.
+	var s [256]int
+	for i := 0; i < len(pattern); i++ {
+		s[pattern[i]] |= int(uint(1) << uint(len(pattern)-i-1))
+	}
 
 	// Highest score beyond which we give up.
 	scoreThreshold := dmp.MatchThreshold
@@ -82,12 +86,8 @@ func (dmp *DiffMatchPatch) MatchBitap(text, pattern string, loc int) int {
 
 		for j := finish; j >= start; j-- {
 			var charMatch int
-			if len(text) <= j-1 {
-				// Out of range.
-				charMatch = 0
-			} else if _, ok := s[text[j-1]]; !ok {
-				charMatch = 0
-			} else {
+			if len(text) > j-1 {
+				// Characters not in the pattern map to 0.
 				charMatch = s[text[j-1]]
 			}
 
@@ -141,20 +141,9 @@ func (dmp *DiffMatchPatch) matchBitapScore(e, x, loc int, pattern string) float6
 
 // MatchAlphabet initialises the alphabet for the Bitap algorithm.
 func (dmp *DiffMatchPatch) MatchAlphabet(pattern string) map[byte]int {
-	s := map[byte]int{}
-	charPattern := []byte(pattern)
-	for _, c := range charPattern {
-		_, ok := s[c]
-		if !ok {
-			s[c] = 0
-		}
-	}
-	i := 0
-
-	for _, c := range charPattern {
-		value := s[c] | int(uint(1)<<uint((len(pattern)-i-1)))
-		s[c] = value
-		i++
+	s := make(map[byte]int, min(len(pattern), 256))
+	for i := 0; i < len(pattern); i++ {
+		s[pattern[i]] |= int(uint(1) << uint(len(pattern)-i-1))
 	}
 	return s
 }

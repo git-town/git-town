@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"mime"
 	"mime/multipart"
 	"net/http/httptest"
 )
@@ -40,9 +41,12 @@ func GzipConfig(level int, h func(gw *gzip.Writer) error) Config {
 // Deprecated: Use reqtest.Server.
 func TestServerConfig(s *httptest.Server) Config {
 	return func(rb *Builder) {
+		// In memory servers don't set s.URL until after s.Client is called,
+		// so call that first.
+		cl := s.Client()
 		rb.
 			BaseURL(s.URL).
-			Client(s.Client())
+			Client(cl)
 	}
 }
 
@@ -59,7 +63,7 @@ func BodyMultipart(boundary string, h func(multi *multipart.Writer) error) Confi
 			boundary = multi.Boundary()
 		}
 		rb.
-			ContentType("multipart/form-data; boundary=" + boundary).
+			ContentType(mime.FormatMediaType("multipart/form-data", map[string]string{"boundary": boundary})).
 			BodyWriter(func(w io.Writer) error {
 				multi := multipart.NewWriter(w)
 				if err := multi.SetBoundary(boundary); err != nil {
