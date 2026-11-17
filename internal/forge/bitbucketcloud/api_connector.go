@@ -88,6 +88,26 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	}
 }
 
+// ProposalUpdateOptions provides the options to update the given proposal to the given state.
+// Bitbucket's update endpoint is a PUT, and the go-bitbucket library sends empty values
+// for all fields that aren't set, which Bitbucket then applies.
+// To not remove reviewers, clear the description, or reset "close source branch",
+// this always sends the complete state of the proposal.
+func (self APIConnector) ProposalUpdateOptions(data forgedomain.BitbucketCloudProposalData) *bitbucket.PullRequestsOptions {
+	return &bitbucket.PullRequestsOptions{
+		ID:                data.Number.String(),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      data.Source.String(),
+		DestinationBranch: data.Target.String(),
+		Title:             data.Title.String(),
+		Description:       data.Body.GetOrZero().String(),
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
+		Reviewers:         data.Reviewers,
+	}
+}
+
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -236,26 +256,6 @@ func (self APIConnector) proposalData(number forgedomain.ProposalNumber) (forged
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
 	return parsePullRequest(responseData)
-}
-
-// ProposalUpdateOptions provides the options to update the given proposal to the given state.
-// Bitbucket's update endpoint is a PUT, and the go-bitbucket library sends empty values
-// for all fields that aren't set, which Bitbucket then applies.
-// To not remove reviewers, clear the description, or reset "close source branch",
-// this always sends the complete state of the proposal.
-func (self APIConnector) ProposalUpdateOptions(data forgedomain.BitbucketCloudProposalData) *bitbucket.PullRequestsOptions {
-	return &bitbucket.PullRequestsOptions{
-		ID:                data.Number.String(),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		SourceBranch:      data.Source.String(),
-		DestinationBranch: data.Target.String(),
-		Title:             data.Title.String(),
-		Description:       data.Body.GetOrZero().String(),
-		Draft:             data.Draft,
-		CloseSourceBranch: data.CloseSourceBranch,
-		Reviewers:         data.Reviewers,
-	}
 }
 
 // ============================================================================
