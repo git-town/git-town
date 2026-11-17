@@ -57,7 +57,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
-      |          | git push --force-with-lease                                |
+      |          | git push --force-with-lease --force-if-includes            |
       |          | git branch -D branch-1                                     |
     And all branches are now synchronized
     And these commits exist now

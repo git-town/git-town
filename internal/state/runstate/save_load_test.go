@@ -130,7 +130,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashOpenChanges{},
 				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.LocalBranchNameOpt("parent"), InitialParentSHA: Some(gitdomain.SHA("111111")), TrackingBranch: Some(gitdomain.RemoteBranchName("origin/branch")), PushBranches: true},
 				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.LocalBranchNameOpt("original-parent"), InitialParentSHA: Some(gitdomain.SHA("123456")), TrackingBranch: Some(gitdomain.RemoteBranchName("origin/branch"))},
-				&opcodes.SyncFeatureBranchRebase{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.SHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.RemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchRebase{Branch: "branch", CommitsToRemove: Some(gitdomain.SHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.RemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -802,7 +802,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentSHAPreviousRun": "111111",
+        "CommitsToRemove": "111111",
         "PushBranches": true,
         "TrackingBranch": "origin/branch"
       },
