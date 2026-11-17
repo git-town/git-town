@@ -3,7 +3,7 @@ module github.com/git-town/git-town/v24/tools/generate_json_schema
 go 1.27
 
 require (
-	github.com/git-town/git-town/v24 v24.1.1
+	github.com/git-town/git-town/v24 v24.2.0
 	github.com/invopop/jsonschema v0.13.0
 	github.com/shoenig/test v1.12.2
 )
