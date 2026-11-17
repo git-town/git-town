@@ -165,7 +165,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 		return err
 	}
 	data.Body = Some(newBody)
-	_, err = self.client.Value.Repositories.PullRequests.Update(self.proposalUpdateOptions(data))
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
@@ -179,7 +179,7 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 		return err
 	}
 	data.Source = source
-	_, err = self.client.Value.Repositories.PullRequests.Update(self.proposalUpdateOptions(data))
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
@@ -193,7 +193,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 		return err
 	}
 	data.Target = target
-	_, err = self.client.Value.Repositories.PullRequests.Update(self.proposalUpdateOptions(data))
+	_, err = self.client.Value.Repositories.PullRequests.Update(self.ProposalUpdateOptions(data))
 	self.log.Finished(err)
 	return err
 }
@@ -238,12 +238,12 @@ func (self APIConnector) proposalData(number forgedomain.ProposalNumber) (forged
 	return parsePullRequest(responseData)
 }
 
-// proposalUpdateOptions provides the options to update the given proposal to the given state.
+// ProposalUpdateOptions provides the options to update the given proposal to the given state.
 // Bitbucket's update endpoint is a PUT, and the go-bitbucket library sends empty values
 // for all fields that aren't set, which Bitbucket then applies.
 // To not remove reviewers, clear the description, or reset "close source branch",
 // this always sends the complete state of the proposal.
-func (self APIConnector) proposalUpdateOptions(data forgedomain.BitbucketCloudProposalData) *bitbucket.PullRequestsOptions {
+func (self APIConnector) ProposalUpdateOptions(data forgedomain.BitbucketCloudProposalData) *bitbucket.PullRequestsOptions {
 	return &bitbucket.PullRequestsOptions{
 		ID:                data.Number.String(),
 		Owner:             self.Organization,

@@ -1,8 +1,9 @@
-package bitbucketcloud
+package bitbucketcloud_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v24/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -11,7 +12,7 @@ import (
 func TestProposalUpdateOptions(t *testing.T) {
 	t.Parallel()
 
-	connector := APIConnector{
+	connector := bitbucketcloud.APIConnector{
 		Organization: "org",
 		Repository:   "repo",
 	}
@@ -28,7 +29,7 @@ func TestProposalUpdateOptions(t *testing.T) {
 			Target:            "main",
 			Title:             "title",
 		}
-		have := connector.proposalUpdateOptions(data)
+		have := connector.ProposalUpdateOptions(data)
 		must.EqOp(t, "", have.Description)
 		must.Len(t, 0, have.Reviewers)
 	})
@@ -45,7 +46,7 @@ func TestProposalUpdateOptions(t *testing.T) {
 			Target:            "main",
 			Title:             "title",
 		}
-		have := connector.proposalUpdateOptions(data)
+		have := connector.ProposalUpdateOptions(data)
 		must.EqOp(t, "123", have.ID)
 		must.EqOp(t, "org", have.Owner)
 		must.EqOp(t, "repo", have.RepoSlug)
