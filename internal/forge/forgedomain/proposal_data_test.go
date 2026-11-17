@@ -55,4 +55,42 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		must.True(t, data2.Draft)
 		must.Eq(t, []string{"{reviewer-1}", "{reviewer-2}"}, data2.Reviewers)
 	})
+
+	t.Run("MarshalJSON without reviewers", func(t *testing.T) {
+		t.Parallel()
+		data := forgedomain.BitbucketCloudProposalData{
+			Active:            true,
+			Body:              gitdomain.NewProposalBodyOpt("body"),
+			CloseSourceBranch: false,
+			Draft:             false,
+			MergeWithAPI:      true,
+			Number:            123,
+			Reviewers:         nil,
+			Source:            "source",
+			Target:            "target",
+			Title:             "title",
+			URL:               "url",
+		}
+		serialized, err := json.MarshalIndent(data, "", "  ")
+		must.NoError(t, err)
+		want := `
+{
+  "Active": true,
+  "Body": "body",
+  "MergeWithAPI": true,
+  "Number": 123,
+  "Source": "source",
+  "Target": "target",
+  "Title": "title",
+  "URL": "url",
+  "CloseSourceBranch": false,
+  "Draft": false
+}`[1:]
+		must.EqOp(t, want, string(serialized))
+
+		var data2 forgedomain.BitbucketCloudProposalData
+		must.NoError(t, json.Unmarshal(serialized, &data2))
+		must.Eq(t, data, data2)
+		must.Nil(t, data2.Reviewers)
+	})
 }
