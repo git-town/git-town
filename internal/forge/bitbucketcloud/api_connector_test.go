@@ -12,27 +12,21 @@ func TestProposalUpdateOptions(t *testing.T) {
 	t.Parallel()
 
 	connector := APIConnector{
-		WebConnector: WebConnector{
-			HostedRepoInfo: forgedomain.HostedRepoInfo{
-				Organization: "org",
-				Repository:   "repo",
-			},
-		},
+		Organization: "org",
+		Repository:   "repo",
 	}
 
 	t.Run("no body", func(t *testing.T) {
 		t.Parallel()
 		data := forgedomain.BitbucketCloudProposalData{
+			Body:              gitdomain.NewProposalBodyOpt(""),
 			CloseSourceBranch: false,
 			Draft:             false,
-			ProposalData: forgedomain.ProposalData{
-				Body:   gitdomain.NewProposalBodyOpt(""),
-				Number: 123,
-				Source: "feature",
-				Target: "main",
-				Title:  "title",
-			},
-			Reviewers: []string{},
+			Number:            123,
+			Reviewers:         []string{},
+			Source:            "feature",
+			Target:            "main",
+			Title:             "title",
 		}
 		have := connector.proposalUpdateOptions(data)
 		must.EqOp(t, "", have.Description)
@@ -42,16 +36,14 @@ func TestProposalUpdateOptions(t *testing.T) {
 	t.Run("sends the complete state of the proposal", func(t *testing.T) {
 		t.Parallel()
 		data := forgedomain.BitbucketCloudProposalData{
+			Body:              gitdomain.NewProposalBodyOpt("body"),
 			CloseSourceBranch: true,
 			Draft:             true,
-			ProposalData: forgedomain.ProposalData{
-				Body:   gitdomain.NewProposalBodyOpt("body"),
-				Number: 123,
-				Source: "feature",
-				Target: "main",
-				Title:  "title",
-			},
-			Reviewers: []string{"{reviewer-1}", "{reviewer-2}"},
+			Number:            123,
+			Reviewers:         []string{"{reviewer-1}", "{reviewer-2}"},
+			Source:            "feature",
+			Target:            "main",
+			Title:             "title",
 		}
 		have := connector.proposalUpdateOptions(data)
 		must.EqOp(t, "123", have.ID)

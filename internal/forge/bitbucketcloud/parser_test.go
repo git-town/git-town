@@ -65,19 +65,17 @@ func TestParsePullRequest(t *testing.T) {
 		have, err := parsePullRequest(give)
 		must.NoError(t, err)
 		want := forgedomain.BitbucketCloudProposalData{
+			Active:            true,
+			Body:              gitdomain.NewProposalBodyOpt("body"),
 			CloseSourceBranch: true,
 			Draft:             false,
-			ProposalData: forgedomain.ProposalData{
-				Active:       true,
-				Body:         gitdomain.NewProposalBodyOpt("body"),
-				MergeWithAPI: false,
-				Number:       123,
-				Source:       "feature",
-				Target:       "main",
-				Title:        "title",
-				URL:          "https://bitbucket.org/org/repo/pull-requests/123",
-			},
-			Reviewers: []string{"{reviewer-1}", "{reviewer-2}"},
+			MergeWithAPI:      false,
+			Number:            123,
+			Reviewers:         []string{"{reviewer-1}", "{reviewer-2}"},
+			Source:            "feature",
+			Target:            "main",
+			Title:             "title",
+			URL:               "https://bitbucket.org/org/repo/pull-requests/123",
 		}
 		must.Eq(t, want, have)
 	})
