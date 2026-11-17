@@ -1,5 +1,19 @@
 # Git Town Changelog
 
+## 24.2.0 (2026-11-17)
+
+## New Features
+
+- `git town sync` now detects shipped changes more intelligently. When a branch got shipped at the remote, and all its changes are in the parent, it deletes it without syncing first ([#6309](https://github.com/git-town/git-town/pull/6309)).
+
+#### Bug Fixes
+
+- `git town sync` no longer force-pushes twice ([#6305](https://github.com/git-town/git-town/pull/6305)).
+- `git town sync` now behaves correctly when you manually prepended a parent branch ([#6304](https://github.com/git-town/git-town/pull/6304)).
+- `git town sync` now respects the [push-branches](https://www.git-town.com/preferences/push-branches.html) setting when removing the commits of a shipped ancestor ([#6310](https://github.com/git-town/git-town/pull/6310)).
+- `git town sync` now rebases correctly when the parent branch was shipped at the remote ([#6306](https://github.com/git-town/git-town/pull/6306)).
+- `git town sync` no longer rebases on an outdated tracking branch when the tip of `origin/<branch>` is found in the reflog of the local branch ([#6305](https://github.com/git-town/git-town/pull/6305)).
+
 ## 24.1.1 (2026-11-06)
 
 #### Bug Fixes
