@@ -1,8 +1,9 @@
-package bitbucketcloud
+package bitbucketcloud_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v24/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v24/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -40,7 +41,7 @@ func TestParsePullRequest(t *testing.T) {
 	t.Run("no reviewers", func(t *testing.T) {
 		t.Parallel()
 		give := newPullRequest()
-		have, err := parsePullRequest(give)
+		have, err := bitbucketcloud.ParsePullRequest(give)
 		must.NoError(t, err)
 		must.Eq(t, []string{}, have.Reviewers)
 	})
@@ -51,7 +52,7 @@ func TestParsePullRequest(t *testing.T) {
 		give["reviewers"] = []any{
 			map[string]any{"account_id": "account-1"},
 		}
-		_, err := parsePullRequest(give)
+		_, err := bitbucketcloud.ParsePullRequest(give)
 		must.Error(t, err)
 	})
 
@@ -62,7 +63,7 @@ func TestParsePullRequest(t *testing.T) {
 			map[string]any{"account_id": "account-1", "uuid": "{reviewer-1}"},
 			map[string]any{"uuid": "{reviewer-2}"},
 		}
-		have, err := parsePullRequest(give)
+		have, err := bitbucketcloud.ParsePullRequest(give)
 		must.NoError(t, err)
 		want := forgedomain.BitbucketCloudProposalData{
 			Active:            true,

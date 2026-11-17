@@ -65,7 +65,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return None[forgedomain.Proposal](), nil
 		}
-		proposal3, err := parsePullRequest(proposal2)
+		proposal3, err := ParsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return None[forgedomain.Proposal](), nil
@@ -142,7 +142,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return []forgedomain.Proposal{}, nil
 		}
-		proposal3, err := parsePullRequest(proposal2)
+		proposal3, err := ParsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return []forgedomain.Proposal{}, nil
@@ -255,7 +255,7 @@ func (self APIConnector) proposalData(number forgedomain.ProposalNumber) (forged
 	if !ok {
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	return parsePullRequest(responseData)
+	return ParsePullRequest(responseData)
 }
 
 // ============================================================================

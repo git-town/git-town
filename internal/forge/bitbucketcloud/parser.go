@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v24/internal/messages"
 )
 
-func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {
+func ParsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {
 	var emptyResult forgedomain.BitbucketCloudProposalData
 	id1, has := pullRequest["id"]
 	if !has {

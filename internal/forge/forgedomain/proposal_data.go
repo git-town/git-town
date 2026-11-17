@@ -24,7 +24,7 @@ type BitbucketCloudProposalData struct {
 	ProposalData
 	CloseSourceBranch bool
 	Draft             bool
-	Reviewers         []string `json:reviewers",omitempty"` // UUIDs of the reviewers
+	Reviewers         []string // UUIDs of the reviewers
 }
 
 func (self BitbucketCloudProposalData) Data() ProposalData {
