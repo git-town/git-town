@@ -9,7 +9,7 @@ Feature: undo a hack after additional commits to the new branch
     When I run "git-town hack new"
     And I add commit "additional commit" to the "new" branch
 
-  Scenario: undo
+  Scenario: normal undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And Git Town prints the error:
