@@ -15,6 +15,7 @@ Feature: undo a hack after additional commits to the new branch
     And Git Town prints the error:
       """
       cannot undo because these branches received new commits after the last Git Town command: new
+      Undoing would delete these commits. To undo anyway, run "git town undo --force".
       """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           |
