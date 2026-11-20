@@ -373,7 +373,7 @@ and will be removed in future versions of Git Town.`
 	SyncTags                              = "Sync tags: %s\n"
 	SyncWithUpstream                      = "Sync with upstream: %s\n"
 
-	UndoBranchHasNewCommits                 = "cannot undo because these branches received new commits after the last Git Town command: %s\nUndoing would delete these commits. To undo anyway, run \"git town undo --force\"."
+	UndoBranchHasNewCommits                 = "cannot undo because these branches received new commits after the last Git Town command:\n%s\n\nUndoing would delete these commits. To undo anyway, run \"git town undo --force\"."
 	UndoCannotRevertCommitOnPerennialBranch = "Cannot undo commit %s because it is on a perennial branch"
 	UndoContinueGuidance                    = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
 	UndoCreateOpcodeProblem                 = "cannot create undo operations for %q: %w"

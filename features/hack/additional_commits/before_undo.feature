@@ -6,7 +6,7 @@ Feature: undo a hack after additional commits to the new branch
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    When I run "git-town hack new"
+    And I run "git-town hack new"
     And I add commit "additional commit" to the "new" branch
 
   Scenario: normal undo
@@ -14,7 +14,9 @@ Feature: undo a hack after additional commits to the new branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot undo because these branches received new commits after the last Git Town command: new
+      cannot undo because these branches received new commits after the last Git Town command:
+      new
+      
       Undoing would delete these commits. To undo anyway, run "git town undo --force".
       """
     And these commits exist now
@@ -33,5 +35,5 @@ Feature: undo a hack after additional commits to the new branch
       """
       deleted branch new
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
