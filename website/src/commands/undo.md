@@ -15,10 +15,9 @@ before you ran the problematic command.
 
 #### `-f`<br>`--force`
 
-If a branch that the last Git Town command created received new commits
-since then, undoing that command would delete these commits.
-In that case, the _undo_ command refuses to run.
-Use the `--force` aka `-f` flag to undo anyway.
+By default, undo only reverts changes made by Git Town and refuses to run
+if you have made additional changes since then.
+Use this flag to undo anyway.
 
 #### `-h`<br>`--help`
 

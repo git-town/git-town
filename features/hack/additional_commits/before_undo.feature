@@ -16,7 +16,7 @@ Feature: undo a hack after additional commits to the new branch
       """
       cannot undo because these branches received new commits after the last Git Town command:
       new
-      
+
       Undoing would delete these commits. To undo anyway, run "git town undo --force".
       """
     And these commits exist now
