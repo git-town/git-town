@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v24/internal/messages"
 	"github.com/git-town/git-town/v24/internal/state/runstate"
 	"github.com/git-town/git-town/v24/internal/undo"
+	"github.com/git-town/git-town/v24/internal/undo/undobranches"
 	"github.com/git-town/git-town/v24/internal/validate"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -101,7 +102,7 @@ func determineUndoData(repo execute.OpenRepoResult) (undoData, configdomain.Prog
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func executeUndo(cliConfig configdomain.PartialConfig) error {
+func executeUndo(cliConfig configdomain.PartialConfig, force configdomain.Force) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -135,6 +136,14 @@ Start:
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
+	if !force {
+		if endBranchesSnapshot, hasEndBranchesSnapshot := runState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
+			branchesWithNewCommits := undobranches.AddedBranchesWithNewCommits(runState.BeginBranchesSnapshot, endBranchesSnapshot, runState.TouchedBranches, data.initialBranchesSnapshot.Branches)
+			if len(branchesWithNewCommits) > 0 {
+				return fmt.Errorf(messages.UndoBranchHasNewCommits, branchesWithNewCommits.Join(", ")) //lint:ignore ST1005 the trailing punctuation is intentional here
+			}
+		}
+	}
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:           repo.Backend,
 		CommandsCounter:   repo.CommandsCounter,
@@ -163,6 +172,7 @@ type undoData struct {
 }
 
 func undoCmd() *cobra.Command {
+	addForceFlag, readForceFlag := flags.Force("undo even if this deletes branches that received new commits")
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -170,9 +180,10 @@ func undoCmd() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDErrors,
 		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			force, errForce := readForceFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errInteractive, errVerbose); err != nil {
+			if err := cmp.Or(errForce, errInteractive, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -190,11 +201,12 @@ func undoCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeUndo(cliConfig)
+			return executeUndo(cliConfig, force)
 		},
 		Short: undoDesc,
 		Use:   "undo",
 	}
+	addForceFlag(&cmd)
 	addInteractiveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

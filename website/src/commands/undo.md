@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town undo [-h | --help] [--(non)-interactive] [-v | --verbose]
+git town undo [-f | --force] [-h | --help] [--(non)-interactive] [-v | --verbose]
 ```
 
 The _undo_ command reverts the last fully executed Git Town command.
@@ -12,6 +12,12 @@ and leaves your repository in the state it was
 before you ran the problematic command.
 
 ## Options
+
+#### `-f`<br>`--force`
+
+By default, undo only reverts changes made by Git Town and refuses to run
+if you have made additional changes since then.
+Use this flag to undo anyway.
 
 #### `-h`<br>`--help`
 
