@@ -29,4 +29,9 @@ Feature: undo a hack after additional commits to the new branch
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
+    And Git Town prints:
+      """
+      deleted branch new
+      """
+    And the initial commits exist now
     And the initial branches and lineage exist now
