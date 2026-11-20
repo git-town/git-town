@@ -22,7 +22,10 @@ func AddedBranchesWithNewCommits(beginBranchesSnapshot, endBranchesSnapshot gitd
 			continue
 		}
 		currentSHA, hasCurrentSHA := currentBranch.LocalSHA().Get()
-		if hasCurrentSHA && currentSHA != endSHA {
+		if !hasCurrentSHA {
+			continue
+		}
+		if currentSHA != endSHA {
 			result = append(result, addedBranch)
 		}
 	}

@@ -39,14 +39,16 @@ func TestAddedBranchesWithNewCommits(t *testing.T) {
 	t.Run("added branch is unchanged", func(t *testing.T) {
 		t.Parallel()
 		have := undobranches.AddedBranchesWithNewCommits(begin, end, touched, end.Branches)
-		must.Eq(t, gitdomain.LocalBranchNames{}, have)
+		want := gitdomain.LocalBranchNames{}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("added branch no longer exists", func(t *testing.T) {
 		t.Parallel()
 		current := gitdomain.BranchInfos{mainBranch}
 		have := undobranches.AddedBranchesWithNewCommits(begin, end, touched, current)
-		must.Eq(t, gitdomain.LocalBranchNames{}, have)
+		want := gitdomain.LocalBranchNames{}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("added branch received new commits", func(t *testing.T) {
@@ -77,6 +79,7 @@ func TestAddedBranchesWithNewCommits(t *testing.T) {
 			},
 		}
 		have := undobranches.AddedBranchesWithNewCommits(begin, end, []gitdomain.BranchName{"main"}, current)
-		must.Eq(t, gitdomain.LocalBranchNames{}, have)
+		want := gitdomain.LocalBranchNames{}
+		must.Eq(t, want, have)
 	})
 }
