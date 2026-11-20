@@ -140,7 +140,7 @@ Start:
 		if endBranchesSnapshot, hasEndBranchesSnapshot := runState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
 			branchesWithNewCommits := undobranches.AddedBranchesWithNewCommits(runState.BeginBranchesSnapshot, endBranchesSnapshot, runState.TouchedBranches, data.initialBranchesSnapshot.Branches)
 			if len(branchesWithNewCommits) > 0 {
-				return fmt.Errorf(messages.UndoBranchHasNewCommits, branchesWithNewCommits.Join(", "))
+				return fmt.Errorf(messages.UndoBranchHasNewCommits, branchesWithNewCommits.Join(", ")) //lint:ignore ST1005 the trailing punctuation is intentional here
 			}
 		}
 	}
