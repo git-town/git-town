@@ -80,6 +80,7 @@ const (
 	CompressContributionBranch         = "you are merely contributing to branch %s and should leave compressing it to the branch owner"
 	CompressDetachedHead               = "please check out the branch to compress"
 	CompressIsPerennial                = "better not compress perennial branches"
+	CompressMessageConflict            = "the --message and --keep-commit-messages flags cannot be used together"
 	CompressNoBranchInfo               = "no branch info for branch %s"
 	CompressNoCommits                  = "branch %s has no commits"
 	CompressObservedBranch             = "you are merely observing branch %s and should leave compressing it to the branch owner"

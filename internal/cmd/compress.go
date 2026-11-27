@@ -38,7 +38,8 @@ Branches must be in sync to compress them, run "git sync" as needed.
 Provide the --stack switch to compress all branches in the stack.
 
 The compressed commit uses the commit message of the first commit in the branch.
-You can provide a custom commit message with the -m switch.
+You can provide a custom commit message with the -m switch
+or preserve all commit messages with --keep-commit-messages.
 
 Assuming you have a feature branch with these commits:
 
@@ -83,6 +84,7 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
+	addKeepCommitMessagesFlag, readKeepCommitMessagesFlag := flags.KeepCommitMessages()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
 	addNoVerifyFlag, readNoVerifyFlag := flags.NoVerify()
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
@@ -94,10 +96,11 @@ func compressCmd() *cobra.Command {
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
+			keepCommitMessages, errKeepCommitMessages := readKeepCommitMessagesFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errCommitHook, errDryRun, errInteractive, errMessage, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errCommitHook, errDryRun, errInteractive, errKeepCommitMessages, errMessage, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -115,13 +118,14 @@ func compressCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCompress(cliConfig, message, commitHook, stack)
+			return executeCompress(cliConfig, message, keepCommitMessages, commitHook, stack)
 		},
 		Short: compressDesc,
 		Use:   compressCommand,
 	}
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
+	addKeepCommitMessagesFlag(&cmd)
 	addMessageFlag(&cmd)
 	addNoVerifyFlag(&cmd)
 	addStackFlag(&cmd)
@@ -173,7 +177,7 @@ func compressProgram(data compressData, commitHook configdomain.CommitHook) prog
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (compressData, configdomain.ProgramFlow, error) {
+func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], keepCommitMessages configdomain.KeepCommitMessages, compressEntireStack configdomain.FullStack) (compressData, configdomain.ProgramFlow, error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	var emptyResult compressData
@@ -277,7 +281,16 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 			continue
 		}
 		var newCommitMessage gitdomain.CommitMessage
-		if messageContent, has := message.Get(); has {
+		if keepCommitMessages.Enabled() {
+			commitMessages := make(gitdomain.CommitMessages, len(commits))
+			for c, commit := range commits {
+				commitMessages[c], err = repo.Git.CommitMessage(repo.Backend, commit.SHA)
+				if err != nil {
+					return emptyResult, configdomain.ProgramFlowExit, err
+				}
+			}
+			newCommitMessage = commitMessages.Join("\n\n")
+		} else if messageContent, has := message.Get(); has {
 			newCommitMessage = messageContent
 		} else {
 			newCommitMessage, err = repo.Git.CommitMessage(repo.Backend, commits[0].SHA)
@@ -322,7 +335,7 @@ type compressBranchProgramArgs struct {
 	prog          Mutable[program.Program]
 }
 
-func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
+func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage], keepCommitMessages configdomain.KeepCommitMessages, commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -335,7 +348,10 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCompressData(repo, message, compressEntireStack)
+	if message.IsSome() && keepCommitMessages.Enabled() {
+		return errors.New(messages.CompressMessageConflict)
+	}
+	data, flow, err := determineCompressData(repo, message, keepCommitMessages, compressEntireStack)
 	if err != nil {
 		return err
 	}
