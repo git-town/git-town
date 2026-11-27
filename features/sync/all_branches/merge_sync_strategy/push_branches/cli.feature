@@ -5,10 +5,10 @@ Feature: disable pushing through the CLI
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
-    And the current branch is "main"
     And the tags
       | NAME      | LOCATION |
       | local-tag | local    |
+    And the current branch is "main"
     When I run "git-town sync --all --no-push"
 
   Scenario: result
