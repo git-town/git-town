@@ -2,6 +2,8 @@ package gh_test
 
 import (
 	"errors"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v24/internal/browser/browserdomain"
@@ -61,9 +63,13 @@ func TestConnectorCreateProposal(t *testing.T) {
 		err := connector.CreateProposal(args)
 		must.NoError(t, err)
 		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--body=my body"},
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--body-file=<temp>", "--editor"},
 			{"gh", "pr", "view"},
 		}, frontend.calls)
+		must.Eq(t, "my body", frontend.bodyFileContent)
+		must.True(t, frontend.bodyFilePath != "")
+		_, statErr := os.Stat(frontend.bodyFilePath)
+		must.True(t, os.IsNotExist(statErr))
 	})
 
 	t.Run("missing title (non-interactive mode)", func(t *testing.T) {
@@ -125,9 +131,13 @@ func TestConnectorCreateProposal(t *testing.T) {
 		err := connector.CreateProposal(args)
 		must.NoError(t, err)
 		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body-file=<temp>", "--editor"},
 			{"gh", "pr", "view"},
 		}, frontend.calls)
+		must.Eq(t, "my body", frontend.bodyFileContent)
+		must.True(t, frontend.bodyFilePath != "")
+		_, statErr := os.Stat(frontend.bodyFilePath)
+		must.True(t, os.IsNotExist(statErr))
 	})
 
 	t.Run("with title and body (non-interactive mode)", func(t *testing.T) {
@@ -144,6 +154,25 @@ func TestConnectorCreateProposal(t *testing.T) {
 			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body=my body"},
 			{"gh", "pr", "view"},
 		}, frontend.calls)
+	})
+
+	t.Run("with title and body cleans up the temporary file when gh fails (interactive mode)", func(t *testing.T) {
+		t.Parallel()
+		frontend := &recordingRunner{err: errors.New("test error")}
+		connector := newTestConnector(frontend)
+		args := createProposalArgs()
+		args.Interactive = clidomain.Interactive("")
+		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+		err := connector.CreateProposal(args)
+		must.Error(t, err)
+		must.Eq(t, [][]string{
+			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body-file=<temp>", "--editor"},
+		}, frontend.calls)
+		must.Eq(t, "my body", frontend.bodyFileContent)
+		must.True(t, frontend.bodyFilePath != "")
+		_, statErr := os.Stat(frontend.bodyFilePath)
+		must.True(t, os.IsNotExist(statErr))
 	})
 }
 
@@ -265,13 +294,27 @@ func (self proposalQuerier) QueryZ(_ string, _ ...string) (stringss.ZeroDelineat
 }
 
 type recordingRunner struct {
-	calls [][]string
+	bodyFileContent string
+	bodyFilePath    string
+	calls           [][]string
+	err             error
 }
 
 func (self *recordingRunner) Run(executable string, args ...string) error {
 	call := append([]string{executable}, args...)
+	for index, arg := range call {
+		if path, isBodyFile := strings.CutPrefix(arg, "--body-file="); isBodyFile {
+			content, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			self.bodyFileContent = string(content)
+			self.bodyFilePath = path
+			call[index] = "--body-file=<temp>"
+		}
+	}
 	self.calls = append(self.calls, call)
-	return nil
+	return self.err
 }
 
 func (self *recordingRunner) RunWithEnv(_ []string, executable string, args ...string) error {
