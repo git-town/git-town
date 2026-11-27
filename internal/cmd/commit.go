@@ -56,7 +56,7 @@ func commitCmd() *cobra.Command {
 			message, errMessage := readMessageFlag(cmd)
 			up, errUp := readUpFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errStageAll, errDryRun, errInteractive, errMessage, errUp, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errInteractive, errMessage, errStageAll, errUp, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
