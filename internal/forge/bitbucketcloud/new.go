@@ -12,9 +12,16 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
+const (
+	// sshHostname is the hostname that Bitbucket Cloud uses for Git access over SSH.
+	sshHostname = "ssh.bitbucket.org"
+	// webHostname is the hostname of the Bitbucket Cloud website.
+	webHostname = "bitbucket.org"
+)
+
 // Detect indicates whether the current repository is hosted on Bitbucket Cloud.
 func Detect(remoteURL giturl.Parts) bool {
-	return remoteURL.Host == "bitbucket.org"
+	return remoteURL.Host == webHostname || remoteURL.Host == sshHostname
 }
 
 type NewConnectorArgs struct {
@@ -32,7 +39,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	webConnector := WebConnector{
 		browserEnabled:    args.BrowserEnabled,
 		browserExecutable: args.BrowserExecutable,
-		Hostname:          args.RemoteURL.Host,
+		Hostname:          webHostnameFor(args.RemoteURL.Host),
 		Organization:      args.RemoteURL.Org,
 		Repository:        args.RemoteURL.Repo,
 	}
@@ -65,4 +72,13 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		}, nil
 	}
 	return webConnector, nil
+}
+
+// webHostnameFor provides the hostname of the website for the given remote hostname.
+// Bitbucket Cloud serves Git over SSH at a different hostname than its website.
+func webHostnameFor(remoteHost string) string {
+	if remoteHost == sshHostname {
+		return webHostname
+	}
+	return remoteHost
 }
