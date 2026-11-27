@@ -1539,6 +1539,11 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100755",
 						SHA:        "111111",
 					}),
+					ParentBase: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
 					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
@@ -1569,10 +1574,45 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100644",
 						SHA:        "111111",
 					}),
+					ParentBase: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100644",
+						SHA:        "111111",
+					}),
 					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
+					}),
+				},
+			}
+			have := git.DetectPhantomMergeConflicts(mergeConflicts, gitdomain.LocalBranchNameOpt("alpha"), "main")
+			want := []git.PhantomConflict{}
+			must.Eq(t, want, have)
+		})
+		t.Run("current branch does not contain the parent version of the file", func(t *testing.T) {
+			t.Parallel()
+			mergeConflicts := []git.MergeConflict{
+				{
+					Root: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
+					Parent: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
+					ParentBase: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "222222",
+					}),
+					Current: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100755",
+						SHA:        "333333",
 					}),
 				},
 			}
@@ -1590,6 +1630,11 @@ func TestBackendCommands(t *testing.T) {
 						SHA:        "111111",
 					}),
 					Parent: Some(git.Blob{
+						FilePath:   "file",
+						Permission: "100644",
+						SHA:        "222222",
+					}),
+					ParentBase: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100644",
 						SHA:        "222222",
@@ -1615,6 +1660,11 @@ func TestBackendCommands(t *testing.T) {
 						SHA:        "222222",
 					}),
 					Parent: Some(git.Blob{
+						FilePath:   "file-2",
+						Permission: "100755",
+						SHA:        "111111",
+					}),
+					ParentBase: Some(git.Blob{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",

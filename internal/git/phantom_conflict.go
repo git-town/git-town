@@ -26,8 +26,9 @@ func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt 
 		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
 			continue
 		}
-		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
-			// root and parent have the exact same version of the file --> this is a phantom merge conflict
+		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) && reflect.DeepEqual(conflictInfo.ParentBase, conflictInfo.Parent) {
+			// root and parent have the exact same version of the file,
+			// and the current branch already contains this version of the file --> this is a phantom merge conflict
 			result = append(result, PhantomConflict{
 				FilePath:   currentInfo.FilePath,
 				Resolution: gitdomain.ConflictResolutionOurs,
