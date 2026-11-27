@@ -319,9 +319,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}
 	var shouldPushTags bool
 	switch {
-	case !validatedConfig.NormalConfig.PushBranches.ShouldPush():
-		shouldPushTags = false
 	case !validatedConfig.NormalConfig.SyncTags.ShouldSyncTags():
+		shouldPushTags = false
+	case !validatedConfig.NormalConfig.PushBranches.ShouldPush():
 		shouldPushTags = false
 	case args.syncAllBranches.Enabled():
 		shouldPushTags = true
