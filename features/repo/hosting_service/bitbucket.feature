@@ -24,3 +24,7 @@ Feature: Bitbucket
       | username@bitbucket.org/git-town/git-town             |
       | ssh://username@bitbucket.org/git-town/git-town.git   |
       | ssh://username@bitbucket.org/git-town/git-town       |
+      | git@ssh.bitbucket.org:git-town/git-town.git          |
+      | git@ssh.bitbucket.org:git-town/git-town              |
+      | ssh://git@ssh.bitbucket.org/git-town/git-town.git    |
+      | ssh://git@ssh.bitbucket.org/git-town/git-town        |
