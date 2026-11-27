@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	observeDesc = "Stop your contributions to some feature branches"
+	observeDesc = "Convert branches into observed branches"
 	observeHelp = `
 Marks the given local branches as observed.
 If no branch is provided, observes the current branch.
