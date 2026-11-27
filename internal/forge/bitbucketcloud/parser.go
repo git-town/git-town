@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v24/internal/messages"
 )
 
-func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {
+func ParsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudProposalData, error) {
 	var emptyResult forgedomain.BitbucketCloudProposalData
 	id1, has := pullRequest["id"]
 	if !has {
@@ -135,6 +135,10 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 	if !ok {
 		return emptyResult, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
+	reviewers, err := parseReviewers(pullRequest)
+	if err != nil {
+		return emptyResult, err
+	}
 	return forgedomain.BitbucketCloudProposalData{
 		CloseSourceBranch: closeSourceBranch2,
 		Draft:             draft2,
@@ -146,5 +150,35 @@ func parsePullRequest(pullRequest map[string]any) (forgedomain.BitbucketCloudPro
 		Title:             gitdomain.ProposalTitle(title2),
 		Body:              gitdomain.NewProposalBodyOpt(body2),
 		URL:               url6,
+		Reviewers:         reviewers,
 	}, nil
+}
+
+// parseReviewers provides the UUIDs of the reviewers of the given pull request.
+func parseReviewers(pullRequest map[string]any) ([]string, error) {
+	reviewers1, has := pullRequest["reviewers"]
+	if !has {
+		return []string{}, nil
+	}
+	reviewers2, ok := reviewers1.([]any)
+	if !ok {
+		return nil, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	reviewerUUIDs := make([]string, 0, len(reviewers2))
+	for _, reviewer1 := range reviewers2 {
+		reviewer2, ok := reviewer1.(map[string]any)
+		if !ok {
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
+		}
+		uuid1, has := reviewer2["uuid"]
+		if !has {
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
+		}
+		uuid2, ok := uuid1.(string)
+		if !ok {
+			return nil, errors.New(messages.APIUnexpectedResultDataStructure)
+		}
+		reviewerUUIDs = append(reviewerUUIDs, uuid2)
+	}
+	return reviewerUUIDs, nil
 }

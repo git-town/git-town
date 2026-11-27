@@ -82,7 +82,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictMergePhantomFinalize{},
 				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.LocalBranchNameOpt("parent"), ParentSHA: Some(gitdomain.SHA("123456"))},
 				&opcodes.ConflictResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Active: true, Body: gitdomain.NewProposalBodyOpt("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, Reviewers: []string{"one", "two"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
 				&opcodes.ExitToShell{},
 				&opcodes.FetchUpstream{Branch: "branch"},
@@ -458,7 +458,11 @@ func TestLoadSave(t *testing.T) {
             "Title": "title",
             "URL": "url",
             "CloseSourceBranch": false,
-            "Draft": false
+            "Draft": false,
+            "Reviewers": [
+              "one",
+              "two"
+            ]
           },
           "forge-type": "bitbucket"
         }
