@@ -34,10 +34,12 @@ const (
 	commitDesc = "Commit into another branch"
 	commitHelp = `
 Allows you to commit the currently staged changes
-into another branch without needing to change branches.`
+into another branch without needing to change branches.
+Use --all to stage all open changes first.`
 )
 
 func commitCmd() *cobra.Command {
+	addStageAllFlag, readStageAllFlag := flags.StageAll()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addInteractiveFlag, readInteractiveFlag := flags.Interactive()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message")
@@ -48,12 +50,13 @@ func commitCmd() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(commitDesc, commitHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			stageAll, errStageAll := readStageAllFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			interactive, errInteractive := readInteractiveFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			up, errUp := readUpFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errInteractive, errMessage, errUp, errVerbose); err != nil {
+			if err := cmp.Or(errStageAll, errDryRun, errInteractive, errMessage, errUp, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -71,11 +74,12 @@ func commitCmd() *cobra.Command {
 				Stash:             None[configdomain.Stash](),
 				Verbose:           verbose,
 			})
-			return executeCommit(cliConfig, message, up)
+			return executeCommit(cliConfig, message, stageAll, up)
 		},
 		Short: commitDesc,
 		Use:   "commit",
 	}
+	addStageAllFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addInteractiveFlag(&cmd)
 	addMessageFlag(&cmd)
@@ -86,6 +90,9 @@ func commitCmd() *cobra.Command {
 
 func commitProgram(data commitData) program.Program {
 	prog := NewMutable(&program.Program{})
+	if data.stageAll.Enabled() {
+		prog.Value.Add(&opcodes.ChangesStage{})
+	}
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.branchToCommitInto},
 		&opcodes.Commit{
@@ -133,10 +140,11 @@ type commitData struct {
 	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch           Option[gitdomain.LocalBranchName]
 	remotes                  gitdomain.Remotes
+	stageAll                 configdomain.StageAll
 	stashSize                gitdomain.StashSize
 }
 
-func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) (commitData, configdomain.ProgramFlow, error) {
+func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdomain.CommitMessage], stageAll configdomain.StageAll, up Option[configdomain.Up]) (commitData, configdomain.ProgramFlow, error) {
 	var emptyCommitData commitData
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
@@ -251,11 +259,12 @@ func determineCommitData(repo execute.OpenRepoResult, commitMessage Option[gitdo
 		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
 		previousBranch:           previousBranch,
 		remotes:                  remotes,
+		stageAll:                 stageAll,
 		stashSize:                stashSize,
 	}, configdomain.ProgramFlowContinue, nil
 }
 
-func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], up Option[configdomain.Up]) error {
+func executeCommit(cliConfig configdomain.PartialConfig, commitMessage Option[gitdomain.CommitMessage], stageAll configdomain.StageAll, up Option[configdomain.Up]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -268,7 +277,7 @@ Start:
 	if err != nil {
 		return err
 	}
-	data, flow, err := determineCommitData(repo, commitMessage, up)
+	data, flow, err := determineCommitData(repo, commitMessage, stageAll, up)
 	if err != nil {
 		return err
 	}
