@@ -51,3 +51,5 @@ Feature: stop on a real conflict when the parent already merged a conflicting ch
       | BRANCH   | COMMAND           |
       | branch-2 | git merge --abort |
     And no merge is now in progress
+    And the initial branches and lineage exist now
+    And the initial commits exist now

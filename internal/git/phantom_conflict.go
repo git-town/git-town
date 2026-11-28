@@ -1,8 +1,6 @@
 package git
 
 import (
-	"reflect"
-
 	"github.com/git-town/git-town/v24/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
@@ -26,7 +24,7 @@ func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt 
 		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
 			continue
 		}
-		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) && reflect.DeepEqual(conflictInfo.ParentBase, conflictInfo.Parent) {
+		if conflictInfo.Root.EqualSome(initialParentInfo) && conflictInfo.ParentBase.EqualSome(initialParentInfo) {
 			// root and parent have the exact same version of the file,
 			// and the current branch already contains this version of the file --> this is a phantom merge conflict
 			result = append(result, PhantomConflict{
