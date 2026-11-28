@@ -9,9 +9,10 @@ import (
 
 // MergeConflict contains everything Git Town needs to know about a merge conflict to determine whether this is a phantom merge conflict.
 type MergeConflict struct {
-	Current Option[Blob] // info about the file on the current branch
-	Parent  Option[Blob] // info about the file on the original parent
-	Root    Option[Blob] // info about the file on the root branch
+	Current    Option[Blob] // info about the file on the current branch
+	Parent     Option[Blob] // info about the file on the original parent
+	ParentBase Option[Blob] // info about the file at the merge base of the current branch and the original parent
+	Root       Option[Blob] // info about the file on the root branch
 }
 
 func (self MergeConflict) Debug(querier subshelldomain.Querier) {

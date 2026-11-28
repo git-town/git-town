@@ -1,8 +1,10 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -659,11 +661,27 @@ func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch git
 // MergeConflicts loads the information needed to determine which of the given file conflicts are phantom merge conflicts.
 func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
 	result := make(MergeConflicts, len(fileConflicts))
+	if len(fileConflicts) == 0 {
+		return result, nil
+	}
+	parentBase := None[gitdomain.Location]()
+	output, err := querier.QueryTrim("git", "merge-base", "--all", parentLocation.String(), "HEAD")
+	if err != nil {
+		exitErr, isExitErr := errors.AsType[*exec.ExitError](err)
+		if !isExitErr || exitErr.ExitCode() != 1 || len(output) > 0 {
+			return result, err
+		}
+	} else {
+		mergeBases := stringslice.NonEmptyLines(output.String())
+		if len(mergeBases) == 1 {
+			parentBase = Some(gitdomain.Location(mergeBases[0]))
+		}
+	}
 	for f, fileConflict := range fileConflicts {
 		rootBlob := None[Blob]()
 		parentBlob := None[Blob]()
+		parentBaseBlob := None[Blob]()
 		if currentBranchBlob, has := fileConflict.CurrentBranchChange.Get(); has {
-			var err error
 			rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlob.FilePath)
 			if err != nil {
 				return result, err
@@ -672,11 +690,18 @@ func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflic
 			if err != nil {
 				return result, err
 			}
+			if base, hasBase := parentBase.Get(); hasBase {
+				parentBaseBlob, err = self.ContentBlobInfo(querier, base, currentBranchBlob.FilePath)
+				if err != nil {
+					return result, err
+				}
+			}
 		}
 		result[f] = MergeConflict{
-			Current: fileConflict.CurrentBranchChange,
-			Parent:  parentBlob,
-			Root:    rootBlob,
+			Current:    fileConflict.CurrentBranchChange,
+			Parent:     parentBlob,
+			ParentBase: parentBaseBlob,
+			Root:       rootBlob,
 		}
 	}
 	return result, nil
