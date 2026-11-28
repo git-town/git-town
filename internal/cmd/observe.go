@@ -22,7 +22,6 @@ import (
 )
 
 const (
-	observeDesc = "Stop your contributions to some feature branches"
 	observeHelp = `
 Marks the given local branches as observed.
 If no branch is provided, observes the current branch.
@@ -111,7 +110,7 @@ func observeCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Args:    cobra.ArbitraryArgs,
 		GroupID: cmdhelpers.GroupIDTypes,
-		Long:    cmdhelpers.Long(observeDesc, observeHelp),
+		Long:    cmdhelpers.Long(messages.ObserveDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
@@ -134,7 +133,7 @@ func observeCmd() *cobra.Command {
 			})
 			return executeObserve(args, cliConfig)
 		},
-		Short: observeDesc,
+		Short: messages.ObserveDesc,
 		Use:   "observe [branches]",
 	}
 	addVerboseFlag(&cmd)

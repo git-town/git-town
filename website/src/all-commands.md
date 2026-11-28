@@ -41,8 +41,8 @@ and `git town help <command>` for help with individual commands.
 
 - [git town contribute](commands/detach.md) - stop syncing some feature branches
   with their parents
-- [git town observe](commands/observe.md) - stop syncing your contributions to
-  some feature branches
+- [git town observe](commands/observe.md) - convert branches into observed
+  branches
 - [git town park](commands/park.md) - suspend syncing some of your feature
   branches altogether
 - [git town prototype](commands/prototype.md) - sync
