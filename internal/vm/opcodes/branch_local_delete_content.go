@@ -23,13 +23,15 @@ func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 				CommitsToRemove:    self.BranchToDelete.BranchName(),
 			})
 		}
-		opcodes = append(opcodes, &BranchLocalDelete{
-			Branch: self.BranchToDelete,
-		})
+		opcodes = append(opcodes,
+			&BranchLocalDelete{Branch: self.BranchToDelete},
+			&BranchPushesRemove{Branch: self.BranchToDelete},
+		)
 		args.PrependOpcodes(opcodes...)
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.PrependOpcodes(
 			&BranchLocalDelete{Branch: self.BranchToDelete},
+			&BranchPushesRemove{Branch: self.BranchToDelete},
 		)
 	}
 	return nil

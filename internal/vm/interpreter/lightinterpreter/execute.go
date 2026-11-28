@@ -40,6 +40,7 @@ func Execute(args ExecuteArgs) {
 			Inputs:                          dialogcomponents.NewInputs(),
 			PrependOpcodes:                  args.Prog.Prepend,
 			RegisterUndoablePerennialCommit: nil,
+			RemoveOpcodes:                   args.Prog.RemoveIf,
 			UpdateInitialSnapshotLocalSHA:   nil,
 		})
 		if err != nil {
