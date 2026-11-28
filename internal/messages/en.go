@@ -226,6 +226,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ObservedBranchCannotPark    = "cannot park observed branches"
 	ObservedBranchCannotPropose = "cannot propose observed branches"
 	ObservedBranchCannotShip    = "cannot ship observed branches"
+	ObserveDesc                 = "Convert branches into observed branches"
 	ObserveDetachedHead         = "please check out the branch to make observed"
 	ObservedRegexCannotParse    = "unknown observed regex value %q defined in %s: %w"
 	ObservedRegexPrompt         = "Observed regex: "
