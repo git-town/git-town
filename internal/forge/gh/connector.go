@@ -3,6 +3,7 @@ package gh
 import (
 	"errors"
 	"fmt"
+	"os"
 	"regexp"
 	"slices"
 	"strings"
@@ -46,7 +47,25 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 		args = append(args, "--title="+title.String())
 	}
 	if hasBody {
-		args = append(args, "--body="+body.String())
+		if data.Interactive.IsEnabled() {
+			bodyFile, err := os.CreateTemp("", "git-town-proposal-body-*")
+			if err != nil {
+				return err
+			}
+			defer func() {
+				_ = os.Remove(bodyFile.Name())
+			}()
+			if _, err := bodyFile.WriteString(body.String()); err != nil {
+				_ = bodyFile.Close()
+				return err
+			}
+			if err := bodyFile.Close(); err != nil {
+				return err
+			}
+			args = append(args, "--body-file="+bodyFile.Name(), "--editor")
+		} else {
+			args = append(args, "--body="+body.String())
+		}
 	}
 	infoMissing := !hasTitle || !hasBody
 	if infoMissing && data.Interactive.IsDisabled() {
