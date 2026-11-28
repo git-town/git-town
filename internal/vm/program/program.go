@@ -80,6 +80,17 @@ func (self *Program) RemoveAllButLast(removeType string) Program {
 	return slice.RemoveAt(*self, indexesToRemove...)
 }
 
+// RemoveIf removes all opcodes for which the given predicate returns true.
+func (self *Program) RemoveIf(matches func(shared.Opcode) bool) {
+	result := make(Program, 0, len(*self))
+	for _, opcode := range *self {
+		if !matches(opcode) {
+			result = append(result, opcode)
+		}
+	}
+	*self = result
+}
+
 // Implementation of the fmt.Stringer interface.
 func (self *Program) String() string {
 	return self.StringIndented("")

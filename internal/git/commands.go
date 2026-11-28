@@ -408,6 +408,17 @@ func (self *Commands) ContentBlobInfo(querier subshelldomain.Querier, branch git
 	return Some(sha), err
 }
 
+// ContentBlobInfoLiteral provides blob information for the exact given file path,
+// without interpreting the path as a pathspec.
+func (self *Commands) ContentBlobInfoLiteral(querier subshelldomain.Querier, branch gitdomain.Location, filePath string) (Option[Blob], error) {
+	output, err := querier.QueryTrim("git", "--literal-pathspecs", "ls-tree", branch.String(), "--", filePath)
+	if err != nil || len(output) == 0 {
+		return None[Blob](), err
+	}
+	sha, err := ParseLsTreeOutput(output)
+	return Some(sha), err
+}
+
 func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 	return runner.RunWithEnv([]string{"GIT_EDITOR=true"}, "git", "rebase", "--continue")
 }

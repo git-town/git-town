@@ -85,6 +85,7 @@ func Execute(args ExecuteArgs) error {
 			Inputs:                          args.Inputs,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+			RemoveOpcodes:                   args.RunState.RunProgram.RemoveIf,
 			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {

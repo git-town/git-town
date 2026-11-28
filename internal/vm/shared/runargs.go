@@ -23,5 +23,6 @@ type RunArgs struct {
 	Inputs                          dialogcomponents.Inputs
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
+	RemoveOpcodes                   func(func(Opcode) bool)
 	UpdateInitialSnapshotLocalSHA   func(gitdomain.LocalBranchName, gitdomain.SHA) error
 }
