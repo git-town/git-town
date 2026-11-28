@@ -179,19 +179,6 @@ func TestProgram(t *testing.T) {
 		})
 	})
 
-	t.Run("RemoveIf", func(t *testing.T) {
-		t.Parallel()
-		keep := &opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "other", ForceIfIncludes: true, TrackingBranch: "origin/other"}
-		remove := &opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true, TrackingBranch: "origin/branch"}
-		give := program.Program{remove, keep, &opcodes.MergeAbort{}}
-		give.RemoveIf(func(opcode shared.Opcode) bool {
-			push, isPush := opcode.(*opcodes.PushCurrentBranchForceIfNeeded)
-			return isPush && push.CurrentBranch == "branch"
-		})
-		want := program.Program{keep, &opcodes.MergeAbort{}}
-		must.Eq(t, want, give)
-	})
-
 	t.Run("RemoveAllButLast", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the given type at the end", func(t *testing.T) {
@@ -256,6 +243,19 @@ func TestProgram(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("RemoveIf", func(t *testing.T) {
+		t.Parallel()
+		keep := &opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "other", ForceIfIncludes: true, TrackingBranch: "origin/other"}
+		remove := &opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true, TrackingBranch: "origin/branch"}
+		give := program.Program{remove, keep, &opcodes.MergeAbort{}}
+		give.RemoveIf(func(opcode shared.Opcode) bool {
+			push, isPush := opcode.(*opcodes.PushCurrentBranchForceIfNeeded)
+			return isPush && push.CurrentBranch == "branch"
+		})
+		want := program.Program{keep, &opcodes.MergeAbort{}}
+		must.Eq(t, want, give)
 	})
 
 	t.Run("StringIndented", func(t *testing.T) {

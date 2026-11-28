@@ -46,7 +46,7 @@ func TestRebaseOntoRemoveDeleted(t *testing.T) {
 		expectedErr := runtime.TestRunner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", "target", "removed")
 		must.True(t, expectedErr != nil)
 		opcode := opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "target", CommitsToRemove: "removed"}
-		err, prepended := runRebaseOntoRemoveDeleted(runtime, opcode)
+		prepended, err := runRebaseOntoRemoveDeleted(runtime, opcode)
 		must.True(t, err != nil)
 		must.EqOp(t, expectedErr.Error(), err.Error())
 		must.False(t, prepended)
@@ -62,14 +62,14 @@ func TestRebaseOntoRemoveDeleted(t *testing.T) {
 		expectedErr := runtime.TestRunner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", "missing", "feature-1")
 		must.True(t, expectedErr != nil)
 		opcode := opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "missing", CommitsToRemove: "feature-1"}
-		err, prepended := runRebaseOntoRemoveDeleted(runtime, opcode)
+		prepended, err := runRebaseOntoRemoveDeleted(runtime, opcode)
 		must.True(t, err != nil)
 		must.EqOp(t, expectedErr.Error(), err.Error())
 		must.False(t, prepended)
 	})
 }
 
-func runRebaseOntoRemoveDeleted(runtime commands.TestCommands, opcode opcodes.RebaseOntoRemoveDeleted) (error, bool) {
+func runRebaseOntoRemoveDeleted(runtime commands.TestCommands, opcode opcodes.RebaseOntoRemoveDeleted) (bool, error) {
 	prepended := false
 	validatedConfig := config.ValidatedConfig{
 		NormalConfig: config.DefaultNormalConfig(),
@@ -96,5 +96,5 @@ func runRebaseOntoRemoveDeleted(runtime commands.TestCommands, opcode opcodes.Re
 			return nil
 		},
 	})
-	return err, prepended
+	return prepended, err
 }
