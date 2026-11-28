@@ -27,8 +27,9 @@ func TextField(args TextFieldArgs) (stringss.Trimmed, dialogdomain.Exit, error) 
 		textInput: textInput,
 		title:     args.Title,
 	}
-	program := tea.NewProgram(model)
-	SendInputs(args.DialogName, args.Inputs.Next(), program)
+	input := args.Inputs.Next()
+	program := NewProgram(model, input)
+	SendInputs(args.DialogName, input, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textFieldModel)
 	return stringss.Trim(result.textInput.Value()), result.status == list.StatusExit, err

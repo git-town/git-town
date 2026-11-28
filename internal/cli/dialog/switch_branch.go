@@ -287,7 +287,8 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 	if currentBranch, has := args.CurrentBranch.Get(); has {
 		initialBranchPos = Some(entries.IndexOf(currentBranch))
 	}
-	dialogProgram := tea.NewProgram(SwitchModel{
+	input := args.Inputs.Next()
+	dialogProgram := dialogcomponents.NewProgram(SwitchModel{
 		DisableBranchesInOtherWorktrees: args.DisableBranchesInOtherWorktrees,
 		DisplayBranchTypes:              args.DisplayBranchTypes,
 		EntryData:                       args.EntryData,
@@ -295,8 +296,8 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		List:                            list.NewList(newSwitchBranchListEntries(entries, args.DisableBranchesInOtherWorktrees), args.Cursor),
 		Title:                           args.Title,
 		UncommittedChanges:              args.UncommittedChanges,
-	})
-	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
+	}, input)
+	dialogcomponents.SendInputs(args.InputName, input, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()

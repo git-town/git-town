@@ -17,13 +17,14 @@ func CheckList[S any](entries list.Entries[S], selections []int, title, help str
 		return nil, true, err
 	}
 	cursor := entries.FirstEnabled()
-	program := tea.NewProgram(CheckListModel[S]{
+	input := inputs.Next()
+	program := NewProgram(CheckListModel[S]{
 		help:       help,
 		List:       list.NewList(entries, cursor),
 		Selections: selections,
 		title:      title,
-	})
-	SendInputs(dialogName, inputs.Next(), program)
+	}, input)
+	SendInputs(dialogName, input, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(CheckListModel[S])
 	return result.CheckedEntries(), result.Aborted(), err

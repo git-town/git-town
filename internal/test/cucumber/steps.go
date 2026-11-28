@@ -1478,6 +1478,38 @@ echo "new line" >> file
 		return nil
 	})
 
+	sc.Step(`^the open changes snapshot backup is corrupted$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		gitDir := devRepo.MustQueryTrim("git", "rev-parse", "--absolute-git-dir").String()
+		backupsRoot := filepath.Join(gitDir, "git-town", "open-changes")
+		snapshots, err := os.ReadDir(backupsRoot)
+		if err != nil {
+			return err
+		}
+		if len(snapshots) != 1 {
+			return fmt.Errorf("expected one open changes backup, found %d", len(snapshots))
+		}
+		filesRoot := filepath.Join(backupsRoot, snapshots[0].Name(), "files")
+		backupFile := ""
+		err = filepath.WalkDir(filesRoot, func(filePath string, entry fs.DirEntry, walkErr error) error {
+			if walkErr != nil {
+				return walkErr
+			}
+			if len(backupFile) == 0 && entry.Type().IsRegular() {
+				backupFile = filePath
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		if len(backupFile) == 0 {
+			return errors.New("open changes backup contains no file to corrupt")
+		}
+		return os.WriteFile(backupFile, []byte("corrupted backup"), 0o600)
+	})
+
 	sc.Step(`^the origin is "([^"]*)"$`, func(ctx context.Context, origin string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1625,38 +1657,6 @@ echo "new line" >> file
 			return errors.New(msg)
 		}
 		return nil
-	})
-
-	sc.Step(`^the open changes snapshot backup is corrupted$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		gitDir := devRepo.MustQueryTrim("git", "rev-parse", "--absolute-git-dir").String()
-		backupsRoot := filepath.Join(gitDir, "git-town", "open-changes")
-		snapshots, err := os.ReadDir(backupsRoot)
-		if err != nil {
-			return err
-		}
-		if len(snapshots) != 1 {
-			return fmt.Errorf("expected one open changes backup, found %d", len(snapshots))
-		}
-		filesRoot := filepath.Join(backupsRoot, snapshots[0].Name(), "files")
-		backupFile := ""
-		err = filepath.WalkDir(filesRoot, func(filePath string, entry fs.DirEntry, walkErr error) error {
-			if walkErr != nil {
-				return walkErr
-			}
-			if len(backupFile) == 0 && entry.Type().IsRegular() {
-				backupFile = filePath
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-		if len(backupFile) == 0 {
-			return errors.New("open changes backup contains no file to corrupt")
-		}
-		return os.WriteFile(backupFile, []byte("corrupted backup"), 0o600)
 	})
 
 	sc.Step(`^the uncommitted file is untracked$`, func(ctx context.Context) error {

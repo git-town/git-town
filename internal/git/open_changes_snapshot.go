@@ -721,7 +721,7 @@ func openChangesMetadataIDText(id uint32, present bool) string {
 
 func openChangesMetadataMatchEntries(entries map[string]openChangesTreeEntry, metadata map[string]openChangesFileMetadata) bool {
 	regularFiles := 0
-	for file, entry := range entries {
+	for file, entry := range entries { // okay to iterate the map in random order because every entry is checked and order does not affect the result
 		recordedMetadata, hasRecordedMetadata := metadata[file]
 		if !openChangesRecordedModeMatchesEntry(recordedMetadata.mode, hasRecordedMetadata, entry.permission) {
 			return false
@@ -1034,7 +1034,7 @@ func restoreFileExactWith(source, destination string, metadata openChangesFileMe
 
 func sortedOpenChangesTreeFiles(entries map[string]openChangesTreeEntry) []string {
 	result := make([]string, 0, len(entries))
-	for file := range entries {
+	for file := range entries { // okay to iterate the map in random order because we sort the result below
 		result = append(result, file)
 	}
 	sort.Strings(result)
