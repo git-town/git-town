@@ -280,6 +280,10 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}, err
 }
 
+func (self *TestRunner) QueryWithEnv(env []string, name string, arguments ...string) (string, error) {
+	return self.QueryWith(&Options{Env: append(os.Environ(), env...), TTY: true}, name, arguments...)
+}
+
 func (self *TestRunner) QueryZ(name string, arguments ...string) (stringss.ZeroDelineated, error) {
 	result, err := self.Query(name, arguments...)
 	return stringss.ZeroDelineated(result), err

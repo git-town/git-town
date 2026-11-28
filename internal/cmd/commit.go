@@ -30,13 +30,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	commitDesc = "Commit into another branch"
-	commitHelp = `
-Allows you to commit the currently staged changes
-into another branch without needing to change branches.
-Use --all to stage all open changes first.`
-)
+const commitDesc = "Commit into another branch"
 
 func commitCmd() *cobra.Command {
 	addStageAllFlag, readStageAllFlag := flags.StageAll()
@@ -48,7 +42,7 @@ func commitCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDStack,
-		Long:    cmdhelpers.Long(commitDesc, commitHelp),
+		Long:    cmdhelpers.Long(commitDesc, messages.CommitHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			stageAll, errStageAll := readStageAllFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -292,7 +286,21 @@ Start:
 	if err != nil {
 		return err
 	}
+	openChangesSnapshot := None[gitdomain.SHA]()
+	if stageAll.Enabled() && data.hasOpenChanges && !bool(data.config.NormalConfig.DryRun) {
+		openChangesSnapshot, err = repo.Git.CreateOpenChangesSnapshot(repo.Backend)
+		if err != nil {
+			return err
+		}
+	}
 	runProgram := commitProgram(data)
+	finalUndoProgram := program.Program{}
+	if snapshot, hasSnapshot := openChangesSnapshot.Get(); hasSnapshot {
+		finalUndoProgram.Add(
+			&opcodes.CheckoutIfNeeded{Branch: data.initialBranch},
+			&opcodes.ChangesSnapshotRestore{SHA: snapshot},
+		)
+	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -302,7 +310,7 @@ Start:
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		FinalUndoProgram:      program.Program{},
+		FinalUndoProgram:      finalUndoProgram,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),

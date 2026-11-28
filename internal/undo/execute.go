@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v24/internal/state/runstate"
 	"github.com/git-town/git-town/v24/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v24/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v24/internal/vm/opcodes"
 	. "github.com/git-town/git-town/v24/pkg/prelude"
 )
 
@@ -38,6 +39,9 @@ type ExecuteArgs struct {
 func Execute(args ExecuteArgs) error {
 	if args.RunState.DryRun {
 		return nil
+	}
+	if err := validateOpenChangesSnapshots(args.Git, args.Backend, args.RunState); err != nil {
+		return err
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		Backend:        args.Backend,
@@ -66,5 +70,16 @@ func Execute(args ExecuteArgs) error {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
 	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
+	return nil
+}
+
+func validateOpenChangesSnapshots(gitCommands git.Commands, backend subshelldomain.RunnerQuerier, runState runstate.RunState) error {
+	for _, opcode := range runState.FinalUndoProgram {
+		if restore, isRestore := opcode.(*opcodes.ChangesSnapshotRestore); isRestore {
+			if err := gitCommands.ValidateOpenChangesSnapshot(backend, restore.SHA); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }

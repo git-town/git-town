@@ -24,11 +24,18 @@ Feature: stage all open changes through the long flag
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                                     |
-      | branch-2 | git checkout branch-1                       |
-      | branch-1 | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout branch-2                       |
-      | branch-2 | git reset --hard {{ sha 'initial commit' }} |
-    And the initial branches and lineage exist now
+    Then the initial branches and lineage exist now
+    And the uncommitted file is untracked
+    And the uncommitted file still exists
     And the initial commits exist now
+
+  Scenario: undo with a corrupted snapshot backup
+    When the open changes snapshot backup is corrupted
+    And I run "git-town undo"
+    Then Git Town prints the error:
+      """
+      the saved open changes snapshot is incomplete
+      """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local    | up-commit | changes   | my changes   |

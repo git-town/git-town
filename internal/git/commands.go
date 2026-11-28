@@ -38,6 +38,10 @@ func (self *Commands) AbortRebase(runner subshelldomain.Runner) error {
 	return runner.Run("git", "rebase", "--abort")
 }
 
+func (self *Commands) ApplyStash(runner subshelldomain.Runner, sha gitdomain.SHA) error {
+	return runner.Run("git", "stash", "apply", "--index", sha.String())
+}
+
 // BranchAuthors provides the user accounts that contributed to the given branch.
 func (self *Commands) BranchAuthors(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {
 	output, err := querier.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
