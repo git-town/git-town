@@ -3,12 +3,13 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town commit [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <text>] [-u | --up uint] [-v | --verbose]
+git town commit [-a | --all] [--dry-run] [-h | --help] [--(non)-interactive] [(-m | --message) <text>] [-u | --up uint] [-v | --verbose]
 ```
 
 The _commit_ command takes the currently staged changes
 and commits them into a different branch in your stack,
 then synchronizes the result back into your current branch.
+When using `--all`, it stages all open changes first.
 
 This is useful when working with [stacked branches](../stacked-changes.md).
 A common scenario is that you're implementing a feature and realize
@@ -38,6 +39,10 @@ Git Town will automatically sync the committed changes back into `feature`,
 letting you continue where you left off.
 
 ## Options
+
+#### `-a`<br>`--all`
+
+Stage all open changes before committing them.
 
 #### `--dry-run`
 

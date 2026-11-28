@@ -260,6 +260,10 @@ func (self proposalQuerier) QueryTrim(_ string, _ ...string) (stringss.Trimmed, 
 	return stringss.Trimmed(""), nil
 }
 
+func (self proposalQuerier) QueryWithEnv(_ []string, _ string, _ ...string) (string, error) {
+	return "", nil
+}
+
 func (self proposalQuerier) QueryZ(_ string, _ ...string) (stringss.ZeroDelineated, error) {
 	return stringss.ZeroDelineated(""), nil
 }

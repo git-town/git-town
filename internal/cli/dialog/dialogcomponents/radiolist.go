@@ -19,12 +19,13 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 		var zero S
 		return zero, true, err
 	}
-	program := tea.NewProgram(radioListModel[S]{
+	input := inputs.Next()
+	program := NewProgram(radioListModel[S]{
 		help:  help,
 		List:  list.NewList(entries, cursor),
 		title: title,
-	})
-	SendInputs(dialogName, inputs.Next(), program)
+	}, input)
+	SendInputs(dialogName, input, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(radioListModel[S])
 	return result.SelectedData(), result.Aborted(), err

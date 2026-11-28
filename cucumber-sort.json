@@ -133,6 +133,7 @@
     "^an uncommitted file",
     "^a folder .*$",
     "^wait 1 second to ensure new Git timestamps$",
+    "^the open changes snapshot backup is corrupted$",
     "^I ran .*$",
     [
       "^I resolve the conflict in",
@@ -169,6 +170,7 @@
     "^there is now no previous Git branch$",
     "^there are (now|still) no perennial branches$",
     "^branch \".*\" (now|still) has type .*$",
+    "^the uncommitted file is untracked$",
     "^the uncommitted file still exists$",
     "^no uncommitted files exist now$",
     "^the initial branches exist now$",

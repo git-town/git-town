@@ -38,6 +38,10 @@ func (self BackendRunner) QueryTrim(executable string, args ...string) (stringss
 	return stringss.Trim(stripansi.Strip(output)), err
 }
 
+func (self BackendRunner) QueryWithEnv(env []string, executable string, args ...string) (string, error) {
+	return self.execute(env, executable, args...)
+}
+
 func (self BackendRunner) QueryZ(executable string, args ...string) (stringss.ZeroDelineated, error) {
 	result, err := self.execute([]string{}, executable, args...)
 	return stringss.ZeroDelineated(result), err

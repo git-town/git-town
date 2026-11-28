@@ -33,6 +33,7 @@ func All() []shared.Opcode {
 		&BranchWithRemoteGoneDeleteIfSquashedAtRuntime{},
 		&BrowserOpen{},
 		&ChangesDiscard{},
+		&ChangesSnapshotRestore{},
 		&ChangesStage{},
 		&ChangesUnstageAll{},
 		&CheckoutDescendentOrOtherIfNeeded{},

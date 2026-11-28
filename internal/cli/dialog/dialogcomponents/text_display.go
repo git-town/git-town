@@ -20,8 +20,9 @@ func TextDisplay(title, text string, inputs Inputs, interactive clidomain.Intera
 		text:   text,
 		title:  title,
 	}
-	program := tea.NewProgram(model)
-	SendInputs(dialogName, inputs.Next(), program)
+	input := inputs.Next()
+	program := NewProgram(model, input)
+	SendInputs(dialogName, input, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textDisplayModel)
 	return result.status == list.StatusExit, err

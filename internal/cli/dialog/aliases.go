@@ -36,14 +36,15 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	if err := interactive.Check(); err != nil {
 		return configdomain.Aliases{}, true, err
 	}
-	program := tea.NewProgram(AliasesModel{
+	input := inputs.Next()
+	program := dialogcomponents.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		List:                 list.NewList(list.NewEntries(allAliasableCommands...), 0),
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
-	})
-	dialogcomponents.SendInputs("aliases", inputs.Next(), program)
+	}, input)
+	dialogcomponents.SendInputs("aliases", input, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {
