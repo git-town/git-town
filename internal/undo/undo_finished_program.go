@@ -22,9 +22,10 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
-			AuthorOverride: None[gitdomain.Author](),
-			CommitHook:     configdomain.CommitHookEnabled,
-			Message:        "Committing open changes to undo them",
+			AuthorOverride:  None[gitdomain.Author](),
+			CleanupVerbatim: false,
+			CommitHook:      configdomain.CommitHookEnabled,
+			Message:         "Committing open changes to undo them",
 		})
 	}
 	// undo config changes

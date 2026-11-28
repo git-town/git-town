@@ -9,11 +9,16 @@ import (
 
 // CommitWithMessage commits all open changes using the given commit message.
 type CommitWithMessage struct {
-	AuthorOverride Option[gitdomain.Author]
-	CommitHook     configdomain.CommitHook
-	Message        gitdomain.CommitMessage
+	AuthorOverride  Option[gitdomain.Author]
+	CleanupVerbatim bool
+	CommitHook      configdomain.CommitHook
+	Message         gitdomain.CommitMessage
 }
 
 func (self *CommitWithMessage) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, configdomain.UseCustomMessage(self.Message), self.AuthorOverride, self.CommitHook)
+	useMessage := configdomain.UseCustomMessage(self.Message)
+	if self.CleanupVerbatim {
+		useMessage = configdomain.UseCustomMessageVerbatim(self.Message)
+	}
+	return args.Git.Commit(args.Frontend, useMessage, self.AuthorOverride, self.CommitHook)
 }

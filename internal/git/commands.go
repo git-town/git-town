@@ -1,6 +1,7 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"unicode/utf8"
 
 	"github.com/git-town/git-town/v24/internal/config/configdomain"
 	"github.com/git-town/git-town/v24/internal/config/gitconfig"
@@ -317,10 +319,17 @@ func (self *Commands) CommentOutSquashCommitMessage(querier subshelldomain.Queri
 
 func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
+	message := gitdomain.CommitMessage("")
+	useStdin := false
 	switch {
 	case useMessage.IsCustomMessage():
-		message := useMessage.GetCustomMessageOrPanic()
-		args = append(args, "-m", message.String())
+		message = useMessage.GetCustomMessageOrPanic()
+		if useMessage.IsCleanupVerbatim() {
+			args = append(args, "--file=-", "--cleanup=verbatim")
+			useStdin = true
+		} else {
+			args = append(args, "-m", message.String())
+		}
 	case useMessage.IsUseDefault():
 		args = append(args, "--no-edit")
 	case useMessage.IsEditDefault():
@@ -336,12 +345,36 @@ func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdoma
 		args = append(args, "--no-verify")
 	case configdomain.CommitHookEnabled:
 	}
+	if useStdin {
+		inputRunner, isInputRunner := runner.(subshelldomain.RunnerWithInput)
+		if !isInputRunner {
+			return errors.New(messages.CommitMessageInputUnsupported)
+		}
+		args = append([]string{"-c", "i18n.commitEncoding=UTF-8"}, args...)
+		return inputRunner.RunWithInput(message.String(), "git", args...)
+	}
 	return runner.Run("git", args...)
 }
 
 func (self *Commands) CommitMessage(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
 	output, err := querier.QueryTrim("git", "show", "--no-patch", "--format=%B", sha.String())
 	return gitdomain.CommitMessage(output), err
+}
+
+func (self *Commands) CommitMessageVerbatim(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
+	output, err := querier.Query("git", "show", "--no-patch", "--no-show-signature", "--encoding=UTF-8", "--format=%B%x1f", sha.String())
+	if err != nil {
+		return "", err
+	}
+	output = strings.TrimSuffix(output, "\n")
+	message, found := strings.CutSuffix(output, "\x1f")
+	if !found {
+		return "", fmt.Errorf(messages.CommitMessageNotFound, sha)
+	}
+	if !utf8.ValidString(message) {
+		return "", fmt.Errorf(messages.CommitMessageNotUTF8, sha)
+	}
+	return gitdomain.CommitMessage(message), nil
 }
 
 func (self *Commands) CommitStart(runner subshelldomain.Runner) error {

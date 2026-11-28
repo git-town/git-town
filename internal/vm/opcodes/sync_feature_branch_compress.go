@@ -71,9 +71,10 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				CurrentBranch: self.CurrentBranch,
 			},
 			&CommitWithMessage{
-				AuthorOverride: None[gitdomain.Author](),
-				CommitHook:     configdomain.CommitHookEnabled,
-				Message:        commitMessage,
+				AuthorOverride:  None[gitdomain.Author](),
+				CleanupVerbatim: false,
+				CommitHook:      configdomain.CommitHookEnabled,
+				Message:         commitMessage,
 			},
 		)
 		trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()

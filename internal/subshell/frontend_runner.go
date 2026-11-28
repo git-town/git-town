@@ -33,15 +33,19 @@ type FrontendRunner struct {
 }
 
 func (self *FrontendRunner) Run(cmd string, args ...string) error {
-	return self.execute([]string{}, cmd, args...)
+	return self.execute([]string{}, None[string](), cmd, args...)
 }
 
 func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string) error {
-	return self.execute(env, cmd, args...)
+	return self.execute(env, None[string](), cmd, args...)
+}
+
+func (self *FrontendRunner) RunWithInput(input string, cmd string, args ...string) error {
+	return self.execute([]string{}, Some(input), cmd, args...)
 }
 
 // runs the given command in this ShellRunner's directory.
-func (self *FrontendRunner) execute(env []string, cmd string, args ...string) error {
+func (self *FrontendRunner) execute(env []string, input Option[string], cmd string, args ...string) error {
 	self.CommandsCounter.Value.Increment()
 	var location gitdomain.Location
 	if self.PrintBranchNames {
@@ -73,7 +77,11 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) er
 		subProcess.Env = append(subProcess.Environ(), env...)
 		var stderrBuffer bytes.Buffer // we only need to look at STDERR since that's where Git will print error messages
 		subProcess.Stderr = io.MultiWriter(os.Stderr, &stderrBuffer)
-		subProcess.Stdin = os.Stdin
+		if inputText, hasInput := input.Get(); hasInput {
+			subProcess.Stdin = strings.NewReader(inputText)
+		} else {
+			subProcess.Stdin = os.Stdin
+		}
 		subProcess.Stdout = os.Stdout
 		if err := subProcess.Start(); err != nil {
 			return err

@@ -57,29 +57,61 @@ const (
 	BranchTypeCannotDetermine       = "cannot determine type of branch %s"
 	BrowserOpen                     = "Please open in a browser: %s\n"
 
-	CacheUnitialized                   = "using a cached value before initialization"
-	CannotParse                        = "cannot parse %s: %w"
-	CombineBranchNotLocal              = "cannot combine: branch %s is not local"
-	CombineDetachedHead                = "please check out the branch to combine"
-	CombineNoGrandParent               = "cannot combine branch %s because its parent branch %s has no parent"
-	CombineNoParent                    = "cannot combine branch %s because it has no parent"
-	CombineNotInSyncWithTracking       = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
-	CombineOpenChanges                 = "please commit or remove the open changes first"
-	CombineWrongBranchType             = "cannot combine %s branches"
-	CommandsRun                        = "Ran %d shell commands."
-	CommitDetachedHead                 = "please check out a branch before committing"
-	CommitIntoMainBranch               = "cannot commit into the main branch"
-	CommitMessageProblem               = "cannot determine last commit message: %w"
-	CommitNoBranchToCommitInto         = "please provide the branch to commit into"
-	CommitsSelected                    = "%d commits selected"
-	CommitUpNoAncestor                 = "branch %s doesn't have the given ancestor"
-	CommitWrongBranchType              = "cannot commit into branch %s because it is %v %s branch"
-	CompletionTypeUnknown              = "unknown completion type: %q"
-	CompressAlreadyOneCommit           = "branch %s has already just one commit"
-	CompressBranchNoParent             = "cannot compress branch %s because it has no parent"
-	CompressContributionBranch         = "you are merely contributing to branch %s and should leave compressing it to the branch owner"
-	CompressDetachedHead               = "please check out the branch to compress"
+	CacheUnitialized              = "using a cached value before initialization"
+	CannotParse                   = "cannot parse %s: %w"
+	CombineBranchNotLocal         = "cannot combine: branch %s is not local"
+	CombineDetachedHead           = "please check out the branch to combine"
+	CombineNoGrandParent          = "cannot combine branch %s because its parent branch %s has no parent"
+	CombineNoParent               = "cannot combine branch %s because it has no parent"
+	CombineNotInSyncWithTracking  = `branch %s is not in sync with its tracking branch, please run "git town sync" and try again`
+	CombineOpenChanges            = "please commit or remove the open changes first"
+	CombineWrongBranchType        = "cannot combine %s branches"
+	CommandsRun                   = "Ran %d shell commands."
+	CommitDetachedHead            = "please check out a branch before committing"
+	CommitIntoMainBranch          = "cannot commit into the main branch"
+	CommitMessageInputUnsupported = "this shell runner cannot accept commit messages through standard input"
+	CommitMessageNotFound         = "cannot find the commit message in commit %s"
+	CommitMessageNotUTF8          = "cannot decode the commit message of commit %s as UTF-8"
+	CommitMessageProblem          = "cannot determine last commit message: %w"
+	CommitNoBranchToCommitInto    = "please provide the branch to commit into"
+	CommitsSelected               = "%d commits selected"
+	CommitUpNoAncestor            = "branch %s doesn't have the given ancestor"
+	CommitWrongBranchType         = "cannot commit into branch %s because it is %v %s branch"
+	CompletionTypeUnknown         = "unknown completion type: %q"
+	CompressAlreadyOneCommit      = "branch %s has already just one commit"
+	CompressBranchNoParent        = "cannot compress branch %s because it has no parent"
+	CompressContributionBranch    = "you are merely contributing to branch %s and should leave compressing it to the branch owner"
+	CompressDetachedHead          = "please check out the branch to compress"
+	CompressHelp                  = `
+Compress is a more convenient way of running "git rebase --interactive"
+and choosing to fixup all commits.
+Branches must be in sync to compress them, run "git sync" as needed.
+
+Provide the --stack switch to compress all branches in the stack.
+
+The compressed commit uses the commit message of the first commit in the branch.
+You can provide a custom commit message with the -m switch
+or preserve all commit messages with --keep-commit-messages.
+
+Assuming you have a feature branch with these commits:
+
+$ git log --format='%s'
+commit 1
+commit 2
+commit 3
+
+Let's compress these three commits into a single commit:
+
+$ git town compress
+
+Now your branch has a single commit with the name of the first commit but
+containing the changes of all three commits that existed on the branch before:
+
+$ git log --format='%s'
+commit 1
+`
 	CompressIsPerennial                = "better not compress perennial branches"
+	CompressMessageConflict            = "the --message and --keep-commit-messages flags cannot be used together"
 	CompressNoBranchInfo               = "no branch info for branch %s"
 	CompressNoCommits                  = "branch %s has no commits"
 	CompressObservedBranch             = "you are merely observing branch %s and should leave compressing it to the branch owner"
@@ -206,6 +238,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	InteractivityDisabledViaEnv        = "interactivity disabled via environment variable"
 	InteractivityDisabledViaGit        = "interactivity disabled via Git metadata"
 	InvalidStatusOutput                = `invalid "git status -z" output: %q`
+
+	KeepCommitMessagesHelp = "preserve the commit messages of squashed commits"
 
 	MainBranch                       = "Main branch: %s\n"
 	MainBranchCannotMakeContribution = "cannot make the main branch a contribution branch"
