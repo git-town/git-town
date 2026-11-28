@@ -155,25 +155,26 @@ func TestConnectorCreateProposal(t *testing.T) {
 			{"gh", "pr", "view"},
 		}, frontend.calls)
 	})
+}
 
-	t.Run("with title and body cleans up the temporary file when gh fails (interactive mode)", func(t *testing.T) {
-		t.Parallel()
-		frontend := &recordingRunner{err: errors.New("test error")}
-		connector := newTestConnector(frontend)
-		args := createProposalArgs()
-		args.Interactive = clidomain.Interactive("")
-		args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
-		args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
-		err := connector.CreateProposal(args)
-		must.Error(t, err)
-		must.Eq(t, [][]string{
-			{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body-file=<temp>", "--editor"},
-		}, frontend.calls)
-		must.Eq(t, "my body", frontend.bodyFileContent)
-		must.True(t, frontend.bodyFilePath != "")
-		_, statErr := os.Stat(frontend.bodyFilePath)
-		must.True(t, os.IsNotExist(statErr))
-	})
+func TestConnectorCreateProposalCleansUpBodyFileWhenGhFails(t *testing.T) {
+	t.Parallel()
+	frontend := &recordingRunner{}
+	frontend.err = errors.New("test error")
+	connector := newTestConnector(frontend)
+	args := createProposalArgs()
+	args.Interactive = clidomain.Interactive("")
+	args.ProposalTitle = Some(gitdomain.ProposalTitle("my title"))
+	args.ProposalBody = Some(gitdomain.ProposalBody("my body"))
+	err := connector.CreateProposal(args)
+	must.Error(t, err)
+	must.Eq(t, [][]string{
+		{"gh", "pr", "create", "--head=feature", "--base=main", "--title=my title", "--body-file=<temp>", "--editor"},
+	}, frontend.calls)
+	must.Eq(t, "my body", frontend.bodyFileContent)
+	must.True(t, frontend.bodyFilePath != "")
+	_, statErr := os.Stat(frontend.bodyFilePath)
+	must.True(t, os.IsNotExist(statErr))
 }
 
 func TestConnectorSquashMergeProposal(t *testing.T) {
