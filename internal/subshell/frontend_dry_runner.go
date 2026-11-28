@@ -27,6 +27,10 @@ func (self *FrontendDryRunner) RunWithEnv(env []string, cmd string, args ...stri
 	return self.execute(env, cmd, args...)
 }
 
+func (self *FrontendDryRunner) RunWithInput(_ string, cmd string, args ...string) error {
+	return self.execute([]string{}, cmd, args...)
+}
+
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendDryRunner) execute(env []string, executable string, args ...string) error {
 	var currentBranch gitdomain.LocalBranchName

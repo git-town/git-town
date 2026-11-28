@@ -62,7 +62,8 @@ Enables or disables [interactive](../preferences/interactive.md) dialogs.
 #### `--keep-commit-messages`
 
 The `--keep-commit-messages` flag preserves all squashed commit messages.
-The compressed commit contains them in their original order.
+The compressed commit contains them in their original order without reformatting
+them.
 It puts an empty line between them.
 You cannot use this flag together with `--message`.
 

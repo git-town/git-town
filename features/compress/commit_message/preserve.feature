@@ -5,21 +5,23 @@ Feature: compress preserves the commit messages of all squashed commits
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
+    And Git setting "commit.cleanup" is "verbatim"
     And the commits
-      | BRANCH  | LOCATION      | MESSAGE                 | FILE NAME | FILE CONTENT |
-      | feature | local, origin | commit 1                | file_1    | content 1    |
-      |         |               | commit 2\n\nbody line 1 | file_2    | content 2    |
-      |         |               | commit 3                | file_3    | content 3    |
+      | BRANCH  | LOCATION      | MESSAGE                                      | FILE NAME | FILE CONTENT |
+      | feature | local, origin | commit 1                                     | file_1    | content 1    |
+      |         |               | commit 2\n\nbody line 1\n# preserved comment | file_2    | content 2    |
+      |         |               | commit 3                                     | file_3    | content 3    |
+    And Git setting "commit.cleanup" is "strip"
     And the current branch is "feature"
     When I run "git-town compress --keep-commit-messages"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git reset --soft main --                        |
-      |         | git commit -m "commit 1                         |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                                             |
+      | feature | git fetch --prune --tags                                            |
+      |         | git reset --soft main --                                            |
+      |         | git -c i18n.commitEncoding=UTF-8 commit --file=- --cleanup=verbatim |
+      |         | git push --force-with-lease --force-if-includes                     |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
@@ -31,6 +33,7 @@ Feature: compress preserves the commit messages of all squashed commits
       commit 2
 
       body line 1
+      # preserved comment
 
       commit 3
       """

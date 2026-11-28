@@ -1,10 +1,6 @@
 package gitdomain
 
-import (
-	"strings"
-
-	"github.com/git-town/git-town/v24/internal/gohacks/stringss"
-)
+import "strings"
 
 type CommitMessages []CommitMessage
 
@@ -16,10 +12,16 @@ func NewCommitMessages(messages ...string) CommitMessages {
 	return result
 }
 
-func (self CommitMessages) Join(sep string) CommitMessage {
-	messages := make([]string, len(self))
+func (self CommitMessages) Join() CommitMessage {
+	var result strings.Builder
 	for c, message := range self {
-		messages[c] = message.String()
+		if c > 0 {
+			result.WriteByte('\n')
+		}
+		result.WriteString(message.String())
+		if c < len(self)-1 && !strings.HasSuffix(message.String(), "\n") {
+			result.WriteByte('\n')
+		}
 	}
-	return CommitMessage(stringss.Trim(strings.Join(messages, sep)))
+	return CommitMessage(result.String())
 }

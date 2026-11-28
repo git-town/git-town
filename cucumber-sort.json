@@ -5,6 +5,7 @@
   ],
   "exclude": [
     "features/append/branch_prefix/config_file.feature",
+    "features/compress/commit_message/preserve.feature",
     "features/delete/interactive/cli/disable_via_false.feature",
     "features/delete/interactive/cli/disable_via_negation.feature",
     "features/delete/interactive/no_tty/missing_parent.feature",

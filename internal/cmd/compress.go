@@ -30,34 +30,6 @@ import (
 const (
 	compressCommand = "compress"
 	compressDesc    = "Squash all commits on the current branch down to a single commit"
-	compressHelp    = `
-Compress is a more convenient way of running "git rebase --interactive"
-and choosing to fixup all commits.
-Branches must be in sync to compress them, run "git sync" as needed.
-
-Provide the --stack switch to compress all branches in the stack.
-
-The compressed commit uses the commit message of the first commit in the branch.
-You can provide a custom commit message with the -m switch
-or preserve all commit messages with --keep-commit-messages.
-
-Assuming you have a feature branch with these commits:
-
-$ git log --format='%s'
-commit 1
-commit 2
-commit 3
-
-Let's compress these three commits into a single commit:
-
-$ git town compress
-
-Now your branch has a single commit with the name of the first commit but
-containing the changes of all three commits that existed on the branch before:
-
-$ git log --format='%s'
-commit 1
-`
 )
 
 func compressBranchProgram(args compressBranchProgramArgs) {
@@ -67,9 +39,10 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 	args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
 	args.prog.Value.Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
 	args.prog.Value.Add(&opcodes.CommitWithMessage{
-		AuthorOverride: None[gitdomain.Author](),
-		CommitHook:     args.commitHook,
-		Message:        args.data.newCommitMessage,
+		AuthorOverride:  None[gitdomain.Author](),
+		CleanupVerbatim: args.data.cleanupVerbatim,
+		CommitHook:      args.commitHook,
+		Message:         args.data.newCommitMessage,
 	})
 	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
 	if hasTrackingBranch && args.offline.IsOnline() {
@@ -91,7 +64,7 @@ func compressCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Args: cobra.NoArgs,
-		Long: cmdhelpers.Long(compressDesc, compressHelp),
+		Long: cmdhelpers.Long(compressDesc, messages.CompressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
@@ -102,6 +75,9 @@ func compressCmd() *cobra.Command {
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errCommitHook, errDryRun, errInteractive, errKeepCommitMessages, errMessage, errStack, errVerbose); err != nil {
 				return err
+			}
+			if message.IsSome() && keepCommitMessages.Enabled() {
+				return errors.New(messages.CompressMessageConflict)
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:       None[configdomain.AutoResolve](),
@@ -147,7 +123,8 @@ type compressData struct {
 
 type compressBranchData struct {
 	branchType       configdomain.BranchType
-	commitCount      int // number of commits in this branch
+	cleanupVerbatim  bool // whether to preserve the exact commit message content
+	commitCount      int  // number of commits in this branch
 	name             gitdomain.LocalBranchName
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
@@ -284,12 +261,12 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		if keepCommitMessages.Enabled() {
 			commitMessages := make(gitdomain.CommitMessages, len(commits))
 			for c, commit := range commits {
-				commitMessages[c], err = repo.Git.CommitMessage(repo.Backend, commit.SHA)
+				commitMessages[c], err = repo.Git.CommitMessageVerbatim(repo.Backend, commit.SHA)
 				if err != nil {
 					return emptyResult, configdomain.ProgramFlowExit, err
 				}
 			}
-			newCommitMessage = commitMessages.Join("\n\n")
+			newCommitMessage = commitMessages.Join()
 		} else if messageContent, has := message.Get(); has {
 			newCommitMessage = messageContent
 		} else {
@@ -304,6 +281,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		}
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
+			cleanupVerbatim:  keepCommitMessages.Enabled(),
 			commitCount:      commitCount,
 			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
@@ -347,9 +325,6 @@ Start:
 	})
 	if err != nil {
 		return err
-	}
-	if message.IsSome() && keepCommitMessages.Enabled() {
-		return errors.New(messages.CompressMessageConflict)
 	}
 	data, flow, err := determineCompressData(repo, message, keepCommitMessages, compressEntireStack)
 	if err != nil {

@@ -1,6 +1,6 @@
 Feature: compress rejects conflicting commit message options
 
-  Scenario: using --message and --keep-commit-messages together
+  Background:
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,6 +11,8 @@ Feature: compress rejects conflicting commit message options
       |         |               | commit 2 | file_2    | content 2    |
     And the current branch is "feature"
     When I run "git-town compress -m compressed --keep-commit-messages"
+
+  Scenario: using --message and --keep-commit-messages together
     Then Git Town runs no commands
     And Git Town prints the error:
       """

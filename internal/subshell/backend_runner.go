@@ -30,30 +30,35 @@ type BackendRunner struct {
 }
 
 func (self BackendRunner) Query(executable string, args ...string) (string, error) {
-	return self.execute([]string{}, executable, args...)
+	return self.execute([]string{}, None[string](), executable, args...)
 }
 
 func (self BackendRunner) QueryTrim(executable string, args ...string) (stringss.Trimmed, error) {
-	output, err := self.execute([]string{}, executable, args...)
+	output, err := self.execute([]string{}, None[string](), executable, args...)
 	return stringss.Trim(stripansi.Strip(output)), err
 }
 
 func (self BackendRunner) QueryZ(executable string, args ...string) (stringss.ZeroDelineated, error) {
-	result, err := self.execute([]string{}, executable, args...)
+	result, err := self.execute([]string{}, None[string](), executable, args...)
 	return stringss.ZeroDelineated(result), err
 }
 
 func (self BackendRunner) Run(executable string, args ...string) error {
-	_, err := self.execute([]string{}, executable, args...)
+	_, err := self.execute([]string{}, None[string](), executable, args...)
 	return err
 }
 
 func (self BackendRunner) RunWithEnv(env []string, executable string, args ...string) error {
-	_, err := self.execute(env, executable, args...)
+	_, err := self.execute(env, None[string](), executable, args...)
 	return err
 }
 
-func (self BackendRunner) execute(env []string, executable string, args ...string) (string, error) {
+func (self BackendRunner) RunWithInput(input string, executable string, args ...string) error {
+	_, err := self.execute([]string{}, Some(input), executable, args...)
+	return err
+}
+
+func (self BackendRunner) execute(env []string, input Option[string], executable string, args ...string) (string, error) {
 	self.CommandsCounter.Value.Increment()
 	if self.Verbose {
 		printHeader(env, executable, args...)
@@ -65,6 +70,9 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	for {
 		subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
 		subProcess.Env = append(subProcess.Environ(), env...)
+		if inputText, hasInput := input.Get(); hasInput {
+			subProcess.Stdin = strings.NewReader(inputText)
+		}
 		if dir, has := self.Dir.Get(); has {
 			subProcess.Dir = dir
 		}

@@ -13,6 +13,7 @@ import (
 //
 // See `--message`, `--edit` and `--no-edit` flags in `git commit` and `git merge`.
 type UseMessage struct {
+	cleanupVerbatim    bool
 	customMessage      Option[gitdomain.CommitMessage]
 	editDefaultMessage bool
 }
@@ -30,6 +31,11 @@ func (self *UseMessage) GetCustomMessageOrPanic() gitdomain.CommitMessage {
 		return message
 	}
 	panic("UseMessage is not UseCustomMessage")
+}
+
+// IsCleanupVerbatim indicates that Git should preserve the exact custom commit message.
+func (self *UseMessage) IsCleanupVerbatim() bool {
+	return self.cleanupVerbatim
 }
 
 // IsCustomMessage indicates that the custom message should be used as is without opening an editor.
@@ -57,6 +63,7 @@ func (self *UseMessage) IsUseDefault() bool {
 // EditDefaultMessage indicates that the default message should be edited.
 func EditDefaultMessage() UseMessage {
 	return UseMessage{
+		cleanupVerbatim:    false,
 		customMessage:      None[gitdomain.CommitMessage](),
 		editDefaultMessage: true,
 	}
@@ -65,6 +72,7 @@ func EditDefaultMessage() UseMessage {
 // UseCustomMessage indicates that the custom message should be used as is without opening an editor.
 func UseCustomMessage(message gitdomain.CommitMessage) UseMessage {
 	return UseMessage{
+		cleanupVerbatim:    false,
 		customMessage:      Some(message),
 		editDefaultMessage: false, // This value is unused.
 	}
@@ -78,9 +86,19 @@ func UseCustomMessageOr(message Option[gitdomain.CommitMessage], other UseMessag
 	return other
 }
 
+// UseCustomMessageVerbatim indicates that the exact custom message should be used without cleanup.
+func UseCustomMessageVerbatim(message gitdomain.CommitMessage) UseMessage {
+	return UseMessage{
+		cleanupVerbatim:    true,
+		customMessage:      Some(message),
+		editDefaultMessage: false, // This value is unused.
+	}
+}
+
 // UseDefaultMessage indicates that the default message should be used as is without opening an editor.
 func UseDefaultMessage() UseMessage {
 	return UseMessage{
+		cleanupVerbatim:    false,
 		customMessage:      None[gitdomain.CommitMessage](),
 		editDefaultMessage: false,
 	}
@@ -92,6 +110,7 @@ func UseDefaultMessage() UseMessage {
 // - If message is None and !fallbackToDefault then this is equivalent to EditDefaultMessage().
 func UseMessageWithFallbackToDefault(message Option[gitdomain.CommitMessage], fallbackToDefault bool) UseMessage {
 	return UseMessage{
+		cleanupVerbatim:    false,
 		customMessage:      message,
 		editDefaultMessage: !fallbackToDefault,
 	}

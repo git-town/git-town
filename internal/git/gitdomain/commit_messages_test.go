@@ -7,31 +7,42 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestCommitMessages(t *testing.T) {
+func TestCommitMessagesJoinEmptyList(t *testing.T) {
 	t.Parallel()
+	give := gitdomain.CommitMessages{}
+	have := give.Join()
+	want := gitdomain.CommitMessage("")
+	must.EqOp(t, want, have)
+}
 
-	t.Run("Join", func(t *testing.T) {
-		t.Parallel()
-		t.Run("contains elements", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.NewCommitMessages("commit 1", "commit 2\n\nbody line 1", "commit 3")
-			have := give.Join("\n\n")
-			want := gitdomain.CommitMessage("commit 1\n\ncommit 2\n\nbody line 1\n\ncommit 3")
-			must.EqOp(t, want, have)
-		})
-		t.Run("empty list", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.CommitMessages{}
-			have := give.Join("\n\n")
-			want := gitdomain.CommitMessage("")
-			must.EqOp(t, want, have)
-		})
-		t.Run("trims whitespace", func(t *testing.T) {
-			t.Parallel()
-			give := gitdomain.CommitMessages{"", "commit"}
-			have := give.Join("\n\n")
-			want := gitdomain.CommitMessage("commit")
-			must.EqOp(t, want, have)
-		})
-	})
+func TestCommitMessagesJoinMissingFinalNewline(t *testing.T) {
+	t.Parallel()
+	give := gitdomain.NewCommitMessages("commit 1", "commit 2")
+	have := give.Join()
+	want := gitdomain.CommitMessage("commit 1\n\ncommit 2")
+	must.EqOp(t, want, have)
+}
+
+func TestCommitMessagesJoinPreservesWhitespace(t *testing.T) {
+	t.Parallel()
+	give := gitdomain.CommitMessages{"", "commit  "}
+	have := give.Join()
+	want := gitdomain.CommitMessage("\n\ncommit  ")
+	must.EqOp(t, want, have)
+}
+
+func TestCommitMessagesJoinWithFinalNewlines(t *testing.T) {
+	t.Parallel()
+	give := gitdomain.NewCommitMessages("commit 1\n", "commit 2\n")
+	have := give.Join()
+	want := gitdomain.CommitMessage("commit 1\n\ncommit 2\n")
+	must.EqOp(t, want, have)
+}
+
+func TestCommitMessagesJoinWithTrailingBlankLine(t *testing.T) {
+	t.Parallel()
+	give := gitdomain.NewCommitMessages("commit 1\n\n", "commit 2")
+	have := give.Join()
+	want := gitdomain.CommitMessage("commit 1\n\n\ncommit 2")
+	must.EqOp(t, want, have)
 }
